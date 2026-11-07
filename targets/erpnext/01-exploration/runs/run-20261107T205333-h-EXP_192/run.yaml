@@ -1,0 +1,84 @@
+id: run-20261107T205333-h-EXP_192
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_192.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Projects
+started_at: 2026-11-07T20:52:41.600Z
+ended_at: 2026-11-07T20:53:33.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.044, "element": "Close button on Message dialog"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page loaded at /desk/projects/timesheet/new-timesheet-aksombneya (not exactly /app/timesheet/new but redirected). A popup message \\\"Pas d'autorisation pour Employé\\\" appeared on login but was dismissed. The form is in French. The \\\"No.\\\" column has value \\\"1\\\" and \\\"H\\\" column has "
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Projects)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Timesheet
+        path: /app/timesheet/new
+        kind: defaults
+      page_title: Nouveau(elle) Feuille de Temps - new-timesheet-aksombneya
+      field_labels:
+        - Séries
+        - Statut
+        - Société
+        - Projet
+        - Client
+        - Devise
+        - Taux de Change
+        - Détail Employé
+        - Employé
+        - Feuilles de Temps
+        - No.
+        - Type d'activité
+        - Horaire de Début
+        - H
+        - Projet
+        - Est facturable
+        - Ajouter une ligne
+        - Total des Heures Travaillées
+      section_labels:
+        - Détails
+        - Facturation
+        - Détail Employé
+        - Feuilles de Temps
+      prefilled:
+        - "Séries: TS-.YYYY.-"
+        - "Statut: Brouillon"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Taux de Change: 1,000"
+        - "Feuilles de Temps - No. 1 - H: 0,000"
+      notes: Page loaded at /desk/projects/timesheet/new-timesheet-aksombneya (not exactly /app/timesheet/new but redirected). A popup message "Pas d'autorisation pour Employé" appeared on login but was dismissed. The form is in French. The "No." column has value "1" and "H" column has "0,000".
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b6cc7d55-42ab-4cb3-b64a-147212147a2c attempts: 1"

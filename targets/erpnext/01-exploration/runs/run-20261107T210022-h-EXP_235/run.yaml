@@ -1,0 +1,194 @@
+id: run-20261107T210022-h-EXP_235
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_235.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:57:55.800Z
+ended_at: 2026-11-07T21:00:22.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Inspection de qualité requise"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.483, "y": 0.058, "element": "Configuration de la nomenclature tab"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'move_mouse_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 15
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["tab"]})'
+  - n: 17
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 18
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.262, "y": 0.259, "element": "Inspection de qualité requise checkbox - the square icon to the left of the text"})'
+  - n: 19
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.262, "y": 0.259, "element": "Inspection de qualité requise checkbox - the square icon to the left of the text"})'
+  - n: 20
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.262, "y": 0.259, "element": "Inspection de qualité requise checkbox"})'
+  - n: 21
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/manufacturing/bom/new-bom-bdswfoxteo#bom_conf_tab", "extract_images": false})'
+  - n: 22
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.262, "y": 0.259, "element": "Inspection de qualité requise checkbox"})'
+  - n: 23
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox - the small square icon"})'
+  - n: 24
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["enter"]})'
+  - n: 25
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.262, "y": 0.259, "element": "Inspection de qualité requise checkbox - the small square at the left of the text"})'
+  - n: 26
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox - the small square icon"})'
+  - n: 27
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 28
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 29
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 30
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 31
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 32
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 33
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 34
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 35
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 36
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox"})'
+  - n: 37
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.261, "element": "Inspection de qualité requise checkbox - the small square icon"})'
+    screenshot: step_37.png
+  - n: 38
+    action:
+      type: other
+      target_desc: "answer({\"content\": \"## Section Labels\\n- Article de production\\n- Configuration de la nomenclature\\n- Plus d'info\\n- Inspection de la Qualité\\n- Entrepôt par Défaut\\n- Composants consommés\\n\\n## Field Labels\\n- Est actif\\n- Est une nomenclature fantôme\\n- Est Défaut\\n- Autoriser un article alternati"
+  - n: 39
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_37.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: BOM
+        path: /app/bom/new
+        kind: interact
+        mission: M-006
+        action:
+          field: inspection_required
+          value: "1"
+      page_title: Nouveau(elle) Nomenclature - Configuration de la nomenclature
+      field_labels:
+        - Section Labels
+        - Field Labels
+        - Prefilled Fields
+      section_labels:
+        - Sections
+        - Fields
+        - Prefilled
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/c8669589-5b57-4443-bcc6-246e887cd965 attempts: 1"

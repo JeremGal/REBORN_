@@ -1,0 +1,53 @@
+id: run-20261107T204650-h-EXP_145
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_145.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Buying
+started_at: 2026-11-07T20:46:06.700Z
+ended_at: 2026-11-07T20:46:50.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The login was successful but the user *** does not have access to the supplier-scorecard-period document. The page shows an error: 'Non autorisé - L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page.' "
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Buying)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Supplier Scorecard Period
+        path: /app/supplier-scorecard-period/new
+        kind: defaults
+      page_title: Frappe
+      field_labels: []
+      section_labels:
+        - "Error: Non autorisé"
+      prefilled: []
+      notes: "The login was successful but the user *** does not have access to the supplier-scorecard-period document. The page shows an error: 'Non autorisé - L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page.' No form fields are visible."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/85bda4ec-c9d9-481f-9f7c-6ede7f82234e attempts: 1"

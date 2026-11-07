@@ -1,0 +1,27 @@
+﻿{
+    "mission":  "M-005",
+    "application":  "ERPNext (fictitious data)",
+    "experiments":  [
+                        {
+                            "kind":  "defaults",
+                            "doctype":  "Account",
+                            "module":  "Accounts",
+                            "path":  "/app/account/new",
+                            "timeout_s":  360
+                        },
+                        {
+                            "kind":  "defaults",
+                            "doctype":  "Quotation",
+                            "module":  "Selling",
+                            "path":  "/app/quotation/new",
+                            "timeout_s":  360
+                        },
+                        {
+                            "kind":  "defaults",
+                            "doctype":  "Stock Entry Type",
+                            "module":  "Stock",
+                            "path":  "/app/stock-entry-type/new",
+                            "timeout_s":  360
+                        }
+                    ]
+}

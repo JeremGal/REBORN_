@@ -29,7 +29,7 @@ function inputType(f) {
 
 // Labels the H agent read on screen against the labels the program declares for that form. A screen whose observed
 // labels mostly match the declared ones is confirmed by observation; otherwise the gap is written down.
-const normLabel = (s) => String(s).toLowerCase().replace(/[*:()\s]+/g, " ").trim();
+const normLabel = (s) => String(s).toLowerCase().replace(/\([^)]*\)?/g, " ").replace(/\.{2,}|…/g, " ").replace(/[*:\s]+/g, " ").trim();
 export function compareLabels(declared, observed) {
   const d = new Set(declared.map(normLabel));
   const seen = [...new Set(observed.map(normLabel).filter(Boolean))];

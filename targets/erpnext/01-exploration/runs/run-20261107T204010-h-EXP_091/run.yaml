@@ -1,0 +1,65 @@
+id: run-20261107T204010-h-EXP_091
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_091.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:39:30.100Z
+ended_at: 2026-11-07T20:40:10.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.495, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.495, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.495, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Page loaded successfully after login. The form has 7 fields total, 2 of which are prefilled with values.", "prefilled": ["Date de la transaction: 07/11/2026", "Société: Digital Solution Service"], "page_title": "Nouveau(elle) Bon de Clôture de la Période - new-period-closing-vouche'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Period Closing Voucher
+        path: /app/period-closing-voucher/new
+        kind: defaults
+      page_title: Nouveau(elle) Bon de Clôture de la Période - new-period-closing-voucher-allgwnedgs
+      field_labels:
+        - Date de la transaction
+        - Société
+        - Exercice fiscal
+        - Date de début de la période
+        - Date de fin de la période
+        - Compte de clôture
+        - Remarques
+      section_labels: []
+      prefilled:
+        - "Date de la transaction: 07/11/2026"
+        - "Société: Digital Solution Service"
+      notes: Page loaded successfully after login. The form has 7 fields total, 2 of which are prefilled with values.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/698e841b-327e-4e9e-b37a-d7149e4dcaca attempts: 1"

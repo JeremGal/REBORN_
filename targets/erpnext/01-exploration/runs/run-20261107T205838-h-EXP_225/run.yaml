@@ -1,0 +1,155 @@
+id: run-20261107T205838-h-EXP_225
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_225.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:56:03.000Z
+ended_at: 2026-11-07T20:58:38.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.045, "element": "Close button (X) on the error dialog"})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'write({"x": 0.471, "y": 0.019, "text": "blanket order", "enter": true, "element": "Search bar at the top", "overwrite": true})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'write({"x": 0.471, "y": 0.043, "text": "blanket order", "enter": true, "element": "Search input field", "overwrite": true})'
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/blanket-order/new"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.045, "element": "Close button (X) on the error dialog"})'
+  - n: 10
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 11
+    action:
+      type: other
+      target_desc: refresh_web({})
+  - n: 12
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/blanket-order/new"})'
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.019, "y": 0.019, "element": "Hamburger menu icon in top left corner"})'
+  - n: 14
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 15
+    action:
+      type: other
+      target_desc: refresh_web({})
+  - n: 16
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/login"})'
+  - n: 17
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.022, "y": 0.172, "element": "Icon that looks like it could be for Sales (second icon in left sidebar, looks like a shopping bag/cart)"})'
+  - n: 18
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.022, "y": 0.222, "element": "Icon in left sidebar that might be for Sales (looks like a document or sales icon, around the 4th-5th position)"})'
+  - n: 19
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.022, "y": 0.263, "element": "Icon in left sidebar that might be for Sales (looks like a document or sales icon)"})'
+  - n: 20
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.022, "y": 0.305, "element": "Icon in left sidebar that might be for Sales (looks like a document with lines, around the 7th position)"})'
+  - n: 21
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.022, "y": 0.346, "element": "Icon in left sidebar that might be for Sales (looks like a document or chart icon)"})'
+  - n: 22
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.022, "y": 0.388, "element": "Icon in left sidebar that might be for HR or another module"})'
+  - n: 23
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.022, "y": 0.429, "element": "Icon in left sidebar that might be for HR (looks like a person icon, last icon)"})'
+  - n: 24
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.022, "y": 0.022, "element": "Home icon in left sidebar (house icon at top)"})'
+  - n: 25
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 26
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/blanket-order/new"})'
+  - n: 27
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 10})'
+  - n: 28
+    action:
+      type: other
+      target_desc: 'answer({"notes": "The user has been logged in to ERPNext but the account lacks permissions to access the Blanket Order form. The error is persistent across multiple navigation attempts.", "prefilled": ["Blocked", "Authorization Error", "The user *** does not have access to the Blanket Order form. Th'
+    screenshot: step_28.png
+  - n: 29
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_28.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Blanket Order
+        path: /app/blanket-order/new
+        kind: interact
+        mission: M-006
+        action:
+          field: blanket_order_type
+          value: Selling
+      page_title: Blocked - Authorization Error
+      field_labels:
+        - Status
+        - Issue
+        - Details
+      section_labels:
+        - Blocker Information
+      prefilled:
+        - Blocked
+        - Authorization Error
+        - "The user *** does not have access to the Blanket Order form. The ERPNext system shows: 'L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page' (The user has no access to the document type via role authorization for the document Page. No authorization for Page). I was unable to open the Blanket Order form or complete any of the requested tasks."
+      notes: The user has been logged in to ERPNext but the account lacks permissions to access the Blanket Order form. The error is persistent across multiple navigation attempts.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b81d4806-596c-428c-8350-f0a7402bf8bc attempts: 1"

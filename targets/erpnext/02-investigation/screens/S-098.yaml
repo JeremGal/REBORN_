@@ -2,7 +2,7 @@ id: S-098
 title: Asset Maintenance
 purpose: create, view and edit Asset Maintenance records
 kind: form
-layout: "sections: Tasks; 9 fields"
+layout: "sections: Tasks; 9 fields; observed labels differ from the declared form (3/11 match; not declared: no., tâche de mainte, statut d'entretien, périodicité, attribuer à, prochaine date d', derniè, maintenance des actifs)"
 fields:
   - label: Asset Name
     control: lookup
@@ -55,3 +55,10 @@ evidence:
     kind: rea
     locator: form layout of Asset Maintenance
     note: declared by the program
+  - ref: run-20261107T204429-h-EXP_129
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 3/11 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204429-h-EXP_129/step_05.png
+  - 01-exploration/runs/run-20261107T204429-h-EXP_129/step_05.png

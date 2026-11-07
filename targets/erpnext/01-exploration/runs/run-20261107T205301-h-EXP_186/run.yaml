@@ -1,0 +1,59 @@
+id: run-20261107T205301-h-EXP_186
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_186.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Projects
+started_at: 2026-11-07T20:52:23.000Z
+ended_at: 2026-11-07T20:53:01.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": [], "page_title": "Nouveau(elle) Modèle de projet", "field_labels": ["Nom", "Type de Projet", "Désactivé", "No.", "Tâche", "Objet"], "section_labels": ["Modèle de projet"]})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Projects)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Project Template
+        path: /app/project-template/new
+        kind: defaults
+      page_title: Nouveau(elle) Modèle de projet
+      field_labels:
+        - Nom
+        - Type de Projet
+        - Désactivé
+        - No.
+        - Tâche
+        - Objet
+      section_labels:
+        - Modèle de projet
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/f96cd40c-d465-4014-a23e-ecffad0d13a4 attempts: 1"

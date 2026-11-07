@@ -1,0 +1,71 @@
+id: run-20261107T205245-h-EXP_185
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_185.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Projects
+started_at: 2026-11-07T20:52:07.400Z
+ended_at: 2026-11-07T20:52:45.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Séries: PROJ-####", "Statut: Ouvrir", "Priorité: Moyen", "Est actif: Oui", "% Méthode Complète: Achèvement de la Tâche"], "page_title": "Nouveau(elle) Projet - new-project-yypuxkvmqs", "field_labels": ["Séries", "nom du projet", "Statut", "Type de Projet", "% Méthode Complète"'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Projects)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Project
+        path: /app/project/new
+        kind: defaults
+      page_title: Nouveau(elle) Projet - new-project-yypuxkvmqs
+      field_labels:
+        - Séries
+        - nom du projet
+        - Statut
+        - Type de Projet
+        - "% Méthode Complète"
+        - À partir du modèle
+        - Priorité
+        - Département
+        - Est actif
+      section_labels:
+        - Détails
+        - Calcul des Coûts
+        - Progression
+        - Plus d'info
+        - Chronologie
+      prefilled:
+        - "Séries: PROJ-####"
+        - "Statut: Ouvrir"
+        - "Priorité: Moyen"
+        - "Est actif: Oui"
+        - "% Méthode Complète: Achèvement de la Tâche"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/afbcd65c-8dd5-48d4-a792-be4bfb626c26 attempts: 1"

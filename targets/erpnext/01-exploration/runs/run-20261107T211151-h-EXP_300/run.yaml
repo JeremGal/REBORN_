@@ -1,0 +1,70 @@
+id: run-20261107T211151-h-EXP_300
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_300.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:11:16.600Z
+ended_at: 2026-11-07T21:11:51.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.632, "y": 0.188, "element": "Est Immobilisation checkbox"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Checked the 'Est Immobilisation' checkbox. The form is in French.\", \"prefilled\": [\"Unite de Mesure par Défaut: N°\"], \"page_title\": \"Nouveau(elle) Item - new-item-zcdutpyyoc\", \"section_labels\": [\"Détails\", \"Comptabilité\", \"UdM\", \"Taxe\", \"Inventaire\", \"Achat\", \"Ventes\", \"Production\","
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Item
+        path: /app/item/new
+        kind: interact
+        mission: M-006
+        action:
+          field: is_fixed_asset
+          value: "1"
+      page_title: Nouveau(elle) Item - new-item-zcdutpyyoc
+      field_labels: []
+      section_labels:
+        - Détails
+        - Comptabilité
+        - UdM
+        - Taxe
+        - Inventaire
+        - Achat
+        - Ventes
+        - Production
+        - Qualité
+      prefilled:
+        - "Unite de Mesure par Défaut: N°"
+      notes: Checked the 'Est Immobilisation' checkbox. The form is in French.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/72b76ed1-31b5-4aae-a1e8-1241810ac8ab attempts: 1"

@@ -2,7 +2,7 @@ id: S-028
 title: Cost Center Allocation
 purpose: create, view and edit Cost Center Allocation records
 kind: form
-layout: 5 fields
+layout: "5 fields; observed labels differ from the declared form (3/6 match; not declared: no., centre de coûts, pourcentage)"
 fields:
   - label: Main Cost Center
     control: lookup
@@ -43,3 +43,10 @@ evidence:
     kind: rea
     locator: form layout of Cost Center Allocation
     note: declared by the program
+  - ref: run-20261107T203643-h-EXP_059
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 3/6 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T203643-h-EXP_059/step_06.png
+  - 01-exploration/runs/run-20261107T203643-h-EXP_059/step_06.png

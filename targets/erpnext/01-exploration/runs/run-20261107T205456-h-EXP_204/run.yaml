@@ -1,0 +1,70 @@
+id: run-20261107T205456-h-EXP_204
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_204.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T20:54:16.300Z
+ended_at: 2026-11-07T20:54:56.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Séries: MAT-INS-.YYYY.-\", \"Date d'Installation: 07/11/2026\", \"Statut: Brouillon\", \"Société: Digital Solution Service\"], \"page_title\": \"Nouveau(elle) Note d'Installation - new-installation-note-irlagtllzv\", \"field_labels\": [\"Séries\", \"Date d'Installation\", \"Client\", \"Temps d'In"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Installation Note
+        path: /app/installation-note/new
+        kind: defaults
+      page_title: Nouveau(elle) Note d'Installation - new-installation-note-irlagtllzv
+      field_labels:
+        - Séries
+        - Date d'Installation
+        - Client
+        - Temps d'Installation
+        - Statut
+        - Société
+        - Projet
+        - Remarques
+        - No.
+        - Code de l'Article
+        - Qté Installée
+        - Description
+      section_labels:
+        - Note d'Installation
+        - Articles
+      prefilled:
+        - "Séries: MAT-INS-.YYYY.-"
+        - "Date d'Installation: 07/11/2026"
+        - "Statut: Brouillon"
+        - "Société: Digital Solution Service"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/588715e5-6eab-4379-a3f7-991bc49d4af3 attempts: 1"

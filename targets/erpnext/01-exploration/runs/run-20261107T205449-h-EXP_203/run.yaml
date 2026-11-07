@@ -1,0 +1,57 @@
+id: run-20261107T205449-h-EXP_203
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_203.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T20:53:58.000Z
+ended_at: 2026-11-07T20:54:49.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The page is in French. The form has one field \\\"Industrie\\\" with a red asterisk indicating it's required. No fields have pre-filled values.\", \"prefilled\": [], \"page_title\": \"Nouveau(elle) Secteur d'Activité\", \"field_labels\": [\"Industrie\"], \"section_labels\": []})"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Industry Type
+        path: /app/industry-type/new
+        kind: defaults
+      page_title: Nouveau(elle) Secteur d'Activité
+      field_labels:
+        - Industrie
+      section_labels: []
+      prefilled: []
+      notes: The page is in French. The form has one field "Industrie" with a red asterisk indicating it's required. No fields have pre-filled values.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/18b45411-285e-4cf0-9f30-7af486989684 attempts: 1"

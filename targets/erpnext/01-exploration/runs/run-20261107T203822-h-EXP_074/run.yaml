@@ -1,0 +1,57 @@
+id: run-20261107T203822-h-EXP_074
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_074.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:37:46.800Z
+ended_at: 2026-11-07T20:38:22.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page loaded successfully after login. The page is in French. No checkboxes are ticked, and no other fields have pre-filled values.\", \"prefilled\": [\"Surveiller les 'X' derniers jours: 60\"], \"page_title\": \"Moniteur de santé du grand livre\", \"field_labels\": [\"Activer le moniteur de sa"
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_04.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Ledger Health Monitor
+        path: /app/ledger-health-monitor
+        kind: defaults
+      page_title: Moniteur de santé du grand livre
+      field_labels:
+        - Activer le moniteur de santé
+        - Surveiller les 'X' derniers jours
+        - Écart Débit-Crédit
+        - Écart entre le grand livre général et le grand livre des paiements
+        - No.
+        - Société
+      section_labels:
+        - Configuration
+        - Sociétés
+      prefilled:
+        - "Surveiller les 'X' derniers jours: 60"
+      notes: Page loaded successfully after login. The page is in French. No checkboxes are ticked, and no other fields have pre-filled values.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d955c2f3-d456-4889-8e41-5c9769ab70e8 attempts: 1"

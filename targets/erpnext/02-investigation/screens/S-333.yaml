@@ -2,7 +2,7 @@ id: S-333
 title: Quality Feedback Template
 purpose: create, view and edit Quality Feedback Template records
 kind: form
-layout: 2 fields
+layout: "2 fields; observed labels differ from the declared form (1/3 match; not declared: no., paramètre)"
 fields:
   - label: Template Name
     control: text
@@ -22,3 +22,10 @@ evidence:
     kind: rea
     locator: form layout of Quality Feedback Template
     note: declared by the program
+  - ref: run-20261107T205405-h-EXP_196
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 1/3 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205405-h-EXP_196/step_05.png
+  - 01-exploration/runs/run-20261107T205405-h-EXP_196/step_05.png

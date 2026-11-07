@@ -1,0 +1,124 @@
+id: run-20261107T205535-h-EXP_208
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_208.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T20:53:42.800Z
+ended_at: 2026-11-07T20:55:35.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.5, "element": "Page content area to focus the page"})'
+  - n: 8
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 400, "scroll_element": null})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Désactiver le total arrondi"})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.32, "y": 0.978, "element": "Remise Supplémentaire expandable section"})'
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.32, "y": 0.978, "element": "Remise Supplémentaire expandable section"})'
+  - n: 14
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [], \"page_title\": \"Nouveau(elle) Devis - new-quotation-dvwrphoskq\", \"field_labels\": [\"Champ barre\", \"Code de l'Article\", \"Quantité\", \"Prix (USD)\", \"Montant (USD)\", \"Ajouter une ligne\", \"Ajouter plusieurs\", \"Télécharger\", \"Charger\", \"Quantité totale\", \"Total (USD)\", \"Catégorie de"
+    screenshot: step_14.png
+  - n: 15
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_14.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Quotation
+        path: /app/quotation/new
+        kind: defaults
+      page_title: Nouveau(elle) Devis - new-quotation-dvwrphoskq
+      field_labels:
+        - Champ barre
+        - Code de l'Article
+        - Quantité
+        - Prix (USD)
+        - Montant (USD)
+        - Ajouter une ligne
+        - Ajouter plusieurs
+        - Télécharger
+        - Charger
+        - Quantité totale
+        - Total (USD)
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxes et Frais de Vente
+        - No.
+        - Type
+        - Compte compt...
+        - Taux d'Impositi...
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+        - Aucune ligne
+        - Ajouter une ligne
+        - Total des Taxes et Frais (Devise Société) (USD)
+        - Total des Taxes et Frais (USD)
+        - Total TTC (USD)
+        - Arrondi (USD)
+        - Total arrondi (USD)
+        - Désactiver le total arrondi
+        - Remise Supplémentaire
+      section_labels:
+        - En-tête
+        - Articles
+        - Taxes et Frais
+        - Taxes et Frais de Vente
+        - Totaux
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/888556b6-ea60-4f1f-b66b-a9a58e8a6e28 attempts: 3"

@@ -1,0 +1,76 @@
+id: run-20261107T213703-h-EXP_316
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_316.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:36:08.500Z
+ended_at: 2026-11-07T21:37:03.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": false})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "select_option({\"x\": 0.419, \"y\": 0.186, \"option\": \"Écriture de Reprise\", \"element\": \"Type d'Écriture dropdown\"})"
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form is fully visible without scrolling. All fields and labels are as displayed.\", \"prefilled\": [\"Société: Digital Solution Service\", \"Séries: ACC-JV-.YYYY.-\", \"Type d'Écriture: Écriture de Reprise\", \"Date de Comptabilisation: 07/11/2026\"], \"page_title\": \"Nouveau(elle) Écriture"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Journal Entry
+        path: /app/journal-entry/new
+        kind: interact
+        mission: M-006
+        action:
+          field: voucher_type
+          value: Write Off Entry
+      page_title: Nouveau(elle) Écriture de Journal - new-journal-entry-kiuajxdxss
+      field_labels:
+        - Société
+        - Séries
+        - Type d'Écriture
+        - Date de Comptabilisation
+        - Multi-devis
+        - Écritures Comptables
+        - Ajouter une ligne
+        - Total Débit
+        - Total Crédit
+        - Numéro de référence
+        - Date de référence
+      section_labels:
+        - Détails
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Séries: ACC-JV-.YYYY.-"
+        - "Type d'Écriture: Écriture de Reprise"
+        - "Date de Comptabilisation: 07/11/2026"
+      notes: The form is fully visible without scrolling. All fields and labels are as displayed.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d0e333d5-130f-4356-b022-acc8ce72a9ac attempts: 1"

@@ -2,7 +2,7 @@ id: S-090
 title: Tax Withholding Category
 purpose: create, view and edit Tax Withholding Category records
 kind: form
-layout: "sections: Category Details, Tax Withholding Rates, Account Details; 8 fields"
+layout: "sections: Category Details, Tax Withholding Rates, Account Details; 8 fields; observed labels differ from the declared form (11/24 match; not declared: nom, total net, no., date de début, date de fin, groupe de retenue à, taux de, seuil cumulé)"
 fields:
   - label: Category Name
     control: text
@@ -48,3 +48,10 @@ evidence:
     kind: rea
     locator: form layout of Tax Withholding Category
     note: declared by the program
+  - ref: run-20261107T204329-h-EXP_121
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 11/24 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204329-h-EXP_121/step_05.png
+  - 01-exploration/runs/run-20261107T204329-h-EXP_121/step_05.png

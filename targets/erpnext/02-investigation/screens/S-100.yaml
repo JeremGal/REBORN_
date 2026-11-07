@@ -2,7 +2,7 @@ id: S-100
 title: Asset Maintenance Team
 purpose: create, view and edit Asset Maintenance Team records
 kind: form
-layout: "sections: Team; 5 fields"
+layout: "sections: Team; 5 fields; observed labels differ from the declared form (5/10 match; not declared: no., membre de l'équipe, nom complet, rôle de maintenance, ajouter une ligne)"
 fields:
   - label: Maintenance Team Name
     control: text
@@ -36,3 +36,10 @@ evidence:
     kind: rea
     locator: form layout of Asset Maintenance Team
     note: declared by the program
+  - ref: run-20261107T204437-h-EXP_131
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 5/10 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204437-h-EXP_131/step_05.png
+  - 01-exploration/runs/run-20261107T204437-h-EXP_131/step_05.png

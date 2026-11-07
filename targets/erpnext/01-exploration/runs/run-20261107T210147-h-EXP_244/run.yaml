@@ -1,0 +1,107 @@
+id: run-20261107T210147-h-EXP_244
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_244.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:01:06.900Z
+ended_at: 2026-11-07T21:01:47.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Page is in French. The form is a new Delivery Note (Bon de livraison) in Frappe ERP. The page is fully visible with no additional scrollable content below the Taxes et Frais section.", "prefilled": ["Séries: MAT-DN-.YYYY.-", "Date: 07/11/2026", "Heure de Publication: 22:02:06"], "p'
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Delivery Note
+        path: /app/delivery-note/new
+        kind: defaults
+      page_title: Nouveau(elle) Bon de livraison - new-delivery-note-rqbddazzgs
+      field_labels:
+        - Séries
+        - Date
+        - Est un Retour
+        - Client
+        - Heure de Publication
+        - Modifier la Date et l'Heure de la Publication
+        - Scan Code Barre
+        - Entrepôt d'origine
+        - No.
+        - Code de l'Article
+        - Quantité
+        - UdM
+        - Prix (USD)
+        - Montant (U...
+        - Entrepôt
+        - Ajouter une ligne
+        - Ajouter plusieurs
+        - Télécharger
+        - Charger
+        - Quantité totale
+        - Total (USD)
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxes et Frais de Vente
+        - No.
+        - Type
+        - Compte compt...
+        - Taux d'Impositi...
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+        - Ajouter une ligne
+        - Total des Taxes et Frais (Devise Société) (USD)
+        - Total des Taxes et Frais (USD)
+      section_labels:
+        - Détails
+        - Adresse & Contact
+        - Termes
+        - Plus d'info
+        - Devise et liste de prix
+        - Articles
+        - Bon de Livraison article
+        - Taxes et Frais
+        - Taxes et Frais de Vente
+      prefilled:
+        - "Séries: MAT-DN-.YYYY.-"
+        - "Date: 07/11/2026"
+        - "Heure de Publication: 22:02:06"
+      notes: Page is in French. The form is a new Delivery Note (Bon de livraison) in Frappe ERP. The page is fully visible with no additional scrollable content below the Taxes et Frais section.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/ba9aaa22-6a42-4b61-b375-852526ce111b attempts: 1"

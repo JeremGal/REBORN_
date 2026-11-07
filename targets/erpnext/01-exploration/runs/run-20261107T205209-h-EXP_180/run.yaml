@@ -1,0 +1,60 @@
+id: run-20261107T205209-h-EXP_180
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_180.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:51:32.900Z
+ended_at: 2026-11-07T20:52:09.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page is in French. The form has 5 tabs and 6 fields visible. Only the 'Capacité de tâche' field has a pre-filled value of 1. The 'Désactivé' checkbox is unchecked.\", \"prefilled\": [\"Capacité de tâche: 1\"], \"page_title\": \"Nouveau(elle) Station de travail\", \"field_labels\": [\"Nom de la"
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_04.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Workstation
+        path: /app/workstation/new
+        kind: defaults
+      page_title: Nouveau(elle) Station de travail
+      field_labels:
+        - Nom de la station de travail
+        - Capacité de tâche
+        - Type de poste de travail
+        - Entrepôt
+        - Étage de l'usine
+        - Désactivé
+      section_labels:
+        - Détails
+        - Statut du poste de travail
+        - Coûts d'Exploitation
+        - Description
+        - Heures de travail
+      prefilled:
+        - "Capacité de tâche: 1"
+      notes: Page is in French. The form has 5 tabs and 6 fields visible. Only the 'Capacité de tâche' field has a pre-filled value of 1. The 'Désactivé' checkbox is unchecked.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/412225a1-7c19-4d44-a212-ed33e4dceaf7 attempts: 1"

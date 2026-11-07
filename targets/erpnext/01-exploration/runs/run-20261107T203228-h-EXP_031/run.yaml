@@ -1,0 +1,57 @@
+id: run-20261107T203228-h-EXP_031
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_031.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T20:31:57.100Z
+ended_at: 2026-11-07T20:32:28.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form has one section \\\"Type d'entrée de stock\\\" with three fields: Nom (empty), Objet (prefilled with \\\"Sortie de Matériel\\\"), and Est standard (unchecked checkbox). No other sections or fields are visible.\", \"prefilled\": [\"Objet: Sortie de Matériel\"], \"page_title\": \"Nouveau(el"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Stock Entry Type
+        path: /app/stock-entry-type/new
+        kind: defaults
+      page_title: Nouveau(elle) Type d'entrée de stock
+      field_labels:
+        - Nom
+        - Objet
+        - Est standard
+      section_labels:
+        - Type d'entrée de stock
+      prefilled:
+        - "Objet: Sortie de Matériel"
+      notes: "The form has one section \"Type d'entrée de stock\" with three fields: Nom (empty), Objet (prefilled with \"Sortie de Matériel\"), and Est standard (unchecked checkbox). No other sections or fields are visible."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/1f5d9b48-d0eb-47a2-9678-450e8e2e7e7f attempts: 1"

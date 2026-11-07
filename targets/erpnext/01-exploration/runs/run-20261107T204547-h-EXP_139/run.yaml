@@ -1,0 +1,121 @@
+id: run-20261107T204547-h-EXP_139
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_139.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Buying
+started_at: 2026-11-07T20:44:43.700Z
+ended_at: 2026-11-07T20:45:47.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Arrondi"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Arrondi (USD)"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form is in French. Field labels below are as visible on the page.\", \"prefilled\": [\"Séries: PUR-ORD-.YYYY.-\", \"Date: 07/11/2026\"], \"page_title\": \"Nouveau(elle) Commande d'Achat - new-purchase-order-ninyogbkje\", \"field_labels\": [\"Séries\", \"Date\", \"Fournisseur\", \"Requis pour le\", "
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: read
+      target_desc: values shown by the application (Buying)
+    screenshot: step_09.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Purchase Order
+        path: /app/purchase-order/new
+        kind: defaults
+      page_title: Nouveau(elle) Commande d'Achat - new-purchase-order-ninyogbkje
+      field_labels:
+        - Séries
+        - Date
+        - Fournisseur
+        - Requis pour le
+        - Est sous-traité
+        - Devise et liste de prix
+        - Scan Code Barre
+        - Définir le magasin cible
+        - Articles
+        - No.
+        - Code de l'Art...
+        - Requis pour l...
+        - Quantit...
+        - UdM
+        - Prix (USD)
+        - Montant (USD)
+        - Entrepôt cible
+        - Ajouter une ligne
+        - Ajouter plusieurs
+        - Télécharger
+        - Charger
+        - Quantité totale
+        - Total (USD)
+        - Taxes et Frais
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxe et Frais d'Achat
+        - Taxes et Frais d'Achats
+        - No.
+        - Type
+        - Compte compt...
+        - Taux d'Imposit...
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+        - Ajouter une ligne
+        - Total des Taxes et Frais (USD)
+        - Totaux (USD)
+        - Total TTC (USD)
+        - Désactiver le total arrondi
+        - Arrondi (USD)
+      section_labels:
+        - Détails
+        - Adresse & Contact
+        - Termes
+        - Plus d'info
+        - Devise et liste de prix
+        - Articles
+        - Taxes et Frais
+        - Taxes et Frais d'Achats
+        - Totaux (USD)
+      prefilled:
+        - "Séries: PUR-ORD-.YYYY.-"
+        - "Date: 07/11/2026"
+      notes: The form is in French. Field labels below are as visible on the page.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/c0bf1e8f-6cb1-4927-95b2-820a80a86a4c attempts: 1"

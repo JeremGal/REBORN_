@@ -1,0 +1,64 @@
+id: run-20261107T203643-h-EXP_059
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_059.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:36:07.900Z
+ended_at: 2026-11-07T20:36:43.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Empty area to close dropdown"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'answer({"notes": "The form is in French. The section \"Pourcentages de répartition des centres de coûts\" contains a table with columns No., Centre de coûts, and Pourcentage (%). There is an \"Ajouter une ligne\" button to add more rows.", "prefilled": ["Valide à partir de: 07/11/2026", "Société: Di'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Cost Center Allocation
+        path: /app/cost-center-allocation/new
+        kind: defaults
+      page_title: Nouveau(elle) Répartition des centres de coûts
+      field_labels:
+        - Centre de coûts principal
+        - Valide à partir de
+        - Société
+        - No.
+        - Centre de coûts
+        - Pourcentage (%)
+      section_labels: []
+      prefilled:
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+      notes: The form is in French. The section "Pourcentages de répartition des centres de coûts" contains a table with columns No., Centre de coûts, and Pourcentage (%). There is an "Ajouter une ligne" button to add more rows.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/7f1de077-a33d-49dd-bf56-0e5cd8e1bf78 attempts: 1"

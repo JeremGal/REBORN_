@@ -1,0 +1,65 @@
+id: run-20261107T210410-h-EXP_255
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_255.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:03:34.600Z
+ended_at: 2026-11-07T21:04:10.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.265, \"y\": 0.602, \"element\": \"Checkbox 'Applicable sur la base de l'enregistrement des dépenses réelles'\"})"
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Checked the checkbox 'Applicable sur la base de l'enregistrement des dépenses réelles'\", \"prefilled\": [\"Séries: BUDGET-########\", \"Budget Pour: Centre de coûts\", \"Société: Digital Solution Service\", \"Fréquence de répartition: Mensuel\", \"Répartir également: checked\"], \"page_title\": "
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Budget
+        path: /app/budget/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_on_booking_actual_expenses
+          value: "1"
+      page_title: Nouveau(elle) Budget
+      field_labels: []
+      section_labels:
+        - ""
+        - Répartition du budget
+        - Action de contrôle
+        - Action de contrôle pour la charge cumulée
+      prefilled:
+        - "Séries: BUDGET-########"
+        - "Budget Pour: Centre de coûts"
+        - "Société: Digital Solution Service"
+        - "Fréquence de répartition: Mensuel"
+        - "Répartir également: checked"
+      notes: Checked the checkbox 'Applicable sur la base de l'enregistrement des dépenses réelles'
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/5c299bd6-dd1a-4b00-8fe6-058056b984a1 attempts: 1"

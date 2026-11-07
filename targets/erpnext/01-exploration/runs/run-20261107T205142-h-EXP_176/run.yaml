@@ -1,0 +1,107 @@
+id: run-20261107T205142-h-EXP_176
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_176.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:50:51.400Z
+ended_at: 2026-11-07T20:51:42.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1200, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Naming Series: MFG-PP-.YYYY.-", "Date de Comptabilisation: 07/11/2026", "Société: Digital Solution Service", "Qté Planifiée: 0,000", "Date de Début Prév...: 07/11/2026 00:00:00", "Prendre en compte la quantité projetée dans le calcul: checked", "Inclure les articles non stocké'
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Production Plan
+        path: /app/production-plan/new
+        kind: defaults
+      page_title: Nouveau(elle) Plan de production
+      field_labels:
+        - Naming Series
+        - Date de Comptabilisation
+        - Société
+        - Consider Process Loss
+        - Obtenir les articles de
+        - No.
+        - Code de l'Article
+        - N° Nomenclat...
+        - Qté Planifiée
+        - UdM
+        - Entrepôt de p...
+        - Date de Début Prév...
+        - Ajouter une ligne
+        - Entrepôt de sous-ensemble
+        - Prendre en compte la quantité projetée dans le calcul
+        - Consolider les articles de sous-ensemble
+        - Obtenir les articles de sous-ensemble
+        - No.
+        - Code de l'article d...
+        - N° Nomenclature
+        - Type de production
+        - Qté requise
+        - Quantité pr...
+        - Quantité à ...
+        - Fo...
+        - Inclure les articles non stockés
+        - Inclure les articles sous-traités
+        - Prendre en compte la qté minimale de commande
+        - Inclure le stock de sécurité dans le calcul de la qté requise
+        - Prendre en compte la quantité projetée dans le calcul (RM)
+        - Entrepôt de groupe de matières premières
+        - Pour l'Entrepôt
+        - Obtenir les articles pour achat uniquement
+        - Obtenir les articles pour achat / transfert
+      section_labels:
+        - Sélectionner les articles à produire
+        - Articles d'assemblage
+        - Articles de sous-assemblage
+        - Pour les matières premières
+      prefilled:
+        - "Naming Series: MFG-PP-.YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Qté Planifiée: 0,000"
+        - "Date de Début Prév...: 07/11/2026 00:00:00"
+        - "Prendre en compte la quantité projetée dans le calcul: checked"
+        - "Inclure les articles non stockés: checked"
+        - "Inclure les articles sous-traités: checked"
+        - "Prendre en compte la quantité projetée dans le calcul (RM): checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/4ff2880a-cd63-4a2c-9aa8-78d7ed64ea99 attempts: 1"

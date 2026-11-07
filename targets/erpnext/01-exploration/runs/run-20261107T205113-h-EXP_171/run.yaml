@@ -1,0 +1,69 @@
+id: run-20261107T205113-h-EXP_171
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_171.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:50:39.200Z
+ended_at: 2026-11-07T20:51:13.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.254, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Société: Digital Solution Service", "Date de Comptabilisation: 07/11/2026", "Naming Series: PO-JOB.#####", "Total quantité terminée: 0"], "page_title": "Nouveau(elle) Carte de travail - new-job-card-gbnfzzvrky", "field_labels": ["Ordre de fabrication", "Opération", "Quantité À'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_04.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Job Card
+        path: /app/job-card/new
+        kind: defaults
+      page_title: Nouveau(elle) Carte de travail - new-job-card-gbnfzzvrky
+      field_labels:
+        - Ordre de fabrication
+        - Opération
+        - Quantité À Produire
+        - Station de travail
+        - Société
+        - Date de Comptabilisation
+        - Naming Series
+        - Type de poste de travail
+        - Entrepôt (Travaux en Cours)
+        - Entrepôt source
+        - Qté en attente
+        - Total quantité terminée
+      section_labels:
+        - Détails
+        - Matières premières
+        - Saisies de temps
+        - Articles secondaires
+        - Plus d'info
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Naming Series: PO-JOB.#####"
+        - "Total quantité terminée: 0"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/3e293fca-4f0a-4beb-8695-3575924bb937 attempts: 1"

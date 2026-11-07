@@ -1,0 +1,64 @@
+id: run-20261107T204429-h-EXP_129
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_129.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Assets
+started_at: 2026-11-07T20:43:26.400Z
+ended_at: 2026-11-07T20:44:29.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page loaded after login. The form is in French. There is a dropdown open for \\\"Nom de l'Actif\\\" field showing filter criteria \\\"Société est égal à \\\"Digital Solution Service\\\" et Docstatus est égal à 1.\\\" and options to create new or search. The \\\"Tâches de maintenance\\\" section ha"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Assets)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Asset Maintenance
+        path: /app/asset-maintenance/new
+        kind: defaults
+      page_title: Nouveau(elle) Maintenance des actifs
+      field_labels:
+        - Nom de l'Actif
+        - Tâches de maintenance
+        - No.
+        - Tâche de mainte...
+        - Statut d'Entretien
+        - Périodicité
+        - Attribuer À
+        - prochaine date d'...
+        - Derniè...
+      section_labels:
+        - Maintenance des actifs
+        - Tâches
+      prefilled:
+        - "Statut d'Entretien: Planned"
+      notes: Page loaded after login. The form is in French. There is a dropdown open for "Nom de l'Actif" field showing filter criteria "Société est égal à "Digital Solution Service" et Docstatus est égal à 1." and options to create new or search. The "Tâches de maintenance" section has one row with "Planned" status prefilled.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/362ca943-6528-4ca2-9d65-04bacd2e39e0 attempts: 2"

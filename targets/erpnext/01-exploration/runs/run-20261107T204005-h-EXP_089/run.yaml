@@ -1,0 +1,66 @@
+id: run-20261107T204005-h-EXP_089
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_089.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:39:31.700Z
+ended_at: 2026-11-07T20:40:05.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Part de la facture (%): 0,000", "Nombre de jours: 0"], "page_title": "Nouveau(elle) Modèle de termes de paiement", "field_labels": ["Template Name", "Attribuer le paiement en fonction des conditions de paiement", "No.", "Terme de paiement", "Description", "Part de la facture ('
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Payment Terms Template
+        path: /app/payment-terms-template/new
+        kind: defaults
+      page_title: Nouveau(elle) Modèle de termes de paiement
+      field_labels:
+        - Template Name
+        - Attribuer le paiement en fonction des conditions de paiement
+        - No.
+        - Terme de paiement
+        - Description
+        - Part de la facture (%)
+        - Date d'échéance ba...
+        - Nombre de jours
+        - Ajouter une ligne
+      section_labels:
+        - Template Name
+        - Attribuer le paiement en fonction des conditions de paiement
+        - Termes de paiement
+      prefilled:
+        - "Part de la facture (%): 0,000"
+        - "Nombre de jours: 0"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/65d528cf-d108-42a3-a69d-bce784c2481b attempts: 1"

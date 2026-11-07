@@ -1,0 +1,59 @@
+id: run-20261107T204733-h-EXP_149
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_149.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / CRM
+started_at: 2026-11-07T20:47:00.000Z
+ended_at: 2026-11-07T20:47:33.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page is in French. Sections: 'Détails du rendez-vous' (with fields: Durée du rendez-vous (en minutes)=60, Agents (empty), Avertir par e-mail (unchecked checkbox), Nombre de rendez-vous simultanés=0), 'Planification des rendez-vous' (with field: Activer la planification des rendez-v"
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: read
+      target_desc: values shown by the application (CRM)
+    screenshot: step_04.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Appointment Booking Settings
+        path: /app/appointment-booking-settings
+        kind: defaults
+      page_title: Paramètres de réservation de rendez-vous
+      field_labels:
+        - Durée du rendez-vous (en minutes)
+        - Agents
+        - Avertir par e-mail
+        - Nombre de rendez-vous simultanés
+        - Activer la planification des rendez-vous
+      section_labels:
+        - Détails du rendez-vous
+        - Planification des rendez-vous
+        - Commentaires
+        - Activité
+      prefilled:
+        - "Durée du rendez-vous (en minutes): 60"
+        - "Nombre de rendez-vous simultanés: 0"
+      notes: "Page is in French. Sections: 'Détails du rendez-vous' (with fields: Durée du rendez-vous (en minutes)=60, Agents (empty), Avertir par e-mail (unchecked checkbox), Nombre de rendez-vous simultanés=0), 'Planification des rendez-vous' (with field: Activer la planification des rendez-vous (unchecked checkbox)), 'Commentaires' (empty comment field), 'Activité' (activity log). No other fields visible after scrolling."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/13326070-9dc6-4ef4-b132-9959e53dca5e attempts: 1"

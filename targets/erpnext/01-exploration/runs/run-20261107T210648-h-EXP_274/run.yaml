@@ -1,0 +1,108 @@
+id: run-20261107T210648-h-EXP_274
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_274.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Setup
+started_at: 2026-11-07T21:05:31.400Z
+ended_at: 2026-11-07T21:06:48.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.334, "y": 0.059, "element": "Comptes tab"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.265, \"y\": 0.419, \"element\": \"Checkbox 'Comptabiliser les acomptes sur un compte de tiers distinct'\"})"
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.265, "y": 0.059, "element": "Details tab"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Pays: France\", \"En-Tête par Défaut: Company Letterhead - Grey\", \"Rapprochement effectif à partir du: Le plus ancien entre la facture ou l'avance\", \"Fréquence: Quotidien\"], \"page_title\": \"Nouveau(elle) Société - Comptes Tab\", \"field_labels\": [\"Société\", \"Abréviation\", \"Devise p"
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: read
+      target_desc: values shown by the application (Setup)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Company
+        path: /app/company/new
+        kind: interact
+        mission: M-006
+        action:
+          field: book_advance_payments_in_separate_party_account
+          value: "1"
+      page_title: Nouveau(elle) Société - Comptes Tab
+      field_labels:
+        - Société
+        - Abréviation
+        - Devise par Défaut
+        - Pays
+        - Est un groupe
+        - Liste de Vacances par Défaut
+        - En-Tête par Défaut
+        - Numéro d'identification fiscale
+        - Domaine
+        - Date de création
+        - Maison mère
+        - Créer un Plan Comptable Basé Sur
+        - Modèle de termes de paiement par défaut
+        - Livre comptable par défaut
+        - Compte d'avance reçue par défaut
+        - Compte d'acompte versé par défaut
+        - Rapprochement effectif à partir du
+        - Créer automatiquement la Réévaluation du taux de change
+        - Fréquence
+        - Valider les journaux ERR ?
+        - Rôle d'approbateur de budget exceptionnel
+        - Série pour la Dépréciation d'Actifs (Entrée de Journal)
+      section_labels:
+        - Chart of Accounts
+        - Comptes par défaut
+        - Paiements Anticipés
+        - Paramètres de réévaluation du taux de change
+        - Détail du budget
+        - Valeurs par défaut des immobilisations
+      prefilled:
+        - "Pays: France"
+        - "En-Tête par Défaut: Company Letterhead - Grey"
+        - "Rapprochement effectif à partir du: Le plus ancien entre la facture ou l'avance"
+        - "Fréquence: Quotidien"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/0ac75117-85f3-4025-a505-2a66263bb7bb attempts: 1"

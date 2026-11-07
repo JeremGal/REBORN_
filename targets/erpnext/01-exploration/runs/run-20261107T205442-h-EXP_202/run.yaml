@@ -1,0 +1,141 @@
+id: run-20261107T205442-h-EXP_202
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_202.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T20:50:10.100Z
+ended_at: 2026-11-07T20:54:42.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.497, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/delivery-schedule-item/new"})'
+  - n: 8
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 9
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 10})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/delivery-schedule-item/new-delivery-schedule-item-vrswnhnuvx", "render_js": true})'
+  - n: 11
+    action:
+      type: other
+      target_desc: refresh_web({})
+  - n: 12
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/selling/delivery-schedule-item/new-delivery-schedule-item-ctibfkomtr"})'
+  - n: 13
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 10})'
+  - n: 14
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "u"]})'
+  - n: 15
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 15})'
+  - n: 16
+    action:
+      type: other
+      target_desc: 'web_search({"query": "ERPNext delivery schedule item form fields"})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'web_search({"query": "site:github.com frappe erpnext delivery-schedule-item doctype fields"})'
+  - n: 18
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://github.com/frappe/erpnext/tree/develop/selling/doctype/delivery_schedule_item"})'
+  - n: 19
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://github.com/frappe/erpnext/blob/develop/selling/doctype/delivery_schedule_item/delivery_schedule_item.json"})'
+    screenshot: step_19.png
+  - n: 20
+    action:
+      type: other
+      target_desc: 'web_search({"query": "erpnext selling doctype delivery_schedule_item.json github"})'
+  - n: 21
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://raw.githubusercontent.com/frappe/erpnext/develop/selling/doctype/delivery_schedule_item/delivery_schedule_item.json"})'
+  - n: 22
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/api/resource/Delivery%20Schedule%20Item"})'
+  - n: 23
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.5, "element": "Blank content area in the main content section"})'
+  - n: 24
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "shift", "r"]})'
+  - n: 25
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 10})'
+  - n: 26
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Item"})'
+  - n: 27
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form page loaded successfully at https://***/app/delivery-schedule-item/new (redirected to /desk/selling/delivery-schedule-item/new-delivery-schedule-item-xxxxx). The page title is 'Nouveau(elle) Article du planning de livraison'. However, the form content (sections, fields, an"
+  - n: 28
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_19.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Delivery Schedule Item
+        path: /app/delivery-schedule-item/new
+        kind: defaults
+      page_title: Nouveau(elle) Article du planning de livraison
+      field_labels: []
+      section_labels:
+        - Formulaire Article du planning de livraison
+      prefilled: []
+      notes: The form page loaded successfully at https://***/app/delivery-schedule-item/new (redirected to /desk/selling/delivery-schedule-item/new-delivery-schedule-item-xxxxx). The page title is 'Nouveau(elle) Article du planning de livraison'. However, the form content (sections, fields, and pre-filled values) did not render in the browser - the main content area remained blank despite multiple refresh attempts. This appears to be a JavaScript rendering issue with the Frappe/ERPNext application in this browser environment. The sidebar navigation and header loaded correctly, confirming successful login and navigation to the correct page. The form fields could not be read because the JavaScript application failed to render the form content in the viewport.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/f83af6cf-5dd6-4249-8549-1f8e4060d4e3 attempts: 3"

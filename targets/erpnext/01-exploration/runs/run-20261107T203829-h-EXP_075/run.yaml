@@ -1,0 +1,69 @@
+id: run-20261107T203829-h-EXP_075
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_075.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:37:32.500Z
+ended_at: 2026-11-07T20:38:29.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.042, "element": "Close error popup X button"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/ledger-merge/new"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.042, "element": "Close error popup X button"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form has 3 fields total. 'Type de racine' is empty (not prefilled). The page is fully visible with no scrolling needed. The URL redirected from /app/ledger-merge/new to /desk/accounts/ledger-merge/new-ledger-merge-nxlyyiclsb.\", \"prefilled\": [\"Société: Digital Solution Service\","
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Ledger Merge
+        path: /app/ledger-merge/new
+        kind: defaults
+      page_title: Nouveau(elle) Fusion de grand livre
+      field_labels:
+        - Type de racine
+        - Société
+        - Statut
+      section_labels: []
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Statut: En attente"
+      notes: The form has 3 fields total. 'Type de racine' is empty (not prefilled). The page is fully visible with no scrolling needed. The URL redirected from /app/ledger-merge/new to /desk/accounts/ledger-merge/new-ledger-merge-nxlyyiclsb.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/705d6112-b8bd-4a20-b947-dd07edbc848c attempts: 1"

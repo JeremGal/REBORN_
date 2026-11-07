@@ -1,0 +1,56 @@
+id: run-20261107T205243-h-EXP_184
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_184.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Projects
+started_at: 2026-11-07T20:52:10.800Z
+ended_at: 2026-11-07T20:52:43.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page loaded successfully after login. The form is in French. No fields have pre-filled values.\", \"prefilled\": [], \"page_title\": \"Nouveau(elle) Type d'activité\", \"field_labels\": [\"Type d'activité\", \"Prix de Facturation par Défaut (USD)\", \"Coût de Revient par Défaut (USD)\", \"Désactiv"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Projects)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Activity Type
+        path: /app/activity-type/new
+        kind: defaults
+      page_title: Nouveau(elle) Type d'activité
+      field_labels:
+        - Type d'activité
+        - Prix de Facturation par Défaut (USD)
+        - Coût de Revient par Défaut (USD)
+        - Désactivé
+      section_labels: []
+      prefilled: []
+      notes: Page loaded successfully after login. The form is in French. No fields have pre-filled values.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/48638b17-f716-4b67-8917-279ccb0ec1b0 attempts: 1"

@@ -2,7 +2,7 @@ id: S-344
 title: Industry Type
 purpose: create, view and edit Industry Type records
 kind: form
-layout: 1 fields
+layout: 1 fields; observed labels differ from the declared form (1/1 match)
 fields:
   - label: Industry
     control: text
@@ -17,3 +17,10 @@ evidence:
     kind: rea
     locator: form layout of Industry Type
     note: declared by the program
+  - ref: run-20261107T205449-h-EXP_203
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 1/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205449-h-EXP_203/step_06.png
+  - 01-exploration/runs/run-20261107T205449-h-EXP_203/step_06.png

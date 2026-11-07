@@ -1,0 +1,56 @@
+id: run-20261107T210445-h-EXP_264
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_264.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:03:44.300Z
+ended_at: 2026-11-07T21:04:45.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": [], "page_title": "Nouveau(elle) Paramétre des Inspection Qualite", "field_labels": ["Paramètre", "Groupe de paramètre", "Description"], "section_labels": ["Paramétre des Inspection Qualite"]})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Quality Inspection Parameter
+        path: /app/quality-inspection-parameter/new
+        kind: defaults
+      page_title: Nouveau(elle) Paramétre des Inspection Qualite
+      field_labels:
+        - Paramètre
+        - Groupe de paramètre
+        - Description
+      section_labels:
+        - Paramétre des Inspection Qualite
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/f3e87bf0-b10a-4f87-813f-3b4aa0d0f938 attempts: 1"

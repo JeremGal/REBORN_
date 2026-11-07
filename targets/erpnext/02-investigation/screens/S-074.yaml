@@ -2,7 +2,7 @@ id: S-074
 title: Promotional Scheme
 purpose: create, view and edit Promotional Scheme records
 kind: form
-layout: "sections: Discount on Other Item, Party Information, Period Settings, Price Discount Slabs, Product Discount Slabs; 27 fields"
+layout: "sections: Discount on Other Item, Party Information, Period Settings, Price Discount Slabs, Product Discount Slabs; 27 fields; observed labels differ from the declared form (14/28 match; not declared: nom, udm, promotion tarif, promotion prix, no., qté min, qté max, montant minimum)"
 fields:
   - label: Apply On
     control: select
@@ -138,3 +138,10 @@ evidence:
     kind: rea
     locator: form layout of Promotional Scheme
     note: declared by the program
+  - ref: run-20261107T204143-h-EXP_105
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 14/28 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204143-h-EXP_105/step_07.png
+  - 01-exploration/runs/run-20261107T204143-h-EXP_105/step_07.png

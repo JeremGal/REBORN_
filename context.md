@@ -224,7 +224,25 @@ Choix d'Alan : schéma livré + lecture du code = deux natures de preuve, donc u
 | Vecteurs de test | 86 | |
 | Attentes vérifiables pour le bloc 3 | 1017 | 0 prouvée (aucune refonte encore) |
 
-Commandes : `frappe features` (une fiche fonctionnalité et une fiche écran par formulaire), `frappe probe` (brouillon minimal de 181 documents métier : 67 enregistrés, 66 refusés avec leur message, 48 non tentés faute de fiche liée ; jamais validés ; `frappe cleanup <run>` les supprime), `frappe translations --lang fr`. L'agent H se lance avec `tools/h_run.py <plan.json>` (venv `tools/py-hexplorer`, clé lue dans le `.env`, utilisateur de test `reborn.agent.test@example.com` à rôles métier, mot de passe dans `tools/secrets/frappe-agent.env` hors du repo, changé après chaque série). Leçon : l'agent a d'abord lu le total des lignes comme total TTC faute d'avoir fait défiler la page ; consigne corrigée, lectures EXP_011 et EXP_012 écartées. Les sessions H n'apparaissaient pas pour Alan : la clé de son `.env` voit 14 sessions, son tableau de bord est sans doute sur une autre organisation.
+Commandes : `frappe features` (une fiche fonctionnalité et une fiche écran par formulaire), `frappe probe` (brouillon minimal de 181 documents métier : 67 enregistrés, 66 refusés avec leur message, 48 non tentés faute de fiche liée ; jamais validés ; `frappe cleanup <run>` les supprime), `frappe translations --lang fr`. L'agent H se lance avec `tools/h_run.py <plan.json>` (venv `tools/py-hexplorer`, clé lue dans le `.env`, utilisateur de test `<compte de test à rôles métier>` à rôles métier, mot de passe dans `tools/secrets/frappe-agent.env` hors du repo, changé après chaque série). Leçon : l'agent a d'abord lu le total des lignes comme total TTC faute d'avoir fait défiler la page ; consigne corrigée, lectures EXP_011 et EXP_012 écartées. Les sessions H n'apparaissaient pas pour Alan : la clé de son `.env` voit 14 sessions, son tableau de bord est sans doute sur une autre organisation.
+
+**Campagne H Company, bilan mesuré (07/11/2026 soir)** : `reborn frappe erpnext logic` écrit `02-investigation/logic-coverage.md`.
+
+| Mesure | Résultat |
+|---|---|
+| Règles déclarées par les formulaires métier (dénominateur) | 3 830 |
+| **Confirmées par observation** | **193 (5,0 %)** |
+| Compatibles sans preuve | 330 (8,6 %) |
+| Contredites | 1 (série de numérotation : l'agent a lu 7 croix au lieu de 8, à vérifier) |
+| Formulaires lus par l'agent | 180 sur 263 (263 sessions réussies ; 47 lectures vides, dont 27 refus de droits du compte de test) |
+| Écrans dont les libellés concordent avec la définition | 96 sur 180 |
+| Phase 2 (actions sans enregistrer) | 115 / 200 au moment du bilan, toujours en cours ; rendement faible : environ 0,1 règle confirmée par expérience |
+
+Par type : valeurs par défaut 71 / 1 227, affichage conditionnel 70 / 1 120, champs calculés 52 / 876, remplissages automatiques 0 / 319, obligatoires ou verrouillés sous condition 0 / 172, filtres 0 / 31. En plus, hors déclarations : 7 règles de calcul confirmées, 66 refus observés avec leur message, 67 brouillons acceptés.
+
+Pourquoi si bas : une lecture de formulaire vide ne teste qu'un état de départ. Les 876 champs calculés valent 0 sans ligne, les remplissages automatiques demandent de choisir un client ou un article, les champs obligatoires sous condition demandent d'essayer d'enregistrer. Le rendement de la phase 2 est limité par les droits (12 refus), les champs introuvables et les listes de libellés tronquées. Le calculateur ne compte que les observations positives et connaît l'état d'un document neuf (brouillon, non enregistré, défauts littéraux) ; 23 « contradictions » initiales étaient des artefacts (séparateurs de numérotation, pages de réglages, masquage de l'utilisateur) et ont été corrigées par des tests.
+
+Pour monter : phase 3 (choisir un client et un article pour les remplissages automatiques), validation de documents fictifs pour lire les écritures comptables et mouvements de stock, rôle plus large pour le compte de test (27 formulaires refusés), puis lecture du code public d'ERPNext (GPL) comme deuxième preuve. Les captures sont limitées à la dernière image de chaque lecture (29 Mo) ; l'historique complet reste dans `h-explorer/artifacts` (hors git) et derrière l'adresse de session de chaque run.
 
 Découvertes : arrondi bancaire au centime (0,625 donne 0,62), réglable dans les paramètres système ; deux lignes de taxe sur le **même compte** partagent un taux (la première prend le taux de la dernière, cause non établie, U-001) ; quantité décimale refusée pour les unités « nombre entier ». Prochaines familles de calcul à observer avec `frappe observe` : achats, paiements et soldes restants, stock (valorisation), règles de prix, échéanciers.
 

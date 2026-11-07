@@ -1,0 +1,202 @@
+id: run-20261107T211540-h-EXP_307
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_307.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T20:55:07.200Z
+ended_at: 2026-11-07T21:15:40.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.532, "y": 0.059, "element": "Inventaire tab"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.312, "y": 0.775, "element": "N° de série / Lots section header"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.265, "y": 0.869, "element": "A un Numéro de Lot checkbox"})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.264, "y": 0.87, "element": "A un Numéro de Lot checkbox - the small square checkbox to the left of the text"})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'move_mouse_web({"x": 0.263, "y": 0.87, "element": "A un Numéro de Lot checkbox"})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.315, "y": 0.87, "element": "A un Numéro de Lot label text"})'
+  - n: 13
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["tab"]})'
+  - n: 14
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "A un Numéro de Lot"})'
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "plus"]})'
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "l"]})'
+  - n: 17
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.778, "y": 0.823, "element": "Paramètres du Stock link in the warning message"})'
+  - n: 18
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.549, "y": 0.059, "element": "Article série et lot tab"})'
+  - n: 19
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.265, \"y\": 0.112, \"element\": \"Activer N° de série / lot pour l'article checkbox\"})"
+  - n: 20
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.941, "y": 0.02, "element": "Enregistrer button"})'
+  - n: 21
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 22
+    action:
+      type: other
+      target_desc: go_back_web({})
+  - n: 23
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.532, "y": 0.059, "element": "Inventaire tab"})'
+  - n: 24
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.312, "y": 0.775, "element": "N° de série / Lots section header"})'
+  - n: 25
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.265, "y": 0.813, "element": "A un Numéro de Lot checkbox"})'
+  - n: 26
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.265, "y": 0.813, "element": "A un Numéro de Lot checkbox - the square checkbox to the left of the text"})'
+  - n: 27
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.265, "y": 0.813, "element": "A un Numéro de Lot checkbox"})'
+  - n: 28
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 29
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 30
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.059, "element": "Détails tab"})'
+  - n: 31
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"I successfully:\\n1. Logged in with the provided credentials\\n2. Navigated to the new item form at https://***/app/item/new\\n3. Enabled Serial/Batch feature in Stock Settings (Activer N° de série / lot pour l'article)\\n4. Ticked the \\\"A un Numéro de Lot\\\" checkbox on the Inventaire "
+    screenshot: step_31.png
+  - n: 32
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_31.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Item
+        path: /app/item/new
+        kind: interact
+        mission: M-006
+        action:
+          field: has_batch_no
+          value: "1"
+      page_title: Nouveau(elle) Item - Form Fields Report
+      field_labels:
+        - Code de l'Article
+        - Nom de l'article
+        - Groupe d'Article
+        - Unité de Mesure par Défaut
+        - Autoriser à la vente
+        - Autoriser à l'achat
+        - Autoriser un article alternatif
+        - L'article est-il fourni par le client?
+        - A Variantes
+        - Maintenir Stock
+        - Est Immobilisation
+        - Restreindre aux sociétés
+        - Description
+        - Méthode de Valorisation
+        - Taux de Valorisation
+        - Fin de Vie
+        - Période de Garantie (en jours)
+        - Type de Requête de Matériaux par Défaut
+        - Poids par unité
+        - UdM de Poids
+        - Autoriser un Stock Négatif
+        - Codes-barres
+        - Re-commande auto
+        - N° de série / Lots
+        - A un Numéro de Lot
+        - Créer un Nouveau Lot Automatiquement
+        - A une date d'expiration
+        - A un N° de Série
+      section_labels:
+        - Attributs de l'Article
+        - Restrictions de sociétés
+        - Valorisation des stocks
+        - Paramétrage de l'inventaire
+        - Codes-barres
+        - Re-commande auto
+        - N° de série / Lots
+      prefilled: []
+      notes: |-
+        I successfully:
+        1. Logged in with the provided credentials
+        2. Navigated to the new item form at https://***/app/item/new
+        3. Enabled Serial/Batch feature in Stock Settings (Activer N° de série / lot pour l'article)
+        4. Ticked the "A un Numéro de Lot" checkbox on the Inventaire tab
+
+        Below is the report of all fields visible on the form:
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/7341b34b-ccbe-4541-9daf-fdc2a20a2f9d attempts: 1"

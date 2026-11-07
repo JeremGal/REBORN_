@@ -1,0 +1,98 @@
+id: run-20261107T205540-h-EXP_209
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_209.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T20:54:53.500Z
+ended_at: 2026-11-07T20:55:40.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.251, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Séries: SAL-ORD-.YYYY.-", "Type de Commande: Ventes", "Date: 07/11/2026", "Quantité: 0", "Quantité totale: 0", "Total (USD): $ 0,00", "Total des Taxes et Frais (Devise Société) (USD): $ 0,00", "Total des Taxes et Frais (USD): $ 0,00"], "page_title": "Nouveau(elle) Commande cli'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Order
+        path: /app/sales-order/new
+        kind: defaults
+      page_title: Nouveau(elle) Commande client - new-sales-order-lbtpeiitvy
+      field_labels:
+        - Séries
+        - Type de Commande
+        - Est sous-traité
+        - Client
+        - Date
+        - Date de livraison
+        - Scan Code Barre
+        - Entrepôt d'origine
+        - Code de l'Article
+        - Date de livraison
+        - Quantité
+        - Prix (USD)
+        - Montant (USD)
+        - Quantité totale
+        - Total (USD)
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxes et Frais de Vente
+        - Type
+        - Compte compt...
+        - Taux d'Impositi...
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+        - Total des Taxes et Frais (Devise Société) (USD)
+        - Total des Taxes et Frais (USD)
+      section_labels:
+        - Détails
+        - Termes
+        - Plus d'info
+        - Devise et liste de prix
+        - Articles
+        - Taxes
+        - Taxes et Frais de Vente
+      prefilled:
+        - "Séries: SAL-ORD-.YYYY.-"
+        - "Type de Commande: Ventes"
+        - "Date: 07/11/2026"
+        - "Quantité: 0"
+        - "Quantité totale: 0"
+        - "Total (USD): $ 0,00"
+        - "Total des Taxes et Frais (Devise Société) (USD): $ 0,00"
+        - "Total des Taxes et Frais (USD): $ 0,00"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/fe50e910-8697-492d-9f7f-e6e1c8e566aa attempts: 1"

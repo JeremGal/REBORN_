@@ -2,7 +2,7 @@ id: S-357
 title: Brand
 purpose: create, view and edit Brand records
 kind: form
-layout: "sections: Defaults; 4 fields"
+layout: "sections: Defaults; 4 fields; observed labels differ from the declared form (3/6 match; not declared: société, entrepôt par défaut, liste des prix par défaut)"
 fields:
   - label: Brand Name
     control: text
@@ -29,3 +29,10 @@ evidence:
     kind: rea
     locator: form layout of Brand
     note: declared by the program
+  - ref: run-20261107T205645-h-EXP_216
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 3/6 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205645-h-EXP_216/step_05.png
+  - 01-exploration/runs/run-20261107T205645-h-EXP_216/step_05.png

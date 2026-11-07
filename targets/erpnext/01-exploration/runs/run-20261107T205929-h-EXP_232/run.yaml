@@ -1,0 +1,54 @@
+id: run-20261107T205929-h-EXP_232
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_232.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Setup
+started_at: 2026-11-07T20:58:54.200Z
+ended_at: 2026-11-07T20:59:29.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The page shows only one section 'Site Web' with one field 'Afficher dans le Site Web' (an unchecked checkbox). No fields have prefilled values.\", \"prefilled\": [], \"page_title\": \"Nouveau(elle) Partenaire commercial\", \"field_labels\": [\"Afficher dans le Site Web\"], \"section_labels\": ["
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Setup)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Partner
+        path: /app/sales-partner/new
+        kind: defaults
+      page_title: Nouveau(elle) Partenaire commercial
+      field_labels:
+        - Afficher dans le Site Web
+      section_labels:
+        - Site Web
+      prefilled: []
+      notes: The page shows only one section 'Site Web' with one field 'Afficher dans le Site Web' (an unchecked checkbox). No fields have prefilled values.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/df53f4e7-4362-4df8-8304-3bc7e44a2f31 attempts: 1"

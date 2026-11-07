@@ -1,0 +1,112 @@
+id: run-20261107T204410-h-EXP_122
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_122.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / CRM
+started_at: 2026-11-07T20:42:47.000Z
+ended_at: 2026-11-07T20:44:10.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.402, "y": 0.059, "element": "Articles tab"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.312, "y": 0.196, "element": "Ajouter une ligne button"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.403, "y": 0.198, "element": "TEST-ART-001 option in dropdown"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'write({"x": 0.578, "y": 0.161, "text": "3", "enter": false, "element": "Qté field showing 1,000", "overwrite": true})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'write({"x": 0.719, "y": 0.161, "text": "10", "enter": false, "element": "Prix (USD) field", "overwrite": true})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.416, "element": "Empty area below the items table"})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.26, "y": 0.059, "element": "Détails tab"})'
+  - n: 12
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 13
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.312, \"y\": 0.745, \"element\": \"Plus d'informations link\"})"
+  - n: 14
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 15
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Field labels (up to 120): Séries, Type d'Opportunité, Stade de vente, Opportunité De, Propriétaire de l'opportunité, Date de clôture prévue, Tiers, Probabilité (%), Statut, Nb de salarié(e)s, Industrie, Ville, CA annuel, Part de Marché, État/Province, Site Web, Pays, Région, Devise"
+    screenshot: step_15.png
+  - n: 16
+    action:
+      type: read
+      target_desc: values shown by the application (CRM)
+    screenshot: step_15.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Opportunity
+        path: /app/opportunity/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Opportunité / Nouveau(elle) Opportunité
+      field_labels: []
+      section_labels:
+        - Organisation
+        - Valeur de l'opportunité
+        - Plus d'informations
+      prefilled:
+        - "Séries: CRM-OPP-.YYYY.-"
+        - "Type d'Opportunité: Ventes"
+        - "Stade de vente: Prospection"
+        - "Probabilité (%): 100"
+        - "Statut: Ouvrir"
+        - "Nb de salarié(e)s: 1-10"
+        - "Pays: France"
+        - "Devise: USD"
+        - "Société: Digital Solution Service"
+        - "Langue d'Impression: Français"
+        - "Date d'Opportunité: 07/11/2026"
+      notes: "Field labels (up to 120): Séries, Type d'Opportunité, Stade de vente, Opportunité De, Propriétaire de l'opportunité, Date de clôture prévue, Tiers, Probabilité (%), Statut, Nb de salarié(e)s, Industrie, Ville, CA annuel, Part de Marché, État/Province, Site Web, Pays, Région, Devise, Montant de l'opportunité (USD), Société, Langue d'Impression, Date d'Opportunité. Section labels: Organisation, Valeur de l'opportunité, Plus d'informations."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/467a5866-95ef-41b0-9736-04ce8c0a890a attempts: 1"

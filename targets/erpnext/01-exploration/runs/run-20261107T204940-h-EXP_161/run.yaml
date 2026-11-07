@@ -1,0 +1,66 @@
+id: run-20261107T204940-h-EXP_161
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_161.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / CRM
+started_at: 2026-11-07T20:48:47.800Z
+ended_at: 2026-11-07T20:49:40.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/crm/prospect/new-prospect-rpdnfxvycm#overview_tab"})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: other
+      target_desc: 'answer({"notes": "All other fields are empty. The form is in French.", "prefilled": ["Nb de salarié(e)s: 1-10", "Société: Digital Solution Service"], "page_title": "Nouveau(elle) Prospect - new-prospect-rpdnfxvycm", "section_labels": ["Aperçu", "Adresse & Contact", "Leads", "Opportunités"]})'
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (CRM)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Prospect
+        path: /app/prospect/new
+        kind: defaults
+      page_title: Nouveau(elle) Prospect - new-prospect-rpdnfxvycm
+      field_labels: []
+      section_labels:
+        - Aperçu
+        - Adresse & Contact
+        - Leads
+        - Opportunités
+      prefilled:
+        - "Nb de salarié(e)s: 1-10"
+        - "Société: Digital Solution Service"
+      notes: All other fields are empty. The form is in French.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/2a69a4fa-52b9-4cc8-9a66-768901801c83 attempts: 1"

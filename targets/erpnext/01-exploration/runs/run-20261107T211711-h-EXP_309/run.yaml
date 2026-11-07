@@ -1,0 +1,585 @@
+id: run-20261107T211711-h-EXP_309
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_309.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T20:57:30.300Z
+ended_at: 2026-11-07T21:17:11.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.297, "y": 0.612, "element": "Description expandable section"})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.329, "y": 0.612, "element": "Description expandable section arrow"})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 500, "scroll_element": null})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.612, "element": "Description section header (clickable row)"})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/item/new-item-fjthaseewf", "render_js": true})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/stock/item/new-item-fjthaseewf"})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.329, "y": 0.612, "element": "Description expandable section"})'
+  - n: 15
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 16
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1500, "scroll_element": null})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/item/new-item-kyowpbrwxq", "render_js": true, "extract_images": false})'
+  - n: 18
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "f5"]})'
+  - n: 19
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 3000, "scroll_element": null})'
+  - n: 20
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.297, "y": 0.612, "element": "Description section header"})'
+  - n: 21
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.329, "y": 0.612, "element": "Description expandable section - the arrow/chevron icon"})'
+  - n: 22
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 23
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 24
+    action:
+      type: other
+      target_desc: 'move_mouse_web({"x": 0.5, "y": 0.612, "element": "Description section header area"})'
+  - n: 25
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.297, "y": 0.612, "element": "Description section header with chevron down arrow"})'
+  - n: 26
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.297, "y": 0.612, "element": "Description section header - click on the text \"Description\""})'
+  - n: 27
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 3000, "scroll_element": null})'
+  - n: 28
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/item/new-item-kyowpbrwxq", "render_js": true, "extract_images": false})'
+  - n: 29
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 30
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.297, "y": 0.597, "element": "Description section header with down chevron"})'
+  - n: 31
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.329, "y": 0.612, "element": "Description section header - the chevron arrow"})'
+  - n: 32
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 33
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1500, "scroll_element": null})'
+  - n: 34
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.297, "y": 0.612, "element": "Description section header - clicking on the word \"Description\" text"})'
+  - n: 35
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.297, "y": 0.612, "element": "Description section header with right-pointing chevron"})'
+  - n: 36
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 37
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 38
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section header - clicking on the chevron down arrow at the right of Description text"})'
+  - n: 39
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 3000, "scroll_element": null})'
+  - n: 40
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section header - the chevron/arrow at the right side"})'
+  - n: 41
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 42
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 43
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 44
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 45
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.597, "element": "Description section header - clicking on the dropdown chevron next to Description"})'
+  - n: 46
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.297, "y": 0.612, "element": "Description section header with right chevron"})'
+  - n: 47
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 48
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 49
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.297, "y": 0.612, "element": "Description section header - clicking on the word Description to expand"})'
+  - n: 50
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - the chevron/arrow at the right of Description"})'
+  - n: 51
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section header - clicking on the chevron/arrow at the right"})'
+  - n: 52
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 53
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 54
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to the right of Description"})'
+  - n: 55
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 56
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 57
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 58
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand the section"})'
+  - n: 59
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section header - clicking on the chevron/arrow to expand"})'
+  - n: 60
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 61
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 62
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 63
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 64
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 65
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 66
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 67
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 68
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 69
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 70
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 71
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 72
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 73
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 74
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 75
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 76
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 77
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 78
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 79
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 80
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 81
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 82
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 83
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 84
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 85
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 86
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 87
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 88
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 89
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 90
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 91
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 92
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 93
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 94
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 95
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 96
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 97
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 98
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 99
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 100
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 101
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 102
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 103
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 104
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 105
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 106
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 107
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 108
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 109
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 110
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 111
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 112
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 113
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 114
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 115
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 116
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 117
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 118
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 119
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 120
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 121
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 122
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 123
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 124
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 125
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 126
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 127
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.33, "y": 0.612, "element": "Description section - clicking on the chevron/arrow to expand"})'
+  - n: 128
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 129
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+    screenshot: step_129.png
+  - n: 130
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 131
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 132
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Unité de Mesure par Défaut: N°\", \"Maintenir Stock: checked\", \"Autoriser à la vente: checked\", \"Autoriser à l'achat: checked\"], \"page_title\": \"Nouveau(elle) Item - new-item-kyowpbrwxq\", \"field_labels\": [\"Code de l'Article\", \"Nom de l'article\", \"Groupe d'Article\", \"Unité de Mesu"
+  - n: 133
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_129.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Item
+        path: /app/item/new
+        kind: interact
+        mission: M-006
+        action:
+          field: has_serial_no
+          value: "1"
+      page_title: Nouveau(elle) Item - new-item-kyowpbrwxq
+      field_labels:
+        - Code de l'Article
+        - Nom de l'article
+        - Groupe d'Article
+        - Unité de Mesure par Défaut
+        - Maintenir Stock
+        - Est Immobilisation
+        - Autoriser à la vente
+        - Autoriser à l'achat
+        - Autoriser un article alternatif
+        - L'article est-il fourni par le client?
+        - A Variantes
+        - Restreindre aux sociétés
+        - Marque
+        - Description
+      section_labels:
+        - Attributs de l'Article
+        - Restrictions de sociétés
+        - Description
+      prefilled:
+        - "Unité de Mesure par Défaut: N°"
+        - "Maintenir Stock: checked"
+        - "Autoriser à la vente: checked"
+        - "Autoriser à l'achat: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d7e496fc-8403-45b8-8626-59bf30dde07c attempts: 1"

@@ -2,7 +2,7 @@ id: S-325
 title: Project Update
 purpose: create, view and edit Project Update records
 kind: form
-layout: 7 fields
+layout: "7 fields; observed labels differ from the declared form (3/7 match; not declared: no., utilisateur, nom complet, voir les pièces jointes)"
 fields:
   - label: Series
     control: text
@@ -49,3 +49,10 @@ evidence:
     kind: rea
     locator: form layout of Project Update
     note: declared by the program
+  - ref: run-20261107T205305-h-EXP_188
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 3/7 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205305-h-EXP_188/step_06.png
+  - 01-exploration/runs/run-20261107T205305-h-EXP_188/step_06.png

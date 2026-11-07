@@ -1,0 +1,62 @@
+id: run-20261107T204947-h-EXP_163
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_163.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Maintenance
+started_at: 2026-11-07T20:49:01.800Z
+ended_at: 2026-11-07T20:49:47.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Section 'Articles' has column headers but the row below is empty (no values filled in those fields).\", \"prefilled\": [\"Séries: MAT-MSH-.YYYY.-\", \"Statut: Brouillon\", \"Date de la transaction: 07/11/2026\", \"Société: Digital Solution Service\"], \"page_title\": \"Nouveau(elle) Échéancier d"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Maintenance)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Maintenance Schedule
+        path: /app/maintenance-schedule/new
+        kind: defaults
+      page_title: Nouveau(elle) Échéancier d'Entretien
+      field_labels: []
+      section_labels:
+        - Séries
+        - Statut
+        - Client
+        - Date de la transaction
+        - Articles
+        - Information du Contact
+      prefilled:
+        - "Séries: MAT-MSH-.YYYY.-"
+        - "Statut: Brouillon"
+        - "Date de la transaction: 07/11/2026"
+        - "Société: Digital Solution Service"
+      notes: Section 'Articles' has column headers but the row below is empty (no values filled in those fields).
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/33be54c9-bba2-4ad8-b97f-9e89517c9ea8 attempts: 1"

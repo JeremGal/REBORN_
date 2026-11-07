@@ -1,0 +1,149 @@
+id: run-20261107T204253-h-EXP_113
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_113.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T20:41:10.800Z
+ended_at: 2026-11-07T20:42:53.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.308, "y": 0.497, "element": "Ajouter une ligne button under Articles de réception section"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.375, \"y\": 0.494, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article input field in row 2\", \"overwrite\": true})"
+  - n: 7
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.375, \"y\": 0.494, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article input field in row 2\", \"overwrite\": true})"
+  - n: 8
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.375, \"y\": 0.494, \"element\": \"Code de l'Article input field in row 2\"})"
+  - n: 9
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.375, \"y\": 0.494, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article input field in row 2\", \"overwrite\": true})"
+  - n: 10
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 11
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.375, \"y\": 0.494, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article input field in row 2\", \"overwrite\": true})"
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.625, "element": "Empty space below the form to click outside the table"})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "TEST-ART-001"})'
+  - n: 14
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.38, \"y\": 0.494, \"element\": \"Code de l'Article input field in row 2 - clicking precisely on the text input area\"})"
+  - n: 15
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.38, \"y\": 0.494, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article input field in row 2\", \"overwrite\": true})"
+  - n: 16
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.38, \"y\": 0.494, \"text\": \"T\", \"enter\": false, \"element\": \"Code de l'Article input field in row 2\", \"overwrite\": false})"
+  - n: 17
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.38, \"y\": 0.494, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article input field in row 2\", \"overwrite\": true})"
+  - n: 18
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 19
+    action:
+      type: other
+      target_desc: "write_file_web({\"path\": \"/tmp/erpnext_form.html\", \"content\": \"<!DOCTYPE html>\\n<html>\\n<body>\\n<form>\\n  <label>Code de l'Article:</label>\\n  <input type=\\\"text\\\" id=\\\"item_code\\\" value=\\\"TEST-ART-001\\\">\\n  <input type=\\\"number\\\" id=\\\"quantity\\\" value=\\\"3\\\">\\n  <input type=\\\"number\\\" id=\\\"rate\\\" val"
+  - n: 20
+    action:
+      type: other
+      target_desc: 'web_search({"query": "Frappe desk form type text not working input field"})'
+  - n: 21
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.375, \"y\": 0.494, \"element\": \"Code de l'Article input field in row 2\"})"
+  - n: 22
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "shift", "i"]})'
+  - n: 23
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/landed-cost-voucher/new-landed-cost-voucher-aahqiyooik", "render_js": true})'
+    screenshot: step_23.png
+  - n: 24
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.375, \"y\": 0.494, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article input field in row 2\", \"overwrite\": true})"
+  - n: 25
+    action:
+      type: other
+      target_desc: 'answer({"notes": "The form has multiple sections: En-tête (Header) with fields \"Séries\", \"Date de Comptabilisation\", \"Société\"; Pièces justificatives (Supporting Documents) section with a table; Articles section with \"Obtenir les articles\" button and \"Articles de réception\" table; Frais Ap'
+  - n: 26
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_23.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Landed Cost Voucher
+        path: /app/landed-cost-voucher/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Nouveau(elle) Référence de Coût au Débarquement
+      field_labels: []
+      section_labels:
+        - En-tête
+        - Pièces justificatives
+        - Articles
+        - Frais Applicables
+        - Distribution des charges
+      prefilled:
+        - "Séries: MAT-LCV-.YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Pièce justificative No.: 1"
+        - "Frais d'approche No.: 1"
+        - "Distribuer les Charges sur la Base de: Qté"
+      notes: "The form has multiple sections: En-tête (Header) with fields \"Séries\", \"Date de Comptabilisation\", \"Société\"; Pièces justificatives (Supporting Documents) section with a table; Articles section with \"Obtenir les articles\" button and \"Articles de réception\" table; Frais Applicables section with \"Factures fournisseur\" and \"Frais d'approche\" subsections; and a \"Distribuer les Charges sur la Base de\" field at the bottom. The items table (Articles de réception) has columns: No., Code de l'Article, Description, Qté, Montant, Frais Applicables. Note: I was unable to type text into the \"Code de l'Article\" field in row 2 despite multiple attempts - the field appears to be a special Frappe UI control that may require a different interaction method."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/7ce84b97-7490-4a08-ae75-144e44875f5b attempts: 1"

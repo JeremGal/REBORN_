@@ -2,7 +2,7 @@ id: S-305
 title: Production Plan
 purpose: create, view and edit Production Plan records
 kind: form
-layout: "sections: Filters, Sales Orders, Material Request Detail, Select Items to Manufacture, Sub Assembly Items, Preview Required Materials, For Raw Materials, Other Details; 37 fields"
+layout: "sections: Filters, Sales Orders, Material Request Detail, Select Items to Manufacture, Sub Assembly Items, Preview Required Materials, For Raw Materials, Other Details; 37 fields; observed labels differ from the declared form (18/36 match; not declared: no., n° nomenclat, qté planifiée, udm, entrepôt de p, date de début prév, ajouter une ligne, obtenir les articles de sous-ensemble)"
 fields:
   - label: Naming Series
     control: select
@@ -184,3 +184,10 @@ evidence:
     kind: rea
     locator: form layout of Production Plan
     note: declared by the program
+  - ref: run-20261107T205142-h-EXP_176
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 18/36 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205142-h-EXP_176/step_07.png
+  - 01-exploration/runs/run-20261107T205142-h-EXP_176/step_07.png

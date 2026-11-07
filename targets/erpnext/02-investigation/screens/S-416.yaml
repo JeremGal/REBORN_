@@ -2,7 +2,7 @@ id: S-416
 title: Stock Entry
 purpose: create, view and edit Stock Entry records
 kind: form
-layout: "tabs: Details, Additional Costs, Supplier Info, Accounting Dimensions, Other Info, Connections; sections: BOM Info, Process Loss, Default Warehouse, Items, Supplier Details, Printing Settings, Reference, More Information; 58 fields"
+layout: "tabs: Details, Additional Costs, Supplier Info, Accounting Dimensions, Other Info, Connections; sections: BOM Info, Process Loss, Default Warehouse, Items, Supplier Details, Printing Settings, Reference, More Information; 58 fields; observed labels differ from the declared form (12/22 match; not declared: no., entrepôt source, code de l'article, qté, prix de base, ajouter une ligne, ajouter plusieurs, télécharger)"
 fields:
   - label: Company
     control: lookup
@@ -257,6 +257,12 @@ evidence:
     kind: h-run
     locator: form opened by the H Company agent
     note: 12/17 labels read on screen match the declared form
+  - ref: run-20261107T210636-h-EXP_275
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 12/22 labels read on screen match the declared form
 screenshots:
   - 01-exploration/runs/run-20261107T193833-h-EXP_008/step_06.png
   - 01-exploration/runs/run-20261107T193833-h-EXP_008/step_06.png
+  - 01-exploration/runs/run-20261107T210636-h-EXP_275/step_06.png
+  - 01-exploration/runs/run-20261107T210636-h-EXP_275/step_06.png

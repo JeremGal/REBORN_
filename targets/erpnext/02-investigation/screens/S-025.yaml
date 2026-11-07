@@ -2,7 +2,7 @@ id: S-025
 title: Chart of Accounts Importer
 purpose: settings of Chart of Accounts Importer
 kind: settings
-layout: "sections: Chart Preview; 2 fields"
+layout: "sections: Chart Preview; 2 fields; observed labels differ from the declared form (1/1 match)"
 fields:
   - label: Company
     control: lookup
@@ -21,3 +21,10 @@ evidence:
     kind: rea
     locator: form layout of Chart of Accounts Importer
     note: declared by the program
+  - ref: run-20261107T203639-h-EXP_056
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 1/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T203639-h-EXP_056/step_06.png
+  - 01-exploration/runs/run-20261107T203639-h-EXP_056/step_06.png

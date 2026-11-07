@@ -1,0 +1,62 @@
+id: run-20261107T205051-h-EXP_168
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_168.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:50:14.500Z
+ended_at: 2026-11-07T20:50:51.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page loaded successfully after login. The form has 3 sections and 5 field labels total. Only 2 fields show prefilled values.\", \"prefilled\": [\"Type de mise à jour: Remplacer la nomenclature\", \"Statut: Dans la file d'attente\"], \"page_title\": \"Nouveau(elle) Journal de mise à jour de l"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: BOM Update Log
+        path: /app/bom-update-log/new
+        kind: defaults
+      page_title: Nouveau(elle) Journal de mise à jour de la nomenclature
+      field_labels:
+        - Type de mise à jour
+        - Statut
+        - nomenclature Actuelle
+        - Nouvelle nomenclature
+        - Journal des Erreurs
+      section_labels:
+        - nomenclature Actuelle
+        - Nouvelle nomenclature
+        - Journal des Erreurs
+      prefilled:
+        - "Type de mise à jour: Remplacer la nomenclature"
+        - "Statut: Dans la file d'attente"
+      notes: Page loaded successfully after login. The form has 3 sections and 5 field labels total. Only 2 fields show prefilled values.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/8ff49676-9b52-40fa-bb79-5b5e683201f5 attempts: 1"

@@ -1,0 +1,59 @@
+id: run-20261107T205226-h-EXP_181
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_181.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:51:49.400Z
+ended_at: 2026-11-07T20:52:26.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": [], "page_title": "Nouveau(elle) Composant opérationnel du poste de travail", "field_labels": ["Component Name", "Compte de charges du composant", "No.", "Société", "Compte de Charge", "Ajouter une ligne"], "section_labels": ["Composant opérationnel du poste de travail"]})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Workstation Operating Component
+        path: /app/workstation-operating-component/new
+        kind: defaults
+      page_title: Nouveau(elle) Composant opérationnel du poste de travail
+      field_labels:
+        - Component Name
+        - Compte de charges du composant
+        - No.
+        - Société
+        - Compte de Charge
+        - Ajouter une ligne
+      section_labels:
+        - Composant opérationnel du poste de travail
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/efe78d91-1a75-4f51-91cf-39eea21410fc attempts: 1"

@@ -1,0 +1,60 @@
+id: run-20261107T204608-h-EXP_141
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_141.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Buying
+started_at: 2026-11-07T20:45:27.100Z
+ended_at: 2026-11-07T20:46:08.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form is in French. Only 'Pays' and 'Type de Fournisseur' have pre-filled values. All other fields are empty.\", \"prefilled\": [\"Pays: France\", \"Type de Fournisseur: Société\"], \"page_title\": \"Nouveau(elle) Fournisseur - new-supplier-ayajgzamvr\", \"section_labels\": [\"Détails\", \"Comp"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Buying)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Supplier
+        path: /app/supplier/new
+        kind: defaults
+      page_title: Nouveau(elle) Fournisseur - new-supplier-ayajgzamvr
+      field_labels: []
+      section_labels:
+        - Détails
+        - Comptabilité
+        - Taxe
+        - Paramètres
+        - Utilisateurs du portail
+        - Plus d'info
+      prefilled:
+        - "Pays: France"
+        - "Type de Fournisseur: Société"
+      notes: The form is in French. Only 'Pays' and 'Type de Fournisseur' have pre-filled values. All other fields are empty.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/349e670d-6384-4d89-b5d9-927e6bd142f0 attempts: 1"

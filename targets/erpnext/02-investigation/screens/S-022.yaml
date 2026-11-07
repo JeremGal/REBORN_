@@ -2,7 +2,7 @@ id: S-022
 title: Bisect Nodes
 purpose: create, view and edit Bisect Nodes records
 kind: form
-layout: 9 fields
+layout: "9 fields; observed labels differ from the declared form (0/1 match; not declared: non autorisé)"
 fields:
   - label: Root
     control: lookup
@@ -43,3 +43,10 @@ evidence:
     kind: rea
     locator: form layout of Bisect Nodes
     note: declared by the program
+  - ref: run-20261107T203608-h-EXP_053
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 0/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T203608-h-EXP_053/step_05.png
+  - 01-exploration/runs/run-20261107T203608-h-EXP_053/step_05.png

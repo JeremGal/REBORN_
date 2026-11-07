@@ -1,0 +1,124 @@
+id: run-20261107T204542-h-EXP_138
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_138.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Buying
+started_at: 2026-11-07T20:44:02.500Z
+ended_at: 2026-11-07T20:45:42.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.401, "y": 0.059, "element": "Tarification tab"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.536, "y": 0.059, "element": "Paramètres des transactions tab"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.293, "y": 0.059, "element": "Valeurs par défaut tab"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.706, "y": 0.059, "element": "Paramètres de sous-traitance tab"})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.293, "y": 0.059, "element": "Valeurs par défaut tab"})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.401, "y": 0.059, "element": "Tarification tab"})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.536, "y": 0.059, "element": "Paramètres des transactions tab"})'
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.706, "y": 0.059, "element": "Paramètres de sous-traitance tab"})'
+  - n: 14
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Nomenclature de Fournisseur Par: Nom du fournisseur\", \"Liste des Prix d'Achat par Défaut: Achat standard\", \"Maintenir le même prix tout au long du cycle d'achat: checked\", \"Action si le même prix n'est pas maintenu: Arrêter\", \"La commande d'achat est-elle obligatoire pour la c"
+    screenshot: step_14.png
+  - n: 15
+    action:
+      type: read
+      target_desc: values shown by the application (Buying)
+    screenshot: step_14.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Buying Settings
+        path: /app/buying-settings
+        kind: defaults
+      page_title: Paramètres d'Achat
+      field_labels:
+        - Nomenclature de Fournisseur Par
+        - Groupe de fournisseurs par défaut
+        - Liste des Prix d'Achat par Défaut
+        - Maintenir le même prix tout au long du cycle d'achat
+        - Action si le même prix n'est pas maintenu
+        - Rôle autorisé à remplacer l'action d'arrêt
+        - La commande d'achat est-elle obligatoire pour la création de factures d'achat et de réceptions ?
+        - Un reçu d'achat est-il obligatoire pour la création d'une facture d'achat ?
+        - À quelle fréquence le projet doit-il être mis à jour avec le coût d'achat total ?
+        - Tolérance de dépassement de commande (%)
+        - Autoriser l'ajout de plusieurs fois le même article dans une transaction
+        - Autoriser les prix négatifs pour les articles
+        - Définir le taux de valorisation pour les matières rejetées
+        - Désactiver le dernier prix d'achat
+        - Facturer la quantité rejetée dans la facture d'achat
+        - Utiliser le taux de change de la date de transaction
+        - Autoriser les devis fournisseurs avec une quantité à zéro
+        - Prélèvement rétroactif des matières premières de la sous-traitance basé sur
+        - Tolérance de sur-transfert (%)
+        - Créer automatiquement une commande de sous-traitance
+        - Créer automatiquement un reçu d'achat
+      section_labels:
+        - Valeurs par défaut du fournisseur
+        - Paramètres de facture d'achat
+        - Lignes d'article à quantité nulle
+      prefilled:
+        - "Nomenclature de Fournisseur Par: Nom du fournisseur"
+        - "Liste des Prix d'Achat par Défaut: Achat standard"
+        - "Maintenir le même prix tout au long du cycle d'achat: checked"
+        - "Action si le même prix n'est pas maintenu: Arrêter"
+        - "La commande d'achat est-elle obligatoire pour la création de factures d'achat et de réceptions ?: Non"
+        - "Un reçu d'achat est-il obligatoire pour la création d'une facture d'achat ?: Non"
+        - "À quelle fréquence le projet doit-il être mis à jour avec le coût d'achat total ?: A chaque transaction"
+        - "Tolérance de dépassement de commande (%): 0,000"
+        - "Autoriser l'ajout de plusieurs fois le même article dans une transaction: checked"
+        - "Facturer la quantité rejetée dans la facture d'achat: checked"
+        - "Prélèvement rétroactif des matières premières de la sous-traitance basé sur: Nomenclature"
+        - "Tolérance de sur-transfert (%): 0,000"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/9b70fe10-ea13-4c0c-ac1e-29077430485a attempts: 1"

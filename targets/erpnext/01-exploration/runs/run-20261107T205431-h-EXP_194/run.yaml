@@ -1,0 +1,83 @@
+id: run-20261107T205431-h-EXP_194
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_194.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / CRM
+started_at: 2026-11-07T20:53:49.400Z
+ended_at: 2026-11-07T20:54:31.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.264, \"y\": 0.281, \"element\": \"Checkbox 'Activer la planification des rendez-vous'\"})"
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Durée du rendez-vous (en minutes): 60\", \"Nombre de rendez-vous simultanés: 0\", \"Nombre de jours de rendez-vous peuvent être réservés à l'avance: 7\"], \"page_title\": \"Paramètres de réservation de rendez-vous\", \"field_labels\": [\"Durée du rendez-vous (en minutes)\", \"Agents\", \"Aver"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (CRM)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Appointment Booking Settings
+        path: /app/appointment-booking-settings
+        kind: interact
+        mission: M-006
+        action:
+          field: enable_scheduling
+          value: "1"
+      page_title: Paramètres de réservation de rendez-vous
+      field_labels:
+        - Durée du rendez-vous (en minutes)
+        - Agents
+        - Avertir par e-mail
+        - Nombre de rendez-vous simultanés
+        - Activer la planification des rendez-vous
+        - Disponibilité des emplacements
+        - No.
+        - Jour de la semaine
+        - Horaire de Début
+        - Horaire de Fin
+        - Ajouter une ligne
+        - Aucune ligne
+        - Nombre de jours de rendez-vous peuvent être réservés à l'avance
+        - Liste de vacances
+        - Saisissez une réponse / un commentaire
+        - nouveau courrier
+      section_labels:
+        - Détails du rendez-vous
+        - Planification des rendez-vous
+        - Commentaires
+        - Activité
+      prefilled:
+        - "Durée du rendez-vous (en minutes): 60"
+        - "Nombre de rendez-vous simultanés: 0"
+        - "Nombre de jours de rendez-vous peuvent être réservés à l'avance: 7"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/587f64bd-36ce-41ad-9e3e-73a881a5e492 attempts: 1"

@@ -1,0 +1,165 @@
+id: run-20261107T204537-h-EXP_134
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_134.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Buying
+started_at: 2026-11-07T20:44:17.100Z
+ended_at: 2026-11-07T20:45:37.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.2, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.327, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.365, "y": 0.185, "element": "Fournisseur (Supplier) input field"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.365, "y": 0.259, "element": "TEST-Fournisseur Beta option in dropdown"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.362, \"y\": 0.401, \"element\": \"Code de l'Art... field in the first item row\"})"
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.362, "y": 0.445, "element": "TEST-ART-001 option in dropdown"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.537, "y": 0.401, "element": "Quantity field showing 1,000 in the items table"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'write({"x": 0.537, "y": 0.401, "text": "3", "enter": false, "element": "Quantity field in the items table", "overwrite": true})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.672, "y": 0.401, "element": "Prix (USD) field showing $ 0,00 in the items table"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'write({"x": 0.672, "y": 0.401, "text": "10", "enter": false, "element": "Prix (USD) field showing $ 0,00", "overwrite": true})'
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.484, "element": "Empty area below the items table"})'
+  - n: 14
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 15
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 17
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 18
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Séries: PUR-ORD-.YYYY.-", "Date: 07/11/2026", "Fournisseur: TEST-Fournisseur Beta", "UdM: N°", "Prix (USD): $ 10,00", "Montant (USD): $ 30,00", "Entrepôt cible: Magasins - DSS", "Quantité totale: 3", "Total (USD): $ 30,00", "Total des Taxes et Frais (USD): $ 0,00", "Total TTC '
+    screenshot: step_18.png
+  - n: 19
+    action:
+      type: read
+      target_desc: values shown by the application (Buying)
+    screenshot: step_18.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Purchase Order
+        path: /app/purchase-order/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Purchase Order Form Fields Report
+      field_labels:
+        - Séries
+        - Date
+        - Est sous-traité
+        - Fournisseur
+        - Requis pour le
+        - Scan Code Barre
+        - Définir le magasin cible
+        - Code de l'Art...
+        - Requis pour l...
+        - Quantit...
+        - UdM
+        - Prix (USD)
+        - Montant (USD)
+        - Entrepôt cible
+        - Quantité totale
+        - Total (USD)
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxe et Frais d'Achat
+        - Type
+        - Compte compt...
+        - Taux d'Imposit...
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+        - Total des Taxes et Frais (USD)
+        - Total TTC (USD)
+        - Désactiver le total arrondi
+        - Arrondi (USD)
+        - Total arrondi (USD)
+        - Acompte versé (Devise de la société)
+      section_labels:
+        - Adresse & Contact
+        - Termes
+        - Plus d'info
+        - Devise et liste de prix
+        - Articles
+        - Taxes et Frais
+        - Taxes et Frais d'Achats
+        - Totaux (USD)
+        - Remise Supplémentaire
+      prefilled:
+        - "Séries: PUR-ORD-.YYYY.-"
+        - "Date: 07/11/2026"
+        - "Fournisseur: TEST-Fournisseur Beta"
+        - "UdM: N°"
+        - "Prix (USD): $ 10,00"
+        - "Montant (USD): $ 30,00"
+        - "Entrepôt cible: Magasins - DSS"
+        - "Quantité totale: 3"
+        - "Total (USD): $ 30,00"
+        - "Total des Taxes et Frais (USD): $ 0,00"
+        - "Total TTC (USD): $ 30,00"
+        - "Arrondi (USD): $ 0,00"
+        - "Total arrondi (USD): $ 30,00"
+        - "Acompte versé (Devise de la société): $ 0,00"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/bf18c0bc-8817-4461-ad04-bd1656f34be0 attempts: 1"

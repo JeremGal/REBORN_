@@ -1,0 +1,142 @@
+id: run-20261107T214129-h-EXP_335
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_335.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:40:05.600Z
+ended_at: 2026-11-07T21:41:29.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.637, \"y\": 0.129, \"element\": \"Checkbox for 'Code de l'Article' in the 'Appliquer la règle sur le code d'article' section\"})"
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 8
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["home"]})'
+  - n: 10
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.696, \"y\": 0.129, \"element\": \"Code de l'Article option in the 'Appliquer la règle sur le code d'article' section\"})"
+  - n: 11
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 12
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.696, \"y\": 0.129, \"element\": \"Code de l'Article text/checkbox in the Appliquer la règle sur le code d'article section\"})"
+  - n: 13
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 14
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.637, \"y\": 0.129, \"element\": \"Small checkbox/square to the left of 'Code de l'Article' text in the Appliquer la règle sur le code d'article section\"})"
+  - n: 15
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.696, \"y\": 0.129, \"element\": \"Code de l'Article text in the top right section header row\"})"
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 17
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 18
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Naming Series: PRLE-####\", \"Appliquer Sur: Code de l'Article\", \"Prix ou remise de produit: Prix\", \"Montant Min: 0,00\", \"Montant Max: 0,00\", \"Valide à partir de: 07/11/2026\", \"Société: Digital Solution Service\", \"Devise: USD\", \"Type de Marge: Pourcentage\", \"Taux de Marge ou Mon"
+    screenshot: step_18.png
+  - n: 19
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_18.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: apply_rule_on_other
+          value: Item Code
+      page_title: Nouveau(elle) Règle de tarification
+      field_labels:
+        - Naming Series
+        - Titre
+        - Appliquer Sur
+        - Prix ou remise de produit
+        - Entrepôt
+        - Conditions mixtes
+        - Est cumulatif
+        - Code de coupon basé
+        - Qté min. (selon UdM de stock)
+        - Qté max. (selon l'UdM de stock)
+        - Montant Min
+        - Montant Max
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Type de Marge
+        - Taux de Marge ou Montant
+      section_labels:
+        - Appliquer la règle sur le code d'article
+        - Remise sur un autre article
+        - Informations sur le tiers
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+      prefilled:
+        - "Naming Series: PRLE-####"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Montant Min: 0,00"
+        - "Montant Max: 0,00"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0.000"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/52f677ac-3653-4949-a929-28e9b2a2f801 attempts: 1"

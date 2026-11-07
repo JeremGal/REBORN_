@@ -2,7 +2,7 @@ id: S-433
 title: Service Level Agreement
 purpose: create, view and edit Service Level Agreement records
 kind: form
-layout: "sections: Assignment Conditions, Valid From, Response and Resolution, Status Details, Working Hours; 16 fields"
+layout: "sections: Assignment Conditions, Valid From, Response and Resolution, Status Details, Working Hours; 16 fields; observed labels differ from the declared form (5/11 match; not declared: nom, client, priorité, service demandé, temps de première réponse, temps de résolution)"
 fields:
   - label: Apply On
     control: lookup
@@ -81,3 +81,10 @@ evidence:
     kind: rea
     locator: form layout of Service Level Agreement
     note: declared by the program
+  - ref: run-20261107T210934-h-EXP_292
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 5/11 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T210934-h-EXP_292/step_05.png
+  - 01-exploration/runs/run-20261107T210934-h-EXP_292/step_05.png

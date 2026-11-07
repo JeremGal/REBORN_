@@ -1,0 +1,65 @@
+id: run-20261107T204045-h-EXP_096
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_096.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:40:09.700Z
+ended_at: 2026-11-07T20:40:45.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.323, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form is in French. The page title is \\\"Nouveau(elle) Profil PDV\\\". There are 4 section tabs: Détails, Comptabilité, Configurations PDV, Plus d'info. On the visible form (Détails tab), the field labels are: Nom, Entrepôt, Société, Adresse de la Société, Client, Pays, Désactivé. "
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: POS Profile
+        path: /app/pos-profile/new
+        kind: defaults
+      page_title: Nouveau(elle) Profil PDV
+      field_labels:
+        - Nom
+        - Entrepôt
+        - Société
+        - Adresse de la Société
+        - Client
+        - Pays
+        - Désactivé
+      section_labels:
+        - Détails
+        - Comptabilité
+        - Configurations PDV
+        - Plus d'info
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Pays: France"
+      notes: "The form is in French. The page title is \"Nouveau(elle) Profil PDV\". There are 4 section tabs: Détails, Comptabilité, Configurations PDV, Plus d'info. On the visible form (Détails tab), the field labels are: Nom, Entrepôt, Société, Adresse de la Société, Client, Pays, Désactivé. Prefilled values: Société shows \"Digital Solution Service\" and Pays shows \"France\". The Désactivé checkbox appears unchecked. No other sections were scrolled into since the entire page was visible and all fields fit on one screen."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b8ef88ad-2a55-4097-baa1-c7f0b21b2993 attempts: 1"

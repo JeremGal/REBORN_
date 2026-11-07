@@ -1,0 +1,56 @@
+id: run-20261107T203931-h-EXP_085
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_085.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:38:51.800Z
+ended_at: 2026-11-07T20:39:31.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form fields: Série, Société, Date de Comptabilisation, Compte bancaire de l'entreprise, Référence de l'ordre de paiement (No, Type, Nom, Montant)\", \"prefilled\": [\"Séries: PMO-\", \"Société: Digital Solution Service\", \"Date de Comptabilisation: 07/11/2026\"], \"page_title\": \"Nouveau(ell"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Payment Order
+        path: /app/payment-order/new
+        kind: defaults
+      page_title: Nouveau(elle) Ordre de paiement
+      field_labels: []
+      section_labels:
+        - Ordre de paiement
+      prefilled:
+        - "Séries: PMO-"
+        - "Société: Digital Solution Service"
+        - "Date de Comptabilisation: 07/11/2026"
+      notes: "Form fields: Série, Société, Date de Comptabilisation, Compte bancaire de l'entreprise, Référence de l'ordre de paiement (No, Type, Nom, Montant)"
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/bba6c40a-0d50-4d60-8f68-a45e39c2d0db attempts: 1"

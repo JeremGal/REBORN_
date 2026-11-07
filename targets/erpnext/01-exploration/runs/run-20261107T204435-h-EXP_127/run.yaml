@@ -1,0 +1,339 @@
+id: run-20261107T204435-h-EXP_127
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_127.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T20:39:49.500Z
+ended_at: 2026-11-07T20:44:35.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.415, \"y\": 0.322, \"text\": \"TEST-ART-001\", \"enter\": true, \"element\": \"Code de l'Article input field in row 1\", \"overwrite\": true})"
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.366, "y": 0.367, "element": "TEST-ART-001 option in dropdown"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'write({"x": 0.685, "y": 0.322, "text": "3", "enter": true, "element": "Quantité input field in row 1", "overwrite": true})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Empty area outside the table to deselect the quantity field"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.685, "y": 0.322, "element": "Quantité field showing 3,000 in row 1"})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'write({"x": 0.685, "y": 0.322, "text": "3", "enter": true, "element": "Quantité input field in row 1", "overwrite": true})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.685, "y": 0.322, "element": "Quantité field showing 3,000 in row 1"})'
+  - n: 12
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'write({"x": 0.685, "y": 0.322, "text": "3", "enter": true, "element": "Quantité input field", "overwrite": true})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.714, "y": 0.322, "element": "The number 3,000 text in the Quantité field"})'
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["backspace"]})'
+  - n: 17
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["backspace"]})'
+  - n: 18
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["3"]})'
+  - n: 19
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.819, "y": 0.322, "element": "Prix field in row 1 (showing \"Prix\" placeholder)"})'
+  - n: 20
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.685, "y": 0.322, "element": "Quantité field showing 3,030"})'
+  - n: 21
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 22
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["delete"]})'
+  - n: 23
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["3"]})'
+  - n: 24
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.819, "y": 0.322, "element": "Prix field in row 1 (showing \"Prix\" placeholder)"})'
+  - n: 25
+    action:
+      type: other
+      target_desc: 'write({"x": 0.819, "y": 0.322, "text": "10", "enter": true, "element": "Prix input field in row 1", "overwrite": true})'
+  - n: 26
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.819, "y": 0.322, "element": "Prix column cell in row 1"})'
+  - n: 27
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.819, "y": 0.322, "element": "Prix field text area in row 1"})'
+  - n: 28
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["tab"]})'
+  - n: 29
+    action:
+      type: other
+      target_desc: 'write({"x": 0.819, "y": 0.322, "text": "10", "enter": false, "element": "Prix cell in the first row of the Articles table", "overwrite": true})'
+  - n: 30
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["tab"]})'
+  - n: 31
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.816, "y": 0.322, "element": "The letter P text in the Prix column of row 1"})'
+  - n: 32
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["1"]})'
+  - n: 33
+    action:
+      type: other
+      target_desc: 'move_mouse_web({"x": 0.5, "y": 0.322, "element": "Row 1 in the Articles table"})'
+  - n: 34
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.956, "y": 0.322, "element": "Pencil/edit icon on the right side of row 1"})'
+  - n: 35
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.669, "y": 0.151, "element": "Quantité field showing 3,000 in the dialog"})'
+  - n: 36
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 37
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["delete"]})'
+  - n: 38
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["3"]})'
+  - n: 39
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 40
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.82, "y": 0.322, "element": "Prix column cell in row 1 of the table"})'
+  - n: 41
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["1"]})'
+  - n: 42
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.82, "y": 0.322, "element": "Prix cell in row 1 - double click"})'
+  - n: 43
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["f12"]})'
+  - n: 44
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "shift", "j"]})'
+  - n: 45
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.005, "element": "Browser address bar at the top"})'
+  - n: 46
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.956, "y": 0.322, "element": "Pencil icon at the far right of row 1 in the table"})'
+  - n: 47
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 48
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.956, "y": 0.291, "element": "Gear/settings icon at the top right of the Articles table"})'
+  - n: 49
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.042, "element": "X close button in the Configure Columns dialog"})'
+  - n: 50
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.272, "y": 0.322, "element": "Checkbox on the left of row 1"})'
+  - n: 51
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.312, "y": 0.361, "element": "Supprimer la ligne button"})'
+  - n: 52
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.312, "y": 0.361, "element": "Ajouter une ligne button"})'
+  - n: 53
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.366, "y": 0.409, "element": "TEST-ART-001 option in the dropdown"})'
+  - n: 54
+    action:
+      type: other
+      target_desc: 'write({"x": 0.685, "y": 0.322, "text": "3", "enter": false, "element": "Quantité input field in row 1", "overwrite": true})'
+  - n: 55
+    action:
+      type: other
+      target_desc: 'write({"x": 0.819, "y": 0.322, "text": "10", "enter": false, "element": "Prix cell in the Articles table row 1", "overwrite": true})'
+  - n: 56
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.685, "y": 0.322, "element": "Quantité field showing 3,000"})'
+  - n: 57
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["tab"]})'
+  - n: 58
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 59
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.819, "y": 0.322, "element": "Prix field showing $ 0,00 in row 1"})'
+  - n: 60
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["1"]})'
+  - n: 61
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.685, "y": 0.322, "element": "Quantité field showing 3,000 in row 1"})'
+  - n: 62
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["tab"]})'
+  - n: 63
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 64
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.819, "y": 0.322, "element": "Prix field showing $ 0,00 in row 1"})'
+  - n: 65
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["1"]})'
+  - n: 66
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.956, "y": 0.322, "element": "Pencil icon at the far right of row 1"})'
+  - n: 67
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 68
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "l"]})'
+  - n: 69
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Empty area below the Articles table"})'
+  - n: 70
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 71
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Note: I was unable to set the Prix (rate) to 10. The Prix field in the table could not be focused/edited through the available interaction methods. The item TEST-ART-001 was added with quantity 3 (displayed as 3,000 due to locale formatting). The row was not saved/submitted.", "pre'
+    screenshot: step_71.png
+  - n: 72
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_71.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Proforma Invoice
+        path: /app/proforma-invoice/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Nouveau(elle) Facture proforma
+      field_labels:
+        - Séries *
+        - Date *
+        - Basé sur
+        - No.
+        - Code de l'Article *
+        - Nom de l'article
+        - Quantité *
+        - Prix
+        - Montant
+        - Statut
+      section_labels:
+        - Détails
+        - Articles
+        - Statut
+      prefilled:
+        - "Séries: PRO-.YYYY.-"
+        - "Date: 07/11/2026"
+        - "Basé sur: Quantité"
+        - "Statut: Brouillon"
+      notes: "Note: I was unable to set the Prix (rate) to 10. The Prix field in the table could not be focused/edited through the available interaction methods. The item TEST-ART-001 was added with quantity 3 (displayed as 3,000 due to locale formatting). The row was not saved/submitted."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/f519e43f-f173-4081-b63d-ad110e4f2cc4 attempts: 1"

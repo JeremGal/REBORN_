@@ -58,10 +58,82 @@ test("the probe never touches documents that change the configuration", async ()
 
 test("labels read on screen are compared with the declared form", async () => {
   const { compareLabels } = await lib("frappe-features");
-  const r = compareLabels(["Customer", "Date", "Status", "Items"], ["Customer *", "Date", "Status:", "Something else"]);
-  assert.equal(r.observed, 4);
-  assert.equal(r.matched, 3);
+  const r = compareLabels(["Customer", "Date", "Status", "Items", "Total", "Amount"], ["Customer *", "Date", "Status:", "Something else", "Total (USD)", "Amount (U..."]);
+  assert.equal(r.observed, 6);
+  assert.equal(r.matched, 5);
   assert.deepEqual(r.unmatched, ["something else"]);
+});
+
+test("simple display conditions are evaluated, complex ones are left alone", async () => {
+  const { parseCondition, evaluate } = await lib("frappe-logic");
+  assert.equal(evaluate(parseCondition("eval:doc.is_return == 1"), { is_return: "0" }), false);
+  assert.equal(evaluate(parseCondition("eval:doc.status=='Draft'"), { status: "Draft" }), true);
+  assert.equal(evaluate(parseCondition("eval:!doc.disabled"), { disabled: "0" }), true);
+  assert.equal(evaluate(parseCondition("eval:!doc.disabled"), {}), null);   // unknown state: no prediction
+  assert.equal(evaluate(parseCondition("customer"), { customer: "C" }), true);
+  assert.equal(parseCondition("eval:in_list(['A','B'], doc.x) && doc.y"), null);
+});
+
+test("only positive observations confirm a declared rule", async () => {
+  const { gradeLogic } = await lib("frappe-logic");
+  const metas = [{ name: "Thing", module: "Selling", fields: [
+    { fieldname: "status", label: "Status", fieldtype: "Select", options: "Draft\nOpen", default: "Draft" },
+    { fieldname: "is_ok", label: "Is OK", fieldtype: "Check", default: "1" },
+    { fieldname: "notes", label: "Notes", fieldtype: "Data", depends_on: "eval:doc.status=='Draft'" },
+    { fieldname: "extra", label: "Extra", fieldtype: "Data", depends_on: "eval:doc.status=='Open'" },
+    { fieldname: "total", label: "Total", fieldtype: "Currency", read_only: 1 },
+  ] }];
+  const readings = new Map([["Thing", { labels: ["Statut", "Is OK", "Notes", "Total"], prefilled: ["Statut: Brouillon", "Is OK: checked"] }]]);
+  const g = gradeLogic(metas, { readings, translations: { Status: "Statut", Draft: "Brouillon" }, computedSeen: new Set(["Thing.total"]) });
+  assert.equal(g.tally.default.confirmed, 2);
+  assert.equal(g.tally.visibility.confirmed, 1);
+  assert.equal(g.tally.visibility.consistent, 1);
+  assert.equal(g.tally.computed.confirmed, 1);
+  assert.equal(g.total.contradicted, 0);
+});
+
+test("the grader never invents a contradiction: unknown state, settings pages, separators and unticked boxes", async () => {
+  const { gradeLogic } = await lib("frappe-logic");
+  const metas = [
+    { name: "Doc", module: "Selling", fields: [
+      { fieldname: "naming_series", label: "Series", fieldtype: "Select", default: "DOC-.####" },
+      { fieldname: "flag", label: "Flag", fieldtype: "Check", default: "0" },
+      { fieldname: "party_type", label: "Party Type", fieldtype: "Link", options: "Party Type" },
+      { fieldname: "party_extra", label: "Party Extra", fieldtype: "Data", depends_on: "eval:doc.party_type == 'Customer'" },
+      { fieldname: "posting", label: "Posting", fieldtype: "Check", depends_on: "eval:doc.docstatus==0" },
+      { fieldname: "local", label: "Local", fieldtype: "Data", depends_on: "eval:doc.__islocal" },
+    ] },
+    { name: "Some Settings", module: "Selling", issingle: 1, fields: [{ fieldname: "same_rate", label: "Same Rate", fieldtype: "Check", default: "0" }] },
+  ];
+  const readings = new Map([
+    ["Doc", { labels: ["Series", "Flag", "Party Type", "Party Extra", "Posting", "Local"], prefilled: ["Series: DOC-####", "Flag: unchecked"] }],
+    ["Some Settings", { labels: ["Same Rate"], prefilled: ["Same Rate: checked"] }],
+  ]);
+  const g = gradeLogic(metas, { readings });
+  assert.equal(g.total.contradicted, 0, JSON.stringify(g.contradictions));
+  assert.equal(g.tally.default.confirmed, 2);       // series without its dots, and the unticked box
+  assert.equal(g.tally.visibility.confirmed, 2);    // docstatus 0 and a new document are known states
+  assert.equal(g.tally.visibility.consistent, 1);   // control field with no declared default: unknown, no verdict
+});
+
+test("an action on an unsaved form confirms the display rule it controls and the amounts it recomputes", async () => {
+  const { gradeLogic } = await lib("frappe-logic");
+  const metas = [
+    { name: "Order", module: "Selling", fields: [
+      { fieldname: "is_return", label: "Is Return", fieldtype: "Check", default: "0" },
+      { fieldname: "return_against", label: "Return Against", fieldtype: "Link", options: "Order", depends_on: "eval:doc.is_return" },
+      { fieldname: "total", label: "Total", fieldtype: "Currency", read_only: 1 },
+      { fieldname: "items", label: "Items", fieldtype: "Table", options: "Order Item" },
+    ] },
+    { name: "Order Item", module: "Selling", istable: 1, fields: [{ fieldname: "amount", label: "Amount", fieldtype: "Currency", read_only: 1 }] },
+  ];
+  const interactions = [
+    { doctype: "Order", action: { field: "is_return", value: "1" }, labels: ["Retour contre"], prefilled: [] },
+    { doctype: "Order", action: { line: { item_code: "X", qty: 3, rate: 10 } }, labels: ["Total"], prefilled: ["Total: $ 30,00", "Montant: 30"] },
+  ];
+  const g = gradeLogic(metas, { readings: new Map(), translations: { "Return Against": "Retour contre", Amount: "Montant" }, interactions });
+  assert.equal(g.tally.visibility.confirmed, 1);
+  assert.equal(g.tally.computed.confirmed, 2);
 });
 
 test("one feature and one screen per form, with observed drafts attached", async () => {

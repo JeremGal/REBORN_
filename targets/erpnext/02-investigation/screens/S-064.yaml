@@ -2,7 +2,7 @@ id: S-064
 title: POS Opening Entry
 purpose: create, view and edit POS Opening Entry records
 kind: form
-layout: 11 fields
+layout: "11 fields; observed labels differ from the declared form (0/1 match; not declared: entrée d'ouverture de pdv)"
 fields:
   - label: Period Start Date
     control: date
@@ -67,3 +67,10 @@ evidence:
     kind: rea
     locator: form layout of POS Opening Entry
     note: declared by the program
+  - ref: run-20261107T204039-h-EXP_095
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 0/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204039-h-EXP_095/step_05.png
+  - 01-exploration/runs/run-20261107T204039-h-EXP_095/step_05.png

@@ -1,0 +1,117 @@
+id: run-20261107T210727-h-EXP_276
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_276.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / CRM
+started_at: 2026-11-07T21:05:57.800Z
+ended_at: 2026-11-07T21:07:27.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.262, "y": 0.12, "element": "Signé checkbox"})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 8
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Main content area of the form"})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 600, "scroll_element": null})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.293, "y": 0.978, "element": "Références section header with arrow"})'
+  - n: 13
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Devise: EUR\", \"Taux de change: 1.0000000\", \"Date de début: 2026-11-07\", \"Date de fin: 2027-11-07\", \"Mode de paiement: Virement bancaire\", \"Type d'encaissement: Encaissement automatique\", \"Signé: checked\"], \"page_title\": \"Contract Form - Nouveau(elle) Contrat\", \"field_labels\": "
+    screenshot: step_13.png
+  - n: 14
+    action:
+      type: read
+      target_desc: values shown by the application (CRM)
+    screenshot: step_13.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Contract
+        path: /app/contract/new
+        kind: interact
+        mission: M-006
+        action:
+          field: is_signed
+          value: "1"
+      page_title: Contract Form - Nouveau(elle) Contrat
+      field_labels:
+        - Titre
+        - Nom du client
+        - Client
+        - Partenaire commercial
+        - Date de signature
+        - Durée
+        - Date de début
+        - Date de fin
+        - Devise
+        - Taux de change
+        - Mode de paiement
+        - Type d'encaissement
+        - Signataire
+        - Signé le
+        - Modèle de contrat
+        - Termes du contrat
+        - Nécessite des conditions
+        - Signee (société)
+        - Références
+      section_labels:
+        - Informations générales
+        - Conditions de paiement
+        - Signature
+      prefilled:
+        - "Devise: EUR"
+        - "Taux de change: 1.0000000"
+        - "Date de début: 2026-11-07"
+        - "Date de fin: 2027-11-07"
+        - "Mode de paiement: Virement bancaire"
+        - "Type d'encaissement: Encaissement automatique"
+        - "Signé: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/3fe03f83-8d3e-4cc0-a41b-90d85f478557 attempts: 1"

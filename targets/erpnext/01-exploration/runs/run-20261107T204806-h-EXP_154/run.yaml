@@ -1,0 +1,72 @@
+id: run-20261107T204806-h-EXP_154
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_154.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / CRM
+started_at: 2026-11-07T20:47:25.200Z
+ended_at: 2026-11-07T20:48:06.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Création automatique d'un contact: checked\", \"Fermer l'opportunité répliquée après des jours: 15\"], \"page_title\": \"Paramètres CRM\", \"field_labels\": [\"Campagne Nommée Par\", \"Nom de la Campagne\", \"Création automatique d'un contact\", \"Autoriser la duplication des pistes sur la ba"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (CRM)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: CRM Settings
+        path: /app/crm-settings
+        kind: defaults
+      page_title: Paramètres CRM
+      field_labels:
+        - Campagne Nommée Par
+        - Nom de la Campagne
+        - Création automatique d'un contact
+        - Autoriser la duplication des pistes sur la base des courriels
+        - Fermer l'opportunité répliquée après des jours
+        - Fermeture automatique de l'opportunité de réponse après le nombre de jours mentionné ci-dessus.
+        - Activer la création d'opportunité depuis Contactez-nous
+        - Jours de validité par défaut pour les devis
+        - Reprendre les communications et commentaires
+        - Mettre à jour l'horodatage lors d'une nouvelle communication
+        - Mettre à jour l'horodatage de modification des nouvelles communications reçues dans Lead & Opportunité.
+        - Saisissez une réponse / un commentaire
+      section_labels:
+        - Lead
+        - Opportunité
+        - Devis
+        - Activité
+        - Commentaires
+        - Activité
+      prefilled:
+        - "Création automatique d'un contact: checked"
+        - "Fermer l'opportunité répliquée après des jours: 15"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b470e017-65f5-47a5-814d-258f5fbbe1d0 attempts: 1"

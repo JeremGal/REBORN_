@@ -1,0 +1,61 @@
+id: run-20261107T211136-h-EXP_299
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_299.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Setup
+started_at: 2026-11-07T21:11:00.900Z
+ended_at: 2026-11-07T21:11:36.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/employee/new"})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The user is logged in successfully but does not have permission to access the Employee form. The error states: \\\"L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page\\\"\", \"prefilled\": [\"L'utilisateur ***"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Setup)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Employee
+        path: /app/employee/new
+        kind: interact
+        mission: M-006
+        action:
+          field: leave_encashed
+          value: Yes
+      page_title: Access Denied
+      field_labels: []
+      section_labels:
+        - Error Message
+      prefilled:
+        - |-
+          L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page.
+
+          Pas d'autorisation pour Page
+      notes: "The user is logged in successfully but does not have permission to access the Employee form. The error states: \"L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page\""
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/4355c76e-e137-4329-af7e-6fd0812c936d attempts: 1"

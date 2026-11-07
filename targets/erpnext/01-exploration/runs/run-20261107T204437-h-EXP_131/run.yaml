@@ -1,0 +1,63 @@
+id: run-20261107T204437-h-EXP_131
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_131.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Assets
+started_at: 2026-11-07T20:43:32.900Z
+ended_at: 2026-11-07T20:44:37.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Société: Digital Solution Service\"], \"page_title\": \"Nouveau(elle) Équipe de Maintenance des Actifs\", \"field_labels\": [\"Nom de l'équipe de maintenance\", \"Société\", \"Responsable de Maintenance\", \"Membres de l'équipe de maintenance\", \"No.\", \"Membre de l'équipe\", \"Nom Complet\", \"R"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Assets)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Asset Maintenance Team
+        path: /app/asset-maintenance-team/new
+        kind: defaults
+      page_title: Nouveau(elle) Équipe de Maintenance des Actifs
+      field_labels:
+        - Nom de l'équipe de maintenance
+        - Société
+        - Responsable de Maintenance
+        - Membres de l'équipe de maintenance
+        - No.
+        - Membre de l'équipe
+        - Nom Complet
+        - Rôle de maintenance
+        - Ajouter une ligne
+      section_labels:
+        - Équipe
+      prefilled:
+        - "Société: Digital Solution Service"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/61bb3c5b-b1df-4757-bf43-f9b7ba3af3be attempts: 2"

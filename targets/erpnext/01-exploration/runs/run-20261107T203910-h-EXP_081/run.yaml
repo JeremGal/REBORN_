@@ -1,0 +1,57 @@
+id: run-20261107T203910-h-EXP_081
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_081.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:38:28.500Z
+ended_at: 2026-11-07T20:39:10.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.624, "element": "Empty area to close dropdown"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form only has one field visible: 'Rôle principal' (with a dropdown showing options Client/Vente and Fournisseur/Achat). No other fields or sections are visible on the page. The page is in French. No fields have prefilled values.\", \"prefilled\": [], \"page_title\": \"Nouveau(elle) L"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Party Link
+        path: /app/party-link/new
+        kind: defaults
+      page_title: Nouveau(elle) Lien tiers - new-party-link-haihpoieuu
+      field_labels:
+        - Rôle principal
+      section_labels: []
+      prefilled: []
+      notes: "The form only has one field visible: 'Rôle principal' (with a dropdown showing options Client/Vente and Fournisseur/Achat). No other fields or sections are visible on the page. The page is in French. No fields have prefilled values."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/5aee1ae3-8fa3-49e5-83a8-7023da3094f2 attempts: 1"

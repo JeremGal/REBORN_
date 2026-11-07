@@ -1,0 +1,95 @@
+id: run-20261107T210108-h-EXP_240
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_240.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:59:51.900Z
+ended_at: 2026-11-07T21:01:08.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.251, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.475, "y": 0.056, "element": "Configuration de la nomenclature tab"})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.305, "y": 0.056, "element": "Article de production tab"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.622, \"y\": 0.056, \"element\": \"Plus d'info tab\"})"
+  - n: 7
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/bom/new"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.475, "y": 0.056, "element": "Configuration de la nomenclature tab"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.305, "y": 0.056, "element": "Article de production tab"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Afficher sur le site Web"})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "site Web"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/manufacturing/bom/new-bom-pzdjzitkee", "render_js": true})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "view-source:https://***/desk/manufacturing/bom/new-bom-pzdjzitkee"})'
+  - n: 14
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/manufacturing/bom/new-bom-pzdjzitkee"})'
+    screenshot: step_14.png
+  - n: 15
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_14.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: BOM
+        path: /app/bom/new
+        kind: interact
+        mission: M-006
+        action:
+          field: show_in_website
+          value: "1"
+      page_title: Nouveau(elle) Nomenclature
+      field_labels: []
+      section_labels:
+        - Article de production
+        - Configuration de la nomenclature
+        - Plus d'info
+      prefilled: []
+      notes: "The 'Afficher sur le site Web' (Show in Website) checkbox was not found on this form. The form has 3 tabs: Article de production, Configuration de la nomenclature, and Plus d'info. No fields have prefilled values - all fields are empty."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/f4da518d-45fd-4d15-87e1-f46b13355f8c attempts: 1"

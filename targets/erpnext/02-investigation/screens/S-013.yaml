@@ -2,7 +2,7 @@ id: S-013
 title: Bank Account Type
 purpose: create, view and edit Bank Account Type records
 kind: form
-layout: 1 fields
+layout: 1 fields; observed labels differ from the declared form (1/1 match)
 fields:
   - label: Account Type
     control: text
@@ -16,3 +16,10 @@ evidence:
     kind: rea
     locator: form layout of Bank Account Type
     note: declared by the program
+  - ref: run-20261107T203516-h-EXP_044
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 1/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T203516-h-EXP_044/step_05.png
+  - 01-exploration/runs/run-20261107T203516-h-EXP_044/step_05.png

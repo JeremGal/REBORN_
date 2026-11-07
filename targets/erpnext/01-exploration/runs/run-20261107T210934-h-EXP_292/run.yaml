@@ -1,0 +1,63 @@
+id: run-20261107T210934-h-EXP_292
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_292.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Support
+started_at: 2026-11-07T21:08:59.300Z
+ended_at: 2026-11-07T21:09:34.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 2000, "scroll_element": null})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"page_title\": \"Nouveau(elle) Contrat de niveau de service\", \"field_labels\": [\"Nom\", \"Client\", \"Priorité\", \"Service demandé\", \"Temps de première réponse\", \"Temps de résolution\", \"Appliquer l'accord de niveau de service (SLA) pour le délai de résolution\", \"Activé\"], \"section_labels\": [\"Réponse"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Support)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Service Level Agreement
+        path: /app/service-level-agreement/new
+        kind: defaults
+      page_title: Nouveau(elle) Contrat de niveau de service
+      field_labels:
+        - Nom
+        - Client
+        - Priorité
+        - Service demandé
+        - Temps de première réponse
+        - Temps de résolution
+        - Appliquer l'accord de niveau de service (SLA) pour le délai de résolution
+        - Activé
+      section_labels:
+        - Réponse et résolution
+        - Les priorités
+        - Heures de travail
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/911d8910-60e0-430e-873f-ba93581837c6 attempts: 1"

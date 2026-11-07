@@ -1,0 +1,78 @@
+id: run-20261107T203547-h-EXP_051
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_051.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:34:54.300Z
+ended_at: 2026-11-07T20:35:47.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page is in French. The form is for creating a new Bank Transaction Rule. The page is not scrollable beyond what's visible - the entire content fits in one viewport. No fields were modified.\", \"prefilled\": [\"Type de transaction: Tous\", \"Société: Digital Solution Service\", \"Classer c"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Bank Transaction Rule
+        path: /app/bank-transaction-rule/new
+        kind: defaults
+      page_title: Nouveau(elle) Règle de transaction bancaire
+      field_labels:
+        - Nom de la règle
+        - Type de transaction
+        - Priorité
+        - Montant minimum
+        - Montant maximum
+        - Description de la règle
+        - Société
+        - No.
+        - Case à cocher
+        - Valeur
+        - Ajouter une ligne
+        - Classer comme
+        - Type de Tiers
+        - Compte
+        - Tiers
+        - Type d'écriture bancaire
+        - No.
+        - Compte
+        - Ajouter une ligne
+      section_labels:
+        - Règles de description
+        - Action
+        - Comptes
+      prefilled:
+        - "Type de transaction: Tous"
+        - "Société: Digital Solution Service"
+        - "Classer comme: Écriture Bancaire"
+        - "Type d'écriture bancaire: Compte unique"
+      notes: Page is in French. The form is for creating a new Bank Transaction Rule. The page is not scrollable beyond what's visible - the entire content fits in one viewport. No fields were modified.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b4ccc4e3-a011-4b04-8e17-ea5fb3cb9bda attempts: 1"

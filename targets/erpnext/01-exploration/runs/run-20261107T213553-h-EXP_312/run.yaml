@@ -1,0 +1,115 @@
+id: run-20261107T213553-h-EXP_312
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_312.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:34:40.600Z
+ended_at: 2026-11-07T21:35:53.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.25, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.336, \"y\": 0.059, \"element\": \"Plus d'info tab\"})"
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.059, "element": "Détails tab"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/journal-entry/new"})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 500, "scroll_element": null})'
+  - n: 10
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.336, \"y\": 0.059, \"element\": \"Plus d'info tab\"})"
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.319, "y": 0.192, "element": "Infos supplémentaires section"})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.289, "y": 0.104, "element": "Référence section"})'
+  - n: 13
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.33, \"y\": 0.332, \"element\": \"Paramètres d'Impression section\"})"
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.059, "element": "Détails tab"})'
+  - n: 15
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Envisager pour la retenue à la source' checkbox was not found on this Journal Entry form. I checked both the 'Détails' and 'Plus d'info' tabs thoroughly. The checkbox does not appear to exist in this ERPNext instance's Journal Entry form. The form has the following fields: Soc"
+    screenshot: step_15.png
+  - n: 16
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_15.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Journal Entry
+        path: /app/journal-entry/new
+        kind: interact
+        mission: M-006
+        action:
+          field: apply_tds
+          value: "1"
+      page_title: Nouveau(elle) Écriture de Journal
+      field_labels:
+        - Société
+        - Séries
+        - Type d'Écriture
+        - Date de Comptabilisation
+        - Multi-devis
+        - Numéro de référence
+        - Date de référence
+      section_labels:
+        - Écritures Comptables
+        - Référence
+        - Paramètres d'Impression
+        - Infos supplémentaires
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Séries: ACC-JV-.YYYY.-"
+        - "Type d'Écriture: Écriture de Journal"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Total Débit: $ 0,00"
+        - "Total Crédit: $ 0,00"
+        - "En-Tête: Company Letterhead - Grey"
+        - "Écriture d'Ouverture: Non"
+      notes: "The 'Envisager pour la retenue à la source' checkbox was not found on this Journal Entry form. I checked both the 'Détails' and 'Plus d'info' tabs thoroughly. The checkbox does not appear to exist in this ERPNext instance's Journal Entry form. The form has the following fields: Société (Digital Solution Service), Séries (ACC-JV-.YYYY.-), Type d'Écriture (écriture de Journal), Date de Comptabilisation (07/11/2026), Multi-devis (unchecked), Numéro de référence (empty), Date de référence (empty), and in the Plus d'info tab: Numéro de facture, Date de la Facture, Date d'échéance, Payé À / Reçu De, En-Tête (Company Letterhead - Grey), En-tête d'impression, Écriture d'Ouverture (Non), Remarque personnalisée, À partir du modèle, Moyen de paiement."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/23c26d03-d3a5-4900-bedc-b677613af80d attempts: 1"

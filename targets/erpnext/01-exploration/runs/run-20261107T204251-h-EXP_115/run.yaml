@@ -1,0 +1,71 @@
+id: run-20261107T204251-h-EXP_115
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_115.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:42:13.700Z
+ended_at: 2026-11-07T20:42:51.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form is in French. The page loaded at /desk/accounts/shipping-rule/new-shipping-rule-qlzyukyrll after login. No fields were modified.\", \"prefilled\": [\"Type de règle d'expédition: Vente\", \"Société: Digital Solution Service\", \"Calculer en fonction de: Fixé\"], \"page_title\": \"Nouveau(e"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Shipping Rule
+        path: /app/shipping-rule/new
+        kind: defaults
+      page_title: Nouveau(elle) Règle de Livraison
+      field_labels:
+        - Étiquette de la Règle de Livraison
+        - Type de règle d'expédition
+        - Désactivé
+        - Société
+        - Compte de Livraison
+        - Calculer en fonction de
+        - Montant de la Livraison
+        - Valable pour les Pays
+        - No.
+        - Pays
+      section_labels:
+        - Comptabilité
+        - Restreindre aux pays
+      prefilled:
+        - "Type de règle d'expédition: Vente"
+        - "Société: Digital Solution Service"
+        - "Calculer en fonction de: Fixé"
+      notes: Form is in French. The page loaded at /desk/accounts/shipping-rule/new-shipping-rule-qlzyukyrll after login. No fields were modified.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/ee2abcb9-bdab-4a18-a12b-15f9ce6a118d attempts: 1"

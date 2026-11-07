@@ -1,0 +1,68 @@
+id: run-20261107T204240-h-EXP_114
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_114.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:42:04.400Z
+ended_at: 2026-11-07T20:42:40.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Nom"})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.313, "y": 0.201, "element": "Adresse et contacts section header"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Société: Digital Solution Service"], "page_title": "Nouveau(elle) Actionnaire - new-shareholder-pokiydvsaf", "field_labels": ["Titre", "Société"], "section_labels": ["Adresse et contacts"]})'
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Shareholder
+        path: /app/shareholder/new
+        kind: defaults
+      page_title: Nouveau(elle) Actionnaire - new-shareholder-pokiydvsaf
+      field_labels:
+        - Titre
+        - Société
+      section_labels:
+        - Adresse et contacts
+      prefilled:
+        - "Société: Digital Solution Service"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/4e5ae728-9f51-4198-940b-30a41f1ba2c6 attempts: 1"

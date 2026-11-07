@@ -1,0 +1,100 @@
+id: run-20261107T204807-h-EXP_150
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_150.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T20:46:49.200Z
+ended_at: 2026-11-07T20:48:07.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'write({"x": 0.364, "y": 0.186, "text": "TEST-Client Alpha", "enter": false, "element": "Client field", "overwrite": true})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.364, "y": 0.234, "element": "TEST-Client Alpha option in dropdown"})'
+  - n: 7
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.4, \"y\": 0.5, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article field in the items table\", \"overwrite\": true})"
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.4, "y": 0.545, "element": "TEST-ART-001 option in dropdown"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'write({"x": 0.67, "y": 0.5, "text": "3", "enter": false, "element": "Quantité field in the items table", "overwrite": true})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.7, "element": "Empty area below the items table to deselect and recompute amounts"})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 12
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Field labels visible on form: Séries, Type de Commande, Est sous-traité, Client, Date, Date de livraison, Scan Code Barre, Entrepôt d'origine, Quantité totale, Total (USD), Catégorie de taxe, Règle de Livraison, Incoterm, Modèle de Taxes et Frais de Vente, Total des Taxes et Frais "
+    screenshot: step_12.png
+  - n: 13
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_12.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Order
+        path: /app/sales-order/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Nouveau(elle) Commande client
+      field_labels: []
+      section_labels:
+        - Détails
+        - Articles
+        - Taxes
+        - Taxes et Frais de Vente
+      prefilled:
+        - "Séries: SAL-ORD-.YYYY.-"
+        - "Type de Commande: Ventes"
+        - "Est sous-traité: unchecked"
+        - "Client: TEST-Client Alpha"
+        - "Date: 07/11/2026"
+        - "Date de livraison:"
+        - "Quantité totale: 3"
+        - "Total (USD): $ 30,00"
+        - "Total des Taxes et Frais (Devise Société) (USD): $ 0,00"
+        - "Total des Taxes et Frais (USD): $ 0,00"
+      notes: "Field labels visible on form: Séries, Type de Commande, Est sous-traité, Client, Date, Date de livraison, Scan Code Barre, Entrepôt d'origine, Quantité totale, Total (USD), Catégorie de taxe, Règle de Livraison, Incoterm, Modèle de Taxes et Frais de Vente, Total des Taxes et Frais (Devise Société) (USD), Total des Taxes et Frais (USD). Section labels: Détails, Adresse & Contact, Termes, Plus d'info, Articles, Taxes, Taxes et Frais de Vente."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/00cf245a-71b6-4d13-9631-2542a7cdcb9f attempts: 1"

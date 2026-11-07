@@ -1,0 +1,69 @@
+id: run-20261107T211045-h-EXP_295
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_295.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T21:10:08.100Z
+ended_at: 2026-11-07T21:10:45.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form is in French. The 'Bloquer le client' checkbox was not visible on the form - it may not exist on this form or may be on a different tab/section. No fields were modified.\", \"prefilled\": [\"Type de client: Société\"], \"page_title\": \"Client / Nouveau(elle) Client - new-customer"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Customer
+        path: /app/customer/new
+        kind: interact
+        mission: M-006
+        action:
+          field: on_hold
+          value: "1"
+      page_title: Client / Nouveau(elle) Client - new-customer-odnkaerejc
+      field_labels:
+        - Nom du client
+        - Type de client
+        - Alias
+        - Groupe de clients
+        - Région
+        - Devise de Facturation
+        - Liste de prix
+        - Compte bancaire de l'entreprise
+        - Modèle de termes de paiement
+      section_labels:
+        - Détails
+        - Valeurs par défaut
+        - Points de fidélité
+      prefilled:
+        - "Type de client: Société"
+      notes: The form is in French. The 'Bloquer le client' checkbox was not visible on the form - it may not exist on this form or may be on a different tab/section. No fields were modified.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d3ee02ec-fc74-4484-a081-4f8dbc10c08a attempts: 1"

@@ -1,0 +1,122 @@
+id: run-20261107T203228-h-EXP_030
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_030.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T20:31:44.900Z
+ended_at: 2026-11-07T20:32:28.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/quotation/new-quotation-zcspygzkkd", "render_js": true, "extract_images": false})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/selling/quotation/new-quotation-zcspygzkkd"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Totaux"})'
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Séries: SAL-QTN-.YYYY.-\", \"Date: 07/11/2026\", \"Type de Commande: Ventes\", \"Devis Pour: Client\", \"Valable Jusqu'au: 07/12/2026\"], \"page_title\": \"Nouveau(elle) Devis - new-quotation\", \"field_labels\": [\"Séries\", \"Date\", \"Type de Commande\", \"Devis Pour\", \"Valable Jusqu'au\", \"Clien"
+  - n: 11
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_09.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Quotation
+        path: /app/quotation/new
+        kind: defaults
+      page_title: Nouveau(elle) Devis - new-quotation
+      field_labels:
+        - Séries
+        - Date
+        - Type de Commande
+        - Devis Pour
+        - Valable Jusqu'au
+        - Client
+        - Devise et liste de prix
+        - Scan Code Barre
+        - Articles
+        - No.
+        - Code de l'Article
+        - Quantité
+        - Prix (USD)
+        - Montant (USD)
+        - Ajouter une ligne
+        - Ajouter plusieurs
+        - Télécharger
+        - Charger
+        - Quantité totale
+        - Total (USD)
+        - Taxes et Frais
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxes et Frais de Vente
+        - Taxes et Frais de Vente
+        - No.
+        - Type
+        - Compte compt...
+        - Taux d'Impositi...
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+        - Ajouter une ligne
+        - Total des Taxes et Frais (Devise Société) (USD)
+        - Total des Taxes et Frais (USD)
+        - Totaux
+      section_labels:
+        - Détails
+        - Adresse & Contact
+        - Termes
+        - Plus d'info
+        - Devise et liste de prix
+        - Articles
+        - Taxes et Frais
+        - Totaux
+      prefilled:
+        - "Séries: SAL-QTN-.YYYY.-"
+        - "Date: 07/11/2026"
+        - "Type de Commande: Ventes"
+        - "Devis Pour: Client"
+        - "Valable Jusqu'au: 07/12/2026"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/68ba8021-4782-4308-a448-ac5d72674fe8 attempts: 1"

@@ -2,7 +2,7 @@ id: S-405
 title: Quality Inspection Parameter
 purpose: create, view and edit Quality Inspection Parameter records
 kind: form
-layout: 3 fields
+layout: "3 fields; observed labels differ from the declared form (2/4 match; not declared: groupe de paramètre, paramétre des inspection qualite)"
 fields:
   - label: Parameter
     control: text
@@ -24,3 +24,10 @@ evidence:
     kind: rea
     locator: form layout of Quality Inspection Parameter
     note: declared by the program
+  - ref: run-20261107T210445-h-EXP_264
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 2/4 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T210445-h-EXP_264/step_05.png
+  - 01-exploration/runs/run-20261107T210445-h-EXP_264/step_05.png

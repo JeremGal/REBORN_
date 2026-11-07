@@ -1,0 +1,20 @@
+id: run-20261107T204253-h-EXP_111
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_111.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:41:49.500Z
+ended_at: 2026-11-07T20:42:53.000Z
+outcome: failed
+steps:
+  - n: 1
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    observation: "the agent could not complete the experiment: attempt 1: session failed: internal The session failed due to an internal error. | attempt 2: session failed: internal The session failed due to an internal error. | attempt 3: session failed: internal The session failed due to an internal error."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/5b637bf9-54c6-4885-9bf6-021ee0972d3c attempts: 3"

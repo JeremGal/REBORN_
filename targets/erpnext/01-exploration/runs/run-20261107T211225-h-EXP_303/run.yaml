@@ -1,0 +1,88 @@
+id: run-20261107T211225-h-EXP_303
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_303.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:10:05.500Z
+ended_at: 2026-11-07T21:12:25.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.342, "y": 0.056, "element": "Comptabilité tab"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.63, \"y\": 0.282, \"element\": \"Checkbox 'Activer les produits comptabilisés d'avance'\"})"
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Unité de Mesure par Défaut: N°\", \"Maintenir Stock: checked\", \"Autoriser à la vente: checked\", \"Autoriser à l'achat: checked\"], \"page_title\": \"Nouveau(elle) Item - new-item-huuetnfklz\", \"field_labels\": [\"Code de l'Article\", \"Nom de l'article\", \"Groupe d'Article\", \"Unité de Mesu"
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Item
+        path: /app/item/new
+        kind: interact
+        mission: M-006
+        action:
+          field: enable_deferred_revenue
+          value: "1"
+      page_title: Nouveau(elle) Item - new-item-huuetnfklz
+      field_labels:
+        - Code de l'Article
+        - Nom de l'article
+        - Groupe d'Article
+        - Unité de Mesure par Défaut
+        - Maintenir Stock
+        - Est Immobilisation
+        - Autoriser à la vente
+        - Autoriser à l'achat
+        - Autoriser un article alternatif
+        - L'article est-il fourni par le client?
+        - A Variantes
+        - Restreindre aux sociétés
+        - Société
+        - Entrepôt par Défaut
+        - Liste des Prix par Défaut
+        - Activer les frais reportés
+        - Activer les produits comptabilisés d'avance
+        - Nombre de mois (Revenu)
+      section_labels:
+        - Paramètres par défaut de l'article
+        - Comptabilité différée
+      prefilled:
+        - "Unité de Mesure par Défaut: N°"
+        - "Maintenir Stock: checked"
+        - "Autoriser à la vente: checked"
+        - "Autoriser à l'achat: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/ed51f3ee-d2b3-4e6f-84af-d7e3d5d77ea4 attempts: 1"

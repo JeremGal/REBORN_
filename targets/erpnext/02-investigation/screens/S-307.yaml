@@ -2,7 +2,7 @@ id: S-307
 title: Sales Forecast
 purpose: create, view and edit Sales Forecast records
 kind: form
-layout: "tabs: Connections; sections: Item and Warehouse; 11 fields"
+layout: "tabs: Connections; sections: Item and Warehouse; 11 fields; observed labels differ from the declared form (11/20 match; not declared: no., code de l'artic, nom de l'article, udm, date de livrais, demande qté, entrepôt, prévision des ventes)"
 fields:
   - label: Naming Series
     control: select
@@ -75,3 +75,10 @@ evidence:
     kind: rea
     locator: form layout of Sales Forecast
     note: declared by the program
+  - ref: run-20261107T205202-h-EXP_178
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 11/20 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205202-h-EXP_178/step_05.png
+  - 01-exploration/runs/run-20261107T205202-h-EXP_178/step_05.png

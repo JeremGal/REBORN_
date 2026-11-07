@@ -1,0 +1,90 @@
+id: run-20261107T204253-h-EXP_110
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_110.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:41:14.300Z
+ended_at: 2026-11-07T20:42:53.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.495, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.495, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.495, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.382, \"y\": 0.392, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article field in row 1\", \"overwrite\": true})"
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.382, "y": 0.437, "element": "TEST-ART-001 option in dropdown"})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'write({"x": 0.555, "y": 0.392, "text": "3", "enter": true, "element": "Qté field in row 1", "overwrite": true})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'write({"x": 0.726, "y": 0.392, "text": "10", "enter": true, "element": "Prix (USD) field in row 1", "overwrite": true})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.624, "element": "Empty area below the items table"})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 11
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form fields: Article à fabriquer (empty), Allocation des coûts / Perte de processus (collapsible section), Opérations (collapsible section), Coût d'exploitation basé sur les produits finis (checkbox, unchecked), Composants (table with row: TEST-ART-001, Qté 3,000, UdM N°, Prix $10."
+    screenshot: step_11.png
+  - n: 12
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_11.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: BOM
+        path: /app/bom/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Nomenclature / Nouveau(elle) Nomenclature
+      field_labels:
+        - Article à fabriquer
+        - Allocation des coûts / Perte de processus
+        - Opérations
+        - Coût d'exploitation basé sur les produits finis
+        - Composants
+        - Articles secondaires
+      section_labels:
+        - Composants
+        - Articles secondaires
+      prefilled: []
+      notes: "Form fields: Article à fabriquer (empty), Allocation des coûts / Perte de processus (collapsible section), Opérations (collapsible section), Coût d'exploitation basé sur les produits finis (checkbox, unchecked), Composants (table with row: TEST-ART-001, Qté 3,000, UdM N°, Prix $10.00, Montant $30.00), Articles secondaires (empty, Aucune ligne). No fields have pre-filled values except the item I added."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/13f4c109-490c-44ab-b159-0673fc9b33e2 attempts: 3"

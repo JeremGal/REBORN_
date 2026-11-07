@@ -1,0 +1,88 @@
+id: run-20261107T204749-h-EXP_152
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_152.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / CRM
+started_at: 2026-11-07T20:46:45.400Z
+ended_at: 2026-11-07T20:47:49.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 600, "scroll_element": null})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.546, "y": 0.555, "element": "Page content area - clicking to focus the scrollable content"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page is in French. The form has sections: Type de Tiers, Période du contrat, Détails du contrat, Détails de l'exécution, Autorisé par. Fields visible: Type de Tiers (dropdown, pre-filled with \\\"Client\\\"), Nom du Tiers, Signé (checkbox), Utilisateur tiers, Date de début, Date de fin"
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: read
+      target_desc: values shown by the application (CRM)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Contract
+        path: /app/contract/new
+        kind: defaults
+      page_title: Nouveau(elle) Contrat
+      field_labels:
+        - Type de Tiers
+        - Nom du Tiers
+        - Signé
+        - Utilisateur tiers
+        - Date de début
+        - Date de fin
+        - Modèle de contrat
+        - Termes du contrat
+        - Nécessite des conditions
+        - Signee (société)
+      section_labels:
+        - Type de Tiers
+        - Période du contrat
+        - Détails du contrat
+        - Détails de l'exécution
+        - Autorisé par
+      prefilled:
+        - "Type de Tiers: Client"
+      notes: "Page is in French. The form has sections: Type de Tiers, Période du contrat, Détails du contrat, Détails de l'exécution, Autorisé par. Fields visible: Type de Tiers (dropdown, pre-filled with \"Client\"), Nom du Tiers, Signé (checkbox), Utilisateur tiers, Date de début, Date de fin, Modèle de contrat, Termes du contrat (rich text editor), Nécessite des conditions (checkbox), Signee (société). The page title is \"Nouveau(elle) Contrat\"."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/fe104a18-78d8-4225-90a0-9772b121d346 attempts: 1"

@@ -1,0 +1,2457 @@
+{
+    "mission":  "M-006",
+    "application":  "ERPNext (fictitious data)",
+    "experiments":  [
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM Creator",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom-creator/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Delivery Note",
+                            "module":  "Stock",
+                            "path":  "/app/delivery-note/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "First choose TEST-Client Alpha in the field \u0027Client\u0027 (Customer). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Landed Cost Voucher",
+                            "module":  "Stock",
+                            "path":  "/app/landed-cost-voucher/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Material Request",
+                            "module":  "Stock",
+                            "path":  "/app/material-request/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Opportunity",
+                            "module":  "CRM",
+                            "path":  "/app/opportunity/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "POS Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/pos-invoice/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Proforma Invoice",
+                            "module":  "Selling",
+                            "path":  "/app/proforma-invoice/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/purchase-invoice/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "First choose TEST-Fournisseur Beta in the field \u0027Fournisseur\u0027 (Supplier). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Order",
+                            "module":  "Buying",
+                            "path":  "/app/purchase-order/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "First choose TEST-Fournisseur Beta in the field \u0027Fournisseur\u0027 (Supplier). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Receipt",
+                            "module":  "Stock",
+                            "path":  "/app/purchase-receipt/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "First choose TEST-Fournisseur Beta in the field \u0027Fournisseur\u0027 (Supplier). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Quotation",
+                            "module":  "Selling",
+                            "path":  "/app/quotation/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "First choose TEST-Client Alpha in the field \u0027Client\u0027 (Customer). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Order",
+                            "module":  "Selling",
+                            "path":  "/app/sales-order/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "First choose TEST-Client Alpha in the field \u0027Client\u0027 (Customer). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Subcontracting Order",
+                            "module":  "Subcontracting",
+                            "path":  "/app/subcontracting-order/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "First choose TEST-Fournisseur Beta in the field \u0027Sous-traitant\u0027 (Job Worker). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Subcontracting Receipt",
+                            "module":  "Subcontracting",
+                            "path":  "/app/subcontracting-receipt/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "First choose TEST-Fournisseur Beta in the field \u0027Sous-traitant\u0027 (Job Worker). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Supplier Quotation",
+                            "module":  "Buying",
+                            "path":  "/app/supplier-quotation/new",
+                            "timeout_s":  420,
+                            "action":  {
+                                           "line":  {
+                                                        "item_code":  "TEST-ART-001",
+                                                        "qty":  3,
+                                                        "rate":  10
+                                                    }
+                                       },
+                            "do":  "First choose TEST-Fournisseur Beta in the field \u0027Fournisseur\u0027 (Supplier). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Account",
+                            "module":  "Accounts",
+                            "path":  "/app/account/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_group",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est un groupe\u0027 (Is Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Accounting Dimension Filter",
+                            "module":  "Accounts",
+                            "path":  "/app/accounting-dimension-filter/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_restriction_on_values",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Appliquer une restriction sur les valeurs de dimension\u0027 (Apply restriction on dimension values)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Accounts Settings",
+                            "module":  "Accounts",
+                            "path":  "/app/accounts-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "book_deferred_entries_via_journal_entry",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Comptabiliser les entrÃ©es diffÃ©rÃ©es via une Ã‰criture de journal\u0027 (Book deferred entries via Journal Entry)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Accounts Settings",
+                            "module":  "Accounts",
+                            "path":  "/app/accounts-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "maintain_same_internal_transaction_rate",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Maintenir le mÃªme prix tout au long de la transaction interne\u0027 (Maintain same rate throughout internal Transaction)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Accounts Settings",
+                            "module":  "Accounts",
+                            "path":  "/app/accounts-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "allow_stale",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Autoriser les Taux de Change Existants\u0027 (Allow Stale Exchange Rates)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Accounts Settings",
+                            "module":  "Accounts",
+                            "path":  "/app/accounts-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enable_overdue_billing_threshold",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027EmpÃªcher la Facture de vente lorsque le Client est En retard\u0027 (Prevent Sales Invoice when Customer is Overdue)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Accounts Settings",
+                            "module":  "Accounts",
+                            "path":  "/app/accounts-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enable_party_matching",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Activer la correspondance automatique des tiers\u0027 (Enable Automatic Party Matching)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Appointment Booking Settings",
+                            "module":  "CRM",
+                            "path":  "/app/appointment-booking-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enable_scheduling",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Activer la planification des rendez-vous\u0027 (Enable Appointment Scheduling)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Asset",
+                            "module":  "Assets",
+                            "path":  "/app/asset/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "calculate_depreciation",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Calculer la dÃ©prÃ©ciation\u0027 (Calculate Depreciation)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Asset",
+                            "module":  "Assets",
+                            "path":  "/app/asset/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "asset_owner",
+                                           "value":  "Company"
+                                       },
+                            "do":  "On this form, in the field \u0027PropriÃ©taire de l\u0027Actif\u0027 (Asset Owner) choose the option \u0027SociÃ©tÃ©\u0027 (Company)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Asset",
+                            "module":  "Assets",
+                            "path":  "/app/asset/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "asset_owner",
+                                           "value":  "Customer"
+                                       },
+                            "do":  "On this form, in the field \u0027PropriÃ©taire de l\u0027Actif\u0027 (Asset Owner) choose the option \u0027Client\u0027 (Customer)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Asset",
+                            "module":  "Assets",
+                            "path":  "/app/asset/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "asset_owner",
+                                           "value":  "Supplier"
+                                       },
+                            "do":  "On this form, in the field \u0027PropriÃ©taire de l\u0027Actif\u0027 (Asset Owner) choose the option \u0027Fournisseur\u0027 (Supplier)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Asset Maintenance Log",
+                            "module":  "Assets",
+                            "path":  "/app/asset-maintenance-log/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "has_certificate",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027A un certificat\u0027 (Has Certificate )."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Asset Repair",
+                            "module":  "Assets",
+                            "path":  "/app/asset-repair/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "repair_status",
+                                           "value":  "Completed"
+                                       },
+                            "do":  "On this form, in the field \u0027Ã‰tat de rÃ©paration\u0027 (Repair Status) choose the option \u0027TerminÃ©\u0027 (Completed)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Asset Repair",
+                            "module":  "Assets",
+                            "path":  "/app/asset-repair/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "capitalize_repair_cost",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Capitaliser le coÃ»t de rÃ©paration\u0027 (Capitalize Repair Cost)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Bank Account",
+                            "module":  "Accounts",
+                            "path":  "/app/bank-account/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_company_account",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est le compte de l\u0027entreprise\u0027 (Is Company Account)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Bank Reconciliation Tool",
+                            "module":  "Accounts",
+                            "path":  "/app/bank-reconciliation-tool",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "filter_by_reference_date",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Filtrer par date de rÃ©fÃ©rence\u0027 (Filter by Reference Date)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Bank Statement Import",
+                            "module":  "Accounts",
+                            "path":  "/app/bank-statement-import/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "custom_delimiters",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027DÃ©limiteurs personnalisÃ©s\u0027 (Custom delimiters)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Blanket Order",
+                            "module":  "Manufacturing",
+                            "path":  "/app/blanket-order/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "blanket_order_type",
+                                           "value":  "Selling"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de Commande\u0027 (Order Type) choose the option \u0027Vente\u0027 (Selling)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Blanket Order",
+                            "module":  "Manufacturing",
+                            "path":  "/app/blanket-order/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "blanket_order_type",
+                                           "value":  "Purchasing"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de Commande\u0027 (Order Type) choose the option \u0027Achat\u0027 (Purchasing)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "with_operations",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Avec des OpÃ©rations\u0027 (With Operations)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "fg_based_operating_cost",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027CoÃ»t d\u0027exploitation basÃ© sur les produits finis\u0027 (Finished Goods based Operating Cost)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "inspection_required",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Inspection de qualitÃ© requise\u0027 (Quality Inspection Required)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "rm_cost_as_per",
+                                           "value":  "Price List"
+                                       },
+                            "do":  "On this form, in the field \u0027Prix des MatÃ©riaux BasÃ© sur\u0027 (Rate Of Materials Based On) choose the option \u0027Liste de prix\u0027 (Price List)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "show_in_website",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Afficher sur le site Web\u0027 (Show in Website)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM Creator",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom-creator/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "track_semi_finished_goods",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Produce Item per Operation\u0027."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM Creator",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom-creator/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "rm_cost_as_per",
+                                           "value":  "Price List"
+                                       },
+                            "do":  "On this form, in the field \u0027Prix des MatÃ©riaux BasÃ© sur\u0027 (Rate Of Materials Based On) choose the option \u0027Liste de prix\u0027 (Price List)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM Creator",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom-creator/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "rm_cost_as_per",
+                                           "value":  "Valuation Rate"
+                                       },
+                            "do":  "On this form, in the field \u0027Prix des MatÃ©riaux BasÃ© sur\u0027 (Rate Of Materials Based On) choose the option \u0027Taux de Valorisation\u0027 (Valuation Rate)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM Update Log",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom-update-log/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "update_type",
+                                           "value":  "Replace BOM"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de mise Ã  jour\u0027 (Update Type) choose the option \u0027Remplacer la nomenclature\u0027 (Replace BOM)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "BOM Update Log",
+                            "module":  "Manufacturing",
+                            "path":  "/app/bom-update-log/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "update_type",
+                                           "value":  "Update Cost"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de mise Ã  jour\u0027 (Update Type) choose the option \u0027Mettre Ã  jour le CoÃ»t\u0027 (Update Cost)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Budget",
+                            "module":  "Accounts",
+                            "path":  "/app/budget/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "budget_against",
+                                           "value":  "Cost Center"
+                                       },
+                            "do":  "On this form, in the field \u0027Budget Pour\u0027 (Budget Against) choose the option \u0027Centre de coÃ»ts\u0027 (Cost Center)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Budget",
+                            "module":  "Accounts",
+                            "path":  "/app/budget/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "budget_against",
+                                           "value":  "Project"
+                                       },
+                            "do":  "On this form, in the field \u0027Budget Pour\u0027 (Budget Against) choose the option \u0027Projet\u0027 (Project)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Budget",
+                            "module":  "Accounts",
+                            "path":  "/app/budget/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_on_material_request",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Applicable sur la base des requÃªtes de matÃ©riel\u0027 (Applicable on Material Request)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Budget",
+                            "module":  "Accounts",
+                            "path":  "/app/budget/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_on_purchase_order",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Applicable sur la base des bons de commande d\u0027achat\u0027 (Applicable on Purchase Order)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Budget",
+                            "module":  "Accounts",
+                            "path":  "/app/budget/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_on_booking_actual_expenses",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Applicable sur la base de l\u0027enregistrement des dÃ©penses rÃ©elles\u0027 (Applicable on booking actual expenses)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Budget",
+                            "module":  "Accounts",
+                            "path":  "/app/budget/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_on_cumulative_expense",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Applicable sur la charge cumulÃ©e\u0027 (Applicable on Cumulative Expense)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Buying Settings",
+                            "module":  "Buying",
+                            "path":  "/app/buying-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "maintain_same_rate",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Maintenir le mÃªme prix tout au long du cycle d\u0027achat\u0027 (Maintain same rate throughout the purchase  cycle)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Buying Settings",
+                            "module":  "Buying",
+                            "path":  "/app/buying-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "bill_for_rejected_quantity_in_purchase_invoice",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Facturer la quantitÃ© rejetÃ©e dans la facture d\u0027achat\u0027 (Bill for rejected quantity in Purchase Invoice)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Buying Settings",
+                            "module":  "Buying",
+                            "path":  "/app/buying-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "backflush_raw_materials_of_subcontract_based_on",
+                                           "value":  "BOM"
+                                       },
+                            "do":  "On this form, in the field \u0027PrÃ©lÃ¨vement rÃ©troactif des matiÃ¨res premiÃ¨res de la sous-traitance basÃ© sur\u0027 (Backflush raw materials of subcontract based on) choose the option \u0027Nomenclature\u0027 (BOM)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Buying Settings",
+                            "module":  "Buying",
+                            "path":  "/app/buying-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "backflush_raw_materials_of_subcontract_based_on",
+                                           "value":  "Material Transferred for Subcontract"
+                                       },
+                            "do":  "On this form, in the field \u0027PrÃ©lÃ¨vement rÃ©troactif des matiÃ¨res premiÃ¨res de la sous-traitance basÃ© sur\u0027 (Backflush raw materials of subcontract based on) choose the option \u0027MatÃ©riel transfÃ©rÃ© pour sous-traitance\u0027 (Material Transferred for Subcontract)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Cheque Print Template",
+                            "module":  "Accounts",
+                            "path":  "/app/cheque-print-template/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "cheque_size",
+                                           "value":  "A4"
+                                       },
+                            "do":  "On this form, in the field \u0027Taille du ChÃ¨que\u0027 (Cheque Size) choose the option \u0027A4\u0027."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Cheque Print Template",
+                            "module":  "Accounts",
+                            "path":  "/app/cheque-print-template/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_account_payable",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est Compte CrÃ©diteur\u0027 (Is Account Payable)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Company",
+                            "module":  "Setup",
+                            "path":  "/app/company/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "create_chart_of_accounts_based_on",
+                                           "value":  "Existing Company"
+                                       },
+                            "do":  "On this form, in the field \u0027CrÃ©er un Plan Comptable BasÃ© Sur\u0027 (Create Chart Of Accounts Based On) choose the option \u0027Entreprise existante\u0027 (Existing Company)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Company",
+                            "module":  "Setup",
+                            "path":  "/app/company/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "create_chart_of_accounts_based_on",
+                                           "value":  "Standard Template"
+                                       },
+                            "do":  "On this form, in the field \u0027CrÃ©er un Plan Comptable BasÃ© Sur\u0027 (Create Chart Of Accounts Based On) choose the option \u0027ModÃ¨le Standard\u0027 (Standard Template)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Company",
+                            "module":  "Setup",
+                            "path":  "/app/company/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "book_advance_payments_in_separate_party_account",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Comptabiliser les acomptes sur un compte de tiers distinct\u0027 (Book Advance Payments in Separate Party Account)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Contract",
+                            "module":  "CRM",
+                            "path":  "/app/contract/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_signed",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027SignÃ©\u0027 (Signed)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Contract",
+                            "module":  "CRM",
+                            "path":  "/app/contract/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "requires_fulfilment",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027NÃ©cessite des conditions\u0027 (Requires Fulfilment)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Contract Template",
+                            "module":  "CRM",
+                            "path":  "/app/contract-template/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "requires_fulfilment",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027NÃ©cessite des conditions\u0027 (Requires Fulfilment)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Coupon Code",
+                            "module":  "Accounts",
+                            "path":  "/app/coupon-code/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "coupon_type",
+                                           "value":  "Gift Card"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de coupon\u0027 (Coupon Type) choose the option \u0027Carte cadeau\u0027 (Gift Card)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Coupon Code",
+                            "module":  "Accounts",
+                            "path":  "/app/coupon-code/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "coupon_type",
+                                           "value":  "Promotional"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de coupon\u0027 (Coupon Type) choose the option \u0027Promotionnel\u0027 (Promotional)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Currency Exchange Settings",
+                            "module":  "Accounts",
+                            "path":  "/app/currency-exchange-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "service_provider",
+                                           "value":  "exchangerate.host"
+                                       },
+                            "do":  "On this form, in the field \u0027Fournisseur de services\u0027 (Service Provider) choose the option \u0027exchangerate.host\u0027 (exchangerate.host)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Customer",
+                            "module":  "Selling",
+                            "path":  "/app/customer/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "customer_type",
+                                           "value":  "Individual"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de client\u0027 (Customer Type) choose the option \u0027Individuel\u0027 (Individual)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Customer",
+                            "module":  "Selling",
+                            "path":  "/app/customer/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_internal_customer",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est un client interne\u0027 (Is Internal Customer)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Customer",
+                            "module":  "Selling",
+                            "path":  "/app/customer/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "restrict_to_companies",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Restreindre aux sociÃ©tÃ©s\u0027 (Restrict to Companies)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Customer",
+                            "module":  "Selling",
+                            "path":  "/app/customer/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "on_hold",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Bloquer le client\u0027 (Block Customer)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Delivery Settings",
+                            "module":  "Stock",
+                            "path":  "/app/delivery-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "send_with_attachment",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Envoyer avec piÃ¨ce jointe\u0027 (Send with Attachment)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Email Digest",
+                            "module":  "Setup",
+                            "path":  "/app/email-digest/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enabled",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027ActivÃ©\u0027 (Enabled)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Employee",
+                            "module":  "Setup",
+                            "path":  "/app/employee/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "salary_mode",
+                                           "value":  "Bank"
+                                       },
+                            "do":  "On this form, in the field \u0027Mode de RÃ©munÃ©ration\u0027 (Salary Mode) choose the option \u0027Banque\u0027 (Bank)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Employee",
+                            "module":  "Setup",
+                            "path":  "/app/employee/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "leave_encashed",
+                                           "value":  "Yes"
+                                       },
+                            "do":  "On this form, in the field \u0027Laisser EncaissÃ© ?\u0027 (Leave Encashed?) choose the option \u0027Oui\u0027 (Yes)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_fixed_asset",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est Immobilisation\u0027 (Is Fixed Asset)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "restrict_to_companies",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Restreindre aux sociÃ©tÃ©s\u0027 (Restrict to Companies)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enable_deferred_expense",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Activer les frais reportÃ©s\u0027 (Enable Deferred Expense)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enable_deferred_revenue",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Activer les produits comptabilisÃ©s d\u0027avance\u0027 (Enable Deferred Revenue)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_purchase_item",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Autoriser Ã  l\u0027achat\u0027 (Allow Purchase)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_sales_item",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Autoriser Ã  la vente\u0027 (Allow Sales)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_stock_item",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Maintenir Stock\u0027 (Maintain Stock)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "has_batch_no",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027A un NumÃ©ro de Lot\u0027 (Has Batch No)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "has_expiry_date",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027A une date d\u0027expiration\u0027 (Has Expiry Date)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "has_serial_no",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027A un NÂ° de SÃ©rie\u0027 (Has Serial No)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "has_variants",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027A Variantes\u0027 (Has Variants)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Item Attribute",
+                            "module":  "Stock",
+                            "path":  "/app/item-attribute/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "numeric_values",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Valeurs NumÃ©riques\u0027 (Numeric Values)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Journal Entry",
+                            "module":  "Accounts",
+                            "path":  "/app/journal-entry/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_tds",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Envisager pour la retenue Ã  la source \u0027 (Consider for Tax Withholding )."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Journal Entry",
+                            "module":  "Accounts",
+                            "path":  "/app/journal-entry/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "voucher_type",
+                                           "value":  "Periodic Accounting Entry"
+                                       },
+                            "do":  "On this form, in the field \u0027Type d\u0027Ã‰criture\u0027 (Entry Type) choose the option \u0027Ã‰criture comptable pÃ©riodique\u0027 (Periodic Accounting Entry)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Journal Entry",
+                            "module":  "Accounts",
+                            "path":  "/app/journal-entry/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "for_all_stock_asset_accounts",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Pour tous les comptes d\u0027actif de stock\u0027 (For All Stock Asset Accounts)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Journal Entry",
+                            "module":  "Accounts",
+                            "path":  "/app/journal-entry/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "voucher_type",
+                                           "value":  "Inter Company Journal Entry"
+                                       },
+                            "do":  "On this form, in the field \u0027Type d\u0027Ã‰criture\u0027 (Entry Type) choose the option \u0027Ecriture de journal inter-sociÃ©tÃ©s\u0027 (Inter Company Journal Entry)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Journal Entry",
+                            "module":  "Accounts",
+                            "path":  "/app/journal-entry/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "voucher_type",
+                                           "value":  "Write Off Entry"
+                                       },
+                            "do":  "On this form, in the field \u0027Type d\u0027Ã‰criture\u0027 (Entry Type) choose the option \u0027Ã‰criture de Reprise\u0027 (Write Off Entry)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Manufacturing Settings",
+                            "module":  "Manufacturing",
+                            "path":  "/app/manufacturing-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "material_consumption",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Autoriser la consommation continue de matÃ©riel\u0027 (Allow Continuous Material Consumption)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Manufacturing Settings",
+                            "module":  "Manufacturing",
+                            "path":  "/app/manufacturing-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "backflush_raw_materials_based_on",
+                                           "value":  "BOM"
+                                       },
+                            "do":  "On this form, in the field \u0027Enregistrer les MatiÃ¨res PremiÃ¨res sur la Base de\u0027 (Backflush Raw Materials Based On) choose the option \u0027Nomenclature\u0027 (BOM)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Material Request",
+                            "module":  "Stock",
+                            "path":  "/app/material-request/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "material_request_type",
+                                           "value":  "Customer Provided"
+                                       },
+                            "do":  "On this form, in the field \u0027Objet\u0027 (Purpose) choose the option \u0027Client fourni\u0027 (Customer Provided)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Material Request",
+                            "module":  "Stock",
+                            "path":  "/app/material-request/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "material_request_type",
+                                           "value":  "Material Transfer"
+                                       },
+                            "do":  "On this form, in the field \u0027Objet\u0027 (Purpose) choose the option \u0027Transfert de matÃ©riel\u0027 (Material Transfer)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Operation",
+                            "module":  "Manufacturing",
+                            "path":  "/app/operation/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "create_job_card_based_on_batch_size",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027CrÃ©er une fiche de travail en fonction de la taille du lot\u0027 (Create Job Card based on Batch Size)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Opportunity",
+                            "module":  "CRM",
+                            "path":  "/app/opportunity/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "status",
+                                           "value":  "Lost"
+                                       },
+                            "do":  "On this form, in the field \u0027Statut\u0027 (Status) choose the option \u0027Perdu\u0027 (Lost)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Payment Entry",
+                            "module":  "Accounts",
+                            "path":  "/app/payment-entry/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_tds",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Envisager pour la retenue Ã  la source\u0027 (Consider for Tax Withholding)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Payment Request",
+                            "module":  "Accounts",
+                            "path":  "/app/payment-request/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_a_subscription",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est un abonnement\u0027 (Is a Subscription)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Payment Request",
+                            "module":  "Accounts",
+                            "path":  "/app/payment-request/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "payment_request_type",
+                                           "value":  "Inward"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de demande de paiement\u0027 (Payment Request Type) choose the option \u0027Vers l\u0027intÃ©rieur\u0027 (Inward)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Payment Term",
+                            "module":  "Accounts",
+                            "path":  "/app/payment-term/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "due_date_based_on",
+                                           "value":  "Month(s) after the end of the invoice month"
+                                       },
+                            "do":  "On this form, in the field \u0027Date d\u0027Ã©chÃ©ance basÃ©e sur\u0027 (Due Date Based On) choose the option \u0027Mois (s) aprÃ¨s la fin du mois de la facture\u0027 (Month(s) after the end of the invoice month)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pick List",
+                            "module":  "Stock",
+                            "path":  "/app/pick-list/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "purpose",
+                                           "value":  "Delivery"
+                                       },
+                            "do":  "On this form, in the field \u0027Objet\u0027 (Purpose) choose the option \u0027Livraison\u0027 (Delivery)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pick List",
+                            "module":  "Stock",
+                            "path":  "/app/pick-list/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "purpose",
+                                           "value":  "Material Transfer for Manufacture"
+                                       },
+                            "do":  "On this form, in the field \u0027Objet\u0027 (Purpose) choose the option \u0027Transfert de MatÃ©riel pour la Production\u0027 (Material Transfer for Manufacture)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "POS Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/pos-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "update_stock",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Mettre Ã  Jour le Stock\u0027 (Update Stock)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "POS Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/pos-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "redeem_loyalty_points",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Ã‰changer des points de fidÃ©litÃ©\u0027 (Redeem Loyalty Points)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "POS Invoice Merge Log",
+                            "module":  "Accounts",
+                            "path":  "/app/pos-invoice-merge-log/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "merge_invoices_based_on",
+                                           "value":  "Customer Group"
+                                       },
+                            "do":  "On this form, in the field \u0027Fusionner les factures (basÃ© sur)\u0027 (Merge Invoices Based On) choose the option \u0027Groupe de clients\u0027 (Customer Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_on",
+                                           "value":  "Item Code"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer Sur\u0027 (Apply On) choose the option \u0027Code de l\u0027Article\u0027 (Item Code)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_on",
+                                           "value":  "Item Group"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer Sur\u0027 (Apply On) choose the option \u0027Groupe d\u0027Article\u0027 (Item Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_on",
+                                           "value":  "Brand"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer Sur\u0027 (Apply On) choose the option \u0027Marque\u0027 (Brand)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_rule_on_other",
+                                           "value":  "Item Code"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer la rÃ¨gle sur autre\u0027 (Apply Rule On Other) choose the option \u0027Code de l\u0027Article\u0027 (Item Code)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_rule_on_other",
+                                           "value":  "Item Group"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer la rÃ¨gle sur autre\u0027 (Apply Rule On Other) choose the option \u0027Groupe d\u0027Article\u0027 (Item Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_rule_on_other",
+                                           "value":  "Brand"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer la rÃ¨gle sur autre\u0027 (Apply Rule On Other) choose the option \u0027Marque\u0027 (Brand)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Customer"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Client\u0027 (Customer)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Customer Group"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Groupe de clients\u0027 (Customer Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Territory"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027RÃ©gion\u0027 (Territory)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Sales Partner"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Partenaire commercial\u0027 (Sales Partner)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Campaign"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Campagne\u0027 (Campaign)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Supplier"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Fournisseur\u0027 (Supplier)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Supplier Group"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Groupe de fournisseurs\u0027 (Supplier Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "price_or_product_discount",
+                                           "value":  "Product"
+                                       },
+                            "do":  "On this form, in the field \u0027Prix ou remise de produit\u0027 (Price or Product Discount) choose the option \u0027Produit\u0027 (Product)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_recursive",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est rÃ©cursif\u0027 (Is Recursive)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "price_or_product_discount",
+                                           "value":  "Price"
+                                       },
+                            "do":  "On this form, in the field \u0027Prix ou remise de produit\u0027 (Price or Product Discount) choose the option \u0027Prix\u0027 (Price)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "rate_or_discount",
+                                           "value":  "Rate"
+                                       },
+                            "do":  "On this form, in the field \u0027Prix unitaire ou rÃ©duction\u0027 (Rate or Discount) choose the option \u0027Prix\u0027 (Rate)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "rate_or_discount",
+                                           "value":  "Discount Amount"
+                                       },
+                            "do":  "On this form, in the field \u0027Prix unitaire ou rÃ©duction\u0027 (Rate or Discount) choose the option \u0027Remise\u0027 (Discount Amount)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "rate_or_discount",
+                                           "value":  "Discount Percentage"
+                                       },
+                            "do":  "On this form, in the field \u0027Prix unitaire ou rÃ©duction\u0027 (Rate or Discount) choose the option \u0027Remise en Pourcentage\u0027 (Discount Percentage)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "validate_applied_rule",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Valider la rÃ¨gle appliquÃ©e\u0027 (Validate Applied Rule)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Pricing Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/pricing-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "has_priority",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027A la prioritÃ©\u0027 (Has Priority)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Process Statement Of Accounts",
+                            "module":  "Accounts",
+                            "path":  "/app/process-statement-of-accounts/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "include_ageing",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Inclure le rÃ©sumÃ© du vieillissement\u0027 (Include Ageing Summary)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Process Statement Of Accounts",
+                            "module":  "Accounts",
+                            "path":  "/app/process-statement-of-accounts/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enable_auto_email",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Activer la messagerie automatique\u0027 (Enable Auto Email)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Production Plan",
+                            "module":  "Manufacturing",
+                            "path":  "/app/production-plan/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "get_items_from",
+                                           "value":  "Sales Order"
+                                       },
+                            "do":  "On this form, in the field \u0027Obtenir les articles de\u0027 (Get Items From) choose the option \u0027Commande client\u0027 (Sales Order)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Production Plan",
+                            "module":  "Manufacturing",
+                            "path":  "/app/production-plan/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "get_items_from",
+                                           "value":  "Material Request"
+                                       },
+                            "do":  "On this form, in the field \u0027Obtenir les articles de\u0027 (Get Items From) choose the option \u0027Demande de matÃ©riel\u0027 (Material Request)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Project",
+                            "module":  "Projects",
+                            "path":  "/app/project/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "collect_progress",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Envoyer des emails de suivi d\u0027avancement\u0027 (Collect Progress)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_on",
+                                           "value":  "Item Code"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer Sur\u0027 (Apply On) choose the option \u0027Code de l\u0027Article\u0027 (Item Code)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_on",
+                                           "value":  "Item Group"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer Sur\u0027 (Apply On) choose the option \u0027Groupe d\u0027Article\u0027 (Item Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_on",
+                                           "value":  "Brand"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer Sur\u0027 (Apply On) choose the option \u0027Marque\u0027 (Brand)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_rule_on_other",
+                                           "value":  "Item Code"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer la rÃ¨gle sur autre\u0027 (Apply Rule On Other) choose the option \u0027Code de l\u0027Article\u0027 (Item Code)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_rule_on_other",
+                                           "value":  "Item Group"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer la rÃ¨gle sur autre\u0027 (Apply Rule On Other) choose the option \u0027Groupe d\u0027Article\u0027 (Item Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_rule_on_other",
+                                           "value":  "Brand"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer la rÃ¨gle sur autre\u0027 (Apply Rule On Other) choose the option \u0027Marque\u0027 (Brand)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Customer"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Client\u0027 (Customer)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Customer Group"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Groupe de clients\u0027 (Customer Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Territory"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027RÃ©gion\u0027 (Territory)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Sales Partner"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Partenaire commercial\u0027 (Sales Partner)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Campaign"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Campagne\u0027 (Campaign)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Supplier"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Fournisseur\u0027 (Supplier)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Promotional Scheme",
+                            "module":  "Accounts",
+                            "path":  "/app/promotional-scheme/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "applicable_for",
+                                           "value":  "Supplier Group"
+                                       },
+                            "do":  "On this form, in the field \u0027Applicable pour\u0027 (Applicable For) choose the option \u0027Groupe de fournisseurs\u0027 (Supplier Group)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/purchase-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_return",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est une note de dÃ©bit\u0027 (Is Return (Debit Note))."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/purchase-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "update_stock",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Mettre Ã  Jour le Stock\u0027 (Update Stock)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/purchase-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_tds",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Envisager pour la retenue Ã  la source\u0027 (Consider for Tax Withholding)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/purchase-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_paid",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est PayÃ©\u0027 (Is Paid)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/purchase-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "allocate_advances_automatically",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Affecter les encours au rÃ©glement\u0027 (Set Advances and Allocate (FIFO))."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/purchase-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "on_hold",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Facture en attente\u0027 (Hold Invoice)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Purchase Order",
+                            "module":  "Buying",
+                            "path":  "/app/purchase-order/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_subcontracted",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est sous-traitÃ©\u0027 (Is Subcontracted)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Quality Goal",
+                            "module":  "Quality Management",
+                            "path":  "/app/quality-goal/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "frequency",
+                                           "value":  "Weekly"
+                                       },
+                            "do":  "On this form, in the field \u0027FrÃ©quence de surveillance\u0027 (Monitoring Frequency) choose the option \u0027Hebdomadaire\u0027 (Weekly)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Repost Item Valuation",
+                            "module":  "Stock",
+                            "path":  "/app/repost-item-valuation/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "based_on",
+                                           "value":  "Transaction"
+                                       },
+                            "do":  "On this form, in the field \u0027BasÃ© sur\u0027 (Based On) choose the option \u0027Transaction\u0027."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Repost Item Valuation",
+                            "module":  "Stock",
+                            "path":  "/app/repost-item-valuation/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "based_on",
+                                           "value":  "Item and Warehouse"
+                                       },
+                            "do":  "On this form, in the field \u0027BasÃ© sur\u0027 (Based On) choose the option \u0027Article et entrepÃ´t\u0027 (Item and Warehouse)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Repost Item Valuation",
+                            "module":  "Stock",
+                            "path":  "/app/repost-item-valuation/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "repost_only_accounting_ledgers",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Recomptabiliser uniquement les grands livres\u0027 (Repost Only Accounting Ledgers)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_pos",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Inclure Paiement (PDV)\u0027 (Include Payment (POS))."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_return",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est un avoir (note de crÃ©dit)\u0027 (Is Return (Credit Note))."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "update_stock",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Mettre Ã  Jour le Stock\u0027 (Update Stock)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_tds",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Envisager pour la retenue Ã  la source\u0027 (Consider for Tax Withholding)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "apply_discount_on",
+                                           "value":  "Grand Total"
+                                       },
+                            "do":  "On this form, in the field \u0027Appliquer une Remise SupplÃ©mentaire Sur\u0027 (Apply Additional Discount On) choose the option \u0027Total TTC\u0027 (Grand Total)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "allocate_advances_automatically",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Allouer automatiquement les avances (FIFO)\u0027 (Allocate Advances Automatically (FIFO))."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "redeem_loyalty_points",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Ã‰changer des points de fidÃ©litÃ©\u0027 (Redeem Loyalty Points)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Order",
+                            "module":  "Selling",
+                            "path":  "/app/sales-order/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "order_type",
+                                           "value":  "Maintenance"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de Commande\u0027 (Order Type) choose the option \u0027Entretien\u0027 (Maintenance)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Sales Partner",
+                            "module":  "Setup",
+                            "path":  "/app/sales-partner/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "show_in_website",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Afficher dans le Site Web\u0027 (Show In Website)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Selling Settings",
+                            "module":  "Selling",
+                            "path":  "/app/selling-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "maintain_same_sales_rate",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Maintenir le mÃªme prix tout au long du cycle de vente\u0027 (Maintain same rate throughout sales cycle)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Selling Settings",
+                            "module":  "Selling",
+                            "path":  "/app/selling-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enable_proforma_invoice",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Activer la facture proforma\u0027 (Enable Proforma Invoice)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Shipment",
+                            "module":  "Stock",
+                            "path":  "/app/shipment/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "pickup_from_type",
+                                           "value":  "Company"
+                                       },
+                            "do":  "On this form, in the field \u0027EnlÃ¨vement de\u0027 (Pickup from) choose the option \u0027SociÃ©tÃ©\u0027 (Company)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Shipment",
+                            "module":  "Stock",
+                            "path":  "/app/shipment/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "pickup_from_type",
+                                           "value":  "Customer"
+                                       },
+                            "do":  "On this form, in the field \u0027EnlÃ¨vement de\u0027 (Pickup from) choose the option \u0027Client\u0027 (Customer)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Shipment",
+                            "module":  "Stock",
+                            "path":  "/app/shipment/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "pickup_from_type",
+                                           "value":  "Supplier"
+                                       },
+                            "do":  "On this form, in the field \u0027EnlÃ¨vement de\u0027 (Pickup from) choose the option \u0027Fournisseur\u0027 (Supplier)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Shipment",
+                            "module":  "Stock",
+                            "path":  "/app/shipment/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "delivery_to_type",
+                                           "value":  "Company"
+                                       },
+                            "do":  "On this form, in the field \u0027Livraison Ã \u0027 (Delivery to) choose the option \u0027SociÃ©tÃ©\u0027 (Company)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Shipment",
+                            "module":  "Stock",
+                            "path":  "/app/shipment/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "delivery_to_type",
+                                           "value":  "Customer"
+                                       },
+                            "do":  "On this form, in the field \u0027Livraison Ã \u0027 (Delivery to) choose the option \u0027Client\u0027 (Customer)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Shipment",
+                            "module":  "Stock",
+                            "path":  "/app/shipment/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "delivery_to_type",
+                                           "value":  "Supplier"
+                                       },
+                            "do":  "On this form, in the field \u0027Livraison Ã \u0027 (Delivery to) choose the option \u0027Fournisseur\u0027 (Supplier)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Shipping Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/shipping-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "calculate_based_on",
+                                           "value":  "Fixed"
+                                       },
+                            "do":  "On this form, in the field \u0027Calculer en fonction de\u0027 (Calculate Based On) choose the option \u0027FixÃ©\u0027 (Fixed)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "SMS Center",
+                            "module":  "Selling",
+                            "path":  "/app/sms-center",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "send_to",
+                                           "value":  "All Customer Contact"
+                                       },
+                            "do":  "On this form, in the field \u0027Envoyer Ã€\u0027 (Send To) choose the option \u0027Tout Contact Client\u0027 (All Customer Contact)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "SMS Center",
+                            "module":  "Selling",
+                            "path":  "/app/sms-center",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "send_to",
+                                           "value":  "All Supplier Contact"
+                                       },
+                            "do":  "On this form, in the field \u0027Envoyer Ã€\u0027 (Send To) choose the option \u0027Tous les Contacts Fournisseurs\u0027 (All Supplier Contact)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "SMS Center",
+                            "module":  "Selling",
+                            "path":  "/app/sms-center",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "send_to",
+                                           "value":  "All Sales Partner Contact"
+                                       },
+                            "do":  "On this form, in the field \u0027Envoyer Ã€\u0027 (Send To) choose the option \u0027Tous les Contacts de Partenaires Commerciaux\u0027 (All Sales Partner Contact)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "SMS Center",
+                            "module":  "Selling",
+                            "path":  "/app/sms-center",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "send_to",
+                                           "value":  "All Employee (Active)"
+                                       },
+                            "do":  "On this form, in the field \u0027Envoyer Ã€\u0027 (Send To) choose the option \u0027Tous les EmployÃ©s (Actifs)\u0027 (All Employee (Active))."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Stock Entry",
+                            "module":  "Stock",
+                            "path":  "/app/stock-entry/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "from_bom",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Depuis la nomenclature\u0027 (From BOM)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Stock Entry Type",
+                            "module":  "Stock",
+                            "path":  "/app/stock-entry-type/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "purpose",
+                                           "value":  "Material Transfer"
+                                       },
+                            "do":  "On this form, in the field \u0027Objet\u0027 (Purpose) choose the option \u0027Transfert de matÃ©riel\u0027 (Material Transfer)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Stock Reposting Settings",
+                            "module":  "Stock",
+                            "path":  "/app/stock-reposting-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "limit_reposting_timeslot",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Limiter la plage horaire pour la recomptabilisation des stocks\u0027 (Limit timeslot for Stock Reposting)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Stock Reposting Settings",
+                            "module":  "Stock",
+                            "path":  "/app/stock-reposting-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "item_based_reposting",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Utiliser la recomptabilisation basÃ©e sur l\u0027article\u0027 (Use Item based reposting)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Stock Settings",
+                            "module":  "Stock",
+                            "path":  "/app/stock-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "auto_insert_price_list_rate_if_missing",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027InsÃ©rer automatiquement le prix de l\u0027article s\u0027il est manquant\u0027 (Auto insert Item Price if missing)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Stock Settings",
+                            "module":  "Stock",
+                            "path":  "/app/stock-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enable_serial_and_batch_no_for_item",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Activer NÂ° de sÃ©rie / lot pour l\u0027article\u0027 (Activate Serial / Batch No for Item)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Stock Settings",
+                            "module":  "Stock",
+                            "path":  "/app/stock-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "use_naming_series",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027DÃ©finir un masque de numÃ©rotation par dÃ©faut pour l\u0027ID de lot ?\u0027 (Have default Naming Series for Batch ID?)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Stock Settings",
+                            "module":  "Stock",
+                            "path":  "/app/stock-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "enable_stock_reservation",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Activer la rÃ©servation de stock\u0027 (Enable stock reservation)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Subscription",
+                            "module":  "Accounts",
+                            "path":  "/app/subscription/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "generate_invoice_at",
+                                           "value":  "Days before the current subscription period"
+                                       },
+                            "do":  "On this form, in the field \u0027GÃ©nÃ©rer la facture Ã \u0027 (Generate Invoice At) choose the option \u0027Jours avant la pÃ©riode d\u0027abonnement en cours\u0027 (Days before the current subscription period)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Subscription Plan",
+                            "module":  "Accounts",
+                            "path":  "/app/subscription-plan/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "price_determination",
+                                           "value":  "Based On Price List"
+                                       },
+                            "do":  "On this form, in the field \u0027Prix d\u0027abonnement basÃ© sur\u0027 (Subscription Price Based On) choose the option \u0027BasÃ© sur la liste de prix\u0027 (Based On Price List)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Supplier",
+                            "module":  "Buying",
+                            "path":  "/app/supplier/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "supplier_type",
+                                           "value":  "Individual"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de Fournisseur\u0027 (Supplier Type) choose the option \u0027Individuel\u0027 (Individual)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Supplier",
+                            "module":  "Buying",
+                            "path":  "/app/supplier/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_internal_supplier",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est un fournisseur interne\u0027 (Is Internal Supplier)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Supplier",
+                            "module":  "Buying",
+                            "path":  "/app/supplier/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "restrict_to_companies",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Restreindre aux sociÃ©tÃ©s\u0027 (Restrict to Companies)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Supplier",
+                            "module":  "Buying",
+                            "path":  "/app/supplier/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "on_hold",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Bloquer le fournisseur\u0027 (Block Supplier)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Support Settings",
+                            "module":  "Support",
+                            "path":  "/app/support-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "track_service_level_agreement",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Suivi du contrat de niveau de service\u0027 (Track Service Level Agreement)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Support Settings",
+                            "module":  "Support",
+                            "path":  "/app/support-settings",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "show_latest_forum_posts",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Afficher les derniers messages du forum\u0027 (Show Latest Forum Posts)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Task",
+                            "module":  "Projects",
+                            "path":  "/app/task/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "status",
+                                           "value":  "Completed"
+                                       },
+                            "do":  "On this form, in the field \u0027Statut\u0027 (Status) choose the option \u0027TerminÃ©\u0027 (Completed)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Task",
+                            "module":  "Projects",
+                            "path":  "/app/task/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "is_template",
+                                           "value":  "1"
+                                       },
+                            "do":  "On this form, tick the checkbox \u0027Est un modÃ¨le\u0027 (Is Template)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Tax Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/tax-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "tax_type",
+                                           "value":  "Sales"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de Taxe\u0027 (Tax Type) choose the option \u0027Ventes\u0027 (Sales)."
+                        },
+                        {
+                            "kind":  "interact",
+                            "doctype":  "Tax Rule",
+                            "module":  "Accounts",
+                            "path":  "/app/tax-rule/new",
+                            "timeout_s":  360,
+                            "action":  {
+                                           "field":  "tax_type",
+                                           "value":  "Purchase"
+                                       },
+                            "do":  "On this form, in the field \u0027Type de Taxe\u0027 (Tax Type) choose the option \u0027achat\u0027 (Purchase)."
+                        }
+                    ]
+}

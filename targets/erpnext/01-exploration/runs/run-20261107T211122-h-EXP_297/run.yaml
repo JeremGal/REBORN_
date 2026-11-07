@@ -1,0 +1,59 @@
+id: run-20261107T211122-h-EXP_297
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_297.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Setup
+started_at: 2026-11-07T21:10:52.800Z
+ended_at: 2026-11-07T21:11:22.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Login was successful but the page at /app/email-digest/new shows an authorization error: 'Non autorisé - L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page'. The form could not be accessed to complete"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Setup)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Email Digest
+        path: /app/email-digest/new
+        kind: interact
+        mission: M-006
+        action:
+          field: enabled
+          value: "1"
+      page_title: Login
+      field_labels:
+        - Email
+        - Password
+      section_labels:
+        - Sign In
+      prefilled: []
+      notes: "Login was successful but the page at /app/email-digest/new shows an authorization error: 'Non autorisé - L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page'. The form could not be accessed to complete the remaining tasks."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/75cd4fe3-2243-483c-8da7-352d890c734c attempts: 1"

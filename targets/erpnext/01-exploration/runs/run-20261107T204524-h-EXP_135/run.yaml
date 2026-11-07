@@ -1,0 +1,60 @@
+id: run-20261107T204524-h-EXP_135
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_135.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Assets
+started_at: 2026-11-07T20:44:45.800Z
+ended_at: 2026-11-07T20:45:24.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+    screenshot: step_01.png
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+    screenshot: step_02.png
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.497, "y": 0.324, "element": "Continue button"})'
+    screenshot: step_03.png
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [], \"page_title\": \"Nouveau(elle) Facteur de poste d'immobilisation\", \"field_labels\": [\"Nom du poste\", \"Facteur de poste\", \"Par défaut\"], \"section_labels\": [\"\"]})"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Assets)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Asset Shift Factor
+        path: /app/asset-shift-factor/new
+        kind: defaults
+      page_title: Nouveau(elle) Facteur de poste d'immobilisation
+      field_labels:
+        - Nom du poste
+        - Facteur de poste
+        - Par défaut
+      section_labels:
+        - ""
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/4947ba98-f858-4d34-a356-3a465909a73c attempts: 1"

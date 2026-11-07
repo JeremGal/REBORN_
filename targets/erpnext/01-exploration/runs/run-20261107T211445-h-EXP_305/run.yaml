@@ -1,0 +1,91 @@
+id: run-20261107T211445-h-EXP_305
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_305.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:12:50.800Z
+ended_at: 2026-11-07T21:14:45.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.262, \"y\": 0.389, \"element\": \"Checkbox 'Autoriser à la vente' (Allow Sales)\"})"
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.262, \"y\": 0.389, \"element\": \"Checkbox 'Autoriser à la vente' (Allow Sales) - clicking to check it\"})"
+  - n: 8
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.261, \"y\": 0.389, \"element\": \"Checkbox for 'Autoriser à la vente' - the small square checkbox to the left of the text\"})"
+  - n: 9
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.26, \"y\": 0.388, \"element\": \"The checkbox square for 'Autoriser à la vente' - the small box icon\"})"
+  - n: 10
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form field labels and prefilled values reported. The 'Autoriser à la vente' checkbox was clicked (appears checked/indeterminate). No other fields showed prefilled values except 'Unité de Mesure par Défaut: N°' and the two already-checked checkboxes.\", \"page_title\": \"Item Form - Fie"
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Item
+        path: /app/item/new
+        kind: interact
+        mission: M-006
+        action:
+          field: is_sales_item
+          value: "1"
+      page_title: Item Form - Field Labels and Values Report
+      field_labels:
+        - Code de l'Article
+        - Nom de l'article
+        - Groupe d'Article
+        - Unité de Mesure par Défaut
+        - Maintenir Stock
+        - Est Immobilisation
+        - Autoriser à la vente
+        - Autoriser à l'achat
+        - Autoriser un article alternatif
+        - L'article est-il fourni par le client?
+        - A Variantes
+        - Restreindre aux sociétés
+      section_labels:
+        - Attributs de l'Article
+        - Restrictions de sociétés
+        - Description
+      prefilled: []
+      notes: "Form field labels and prefilled values reported. The 'Autoriser à la vente' checkbox was clicked (appears checked/indeterminate). No other fields showed prefilled values except 'Unité de Mesure par Défaut: N°' and the two already-checked checkboxes."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/8b591993-3064-40ea-be2b-3207097fc2e3 attempts: 1"

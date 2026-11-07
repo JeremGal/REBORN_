@@ -1,0 +1,59 @@
+id: run-20261107T204206-h-EXP_109
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_109.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:41:36.200Z
+ended_at: 2026-11-07T20:42:06.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Page loaded successfully after login. The form has two sections: Filtres and Pièces justificatives. The form is in French. No other content visible below the fold.", "prefilled": ["Société: Digital Solution Service", "Date de Comptabilisation: 07/11/2026"], "page_title": "Nouveau(e'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_04.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Repost Payment Ledger
+        path: /app/repost-payment-ledger/new
+        kind: defaults
+      page_title: Nouveau(elle) Recomptabilisation du grand livre des paiements
+      field_labels:
+        - Société
+        - Type de Référence
+        - Date de Comptabilisation
+        - Ajouter manuellement
+        - Pièces sélectionnées
+        - No.
+        - Ajouter une ligne
+      section_labels:
+        - Filtres
+        - Pièces justificatives
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Date de Comptabilisation: 07/11/2026"
+      notes: "Page loaded successfully after login. The form has two sections: Filtres and Pièces justificatives. The form is in French. No other content visible below the fold."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/9e32b55d-20ac-48d3-9fbc-72e8e5fd522f attempts: 1"

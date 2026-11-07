@@ -1,0 +1,91 @@
+id: run-20261107T204253-h-EXP_116
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_116.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:42:16.500Z
+ended_at: 2026-11-07T20:42:53.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Empty area to close dropdown"})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 1000, "scroll_element": null})'
+  - n: 8
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Société: Digital Solution Service\", \"Jours avant échéance: 0\", \"Générer la facture à: Fin de la période d'abonnement en cours\", \"Valider les factures générées: checked\"], \"page_title\": \"Nouveau(elle) Abonnement\", \"field_labels\": [\"Type de Tiers\", \"Société\", \"Tiers\", \"Date de d"
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Subscription
+        path: /app/subscription/new
+        kind: defaults
+      page_title: Nouveau(elle) Abonnement
+      field_labels:
+        - Type de Tiers
+        - Société
+        - Tiers
+        - Date de début de l'abonnement
+        - Jours avant échéance
+        - Date de fin d'abonnement
+        - Générer la facture à
+        - Date de début de la période d'essai
+        - Suivez les mois civils
+        - Annuler à la fin de la période
+        - Générer de nouvelles factures après la date d'échéance
+        - Valider les factures générées
+        - Plans
+        - No.
+        - Plan
+        - Quantité
+        - Ajouter une ligne
+        - Appliquer une Remise Supplémentaire Sur
+        - Pourcentage de remise supplémentaire
+        - Montant de la remise supplémentaire
+      section_labels:
+        - Période d'abonnement
+        - Plans
+        - Réductions
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Jours avant échéance: 0"
+        - "Générer la facture à: Fin de la période d'abonnement en cours"
+        - "Valider les factures générées: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/473bd217-ac9c-4fcc-ad86-13fe65851be9 attempts: 1"

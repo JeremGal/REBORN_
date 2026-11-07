@@ -1,0 +1,64 @@
+id: run-20261107T204430-h-EXP_130
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_130.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Assets
+started_at: 2026-11-07T20:43:43.100Z
+ended_at: 2026-11-07T20:44:30.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page is in French. The form has 4 visible fields: Tâche (empty), Statut d'Entretien (set to \\\"Prévus\\\"), A un certificat (unchecked checkbox), Date d'Achèvement (empty). Only one field has a pre-filled value: Statut d'Entretien shows \\\"Prévus\\\". The page title in the browser tab is"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Assets)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Asset Maintenance Log
+        path: /app/asset-maintenance-log/new
+        kind: defaults
+      page_title: Nouveau(elle) Journal de Maintenance des Actifs
+      field_labels:
+        - Tâche
+        - Statut d'Entretien
+        - A un certificat
+        - Date d'Achèvement
+      section_labels:
+        - Maintenance des actifs
+        - Détails de maintenance
+        - Actions réalisées
+      prefilled:
+        - "Statut d'Entretien: Prévu"
+      notes: "Page is in French. The form has 4 visible fields: Tâche (empty), Statut d'Entretien (set to \"Prévus\"), A un certificat (unchecked checkbox), Date d'Achèvement (empty). Only one field has a pre-filled value: Statut d'Entretien shows \"Prévus\". The page title in the browser tab is \"Nouveau(elle) Journal de Maintenance des Actifs\"."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/84042cb9-3a3c-4fdb-b8a0-56d939fbe5d9 attempts: 1"

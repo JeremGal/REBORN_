@@ -1,0 +1,142 @@
+id: run-20261107T204357-h-EXP_120
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_120.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T20:42:16.400Z
+ended_at: 2026-11-07T20:43:57.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.375, \"y\": 0.454, \"text\": \"TEST-ART-001\", \"enter\": false, \"element\": \"Code de l'Article input field in row 1 of the Articles table\", \"overwrite\": true})"
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.405, "y": 0.5, "element": "TEST-ART-001 - TEST Article 1, Products suggestion"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'write({"x": 0.663, "y": 0.454, "text": "3", "enter": false, "element": "Quantité field in row 1", "overwrite": true})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.546, "y": 0.624, "element": "Empty area below the table"})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "right", "num_pixels": 300, "scroll_element": null})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.323, "y": 0.059, "element": "Termes tab"})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.264, "y": 0.059, "element": "Détails tab"})'
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.952, "y": 0.425, "element": "Gear/settings icon in the Articles table header (right side)"})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.365, "y": 0.293, "element": "+ Ajouter / Supprimer des colonnes link"})'
+  - n: 15
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.042, "element": "Close button (X) on the Article de Demande de Matériel Champs dialog"})'
+  - n: 16
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.042, "element": "X close button at top right of Configure Les Colonnes dialog"})'
+  - n: 17
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.546, "y": 0.763, "element": "Empty area below the Articles table"})'
+  - n: 18
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 19
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.404, \"y\": 0.059, \"element\": \"Plus d'info tab\"})"
+  - n: 20
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.264, "y": 0.059, "element": "Détails tab"})'
+  - n: 21
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Note: The form has no 'Taux' (rate) column in the Articles table. The item TEST-ART-001 was added with quantity 3 (displayed as 3,000 due to locale number format). The 'Requis pour le' field appears to be a required field that is empty. The 'Plus d'info' tab only contains 'Détails "
+    screenshot: step_21.png
+  - n: 22
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_21.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Material Request
+        path: /app/material-request/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Nouveau(elle) Demande de matériel
+      field_labels:
+        - Séries
+        - Date de la transaction
+        - Objet
+        - Requis pour le
+        - Liste de prix
+        - Scan Code Barre
+        - Définir l'entrepôt
+        - No.
+        - Code de l'Article
+        - Requis pour le
+        - Quantité
+        - Entrepôt
+        - UdM
+      section_labels:
+        - Articles
+      prefilled:
+        - "Séries: MAT-MR-.YYYY.-"
+        - "Date de la transaction: 07/11/2026"
+        - "Objet: achat"
+        - "Liste de prix: Achat standard"
+        - "Quantité: 3,000"
+        - "Entrepôt: Magasins - DSS"
+      notes: "Note: The form has no 'Taux' (rate) column in the Articles table. The item TEST-ART-001 was added with quantity 3 (displayed as 3,000 due to locale number format). The 'Requis pour le' field appears to be a required field that is empty. The 'Plus d'info' tab only contains 'Détails d'Impression'."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/82ce1bb5-2489-41e5-b2bf-0c88e8c04100 attempts: 1"

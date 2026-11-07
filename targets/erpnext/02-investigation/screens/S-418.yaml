@@ -2,7 +2,7 @@ id: S-418
 title: Stock Ledger Entry
 purpose: create, view and edit Stock Ledger Entry records
 kind: form
-layout: 31 fields
+layout: "31 fields; observed labels differ from the declared form (5/11 match; not declared: date, entrée en stock, sortie en stock, quantité, taux de conversion, valeur totale)"
 fields:
   - label: Item Code
     control: lookup
@@ -130,3 +130,10 @@ evidence:
     kind: rea
     locator: form layout of Stock Ledger Entry
     note: declared by the program
+  - ref: run-20261107T210710-h-EXP_277
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 5/11 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T210710-h-EXP_277/step_06.png
+  - 01-exploration/runs/run-20261107T210710-h-EXP_277/step_06.png

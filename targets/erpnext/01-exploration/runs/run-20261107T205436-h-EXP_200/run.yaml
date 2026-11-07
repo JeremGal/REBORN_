@@ -1,0 +1,73 @@
+id: run-20261107T205436-h-EXP_200
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_200.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Quality Management
+started_at: 2026-11-07T20:53:59.700Z
+ended_at: 2026-11-07T20:54:36.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Empty area to close dropdown"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The page is in French. The form has one section \\\"Révoir\\\" with a child section \\\"Avis\\\" containing a table with columns No., Objectif, Cible, UdM, Statut, Révoir. There's also a \\\"Remarques\\\" section at the bottom. Only the Date field has a pre-filled value (07/11/2026).\", \"prefil"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Quality Management)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Quality Review
+        path: /app/quality-review/new
+        kind: defaults
+      page_title: Nouveau(elle) Examen de la qualité - new-quality-review-wxwgrrdaeo
+      field_labels:
+        - Objectif
+        - Statut
+        - Date
+        - Révoir
+        - Avis
+        - No.
+        - Objectif
+        - Cible
+        - UdM
+        - Statut
+        - Révoir
+        - Ajouter une ligne
+        - Remarques
+      section_labels:
+        - Révoir
+        - Avis
+        - Remarques
+      prefilled:
+        - "Date: 07/11/2026"
+      notes: The page is in French. The form has one section "Révoir" with a child section "Avis" containing a table with columns No., Objectif, Cible, UdM, Statut, Révoir. There's also a "Remarques" section at the bottom. Only the Date field has a pre-filled value (07/11/2026).
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/f7458c72-a6db-4eb0-b4c7-468e102f8840 attempts: 1"

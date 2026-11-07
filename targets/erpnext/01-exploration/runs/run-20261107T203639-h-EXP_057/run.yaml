@@ -1,0 +1,93 @@
+id: run-20261107T203639-h-EXP_057
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_057.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:35:56.700Z
+ended_at: 2026-11-07T20:36:39.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1200, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 8
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Fields with empty values (not shown as prefilled): Nom de la Banque, Taille du Chèque, Largeur du Chèque, Hauteur du Chèque", "prefilled": ["Est Compte Crééditeur: checked", "Distance du bord supérieur: 1,00", "Distance du bord gauche: 9,00", "Message à afficher: Acc. Payee", "Dist'
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_09.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Cheque Print Template
+        path: /app/cheque-print-template/new
+        kind: defaults
+      page_title: Nouveau(elle) Modèles d'Impression de Chèques
+      field_labels: []
+      section_labels:
+        - Paramètres Principaux
+        - Paramètres de date
+        - Paramètres du Payeur
+        - Montant en toutes lettres
+        - Montant En Chiffre
+        - Paramètres du numéro de compte
+        - Position Signataire
+      prefilled:
+        - "Est Compte Crééditeur: checked"
+        - "Distance du bord supérieur: 1,00"
+        - "Distance du bord gauche: 9,00"
+        - "Message à afficher: Acc. Payee"
+        - "Distance du bord supérieur: 1,00"
+        - "Position initiale depuis bord gauche: 15,00"
+        - "Distance du bord supérieur: 2,00"
+        - "Position initiale depuis bord gauche: 3,00"
+        - "Distance du bord supérieur: 3,00"
+        - "Position initiale depuis bord gauche: 4,00"
+        - "Largeur du montant en toutes lettres: 15,00"
+        - "Espacement des lignes pour le montant en lettres: 0,50"
+        - "Distance du bord supérieur: 3,50"
+        - "Position initiale depuis bord gauche: 16,00"
+        - "Distance du bord supérieur: 5,00"
+        - "Position initiale depuis bord gauche: 4,00"
+        - "Distance du bord supérieur: 6,00"
+        - "Position initiale depuis bord gauche: 15,00"
+      notes: "Fields with empty values (not shown as prefilled): Nom de la Banque, Taille du Chèque, Largeur du Chèque, Hauteur du Chèque"
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/83c72671-d556-4999-bb79-35c04b60c990 attempts: 1"

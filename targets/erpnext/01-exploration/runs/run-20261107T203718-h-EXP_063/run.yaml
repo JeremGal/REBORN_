@@ -1,0 +1,67 @@
+id: run-20261107T203718-h-EXP_063
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_063.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:36:41.600Z
+ended_at: 2026-11-07T20:37:18.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page title is in French. The form is for creating a new Dunning Type. Only the 'Société' field has a pre-filled value. The 'Est Défaut' checkbox is unchecked. The 'Lettre de relance' section has no lines (shows 'Aucune ligne').\", \"prefilled\": [\"Société: Digital Solution Service\"], "
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Dunning Type
+        path: /app/dunning-type/new
+        kind: defaults
+      page_title: Nouveau(elle) Type de relance
+      field_labels:
+        - Type de relance
+        - Société
+        - Est Défaut
+        - Frais de relance
+        - Taux d'intérêt (%) annuel
+        - No.
+        - Langue
+        - Le corps du texte
+        - Texte de clôture
+        - Compte de Produits
+        - Centre de coûts
+      section_labels:
+        - Type de relance
+        - Lettre de relance
+        - Détails Comptable
+      prefilled:
+        - "Société: Digital Solution Service"
+      notes: Page title is in French. The form is for creating a new Dunning Type. Only the 'Société' field has a pre-filled value. The 'Est Défaut' checkbox is unchecked. The 'Lettre de relance' section has no lines (shows 'Aucune ligne').
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/5caaa43b-a396-4636-9d03-28b67a4db3b7 attempts: 1"

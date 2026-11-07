@@ -1,0 +1,602 @@
+id: run-20261107T210857-h-EXP_286
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_286.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:02:34.900Z
+ended_at: 2026-11-07T21:08:57.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.369, \"y\": 0.156, \"element\": \"Fournisseur de services dropdown showing 'frankfurter.dev - v2'\"})"
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.369, "y": 0.156, "element": "Fournisseur de services dropdown field"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.369, \"y\": 0.156, \"element\": \"Fournisseur de services dropdown showing 'frankfurter.dev - v2'\"})"
+  - n: 8
+    action:
+      type: other
+      target_desc: 'move_mouse_web({"x": 0.369, "y": 0.156, "element": "Fournisseur de services dropdown field"})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["tab"]})'
+  - n: 10
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.312, \"y\": 0.156, \"element\": \"Fournisseur de services dropdown showing 'frankfurter.dev - v2' - clicking directly on the text\"})"
+  - n: 11
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.369, \"y\": 0.156, \"element\": \"Fournisseur de services dropdown showing 'frankfurter.dev - v2'\"})"
+  - n: 12
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.369, "y": 0.156, "option": "exchangerate.host", "element": "Fournisseur de services dropdown"})'
+  - n: 13
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.369, \"y\": 0.162, \"element\": \"Fournisseur de services dropdown showing 'frankfurter.dev - v2' - trying the very bottom of the field\"})"
+  - n: 14
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/setup/currency-exchange-settings"})'
+  - n: 15
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.369, \"y\": 0.156, \"element\": \"Fournisseur de services field with 'frankfurter.dev - v2' value\"})"
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["f"]})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'write({"x": 0.369, "y": 0.156, "text": "exchangerate.host", "enter": false, "element": "Fournisseur de services input field", "overwrite": true})'
+  - n: 18
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.312, \"y\": 0.156, \"element\": \"The 'frankfurter.dev - v2' text in the Fournisseur de services field\"})"
+  - n: 19
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.465, "y": 0.156, "element": "The chevron/arrow icon on the right side of the Fournisseur de services field"})'
+  - n: 20
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 21
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["escape"]})'
+  - n: 22
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.312, \"y\": 0.156, \"element\": \"The 'frankfurter.dev - v2' text in the Fournisseur de services field\"})"
+  - n: 23
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.312, \"y\": 0.156, \"element\": \"The 'frankfurter.dev - v2' text in the Fournisseur de services field\"})"
+  - n: 24
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 25
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["delete"]})'
+  - n: 26
+    action:
+      type: other
+      target_desc: 'write({"x": 0.369, "y": 0.156, "text": "exchangerate.host", "enter": false, "element": "Fournisseur de services field", "overwrite": true})'
+  - n: 27
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 28
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["backspace"]})'
+  - n: 29
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["e"]})'
+  - n: 30
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["x"]})'
+  - n: 31
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["c"]})'
+  - n: 32
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["h"]})'
+  - n: 33
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 34
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["n"]})'
+  - n: 35
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 36
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["g"]})'
+  - n: 37
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 38
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 39
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["e"]})'
+  - n: 40
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["."]})'
+  - n: 41
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["h"]})'
+  - n: 42
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["o"]})'
+  - n: 43
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["s"]})'
+  - n: 44
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["t"]})'
+  - n: 45
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["s"]})'
+  - n: 46
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["enter"]})'
+  - n: 47
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "z"]})'
+  - n: 48
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "z"]})'
+  - n: 49
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "z"]})'
+  - n: 50
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "z"]})'
+  - n: 51
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.369, \"y\": 0.156, \"element\": \"Fournisseur de services field showing 'frankfurter.dev - v2'\"})"
+  - n: 52
+    action:
+      type: other
+      target_desc: 'write({"x": 0.369, "y": 0.156, "text": "exchangerate.host", "enter": false, "element": "Fournisseur de services field", "overwrite": true})'
+  - n: 53
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.369, \"y\": 0.156, \"element\": \"Fournisseur de services field showing 'frankfurter.dev - v2'\"})"
+  - n: 54
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.312, \"y\": 0.156, \"element\": \"The 'frankfurter.dev - v2' text in the Fournisseur de services field\"})"
+  - n: 55
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 56
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["delete"]})'
+  - n: 57
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["e"]})'
+  - n: 58
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["x"]})'
+  - n: 59
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["c"]})'
+  - n: 60
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["h"]})'
+  - n: 61
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 62
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["n"]})'
+  - n: 63
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 64
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["g"]})'
+  - n: 65
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 66
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 67
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["e"]})'
+  - n: 68
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["."]})'
+  - n: 69
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["h"]})'
+  - n: 70
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["o"]})'
+  - n: 71
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["s"]})'
+  - n: 72
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["t"]})'
+  - n: 73
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["s"]})'
+  - n: 74
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["enter"]})'
+  - n: 75
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 76
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["delete"]})'
+  - n: 77
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["e"]})'
+  - n: 78
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["x"]})'
+  - n: 79
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["c"]})'
+  - n: 80
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["h"]})'
+  - n: 81
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 82
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["n"]})'
+  - n: 83
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 84
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["g"]})'
+  - n: 85
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 86
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 87
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["e"]})'
+  - n: 88
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["."]})'
+  - n: 89
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["h"]})'
+  - n: 90
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["o"]})'
+  - n: 91
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["s"]})'
+  - n: 92
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["t"]})'
+  - n: 93
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["s"]})'
+  - n: 94
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["enter"]})'
+  - n: 95
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 96
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["delete"]})'
+  - n: 97
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["e"]})'
+  - n: 98
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["x"]})'
+  - n: 99
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["c"]})'
+  - n: 100
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["h"]})'
+  - n: 101
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 102
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["n"]})'
+  - n: 103
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 104
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["g"]})'
+  - n: 105
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 106
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 107
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["g"]})'
+  - n: 108
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 109
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 110
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["e"]})'
+  - n: 111
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["."]})'
+  - n: 112
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["h"]})'
+  - n: 113
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["o"]})'
+  - n: 114
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["s"]})'
+  - n: 115
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["t"]})'
+  - n: 116
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["s"]})'
+  - n: 117
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["enter"]})'
+  - n: 118
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "a"]})'
+  - n: 119
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["delete"]})'
+  - n: 120
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["e"]})'
+  - n: 121
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["x"]})'
+  - n: 122
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["c"]})'
+  - n: 123
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["h"]})'
+  - n: 124
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 125
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["n"]})'
+  - n: 126
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 127
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["g"]})'
+  - n: 128
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 129
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 130
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["g"]})'
+  - n: 131
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 132
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 133
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["g"]})'
+  - n: 134
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 135
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 136
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["g"]})'
+  - n: 137
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["a"]})'
+  - n: 138
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["r"]})'
+  - n: 139
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["enter"]})'
+    screenshot: step_139.png
+  - n: 140
+    action:
+      type: other
+      target_desc: 'answer({"page_title": "Currency Exchange Settings", "field_labels": ["Field Labels", "Section Labels", "Prefilled Fields"], "section_labels": ["Visible Fields", "Sections", "Prefilled Values"]})'
+  - n: 141
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_139.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Currency Exchange Settings
+        path: /app/currency-exchange-settings
+        kind: interact
+        mission: M-006
+        action:
+          field: service_provider
+          value: exchangerate.host
+      page_title: Currency Exchange Settings
+      field_labels:
+        - Field Labels
+        - Section Labels
+        - Prefilled Fields
+      section_labels:
+        - Visible Fields
+        - Sections
+        - Prefilled Values
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/793d3da2-3f34-4172-ac3b-6f72868dbe10 attempts: 1"

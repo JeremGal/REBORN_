@@ -1,0 +1,72 @@
+id: run-20261107T205008-h-EXP_160
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_160.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:49:24.000Z
+ended_at: 2026-11-07T20:50:08.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.25, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form is a 'Filtre de dimension comptable' (Accounting Dimension Filter) form. The checkbox 'Appliquer une restriction sur les valeurs de dimension' was already ticked when the form loaded. No changes were made to the form.\", \"prefilled\": [\"Société: Digital Solution Service\", \"A"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Accounting Dimension Filter
+        path: /app/accounting-dimension-filter/new
+        kind: interact
+        mission: M-006
+        action:
+          field: apply_restriction_on_values
+          value: "1"
+      page_title: Filtre de dimension comptable / Nouveau(elle) Filtre de dimension comptable
+      field_labels:
+        - Dimension comptable
+        - Société
+        - Désactivé
+        - Appliquer une restriction sur les valeurs de dimension
+        - Autoriser ou restreindre la dimension
+        - Comptes
+        - Est obligatoire
+      section_labels:
+        - ""
+        - Applicable sur le compte
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Appliquer une restriction sur les valeurs de dimension: checked"
+        - "Autoriser ou restreindre la dimension: Autoriser"
+      notes: The form is a 'Filtre de dimension comptable' (Accounting Dimension Filter) form. The checkbox 'Appliquer une restriction sur les valeurs de dimension' was already ticked when the form loaded. No changes were made to the form.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d79eee3b-b276-4fb3-9dd0-a0af46e836fb attempts: 1"

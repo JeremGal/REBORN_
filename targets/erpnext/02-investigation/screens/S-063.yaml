@@ -2,7 +2,7 @@ id: S-063
 title: POS Invoice Merge Log
 purpose: create, view and edit POS Invoice Merge Log records
 kind: form
-layout: "sections: References; 11 fields"
+layout: "sections: References; 11 fields; observed labels differ from the declared form (1/2 match; not declared: société, date de comptabilisation, heure de publication, fusionner les factures , inscription de clôture pdv, client)"
 fields:
   - label: Company
     control: lookup
@@ -68,3 +68,10 @@ evidence:
     kind: rea
     locator: form layout of POS Invoice Merge Log
     note: declared by the program
+  - ref: run-20261107T204033-h-EXP_094
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 1/2 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204033-h-EXP_094/step_06.png
+  - 01-exploration/runs/run-20261107T204033-h-EXP_094/step_06.png

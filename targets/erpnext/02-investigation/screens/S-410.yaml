@@ -2,7 +2,7 @@ id: S-410
 title: Serial and Batch Bundle
 purpose: create, view and edit Serial and Batch Bundle records
 kind: form
-layout: "tabs: Serial and Batch, Quantity and Rate, Reference; sections: Serial / Batch No; 22 fields"
+layout: "tabs: Serial and Batch, Quantity and Rate, Reference; sections: Serial / Batch No; 22 fields; observed labels differ from the declared form (10/17 match; not declared: no., n° de série, n° du lot, qté, ajouter une ligne, télécharger, charger)"
 fields:
   - label: Naming Series
     control: select
@@ -110,3 +110,10 @@ evidence:
     kind: rea
     locator: form layout of Serial and Batch Bundle
     note: declared by the program
+  - ref: run-20261107T210546-h-EXP_269
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 10/17 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T210546-h-EXP_269/step_05.png
+  - 01-exploration/runs/run-20261107T210546-h-EXP_269/step_05.png

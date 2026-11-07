@@ -1,0 +1,53 @@
+id: run-20261107T205457-h-EXP_205
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_205.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T20:54:13.400Z
+ended_at: 2026-11-07T20:54:57.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Login succeeded but the page shows an authorization error: 'Non autorisé' - L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page. The requested form at /app/party-specific-item/new could not be loaded d"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Party Specific Item
+        path: /app/party-specific-item/new
+        kind: defaults
+      page_title: Frappe
+      field_labels: []
+      section_labels:
+        - "Error: Unauthorized"
+      prefilled: []
+      notes: "Login succeeded but the page shows an authorization error: 'Non autorisé' - L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page. The requested form at /app/party-specific-item/new could not be loaded due to insufficient permissions."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/cbcae8b2-8d52-4775-984f-1feb90c4cc7f attempts: 2"

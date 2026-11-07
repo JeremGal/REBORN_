@@ -1,0 +1,126 @@
+id: run-20261107T210805-h-EXP_281
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_281.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / CRM
+started_at: 2026-11-07T21:06:53.900Z
+ended_at: 2026-11-07T21:08:05.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.264, \"y\": 0.759, \"element\": \"Checkbox 'Nécessite des conditions'\"})"
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "End"]})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 400, "scroll_element": null})'
+  - n: 10
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "Home"]})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 500, "scroll_element": null})'
+  - n: 12
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.264, \"y\": 0.759, \"element\": \"Checkbox 'Nécessite des conditions'\"})"
+  - n: 13
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 14
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["home"]})'
+  - n: 17
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.264, \"y\": 0.759, \"element\": \"Checkbox 'Nécessite des conditions'\"})"
+  - n: 18
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form has 12 field labels, 5 section labels, and 1 prefilled field (Type de Tiers: Client). The 'Nécessite des conditions' checkbox was ticked as requested.\", \"prefilled\": [\"Type de Tiers: Client\"], \"page_title\": \"Nouveau(elle) Contrat\", \"field_labels\": [\"Type de Tiers\", \"Nom du"
+    screenshot: step_18.png
+  - n: 19
+    action:
+      type: read
+      target_desc: values shown by the application (CRM)
+    screenshot: step_18.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Contract
+        path: /app/contract/new
+        kind: interact
+        mission: M-006
+        action:
+          field: requires_fulfilment
+          value: "1"
+      page_title: Nouveau(elle) Contrat
+      field_labels:
+        - Type de Tiers
+        - Nom du Tiers
+        - Signé
+        - Utilisateur tiers
+        - Date de début
+        - Date de fin
+        - Modèle de contrat
+        - Termes du contrat
+        - Nécessite des conditions
+        - Délai d'exécution
+        - Conditions d'exécution
+        - Signée (société)
+      section_labels:
+        - Période du contrat
+        - Détails du contrat
+        - Détails de l'exécution
+        - Autorisé par
+        - Références
+      prefilled:
+        - "Type de Tiers: Client"
+      notes: "The form has 12 field labels, 5 section labels, and 1 prefilled field (Type de Tiers: Client). The 'Nécessite des conditions' checkbox was ticked as requested."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/9d568099-13cf-43d1-98f0-d39b1fe8bfda attempts: 1"

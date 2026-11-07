@@ -2,7 +2,7 @@ id: S-033
 title: Exchange Rate Revaluation
 purpose: create, view and edit Exchange Rate Revaluation records
 kind: form
-layout: 8 fields
+layout: "8 fields; observed labels differ from the declared form (4/12 match; not declared: obtenir des entrées, no., compte, nouveau taux de, solde en devise d, nouveau solde en, profit/perte, ajouter une ligne)"
 fields:
   - label: Posting Date
     control: date
@@ -56,3 +56,10 @@ evidence:
     kind: rea
     locator: form layout of Exchange Rate Revaluation
     note: declared by the program
+  - ref: run-20261107T203722-h-EXP_064
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 4/12 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T203722-h-EXP_064/step_05.png
+  - 01-exploration/runs/run-20261107T203722-h-EXP_064/step_05.png

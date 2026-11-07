@@ -1,0 +1,87 @@
+id: run-20261107T213706-h-EXP_317
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_317.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T21:36:07.500Z
+ended_at: 2026-11-07T21:37:06.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.254, "element": "Password input field"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.263, \"y\": 0.143, \"element\": \"Checkbox 'Autoriser la consommation continue de matériel'\"})"
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The checkbox 'Autoriser la consommation continue de matériel' was ticked. The form is in French. The 'Non Sauvegardé' (Not Saved) badge is visible in the header, confirming no save was performed.\", \"prefilled\": [\"Enregistrer les Matières Premières sur la Base de: Nomenclature\", \"Po"
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Manufacturing Settings
+        path: /app/manufacturing-settings
+        kind: interact
+        mission: M-006
+        action:
+          field: material_consumption
+          value: "1"
+      page_title: Paramètres de Production
+      field_labels:
+        - Autoriser la consommation continue de matériel
+        - Enregistrer les Matières Premières sur la Base de
+        - Valider les composants et quantités par nomenclature
+        - Obtenir le coût des matières premières à partir de l'entrée de consommation
+        - Mettre à jour automatiquement le coût de la nomenclature
+        - Autoriser la modification des articles et des quantités dans l'ordre de fabrication
+        - Pourcentage de surproduction pour les commandes client
+        - Pourcentage de surproduction pour les ordres de travail
+        - Transférer les matières premières supplémentaires vers En-cours (%)
+      section_labels:
+        - Consommation de matières premières
+        - Nomenclature
+        - Surproduction pour les ventes et les bons de travail
+        - Transfert de matériel supplémentaire
+        - Commentaires
+        - Activité
+      prefilled:
+        - "Enregistrer les Matières Premières sur la Base de: Nomenclature"
+        - "Pourcentage de surproduction pour les commandes client: 0"
+        - "Pourcentage de surproduction pour les ordres de travail: 0"
+        - "Transférer les matières premières supplémentaires vers En-cours (%): 0"
+      notes: The checkbox 'Autoriser la consommation continue de matériel' was ticked. The form is in French. The 'Non Sauvegardé' (Not Saved) badge is visible in the header, confirming no save was performed.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/91a52015-b111-41ea-8371-eecd634c25bf attempts: 1"

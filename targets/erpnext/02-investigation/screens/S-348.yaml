@@ -2,7 +2,7 @@ id: S-348
 title: Proforma Invoice
 purpose: create, view and edit Proforma Invoice records
 kind: form
-layout: "sections: Details, Items, Print Settings, Status; 19 fields"
+layout: "sections: Details, Items, Print Settings, Status; 19 fields; observed labels differ from the declared form (6/12 match; not declared: quantité, no., code de l'article, nom de l'article, prix, montant)"
 fields:
   - label: Series
     control: select
@@ -102,3 +102,10 @@ evidence:
     kind: rea
     locator: form layout of Proforma Invoice
     note: declared by the program
+  - ref: run-20261107T205517-h-EXP_207
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 6/12 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205517-h-EXP_207/step_05.png
+  - 01-exploration/runs/run-20261107T205517-h-EXP_207/step_05.png

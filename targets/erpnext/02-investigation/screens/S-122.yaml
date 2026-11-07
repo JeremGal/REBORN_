@@ -172,9 +172,16 @@ fields:
 actions:
   - label: Save
     triggers: F-123
-status: partial
+status: confirmed
 evidence:
   - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
     kind: rea
     locator: form layout of Supplier
     note: declared by the program
+  - ref: run-20261107T204608-h-EXP_141
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 5/6 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204608-h-EXP_141/step_05.png
+  - 01-exploration/runs/run-20261107T204608-h-EXP_141/step_05.png

@@ -1,0 +1,127 @@
+id: run-20261107T211639-h-EXP_308
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_308.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:15:23.100Z
+ended_at: 2026-11-07T21:16:39.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 400, "scroll_element": null})'
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.289, \"y\": 0.613, \"element\": \"The 'Description' collapsible section\"})"
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 600, "scroll_element": null})'
+  - n: 10
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.3, "y": 0.598, "element": "The Description section header to collapse it"})'
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.3, "y": 0.613, "element": "The Description section header to expand it"})'
+  - n: 14
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.632, \"y\": 0.722, \"text\": \"\", \"enter\": false, \"element\": \"The 'A une date d'expiration' checkbox\", \"overwrite\": false})"
+  - n: 15
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 16
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.3, \"y\": 0.613, \"element\": \"The 'Description' collapsible section header\"})"
+  - n: 17
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.3, \"y\": 0.613, \"element\": \"The 'Description' collapsible section header\"})"
+  - n: 18
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.632, \"y\": 0.722, \"text\": \"\", \"enter\": false, \"element\": \"The 'A une date d'expiration' checkbox\", \"overwrite\": false})"
+  - n: 19
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 20
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.632, \"y\": 0.722, \"text\": \"\", \"enter\": false, \"element\": \"The 'A une date d'expiration' checkbox\", \"overwrite\": false})"
+  - n: 21
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/item/new-item-tzznvzbuaw", "render_js": true})'
+    screenshot: step_21.png
+  - n: 22
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'A une date d'expiration' (Has Expiry Date) checkbox could not be reliably ticked due to a browser viewport rendering issue where the page showed as 100% visible (0px / 1,200px) despite the form being much longer. All attempts to click or write to the checkbox at its expected c"
+  - n: 23
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_21.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Item
+        path: /app/item/new
+        kind: interact
+        mission: M-006
+        action:
+          field: has_expiry_date
+          value: "1"
+      page_title: ERPNext Item Form - Field Labels and Prefilled Values
+      field_labels: []
+      section_labels:
+        - Field Labels
+        - Section Labels
+        - Prefilled Fields
+      prefilled: []
+      notes: The 'A une date d'expiration' (Has Expiry Date) checkbox could not be reliably ticked due to a browser viewport rendering issue where the page showed as 100% visible (0px / 1,200px) despite the form being much longer. All attempts to click or write to the checkbox at its expected coordinates failed. The form is at the correct URL (https://***/desk/stock/item/new-item-tzznvzbuaw). Below are the complete field labels, section labels, and pre-filled values as observed in the screenshots.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/9cc45e19-0eaf-4fae-811d-597f553c4b01 attempts: 1"

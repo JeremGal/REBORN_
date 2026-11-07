@@ -2,7 +2,7 @@ id: S-362
 title: Designation
 purpose: create, view and edit Designation records
 kind: form
-layout: 2 fields
+layout: 2 fields; observed labels differ from the declared form (1/1 match)
 fields:
   - label: Designation
     control: text
@@ -20,3 +20,10 @@ evidence:
     kind: rea
     locator: form layout of Designation
     note: declared by the program
+  - ref: run-20261107T205731-h-EXP_221
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 1/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205731-h-EXP_221/step_15.png
+  - 01-exploration/runs/run-20261107T205731-h-EXP_221/step_15.png

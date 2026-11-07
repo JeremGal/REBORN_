@@ -1,0 +1,87 @@
+id: run-20261107T210311-h-EXP_251
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_251.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:02:12.700Z
+ended_at: 2026-11-07T21:03:11.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.323, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.429, "y": 0.144, "option": "Projet", "element": "Budget Pour dropdown"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"page_title\": \"Nouveau(elle) Budget\", \"field_labels\": [\"Séries\", \"Budget Pour\", \"Société\", \"Projet\", \"Compte\", \"À partir de l'année fiscale\", \"À l'année fiscale\", \"Fréquence de répartition\", \"Montant Budgétaire\", \"Répartir également\", \"Répartition du budget\", \"No.\", \"Date de début\", \"Date de"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Budget
+        path: /app/budget/new
+        kind: interact
+        mission: M-006
+        action:
+          field: budget_against
+          value: Project
+      page_title: Nouveau(elle) Budget
+      field_labels:
+        - Séries
+        - Budget Pour
+        - Société
+        - Projet
+        - Compte
+        - À partir de l'année fiscale
+        - À l'année fiscale
+        - Fréquence de répartition
+        - Montant Budgétaire
+        - Répartir également
+        - Répartition du budget
+        - No.
+        - Date de début
+        - Date de fin
+        - Montant
+        - Pourcentage
+        - Aucune ligne
+        - Action de contrôle
+        - Applicable sur la base des requêtes de matériel
+        - Applicable sur la base des bons de commande d'achat
+        - Applicable sur la base de l'enregistrement des dépenses réelles
+        - Action de contrôle pour la charge cumulée
+        - Applicable sur la charge cumulée
+        - (Bon de commande + Demande de matériel + Dépense réelle)
+      section_labels:
+        - Form Fields
+        - Section Labels
+        - Prefilled Fields
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b1a75e4c-d454-437c-8c95-9d61bf9980b8 attempts: 1"

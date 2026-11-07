@@ -2,7 +2,7 @@ id: S-419
 title: Stock Reconciliation
 purpose: create, view and edit Stock Reconciliation records
 kind: form
-layout: "sections: Accounting Dimensions; 16 fields"
+layout: "sections: Accounting Dimensions; 16 fields; observed labels differ from the declared form (10/21 match; not declared: no., code de l'article, entrepôt, quantité, udm du stock, taux de valorisation, ajouter une ligne, télécharger)"
 fields:
   - label: Series
     control: select
@@ -86,3 +86,10 @@ evidence:
     kind: rea
     locator: form layout of Stock Reconciliation
     note: declared by the program
+  - ref: run-20261107T210710-h-EXP_278
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 10/21 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T210710-h-EXP_278/step_05.png
+  - 01-exploration/runs/run-20261107T210710-h-EXP_278/step_05.png

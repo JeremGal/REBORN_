@@ -1,0 +1,82 @@
+id: run-20261107T210636-h-EXP_275
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_275.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:05:57.200Z
+ended_at: 2026-11-07T21:06:36.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page loaded successfully after login. The form is in French. The 'Autres Info' tab was not clicked so its contents are not visible. The page showed 'Entire page visible' meaning all content was on screen.\", \"prefilled\": [\"Séries: MAT-STE-.YYYY.-\", \"Date de Comptabilisation: 07/11/2"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Stock Entry
+        path: /app/stock-entry/new
+        kind: defaults
+      page_title: Nouveau(elle) Écriture de Stock - new-stock-entry-fcuosaznil
+      field_labels:
+        - Séries
+        - Modifier la Date et l'Heure de la Publication
+        - Date de Comptabilisation
+        - Type d'entrée de stock
+        - Heure de Publication
+        - Inspection obligatoire
+        - Informations sur la nomenclature
+        - Entrepôt par Défaut
+        - Scan Code Barre
+        - Articles
+        - No.
+        - Entrepôt source
+        - Code de l'Article
+        - Qté
+        - Prix de base (comme l')
+        - Ajouter une ligne
+        - Ajouter plusieurs
+        - Télécharger
+        - Charger
+        - Mettre à Jour le Prix et la Disponibilité
+      section_labels:
+        - Détails
+        - Autres Info
+        - Articles
+      prefilled:
+        - "Séries: MAT-STE-.YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Heure de Publication: 22:06:55"
+      notes: Page loaded successfully after login. The form is in French. The 'Autres Info' tab was not clicked so its contents are not visible. The page showed 'Entire page visible' meaning all content was on screen.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d4e1d817-c401-4138-9bd4-ca37dfa70178 attempts: 1"

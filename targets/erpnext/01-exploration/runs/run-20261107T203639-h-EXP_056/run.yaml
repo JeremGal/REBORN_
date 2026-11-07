@@ -1,0 +1,57 @@
+id: run-20261107T203639-h-EXP_056
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_056.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:36:02.900Z
+ended_at: 2026-11-07T20:36:39.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'answer({"notes": "The page shows only one field (Société, marked as required with an asterisk) and no prefilled values. The page is in French. There is no content below the Société field - the form appears to have no sections or additional fields.", "prefilled": [], "page_title": "Importateur de pla'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Chart of Accounts Importer
+        path: /app/chart-of-accounts-importer
+        kind: defaults
+      page_title: Importateur de plans de comptes
+      field_labels:
+        - Société
+      section_labels: []
+      prefilled: []
+      notes: The page shows only one field (Société, marked as required with an asterisk) and no prefilled values. The page is in French. There is no content below the Société field - the form appears to have no sections or additional fields.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/cb814c4e-8453-4ecc-bf02-2fae6022b38f attempts: 1"

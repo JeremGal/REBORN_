@@ -1,0 +1,64 @@
+id: run-20261107T203752-h-EXP_068
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_068.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:37:21.700Z
+ended_at: 2026-11-07T20:37:52.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Compte Devise: USD\", \"Devise de la Transaction: USD\", \"Société: Digital Solution Service\"], \"page_title\": \"Nouveau(elle) Écriture GL\", \"field_labels\": [\"Compte Devise\", \"Devise de la Transaction\", \"Société\", \"Écriture d'Ouverture\", \"Est Accompte\", \"Est Annulée\"], \"section_labe"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: GL Entry
+        path: /app/gl-entry/new
+        kind: defaults
+      page_title: Nouveau(elle) Écriture GL
+      field_labels:
+        - Compte Devise
+        - Devise de la Transaction
+        - Société
+        - Écriture d'Ouverture
+        - Est Accompte
+        - Est Annulée
+      section_labels:
+        - Détails du compte
+        - détails de la transaction
+        - Plus d'info
+      prefilled:
+        - "Compte Devise: USD"
+        - "Devise de la Transaction: USD"
+        - "Société: Digital Solution Service"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/438705d7-47fe-473d-9cb7-8e49462a3c2e attempts: 1"

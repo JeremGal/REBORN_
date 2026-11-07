@@ -1,0 +1,107 @@
+id: run-20261107T205914-h-EXP_228
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_228.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:58:06.600Z
+ended_at: 2026-11-07T20:59:14.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 1200, "scroll_element": null})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.292, "y": 0.219, "element": "Opérations section header with arrow"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.264, \"y\": 0.255, \"element\": \"Checkbox 'Avec des Opérations'\"})"
+  - n: 8
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.264, \"y\": 0.255, \"element\": \"Checkbox 'Avec des Opérations'\"})"
+  - n: 9
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.264, \"y\": 0.255, \"element\": \"Checkbox 'Avec des Opérations'\"})"
+  - n: 10
+    action:
+      type: other
+      target_desc: "answer({\"content\": \"I have successfully signed in to the ERPNext system and navigated to the BOM (Bill of Materials) form at https://***/app/bom/new. I attempted to tick the 'Avec des Opérations' checkbox, but it appears to be in an indeterminate/partially checked state rather than fully checked.\\n\\"
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Transférer du matériel contre: Ordre de fabrication\", \"Composants row 1: Qté: 0,000, Prix (USD): $ 0,00, Montant (USD): $ 0,00\"], \"page_title\": \"BOM Form - Nouveau(elle) Nomenclature\", \"field_labels\": [\"Article à fabriquer\", \"Avec des Opérations\", \"Gérer les coûts d'exploitati"
+  - n: 12
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: BOM
+        path: /app/bom/new
+        kind: interact
+        mission: M-006
+        action:
+          field: with_operations
+          value: "1"
+      page_title: BOM Form - Nouveau(elle) Nomenclature
+      field_labels:
+        - Article à fabriquer
+        - Avec des Opérations
+        - Gérer les coûts d'exploitation
+        - Transférer du matériel contre
+        - Routage
+        - Produire Item per Operation
+        - Coût d'exploitation basé sur les produits finis
+        - No.
+        - Opération
+        - ID de séquence
+        - Type de poste de travail
+        - Station de travail
+        - Durée de l'Opération
+        - Code de l'Article
+        - Qté
+        - UdM
+        - Prix (USD)
+        - Montant (USD)
+        - Nom de l'article
+        - Type
+      section_labels:
+        - Article de production
+        - Allocation des coûts / Perte de processus
+        - Opérations
+        - Composants
+        - Articles secondaires
+      prefilled:
+        - "Transférer du matériel contre: Ordre de fabrication"
+        - "Composants row 1: Qté: 0,000, Prix (USD): $ 0,00, Montant (USD): $ 0,00"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/062157d3-d9f5-47eb-94c7-ce2f37515380 attempts: 1"

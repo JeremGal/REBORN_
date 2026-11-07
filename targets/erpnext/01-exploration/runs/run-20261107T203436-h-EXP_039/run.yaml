@@ -1,0 +1,78 @@
+id: run-20261107T203436-h-EXP_039
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_039.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:33:46.800Z
+ended_at: 2026-11-07T20:34:36.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 7
+    action:
+      type: other
+      target_desc: refresh_web({})
+  - n: 8
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/advance-payment-ledger-entry/new"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/advance-payment-ledger-entry/new-advance-payment-ledger-entry-qprbikfzhx", "render_js": true})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.5, "element": "Empty area in the form"})'
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: other
+      target_desc: 'answer({"notes": "The form page for \"Advance Payment Ledger Entry\" in French loaded successfully after login. However, only one field (a checkbox labeled \"Dissocié\") is visible on the form - all other form fields appear to not be rendering in the browser. The page title is \"Nouveau(elle) écritu'
+  - n: 12
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Advance Payment Ledger Entry
+        path: /app/advance-payment-ledger-entry/new
+        kind: defaults
+      page_title: Nouveau(elle) écriture du grand livre des paiements anticipés
+      field_labels:
+        - Dissocié
+      section_labels:
+        - Écriture du grand livre des paiements anticipés
+      prefilled: []
+      notes: The form page for "Advance Payment Ledger Entry" in French loaded successfully after login. However, only one field (a checkbox labeled "Dissocié") is visible on the form - all other form fields appear to not be rendering in the browser. The page title is "Nouveau(elle) écriture du grand livre des paiements anticipés" (New Advance Payment Ledger Entry). The form status shows "Non Sauvegardé" (Not Saved). No fields have pre-filled values since the form is new and no other fields are visible.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/f1e68dfd-1f99-48df-a868-a1bf4a89246d attempts: 1"

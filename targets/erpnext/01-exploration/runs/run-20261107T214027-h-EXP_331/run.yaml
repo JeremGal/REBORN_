@@ -1,0 +1,63 @@
+id: run-20261107T214027-h-EXP_331
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_331.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:39:52.000Z
+ended_at: 2026-11-07T21:40:27.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.495, \"y\": 0.197, \"text\": \"***\", \"enter\": false, \"element\": \"Email input field with placeholder 'jane@example.com'\", \"overwrite\": true})"
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.495, "y": 0.252, "text": "***", "enter": false, "element": "Password input field with masked dots", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.495, "y": 0.325, "element": "Continue button (black button)"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "select_option({\"x\": 0.421, \"y\": 0.262, \"option\": \"Groupe de clients\", \"element\": \"Dropdown 'Fusionner les factures (basé sur)' currently showing 'Client'\"})"
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form has the following fields visible: Société (Digital Solution Service - pre-filled), Inscription de clôture PDV (empty), Date de Comptabilisation (empty), Client (empty), Heure de Publication (empty), Groupe de clients (empty), Fusionner les factures (basé sur) - set to 'Gro"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: POS Invoice Merge Log
+        path: /app/pos-invoice-merge-log/new
+        kind: interact
+        mission: M-006
+        action:
+          field: merge_invoices_based_on
+          value: Customer Group
+      page_title: Nouveau(elle) Journal de fusion des factures PDV
+      field_labels: []
+      section_labels:
+        - Société
+        - Inscription de clôture PDV
+      prefilled:
+        - "Société: Digital Solution Service"
+      notes: "The form has the following fields visible: Société (Digital Solution Service - pre-filled), Inscription de clôture PDV (empty), Date de Comptabilisation (empty), Client (empty), Heure de Publication (empty), Groupe de clients (empty), Fusionner les factures (basé sur) - set to 'Groupe de clients', Factures PDV section with columns: No., Facture PDV, Date, Montant (empty row with $0,00)."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/5c623151-3b5b-4cd2-84fe-56c6879933c2 attempts: 1"

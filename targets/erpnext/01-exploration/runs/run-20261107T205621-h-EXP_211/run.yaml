@@ -1,0 +1,84 @@
+id: run-20261107T205621-h-EXP_211
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_211.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Assets
+started_at: 2026-11-07T20:55:15.200Z
+ended_at: 2026-11-07T20:56:21.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.338, \"y\": 0.059, \"element\": \"Plus d'info tab\"})"
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.421, \"y\": 0.166, \"element\": \"Propriétaire de l'Actif dropdown showing 'Société'\"})"
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.299, "y": 0.248, "element": "Fournisseur option in the dropdown"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.265, "y": 0.059, "element": "Détails tab"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Field labels visible on the form (up to 120): Séries, Société, Code de l'Article, Type d'immobilisation, Emplacement, Maintenance requise, Calculer la dépréciation, Reçu d'Achat, Montant net d'achat (USD), Facture d'Achat, Quantité de l'actif, Disponible à partir de la date d'utili"
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: read
+      target_desc: values shown by the application (Assets)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Asset
+        path: /app/asset/new
+        kind: interact
+        mission: M-006
+        action:
+          field: asset_owner
+          value: Supplier
+      page_title: Nouveau(elle) Actif - Immo.
+      field_labels: []
+      section_labels:
+        - Propriété
+        - Assurance
+        - Infos supplémentaires
+      prefilled:
+        - "Séries: ACC-ASS-.YYYY.-"
+        - "Société: Digital Solution Service"
+        - "Quantité de l'actif: 1"
+        - "Propriétaire de l'Actif: Fournisseur"
+        - "Statut: Brouillon"
+      notes: "Field labels visible on the form (up to 120): Séries, Société, Code de l'Article, Type d'immobilisation, Emplacement, Maintenance requise, Calculer la dépréciation, Reçu d'Achat, Montant net d'achat (USD), Facture d'Achat, Quantité de l'actif, Disponible à partir de la date d'utilisation, Numéro de police, Date de début de l'assurance, Assureur, Date de fin de l'assurance, Valeur assurée, Assurance complète, Propriétaire de l'Actif, Société Propriétaire de l'Actif, Responsable, Département. Section labels: Propriété, Assurance, Infos supplémentaires. Prefilled fields: Séries: ACC-ASS-.YYYY.-, Société: Digital Solution Service, Quantité de l'actif: 1, Propriétaire de l'Actif: Fournisseur, Statut: Brouillon."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/5f5c8b58-bde3-44a1-8a3b-e8b18aa53ad7 attempts: 1"

@@ -1,0 +1,56 @@
+id: run-20261107T204039-h-EXP_095
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_095.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:40:04.500Z
+ended_at: 2026-11-07T20:40:39.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.497, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Fields visible: Date de début de la période, Date de Comptabilisation, Définir la date de publication (checkbox), Société, Caissier, Profil PDV, Détails du solde d'ouverture (table with columns: No., Moyen de paiement, Montant d'ouverture), Ajouter une ligne button. Only 3 fields s"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: POS Opening Entry
+        path: /app/pos-opening-entry/new
+        kind: defaults
+      page_title: Nouveau(elle) Entrée d'ouverture de PDV
+      field_labels: []
+      section_labels:
+        - Entrée d'ouverture de PDV
+      prefilled:
+        - "Date de début de la période: 07/11/2026 21:41:00 Europe/Paris"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Société: Digital Solution Service"
+      notes: "Fields visible: Date de début de la période, Date de Comptabilisation, Définir la date de publication (checkbox), Société, Caissier, Profil PDV, Détails du solde d'ouverture (table with columns: No., Moyen de paiement, Montant d'ouverture), Ajouter une ligne button. Only 3 fields show pre-filled values."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/2baf6806-8d28-4a8f-9041-792be028211a attempts: 1"

@@ -1,0 +1,80 @@
+id: run-20261107T205202-h-EXP_178
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_178.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:51:20.800Z
+ended_at: 2026-11-07T20:52:02.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Naming Series: SF.YY.-######", "Date de début: 07/11/2026", "Société: Digital Solution Service", "Fréquence: Mensuel", "Date de Comptabilisation: 07/11/2026", "Nombre de semaines / mois: 6", "Statut: Prévu"], "page_title": "Nouveau(elle) Prévision des ventes", "field_labels": '
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Forecast
+        path: /app/sales-forecast/new
+        kind: defaults
+      page_title: Nouveau(elle) Prévision des ventes
+      field_labels:
+        - Naming Series
+        - Date de début
+        - Société
+        - Fréquence
+        - Date de Comptabilisation
+        - Nombre de semaines / mois
+        - Sélectionner des éléments
+        - Entrepôt Parent
+        - No.
+        - Code de l'Artic...
+        - Nom de l'article
+        - UdM
+        - Date de livrais...
+        - Demande Qté
+        - Entrepôt
+        - Statut
+      section_labels:
+        - Prévision des ventes
+        - Article et entrepôt
+        - Générer la demande
+        - Articles
+        - Statut
+      prefilled:
+        - "Naming Series: SF.YY.-######"
+        - "Date de début: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Fréquence: Mensuel"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Nombre de semaines / mois: 6"
+        - "Statut: Prévu"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/2de00fed-2607-4a97-a50d-b542399d1dfa attempts: 1"

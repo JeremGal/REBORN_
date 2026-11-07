@@ -1,0 +1,77 @@
+id: run-20261107T210843-h-EXP_289
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_289.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Support
+started_at: 2026-11-07T21:07:41.700Z
+ended_at: 2026-11-07T21:08:43.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.5, \"y\": 0.198, \"text\": \"***\", \"enter\": false, \"element\": \"Email input field with placeholder 'jane@example.com'\", \"overwrite\": true})"
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.042, "element": "Close button (X) on the Message popup"})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "reborn"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.43, "y": 0.263, "element": "Créé par (Email) input field"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Page title: Nouveau(elle) Ticket\nSection labels: Détails\nField labels (in order as displayed): Séries, Statut, Objet, Priorité, Client, Type de ticket, Créé par (Email), Description\nPrefilled fields: Séries: ISS-.YYYY.-, Statut: Ouvrir", "page_title": "Nouveau(elle) Ticket", "fi'
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Support)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Issue
+        path: /app/issue/new
+        kind: defaults
+      page_title: Nouveau(elle) Ticket
+      field_labels:
+        - Séries
+        - Statut
+        - Objet
+        - Priorité
+        - Client
+        - Type de ticket
+        - Créé par (Email)
+        - Description
+      section_labels:
+        - Détails
+      prefilled: []
+      notes: |-
+        Page title: Nouveau(elle) Ticket
+        Section labels: Détails
+        Field labels (in order as displayed): Séries, Statut, Objet, Priorité, Client, Type de ticket, Créé par (Email), Description
+        Prefilled fields: Séries: ISS-.YYYY.-, Statut: Ouvrir
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/282caaf4-e01b-4c4a-bab3-49af1e665a54 attempts: 1"

@@ -1,0 +1,64 @@
+id: run-20261107T210500-h-EXP_266
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_266.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:04:09.300Z
+ended_at: 2026-11-07T21:05:00.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page loaded successfully after login. The form is in French.\", \"page_title\": \"Nouveau(elle) Modèle d'inspection de la qualité\", \"field_labels\": [\"Nom du modèle d'inspection de la qualité\", \"No.\", \"Paramètre\", \"Critères d'acceptation val...\", \"Numérique\", \"Valeur minimale\", \"Valeur "
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Quality Inspection Template
+        path: /app/quality-inspection-template/new
+        kind: defaults
+      page_title: Nouveau(elle) Modèle d'inspection de la qualité
+      field_labels:
+        - Nom du modèle d'inspection de la qualité
+        - No.
+        - Paramètre
+        - Critères d'acceptation val...
+        - Numérique
+        - Valeur minimale
+        - Valeur maximale
+      section_labels:
+        - Paramètre d'Inspection de Qualité de l'Article
+      prefilled: []
+      notes: Page loaded successfully after login. The form is in French.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/283f71bb-5050-4801-9e29-36cec362fe8e attempts: 1"

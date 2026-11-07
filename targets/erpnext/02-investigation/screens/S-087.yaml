@@ -2,7 +2,7 @@ id: S-087
 title: Subscription Settings
 purpose: settings of Subscription Settings
 kind: settings
-layout: 3 fields
+layout: "3 fields; observed labels differ from the declared form (3/8 match; not declared: saisissez une réponse / un commentaire, paramètres des abonnements, commentaires, activité, subscription settings)"
 fields:
   - label: Grace Period
     control: number
@@ -22,3 +22,10 @@ evidence:
     kind: rea
     locator: form layout of Subscription Settings
     note: declared by the program
+  - ref: run-20261107T204300-h-EXP_118
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 3/8 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204300-h-EXP_118/step_05.png
+  - 01-exploration/runs/run-20261107T204300-h-EXP_118/step_05.png

@@ -1,0 +1,96 @@
+id: run-20261107T204143-h-EXP_105
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_105.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:41:02.200Z
+ended_at: 2026-11-07T20:41:43.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Page fully loaded, no additional scroll needed as entire page is visible.", "prefilled": ["Valide à partir de: 07/11/2026", "Société: Digital Solution Service", "Devise: USD"], "page_title": "Nouveau(elle) Schéma promotionnel", "field_labels": ["Nom", "Appliquer Sur", "Désactiver",'
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Promotional Scheme
+        path: /app/promotional-scheme/new
+        kind: defaults
+      page_title: Nouveau(elle) Schéma promotionnel
+      field_labels:
+        - Nom
+        - Appliquer Sur
+        - Désactiver
+        - Code de l'Article
+        - UdM
+        - Conditions mixtes
+        - Est cumulatif
+        - Valide à partir de
+        - Société
+        - Devise
+        - Valable jusqu'au
+        - Promotion Tarif
+        - Promotion Prix
+        - No.
+        - Qté Min
+        - Qté Max
+        - Montant minimum
+        - Montant maximum
+        - Type de remise
+        - Schéma promotionnel Réduction de produit
+        - No.
+        - Qté Min
+        - Qté Max
+        - Montant mini...
+        - Montant maxi...
+        - Code de l'Article
+        - Qté
+      section_labels:
+        - Régle de tarification Article Code
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Paramètres de période
+        - Dalles à prix réduit
+        - Dalles à prix réduit
+      prefilled:
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: Page fully loaded, no additional scroll needed as entire page is visible.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/6f7b9aef-a35a-43a4-a96d-065604880d04 attempts: 1"

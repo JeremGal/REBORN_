@@ -1,0 +1,68 @@
+id: run-20261107T205133-h-EXP_173
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_173.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T20:50:56.900Z
+ended_at: 2026-11-07T20:51:33.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Naming Series: MPS.YY.-######", "Date de Comptabilisation: 07/11/2026", "Société: Digital Solution Service"], "page_title": "Nouveau(elle) Plan directeur de production", "field_labels": ["Naming Series", "Date de Comptabilisation", "Société", "Date de début", "Date de fin", "S'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Master Production Schedule
+        path: /app/master-production-schedule/new
+        kind: defaults
+      page_title: Nouveau(elle) Plan directeur de production
+      field_labels:
+        - Naming Series
+        - Date de Comptabilisation
+        - Société
+        - Date de début
+        - Date de fin
+        - Sélectionner des éléments
+        - Entrepôt Parent
+      section_labels:
+        - Planification
+        - Demande
+      prefilled:
+        - "Naming Series: MPS.YY.-######"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Société: Digital Solution Service"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/bc16d177-b304-4fa3-9c20-8b336da0b2bd attempts: 1"

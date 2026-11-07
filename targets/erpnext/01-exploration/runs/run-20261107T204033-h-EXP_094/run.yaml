@@ -1,0 +1,60 @@
+id: run-20261107T204033-h-EXP_094
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_094.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:39:57.600Z
+ended_at: 2026-11-07T20:40:33.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page is in French. Top form area contains fields: Société (prefilled: Digital Solution Service), Date de Comptabilisation, Heure de Publication, Fusionner les factures (basé sur) (prefilled: Client), Inscription de clôture PDV, Client. Second section is 'Factures PDV' with a table "
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: POS Invoice Merge Log
+        path: /app/pos-invoice-merge-log/new
+        kind: defaults
+      page_title: Nouveau(elle) Journal de fusion des factures PDV
+      field_labels: []
+      section_labels:
+        - Société, Date de Comptabilisation, Heure de Publication, Fusionner les factures (basé sur), Inscription de clôture PDV, Client (top form area)
+        - Factures PDV
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Fusionner les factures (basé sur): Client"
+      notes: "Page is in French. Top form area contains fields: Société (prefilled: Digital Solution Service), Date de Comptabilisation, Heure de Publication, Fusionner les factures (basé sur) (prefilled: Client), Inscription de clôture PDV, Client. Second section is 'Factures PDV' with a table containing columns: No., Facture PDV, Date, Montant. One row exists (No. 1) but all fields in that row are empty."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/9c075ffc-3475-4d6a-8eff-3e042b251c9a attempts: 1"

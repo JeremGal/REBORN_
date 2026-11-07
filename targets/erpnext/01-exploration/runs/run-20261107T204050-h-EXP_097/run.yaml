@@ -1,0 +1,63 @@
+id: run-20261107T204050-h-EXP_097
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_097.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:40:19.500Z
+ended_at: 2026-11-07T20:40:50.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field with placeholder jane@example.com", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Type de facture créée via l'écran PDV: Facture de vente\"], \"page_title\": \"Paramètres PDV\", \"field_labels\": [\"Type de facture créée via l'écran PDV\", \"Créer des écritures de grand livre pour modifier le montant\"], \"section_labels\": [\"Champs supplémentaires PDV\", \"Champs de rech"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: POS Settings
+        path: /app/pos-settings
+        kind: defaults
+      page_title: Paramètres PDV
+      field_labels:
+        - Type de facture créée via l'écran PDV
+        - Créer des écritures de grand livre pour modifier le montant
+      section_labels:
+        - Champs supplémentaires PDV
+        - Champs de recherche PDV
+        - Commentaires
+        - Activité
+      prefilled:
+        - "Type de facture créée via l'écran PDV: Facture de vente"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b5ba5775-3eca-49df-a8d7-6da789ef9fa2 attempts: 1"

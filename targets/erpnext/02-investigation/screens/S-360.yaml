@@ -2,7 +2,7 @@ id: S-360
 title: Customer Group
 purpose: create, view and edit Customer Group records
 kind: form
-layout: "sections: Default Accounts, Credit Limits; 10 fields"
+layout: "sections: Default Accounts, Credit Limits; 10 fields; observed labels differ from the declared form (1/1 match)"
 fields:
   - label: Customer Group Name
     control: text
@@ -56,3 +56,10 @@ evidence:
     kind: rea
     locator: form layout of Customer Group
     note: declared by the program
+  - ref: run-20261107T205728-h-EXP_219
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 1/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205728-h-EXP_219/step_05.png
+  - 01-exploration/runs/run-20261107T205728-h-EXP_219/step_05.png

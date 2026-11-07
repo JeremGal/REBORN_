@@ -1,0 +1,67 @@
+id: run-20261107T203722-h-EXP_064
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_064.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:36:42.800Z
+ended_at: 2026-11-07T20:37:22.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Date de Comptabilisation: 07/11/2026\", \"Société: Digital Solution Service\", \"Tolérance de perte d'arrondi: 0,050000000\"], \"page_title\": \"Nouveau(elle) Réévaluation du taux de change\", \"field_labels\": [\"Date de Comptabilisation\", \"Société\", \"Tolérance de perte d'arrondi\", \"Obte"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Exchange Rate Revaluation
+        path: /app/exchange-rate-revaluation/new
+        kind: defaults
+      page_title: Nouveau(elle) Réévaluation du taux de change
+      field_labels:
+        - Date de Comptabilisation
+        - Société
+        - Tolérance de perte d'arrondi
+        - Obtenir des entrées
+        - Compte de réévaluation du taux de change
+        - No.
+        - Compte
+        - Nouveau taux de ...
+        - Solde en devise d...
+        - Nouveau solde en ...
+        - Profit/perte
+        - Ajouter une ligne
+      section_labels: []
+      prefilled:
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Tolérance de perte d'arrondi: 0,050000000"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/6c6bddb7-1c37-47d5-8a65-14bc90d1811a attempts: 1"

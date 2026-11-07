@@ -1,0 +1,67 @@
+id: run-20261107T210710-h-EXP_277
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_277.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:06:15.500Z
+ended_at: 2026-11-07T21:07:10.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "ctrl_f_web({\"query\": \"Nouveau(elle) Écriture du Livre d'Inventaire\"})"
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The page appears to be mostly empty - only checkboxes and a few labels are visible. The form may have fields that are not rendering in the screenshot. The visible labels include: 'Est une écriture d'ajustement', 'Recalculer le prix entrant/sortant', 'A un Numéro de Lot', 'A un N° d"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Stock Ledger Entry
+        path: /app/stock-ledger-entry/new
+        kind: defaults
+      page_title: Nouveau(elle) Écriture du Livre d'Inventaire
+      field_labels:
+        - Date
+        - Entrée en stock
+        - Sortie en stock
+        - Quantité
+        - Taux de conversion
+        - Valeur totale
+        - Est une écriture d'ajustement
+        - Recalculer le prix entrant/sortant
+        - A un Numéro de Lot
+        - A un N° de Série
+        - Est Annulée
+      section_labels: []
+      prefilled: []
+      notes: "The page appears to be mostly empty - only checkboxes and a few labels are visible. The form may have fields that are not rendering in the screenshot. The visible labels include: 'Est une écriture d'ajustement', 'Recalculer le prix entrant/sortant', 'A un Numéro de Lot', 'A un N° de Série', 'Est Annulée'. The page title is 'Nouveau(elle) Écriture du Livre d'Inventaire'. No fields show pre-filled values."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/713c121d-b5a9-47ba-aa83-5b9f16629a6a attempts: 1"

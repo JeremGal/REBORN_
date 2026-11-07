@@ -1,0 +1,71 @@
+id: run-20261107T203930-h-EXP_083
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_083.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:38:51.100Z
+ended_at: 2026-11-07T20:39:30.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.044, "element": "Close button (X) on the authorization dialog"})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'answer({"notes": "No explicit sections visible on the form. The form has 7 field labels total. The page is in French. No sections were identified with distinct headers.", "prefilled": ["Canal de paiement: Courriel", "Société: Digital Solution Service", "Message de Demande de Paiement par Défaut: Ple'
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Payment Gateway Account
+        path: /app/payment-gateway-account/new
+        kind: defaults
+      page_title: Nouveau(elle) Compte Passerelle de Paiement
+      field_labels:
+        - Passerelle de Paiement
+        - Compte de paiement
+        - Canal de paiement
+        - Société
+        - Est Default
+        - Message de Demande de Paiement par Défaut
+        - Exemple de message
+      section_labels: []
+      prefilled:
+        - "Canal de paiement: Courriel"
+        - "Société: Digital Solution Service"
+        - "Message de Demande de Paiement par Défaut: Please click on the link below to make your payment"
+        - 'Exemple de message: \n\n<p> Merci de faire partie de {{ doc.company }} ! Nous espérons que vous appréciez notre service. </p>\n\n<p> Veuillez trouver ci-joint le relevé de facturation électronique. Le montant dû est de {{ doc.grand_total }}.</p>\n\n<p> Nous ne souhaitons pas que vous perdiez votre temps à courir pour régler votre facture. Après tout, la vie est belle, et le temps dont vous disposez doit être consacré à en profiter ! Voici donc nos petites astuces pour vous aider à gagner du temps pour la vie ! </p>\n\n<a href="{{ payment_url }}"> clicquez ici pour payer </a>\n\n'
+      notes: No explicit sections visible on the form. The form has 7 field labels total. The page is in French. No sections were identified with distinct headers.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/94fc8819-ddb0-4e86-830b-255ab718550d attempts: 1"

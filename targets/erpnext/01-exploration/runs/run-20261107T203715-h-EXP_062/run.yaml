@@ -1,0 +1,90 @@
+id: run-20261107T203715-h-EXP_062
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_062.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:36:38.400Z
+ended_at: 2026-11-07T20:37:15.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.495, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.495, "y": 0.25, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.495, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Séries: DUNN-.MM.-.YY.-\", \"Société: Digital Solution Service\", \"Date: 07/11/2026\", \"Statut: Brouillon\", \"Devise: USD\", \"Taux de Conversion: 1,000\", \"Taux d'intérêt (%) annuel: 0,000\", \"Total des intérêts: $ 0,00\", \"Total en suspens: $ 0,00\"], \"page_title\": \"Nouveau(elle) Relan"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Dunning
+        path: /app/dunning/new
+        kind: defaults
+      page_title: Nouveau(elle) Relance - new-dunning-omoxaharrr
+      field_labels:
+        - Séries
+        - Société
+        - Client
+        - Date
+        - Heure de Publication
+        - Statut
+        - Devise
+        - Taux de Conversion
+        - Type de relance
+        - Taux d'intérêt (%) annuel
+        - No.
+        - Facture de vente
+        - Niveau de relance
+        - Jours en retard
+        - Solde
+        - Intérêts
+        - Total des intérêts
+        - Frais de relance
+        - Total en suspens
+      section_labels:
+        - Détails
+        - Adresse & Contact
+        - Devise
+        - Paiements en retard
+        - Paramètres d'Impression
+        - Détails Comptable
+      prefilled:
+        - "Séries: DUNN-.MM.-.YY.-"
+        - "Société: Digital Solution Service"
+        - "Date: 07/11/2026"
+        - "Statut: Brouillon"
+        - "Devise: USD"
+        - "Taux de Conversion: 1,000"
+        - "Taux d'intérêt (%) annuel: 0,000"
+        - "Total des intérêts: $ 0,00"
+        - "Total en suspens: $ 0,00"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/6fe55efe-8672-4891-9947-35b35061c7b6 attempts: 1"

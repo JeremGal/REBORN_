@@ -1,0 +1,73 @@
+id: run-20261107T210546-h-EXP_269
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_269.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:05:04.100Z
+ended_at: 2026-11-07T21:05:46.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Naming Series: SABB-#######", "Société: Digital Solution Service", "Qté: 1"], "page_title": "Nouveau(elle) Ensemble de n° de série et lot - new-serial-and-batch-bundle-bticbbrufi", "field_labels": ["Naming Series", "Société", "A un N° de Série", "A un Numéro de Lot", "Code de '
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Serial and Batch Bundle
+        path: /app/serial-and-batch-bundle/new
+        kind: defaults
+      page_title: Nouveau(elle) Ensemble de n° de série et lot - new-serial-and-batch-bundle-bticbbrufi
+      field_labels:
+        - Naming Series
+        - Société
+        - A un N° de Série
+        - A un Numéro de Lot
+        - Code de l'Article
+        - Entrepôt
+        - Type de transaction
+        - N° de série / lot
+        - No.
+        - N° de Série
+        - N° du Lot
+        - Qté
+        - Entrepôt
+        - Ajouter une ligne
+        - Télécharger
+        - Charger
+      section_labels:
+        - N° de série et lot
+        - Référence
+      prefilled:
+        - "Naming Series: SABB-#######"
+        - "Société: Digital Solution Service"
+        - "Qté: 1"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/889e0351-b3f1-4a73-9dc5-d275b4c42dee attempts: 1"

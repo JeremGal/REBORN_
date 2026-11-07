@@ -1,0 +1,55 @@
+id: run-20261107T203939-h-EXP_086
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_086.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:38:59.900Z
+ended_at: 2026-11-07T20:39:39.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Page loaded successfully after login. Only two fields are visible: Société (prefilled with \"Digital Solution Service\") and Type de Tiers (empty). No scrollable content below.", "prefilled": ["Société: Digital Solution Service"], "page_title": "Réconciliation des Paiements", "fiel'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Payment Reconciliation
+        path: /app/payment-reconciliation
+        kind: defaults
+      page_title: Réconciliation des Paiements
+      field_labels:
+        - Société
+        - Type de Tiers
+      section_labels: []
+      prefilled:
+        - "Société: Digital Solution Service"
+      notes: 'Page loaded successfully after login. Only two fields are visible: Société (prefilled with "Digital Solution Service") and Type de Tiers (empty). No scrollable content below.'
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d17418f4-d12a-4d35-9530-6f99da844a0c attempts: 1"

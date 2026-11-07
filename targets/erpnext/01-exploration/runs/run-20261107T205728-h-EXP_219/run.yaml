@@ -1,0 +1,53 @@
+id: run-20261107T205728-h-EXP_219
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_219.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Setup
+started_at: 2026-11-07T20:56:41.900Z
+ended_at: 2026-11-07T20:57:28.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.323, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"notes": "The page title is \"Nouveau(elle) Groupe de clients\". The form has one visible field/label: \"Est un groupe\" (a checkbox with the description \"Seuls les noeuds feuilles sont autorisés dans une transaction\"). No fields have prefilled values.", "prefilled": [], "page_title": "Nou'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Setup)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Customer Group
+        path: /app/customer-group/new
+        kind: defaults
+      page_title: Nouveau(elle) Groupe de clients
+      field_labels:
+        - Est un groupe
+      section_labels: []
+      prefilled: []
+      notes: 'The page title is "Nouveau(elle) Groupe de clients". The form has one visible field/label: "Est un groupe" (a checkbox with the description "Seuls les noeuds feuilles sont autorisés dans une transaction"). No fields have prefilled values.'
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/f070fd2e-c06a-4728-91ca-62f2d5f338b1 attempts: 1"

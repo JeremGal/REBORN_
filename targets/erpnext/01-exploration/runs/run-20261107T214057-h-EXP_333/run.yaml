@@ -1,0 +1,117 @@
+id: run-20261107T214057-h-EXP_333
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_333.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:39:47.700Z
+ended_at: 2026-11-07T21:40:57.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "select_option({\"x\": 0.418, \"y\": 0.278, \"option\": \"Groupe d'Article\", \"element\": \"Appliquer Sur dropdown\"})"
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 600, "scroll_element": null})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.5, "element": "Page content area to focus it for scrolling"})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 400, "scroll_element": null})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 400, "scroll_element": null})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Pour la Liste de Prix"})'
+  - n: 13
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 14
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Section labels: Détails, Condition dynamique, Paramètres avancés, Article d'Aide. The 'Appliquer Sur' field was changed to 'Groupe d'Article'. The page shows the full form with all fields.\", \"prefilled\": [\"Appliquer Sur: Groupe d'Article\", \"Groupe d'Article: sélectionnés combinés.\""
+    screenshot: step_14.png
+  - n: 15
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_14.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: apply_on
+          value: Item Group
+      page_title: Nouveau(elle) Règle de tarification
+      field_labels: []
+      section_labels:
+        - Détails
+        - Condition dynamique
+        - Paramètres avancés
+        - Article d'Aide
+      prefilled:
+        - "Appliquer Sur: Groupe d'Article"
+        - "Groupe d'Article: sélectionnés combinés."
+        - "Prix ou remise de produit: Prix"
+        - "Est cumulatif: checked"
+        - "Entrepôt: "
+        - Remise sur un autre article
+        - "Vente: "
+        - "Achat: "
+        - "Qte min. (selon UdM de stock): "
+        - "Montant Min: 0,00"
+        - "Qte max. (selon l'UdM de stock): "
+        - "Montant Max: 0,00"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Valable jusqu'au: "
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0,000"
+        - "Prix unitaire ou réduction: Remise en Pourcentage"
+        - "Remise en Pourcentage: "
+        - "Pour la Liste de Prix: "
+      notes: "Section labels: Détails, Condition dynamique, Paramètres avancés, Article d'Aide. The 'Appliquer Sur' field was changed to 'Groupe d'Article'. The page shows the full form with all fields."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/6456f498-518a-4ec6-8f6b-59192afea91d attempts: 1"

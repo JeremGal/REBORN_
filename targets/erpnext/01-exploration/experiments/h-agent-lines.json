@@ -1,0 +1,261 @@
+{
+ "mission": "M-006",
+ "application": "ERPNext (fictitious data)",
+ "experiments": [
+  {
+   "kind": "interact",
+   "doctype": "BOM",
+   "module": "Manufacturing",
+   "path": "/app/bom/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "BOM Creator",
+   "module": "Manufacturing",
+   "path": "/app/bom-creator/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Delivery Note",
+   "module": "Stock",
+   "path": "/app/delivery-note/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "First choose TEST-Client Alpha in the field 'Client' (Customer). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Landed Cost Voucher",
+   "module": "Stock",
+   "path": "/app/landed-cost-voucher/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Material Request",
+   "module": "Stock",
+   "path": "/app/material-request/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Opportunity",
+   "module": "CRM",
+   "path": "/app/opportunity/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "POS Invoice",
+   "module": "Accounts",
+   "path": "/app/pos-invoice/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Proforma Invoice",
+   "module": "Selling",
+   "path": "/app/proforma-invoice/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Purchase Invoice",
+   "module": "Accounts",
+   "path": "/app/purchase-invoice/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "First choose TEST-Fournisseur Beta in the field 'Fournisseur' (Supplier). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Purchase Order",
+   "module": "Buying",
+   "path": "/app/purchase-order/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "First choose TEST-Fournisseur Beta in the field 'Fournisseur' (Supplier). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Purchase Receipt",
+   "module": "Stock",
+   "path": "/app/purchase-receipt/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "First choose TEST-Fournisseur Beta in the field 'Fournisseur' (Supplier). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Quotation",
+   "module": "Selling",
+   "path": "/app/quotation/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Sales Invoice",
+   "module": "Accounts",
+   "path": "/app/sales-invoice/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "First choose TEST-Client Alpha in the field 'Client' (Customer). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Sales Order",
+   "module": "Selling",
+   "path": "/app/sales-order/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "First choose TEST-Client Alpha in the field 'Client' (Customer). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Subcontracting Order",
+   "module": "Subcontracting",
+   "path": "/app/subcontracting-order/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "First choose TEST-Fournisseur Beta in the field 'Sous-traitant' (Job Worker). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Subcontracting Receipt",
+   "module": "Subcontracting",
+   "path": "/app/subcontracting-receipt/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "First choose TEST-Fournisseur Beta in the field 'Sous-traitant' (Job Worker). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  },
+  {
+   "kind": "interact",
+   "doctype": "Supplier Quotation",
+   "module": "Buying",
+   "path": "/app/supplier-quotation/new",
+   "timeout_s": 420,
+   "action": {
+    "line": {
+     "item_code": "TEST-ART-001",
+     "qty": 3,
+     "rate": 10
+    }
+   },
+   "do": "First choose TEST-Fournisseur Beta in the field 'Fournisseur' (Supplier). In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed."
+  }
+ ]
+}

@@ -52,9 +52,12 @@ test("import-run writes a run that validates, copying the screenshots it finds",
     fs.mkdirSync(path.join(hdir, "artifacts", "EXP_001"), { recursive: true });
     fs.writeFileSync(path.join(hdir, "artifacts", "EXP_001", "final.png"), Buffer.from([0x89, 0x50, 0x4e, 0x47]));
     fs.writeFileSync(path.join(hdir, "experiments", "EXP_001.json"), JSON.stringify(EXP));
-    const r = spawnSync(process.execPath, [path.join(ROOT, "tools", "reborn.mjs"), "import-run", "gnucash", path.join(hdir, "experiments"), "--mission", "M-001", "--root", hdir], { encoding: "utf8", env: { ...process.env } });
+    const r = spawnSync(process.execPath, [path.join(ROOT, "tools", "reborn.mjs"), "import-run", "gnucash", path.join(hdir, "experiments"), "--mission", "M-001", "--root", hdir, "--shots", "all"], { encoding: "utf8", env: { ...process.env } });
     assert.equal(r.status, 0, r.stderr || r.stdout);
     assert.match(r.stdout, /1\/2 screenshot\(s\) copied/);
+    // by default only the final screenshot is kept
+    const r2 = spawnSync(process.execPath, [path.join(ROOT, "tools", "reborn.mjs"), "import-run", "gnucash", path.join(hdir, "experiments"), "--mission", "M-001", "--root", hdir], { encoding: "utf8", env: { ...process.env } });
+    assert.match(r2.stdout, /1\/1 screenshot\(s\) copied/);
     const v = spawnSync(process.execPath, [path.join(ROOT, "tools", "reborn.mjs"), "validate", "gnucash"], { encoding: "utf8", env: { ...process.env } });
     assert.equal(v.status, 0, v.stdout);
   } finally { sb.cleanup(); }

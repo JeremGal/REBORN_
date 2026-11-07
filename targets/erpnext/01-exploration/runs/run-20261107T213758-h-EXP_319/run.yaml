@@ -1,0 +1,86 @@
+id: run-20261107T213758-h-EXP_319
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_319.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:37:08.000Z
+ended_at: 2026-11-07T21:37:58.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.422, \"y\": 0.186, \"element\": \"Objet dropdown field showing 'achat'\"})"
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.302, \"y\": 0.392, \"element\": \"'Client fourni' option in the dropdown\"})"
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Objet' field was changed from 'achat' to 'Client fourni' as requested. The form has tabs: Détails, Termes, Plus d'info. The 'Articles' section contains a table with columns and one empty row (no value in row 1). No other fields had values.\", \"prefilled\": [\"Série: MAT-MR-.YYYY."
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Material Request
+        path: /app/material-request/new
+        kind: interact
+        mission: M-006
+        action:
+          field: material_request_type
+          value: Customer Provided
+      page_title: Nouveau(elle) Demande de matériel
+      field_labels:
+        - Séries
+        - Date de la transaction
+        - Objet
+        - Requis pour le
+        - Client
+        - Liste de prix
+        - Articles
+        - Scan Code Barre
+        - Définir l'entrepôt
+        - Articles
+        - No.
+        - Code de l'Article
+        - Requis pour le
+        - Quantité
+        - Entrepôt
+        - UdM
+      section_labels:
+        - Articles
+      prefilled:
+        - "Série: MAT-MR-.YYYY.-"
+        - "Date de la transaction: 07/11/2026"
+        - "Objet: Client fourni"
+        - "Liste de prix: Achat standard"
+        - "Quantité: 0,000"
+      notes: "The 'Objet' field was changed from 'achat' to 'Client fourni' as requested. The form has tabs: Détails, Termes, Plus d'info. The 'Articles' section contains a table with columns and one empty row (no value in row 1). No other fields had values."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b852d3f5-ed1a-4e67-9b84-571bed5d1948 attempts: 1"

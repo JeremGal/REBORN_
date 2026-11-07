@@ -101,9 +101,16 @@ actions:
     triggers: F-016
   - label: Amend
     triggers: F-016
-status: partial
+status: confirmed
 evidence:
   - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
     kind: rea
     locator: form layout of Bank Guarantee
     note: declared by the program
+  - ref: run-20261107T203525-h-EXP_046
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 17/17 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T203525-h-EXP_046/step_10.png
+  - 01-exploration/runs/run-20261107T203525-h-EXP_046/step_10.png

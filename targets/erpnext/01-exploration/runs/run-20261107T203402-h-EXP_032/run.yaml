@@ -1,0 +1,68 @@
+id: run-20261107T203402-h-EXP_032
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_032.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:32:28.500Z
+ended_at: 2026-11-07T20:34:02.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Société: Digital Solution Service", "Devise: USD"], "page_title": "Nouveau(elle) Compte", "field_labels": ["Désactiver", "Nom du Compte", "Numéro de compte", "Est un groupe", "Société", "Devise", "Compte Parent", "Catégorie de compte", "Utilisé avec le modèle de rapport financ'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Account
+        path: /app/account/new
+        kind: defaults
+      page_title: Nouveau(elle) Compte
+      field_labels:
+        - Désactiver
+        - Nom du Compte
+        - Numéro de compte
+        - Est un groupe
+        - Société
+        - Devise
+        - Compte Parent
+        - Catégorie de compte
+        - Utilisé avec le modèle de rapport financier
+        - Type de compte
+        - Taux d'Imposition
+        - Taux auquel cette taxe est appliquée
+        - Solde doit être
+      section_labels:
+        - Compte / Nouveau(elle) Compte
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/1d538993-39f8-4aff-878f-ec97450e87bc attempts: 2"

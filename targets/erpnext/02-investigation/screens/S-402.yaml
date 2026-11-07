@@ -2,7 +2,7 @@ id: S-402
 title: Purchase Receipt
 purpose: create, view and edit Purchase Receipt records
 kind: form
-layout: "tabs: Address & Contact, Terms, More Info, Connections; sections: Accounting Dimensions, Currency and Price List, Items, Taxes and Charges, Totals, Totals (Company Currency), Additional Discount, Tax Breakup, Pricing Rules, Raw Materials Consumed, Supplier Address, Shipping Address, Company Billing Address, Status, Auto Repeat, Printing Settings, Transporter, Additional Info; 98 fields"
+layout: "tabs: Address & Contact, Terms, More Info, Connections; sections: Accounting Dimensions, Currency and Price List, Items, Taxes and Charges, Totals, Totals (Company Currency), Additional Discount, Tax Breakup, Pricing Rules, Raw Materials Consumed, Supplier Address, Shipping Address, Company Billing Address, Status, Auto Repeat, Printing Settings, Transporter, Additional Info; 98 fields; observed labels differ from the declared form (11/19 match; not declared: réf. d'achat, monnaie, arrondi sur la valeur totale, avance payée, total à payer, conteneur, groupe de tarifs, details)"
 fields:
   - label: Series
     control: select
@@ -422,3 +422,10 @@ evidence:
     kind: rea
     locator: form layout of Purchase Receipt
     note: declared by the program
+  - ref: run-20261107T210422-h-EXP_261
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 11/19 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T210422-h-EXP_261/step_41.png
+  - 01-exploration/runs/run-20261107T210422-h-EXP_261/step_41.png

@@ -1,0 +1,68 @@
+id: run-20261107T204259-h-EXP_117
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_117.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:42:01.900Z
+ended_at: 2026-11-07T20:42:59.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Devise: USD\", \"Intervalle de facturation: Jour\", \"Nombre d'intervalles de facturation: 1\"], \"page_title\": \"Nouveau(elle) Plan d'abonnement\", \"field_labels\": [\"Nom du Plan\", \"Item\", \"Devise\", \"Prix d'abonnement basé sur\", \"Intervalle de facturation\", \"Nombre d'intervalles de fa"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Subscription Plan
+        path: /app/subscription-plan/new
+        kind: defaults
+      page_title: Nouveau(elle) Plan d'abonnement
+      field_labels:
+        - Nom du Plan
+        - Item
+        - Devise
+        - Prix d'abonnement basé sur
+        - Intervalle de facturation
+        - Nombre d'intervalles de facturation
+        - ID de prix produit
+        - Passerelle de Paiement
+      section_labels:
+        - Plan de paiement
+      prefilled:
+        - "Devise: USD"
+        - "Intervalle de facturation: Jour"
+        - "Nombre d'intervalles de facturation: 1"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/4bb76e9f-3411-4e4f-835e-c4b54364cf38 attempts: 2"

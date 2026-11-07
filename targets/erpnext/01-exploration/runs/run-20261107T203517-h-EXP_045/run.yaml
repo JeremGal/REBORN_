@@ -1,0 +1,57 @@
+id: run-20261107T203517-h-EXP_045
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_045.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:34:46.700Z
+ended_at: 2026-11-07T20:35:17.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.199, "text": "***", "enter": false, "element": "Email input field with placeholder jane@example.com", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Section labels: Compte, Écritures de Paiement. Fields visible: Compte, Compte bancaire, Date de début, Date de fin, Inclure les Écritures Réconciliées, Inclure les transactions du point de vente, No., Écriture de Paiem..., Contrepartie, Montant, Numéro de..., Date du Chèque, Date d'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Bank Clearance
+        path: /app/bank-clearance
+        kind: defaults
+      page_title: Liquidation bancaire
+      field_labels: []
+      section_labels:
+        - Compte
+        - Écritures de Paiement
+      prefilled:
+        - "Compte: 5124 - Comptes en devises - DSS"
+        - "Date de début: 01/11/2026"
+        - "Date de fin: 30/11/2026"
+      notes: "Section labels: Compte, Écritures de Paiement. Fields visible: Compte, Compte bancaire, Date de début, Date de fin, Inclure les Écritures Réconciliées, Inclure les transactions du point de vente, No., Écriture de Paiem..., Contrepartie, Montant, Numéro de..., Date du Chèque, Date de Compens..."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b435bdd6-ffd0-45e9-9a86-20d2a04fc3d3 attempts: 1"

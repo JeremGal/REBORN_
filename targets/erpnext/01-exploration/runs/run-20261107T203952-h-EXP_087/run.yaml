@@ -1,0 +1,72 @@
+id: run-20261107T203952-h-EXP_087
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_087.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:39:17.500Z
+ended_at: 2026-11-07T20:39:52.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Type de demande de paiement: Vers l'intérieur\", \"Séries: ACC-PRQ-.YYYY.-\"], \"page_title\": \"Nouveau(elle) Requête de Paiement\", \"section_labels\": [\"Type de demande de paiement\", \"Séries\", \"Date de la transaction\", \"Moyen de paiement\", \"Parti Détails\", \"Type de Tiers\", \"Tiers\", "
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_04.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Payment Request
+        path: /app/payment-request/new
+        kind: defaults
+      page_title: Nouveau(elle) Requête de Paiement
+      field_labels: []
+      section_labels:
+        - Type de demande de paiement
+        - Séries
+        - Date de la transaction
+        - Moyen de paiement
+        - Parti Détails
+        - Type de Tiers
+        - Tiers
+        - détails de la transaction
+        - Montant
+        - Montant dans la devise de transaction
+        - Est un abonnement
+        - Détails de compte en banque
+        - Message du Destinataire et Détails de Paiement
+        - Format d'Impression
+        - Compte Passerelle de Paiement
+        - À
+        - Objet
+        - Message
+      prefilled:
+        - "Type de demande de paiement: Vers l'intérieur"
+        - "Séries: ACC-PRQ-.YYYY.-"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d688c72c-e42d-4e07-b9ab-6068cf9c4dd4 attempts: 1"

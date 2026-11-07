@@ -1,0 +1,71 @@
+id: run-20261107T204445-h-EXP_132
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_132.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Assets
+started_at: 2026-11-07T20:44:05.500Z
+ended_at: 2026-11-07T20:44:45.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Société: Digital Solution Service\", \"Date de la transaction: 07/11/2026 21:45:09\"], \"page_title\": \"Nouveau(elle) Mouvement d'Actif\", \"field_labels\": [\"Société\", \"Date de la transaction\", \"Europe/Paris\", \"Objet\", \"No.\", \"Actif - Immo.\", \"Localisation source\", \"De l'Employé\", \"L"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Assets)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Asset Movement
+        path: /app/asset-movement/new
+        kind: defaults
+      page_title: Nouveau(elle) Mouvement d'Actif
+      field_labels:
+        - Société
+        - Date de la transaction
+        - Europe/Paris
+        - Objet
+        - No.
+        - Actif - Immo.
+        - Localisation source
+        - De l'Employé
+        - Localisation cible
+        - À l'employé
+        - Ajouter une ligne
+        - Référence
+      section_labels:
+        - Société
+        - Date de la transaction
+        - Objet
+        - Actifs - Immo.
+        - Référence
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Date de la transaction: 07/11/2026 21:45:09"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/0f64f759-bbb3-4e95-82f8-3e13ac3140eb attempts: 1"

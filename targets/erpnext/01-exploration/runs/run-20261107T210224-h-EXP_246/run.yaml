@@ -1,0 +1,176 @@
+id: run-20261107T210224-h-EXP_246
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_246.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T21:00:25.200Z
+ended_at: 2026-11-07T21:02:24.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/manufacturing/bom-creator/new-bom-creator-ycjjldbybu", "render_js": true})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Taux de Valorisation"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Rate Of Materials"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Matériaux"})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/bom-creator/new"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/app/bom-creator/new", "render_js": true})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/manufacturing/bom-creator/new-bom-creator-zshussgugi#design_tab"})'
+  - n: 14
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Taux"})'
+  - n: 15
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Prix des"})'
+  - n: 16
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Valuation Rate"})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Rate Of Materials Based On"})'
+  - n: 18
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Taux de Valorisation"})'
+  - n: 19
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Map Item"})'
+  - n: 20
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "0 parts"})'
+  - n: 21
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "1 BOMs will be created"})'
+  - n: 22
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Map Item"})'
+  - n: 23
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Attach"})'
+  - n: 24
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Produit fini"})'
+  - n: 25
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Design Name"})'
+  - n: 26
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Société"})'
+  - n: 27
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Produce Item per Operation"})'
+  - n: 28
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Part"})'
+  - n: 29
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Item"})'
+  - n: 30
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Quantité"})'
+  - n: 31
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "UdM"})'
+  - n: 32
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Montant"})'
+    screenshot: step_32.png
+  - n: 33
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Non Sauvegardé"})'
+  - n: 34
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Prix des Matériaux Basé sur' / 'Rate Of Materials Based On' field with 'Taux de Valorisation' / 'Valuation Rate' option was not found on this form. The form is in French and contains these fields: Design Name, Société, Produit fini, Design File, Produce Item per Operation, Par"
+  - n: 35
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_32.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: BOM Creator
+        path: /app/bom-creator/new
+        kind: interact
+        mission: M-006
+        action:
+          field: rm_cost_as_per
+          value: Valuation Rate
+      page_title: Nouveau(elle) Créateur de nomenclature - new-bom-creator-zshussgugi
+      field_labels: []
+      section_labels:
+        - Design Tab
+        - Form Fields
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Quantité: 1"
+      notes: "The 'Prix des Matériaux Basé sur' / 'Rate Of Materials Based On' field with 'Taux de Valorisation' / 'Valuation Rate' option was not found on this form. The form is in French and contains these fields: Design Name, Société, Produit fini, Design File, Produce Item per Operation, Part, Item, Quantité, UdM, Montant. The form shows 'Non Sauvegardé' (unsaved) status."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b0eea0c3-b105-4e71-b629-02ea5b482677 attempts: 1"

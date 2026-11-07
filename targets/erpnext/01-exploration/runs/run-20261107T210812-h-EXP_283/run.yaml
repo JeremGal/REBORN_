@@ -1,0 +1,68 @@
+id: run-20261107T210812-h-EXP_283
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_283.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:07:27.100Z
+ended_at: 2026-11-07T21:08:12.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.199, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.254, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.415, "y": 0.164, "option": "Carte cadeau", "element": "Type de coupon dropdown"})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"page_title\": \"Code de coupon / Nouveau(elle) Code de coupon\", \"field_labels\": [\"Nom du coupon\", \"Code de coupon\", \"Type de coupon\", \"Client\", \"Depuis une plateforme e-commerce externe\", \"Règle de tarification\", \"Valide à partir de\", \"Valable jusqu'au\", \"Utilisation maximale\", \"Utilisé\", \"De"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Coupon Code
+        path: /app/coupon-code/new
+        kind: interact
+        mission: M-006
+        action:
+          field: coupon_type
+          value: Gift Card
+      page_title: Code de coupon / Nouveau(elle) Code de coupon
+      field_labels:
+        - Nom du coupon
+        - Code de coupon
+        - Type de coupon
+        - Client
+        - Depuis une plateforme e-commerce externe
+        - Règle de tarification
+        - Valide à partir de
+        - Valable jusqu'au
+        - Utilisation maximale
+        - Utilisé
+        - Description du coupon
+      section_labels:
+        - Validité et utilisation
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d4a1ae5a-6be5-45dd-9bed-9944e03add40 attempts: 1"

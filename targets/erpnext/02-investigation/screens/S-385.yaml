@@ -2,7 +2,7 @@ id: S-385
 title: Delivery Note
 purpose: create, view and edit Delivery Note records
 kind: form
-layout: "tabs: Address & Contact, Terms, More Info, Connections; sections: Accounting Dimensions, Currency and Price List, Items, Taxes and Charges, Totals, Totals (Company Currency), Additional Discount, Tax Breakup, Packing List, Pricing Rules, Billing Address, Shipping Address, Company Address, Status, Transporter Info, Customer PO Details, Commission, Sales Team, Auto Repeat, Print Settings, UTM Analytics, Additional Info; 109 fields; observed labels differ from the declared form (20/41 match; not declared: no., code de l'article, quantité, udm, prix usd, montant u..., entrepôt, ajouter une ligne)"
+layout: "tabs: Address & Contact, Terms, More Info, Connections; sections: Accounting Dimensions, Currency and Price List, Items, Taxes and Charges, Totals, Totals (Company Currency), Additional Discount, Tax Breakup, Packing List, Pricing Rules, Billing Address, Shipping Address, Company Address, Status, Transporter Info, Customer PO Details, Commission, Sales Team, Auto Repeat, Print Settings, UTM Analytics, Additional Info; 109 fields; observed labels differ from the declared form (22/39 match; not declared: no., code de l'article, quantité, udm, prix, montant, entrepôt, ajouter une ligne); observed labels differ from the declared form (22/39 match; not declared: no., code de l'article, quantité, udm, prix, montant, entrepôt, ajouter une ligne)"
 fields:
   - label: Series
     control: select
@@ -470,7 +470,13 @@ evidence:
   - ref: run-20261107T193833-h-EXP_007
     kind: h-run
     locator: form opened by the H Company agent
-    note: 20/41 labels read on screen match the declared form
+    note: 22/39 labels read on screen match the declared form
+  - ref: run-20261107T210147-h-EXP_244
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 22/39 labels read on screen match the declared form
 screenshots:
   - 01-exploration/runs/run-20261107T193833-h-EXP_007/step_07.png
   - 01-exploration/runs/run-20261107T193833-h-EXP_007/step_07.png
+  - 01-exploration/runs/run-20261107T210147-h-EXP_244/step_07.png
+  - 01-exploration/runs/run-20261107T210147-h-EXP_244/step_07.png

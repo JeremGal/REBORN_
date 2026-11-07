@@ -1,0 +1,1847 @@
+{
+ "mission": "M-005",
+ "application": "ERPNext (fictitious data)",
+ "experiments": [
+  {
+   "kind": "defaults",
+   "doctype": "Account",
+   "module": "Accounts",
+   "path": "/app/account/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Account Category",
+   "module": "Accounts",
+   "path": "/app/account-category/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Account Closing Balance",
+   "module": "Accounts",
+   "path": "/app/account-closing-balance/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Accounting Dimension",
+   "module": "Accounts",
+   "path": "/app/accounting-dimension/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Accounting Dimension Filter",
+   "module": "Accounts",
+   "path": "/app/accounting-dimension-filter/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Accounting Period",
+   "module": "Accounts",
+   "path": "/app/accounting-period/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Accounts Settings",
+   "module": "Accounts",
+   "path": "/app/accounts-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Advance Payment Ledger Entry",
+   "module": "Accounts",
+   "path": "/app/advance-payment-ledger-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank",
+   "module": "Accounts",
+   "path": "/app/bank/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Account",
+   "module": "Accounts",
+   "path": "/app/bank-account/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Account Balance",
+   "module": "Accounts",
+   "path": "/app/bank-account-balance/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Account Subtype",
+   "module": "Accounts",
+   "path": "/app/bank-account-subtype/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Account Type",
+   "module": "Accounts",
+   "path": "/app/bank-account-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Clearance",
+   "module": "Accounts",
+   "path": "/app/bank-clearance",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Guarantee",
+   "module": "Accounts",
+   "path": "/app/bank-guarantee/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Reconciliation Tool",
+   "module": "Accounts",
+   "path": "/app/bank-reconciliation-tool",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Statement Import",
+   "module": "Accounts",
+   "path": "/app/bank-statement-import/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Statement Import Log",
+   "module": "Accounts",
+   "path": "/app/bank-statement-import-log/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Transaction",
+   "module": "Accounts",
+   "path": "/app/bank-transaction/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bank Transaction Rule",
+   "module": "Accounts",
+   "path": "/app/bank-transaction-rule/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bisect Accounting Statements",
+   "module": "Accounts",
+   "path": "/app/bisect-accounting-statements",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bisect Nodes",
+   "module": "Accounts",
+   "path": "/app/bisect-nodes/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Budget",
+   "module": "Accounts",
+   "path": "/app/budget/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Cashier Closing",
+   "module": "Accounts",
+   "path": "/app/cashier-closing/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Chart of Accounts Importer",
+   "module": "Accounts",
+   "path": "/app/chart-of-accounts-importer",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Cheque Print Template",
+   "module": "Accounts",
+   "path": "/app/cheque-print-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Cost Center",
+   "module": "Accounts",
+   "path": "/app/cost-center/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Cost Center Allocation",
+   "module": "Accounts",
+   "path": "/app/cost-center-allocation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Coupon Code",
+   "module": "Accounts",
+   "path": "/app/coupon-code/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Currency Exchange Settings",
+   "module": "Accounts",
+   "path": "/app/currency-exchange-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Dunning",
+   "module": "Accounts",
+   "path": "/app/dunning/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Dunning Type",
+   "module": "Accounts",
+   "path": "/app/dunning-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Exchange Rate Revaluation",
+   "module": "Accounts",
+   "path": "/app/exchange-rate-revaluation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Finance Book",
+   "module": "Accounts",
+   "path": "/app/finance-book/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Financial Report Template",
+   "module": "Accounts",
+   "path": "/app/financial-report-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Fiscal Year",
+   "module": "Accounts",
+   "path": "/app/fiscal-year/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "GL Entry",
+   "module": "Accounts",
+   "path": "/app/gl-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Invoice Discounting",
+   "module": "Accounts",
+   "path": "/app/invoice-discounting/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Item Tax Template",
+   "module": "Accounts",
+   "path": "/app/item-tax-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Journal Entry",
+   "module": "Accounts",
+   "path": "/app/journal-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Journal Entry Template",
+   "module": "Accounts",
+   "path": "/app/journal-entry-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Ledger Health",
+   "module": "Accounts",
+   "path": "/app/ledger-health/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Ledger Health Monitor",
+   "module": "Accounts",
+   "path": "/app/ledger-health-monitor",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Ledger Merge",
+   "module": "Accounts",
+   "path": "/app/ledger-merge/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Loyalty Point Entry",
+   "module": "Accounts",
+   "path": "/app/loyalty-point-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Loyalty Program",
+   "module": "Accounts",
+   "path": "/app/loyalty-program/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Mode of Payment",
+   "module": "Accounts",
+   "path": "/app/mode-of-payment/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Monthly Distribution",
+   "module": "Accounts",
+   "path": "/app/monthly-distribution/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Opening Invoice Creation Tool",
+   "module": "Accounts",
+   "path": "/app/opening-invoice-creation-tool",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Party Link",
+   "module": "Accounts",
+   "path": "/app/party-link/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Payment Entry",
+   "module": "Accounts",
+   "path": "/app/payment-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Payment Gateway Account",
+   "module": "Accounts",
+   "path": "/app/payment-gateway-account/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Payment Ledger Entry",
+   "module": "Accounts",
+   "path": "/app/payment-ledger-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Payment Order",
+   "module": "Accounts",
+   "path": "/app/payment-order/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Payment Reconciliation",
+   "module": "Accounts",
+   "path": "/app/payment-reconciliation",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Payment Request",
+   "module": "Accounts",
+   "path": "/app/payment-request/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Payment Term",
+   "module": "Accounts",
+   "path": "/app/payment-term/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Payment Terms Template",
+   "module": "Accounts",
+   "path": "/app/payment-terms-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Pegged Currencies",
+   "module": "Accounts",
+   "path": "/app/pegged-currencies",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Period Closing Voucher",
+   "module": "Accounts",
+   "path": "/app/period-closing-voucher/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "POS Closing Entry",
+   "module": "Accounts",
+   "path": "/app/pos-closing-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "POS Invoice",
+   "module": "Accounts",
+   "path": "/app/pos-invoice/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "POS Invoice Merge Log",
+   "module": "Accounts",
+   "path": "/app/pos-invoice-merge-log/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "POS Opening Entry",
+   "module": "Accounts",
+   "path": "/app/pos-opening-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "POS Profile",
+   "module": "Accounts",
+   "path": "/app/pos-profile/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "POS Settings",
+   "module": "Accounts",
+   "path": "/app/pos-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Pricing Rule",
+   "module": "Accounts",
+   "path": "/app/pricing-rule/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Process Deferred Accounting",
+   "module": "Accounts",
+   "path": "/app/process-deferred-accounting/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Process Payment Reconciliation",
+   "module": "Accounts",
+   "path": "/app/process-payment-reconciliation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Process Payment Reconciliation Log",
+   "module": "Accounts",
+   "path": "/app/process-payment-reconciliation-log/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Process Period Closing Voucher",
+   "module": "Accounts",
+   "path": "/app/process-period-closing-voucher/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Process Statement Of Accounts",
+   "module": "Accounts",
+   "path": "/app/process-statement-of-accounts/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Process Subscription",
+   "module": "Accounts",
+   "path": "/app/process-subscription/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Promotional Scheme",
+   "module": "Accounts",
+   "path": "/app/promotional-scheme/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Purchase Invoice",
+   "module": "Accounts",
+   "path": "/app/purchase-invoice/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Purchase Taxes and Charges Template",
+   "module": "Accounts",
+   "path": "/app/purchase-taxes-and-charges-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Repost Accounting Ledger",
+   "module": "Accounts",
+   "path": "/app/repost-accounting-ledger/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Repost Payment Ledger",
+   "module": "Accounts",
+   "path": "/app/repost-payment-ledger/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Sales Invoice",
+   "module": "Accounts",
+   "path": "/app/sales-invoice/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Sales Taxes and Charges Template",
+   "module": "Accounts",
+   "path": "/app/sales-taxes-and-charges-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Share Transfer",
+   "module": "Accounts",
+   "path": "/app/share-transfer/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Share Type",
+   "module": "Accounts",
+   "path": "/app/share-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Shareholder",
+   "module": "Accounts",
+   "path": "/app/shareholder/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Shipping Rule",
+   "module": "Accounts",
+   "path": "/app/shipping-rule/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Subscription",
+   "module": "Accounts",
+   "path": "/app/subscription/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Subscription Plan",
+   "module": "Accounts",
+   "path": "/app/subscription-plan/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Subscription Settings",
+   "module": "Accounts",
+   "path": "/app/subscription-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Tax Category",
+   "module": "Accounts",
+   "path": "/app/tax-category/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Tax Rule",
+   "module": "Accounts",
+   "path": "/app/tax-rule/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Tax Withholding Category",
+   "module": "Accounts",
+   "path": "/app/tax-withholding-category/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Tax Withholding Group",
+   "module": "Accounts",
+   "path": "/app/tax-withholding-group/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Unreconcile Payment",
+   "module": "Accounts",
+   "path": "/app/unreconcile-payment/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset",
+   "module": "Assets",
+   "path": "/app/asset/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Activity",
+   "module": "Assets",
+   "path": "/app/asset-activity/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Capitalization",
+   "module": "Assets",
+   "path": "/app/asset-capitalization/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Category",
+   "module": "Assets",
+   "path": "/app/asset-category/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Depreciation Schedule",
+   "module": "Assets",
+   "path": "/app/asset-depreciation-schedule/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Maintenance",
+   "module": "Assets",
+   "path": "/app/asset-maintenance/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Maintenance Log",
+   "module": "Assets",
+   "path": "/app/asset-maintenance-log/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Maintenance Team",
+   "module": "Assets",
+   "path": "/app/asset-maintenance-team/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Movement",
+   "module": "Assets",
+   "path": "/app/asset-movement/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Repair",
+   "module": "Assets",
+   "path": "/app/asset-repair/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Shift Allocation",
+   "module": "Assets",
+   "path": "/app/asset-shift-allocation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Shift Factor",
+   "module": "Assets",
+   "path": "/app/asset-shift-factor/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Asset Value Adjustment",
+   "module": "Assets",
+   "path": "/app/asset-value-adjustment/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Location",
+   "module": "Assets",
+   "path": "/app/location/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Buying Settings",
+   "module": "Buying",
+   "path": "/app/buying-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Purchase Order",
+   "module": "Buying",
+   "path": "/app/purchase-order/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Request for Quotation",
+   "module": "Buying",
+   "path": "/app/request-for-quotation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Supplier",
+   "module": "Buying",
+   "path": "/app/supplier/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Supplier Quotation",
+   "module": "Buying",
+   "path": "/app/supplier-quotation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Supplier Scorecard",
+   "module": "Buying",
+   "path": "/app/supplier-scorecard/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Supplier Scorecard Criteria",
+   "module": "Buying",
+   "path": "/app/supplier-scorecard-criteria/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Supplier Scorecard Period",
+   "module": "Buying",
+   "path": "/app/supplier-scorecard-period/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Supplier Scorecard Standing",
+   "module": "Buying",
+   "path": "/app/supplier-scorecard-standing/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Supplier Scorecard Variable",
+   "module": "Buying",
+   "path": "/app/supplier-scorecard-variable/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Appointment",
+   "module": "CRM",
+   "path": "/app/appointment/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Appointment Booking Settings",
+   "module": "CRM",
+   "path": "/app/appointment-booking-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Campaign",
+   "module": "CRM",
+   "path": "/app/campaign/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Competitor",
+   "module": "CRM",
+   "path": "/app/competitor/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Contract",
+   "module": "CRM",
+   "path": "/app/contract/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Contract Template",
+   "module": "CRM",
+   "path": "/app/contract-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "CRM Settings",
+   "module": "CRM",
+   "path": "/app/crm-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Email Campaign",
+   "module": "CRM",
+   "path": "/app/email-campaign/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Lead",
+   "module": "CRM",
+   "path": "/app/lead/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Market Segment",
+   "module": "CRM",
+   "path": "/app/market-segment/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Opportunity",
+   "module": "CRM",
+   "path": "/app/opportunity/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Opportunity Lost Reason",
+   "module": "CRM",
+   "path": "/app/opportunity-lost-reason/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Opportunity Type",
+   "module": "CRM",
+   "path": "/app/opportunity-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Prospect",
+   "module": "CRM",
+   "path": "/app/prospect/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Sales Stage",
+   "module": "CRM",
+   "path": "/app/sales-stage/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Maintenance Schedule",
+   "module": "Maintenance",
+   "path": "/app/maintenance-schedule/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Maintenance Visit",
+   "module": "Maintenance",
+   "path": "/app/maintenance-visit/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Blanket Order",
+   "module": "Manufacturing",
+   "path": "/app/blanket-order/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "BOM",
+   "module": "Manufacturing",
+   "path": "/app/bom/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "BOM Creator",
+   "module": "Manufacturing",
+   "path": "/app/bom-creator/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "BOM Update Log",
+   "module": "Manufacturing",
+   "path": "/app/bom-update-log/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "BOM Update Tool",
+   "module": "Manufacturing",
+   "path": "/app/bom-update-tool",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Downtime Entry",
+   "module": "Manufacturing",
+   "path": "/app/downtime-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Job Card",
+   "module": "Manufacturing",
+   "path": "/app/job-card/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Manufacturing Settings",
+   "module": "Manufacturing",
+   "path": "/app/manufacturing-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Master Production Schedule",
+   "module": "Manufacturing",
+   "path": "/app/master-production-schedule/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Operation",
+   "module": "Manufacturing",
+   "path": "/app/operation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Plant Floor",
+   "module": "Manufacturing",
+   "path": "/app/plant-floor/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Production Plan",
+   "module": "Manufacturing",
+   "path": "/app/production-plan/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Routing",
+   "module": "Manufacturing",
+   "path": "/app/routing/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Sales Forecast",
+   "module": "Manufacturing",
+   "path": "/app/sales-forecast/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Work Order",
+   "module": "Manufacturing",
+   "path": "/app/work-order/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Workstation",
+   "module": "Manufacturing",
+   "path": "/app/workstation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Workstation Operating Component",
+   "module": "Manufacturing",
+   "path": "/app/workstation-operating-component/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Workstation Type",
+   "module": "Manufacturing",
+   "path": "/app/workstation-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Activity Cost",
+   "module": "Projects",
+   "path": "/app/activity-cost/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Activity Type",
+   "module": "Projects",
+   "path": "/app/activity-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Project",
+   "module": "Projects",
+   "path": "/app/project/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Project Template",
+   "module": "Projects",
+   "path": "/app/project-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Project Type",
+   "module": "Projects",
+   "path": "/app/project-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Project Update",
+   "module": "Projects",
+   "path": "/app/project-update/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Projects Settings",
+   "module": "Projects",
+   "path": "/app/projects-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Task",
+   "module": "Projects",
+   "path": "/app/task/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Task Type",
+   "module": "Projects",
+   "path": "/app/task-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Timesheet",
+   "module": "Projects",
+   "path": "/app/timesheet/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Non Conformance",
+   "module": "Quality Management",
+   "path": "/app/non-conformance/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Action",
+   "module": "Quality Management",
+   "path": "/app/quality-action/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Feedback",
+   "module": "Quality Management",
+   "path": "/app/quality-feedback/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Feedback Template",
+   "module": "Quality Management",
+   "path": "/app/quality-feedback-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Goal",
+   "module": "Quality Management",
+   "path": "/app/quality-goal/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Meeting",
+   "module": "Quality Management",
+   "path": "/app/quality-meeting/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Procedure",
+   "module": "Quality Management",
+   "path": "/app/quality-procedure/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Review",
+   "module": "Quality Management",
+   "path": "/app/quality-review/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Customer",
+   "module": "Selling",
+   "path": "/app/customer/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Delivery Schedule Item",
+   "module": "Selling",
+   "path": "/app/delivery-schedule-item/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Industry Type",
+   "module": "Selling",
+   "path": "/app/industry-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Installation Note",
+   "module": "Selling",
+   "path": "/app/installation-note/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Party Specific Item",
+   "module": "Selling",
+   "path": "/app/party-specific-item/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Product Bundle",
+   "module": "Selling",
+   "path": "/app/product-bundle/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Proforma Invoice",
+   "module": "Selling",
+   "path": "/app/proforma-invoice/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quotation",
+   "module": "Selling",
+   "path": "/app/quotation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Sales Order",
+   "module": "Selling",
+   "path": "/app/sales-order/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Sales Partner Type",
+   "module": "Selling",
+   "path": "/app/sales-partner-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Selling Settings",
+   "module": "Selling",
+   "path": "/app/selling-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "SMS Center",
+   "module": "Selling",
+   "path": "/app/sms-center",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Authorization Control",
+   "module": "Setup",
+   "path": "/app/authorization-control",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Authorization Rule",
+   "module": "Setup",
+   "path": "/app/authorization-rule/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Branch",
+   "module": "Setup",
+   "path": "/app/branch/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Brand",
+   "module": "Setup",
+   "path": "/app/brand/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Company",
+   "module": "Setup",
+   "path": "/app/company/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Currency Exchange",
+   "module": "Setup",
+   "path": "/app/currency-exchange/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Customer Group",
+   "module": "Setup",
+   "path": "/app/customer-group/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Department",
+   "module": "Setup",
+   "path": "/app/department/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Designation",
+   "module": "Setup",
+   "path": "/app/designation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Driver",
+   "module": "Setup",
+   "path": "/app/driver/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Email Digest",
+   "module": "Setup",
+   "path": "/app/email-digest/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Employee",
+   "module": "Setup",
+   "path": "/app/employee/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Employee Group",
+   "module": "Setup",
+   "path": "/app/employee-group/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Global Defaults",
+   "module": "Setup",
+   "path": "/app/global-defaults",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Holiday List",
+   "module": "Setup",
+   "path": "/app/holiday-list/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Incoterm",
+   "module": "Setup",
+   "path": "/app/incoterm/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Item Group",
+   "module": "Setup",
+   "path": "/app/item-group/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Party Type",
+   "module": "Setup",
+   "path": "/app/party-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quotation Lost Reason",
+   "module": "Setup",
+   "path": "/app/quotation-lost-reason/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Sales Partner",
+   "module": "Setup",
+   "path": "/app/sales-partner/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Sales Person",
+   "module": "Setup",
+   "path": "/app/sales-person/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Supplier Group",
+   "module": "Setup",
+   "path": "/app/supplier-group/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Terms and Conditions",
+   "module": "Setup",
+   "path": "/app/terms-and-conditions/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Territory",
+   "module": "Setup",
+   "path": "/app/territory/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Transaction Deletion Record",
+   "module": "Setup",
+   "path": "/app/transaction-deletion-record/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "UOM",
+   "module": "Setup",
+   "path": "/app/uom/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "UOM Conversion Factor",
+   "module": "Setup",
+   "path": "/app/uom-conversion-factor/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Vehicle",
+   "module": "Setup",
+   "path": "/app/vehicle/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Batch",
+   "module": "Stock",
+   "path": "/app/batch/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Bin",
+   "module": "Stock",
+   "path": "/app/bin/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Customs Tariff Number",
+   "module": "Stock",
+   "path": "/app/customs-tariff-number/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Delivery Note",
+   "module": "Stock",
+   "path": "/app/delivery-note/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Delivery Settings",
+   "module": "Stock",
+   "path": "/app/delivery-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Delivery Trip",
+   "module": "Stock",
+   "path": "/app/delivery-trip/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Inventory Dimension",
+   "module": "Stock",
+   "path": "/app/inventory-dimension/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Item",
+   "module": "Stock",
+   "path": "/app/item/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Item Alternative",
+   "module": "Stock",
+   "path": "/app/item-alternative/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Item Attribute",
+   "module": "Stock",
+   "path": "/app/item-attribute/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Item Lead Time",
+   "module": "Stock",
+   "path": "/app/item-lead-time/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Item Manufacturer",
+   "module": "Stock",
+   "path": "/app/item-manufacturer/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Item Price",
+   "module": "Stock",
+   "path": "/app/item-price/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Item Variant Settings",
+   "module": "Stock",
+   "path": "/app/item-variant-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Landed Cost Voucher",
+   "module": "Stock",
+   "path": "/app/landed-cost-voucher/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Manufacturer",
+   "module": "Stock",
+   "path": "/app/manufacturer/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Material Request",
+   "module": "Stock",
+   "path": "/app/material-request/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Packing Slip",
+   "module": "Stock",
+   "path": "/app/packing-slip/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Pick List",
+   "module": "Stock",
+   "path": "/app/pick-list/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Price List",
+   "module": "Stock",
+   "path": "/app/price-list/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Purchase Receipt",
+   "module": "Stock",
+   "path": "/app/purchase-receipt/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Putaway Rule",
+   "module": "Stock",
+   "path": "/app/putaway-rule/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Inspection",
+   "module": "Stock",
+   "path": "/app/quality-inspection/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Inspection Parameter",
+   "module": "Stock",
+   "path": "/app/quality-inspection-parameter/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Inspection Parameter Group",
+   "module": "Stock",
+   "path": "/app/quality-inspection-parameter-group/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quality Inspection Template",
+   "module": "Stock",
+   "path": "/app/quality-inspection-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Quick Stock Balance",
+   "module": "Stock",
+   "path": "/app/quick-stock-balance",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Repost Item Valuation",
+   "module": "Stock",
+   "path": "/app/repost-item-valuation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Serial and Batch Bundle",
+   "module": "Stock",
+   "path": "/app/serial-and-batch-bundle/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Serial No",
+   "module": "Stock",
+   "path": "/app/serial-no/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Shipment",
+   "module": "Stock",
+   "path": "/app/shipment/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Shipment Parcel Template",
+   "module": "Stock",
+   "path": "/app/shipment-parcel-template/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Stock Closing Balance",
+   "module": "Stock",
+   "path": "/app/stock-closing-balance/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Stock Closing Entry",
+   "module": "Stock",
+   "path": "/app/stock-closing-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Stock Entry",
+   "module": "Stock",
+   "path": "/app/stock-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Stock Entry Type",
+   "module": "Stock",
+   "path": "/app/stock-entry-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Stock Ledger Entry",
+   "module": "Stock",
+   "path": "/app/stock-ledger-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Stock Reconciliation",
+   "module": "Stock",
+   "path": "/app/stock-reconciliation/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Stock Reposting Settings",
+   "module": "Stock",
+   "path": "/app/stock-reposting-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Stock Reservation Entry",
+   "module": "Stock",
+   "path": "/app/stock-reservation-entry/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Stock Settings",
+   "module": "Stock",
+   "path": "/app/stock-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "UOM Category",
+   "module": "Stock",
+   "path": "/app/uom-category/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Warehouse",
+   "module": "Stock",
+   "path": "/app/warehouse/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Warehouse Type",
+   "module": "Stock",
+   "path": "/app/warehouse-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Subcontracting BOM",
+   "module": "Subcontracting",
+   "path": "/app/subcontracting-bom/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Subcontracting Inward Order",
+   "module": "Subcontracting",
+   "path": "/app/subcontracting-inward-order/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Subcontracting Order",
+   "module": "Subcontracting",
+   "path": "/app/subcontracting-order/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Subcontracting Receipt",
+   "module": "Subcontracting",
+   "path": "/app/subcontracting-receipt/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Issue",
+   "module": "Support",
+   "path": "/app/issue/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Issue Priority",
+   "module": "Support",
+   "path": "/app/issue-priority/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Issue Type",
+   "module": "Support",
+   "path": "/app/issue-type/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Service Level Agreement",
+   "module": "Support",
+   "path": "/app/service-level-agreement/new",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Support Settings",
+   "module": "Support",
+   "path": "/app/support-settings",
+   "timeout_s": 360
+  },
+  {
+   "kind": "defaults",
+   "doctype": "Warranty Claim",
+   "module": "Support",
+   "path": "/app/warranty-claim/new",
+   "timeout_s": 360
+  }
+ ]
+}

@@ -1,0 +1,173 @@
+id: run-20261107T205303-h-EXP_182
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_182.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:51:34.500Z
+ended_at: 2026-11-07T20:53:03.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Empêcher la Facture de vente lorsque le Client est En retard"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Empêcher"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/accounts-settings", "render_js": true, "extract_images": false})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.357, "y": 0.058, "element": "Paiements tab"})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.277, "y": 0.058, "element": "Facturation tab"})'
+  - n: 12
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.261, \"y\": 0.153, \"element\": \"Checkbox \\\"Dissocier le paiement lors de l'annulation de la facture\\\" - the first checked checkbox at the top\"})"
+  - n: 13
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.261, \"y\": 0.153, \"element\": \"Checkbox \\\"Dissocier le paiement lors de l'annulation de la facture\\\" - first checkbox in the Annulation de facture section\"})"
+  - n: 14
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 15
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.357, "y": 0.058, "element": "Paiements tab"})'
+  - n: 16
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.277, "y": 0.058, "element": "Facturation tab"})'
+  - n: 17
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.562, "y": 0.058, "element": "Actifs - Immo. tab"})'
+  - n: 18
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.458, "y": 0.058, "element": "Limites de crédit tab"})'
+  - n: 19
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.261, "y": 0.354, "element": "Checkbox \"Empêcher la Facture de vente lorsque le Client est En retard\""})'
+  - n: 20
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.277, "y": 0.058, "element": "Facturation tab"})'
+  - n: 21
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.657, "y": 0.058, "element": "Clôture tab"})'
+    screenshot: step_21.png
+  - n: 22
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The checkbox 'Empêcher la Facture de vente lorsque le Client est En retard' was found on the 'Limites de crédit' tab and has been ticked. The form is at https://***/desk/accounts/accounts-settings#invoicing_settings_tab. No changes were saved.\", \"prefilled\": [\"Tolérance de surfactu"
+  - n: 23
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_21.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Accounts Settings
+        path: /app/accounts-settings
+        kind: interact
+        mission: M-006
+        action:
+          field: enable_overdue_billing_threshold
+          value: "1"
+      page_title: Paramètres de comptabilité
+      field_labels:
+        - Tolérance de surfacturation (%)
+        - Rôle autorisé à contourner la limite de crédit
+        - Empêcher la Facture de vente lorsque le Client est En retard
+        - Rôleauthorized à contourner la restriction de surfacturation
+        - Ignorer le solde de clôture du compte
+        - Utiliser l'ancien contrôleur pour la pièce de clôture de période
+        - Période d'amortissement par défaut
+        - Activer l'amortissement automatique
+        - Activer la comptabilisation automatique des écritures d'inventaire
+        - Activer les amortissements différentiels
+        - Déduire les amortissements de la base d'impôt sur le revenu
+        - Comptabiliser les encaissements sur les factures dès la réception du paiement
+        - Comptabiliser les décaissements sur les factures dès le paiement
+        - Comptabiliser les encaissements et les décaissements en attente
+        - Activer l'échéance de paiement par défaut
+        - Activer le grand livre immuable
+        - Vérifier l'unicité du numéro de facture fournisseur
+        - Récupérer automatiquement les conditions de paiement depuis la Commande/le Devis
+        - Activer l'abonnement
+        - Activer la comptabilité des tiers communs
+        - Autoriser les factures multi-devises en contrepartie d'un seul compte de tiers
+        - Confirmer avant de réinitialiser la date de comptabilisation
+        - Comptabiliser les charges de stock dans le grand livre
+        - Activer les remises et la marge
+        - Dissocier le paiement lors de l'annulation de la facture
+        - Dissocier l'acompte lors de l'annulation de la commande lors d'une transaction
+      section_labels:
+        - Accounts Settings
+        - Limites de crédit
+        - Clôture
+        - Actifs - Immo.
+        - Paiements
+        - Facturation
+        - Annulation de facture
+        - Caractéristiques de la facturation
+        - Comptabilité des charges de stock
+        - Comptabilité analytique
+        - Actifs - Immo.
+        - Échéances de paiement
+        - Commentaires
+        - Activité
+      prefilled:
+        - "Tolérance de surfacturation (%): 0,00"
+        - "Dissocier le paiement lors de l'annulation de la facture: checked"
+        - "Dissocier l'acompte lors de l'annulation de la commande lors d'une transaction: checked"
+        - "Activer l'abonnement: checked"
+        - "Confirmer avant de réinitialiser la date de comptabilisation: checked"
+        - "Activer l'amortissement automatique: checked"
+        - "Activer la comptabilisation automatique des écritures d'inventaire: checked"
+        - "Utiliser l'ancien contrôleur pour la pièce de clôture de période: checked"
+        - "Empêcher la Facture de vente lorsque le Client est En retard: checked"
+      notes: The checkbox 'Empêcher la Facture de vente lorsque le Client est En retard' was found on the 'Limites de crédit' tab and has been ticked. The form is at https://***/desk/accounts/accounts-settings#invoicing_settings_tab. No changes were saved.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/99bbb2b8-e059-4271-b3eb-da6ca224daf8 attempts: 1"

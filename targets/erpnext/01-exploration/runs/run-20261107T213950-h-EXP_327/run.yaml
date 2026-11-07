@@ -1,0 +1,80 @@
+id: run-20261107T213950-h-EXP_327
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_327.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:39:08.900Z
+ended_at: 2026-11-07T21:39:50.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.421, \"y\": 0.245, \"element\": \"Objet dropdown field showing 'Transfert de Matériel pour la Production'\"})"
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.375, "y": 0.345, "element": "Livraison option in the dropdown"})'
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form is on the Pick List page. Objet field has been changed to 'Livraison' as requested. No fields were saved or submitted.\", \"prefilled\": [\"Société: Digital Solution Service\", \"Séries: STO-PICK-.YYYY.-\", \"Objet: Livraison\"], \"page_title\": \"Nouveau(elle) Liste de prélèvement\", \"fie"
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pick List
+        path: /app/pick-list/new
+        kind: interact
+        mission: M-006
+        action:
+          field: purpose
+          value: Delivery
+      page_title: Nouveau(elle) Liste de prélèvement
+      field_labels:
+        - Société
+        - Entrepôt
+        - Séries
+        - Objet
+        - Prendre en compte les entrepôts des rejets
+        - Obtenir les emplacements des articles
+        - Client
+        - Prélever manuellement
+        - Ignorez Règle de Prix
+        - Scan Code Barre
+        - Mode scan
+        - Demander la qté
+      section_labels:
+        - Emplacements des articles
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Séries: STO-PICK-.YYYY.-"
+        - "Objet: Livraison"
+      notes: Form is on the Pick List page. Objet field has been changed to 'Livraison' as requested. No fields were saved or submitted.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/97b73ccd-ec25-40f0-a8be-a60fe2549d03 attempts: 1"

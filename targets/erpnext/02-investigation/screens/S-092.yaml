@@ -2,7 +2,7 @@ id: S-092
 title: Unreconcile Payment
 purpose: create, view and edit Unreconcile Payment records
 kind: form
-layout: 5 fields
+layout: "5 fields; observed labels differ from the declared form (4/10 match; not declared: obtenir les allocations, no., nom de référence, montant alloué, non lié, ajouter une ligne)"
 fields:
   - label: Company
     control: lookup
@@ -41,3 +41,10 @@ evidence:
     kind: rea
     locator: form layout of Unreconcile Payment
     note: declared by the program
+  - ref: run-20261107T204335-h-EXP_123
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 4/10 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204335-h-EXP_123/step_05.png
+  - 01-exploration/runs/run-20261107T204335-h-EXP_123/step_05.png

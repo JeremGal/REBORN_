@@ -1,0 +1,93 @@
+id: run-20261107T213804-h-EXP_320
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_320.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:36:56.600Z
+ended_at: 2026-11-07T21:38:04.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.497, "y": 0.324, "element": "Continue button"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.497, "y": 0.324, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.421, \"y\": 0.186, \"element\": \"Objet dropdown field showing 'achat'\"})"
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.324, "y": 0.252, "element": "Transfert de matériel option in the dropdown"})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.327, "y": 0.059, "element": "Termes tab"})'
+  - n: 10
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.402, \"y\": 0.059, \"element\": \"Plus d'info tab\"})"
+  - n: 11
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.319, \"y\": 0.104, \"element\": \"Détails d'Impression expandable section\"})"
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.264, "y": 0.059, "element": "Détails tab"})'
+  - n: 13
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Field labels (in order as they appear on the form): Séries, Objet, Date de la transaction, Requis pour le, Liste de prix, Scan Code Barre, Entrepôt d'origine, Définir le magasin cible, Articles (section), No., Code de l'Article, Requis pour le, Quantité, Entrepôt cible, UdM, Ajoute"
+    screenshot: step_13.png
+  - n: 14
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_13.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Material Request
+        path: /app/material-request/new
+        kind: interact
+        mission: M-006
+        action:
+          field: material_request_type
+          value: Material Transfer
+      page_title: Nouveau(elle) Demande de matériel - new-material-request-frbptxmqod
+      field_labels: []
+      section_labels:
+        - Articles
+      prefilled:
+        - "Séries: MAT-MR-.YYYY.-"
+        - "Objet: Transfert de matériel"
+        - "Date de la transaction: 07/11/2026"
+        - "Liste de prix: Achat standard"
+      notes: "Field labels (in order as they appear on the form): Séries, Objet, Date de la transaction, Requis pour le, Liste de prix, Scan Code Barre, Entrepôt d'origine, Définir le magasin cible, Articles (section), No., Code de l'Article, Requis pour le, Quantité, Entrepôt cible, UdM, Ajouter une ligne, Ajouter plusieurs, Télécharger, Charger"
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/bbfc36ef-abf4-454d-8d3f-259e0f84b5d4 attempts: 1"

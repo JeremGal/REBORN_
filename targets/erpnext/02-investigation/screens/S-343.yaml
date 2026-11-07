@@ -2,7 +2,7 @@ id: S-343
 title: Delivery Schedule Item
 purpose: create, view and edit Delivery Schedule Item records
 kind: form
-layout: 10 fields
+layout: "10 fields; observed labels differ from the declared form (0/1 match; not declared: formulaire article du planning de livraison)"
 fields:
   - label: Item Code
     control: lookup
@@ -53,3 +53,10 @@ evidence:
     kind: rea
     locator: form layout of Delivery Schedule Item
     note: declared by the program
+  - ref: run-20261107T205442-h-EXP_202
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 0/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205442-h-EXP_202/step_19.png
+  - 01-exploration/runs/run-20261107T205442-h-EXP_202/step_19.png

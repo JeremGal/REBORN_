@@ -1,0 +1,97 @@
+id: run-20261107T210637-h-EXP_271
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_271.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:05:46.800Z
+ended_at: 2026-11-07T21:06:37.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field with placeholder jane@example.com", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 600, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/cheque-print-template/new-cheque-print-template-cdnypvhtsm", "render_js": true})'
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The page appears to be a Frappe form for \\\"Modèles d'Impression de Chèques\\\" (Cheque Print Templates). The form is fully visible without scrolling. The checkbox 'Est Compte Crééditeur' is already checked. The form contains fields in two columns. There are 7 section labels visible: "
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Cheque Print Template
+        path: /app/cheque-print-template/new
+        kind: interact
+        mission: M-006
+        action:
+          field: is_account_payable
+          value: "1"
+      page_title: Nouveau(elle) Modèles d'Impression de Chèques
+      field_labels: []
+      section_labels:
+        - Paramètres Principaux
+        - Paramètres de date
+        - Paramètres du Payeur
+        - Montant en toutes lettres
+        - Montant En Chiffre
+        - Paramètres du numéro de compte
+        - Position Signataire
+      prefilled:
+        - "Nom de la Banque: "
+        - "Taille du Chèque: Ordinaire"
+        - "Largeur du Chèque: 20,00"
+        - "Hauteur du Chèque: 9,00"
+        - "Est Compte Crééditeur: checked"
+        - "Distance du bord supérieur: 1,00"
+        - "Distance du bord gauche: 9,00"
+        - "Message à afficher: Acc. Payee"
+        - "Distance du bord supérieur: 1,00"
+        - "Position initiale depuis bord gauche: 15,00"
+        - "Distance du bord supérieur: 2,00"
+        - "Position initiale depuis bord gauche: 3,00"
+        - "Distance du bord supérieur: 3,00"
+        - "Position initiale depuis bord gauche: 4,00"
+        - "Largeur du montant en toutes lettres: 15,00"
+        - "Espacement des lignes pour le montant en lettres: 0,50"
+        - "Distance du bord supérieur: 3,50"
+        - "Position initiale depuis bord gauche: 16,00"
+        - "Distance du bord supérieur: 5,00"
+        - "Position initiale depuis bord gauche: 4,00"
+        - "Distance du bord supérieur: 6,00"
+        - "Position initiale depuis bord gauche: 15,00"
+      notes: "The page appears to be a Frappe form for \"Modèles d'Impression de Chèques\" (Cheque Print Templates). The form is fully visible without scrolling. The checkbox 'Est Compte Crééditeur' is already checked. The form contains fields in two columns. There are 7 section labels visible: Paramètres Principaux, Paramètres de date, Paramètres du Payeur, Montant en toutes lettres, Montant En Chiffre, Paramètres du numéro de compte, and Position Signataire."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/449421a5-7033-46fc-b54c-5816c6ac067d attempts: 1"

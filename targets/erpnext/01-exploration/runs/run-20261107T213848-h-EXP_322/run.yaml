@@ -1,0 +1,100 @@
+id: run-20261107T213848-h-EXP_322
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_322.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / CRM
+started_at: 2026-11-07T21:38:08.200Z
+ended_at: 2026-11-07T21:38:48.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.5, \"y\": 0.198, \"text\": \"***\", \"enter\": false, \"element\": \"Email input field with placeholder 'jane@example.com'\", \"overwrite\": true})"
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "select_option({\"x\": 0.362, \"y\": 0.305, \"option\": \"Perdu\", \"element\": \"Statut dropdown currently showing 'Ouvrir'\"})"
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.044, "element": "Close button (X) on the dialog"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.312, \"y\": 0.746, \"element\": \"Plus d'informations expandable section\"})"
+  - n: 8
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Fields visible on the form (up to 120):\\n\\nSéries, Type d'Opportunité, Stade de vente, Opportunité De, Propriétaire de l'opportunité, Date de clôture prévue, Tiers, Probabilité (%), Statut, Organisation, Nb de salarié(e)s, Industrie, Ville, CA annuel, Part de Marché, État/Province,"
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (CRM)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Opportunity
+        path: /app/opportunity/new
+        kind: interact
+        mission: M-006
+        action:
+          field: status
+          value: Lost
+      page_title: Opportunité / Nouveau(elle) Opportunité
+      field_labels: []
+      section_labels:
+        - Détails
+        - Contacts
+        - Articles
+      prefilled:
+        - "Séries: CRM-OPP-.YYYY.-"
+        - "Type d'Opportunité: Ventes"
+        - "Stade de vente: Prospection"
+        - "Probabilité (%): 100"
+        - "Statut: Perdu"
+        - "Nb de salarié(e)s: 1-10"
+        - "Pays: France"
+        - "Devise: USD"
+        - "Société: Digital Solution Service"
+        - "Langue d'Impression: Français"
+        - "Date d'Opportunité: 07/11/2026"
+      notes: |-
+        Fields visible on the form (up to 120):
+
+        Séries, Type d'Opportunité, Stade de vente, Opportunité De, Propriétaire de l'opportunité, Date de clôture prévue, Tiers, Probabilité (%), Statut, Organisation, Nb de salarié(e)s, Industrie, Ville, CA annuel, Part de Marché, État/Province, Site Web, Pays, Région, Valeur de l'opportunité, Devise, Montant de l'opportunité (USD), Plus d'informations, Société, Langue d'Impression, Date d'Opportunité
+
+        Section labels: Organisation, Valeur de l'opportunité, Plus d'informations
+
+        Prefilled fields:
+        - Série: CRM-OPP-.YYYY.-
+        - Type d'Opportunité: Ventes
+        - Stade de vente: Prospection
+        - Probabilité (%): 100
+        - Statut: Perdu
+        - Nb de salarié(e)s: 1-10
+        - Pays: France
+        - Devise: USD
+        - Société: Digital Solution Service
+        - Langue d'Impression: Français
+        - Date d'Opportunité: 07/11/2026
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/52617e0a-7699-44d1-b96b-b513853d75d7 attempts: 1"

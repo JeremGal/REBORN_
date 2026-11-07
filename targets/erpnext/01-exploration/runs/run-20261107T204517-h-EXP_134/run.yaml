@@ -1,0 +1,60 @@
+id: run-20261107T204517-h-EXP_134
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_134.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Assets
+started_at: 2026-11-07T20:44:47.300Z
+ended_at: 2026-11-07T20:45:17.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+    screenshot: step_01.png
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+    screenshot: step_02.png
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_03.png
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Empty area to close dropdown"})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Naming Series: ACC-ASA-YYYY.-\"], \"page_title\": \"Nouveau(elle) Allocation des postes d'actifs\", \"field_labels\": [\"Actif - Immo.\", \"Livre comptable\", \"Naming Series\"], \"section_labels\": []})"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Assets)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Asset Shift Allocation
+        path: /app/asset-shift-allocation/new
+        kind: defaults
+      page_title: Nouveau(elle) Allocation des postes d'actifs
+      field_labels:
+        - Actif - Immo.
+        - Livre comptable
+        - Naming Series
+      section_labels: []
+      prefilled:
+        - "Naming Series: ACC-ASA-YYYY.-"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/00554087-20a3-41f5-901a-b9d1719b756d attempts: 1"

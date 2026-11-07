@@ -1,0 +1,176 @@
+id: run-20261107T205051-h-EXP_166
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_166.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:48:38.500Z
+ended_at: 2026-11-07T20:50:51.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": true, "element": "Email input field showing placeholder jane@example.com", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.254, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 2000, "scroll_element": null})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 3000, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Maintenir le même prix"})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Maintenir le mÃªme prix"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Maintenir le même prix"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/accounts-settings", "render_js": true})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.563, "y": 0.059, "element": "Actifs - Immo. tab in the horizontal tab navigation"})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.273, "y": 0.059, "element": "Facturation tab in the horizontal tab navigation"})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/accounts-settings", "render_js": true, "extract_images": false})'
+  - n: 14
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "prix"})'
+  - n: 15
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 17
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.264, \"y\": 0.49, \"element\": \"Checkbox next to 'Maintenir le même prix tout au long de la transaction interne'\"})"
+  - n: 18
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 19
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 20
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["home"]})'
+  - n: 21
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 22
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 23
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+    screenshot: step_23.png
+  - n: 24
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 25
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The checkbox 'Maintenir le même prix tout au long de la transaction interne' was successfully ticked. The form was not saved. The page title is 'Paramètres de comptabilité' (Accounts Settings in French). The form is in the 'Facturation' tab. There was also a partially visible secti"
+  - n: 26
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_23.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Accounts Settings
+        path: /app/accounts-settings
+        kind: interact
+        mission: M-006
+        action:
+          field: maintain_same_internal_transaction_rate
+          value: "1"
+      page_title: Paramètres de comptabilité
+      field_labels: []
+      section_labels:
+        - Annulation de facture
+        - Caractéristiques de la facturation
+        - Comptabilité des charges de stock
+        - Comptabilité analytique
+        - Journaux
+        - Paramètres de comptabilité différé
+        - Paramètres fiscaux
+        - Paramètres d'impression
+        - Paramètres du prix de l'article
+        - Paramètres d'échange de devises
+        - Commentaires
+        - Activité
+      prefilled:
+        - "Dissocier le paiement lors de l'annulation de la facture: checked"
+        - "Dissocier l'acompte lors de l'annulation de la commande: checked"
+        - "Activer le grand livre immuable: unchecked"
+        - "Vérifier l'unicité du numéro de facture fournisseur: unchecked"
+        - "Récupérer automatiquement les conditions de paiement depuis la Commande/le Devis: unchecked"
+        - "Activer l'abonnement: checked"
+        - "Activer la comptabilité des tiers communs: unchecked"
+        - "Autoriser les factures multi-devises en contrepartie d'un seul compte de tiers: unchecked"
+        - "Confirmer avant de réinitialiser la date de comptabilisation: checked"
+        - "Comptabiliser les charges de stock dans le grand livre: unchecked"
+        - "Activer les remises et la marge: unchecked"
+        - "Activer les dimensions comptables: unchecked"
+        - "Fusionner les Heads de compte similaires: unchecked"
+        - "Comptabiliser les entrées différées basées sur: Journées"
+        - "Traiter automatiquement l'écriture de comptabilité différé: checked"
+        - "Comptabiliser les entrées différées via une écriture de Journal: unchecked"
+        - "Déterminer la catégorie de taxe d'adresse à partir de: Adresse de facturation"
+        - "Ajouter automatiquement les taxes et frais à partir du modèle de taxe d'article: checked"
+        - "Ajouter automatiquement les taxes depuis le Modèle de taxes et frais: unchecked"
+        - "Comptabiliser la perte de taxe sur remise pour paiement anticipé: unchecked"
+        - "Arrondir le montant de la taxe ligne par ligne: unchecked"
+        - "Afficher la taxe incluse à l'impression: unchecked"
+        - "Afficher les taxes sous forme de tableau à l'impression: unchecked"
+        - "Afficher l'échéancier de paiement à l'impression: unchecked"
+        - "Maintenir le même prix tout au long de la transaction interne: checked"
+        - "Récupérer le taux de valorisation pour la transaction interne: unchecked"
+        - "Autoriser les Taux de Change Existants: checked"
+        - "Autoriser la conversion implicite de devises arrimées: unchecked"
+      notes: The checkbox 'Maintenir le même prix tout au long de la transaction interne' was successfully ticked. The form was not saved. The page title is 'Paramètres de comptabilité' (Accounts Settings in French). The form is in the 'Facturation' tab. There was also a partially visible section 'Arrondir les montants' between 'Comptabilité analytique' and 'Journaux' but no fields were clearly visible under it in the screenshots.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/ef79215a-38a5-4e85-a9b8-7a1f6ded9d2a attempts: 1"

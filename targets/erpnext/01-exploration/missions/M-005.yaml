@@ -1,0 +1,20 @@
+id: M-005
+title: Read every new business form as the program presents it
+goal: >-
+  With the test user, open every business form as a new, empty document (settings pages as they are) and report the
+  visible fields, the section labels and every value already filled in by the program, without typing or saving
+  anything. The values filled in are the program's default rules, the visible fields reflect its display conditions.
+persona: power user
+priority: must
+start_state: Alan's own site with fictitious TEST- data; test user with business roles, not system manager
+steps_hint:
+  - open the address of the new form, scroll to the end, open each tab
+  - never type, save, submit or delete
+capture:
+  screenshots: key-steps
+  read_values: [visible field labels, section labels, prefilled values]
+  network: false
+success_criteria:
+  - every business form has its visible fields and prefilled values reported, or a clear "not permitted"
+requested_by: block 2 (business logic coverage)
+status: todo

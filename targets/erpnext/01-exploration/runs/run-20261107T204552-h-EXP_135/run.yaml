@@ -1,0 +1,171 @@
+id: run-20261107T204552-h-EXP_135
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_135.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T20:44:05.400Z
+ended_at: 2026-11-07T20:45:52.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.362, "y": 0.185, "option": "TEST-Fournisseur Beta", "element": "Fournisseur dropdown"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.362, "y": 0.185, "element": "Fournisseur field"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.362, "y": 0.254, "element": "TEST-Fournisseur Beta option in dropdown"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.352, \"y\": 0.531, \"element\": \"Code de l'Articl... cell in row 1 of the Articles table\"})"
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.373, "y": 0.579, "element": "TEST-ART-001 option in the dropdown"})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.467, "y": 0.531, "element": "Quantité Accep... field showing 1,000"})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'write({"x": 0.467, "y": 0.531, "text": "3", "enter": false, "element": "Quantité Accep... input field", "overwrite": true})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.668, "y": 0.531, "element": "Prix (USD) field showing $ 0,00"})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'write({"x": 0.668, "y": 0.531, "text": "10", "enter": false, "element": "Prix (USD) input field", "overwrite": true})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.65, "element": "Empty area below the table, near the Quantité totale field"})'
+  - n: 15
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 16
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 17
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 18
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 19
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 20
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.75, "element": "Empty space in the main content area to focus the page"})'
+  - n: 21
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 22
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "end"]})'
+  - n: 23
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 24
+    action:
+      type: other
+      target_desc: 'drag_and_drop_web({"x1": 0.99, "x2": 0.99, "y1": 0.2, "y2": 0.6, "description": "Scroll down using the scroll bar on the right side of the page"})'
+  - n: 25
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/purchase-receipt/new-purchase-receipt-agojwzoywp", "render_js": false})'
+    screenshot: step_25.png
+  - n: 26
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form was partially scrolled - some fields below 'Matières premières consommées' were not visible due to scroll issues. The form had tabs: Détails, Adresse & Contact, Termes, Plus d'info. Some additional sections likely exist below the visible area including additional tax fields an"
+  - n: 27
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_25.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Purchase Receipt
+        path: /app/purchase-receipt/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Nouveau(elle) Reçu d’Achat - new-purchase-receipt-agojwzoywp
+      field_labels:
+        - Fournisseur
+        - Date
+        - Adresse de livraison
+        - Adresse de facturation
+        - Arrondi
+        - Monnaie
+        - Statut
+        - Arrondi (USD)
+        - Total TTC (USD)
+        - Total (USD)
+        - Quantité totale
+        - Arrondi (Devise Société)
+        - Total TTC (Devise Société)
+        - Remise Supplémentaire
+        - Matières premières consommées
+      section_labels:
+        - Adresse & Contact
+        - Termes
+        - Plus d'info
+        - Taxes et Frais
+        - Totaux (USD)
+      prefilled:
+        - "Fournisseur: TEST-Fournisseur Beta"
+        - "Code de l'Article: TEST-ART-001"
+        - "Quantité Acceptée: 3"
+        - "Prix (USD): $ 10,00"
+        - "Montant (USD): $ 30,00"
+        - "Quantité totale: 3"
+        - "Total (USD): $ 30,00"
+        - "Total TTC (USD): $ 30,00"
+        - "Total arrondi (USD): $ 30,00"
+      notes: "Form was partially scrolled - some fields below 'Matières premières consommées' were not visible due to scroll issues. The form had tabs: Détails, Adresse & Contact, Termes, Plus d'info. Some additional sections likely exist below the visible area including additional tax fields and more."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/8c33e95e-7715-48e9-bba7-01d7f251892d attempts: 1"

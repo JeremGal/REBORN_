@@ -2,7 +2,7 @@ id: S-120
 title: Purchase Order
 purpose: create, view and edit Purchase Order records
 kind: form
-layout: "tabs: Address & Contact, Drop Ship, Terms, More Info, Connections; sections: Accounting Dimensions , Currency and Price List, Pricing Rules, Taxes and Charges, Totals, Totals (Company Currency), Additional Discount, Tax Breakup, Supplier Address, Shipping Address, Company Billing Address, Payment Terms, Terms & Conditions, Order Status, Printing Settings, Auto Repeat, Additional Info, Raw Materials Supplied; 106 fields; observed labels differ from the declared form (18/43 match; not declared: no., code de l'art..., requis pour l..., quantit..., udm, prix usd, montant usd, entrepôt cible)"
+layout: "tabs: Address & Contact, Drop Ship, Terms, More Info, Connections; sections: Accounting Dimensions , Currency and Price List, Pricing Rules, Taxes and Charges, Totals, Totals (Company Currency), Additional Discount, Tax Breakup, Supplier Address, Shipping Address, Company Billing Address, Payment Terms, Terms & Conditions, Order Status, Printing Settings, Auto Repeat, Additional Info, Raw Materials Supplied; 106 fields; observed labels differ from the declared form (23/43 match; not declared: no., code de l'art, requis pour l, quantit, udm, prix, montant, entrepôt cible); observed labels differ from the declared form (23/42 match; not declared: no., code de l'art, requis pour l, quantit, udm, prix, montant, entrepôt cible)"
 fields:
   - label: Series
     control: select
@@ -457,7 +457,13 @@ evidence:
   - ref: run-20261107T193759-h-EXP_006
     kind: h-run
     locator: form opened by the H Company agent
-    note: 18/43 labels read on screen match the declared form
+    note: 23/43 labels read on screen match the declared form
+  - ref: run-20261107T204547-h-EXP_139
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 23/42 labels read on screen match the declared form
 screenshots:
   - 01-exploration/runs/run-20261107T193759-h-EXP_006/step_07.png
   - 01-exploration/runs/run-20261107T193759-h-EXP_006/step_07.png
+  - 01-exploration/runs/run-20261107T204547-h-EXP_139/step_09.png
+  - 01-exploration/runs/run-20261107T204547-h-EXP_139/step_09.png

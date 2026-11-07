@@ -1,0 +1,64 @@
+id: run-20261107T204931-h-EXP_159
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_159.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:48:54.400Z
+ended_at: 2026-11-07T20:49:31.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.26, "y": 0.211, "element": "Est un groupe checkbox"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Est un groupe' checkbox has been ticked. All other fields are empty.\", \"prefilled\": [\"Société: Digital Solution Service\", \"Devise: USD\"], \"page_title\": \"Nouveau(elle) Compte\", \"section_labels\": [\"Compte\", \"Compte\"]})"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Account
+        path: /app/account/new
+        kind: interact
+        mission: M-006
+        action:
+          field: is_group
+          value: "1"
+      page_title: Nouveau(elle) Compte
+      field_labels: []
+      section_labels:
+        - Compte
+        - Compte
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: The 'Est un groupe' checkbox has been ticked. All other fields are empty.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/1f06ed95-f5fd-4dd6-b9f4-f0e654db6b68 attempts: 1"

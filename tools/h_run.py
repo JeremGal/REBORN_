@@ -58,6 +58,13 @@ def main():
         buttons: List[str] = []
         notes: Optional[str] = None
 
+    class NewFormReading(BaseModel):
+        page_title: str
+        field_labels: List[str] = []
+        section_labels: List[str] = []
+        prefilled: List[str] = []   # "Label: value", one entry per field that already shows a value
+        notes: Optional[str] = None
+
     class InvoiceTotals(BaseModel):
         document_name: Optional[str] = None
         net_total: Optional[str] = None
@@ -75,7 +82,20 @@ def main():
 
     def one(x):
         url = base + x["path"]
-        if x["kind"] == "form":
+        if x["kind"] == "interact":
+            instruction = (f"Open {base}/login. {login}Then go to {url}. {rule}Never click Save or Submit. "
+                           f"{x['do']} Then scroll down to the end of the form and report the labels of the fields visible on "
+                           "the form (up to 120, exactly as written), the section labels, and in 'prefilled' every field that "
+                           "shows a value, written as 'Label: value' exactly as displayed (a ticked checkbox is 'Label: checked').")
+            schema = NewFormReading
+        elif x["kind"] == "defaults":
+            instruction = (f"Open {base}/login. {login}Then go to {url}. {rule}"
+                           "Report the page title, the labels of the sections, the labels of the fields visible on the form "
+                           "(scroll down to the end; up to 80 labels, exactly as written), and in 'prefilled' every field that "
+                           "already shows a value, written as 'Label: value' exactly as displayed (a ticked checkbox is "
+                           "'Label: checked').")
+            schema = NewFormReading
+        elif x["kind"] == "form":
             instruction = (f"Open {base}/login. {login}Then go to {url}. {rule}"
                            "Report the page title, the labels of the sections, the labels of the fields visible on the form "
                            "(scroll down to the end; up to 80 labels, exactly as written), and the buttons shown.")
@@ -88,12 +108,13 @@ def main():
                            "Read exactly as displayed: the total under the item lines, each row of the taxes table (rate and "
                            "amount), the total taxes and charges, the grand total and the rounded total. Report them as text.")
             schema = InvoiceTotals
-        res = run_ui_experiment(url, instruction, schema, {"doctype": x["doctype"], "path": x["path"], "kind": x["kind"]},
+        res = run_ui_experiment(url, instruction, schema, {"doctype": x["doctype"], "path": x["path"], "kind": x["kind"], "mission": plan.get("mission"), **({"action": x["action"]} if x.get("action") else {})},
                                 application=plan.get("application", "web application"), module=x.get("module", x["doctype"]),
                                 timeout_s=x.get("timeout_s", 420))
         out = res.get("observed_output") or {}
         print(f"  {res['experiment_id']}  {res['status']:<7} {res.get('duration_s')} s  {x['doctype']}: "
-              f"{len(out.get('field_labels', []) or [])} field label(s) {('| totals ' + str(out.get('grand_total'))) if x['kind'] != 'form' else ''}"
+              f"{len(out.get('field_labels', []) or [])} field label(s), {len(out.get('prefilled', []) or [])} prefilled"
+              f"{(' | totals ' + str(out.get('grand_total'))) if x['kind'] == 'totals' else ''}"
               f"{('  ERROR ' + str(res.get('error'))[:120]) if res['status'] != 'success' else ''}", flush=True)
         return res
 

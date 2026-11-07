@@ -1,0 +1,101 @@
+id: run-20261107T213806-h-EXP_321
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_321.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T21:37:06.900Z
+ended_at: 2026-11-07T21:38:06.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/operation/new"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/app/operation/new"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/manufacturing/operation/new-operation-sbyyqmlvkc"})'
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: other
+      target_desc: 'update_plan({"goals": [{"title": "Navigate to the operation form at the correct URL", "status": "running"}, {"title": "Find and report form fields, section labels, and prefill values", "status": "todo"}]})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'web_search({"query": "erpnext \"Create Job Card based on Batch Size\" checkbox form"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form at https://***/app/operation/new is a Manufacturing Operation form (Nouveau(elle) Opération). The checkbox 'Créer une fiche de travail en fonction de la taille du lot' (Create Job Card based on Batch Size) was NOT found on this form. The form contains the following fields "
+  - n: 13
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_09.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Operation
+        path: /app/operation/new
+        kind: interact
+        mission: M-006
+        action:
+          field: create_job_card_based_on_batch_size
+          value: "1"
+      page_title: Nouveau(elle) Opération
+      field_labels: []
+      section_labels:
+        - Opération
+        - Carte de travail
+        - Sous-opérations
+        - Description de l'Opération
+      prefilled: []
+      notes: |-
+        The form at https://***/app/operation/new is a Manufacturing Operation form (Nouveau(elle) Opération). The checkbox 'Créer une fiche de travail en fonction de la taille du lot' (Create Job Card based on Batch Size) was NOT found on this form. The form contains the following fields and sections:
+
+        Fields visible on the form:
+        - Nom (required)
+        - Est une opération corrective (checkbox)
+        - Station de Travail par Défaut
+
+        Section labels:
+        - Carte de travail
+        - Sous-opérations
+        - Description de l'Opération
+
+        No fields show pre-filled values. The checkbox mentioned in the instructions does not appear to be present on this form.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/a626ae58-24a2-4714-bc5b-9641dfdfa3e7 attempts: 1"

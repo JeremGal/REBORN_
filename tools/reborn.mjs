@@ -20,7 +20,8 @@ import { implicitRelations } from "./lib/relations.mjs";
 import { docMeta, frappeConfig, getDoc as frappeGet, insertDoc as frappeInsert, list as frappeList, frappe as frappeApi } from "./lib/frappe.mjs";
 import { metaToEntity } from "./lib/frappe-model.mjs";
 import { GENERATED, featuresFromMetas } from "./lib/frappe-features.mjs";
-import { minimalDoc, probeable } from "./lib/frappe-probe.mjs";
+import { PROBE_MODULES, minimalDoc, probeable } from "./lib/frappe-probe.mjs";
+import { gradeLogic } from "./lib/frappe-logic.mjs";
 import { experimentToRun } from "./lib/h-import.mjs";
 import { schemaToEntities } from "./lib/sql-schema.mjs";
 import { ReaSession, collectStrings } from "./lib/rea-session.mjs";
@@ -72,7 +73,7 @@ const cmd = argv.shift();
 // Options may come before or after the positional arguments: move them to the end so commands can read positionals by
 // index (`js gnucash --max-kb 300 dir` used to read "--max-kb" as the folder). rea/craft pass their arguments through.
 // Every option read with opt() takes a value; keep this list in step with them (a test checks it).
-const VALUE_OPTS = new Set(["name", "kind", "max-kb", "only", "table", "cdp", "engine", "find", "decompile", "max", "timeout-min", "query", "contains", "class", "method", "app", "module", "mission", "root", "skip", "lang"]);
+const VALUE_OPTS = new Set(["name", "kind", "max-kb", "only", "table", "cdp", "engine", "find", "decompile", "max", "timeout-min", "query", "contains", "class", "method", "app", "module", "mission", "root", "skip", "lang", "shots"]);
 if (!["rea", "craft"].includes(cmd)) {
   const pos = [], opts = [];
   for (let i = 0; i < argv.length; i++) {
@@ -1022,6 +1023,8 @@ async function frappeCmd(target, sub) {
   if (sub === "features") return frappeFeatures(target);
   if (sub === "probe") return frappeProbe(target);
   if (sub === "translations") return frappeTranslations(target);
+  if (sub === "logic") return frappeLogic(target);
+  if (sub === "plan") return frappePlan(target, argv[1]);
   if (sub === "cleanup") return frappeCleanup(target, argv[1]);
   if (sub !== "model") die("usage: frappe <target> model [--app all|erpnext|frappe] [--module M,N] [--force] | frappe <target> observe <scenarios.json>");
   const app = opt("app", "all");
@@ -1154,6 +1157,114 @@ async function frappeTranslations(target) {
   console.log(`OK  frappe translations  ${Object.keys(map).length} ${lang} strings  (rb_${sha.slice(0, 16)}...)`);
 }
 
+// Interactive experiments for the H agent, never saved: "lines" adds one item line (3 x 10.00) to every selling/buying
+// document and reads the recomputed amounts; "visibility" sets the choice or checkbox that controls a display rule.
+function frappePlan(target, kind) {
+  if (!["lines", "visibility"].includes(kind)) die("usage: frappe <target> plan lines|visibility");
+  const t = loadTarget(target);
+  const metaEntry = t.evidence.filter((e) => e.tool === "frappe-api" && e.operation === "doctype-metadata").sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))[0];
+  if (!metaEntry) die(`no document type definitions yet: node tools/reborn.mjs frappe ${target} model`);
+  const metas = JSON.parse(fs.readFileSync(path.join(evidenceDir(target), metaEntry.file), "utf8")).doctypes;
+  const trEntry = t.evidence.filter((e) => e.tool === "frappe-locale").sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))[0];
+  const tr = trEntry ? JSON.parse(fs.readFileSync(path.join(evidenceDir(target), trEntry.file), "utf8")).map : {};
+  const fr = (s) => (tr[s] ? `'${tr[s]}' (${s})` : `'${s}'`);
+  const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const byName = new Map(metas.map((m) => [m.name, m]));
+  const exps = [];
+  if (kind === "lines") {
+    const party = { Customer: "TEST-Client Alpha", Supplier: "TEST-Fournisseur Beta" };
+    for (const m of metas.filter((x) => !x.istable && !x.issingle && PROBE_MODULES.has(x.module))) {
+      const items = (m.fields || []).find((f) => f.fieldname === "items" && f.fieldtype === "Table");
+      const child = items && byName.get(items.options);
+      if (!child || !["item_code", "qty", "rate", "amount"].every((k) => (child.fields || []).some((f) => f.fieldname === k))) continue;
+      const partyField = (m.fields || []).find((f) => f.reqd && f.fieldtype === "Link" && party[f.options]);
+      const who = partyField ? `First choose ${party[partyField.options]} in the field ${fr(partyField.label)}. ` : "";
+      exps.push({ kind: "interact", doctype: m.name, module: m.module, path: `/app/${slug(m.name)}/new`, timeout_s: 420, action: { line: { item_code: "TEST-ART-001", qty: 3, rate: 10 } },
+        do: `${who}In the items table, add one line: item TEST-ART-001, quantity 3, rate 10. Click outside the table so the amounts are recomputed.` });
+    }
+  } else {
+    const seen = new Set();
+    for (const m of metas.filter((x) => !x.istable && PROBE_MODULES.has(x.module))) {
+      const byField = new Map((m.fields || []).map((f) => [f.fieldname, f]));
+      for (const f of m.fields || []) {
+        if (!f.depends_on || f.hidden) continue;
+        const e = String(f.depends_on).trim().replace(/;$/, "");
+        const mm = /^eval:\s*doc\.(\w+)\s*===?\s*["']([^"']*)["']$/.exec(e) || /^eval:\s*doc\.(\w+)\s*===?\s*(\d+)$/.exec(e) || /^eval:\s*doc\.(\w+)$/.exec(e) || /^(\w+)$/.exec(e);
+        if (!mm) continue;
+        const c = byField.get(mm[1]);
+        if (!c || !["Select", "Check"].includes(c.fieldtype) || c.read_only || c.hidden) continue;
+        const value = c.fieldtype === "Check" ? "1" : (mm[2] ?? "");
+        if (c.fieldtype === "Select" && !value) continue;
+        const key = `${m.name}|${c.fieldname}|${value}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const what = c.fieldtype === "Check" ? `tick the checkbox ${fr(c.label || c.fieldname)}` : `in the field ${fr(c.label || c.fieldname)} choose the option ${fr(value)}`;
+        exps.push({ kind: "interact", doctype: m.name, module: m.module, path: m.issingle ? `/app/${slug(m.name)}` : `/app/${slug(m.name)}/new`, timeout_s: 360, action: { field: c.fieldname, value }, do: `On this form, ${what}.` });
+      }
+    }
+  }
+  const file = path.join(targetDir(target), "01-exploration", "experiments", `h-agent-${kind}.json`);
+  fs.writeFileSync(file, JSON.stringify({ mission: "M-006", application: "ERPNext (fictitious data)", experiments: exps }, null, 1));
+  console.log(`OK  frappe plan ${kind}  ${exps.length} interactive experiment(s), never saved  -> ${path.relative(ROOT, file)}`);
+}
+
+// Business logic coverage: every rule the business forms declare, graded against what the H agent read on screen and what
+// the API runs read back; plus the logic no definition declares (validations, computations) observed in runs.
+function frappeLogic(target) {
+  const t = loadTarget(target);
+  const latest = (pred) => t.evidence.filter(pred).sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))[0];
+  const metaEntry = latest((e) => e.tool === "frappe-api" && e.operation === "doctype-metadata");
+  if (!metaEntry) die(`no document type definitions yet: node tools/reborn.mjs frappe ${target} model`);
+  const all = JSON.parse(fs.readFileSync(path.join(evidenceDir(target), metaEntry.file), "utf8")).doctypes;
+  const metas = all.filter((m) => PROBE_MODULES.has(m.module));
+  const trEntry = latest((e) => e.tool === "frappe-locale");
+  const translations = trEntry ? JSON.parse(fs.readFileSync(path.join(evidenceDir(target), trEntry.file), "utf8")).map : {};
+  const readings = new Map();
+  const interactions = [];
+  for (const r of t.runs.filter((x) => x.agent?.provider === "h-company" && x.outcome !== "failed")) {
+    const last = (r.steps || []).at(-1)?.extracted;
+    const labels = [...(last?.field_labels || []), ...(last?.section_labels || [])];
+    if (last?.inputs?.kind === "interact" && (labels.length || (last.prefilled || []).length)) { interactions.push({ doctype: last.inputs.doctype, action: last.inputs.action, labels, prefilled: last.prefilled || [] }); continue; }
+    if (!last?.inputs?.doctype || !["form", "defaults"].includes(last.inputs.kind) || !labels.length) continue;
+    const prev = readings.get(last.inputs.doctype) || { labels: [], prefilled: [] };
+    readings.set(last.inputs.doctype, { labels: [...prev.labels, ...labels], prefilled: [...prev.prefilled, ...(last.prefilled || [])] });
+  }
+  const byName = new Map(all.map((m) => [m.name, m]));
+  const computedSeen = new Set();
+  let refused = 0, stored = 0;
+  for (const r of t.runs.filter((x) => x.agent?.provider === "api" && x.outcome !== "failed")) {
+    for (const s of r.steps || []) {
+      if (s.extracted?.result === "refused") refused++;
+      if (s.extracted?.result === "stored") stored++;
+      const doctype = /^create draft (.+?) \(/.exec(s.action?.target_desc ?? "")?.[1];
+      if (!doctype || !s.extracted) continue;
+      const meta = byName.get(doctype);
+      for (const k of Object.keys(s.extracted)) if (!["items", "taxes", "case"].includes(k)) computedSeen.add(`${doctype}.${k}`);
+      for (const tf of (meta?.fields || []).filter((f) => f.fieldtype === "Table" && Array.isArray(s.extracted[f.fieldname]))) for (const row of s.extracted[tf.fieldname]) for (const k of Object.keys(row)) computedSeen.add(`${tf.options}.${k}`);
+    }
+  }
+  const g = gradeLogic(metas, { readings, translations, computedSeen, interactions });
+  const pct = (a, b) => (b ? `${Math.round((a / b) * 1000) / 10} %` : "n/a");
+  const confirmedRules = t.rules.filter((r) => r.status === "confirmed").length;
+  const lines = [
+    `# Business logic coverage: ${t.meta?.kit_title ?? target}`, "",
+    `Business forms read on screen by the H Company agent: ${g.formsRead}. Rules declared by the business document types: ${g.total.declared}.`, "",
+    "| Kind of declared rule | Declared | Confirmed by observation | Consistent, not proof | Contradicted | Not checkable by reading |",
+    "|---|---|---|---|---|---|",
+    ...Object.entries(g.tally).sort((a, b) => b[1].declared - a[1].declared).map(([k, v]) => `| ${k} | ${v.declared} | ${v.confirmed} | ${v.consistent} | ${v.contradicted} | ${v.not_checkable} |`),
+    `| **total** | **${g.total.declared}** | **${g.total.confirmed} (${pct(g.total.confirmed, g.total.declared)})** | ${g.total.consistent} | ${g.total.contradicted} | |`, "",
+    `Logic no definition declares, observed in runs: ${confirmedRules} computation and validation rules confirmed, ${refused} refusals with their message, ${stored} drafts accepted.`, "",
+    "Confirmed = seen on screen or read back from the running program and matching the declared rule. Consistent = compatible with what was seen but not a proof (a field not reported may sit on another tab). Not checkable by reading = needs typing or a document in another state (auto-fills, conditional mandatory, computed values on an empty form).",
+    ...(g.contradictions.length ? ["", "## Contradictions to look at", "", ...g.contradictions.map((c) => `- ${c.doctype}.${c.field} (${c.kind}${c.value !== undefined ? `, declared ${c.value}` : ""}${c.expr ? `, condition ${c.expr}` : ""}): observed ${c.observed !== undefined ? `"${c.observed}"` : "visible"}`)] : []),
+    "",
+  ];
+  const out = path.join(targetDir(target), "02-investigation", "logic-coverage.md");
+  fs.writeFileSync(out, lines.join("\n"));
+  if (asJson) return console.log(JSON.stringify(g, null, 2));
+  console.log(lines.slice(0, 7 + Object.keys(g.tally).length + 4).join("\n"));
+  console.log(`written ${path.relative(ROOT, out)}`);
+}
+
 // Deletes the drafts a probe created (newest first), from the list kept in the local evidence store.
 async function frappeCleanup(target, runId) {
   if (!runId) die("usage: frappe <target> cleanup <run-id of a probe>");
@@ -1195,7 +1306,7 @@ function frappeFeatures(target) {
   const observations = new Map();
   for (const r of kept.runs.filter((x) => x.agent?.provider === "h-company" && x.outcome !== "failed")) {
     const last = (r.steps || []).at(-1)?.extracted;
-    if (!last?.inputs?.doctype || last.inputs.kind !== "form") continue;
+    if (!last?.inputs?.doctype || !["form", "defaults"].includes(last.inputs.kind)) continue;
     const runDir = path.join("01-exploration", "runs", r.id);
     const screenshots = (r.steps || []).map((s) => s.screenshot).filter(Boolean).map((s) => path.join(runDir, s).split(path.sep).join("/")).filter((s) => fs.existsSync(path.join(targetDir(target), s))).slice(-2);
     const labels = [...(last.field_labels || []), ...(last.section_labels || [])];
@@ -1234,6 +1345,9 @@ function importRun(target, input) {
   const mission = opt("mission");
   const root = opt("root");
   const skip = new Set((opt("skip") || "").split(",").map((s) => s.trim()).filter(Boolean));
+  // An experiment whose answer lists are all empty observed nothing: importing it would count a screen as observed.
+  const skipEmpty = flag("skip-empty");
+  const shotMode = opt("shots", "last"); // last | all
   if (!input || !mission) die("usage: import-run <target> <EXP_xxx.json | folder of them> --mission M-xxx [--root <h-explorer folder>] [--skip EXP_011,EXP_012]");
   const p = absolute(input);
   if (!fs.existsSync(p)) die(`not found: ${p}`);
@@ -1248,12 +1362,22 @@ function importRun(target, input) {
   const rawDir = path.join(evidenceDir(target), "h-explorer");
   fs.mkdirSync(rawDir, { recursive: true });
   let ok = 0;
+  let emptySkipped = 0;
   for (const f of files) {
-    const exp = JSON.parse(fs.readFileSync(f, "utf8"));
-    const run = experimentToRun(exp, { target, mission, rawName: path.basename(f), secrets });
+    let exp;
+    try { exp = JSON.parse(fs.readFileSync(f, "utf8")); } catch { console.log(`  ${path.basename(f)}: unreadable (still being written?), left out`); continue; }
+    if (exp.inputs?.target && exp.inputs.target !== target) continue;
+    const lists = Object.values(exp.observed_output || {}).filter(Array.isArray);
+    if (skipEmpty && exp.status === "success" && lists.length && lists.every((a) => !a.length)) { emptySkipped++; continue; }
+    const run = experimentToRun(exp, { target, mission: exp.inputs?.mission || mission, rawName: path.basename(f), secrets });
     const runDir = path.join(targetDir(target), "01-exploration", "runs", run.id);
     fs.mkdirSync(runDir, { recursive: true });
-    const wanted = [...(exp.evidence?.screenshots ?? []), exp.evidence?.final_screenshot].filter(Boolean);
+    // Default: keep only the final screenshot of each experiment (the state the values were read in). 'all' keeps every step;
+    // the full trace stays in the explorer's own folder and behind the agent view address in the run notes.
+    const every = [...(exp.evidence?.screenshots ?? []), exp.evidence?.final_screenshot].filter(Boolean);
+    const wanted = shotMode === "all" ? every : every.slice(-1);
+    // Start from an empty set of images: an earlier import may have left more than this mode keeps.
+    if (shotMode !== "all") for (const img of fs.readdirSync(runDir).filter((x) => /\.(png|jpe?g)$/i.test(x))) fs.rmSync(path.join(runDir, img));
     let copied = 0;
     for (const s of wanted) {
       const src = [path.resolve(base, s), path.resolve(path.dirname(f), s)].find((x) => fs.existsSync(x));
@@ -1261,12 +1385,15 @@ function importRun(target, input) {
     }
     // A screenshot that could not be copied is not referenced: the run never points to a missing file.
     for (const st of run.steps) if (st.screenshot && !fs.existsSync(path.join(runDir, st.screenshot))) delete st.screenshot;
+    // Images no step points to are not kept (an earlier import with 'all' may have left some).
+    const referenced = new Set(run.steps.map((s) => s.screenshot).filter(Boolean));
+    for (const img of fs.readdirSync(runDir).filter((x) => /\.(png|jpe?g)$/i.test(x) && !referenced.has(x))) fs.rmSync(path.join(runDir, img));
     fs.writeFileSync(path.join(runDir, "run.yaml"), new YAML.Document(run).toString({ lineWidth: 0 }));
     fs.copyFileSync(f, path.join(rawDir, path.basename(f)));
     ok++;
     console.log(`  ${run.id}  ${run.outcome}  ${run.steps.length} step(s), ${copied}/${wanted.length} screenshot(s) copied`);
   }
-  console.log(`OK  import-run  ${ok} experiment(s) converted into runs of ${target} (mission ${mission}). Next: node tools/reborn.mjs validate ${target}`);
+  console.log(`OK  import-run  ${ok} experiment(s) converted into runs of ${target} (mission ${mission})${emptySkipped ? `, ${emptySkipped} empty reading(s) left out` : ""}. Next: node tools/reborn.mjs validate ${target}`);
 }
 
 // Observation through the API: create fictitious documents as drafts, read back what the program computed, and record it

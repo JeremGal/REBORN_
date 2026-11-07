@@ -139,9 +139,16 @@ fields:
 actions:
   - label: Save
     triggers: F-328
-status: partial
+status: confirmed
 evidence:
   - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
     kind: rea
     locator: form layout of Task
     note: declared by the program
+  - ref: run-20261107T205315-h-EXP_190
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 16/16 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205315-h-EXP_190/step_06.png
+  - 01-exploration/runs/run-20261107T205315-h-EXP_190/step_06.png

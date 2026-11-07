@@ -1,0 +1,90 @@
+id: run-20261107T211755-h-EXP_310
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_310.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:17:17.700Z
+ended_at: 2026-11-07T21:17:55.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.264, "y": 0.458, "element": "A Variantes checkbox"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Unité de Mesure par Défaut: N°\", \"Maintenir Stock: checked\", \"Autoriser à la vente: checked\", \"Autoriser à l'achat: checked\", \"A Variantes: checked\"], \"page_title\": \"Nouveau(elle) Item - new-item-zdrssztxdn\", \"field_labels\": [\"Code de l'Article *\", \"Nom de l'article\", \"Groupe "
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Item
+        path: /app/item/new
+        kind: interact
+        mission: M-006
+        action:
+          field: has_variants
+          value: "1"
+      page_title: Nouveau(elle) Item - new-item-zdrssztxdn
+      field_labels:
+        - Code de l'Article *
+        - Nom de l'article
+        - Groupe d'Article *
+        - Unité de Mesure par Défaut *
+        - Maintenir Stock
+        - Est Immobilisation
+        - Autoriser à la vente
+        - Autoriser à l'achat
+        - Autoriser un article alternatif
+        - L'article est-il fourni par le client?
+        - A Variantes
+        - Restreindre aux sociétés
+      section_labels:
+        - Détails
+        - Comptabilité
+        - UdM
+        - Taxe
+        - Inventaire
+        - Variantes
+        - Achat
+        - Ventes
+        - Production
+        - Qualité
+        - Attributs de l'Article
+        - Restrictions de sociétés
+        - Description
+      prefilled:
+        - "Unité de Mesure par Défaut: N°"
+        - "Maintenir Stock: checked"
+        - "Autoriser à la vente: checked"
+        - "Autoriser à l'achat: checked"
+        - "A Variantes: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/53fa2c75-5af5-4658-9af6-0b5ece1aea1a attempts: 1"

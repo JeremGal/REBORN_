@@ -1,0 +1,92 @@
+id: run-20261107T213848-h-EXP_323
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_323.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:37:46.000Z
+ended_at: 2026-11-07T21:38:48.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Envisager pour la retenue à la source"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "retenue"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Tax Withholding"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/payment-entry/new-payment-entry-qurxanxjsi", "render_js": true, "extract_images": false})'
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: other
+      target_desc: 'web_search({"query": "ERPNext \"Envisager pour la retenue à la source\" payment entry"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The checkbox 'Envisager pour la retenue à la source' (Consider for Tax Withholding) was not found on the form. The form is fully visible and does not contain this field. The form was not modified in any way.\", \"prefilled\": [\"Séries: ACC-PAY-.YYYY.-\", \"Date de Comptabilisation: 07/1"
+  - n: 13
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Payment Entry
+        path: /app/payment-entry/new
+        kind: interact
+        mission: M-006
+        action:
+          field: apply_tds
+          value: "1"
+      page_title: Payment Entry Form - Field Report
+      field_labels: []
+      section_labels:
+        - Type de Paiement
+        - Paiement De / À
+        - Accounts and Transaction Details
+        - Taxes et Frais
+      prefilled:
+        - "Séries: ACC-PAY-.YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Type de paiement: Recevoir"
+        - "Type de Tiers: Client"
+      notes: The checkbox 'Envisager pour la retenue à la source' (Consider for Tax Withholding) was not found on the form. The form is fully visible and does not contain this field. The form was not modified in any way.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/9548b8dd-6ef4-49c0-9016-33d53dae7f30 attempts: 1"

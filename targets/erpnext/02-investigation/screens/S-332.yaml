@@ -2,7 +2,7 @@ id: S-332
 title: Quality Feedback
 purpose: create, view and edit Quality Feedback records
 kind: form
-layout: 4 fields
+layout: "4 fields; observed labels differ from the declared form (4/8 match; not declared: no., paramètre, évaluation, commentaires)"
 fields:
   - label: Template
     control: lookup
@@ -32,3 +32,10 @@ evidence:
     kind: rea
     locator: form layout of Quality Feedback
     note: declared by the program
+  - ref: run-20261107T205401-h-EXP_195
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 4/8 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205401-h-EXP_195/step_05.png
+  - 01-exploration/runs/run-20261107T205401-h-EXP_195/step_05.png

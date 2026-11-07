@@ -1,0 +1,100 @@
+id: run-20261107T204026-h-EXP_093
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_093.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:39:45.600Z
+ended_at: 2026-11-07T20:40:26.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.042, "element": "Close button on the message dialog"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Séries: ACC-PSINV-.YYYY.-", "Date: 07/11/2026", "Heure de Publication: 21:40:49", "Inclure Paiement (PDV): checked"], "page_title": "Nouveau(elle) Facture PDV - new-pos-invoice-oxqkonkoyy", "field_labels": ["Séries", "Date", "Client", "Heure de Publication", "Profil PDV", "Mod'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: POS Invoice
+        path: /app/pos-invoice/new
+        kind: defaults
+      page_title: Nouveau(elle) Facture PDV - new-pos-invoice-oxqkonkoyy
+      field_labels:
+        - Séries
+        - Date
+        - Client
+        - Heure de Publication
+        - Profil PDV
+        - Modifier la Date et l'Heure de la Publication
+        - Date d'Échéance de Paiement
+        - Inclure Paiement (PDV)
+        - Est un avoir (note de crédit)
+        - Mettre à Jour le Stock
+        - Scan Code Barre
+        - No.
+        - Item
+        - Quantité
+        - Prix (USD)
+        - Montant (USD)
+        - Entrepôt
+        - Ajouter une ligne
+        - Ajouter plusieurs
+        - Télécharger
+        - Charger
+        - Quantité totale
+        - Total (USD)
+        - Modèle de Taxes et Frais de Vente
+        - Règle de Livraison
+        - Catégorie de taxe
+        - Type
+        - Compte compt...
+        - Taux d'Impositi...
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+      section_labels:
+        - Détails
+        - Paiements
+        - Adresse & Contact
+        - Termes
+        - Plus d'info
+        - Articles
+        - Liste de Feuille de Temps
+        - Taxes et Frais de Vente
+      prefilled:
+        - "Séries: ACC-PSINV-.YYYY.-"
+        - "Date: 07/11/2026"
+        - "Heure de Publication: 21:40:49"
+        - "Inclure Paiement (PDV): checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/25b35775-1ccd-4279-a919-dbcee0aa2879 attempts: 1"

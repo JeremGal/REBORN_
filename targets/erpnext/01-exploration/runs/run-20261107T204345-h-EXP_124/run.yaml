@@ -1,0 +1,73 @@
+id: run-20261107T204345-h-EXP_124
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_124.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Assets
+started_at: 2026-11-07T20:43:01.200Z
+ended_at: 2026-11-07T20:43:45.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.25, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Séries: ACC-ASS-.YYYY.-\", \"Société: Digital Solution Service\", \"Quantité de l'actif: 1\"], \"page_title\": \"Nouveau(elle) Actif - Immo. - new-asset-tdxczkbpqq\", \"field_labels\": [\"Séries\", \"Société\", \"Code de l'Article\", \"Type d'immobilisation\", \"Emplacement\", \"Maintenance requise"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Assets)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Asset
+        path: /app/asset/new
+        kind: defaults
+      page_title: Nouveau(elle) Actif - Immo. - new-asset-tdxczkbpqq
+      field_labels:
+        - Séries
+        - Société
+        - Code de l'Article
+        - Type d'immobilisation
+        - Emplacement
+        - Maintenance requise
+        - Calculer la dépréciation
+        - Reçu d'Achat
+        - Montant net d'achat (USD)
+        - Facture d'Achat
+        - Quantité de l'actif
+        - Disponible à partir de la date d'utilisation
+      section_labels:
+        - Détails
+        - Détails d'achat
+      prefilled:
+        - "Séries: ACC-ASS-.YYYY.-"
+        - "Société: Digital Solution Service"
+        - "Quantité de l'actif: 1"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/8d1211f1-835a-45d5-97a9-cc769c62233a attempts: 1"

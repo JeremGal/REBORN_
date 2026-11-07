@@ -2,7 +2,7 @@ id: S-094
 title: Asset Activity
 purpose: create, view and edit Asset Activity records
 kind: form
-layout: 4 fields
+layout: 4 fields; observed labels differ from the declared form (1/1 match)
 fields:
   - label: Asset
     control: lookup
@@ -33,3 +33,10 @@ evidence:
     kind: rea
     locator: form layout of Asset Activity
     note: declared by the program
+  - ref: run-20261107T204356-h-EXP_125
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 1/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T204356-h-EXP_125/step_05.png
+  - 01-exploration/runs/run-20261107T204356-h-EXP_125/step_05.png

@@ -2,7 +2,7 @@ id: S-375
 title: Supplier Group
 purpose: create, view and edit Supplier Group records
 kind: form
-layout: "sections: Credit Limit, Default Payable Account; 8 fields"
+layout: "sections: Credit Limit, Default Payable Account; 8 fields; observed labels differ from the declared form (1/1 match)"
 fields:
   - label: Supplier Group Name
     control: text
@@ -45,3 +45,10 @@ evidence:
     kind: rea
     locator: form layout of Supplier Group
     note: declared by the program
+  - ref: run-20261107T205940-h-EXP_234
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 1/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205940-h-EXP_234/step_05.png
+  - 01-exploration/runs/run-20261107T205940-h-EXP_234/step_05.png

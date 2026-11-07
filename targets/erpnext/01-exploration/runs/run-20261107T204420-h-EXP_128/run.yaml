@@ -1,0 +1,61 @@
+id: run-20261107T204420-h-EXP_128
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_128.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Assets
+started_at: 2026-11-07T20:42:58.200Z
+ended_at: 2026-11-07T20:44:20.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Close the dropdown by clicking on empty area"})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form is in French. Only 3 fields are visible on the form. The page states 'Entire page visible (do not scroll down)' so there are no more fields below. The 'Actif - Immo.' field is required (marked with *) but shows no value. The 'Livre comptable' field is empty. Only 'Naming S"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Assets)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Asset Depreciation Schedule
+        path: /app/asset-depreciation-schedule/new
+        kind: defaults
+      page_title: Nouveau(elle) Tableau d'amortissement d'actif
+      field_labels:
+        - Actif - Immo.
+        - Livre comptable
+        - Naming Series
+      section_labels:
+        - ""
+      prefilled:
+        - "Naming Series: ACC-ADS-.YYYY.-"
+      notes: The form is in French. Only 3 fields are visible on the form. The page states 'Entire page visible (do not scroll down)' so there are no more fields below. The 'Actif - Immo.' field is required (marked with *) but shows no value. The 'Livre comptable' field is empty. Only 'Naming Series' has a pre-filled value.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/74aa6128-5adc-4064-b87e-1a804b956610 attempts: 3"

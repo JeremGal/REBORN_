@@ -1,0 +1,61 @@
+id: run-20261107T205751-h-EXP_218
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_218.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:57:12.400Z
+ended_at: 2026-11-07T20:57:51.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.634, \"y\": 0.127, \"element\": \"Checkbox 'Est le compte de l'entreprise' (Is Company Account)\"})"
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The checkbox 'Est le compte de l'entreprise' has been ticked. The 'Société' field shows 'Digital Solution Service' as a prefilled value.\", \"prefilled\": [\"Société: Digital Solution Service\"], \"page_title\": \"Nouveau(elle) Compte bancaire\", \"section_labels\": [\"Compte bancaire\", \"Parti"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Bank Account
+        path: /app/bank-account/new
+        kind: interact
+        mission: M-006
+        action:
+          field: is_company_account
+          value: "1"
+      page_title: Nouveau(elle) Compte bancaire
+      field_labels: []
+      section_labels:
+        - Compte bancaire
+        - Parti Détails
+        - Détails du compte
+        - Détails d'intégration
+      prefilled:
+        - "Société: Digital Solution Service"
+      notes: The checkbox 'Est le compte de l'entreprise' has been ticked. The 'Société' field shows 'Digital Solution Service' as a prefilled value.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/02ab31b3-9a72-4afe-b976-b9c6920d3595 attempts: 1"

@@ -1,0 +1,134 @@
+id: run-20261107T204739-h-EXP_146
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_146.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:45:50.800Z
+ended_at: 2026-11-07T20:47:39.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 2})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.367, "y": 0.186, "element": "Client field"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.367, "y": 0.232, "element": "TEST-Client Alpha option in dropdown"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.406, "y": 0.572, "element": "Item field in row 1 of the articles table"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.406, "y": 0.618, "element": "TEST-ART-001 option in dropdown"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.575, "y": 0.572, "element": "Quantity field showing 1,000"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'write({"x": 0.575, "y": 0.572, "text": "3", "enter": false, "element": "Quantity input field", "overwrite": true})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.735, "element": "Empty area outside the articles table, below it"})'
+  - n: 12
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 13
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 14
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 16
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 17
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["home"]})'
+  - n: 18
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 100, "scroll_element": null})'
+  - n: 19
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Field labels visible on the form: Séries, Date de Comptabilisation, Inclure Paiement (PDV), Client, Heure de Publication, Est un avoir (note de crédit), Est un ajustement du prix de la note de débit, Modifier la Date et l'Heure de la Publication, Date d'Échéance de Paiement, Envisa"
+    screenshot: step_19.png
+  - n: 20
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_19.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Invoice
+        path: /app/sales-invoice/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Nouveau(elle) Facture de vente - new-sales-invoice-esmpzrzarq
+      field_labels: []
+      section_labels:
+        - Articles
+        - Taxes et Frais
+        - Taxes et Frais de Vente
+        - Totaux (USD)
+      prefilled:
+        - "Séries: ACC-SINV-.YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Client: TEST-Client Alpha"
+        - "Heure de Publication: 21:48:14"
+        - "Date d'Échéance de Paiement: 07/11/2026"
+        - "Quantité: 3,000"
+        - "Prix (USD): $10,00"
+        - "Montant (USD): $30,00"
+        - "Entrepôt: Magasins - DSS"
+        - "Quantité totale: 3"
+        - "Total (USD): $30,00"
+        - "Total TTC (USD): $30,00"
+        - "Arrondi (USD): $0,00"
+        - "Total arrondi (USD): $30,00"
+        - "Total Avance (USD): $0,00"
+        - "Montant dû (USD): $30,00"
+      notes: "Field labels visible on the form: Séries, Date de Comptabilisation, Inclure Paiement (PDV), Client, Heure de Publication, Est un avoir (note de crédit), Est un ajustement du prix de la note de débit, Modifier la Date et l'Heure de la Publication, Date d'Échéance de Paiement, Envisager pour la retenue à la source, Devise et liste de prix, Articles, Scan Code Barre, Mettre à Jour le Stock, No., Item, Quantité, Prix (USD), Montant (USD), Entrepôt, Ajouter une ligne, Ajouter plusieurs, Télécharger, Charger, Quantité totale, Total (USD), Catégorie de taxe, Règle de Livraison, Incoterm, Modèle de Taxes et Frais de Vente, Type, Compte compt..., Taux d'Impositi..., Montant Net (U..., Montant (USD), Total (USD), Aucune ligne, Total des Taxes et Frais (Devise Société) (USD), Total des Taxes et Frais (USD), Utiliser le centre de coûts par défaut de la société pour l'arrondi, Désactiver le total arrondi, Total TTC (USD), Arrondi (USD), Total arrondi (USD), Total Avance (USD), Montant dû (USD), Liste de Feuille de Temps"
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/2764d5b1-151e-4ada-aa5e-ba5049cc2781 attempts: 1"

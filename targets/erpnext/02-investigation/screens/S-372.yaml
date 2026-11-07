@@ -2,7 +2,7 @@ id: S-372
 title: Quotation Lost Reason
 purpose: create, view and edit Quotation Lost Reason records
 kind: form
-layout: 1 fields
+layout: "1 fields; observed labels differ from the declared form (0/2 match; not declared: page title raison de la perte du devis / nouveau raison de la perte du devis, status non sauvegardé)"
 fields:
   - label: Quotation Lost Reason
     control: text
@@ -17,3 +17,10 @@ evidence:
     kind: rea
     locator: form layout of Quotation Lost Reason
     note: declared by the program
+  - ref: run-20261107T205914-h-EXP_231
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 0/2 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205914-h-EXP_231/step_30.png
+  - 01-exploration/runs/run-20261107T205914-h-EXP_231/step_30.png

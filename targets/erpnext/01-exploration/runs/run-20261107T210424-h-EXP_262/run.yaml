@@ -1,0 +1,63 @@
+id: run-20261107T210424-h-EXP_262
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_262.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:03:23.000Z
+ended_at: 2026-11-07T21:04:24.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.702, "y": 0.555, "element": "Empty area to close dropdown"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"page_title\": \"Nouveau(elle) Règle de routage d'entrée en stock - new-putaway-rule-xekxvjonfu\", \"field_labels\": [\"Item\", \"Entrepôt\", \"Priorité\", \"Société\", \"Capacité\", \"UdM\", \"Facteur de Conversion\"], \"section_labels\": []})"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Putaway Rule
+        path: /app/putaway-rule/new
+        kind: defaults
+      page_title: Nouveau(elle) Règle de routage d'entrée en stock - new-putaway-rule-xekxvjonfu
+      field_labels:
+        - Item
+        - Entrepôt
+        - Priorité
+        - Société
+        - Capacité
+        - UdM
+        - Facteur de Conversion
+      section_labels: []
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/1a1dbcfe-9d1f-4b40-b685-512034542507 attempts: 1"

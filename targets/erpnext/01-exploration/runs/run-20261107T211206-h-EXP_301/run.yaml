@@ -1,0 +1,91 @@
+id: run-20261107T211206-h-EXP_301
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_301.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:09:53.400Z
+ended_at: 2026-11-07T21:12:06.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.264, \"y\": 0.531, \"element\": \"Checkbox 'Restreindre aux sociétés'\"})"
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Maintenir Stock: checked\", \"Autoriser à la vente: checked\", \"Autoriser à l'achat: checked\", \"Unité de Mesure par Défaut: N°\", \"Restreindre aux sociétés: checked\"], \"page_title\": \"Nouveau(elle) Item - new-item-yyfbxmbwhq\", \"field_labels\": [\"Code de l'Article\", \"Nom de l'article"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Item
+        path: /app/item/new
+        kind: interact
+        mission: M-006
+        action:
+          field: restrict_to_companies
+          value: "1"
+      page_title: Nouveau(elle) Item - new-item-yyfbxmbwhq
+      field_labels:
+        - Code de l'Article
+        - Nom de l'article
+        - Groupe d'Article
+        - Unité de Mesure par Défaut
+        - Maintenir Stock
+        - Est Immobilisation
+        - Autoriser à la vente
+        - Autoriser à l'achat
+        - Autoriser un article alternatif
+        - L'article est-il fourni par le client?
+        - A Variantes
+        - Restreindre aux sociétés
+        - Sociétés autorisées
+        - Description
+      section_labels:
+        - Détails
+        - Comptabilité
+        - UdM
+        - Taxe
+        - Inventaire
+        - Achat
+        - Ventes
+        - Production
+        - Qualité
+        - Attributs de l'Article
+        - Restrictions de sociétés
+        - Description
+      prefilled:
+        - "Maintenir Stock: checked"
+        - "Autoriser à la vente: checked"
+        - "Autoriser à l'achat: checked"
+        - "Unité de Mesure par Défaut: N°"
+        - "Restreindre aux sociétés: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/e46a2609-0570-4a44-a60a-a6f65f9de153 attempts: 1"

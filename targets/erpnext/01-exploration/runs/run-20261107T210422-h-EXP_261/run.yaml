@@ -1,0 +1,290 @@
+id: run-20261107T210422-h-EXP_261
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_261.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:01:17.400Z
+ended_at: 2026-11-07T21:04:22.000Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.322, "y": 0.931, "element": "Remise Supplémentaire section header"})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.399, "y": 0.934, "element": "Remise Supplémentaire expand arrow"})'
+  - n: 12
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.319, "y": 0.934, "element": "Remise Supplémentaire section - clicking the text label"})'
+  - n: 14
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 15
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 200, "scroll_element": null})'
+  - n: 16
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/purchase-receipt/new-purchase-receipt-scuxbsffqj"})'
+  - n: 17
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.398, "y": 0.933, "element": "Chevron/arrow icon next to Remise Supplémentaire"})'
+  - n: 18
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 19
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 20
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 21
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.319, "y": 0.934, "element": "Remise Supplémentaire section title text"})'
+  - n: 22
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 23
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 24
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 25
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 26
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 200, "scroll_element": null})'
+  - n: 27
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.322, "y": 0.976, "element": "Matières premières consommées section header"})'
+  - n: 28
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 200, "scroll_element": null})'
+  - n: 29
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.45, "y": 0.976, "element": "Matières premières consommées chevron arrow"})'
+  - n: 30
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.322, "y": 0.976, "element": "Matières premières consommées text"})'
+  - n: 31
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 32
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.448, "y": 0.977, "element": "Matières premières consommées chevron"})'
+  - n: 33
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 34
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.45, "y": 0.976, "element": "Matières premières consommées section - clicking on the chevron icon"})'
+  - n: 35
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.449, "y": 0.977, "element": "Matières premières consommées - the chevron/arrow at the end of the section title"})'
+  - n: 36
+    action:
+      type: other
+      target_desc: 'move_mouse_web({"x": 0.351, "y": 0.976, "element": "Matières premières consommées section"})'
+  - n: 37
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.449, "y": 0.977, "element": "Matières premières consommées chevron arrow"})'
+  - n: 38
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 100, "scroll_element": null})'
+  - n: 39
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.448, "y": 0.976, "element": "Matières premières consommées section - the chevron arrow at the end"})'
+  - n: 40
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 100, "scroll_element": null})'
+  - n: 41
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.448, "y": 0.977, "element": "Matières premières consommées chevron arrow at the bottom"})'
+    screenshot: step_41.png
+  - n: 42
+    action:
+      type: other
+      target_desc: "answer({\"page_title\": \"Nouveau(elle) Reçu d'Achat - new-purchase-receipt-scuxbsffqj\", \"field_labels\": [\"Réf. d'achat\", \"Date\", \"Adresse de facturation\", \"Adresse de livraison\", \"Société\", \"Monnaie\", \"Devise\", \"Arrondi sur la valeur totale (USD)\", \"Taux de change\", \"Arrondi sur la valeur totale\", \"To"
+  - n: 43
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_41.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Purchase Receipt
+        path: /app/purchase-receipt/new
+        kind: defaults
+      page_title: Nouveau(elle) Reçu d'Achat - new-purchase-receipt-scuxbsffqj
+      field_labels:
+        - Réf. d'achat
+        - Date
+        - Adresse de facturation
+        - Adresse de livraison
+        - Société
+        - Monnaie
+        - Devise
+        - Arrondi sur la valeur totale (USD)
+        - Taux de change
+        - Arrondi sur la valeur totale
+        - Total (Devise Société)
+        - Total
+        - Avance payée (USD)
+        - Avance payée
+        - Total à payer (USD)
+        - Total à payer
+        - Conteneur
+        - Groupe de tarifs
+        - Arrondi sur la valeur totale (USD)
+        - Taux de change
+        - Arrondi sur la valeur totale
+        - Total (Devise Société)
+        - Total
+        - Avance payée (USD)
+        - Avance payée
+        - Total à payer (USD)
+        - Total à payer
+        - Conteneur
+        - Groupe de tarifs
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+        - Adresse de facturation
+        - Adresse de livraison
+      section_labels:
+        - Details
+        - Taxes et Frais
+        - Totaux (USD)
+        - Remise Supplémentaire
+        - Matières premières consommées
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/9c1877f9-7cee-46de-85b2-a8f49fc64bdc attempts: 3"

@@ -1,0 +1,125 @@
+id: run-20261107T204432-h-EXP_126
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_126.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:43:11.600Z
+ended_at: 2026-11-07T20:44:32.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.043, "element": "Close button on the message dialog"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'write({"x": 0.382, "y": 0.545, "text": "TEST-ART-001", "enter": true, "element": "Item input field in the articles table row 1", "overwrite": true})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.414, "y": 0.592, "element": "TEST-ART-001 option in dropdown"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'write({"x": 0.573, "y": 0.545, "text": "3", "enter": true, "element": "Quantité field in the items table row 1", "overwrite": true})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.624, "element": "Empty area below the items table"})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 12
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 13
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 14
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 15
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.9, "element": "Empty area below the form content"})'
+  - n: 16
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Section labels: Détails, Paiements, Adresse & Contact, Termes, Plus d'info. Fields visible on form with prefilled values.\", \"prefilled\": [\"Client: \", \"Région: \", \"Adresse de facturation: \", \"Adresse de livraison: \", \"Montant Total de Facturation (USD): $ 0,00\", \"Quantité totale: 3\""
+    screenshot: step_16.png
+  - n: 17
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_16.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: POS Invoice
+        path: /app/pos-invoice/new
+        kind: interact
+        mission: M-006
+        action:
+          line:
+            item_code: TEST-ART-001
+            qty: 3
+            rate: 10
+      page_title: Nouveau(elle) Facture PDV - new-pos-invoice-lpshbdwoew
+      field_labels: []
+      section_labels:
+        - Détails
+        - Paiements
+        - Adresse & Contact
+        - Termes
+        - Plus d'info
+      prefilled:
+        - "Client: "
+        - "Région: "
+        - "Adresse de facturation: "
+        - "Adresse de livraison: "
+        - "Montant Total de Facturation (USD): $ 0,00"
+        - "Quantité totale: 3"
+        - "Total (USD): $ 30,00"
+        - "Poids net total: 0"
+        - "Modèle de Taxes et Frais de Vente: "
+        - "Règle de Livraison: "
+        - "Catégorie de taxe: "
+        - "Total des Taxes et Frais (Devise Société) (USD): $ 0,00"
+        - "Total des Taxes et Frais (USD): $ 0,00"
+        - "Total TTC (USD): $ 30,00"
+        - "Arrondi (USD): $ 0,00"
+        - "Total arrondi (USD): $ 30,00"
+        - "Total Avance: $ 0,00"
+        - "Montant dû: $ 30,00"
+      notes: "Section labels: Détails, Paiements, Adresse & Contact, Termes, Plus d'info. Fields visible on form with prefilled values."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/e553e6c7-8dc3-4e4b-8227-d473cb8723c1 attempts: 1"

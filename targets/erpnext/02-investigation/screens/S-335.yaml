@@ -2,7 +2,7 @@ id: S-335
 title: Quality Meeting
 purpose: create, view and edit Quality Meeting records
 kind: form
-layout: 3 fields
+layout: "3 fields; observed labels differ from the declared form (3/8 match; not declared: no., ajouter une ligne, type de document, nom du document, minute)"
 fields:
   - label: Status
     control: select
@@ -26,3 +26,10 @@ evidence:
     kind: rea
     locator: form layout of Quality Meeting
     note: declared by the program
+  - ref: run-20261107T205425-h-EXP_198
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 3/8 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205425-h-EXP_198/step_05.png
+  - 01-exploration/runs/run-20261107T205425-h-EXP_198/step_05.png

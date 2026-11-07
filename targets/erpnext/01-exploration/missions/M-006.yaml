@@ -1,0 +1,20 @@
+id: M-006
+title: Act on new forms without saving, and read what the program recomputes or reveals
+goal: >-
+  On new, unsaved forms: add one item line (3 x 10.00) to every selling and buying document and read the recomputed
+  amounts; choose the option or tick the box that controls a display rule and report which fields appear. Never save,
+  submit or delete. The program's reactions are its computation and display rules.
+persona: power user
+priority: must
+start_state: Alan's own site with fictitious TEST- data; test user with business roles, not system manager
+steps_hint:
+  - one action per experiment, then scroll to the end and read
+  - never click Save or Submit
+capture:
+  screenshots: key-steps
+  read_values: [visible field labels, values shown after the action]
+  network: false
+success_criteria:
+  - every planned action has its reaction reported
+requested_by: block 2 (business logic coverage)
+status: todo

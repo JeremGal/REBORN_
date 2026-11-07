@@ -1,0 +1,110 @@
+id: run-20261107T210416-h-EXP_256
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_256.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:03:25.800Z
+ended_at: 2026-11-07T21:04:16.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: "update_plan({\"goals\": [{\"title\": \"Sign in to the login page with provided credentials\", \"status\": \"running\"}, {\"title\": \"Navigate to the budget new form\", \"status\": \"todo\"}, {\"title\": \"Tick the 'Applicable sur la charge cumulée' checkbox\", \"status\": \"todo\"}, {\"title\": \"Scroll to end of form and repo"
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "update_plan({\"goals\": [{\"title\": \"Sign in to the login page with provided credentials\", \"status\": \"done\"}, {\"title\": \"Navigate to the budget new form\", \"status\": \"done\"}, {\"title\": \"Tick the 'Applicable sur la charge cumulée' checkbox\", \"status\": \"running\"}, {\"title\": \"Scroll to end of form and repo"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.265, \"y\": 0.697, \"element\": \"Checkbox 'Applicable sur la charge cumulée'\"})"
+  - n: 8
+    action:
+      type: other
+      target_desc: "update_plan({\"goals\": [{\"title\": \"Sign in to the login page with provided credentials\", \"status\": \"done\"}, {\"title\": \"Navigate to the budget new form\", \"status\": \"done\"}, {\"title\": \"Tick the 'Applicable sur la charge cumulée' checkbox\", \"status\": \"done\"}, {\"title\": \"Scroll to end of form and report "
+  - n: 9
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Field labels visible on the form (in order):\\n\\n1. Séries *\\n2. À partir de l'année fiscale *\\n3. Budget Pour *\\n4. À l'année fiscale *\\n5. Société *\\n6. Fréquence de répartition *\\n7. Centre de coûts *\\n8. Montant Budgétaire *\\n9. Compte *\\n10. Répartir également\\n11. Répartition "
+  - n: 10
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Budget
+        path: /app/budget/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_on_cumulative_expense
+          value: "1"
+      page_title: Nouveau(elle) Budget
+      field_labels: []
+      section_labels:
+        - ""
+        - Répartition du budget
+        - Action de contrôle
+        - Action de contrôle pour la charge cumulée
+      prefilled:
+        - "Séries: BUDGET-########"
+        - "Budget Pour: Centre de coûts"
+        - "Société: Digital Solution Service"
+        - "Fréquence de répartition: Mensuel"
+        - "Répartir également: checked"
+      notes: |-
+        Field labels visible on the form (in order):
+
+        1. Séries *
+        2. À partir de l'année fiscale *
+        3. Budget Pour *
+        4. À l'année fiscale *
+        5. Société *
+        6. Fréquence de répartition *
+        7. Centre de coûts *
+        8. Montant Budgétaire *
+        9. Compte *
+        10. Répartir également
+        11. Répartition du budget (section)
+            - No.
+            - Date de début *
+            - Date de fin *
+            - Montant *
+            - Pourcentage *
+        12. Action de contrôle (section)
+            - Applicable sur la base des requêtes de matériel
+            - Applicable sur la base des bons de commande d'achat
+            - Applicable sur la base de l'enregistrement des dépenses réelles
+        13. Action de contrôle pour la charge cumulée (section)
+            - Applicable sur la charge cumulée (ticked)
+            - (Bon de commande + Demande de matériel + Dépense réelle)
+            - Action si le budget annuel est dépassé sur la charge cumulée
+            - Action si le budget mensuel cumulé est dépassé sur la charge cumulée
+
+        Note: The checkbox 'Applicable sur la charge cumulée' has been ticked.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/56768ff4-f8ff-4f40-a482-1df5319f6937 attempts: 1"

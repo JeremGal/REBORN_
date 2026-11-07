@@ -1,0 +1,66 @@
+id: run-20261107T203402-h-EXP_035
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_035.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:33:25.700Z
+ended_at: 2026-11-07T20:34:02.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Page title: \"Nouveau(elle) Dimension comptable\". The form has two field labels: \"Type de document de référence\" (required, shown as a dropdown) and \"Nom de la dimension\". Below is a section \"Valeurs par défaut de la dimension\" with columns \"No.\", \"Société\", \"Dimension '
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Accounting Dimension
+        path: /app/accounting-dimension/new
+        kind: defaults
+      page_title: Nouveau(elle) Dimension comptable
+      field_labels:
+        - Type de document de référence
+        - Nom de la dimension
+        - Valeurs par défaut de la dimension
+        - No.
+        - Société
+        - Dimension par défaut
+        - Obligatoire pour le bilan
+        - Compte de résultat obligatoire
+        - Ajouter une ligne
+      section_labels:
+        - Valeurs par défaut de la dimension
+      prefilled: []
+      notes: 'Page title: "Nouveau(elle) Dimension comptable". The form has two field labels: "Type de document de référence" (required, shown as a dropdown) and "Nom de la dimension". Below is a section "Valeurs par défaut de la dimension" with columns "No.", "Société", "Dimension par défaut", "Obligatoire pour le bilan", "Compte de résultat obligatoire" and an "Ajouter une ligne" button. No fields have prefilled values.'
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/0071e115-6cb9-4af8-a13d-27a48ba94127 attempts: 1"

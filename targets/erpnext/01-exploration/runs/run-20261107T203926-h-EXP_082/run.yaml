@@ -1,0 +1,88 @@
+id: run-20261107T203926-h-EXP_082
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_082.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T20:38:46.400Z
+ended_at: 2026-11-07T20:39:26.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Page is in French. The form is at /app/payment-entry/new as requested. No fields were modified, saved, submitted, deleted, or changed.", "prefilled": ["Séries: ACC-PAY--YYYY.-", "Date de Comptabilisation: 07/11/2026", "Type de paiement: Recevoir", "Type de Tiers: Client"], "page_ti'
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Payment Entry
+        path: /app/payment-entry/new
+        kind: defaults
+      page_title: Nouveau(elle) Écriture de Paiement - new-payment-entry-ushjlwjddd
+      field_labels:
+        - Séries
+        - Date de Comptabilisation
+        - Type de paiement
+        - Moyen de paiement
+        - Compte bancaire de l'entreprise
+        - Type de Tiers
+        - Tiers
+        - Nom du Tiers
+        - Comptabiliser les acomptes sur un compte de tiers distinct
+        - Compte Payé Au
+        - Modèle de Taxes et Frais de Vente
+        - Impôts et taxes anticipés
+        - No.
+        - Type
+        - Compte compt...
+        - Taux d'imposi...
+        - Montant Net
+        - Montant
+        - Total
+        - Ajouter une ligne
+      section_labels:
+        - Type de Paiement
+        - Paiement De / À
+        - Accounts and Transaction Details
+        - Taxes et Frais
+      prefilled:
+        - "Séries: ACC-PAY--YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Type de paiement: Recevoir"
+        - "Type de Tiers: Client"
+      notes: Page is in French. The form is at /app/payment-entry/new as requested. No fields were modified, saved, submitted, deleted, or changed.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/4b529d97-8ef9-4ba1-9daa-491cf8f95026 attempts: 1"

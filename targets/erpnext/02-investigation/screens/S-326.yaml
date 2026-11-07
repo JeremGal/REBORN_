@@ -2,7 +2,7 @@ id: S-326
 title: Projects Settings
 purpose: settings of Projects Settings
 kind: settings
-layout: "sections: Timesheets; 3 fields"
+layout: "sections: Timesheets; 3 fields; observed labels differ from the declared form (0/1 match; not declared: authorization error)"
 fields:
   - label: Ignore User Time Overlap
     control: checkbox
@@ -22,3 +22,10 @@ evidence:
     kind: rea
     locator: form layout of Projects Settings
     note: declared by the program
+  - ref: run-20261107T205308-h-EXP_189
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 0/1 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T205308-h-EXP_189/step_06.png
+  - 01-exploration/runs/run-20261107T205308-h-EXP_189/step_06.png

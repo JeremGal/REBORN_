@@ -1,0 +1,57 @@
+id: run-20261107T205308-h-EXP_189
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_189.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Projects
+started_at: 2026-11-07T20:52:37.500Z
+ended_at: 2026-11-07T20:53:08.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/projects-settings"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"After signing in with the provided credentials, the page at https://***/app/projects-settings shows an authorization error: 'Non autorisé' (Unauthorized). The user *** does not have access to the document type 'Page' via role authorization. The page title is 'Frappe'. No form field"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Projects)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Projects Settings
+        path: /app/projects-settings
+        kind: defaults
+      page_title: Frappe
+      field_labels: []
+      section_labels:
+        - Authorization Error
+      prefilled: []
+      notes: "After signing in with the provided credentials, the page at https://***/app/projects-settings shows an authorization error: 'Non autorisé' (Unauthorized). The user *** does not have access to the document type 'Page' via role authorization. The page title is 'Frappe'. No form fields or sections are visible due to the access restriction."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/185eb154-54b5-419a-9670-ef519b0b6bc3 attempts: 1"

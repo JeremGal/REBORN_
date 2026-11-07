@@ -1,0 +1,54 @@
+id: run-20261107T210004-h-EXP_236
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_236.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Setup
+started_at: 2026-11-07T20:59:19.200Z
+ended_at: 2026-11-07T21:00:04.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 5})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": [], "page_title": "Nouveau(elle) Région", "field_labels": ["Est un groupe"], "section_labels": ["Est un groupe"]})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Setup)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Territory
+        path: /app/territory/new
+        kind: defaults
+      page_title: Nouveau(elle) Région
+      field_labels:
+        - Est un groupe
+      section_labels:
+        - Est un groupe
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/35286ccd-78ab-4cb9-8e1b-9ea2874a135f attempts: 1"

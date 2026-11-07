@@ -1,0 +1,60 @@
+id: run-20261107T205645-h-EXP_216
+mission: M-005
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_216.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Setup
+started_at: 2026-11-07T20:55:59.100Z
+ended_at: 2026-11-07T20:56:45.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": [], "page_title": "Nouveau(elle) Marque", "field_labels": ["Nom de la Marque", "Description", "Société", "Entrepôt par Défaut", "Liste des Prix par Défaut"], "section_labels": ["Nom de la Marque", "Description", "Valeurs par défaut"]})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Setup)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Brand
+        path: /app/brand/new
+        kind: defaults
+      page_title: Nouveau(elle) Marque
+      field_labels:
+        - Nom de la Marque
+        - Description
+        - Société
+        - Entrepôt par Défaut
+        - Liste des Prix par Défaut
+      section_labels:
+        - Nom de la Marque
+        - Description
+        - Valeurs par défaut
+      prefilled: []
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/174061e5-adb6-4148-bb93-ffc90e0da807 attempts: 1"

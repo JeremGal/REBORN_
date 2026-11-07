@@ -2,7 +2,7 @@ id: S-079
 title: Sales Invoice
 purpose: create, view and edit Sales Invoice records
 kind: form
-layout: "tabs: Payments, Address & Contact, Terms, More Info, Connections; sections: Accounting Dimensions, Currency and Price List, Items, Taxes and Charges, Totals, Totals (Company Currency), Tax Withholding Entry, Additional Discount, Tax Breakup, Pricing Rules, Packing List, Time Sheet List, Payments, Changes, Advance Payments, Write Off, Loyalty Points Redemption, Billing Address, Shipping Address, Company Address, Payment Terms, Terms and Conditions, Customer PO Details, Accounting Details, Commission, ...; 155 fields; observed labels differ from the declared form (22/41 match; not declared: no., item, quantité, prix usd, montant usd, entrepôt, ajouter une ligne, ajouter plusieurs)"
+layout: "tabs: Payments, Address & Contact, Terms, More Info, Connections; sections: Accounting Dimensions, Currency and Price List, Items, Taxes and Charges, Totals, Totals (Company Currency), Tax Withholding Entry, Additional Discount, Tax Breakup, Pricing Rules, Packing List, Time Sheet List, Payments, Changes, Advance Payments, Write Off, Loyalty Points Redemption, Billing Address, Shipping Address, Company Address, Payment Terms, Terms and Conditions, Customer PO Details, Accounting Details, Commission, ...; 155 fields"
 fields:
   - label: Company
     control: lookup
@@ -659,7 +659,7 @@ actions:
     triggers: F-080
   - label: Amend
     triggers: F-080
-status: partial
+status: confirmed
 evidence:
   - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
     kind: rea
@@ -668,7 +668,7 @@ evidence:
   - ref: run-20261107T193709-h-EXP_001
     kind: h-run
     locator: form opened by the H Company agent
-    note: 22/41 labels read on screen match the declared form
+    note: 24/40 labels read on screen match the declared form
 screenshots:
   - 01-exploration/runs/run-20261107T193709-h-EXP_001/step_08.png
   - 01-exploration/runs/run-20261107T193709-h-EXP_001/step_08.png
