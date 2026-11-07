@@ -1,0 +1,26 @@
+{
+  "name": "reborn",
+  "private": true,
+  "description": "REBORN — Autonomous Software Archaeologist (Hackathon H Company × 42AI)",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:lan": "node scripts/dev.mjs --lan",
+    "start": "node scripts/dev.mjs --prod",
+    "start:lan": "node scripts/dev.mjs --prod --lan",
+    "legacy": "node legacy-app/server.mjs",
+    "crm-source": "node --no-warnings legacy-crm/server.mjs",
+    "crm-source:seed": "node --no-warnings legacy-crm/seed.mjs",
+    "crm-source:password": "node scripts/open.mjs crm-source-password",
+    "crm": "node scripts/crm.mjs",
+    "crm:password": "node scripts/open.mjs crm-password",
+    "platform": "npm --prefix platform run dev",
+    "test": "npm --prefix platform test",
+    "build": "npm --prefix platform run build",
+    "scenarios": "node scripts/gen-scenarios.mjs",
+    "e2e": "node scripts/e2e-browser.mjs",
+    "maintenance": "node scripts/open.mjs maintenance",
+    "connect": "node scripts/open.mjs connect",
+    "token": "node scripts/open.mjs token",
+    "secrets": "node scripts/secrets.mjs"
+  }
+}

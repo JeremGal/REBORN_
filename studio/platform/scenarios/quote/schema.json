@@ -1,0 +1,105 @@
+{
+  "application": "Quotix 98",
+  "module": "Devis",
+  "title": "Configurer un devis",
+  "description": "Choisissez un article, une quantité et la catégorie du client : le prix se met à jour instantanément.",
+  "sections": [
+    {
+      "id": "article",
+      "title": "Article"
+    },
+    {
+      "id": "client",
+      "title": "Client"
+    }
+  ],
+  "fields": [
+    {
+      "name": "product",
+      "label": "Code article",
+      "type": "select",
+      "section": "article",
+      "required": true,
+      "default": "A",
+      "display": "cards",
+      "options": [
+        {
+          "value": "A",
+          "label": "Vanne papillon DN50"
+        },
+        {
+          "value": "B",
+          "label": "Pompe centrifuge 2,2 kW"
+        },
+        {
+          "value": "C",
+          "label": "Capteur de pression 0-10 bar"
+        }
+      ]
+    },
+    {
+      "name": "quantity",
+      "label": "Quantité",
+      "type": "number",
+      "section": "article",
+      "required": true,
+      "default": 1
+    },
+    {
+      "name": "customer_type",
+      "label": "Catégorie client",
+      "type": "select",
+      "section": "client",
+      "required": true,
+      "default": "standard",
+      "options": [
+        {
+          "value": "standard",
+          "label": "Standard"
+        },
+        {
+          "value": "premium",
+          "label": "Premium"
+        },
+        {
+          "value": "partenaire",
+          "label": "Partenaire / Distributeur"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "total_price",
+      "label": "Total HT",
+      "format": "currency",
+      "primary": true
+    }
+  ],
+  "tables": [
+    {
+      "id": "grille",
+      "title": "Grille par quantité",
+      "vary": "quantity",
+      "values": [
+        1,
+        10,
+        50,
+        100
+      ],
+      "outputs": [
+        "total_price"
+      ]
+    }
+  ],
+  "unsupported": [
+    {
+      "label": "Menus Fichier, Édition, Clients, Outils",
+      "reason": "Non explorés par l'agent"
+    },
+    {
+      "label": "Impression du devis",
+      "reason": "Sortie imprimante, non observable à l'écran"
+    }
+  ]
+}

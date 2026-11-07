@@ -1,0 +1,12 @@
+{
+  "experiment_id": "EXP_001",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+    "product": "A",
+    "quantity": 10,
+    "customer_type": "premium"
+  },
+  "observed_output": { "total_price": 810 },
+  "status": "success"
+}

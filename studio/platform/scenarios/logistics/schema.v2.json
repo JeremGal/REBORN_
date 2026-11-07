@@ -1,0 +1,134 @@
+{
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "title": "Calcul des frais de transport",
+  "description": "Estimez le coût et le délai d'une expédition selon la destination, le poids et les options.",
+  "sections": [
+    {
+      "id": "envoi",
+      "title": "Envoi"
+    },
+    {
+      "id": "options",
+      "title": "Options de service"
+    },
+    {
+      "id": "client",
+      "title": "Référence"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "total_price",
+      "label": "Frais de transport HT",
+      "format": "currency",
+      "primary": true
+    },
+    {
+      "name": "transit_days",
+      "label": "Délai estimé",
+      "format": "integer",
+      "unit": "jours",
+      "unit_singular": "jour"
+    }
+  ],
+  "tables": [
+    {
+      "id": "grille",
+      "title": "Grille tarifaire par poids",
+      "vary": "weight_kg",
+      "values": [
+        1,
+        5,
+        20,
+        100,
+        500
+      ],
+      "outputs": [
+        "total_price"
+      ]
+    }
+  ],
+  "unsupported": [
+    {
+      "label": "Impression de l'étiquette d'expédition",
+      "reason": "Sortie imprimante, non observable à l'écran"
+    },
+    {
+      "label": "Onglet « Suivi de colis »",
+      "reason": "Module non exploré par l'agent"
+    }
+  ],
+  "fields": [
+    {
+      "name": "zone",
+      "label": "Zone de destination",
+      "type": "select",
+      "section": "envoi",
+      "required": true,
+      "default": "FR",
+      "options": [
+        {
+          "value": "FR",
+          "label": "France métropolitaine"
+        },
+        {
+          "value": "EU",
+          "label": "Union européenne"
+        },
+        {
+          "value": "INT",
+          "label": "International"
+        }
+      ]
+    },
+    {
+      "name": "weight_kg",
+      "label": "Poids du colis",
+      "type": "number",
+      "unit": "kg",
+      "step": 0.1,
+      "required": true,
+      "default": 1,
+      "section": "envoi"
+    },
+    {
+      "name": "pickup_date",
+      "label": "Date d'enlèvement",
+      "type": "date",
+      "section": "envoi"
+    },
+    {
+      "name": "express",
+      "label": "Livraison express 24 h",
+      "type": "checkbox",
+      "section": "options"
+    },
+    {
+      "name": "fragile",
+      "label": "Colis fragile",
+      "type": "checkbox",
+      "section": "options"
+    },
+    {
+      "name": "insurance_value",
+      "label": "Valeur déclarée (assurance)",
+      "type": "number",
+      "unit": "€",
+      "min": 0,
+      "default": 0,
+      "section": "options",
+      "help": "Assurance ad valorem : 1 % de la valeur, minimum 5 €"
+    },
+    {
+      "name": "reference",
+      "label": "Référence client",
+      "type": "text",
+      "max_length": 20,
+      "pattern": "[A-Z0-9-]*",
+      "placeholder": "CMD-2024-001",
+      "help": "Majuscules, chiffres et tirets",
+      "section": "client"
+    }
+  ]
+}

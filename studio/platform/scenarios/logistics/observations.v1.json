@@ -1,0 +1,396 @@
+[
+ {
+  "experiment_id": "LOG_001",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 1,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 12,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_002",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 10,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 15,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_003",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "EU",
+   "weight_kg": 1,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 15.6,
+   "transit_days": 4
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_004",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "EU",
+   "weight_kg": 10,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 30,
+   "transit_days": 4
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_005",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "INT",
+   "weight_kg": 1,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 32.1,
+   "transit_days": 7
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_006",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "INT",
+   "weight_kg": 10,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 60,
+   "transit_days": 7
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_007",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 99,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 90.7,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_008",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 100,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 84.2,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_009",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 499,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 396.2,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_010",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 500,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 366.8,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_011",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 10,
+   "express": true,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 22.5,
+   "transit_days": 1
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_012",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "EU",
+   "weight_kg": 10,
+   "express": true,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 45,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_013",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 10,
+   "express": false,
+   "fragile": true
+  },
+  "observed_output": {
+   "total_price": 27,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_014",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 5,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 12,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_015",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 7,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 12.5,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_016",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "INT",
+   "weight_kg": 5,
+   "express": false,
+   "fragile": true
+  },
+  "observed_output": {},
+  "status": "error",
+  "error": "ENVOI FRAGILE REFUSE A L'INTERNATIONAL"
+ },
+ {
+  "experiment_id": "LOG_017",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 1500,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {},
+  "status": "error",
+  "error": "POIDS HORS LIMITES (0,1 - 1000 KG)"
+ },
+ {
+  "experiment_id": "LOG_018",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "EU",
+   "weight_kg": 250,
+   "express": true,
+   "fragile": true
+  },
+  "observed_output": {
+   "total_price": 583.4,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_019",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "INT",
+   "weight_kg": 120,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 369,
+   "transit_days": 7
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_020",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 42.5,
+   "express": true,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 64,
+   "transit_days": 1
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_021",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "EU",
+   "weight_kg": 0.5,
+   "express": false,
+   "fragile": true
+  },
+  "observed_output": {
+   "total_price": 26.8,
+   "transit_days": 4
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_022",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "INT",
+   "weight_kg": 800,
+   "express": true,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 3199,
+   "transit_days": 4
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_023",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 1200,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {},
+  "status": "error",
+  "error": "POIDS HORS LIMITES (0,1 - 1000 KG)"
+ },
+ {
+  "experiment_id": "LOG_024",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "EU",
+   "weight_kg": 75,
+   "express": true,
+   "fragile": true
+  },
+  "observed_output": {
+   "total_price": 213,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_025",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "INT",
+   "weight_kg": 3,
+   "express": false,
+   "fragile": false
+  },
+  "observed_output": {
+   "total_price": 38.3,
+   "transit_days": 7
+  },
+  "status": "success"
+ }
+]

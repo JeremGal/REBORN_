@@ -1,0 +1,207 @@
+{
+  "contract_version": "1.1",
+  "module": "Devis",
+  "application": "Quotix 98",
+  "settings": {
+    "discount_stacking": "compound",
+    "rounding": {
+      "decimals": 2,
+      "mode": "half_up",
+      "at": "end"
+    },
+    "currency": "EUR",
+    "output_field": "total_price",
+    "tolerance": 0.01
+  },
+  "inputs": [
+    {
+      "name": "quantity",
+      "label": "Quantité",
+      "type": "integer"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "total_price",
+      "label": "Total HT",
+      "format": "currency",
+      "primary": true
+    }
+  ],
+  "notes": "Remises appliquées successivement (volume puis client). Frais de port calculés après remises. Quantité entière de 1 à 999.",
+  "rules": [
+    {
+      "id": "RULE_009",
+      "type": "exception",
+      "description": "Quantité hors limites",
+      "condition": {
+        "any": [
+          {
+            "quantity_lt": 1
+          },
+          {
+            "quantity_gt": 999
+          }
+        ]
+      },
+      "action": {
+        "error": "QUANTITE INVALIDE (1-999)"
+      },
+      "confidence": 0.9,
+      "validation_status": "tested",
+      "evidence": [
+        "EXP_023"
+      ]
+    },
+    {
+      "id": "RULE_001",
+      "type": "unit_price",
+      "description": "Prix unitaire article A",
+      "group": "unit_price",
+      "condition": {
+        "product": "A"
+      },
+      "action": {
+        "unit_price": 100
+      },
+      "confidence": 0.99,
+      "validation_status": "validated",
+      "evidence": [
+        "EXP_001",
+        "EXP_004"
+      ]
+    },
+    {
+      "id": "RULE_002",
+      "type": "unit_price",
+      "description": "Prix unitaire article B",
+      "group": "unit_price",
+      "condition": {
+        "product": "B"
+      },
+      "action": {
+        "unit_price": 250
+      },
+      "confidence": 0.99,
+      "validation_status": "validated",
+      "evidence": [
+        "EXP_002",
+        "EXP_017"
+      ]
+    },
+    {
+      "id": "RULE_003",
+      "type": "unit_price",
+      "description": "Prix unitaire article C",
+      "group": "unit_price",
+      "condition": {
+        "product": "C"
+      },
+      "action": {
+        "unit_price": 40
+      },
+      "confidence": 0.99,
+      "validation_status": "validated",
+      "evidence": [
+        "EXP_003",
+        "EXP_015"
+      ]
+    },
+    {
+      "id": "RULE_004",
+      "type": "quantity_discount",
+      "description": "Remise volume ≥ 50 unités",
+      "group": "quantity_tier",
+      "priority": 1,
+      "condition": {
+        "quantity_gte": 50
+      },
+      "action": {
+        "discount_percent": 20
+      },
+      "confidence": 0.95,
+      "validation_status": "tested",
+      "evidence": [
+        "EXP_009",
+        "EXP_010"
+      ]
+    },
+    {
+      "id": "RULE_005",
+      "type": "quantity_discount",
+      "description": "Remise volume ≥ 10 unités",
+      "group": "quantity_tier",
+      "priority": 2,
+      "condition": {
+        "quantity_gte": 10
+      },
+      "action": {
+        "discount_percent": 10
+      },
+      "confidence": 0.98,
+      "validation_status": "tested",
+      "evidence": [
+        "EXP_005",
+        "EXP_006",
+        "EXP_007",
+        "EXP_008"
+      ]
+    },
+    {
+      "id": "RULE_006",
+      "type": "customer_discount",
+      "description": "Remise client premium",
+      "priority": 3,
+      "condition": {
+        "customer_type": "premium"
+      },
+      "action": {
+        "discount_percent": 10
+      },
+      "confidence": 0.97,
+      "validation_status": "tested",
+      "evidence": [
+        "EXP_011",
+        "EXP_013"
+      ]
+    },
+    {
+      "id": "RULE_007",
+      "type": "customer_discount",
+      "description": "Remise client partenaire",
+      "priority": 3,
+      "condition": {
+        "customer_type": "partenaire"
+      },
+      "action": {
+        "discount_percent": 20
+      },
+      "confidence": 0.96,
+      "validation_status": "tested",
+      "evidence": [
+        "EXP_012",
+        "EXP_014"
+      ]
+    },
+    {
+      "id": "RULE_008",
+      "type": "shipping_fee",
+      "description": "Frais de livraison sous 500 €",
+      "condition": {
+        "subtotal_lt": 500
+      },
+      "action": {
+        "fee_amount": 45
+      },
+      "confidence": 0.93,
+      "validation_status": "tested",
+      "evidence": [
+        "EXP_001",
+        "EXP_004",
+        "EXP_015",
+        "EXP_016",
+        "EXP_017"
+      ]
+    }
+  ]
+}

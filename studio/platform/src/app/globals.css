@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+/*
+ * REBORN — carnet de fouille numérique.
+ * ink        : l'encre du rapport (marine du brief)
+ * verdigris  : la patine — ce qui est restauré, validé, identique
+ * ochre      : l'hypothèse, le travail en cours
+ * rust       : la dérive, l'écart avec le logiciel historique
+ * chalk      : la page
+ * legacy     : le gris du monde ancien
+ */
+@theme {
+  --color-ink: #13233a;
+  --color-ink-2: #1c3050;
+  --color-ink-3: #2a4166;
+  --color-verdigris: #11907f;
+  --color-verdigris-bright: #19b19d;
+  --color-verdigris-soft: #e2f2ee;
+  --color-chalk: #f3f4f1;
+  --color-chalk-2: #eceee9;
+  --color-paper: #ffffff;
+  --color-sediment: #4f5968;
+  --color-silt: #828a96;
+  --color-dust: #aab0b8;
+  --color-line: rgb(19 35 58 / 0.09);
+  --color-line-strong: rgb(19 35 58 / 0.16);
+  --color-ochre: #a86b12;
+  --color-ochre-soft: #f8eedb;
+  --color-rust: #b8452c;
+  --color-rust-soft: #f8e6e1;
+  --color-legacy: #c0c0c0;
+  --color-legacy-ink: #2b2b2b;
+
+  --font-sans: var(--font-lato), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-legacy: "Courier New", Courier, monospace;
+
+  /* Application générée (livrable client) : thème indépendant de REBORN */
+  --color-ga-bg: #f5f6f8;
+  --color-ga-field: #f0f2f5;
+  --color-ga-field-hover: #e7eaef;
+  --color-ga-ink: #18202e;
+  --color-ga-muted: #556071;
+  --color-ga-faint: #8a93a2;
+  --color-ga-line: rgb(24 32 46 / 0.12);
+  --color-ga-accent: #2457a6;
+  --color-ga-accent-soft: #e8eef9;
+  --color-ga-panel: #eef1f5;
+  --color-ga-panel-strong: #232b38;
+  --color-ga-danger: #b42318;
+  --color-ga-danger-soft: #fdeceb;
+  --color-ga-warn: #9a6100;
+  --color-ga-warn-soft: #fdf3e0;
+  --font-app: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--color-chalk);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Surface « carte » : anneau + profondeur très légère */
+.card {
+  background: var(--color-paper);
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 0 0 1px var(--color-line),
+    0 1px 2px -1px rgb(19 35 58 / 0.06),
+    0 2px 6px rgb(19 35 58 / 0.03);
+}
+
+/* Étiquette d'inventaire (EXP_001, RULE_005…) */
+.specimen {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--color-line-strong);
+  background: var(--color-chalk);
+  color: var(--color-ink-2);
+  white-space: nowrap;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-silt);
+}
+
+/* Valeur lue sur l'écran du logiciel historique */
+.legacy-value {
+  font-family: var(--font-legacy);
+  font-weight: 700;
+  color: var(--color-legacy-ink);
+  background: #fff;
+  border: 1px solid;
+  border-color: #9a9a9a #e4e4e4 #e4e4e4 #9a9a9a;
+  padding: 1px 6px;
+  border-radius: 0;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.enter {
+  animation: enter 240ms var(--ease-out-quint) both;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.live-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+  .live-dot {
+    animation: none;
+  }
+}
+
+button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-verdigris);
+  outline-offset: 2px;
+}
