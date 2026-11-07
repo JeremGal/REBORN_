@@ -1,6 +1,6 @@
 # ReBorn: instructions for Claude Code
 
-ReBorn rebuilds legacy business software in three blocks. Read `README.md` first, then the skill of the block you are working on:
+ReBorn rebuilds legacy business software in three blocks. Read `README.md`, then `docs/GUIDE.md` (operating manual), then the skill of the block you are working on:
 
 | Block | Skill | Writes to |
 |---|---|---|
@@ -26,5 +26,8 @@ If you do not know which block you serve, ask.
 node tools/reborn.mjs status [target]
 node tools/reborn.mjs validate [target]
 node tools/reborn.mjs dossier <target>
-node tools/reborn.mjs ask <target>      # turn open unknowns into new missions for block 1
+node tools/reborn.mjs handoff <target>  # machine-readable kit for block 3 (build order, migration map, test vectors, to_observe)
+node tools/reborn.mjs ask <target>      # turn open unknowns into computer-use-ready missions for block 1
 ```
+
+Full command list: `docs/GUIDE.md` §5.
