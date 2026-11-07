@@ -1,0 +1,44 @@
+name: Stockcurrent
+description: Table STOCKCURRENT from the shipped database schema.
+fields:
+  - name: location
+    label: ""
+    type: ref
+    observed_as: LOCATION
+    required: true
+    ref: Locations
+  - name: product
+    label: ""
+    type: ref
+    observed_as: PRODUCT
+    required: true
+    ref: Products
+  - name: attributesetinstance_id
+    label: ""
+    type: ref
+    observed_as: ATTRIBUTESETINSTANCE_ID
+    ref: Attributesetinstance
+  - name: units
+    label: ""
+    type: decimal
+    observed_as: UNITS
+    required: true
+relations:
+  - to: Products
+    kind: many-to-one
+    via: product
+  - to: Attributesetinstance
+    kind: many-to-one
+    via: attributesetinstance_id
+  - to: Locations
+    kind: many-to-one
+    via: location
+storage:
+  engine: HSQLDB
+  observed_table: STOCKCURRENT
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE STOCKCURRENT
+    note: shipped SQL create script

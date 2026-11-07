@@ -1,0 +1,25 @@
+id: M-003
+title: "Answer U-002: What is the real database schema (types, primary and foreign keys, the denominator per currency)?"
+goal: Save the book created above as an SQLite file (File > Save As, SQLite), then hand the .gnucash file to block 2 to run `reborn sqlite`.
+priority: must
+capture:
+  screenshots: every-step
+  read_values:
+    - Bank decreases by 25.00, Groceries increases by 25.00, the transaction balances to zero
+success_criteria:
+  - Acceptance AC-001 gets real expected values and U-002 is answered
+ui_steps:
+  - action: open
+    target: GnuCash
+  - action: note
+    target: Save the book created above as an SQLite file (File > Save As, SQLite), then hand the .gnucash file to block 2 to run `reborn sqlite`.
+  - action: read
+    capture: the values stated in the acceptance 'then'
+  - action: screenshot
+    target: each screen touched
+fills:
+  acceptance: AC-001
+features:
+  - F-001
+requested_by: U-002
+status: todo

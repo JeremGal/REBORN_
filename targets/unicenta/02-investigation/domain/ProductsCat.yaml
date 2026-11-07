@@ -1,0 +1,27 @@
+name: ProductsCat
+description: Table PRODUCTS_CAT from the shipped database schema.
+fields:
+  - name: product
+    label: ""
+    type: ref
+    observed_as: PRODUCT
+    required: true
+    unique: true
+    ref: Products
+  - name: catorder
+    label: ""
+    type: integer
+    observed_as: CATORDER
+relations:
+  - to: Products
+    kind: many-to-one
+    via: product
+storage:
+  engine: HSQLDB
+  observed_table: PRODUCTS_CAT
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE PRODUCTS_CAT
+    note: shipped SQL create script

@@ -1,0 +1,50 @@
+name: Leaves
+description: Table LEAVES from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: pplid
+    label: ""
+    type: ref
+    observed_as: PPLID
+    required: true
+    ref: People
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: startdate
+    label: ""
+    type: datetime
+    observed_as: STARTDATE
+    required: true
+  - name: enddate
+    label: ""
+    type: datetime
+    observed_as: ENDDATE
+    required: true
+  - name: notes
+    label: ""
+    type: string
+    observed_as: NOTES
+    max_length: 255
+relations:
+  - to: People
+    kind: many-to-one
+    via: pplid
+storage:
+  engine: HSQLDB
+  observed_table: LEAVES
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE LEAVES
+    note: shipped SQL create script

@@ -1,0 +1,19 @@
+id: S-001
+title: Sale screen (till)
+purpose: "Ring up a ticket: pick products, see the lines and totals, take payment."
+kind: pos-pad
+screenshots: []   # Swing UI built in code (com.openbravo.pos.sales.JPanelTicket); block 1 to capture
+layout: "Product pad/catalog on one side, the ticket lines grid with units/price/total in the middle, totals and the payment buttons at the bottom. (Inferred from the class names and the data model; confirm by a run.)"
+fields:
+  - { label: Product, control: grid, binds: Ticketlines.product }
+  - { label: Units, control: number, binds: Ticketlines.units }
+  - { label: Price, control: money, binds: Ticketlines.price }
+  - { label: Total, control: display }
+actions:
+  - { label: Add product }
+  - { label: Payment, triggers: F-001 }
+  - { label: Delete line }
+states: [editing, paid]
+status: hypothesis
+evidence:
+  - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "TICKETS / TICKETLINES / PAYMENTS tables", note: "data model; the Swing screen itself not yet captured (U-001)" }

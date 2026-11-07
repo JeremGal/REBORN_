@@ -1,0 +1,61 @@
+name: Csvimport
+description: Table csvimport from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: id
+    required: true
+    max_length: 255
+    unique: true
+  - name: rownumber
+    label: ""
+    type: string
+    observed_as: rownumber
+    max_length: 255
+  - name: csverror
+    label: ""
+    type: string
+    observed_as: csverror
+    max_length: 255
+  - name: reference
+    label: ""
+    type: string
+    observed_as: reference
+    max_length: 255
+  - name: code
+    label: ""
+    type: string
+    observed_as: code
+    max_length: 255
+  - name: name
+    label: ""
+    type: string
+    observed_as: name
+    max_length: 255
+  - name: pricebuy
+    label: ""
+    type: decimal
+    observed_as: pricebuy
+  - name: pricesell
+    label: ""
+    type: decimal
+    observed_as: pricesell
+  - name: previousbuy
+    label: ""
+    type: decimal
+    observed_as: previousbuy
+  - name: previoussell
+    label: ""
+    type: decimal
+    observed_as: previoussell
+relations: []
+storage:
+  engine: HSQLDB
+  observed_table: csvimport
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE csvimport
+    note: shipped SQL create script

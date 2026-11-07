@@ -25,6 +25,30 @@
       }
     },
     "success_criteria": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "ui_steps": {
+      "type": "array",
+      "description": "Concrete UI steps a computer-use agent can execute directly, in order.",
+      "items": {
+        "type": "object",
+        "required": ["action"],
+        "additionalProperties": false,
+        "properties": {
+          "action": { "enum": ["open", "navigate", "click", "type", "select", "read", "screenshot", "wait", "note"] },
+          "target": { "type": "string", "description": "Menu path, button or field label, or window title to act on." },
+          "value": { "type": "string", "description": "What to type or choose." },
+          "capture": { "type": "string", "description": "For a read step: which on-screen value to record (maps to an expected_values key)." }
+        }
+      }
+    },
+    "fills": {
+      "type": "object",
+      "description": "What this mission's observed values will complete, so the run can be linked back automatically.",
+      "additionalProperties": false,
+      "properties": {
+        "acceptance": { "$ref": "common.schema.json#/$defs/acceptanceId" },
+        "rule": { "$ref": "common.schema.json#/$defs/ruleId" }
+      }
+    },
     "features": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/featureId" } },
     "requested_by": { "type": "string", "description": "kickoff, or the unknown U-xxx this mission should answer." },
     "status": { "enum": ["todo", "running", "done", "blocked"] }

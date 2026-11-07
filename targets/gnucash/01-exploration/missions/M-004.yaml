@@ -1,0 +1,19 @@
+id: M-004
+title: "Answer U-003: Which screens exist for invoices, customers, taxes, and how do they flow?"
+goal: Tour the Business menu (customers, invoices, process payment), screenshot each window.
+priority: should
+capture:
+  screenshots: every-step
+  read_values: []
+success_criteria:
+  - "The run answers: Which screens exist for invoices, customers, taxes, and how do they flow?"
+ui_steps:
+  - action: open
+    target: GnuCash
+  - action: note
+    target: Tour the Business menu (customers, invoices, process payment), screenshot each window.
+  - action: screenshot
+    target: each screen touched
+features: []
+requested_by: U-003
+status: todo

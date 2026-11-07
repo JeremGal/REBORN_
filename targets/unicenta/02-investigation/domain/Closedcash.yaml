@@ -1,0 +1,40 @@
+name: Closedcash
+description: Table CLOSEDCASH from the shipped database schema.
+fields:
+  - name: money
+    label: ""
+    type: string
+    observed_as: MONEY
+    required: true
+    max_length: 255
+    unique: true
+  - name: host
+    label: ""
+    type: string
+    observed_as: HOST
+    required: true
+    max_length: 255
+  - name: hostsequence
+    label: ""
+    type: integer
+    observed_as: HOSTSEQUENCE
+    required: true
+  - name: datestart
+    label: ""
+    type: datetime
+    observed_as: DATESTART
+    required: true
+  - name: dateend
+    label: ""
+    type: datetime
+    observed_as: DATEEND
+relations: []
+storage:
+  engine: HSQLDB
+  observed_table: CLOSEDCASH
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE CLOSEDCASH
+    note: shipped SQL create script

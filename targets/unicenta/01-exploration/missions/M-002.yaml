@@ -1,0 +1,25 @@
+id: M-002
+title: "Answer U-001: What does the sale screen look like and what are the exact totals/change for a known ticket?"
+goal: Open uniCenta, open a cash session, add 3 units of a 10.00 product taxed at 20%, tender 40.00 cash, read back base/tax/total/change and screenshot the sale screen.
+priority: must
+capture:
+  screenshots: every-step
+  read_values:
+    - ticket base 30.00, tax 6.00, total 36.00, change 4.00
+success_criteria:
+  - Acceptance AC-001 gets real expected values and U-001 is answered
+ui_steps:
+  - action: open
+    target: uniCenta oPOS
+  - action: note
+    target: Open uniCenta, open a cash session, add 3 units of a 10.00 product taxed at 20%, tender 40.00 cash, read back base/tax/total/change and screenshot the sale screen.
+  - action: read
+    capture: the values stated in the acceptance 'then'
+  - action: screenshot
+    target: each screen touched
+fills:
+  acceptance: AC-001
+features:
+  - F-001
+requested_by: U-001
+status: todo

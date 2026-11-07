@@ -10,8 +10,9 @@ You use the software like a user and record everything visible. Formats: `contra
 ## Missions
 
 - `targets/<t>/01-exploration/missions/M-xxx.yaml`. Start with `M-001` (map every menu and window). Then one mission per business process with fake, realistic data.
-- `node tools/reborn.mjs ask <t>` turns block 2's open questions into new missions: run it often.
-- Each mission names the values to **read back** on screen (totals, generated numbers, messages). They become expected results in acceptance tests.
+- `node tools/reborn.mjs ask <t>` turns block 2's open questions into **computer-use-ready** missions: ordered `ui_steps`, the exact `read_values`, and `fills` (the acceptance scenario the run completes). Run it often; it is your worklist.
+- Work the handoff's `to_observe` first: it lists, per feature, the minimal runs that lift it to `confirmed`.
+- Each mission names the values to **read back** on screen (totals, generated numbers, messages). They become the expected results in the acceptance tests and the parity replay.
 
 ## Runs
 

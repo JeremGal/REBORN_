@@ -1,0 +1,41 @@
+id: F-001
+title: Ring up a ticket and take payment
+module: Sales
+priority: must
+status: partial
+confidence: medium
+user_goal: As a cashier, I add products to a ticket, see the total with tax, take payment and get the change, so the sale is recorded.
+actors: [cashier]
+entry_points:
+  - { screen: S-001, action: "Sale screen" }
+preconditions:
+  - at least one product with a price and a tax category exists
+  - a cash session is open (CLOSEDCASH)
+inputs:
+  - { label: Product, field: Ticketlines.product, type: ref, required: true }
+  - { label: Units, field: Ticketlines.units, type: decimal, required: true }
+  - { label: Tendered, field: Payments.total, type: decimal }
+steps:
+  - { n: 1, actor: user, does: "adds one or more products (each becomes a ticket line)", screen: S-001 }
+  - { n: 2, actor: system, does: "computes line totals and the ticket total with tax", rules: [R-001] }
+  - { n: 3, actor: user, does: "chooses a payment method and tenders an amount" }
+  - { n: 4, actor: system, does: "computes change, records receipt, payment and tax lines", rules: [R-002] }
+rules: [R-001, R-002]
+outputs:
+  - { kind: data-change, description: "ticket, ticket lines, receipt, payment(s) and tax lines stored", entities: [Tickets, Ticketlines, Receipts, Payments, Taxlines] }
+  - { kind: print, description: "customer ticket/receipt" }
+screens: [S-001]
+entities: [Tickets, Ticketlines, Receipts, Payments, Taxlines, Products, Taxes]
+acceptance:
+  - id: AC-001
+    given: "a product at 10.00 with a 20% tax, cash session open"
+    when: "the cashier adds 3 units and tenders 40.00 cash"
+    then: "ticket base 30.00, tax 6.00, total 36.00, change 4.00"
+    expected_values: {}   # MISSING: block 1 must run uniCenta and read back base/tax/total/change (rounding to confirm)
+evidence:
+  - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "TICKETS, TICKETLINES, RECEIPTS, PAYMENTS, TAXLINES, TAXES.RATE", note: "shipped schema" }
+unknowns: [U-001, U-002]
+rebuild_notes: >-
+  Data model is confirmed from the shipped schema. Build Ticket -> TicketLine (units, price, tax) -> Receipt ->
+  Payment/TaxLine. Compute totals per R-001 but confirm the rounding and the RATECASCADE compound-tax order from an
+  observed ticket before finalising. The sale screen (S-001) is a Swing panel built in code: capture it by a run.

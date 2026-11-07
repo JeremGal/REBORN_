@@ -1,0 +1,54 @@
+name: People
+description: Table PEOPLE from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: apppassword
+    label: ""
+    type: string
+    observed_as: APPPASSWORD
+    max_length: 255
+  - name: card
+    label: ""
+    type: string
+    observed_as: CARD
+    max_length: 255
+  - name: role
+    label: ""
+    type: ref
+    observed_as: ROLE
+    required: true
+    ref: Roles
+  - name: visible
+    label: ""
+    type: boolean
+    observed_as: VISIBLE
+    required: true
+  - name: image
+    label: ""
+    type: file
+    observed_as: IMAGE
+relations:
+  - to: Roles
+    kind: many-to-one
+    via: role
+storage:
+  engine: HSQLDB
+  observed_table: PEOPLE
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE PEOPLE
+    note: shipped SQL create script

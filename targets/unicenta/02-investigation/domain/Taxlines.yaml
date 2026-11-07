@@ -1,0 +1,48 @@
+name: Taxlines
+description: Table TAXLINES from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: receipt
+    label: ""
+    type: ref
+    observed_as: RECEIPT
+    required: true
+    ref: Receipts
+  - name: taxid
+    label: ""
+    type: ref
+    observed_as: TAXID
+    required: true
+    ref: Taxes
+  - name: base
+    label: ""
+    type: decimal
+    observed_as: BASE
+    required: true
+  - name: amount
+    label: ""
+    type: decimal
+    observed_as: AMOUNT
+    required: true
+relations:
+  - to: Taxes
+    kind: many-to-one
+    via: taxid
+  - to: Receipts
+    kind: many-to-one
+    via: receipt
+storage:
+  engine: HSQLDB
+  observed_table: TAXLINES
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE TAXLINES
+    note: shipped SQL create script

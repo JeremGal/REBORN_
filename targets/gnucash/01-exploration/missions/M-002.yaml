@@ -1,0 +1,25 @@
+id: M-002
+title: "Answer U-001: What are the exact running balances after a known transaction, and how is the debit/credit side shown?"
+goal: Create a new book, two EUR accounts (Bank asset, Groceries expense), record 25.00 from Bank to Groceries, read back both balances and screenshot the register.
+priority: must
+capture:
+  screenshots: every-step
+  read_values:
+    - Bank decreases by 25.00, Groceries increases by 25.00, the transaction balances to zero
+success_criteria:
+  - Acceptance AC-001 gets real expected values and U-001 is answered
+ui_steps:
+  - action: open
+    target: GnuCash
+  - action: note
+    target: Create a new book, two EUR accounts (Bank asset, Groceries expense), record 25.00 from Bank to Groceries, read back both balances and screenshot the register.
+  - action: read
+    capture: the values stated in the acceptance 'then'
+  - action: screenshot
+    target: each screen touched
+fills:
+  acceptance: AC-001
+features:
+  - F-001
+requested_by: U-001
+status: todo

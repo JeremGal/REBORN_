@@ -1,0 +1,19 @@
+id: M-003
+title: "Answer U-003: Exact rounding and the maximum amounts behaviour."
+goal: Enter amounts with centimes and read back totals and any tax line.
+priority: should
+capture:
+  screenshots: every-step
+  read_values: []
+success_criteria:
+  - "The run answers: Exact rounding and the maximum amounts behaviour."
+ui_steps:
+  - action: open
+    target: PC Compta Windows (DLG)
+  - action: note
+    target: Enter amounts with centimes and read back totals and any tax line.
+  - action: screenshot
+    target: each screen touched
+features: []
+requested_by: U-003
+status: todo

@@ -6,13 +6,15 @@ import path from "node:path";
 import http from "node:http";
 import { spawn, spawnSync } from "node:child_process";
 import YAML from "yaml";
-import { ROOT, chromePath, craftCommand, evidenceDir, reaCommand, targetDir, nodeVersionOk } from "./lib/config.mjs";
+import { ROOT, chromePath, craftCommand, evidenceDir, localConfig, reaCommand, targetDir, nodeVersionOk } from "./lib/config.mjs";
 import { blockStyle, readJson, register, runRea, sha256File } from "./lib/evidence.mjs";
 import { listTargets, loadTarget } from "./lib/load.mjs";
 import { validateTarget } from "./lib/validate.mjs";
 import { renderDossier } from "./lib/dossier.mjs";
 import { inventoryUi } from "./lib/ui-extract.mjs";
 import { buildHandoff } from "./lib/handoff.mjs";
+import { schemaToEntities } from "./lib/sql-schema.mjs";
+import YAML2 from "yaml";
 
 const HELP = `ReBorn CLI
 
@@ -30,6 +32,7 @@ Investigation (block 2): evidence goes to .evidence/<target>/ (gitignored) and i
   web <target> <url> [--cdp <endpoint>]                passive page inspection + script export + JS analysis
   har <target> <session.har>                           API surface from a recorded browser session
   sqlite <target> <file> [--table <name>]              schema (or one table) of a SQLite database
+  schema <target> <create.sql> [--only T,T]            a shipped SQL create script -> entity cards (types, keys), graded confirmed
   rea <target> <rea-command> [args...]                 any REA CLI command (rea --help lists 175)
   doc <target> <url>                                   public documentation page -> markdown evidence (Crawl4AI in Docker)
   ui <target> <folder|file>                            shipped UI definition files (GtkBuilder .ui/.glade) -> screen candidates
@@ -105,6 +108,8 @@ function ask(target) {
   needTarget(target);
   const file = path.join(targetDir(target), "02-investigation", "unknowns.yaml");
   if (!fs.existsSync(file)) die("no unknowns.yaml");
+  const t = loadTarget(target);
+  const featById = new Map(t.features.map((f) => [f.id, f]));
   const doc = YAML.parseDocument(fs.readFileSync(file, "utf8"));
   const missionsDir = path.join(targetDir(target), "01-exploration", "missions");
   fs.mkdirSync(missionsDir, { recursive: true });
@@ -116,24 +121,40 @@ function ask(target) {
     const probe = u.get("probe");
     if (!probe || probe.get("kind") !== "h-mission" || probe.get("mission")) continue;
     const id = `M-${String(next++).padStart(3, "0")}`;
+    const blocks = u.get("blocks")?.toJSON?.() ?? [];
+    // Make the mission computer-use-ready: UI steps from the probe, and the exact values to read from the blocked
+    // feature's first acceptance scenario, so the run links straight back to what it completes.
+    const feat = blocks.map((b) => featById.get(b)).find(Boolean);
+    const acc = feat?.acceptance?.[0];
+    const readKeys = acc?.expected_values && Object.keys(acc.expected_values).length ? Object.keys(acc.expected_values) : [];
+    const thenKeys = acc?.then ? [acc.then] : [];
+    const uiSteps = [
+      { action: "open", target: t.meta?.name ?? target },
+      { action: "note", target: probe.get("suggestion") },
+    ];
+    for (const k of readKeys) uiSteps.push({ action: "read", capture: k });
+    if (!readKeys.length && acc) uiSteps.push({ action: "read", capture: "the values stated in the acceptance 'then'" });
+    uiSteps.push({ action: "screenshot", target: "each screen touched" });
     const mission = {
       id,
       title: `Answer ${u.get("id")}: ${u.get("question")}`.slice(0, 120),
       goal: probe.get("suggestion"),
-      priority: "should",
-      capture: { screenshots: "every-step", read_values: [] },
-      success_criteria: [`The run shows on screen the answer to: ${u.get("question")}`],
-      features: (u.get("blocks")?.toJSON?.() ?? []),
+      priority: feat?.priority === "must" ? "must" : "should",
+      capture: { screenshots: "every-step", read_values: readKeys.length ? readKeys : thenKeys },
+      success_criteria: [acc ? `Acceptance ${acc.id} gets real expected values and ${u.get("id")} is answered` : `The run answers: ${u.get("question")}`],
+      ui_steps: uiSteps,
+      ...(acc ? { fills: { acceptance: acc.id } } : {}),
+      features: blocks,
       requested_by: u.get("id"),
       status: "todo",
     };
     fs.writeFileSync(path.join(missionsDir, `${id}.yaml`), YAML.stringify(mission, { lineWidth: 0 }));
     probe.set("mission", id);
     created++;
-    console.log(`created ${id} for ${u.get("id")}`);
+    console.log(`created ${id} for ${u.get("id")}${acc ? ` (fills ${acc.id})` : ""}`);
   }
   fs.writeFileSync(file, doc.toString({ lineWidth: 0 }));
-  console.log(created ? `${created} mission(s) ready for block 1` : "no open unknown with an h-mission probe left");
+  console.log(created ? `${created} computer-use-ready mission(s) for block 1` : "no open unknown with an h-mission probe left");
 }
 
 // ---------- investigation commands ----------
@@ -400,19 +421,67 @@ async function web(target, url) {
   }
 }
 
-// Public documentation (vendor technical sheet, manual page) -> markdown via Crawl4AI in Docker, registered as evidence.
+// A shipped SQL create script -> entity cards with real types/keys (graded confirmed). Reusable across targets.
+function schema(target, input) {
+  needTarget(target);
+  if (!input) die("usage: schema <target> <create-script.sql> [--only TABLE,TABLE]");
+  const p = absolute(input);
+  if (!fs.existsSync(p)) die(`not found: ${p}`);
+  const only = (opt("only") || "").split(",").map((s) => s.trim().toUpperCase()).filter(Boolean);
+  // register the script itself as evidence
+  const evDir = path.join(evidenceDir(target), "schema");
+  fs.mkdirSync(evDir, { recursive: true });
+  const copy = path.join(evDir, path.basename(p));
+  fs.copyFileSync(p, copy);
+  const sha = sha256File(copy);
+  register(target, { id: `sql:${sha.slice(0, 16)}`, kind: "rea", tool: "reborn-schema", operation: "sql-schema", subject: { label: path.basename(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), copy).split(path.sep).join("/"), bytes: fs.statSync(copy).size, sha256: sha, summary: "shipped SQL create script" });
+  const entities = schemaToEntities(fs.readFileSync(p, "utf8"), { engine: path.basename(p).split("-")[0], sourceRef: `sql:${sha.slice(0, 16)}` });
+  const domainDir = path.join(targetDir(target), "02-investigation", "domain");
+  fs.mkdirSync(domainDir, { recursive: true });
+  let written = 0;
+  for (const e of entities) {
+    if (only.length && !only.includes(e.name.toUpperCase()) && !only.includes((e.storage.observed_table || "").toUpperCase())) continue;
+    const doc = new YAML2.Document(e);
+    fs.writeFileSync(path.join(domainDir, `${e.name}.yaml`), doc.toString({ lineWidth: 0 }));
+    written++;
+  }
+  console.log(`OK  schema  ${entities.length} tables parsed, ${written} entity card(s) written to domain/  (sql:${sha.slice(0, 16)})`);
+  console.log(`  entities: ${entities.map((e) => e.name).join(", ")}`);
+}
+
+// Fetch a public page as markdown. Provider is pluggable: Linkup (web agent, preferred) when LINKUP_API_KEY is set
+// or WEB_PROVIDER=linkup, otherwise Crawl4AI in Docker. The rest of the pipeline does not care which was used.
+function fetchPageMarkdown(url, outFile) {
+  const provider = process.env.WEB_PROVIDER || (process.env.LINKUP_API_KEY ? "linkup" : "crawl4ai");
+  if (provider === "linkup") {
+    const key = process.env.LINKUP_API_KEY || localConfig().linkupApiKey;
+    if (!key) die("WEB_PROVIDER=linkup but no LINKUP_API_KEY (env or reborn.local.json.linkupApiKey)");
+    const body = JSON.stringify({ q: url, depth: "standard", outputType: "searchResults", includeRawContent: true });
+    const r = spawnSync("curl", ["-sS", "--max-time", "120", "-X", "POST", "https://api.linkup.so/v1/fetch", "-H", `Authorization: Bearer ${key}`, "-H", "Content-Type: application/json", "-d", body], { encoding: "utf8", windowsHide: true });
+    if (r.status !== 0 || !r.stdout) die(`linkup fetch failed: ${(r.stderr || "").slice(0, 200)}`);
+    let md = r.stdout;
+    try { const j = JSON.parse(r.stdout); md = j.markdown ?? j.content ?? j.rawContent ?? (j.results?.[0]?.content) ?? r.stdout; } catch { /* keep raw */ }
+    fs.writeFileSync(outFile, md);
+    return "linkup";
+  }
+  const dir = path.dirname(outFile);
+  const r = spawnSync("docker", ["run", "--rm", "-e", "CRAWL4AI_NO_CLOUD_NOTICE=1", "-v", `${dir}:/out`, "--entrypoint", "crwl", "unclecode/crawl4ai:latest", "crawl", url, "-o", "markdown", "-O", `/out/${path.basename(outFile)}`], { stdio: ["ignore", "ignore", "pipe"], windowsHide: true });
+  if (r.status !== 0 || !fs.existsSync(outFile)) die(`crawl4ai failed (exit ${r.status}): is Docker running and unclecode/crawl4ai pulled? (or set WEB_PROVIDER=linkup + LINKUP_API_KEY)`);
+  return "crawl4ai";
+}
+
+// Public documentation (vendor technical sheet, manual page) -> markdown, registered as evidence.
 function doc(target, url) {
   needTarget(target);
   if (!url || !/^https?:\/\//.test(url)) die("usage: doc <target> <https://public-doc-url>");
   const dir = path.join(evidenceDir(target), "docs");
   fs.mkdirSync(dir, { recursive: true });
   const name = `${new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z")}-${new URL(url).hostname}${new URL(url).pathname.replace(/[^A-Za-z0-9]+/g, "-")}.md`.replace(/-+\.md$/, ".md");
-  const r = spawnSync("docker", ["run", "--rm", "-e", "CRAWL4AI_NO_CLOUD_NOTICE=1", "-v", `${dir}:/out`, "--entrypoint", "crwl", "unclecode/crawl4ai:latest", "crawl", url, "-o", "markdown", "-O", `/out/${name}`], { stdio: ["ignore", "ignore", "pipe"], windowsHide: true });
   const out = path.join(dir, name);
-  if (r.status !== 0 || !fs.existsSync(out)) die(`crawl4ai failed (exit ${r.status}): is Docker running and the image unclecode/crawl4ai pulled?`);
+  const provider = fetchPageMarkdown(url, out);
   const sha = sha256File(out);
-  register(target, { id: `doc:${sha.slice(0, 16)}`, kind: "manual", tool: "crawl4ai", operation: "public-documentation", subject: { label: url }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes: fs.statSync(out).size, sha256: sha, summary: `public page captured as markdown: ${url}` });
-  console.log(`OK  doc  ${(fs.statSync(out).size / 1024).toFixed(0)} KB  doc:${sha.slice(0, 16)}  ${url}`);
+  register(target, { id: `doc:${sha.slice(0, 16)}`, kind: "manual", tool: provider, operation: "public-documentation", subject: { label: url }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes: fs.statSync(out).size, sha256: sha, summary: `public page captured as markdown via ${provider}: ${url}` });
+  console.log(`OK  doc (${provider})  ${(fs.statSync(out).size / 1024).toFixed(0)} KB  doc:${sha.slice(0, 16)}  ${url}`);
 }
 
 // Shipped UI definition files (resources, not code) -> screen candidates, registered as evidence.
@@ -526,6 +595,7 @@ switch (cmd) {
   case "craft": craft(t, argv); break;
   case "find": find(t, argv[0], argv[1]); break;
   case "ui": ui(t, argv[0]); break;
+  case "schema": schema(t, argv[0]); break;
   case "doc": doc(t, argv[0]); break;
   case "doctor": {
     const r = reaCommand();

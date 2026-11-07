@@ -1,0 +1,5062 @@
+{
+  "schema": "reborn/handoff@1",
+  "target": {
+    "id": "unicenta",
+    "name": "uniCenta oPOS",
+    "domain": "point of sale (retail and restaurant till)",
+    "kind": "exe",
+    "tech": "Java (Swing desktop), Openbravo POS lineage; ships HSQLDB and Derby create scripts; 1089 classes under com.openbravo.pos",
+    "legal": {
+      "basis": "GPL-3.0 licence (Openbravo POS / uniCenta lineage) explicitly allows studying and modifying the program.",
+      "clean_room": true,
+      "restrictions": [
+        "Do not reuse the uniCenta/Openbravo name, logo or theme in a rebuild."
+      ]
+    }
+  },
+  "generated_at": "2026-11-07T15:13:17.429Z",
+  "clean_room": true,
+  "readiness": {
+    "features": {
+      "partial": 1
+    },
+    "rules": {
+      "partial": 2
+    },
+    "entities": {
+      "confirmed": 40
+    },
+    "has_observed_values": false,
+    "open_questions": 2,
+    "note": "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values."
+  },
+  "to_observe": [
+    {
+      "feature": "F-001",
+      "grade": "partial",
+      "priority": "must",
+      "missing": [
+        "no acceptance scenario has observed expected values (run the feature and read them back)",
+        "rule R-001 has no worked example (capture one input/output pair)",
+        "rule R-001 is partial (confirm by observation)",
+        "rule R-002 has no worked example (capture one input/output pair)",
+        "rule R-002 is partial (confirm by observation)",
+        "screen S-001 has no screenshot (capture it)"
+      ],
+      "missions": [
+        "M-002",
+        "M-003"
+      ]
+    }
+  ],
+  "build_order": [
+    {
+      "kind": "entity",
+      "id": "Applications"
+    },
+    {
+      "kind": "entity",
+      "id": "Attribute"
+    },
+    {
+      "kind": "entity",
+      "id": "Attributeset"
+    },
+    {
+      "kind": "entity",
+      "id": "Attributesetinstance"
+    },
+    {
+      "kind": "entity",
+      "id": "Attributeinstance"
+    },
+    {
+      "kind": "entity",
+      "id": "Attributeuse"
+    },
+    {
+      "kind": "entity",
+      "id": "Attributevalue"
+    },
+    {
+      "kind": "entity",
+      "id": "Breaks"
+    },
+    {
+      "kind": "entity",
+      "id": "Categories"
+    },
+    {
+      "kind": "entity",
+      "id": "Closedcash"
+    },
+    {
+      "kind": "entity",
+      "id": "Csvimport"
+    },
+    {
+      "kind": "entity",
+      "id": "Taxcustcategories"
+    },
+    {
+      "kind": "entity",
+      "id": "Customers"
+    },
+    {
+      "kind": "entity",
+      "id": "Floors"
+    },
+    {
+      "kind": "entity",
+      "id": "Roles"
+    },
+    {
+      "kind": "entity",
+      "id": "People"
+    },
+    {
+      "kind": "entity",
+      "id": "Leaves"
+    },
+    {
+      "kind": "entity",
+      "id": "Locations"
+    },
+    {
+      "kind": "entity",
+      "id": "Moorers"
+    },
+    {
+      "kind": "entity",
+      "id": "Receipts"
+    },
+    {
+      "kind": "entity",
+      "id": "Payments"
+    },
+    {
+      "kind": "entity",
+      "id": "Places"
+    },
+    {
+      "kind": "entity",
+      "id": "Taxcategories"
+    },
+    {
+      "kind": "entity",
+      "id": "Products"
+    },
+    {
+      "kind": "entity",
+      "id": "ProductsCat"
+    },
+    {
+      "kind": "entity",
+      "id": "ProductsCom"
+    },
+    {
+      "kind": "entity",
+      "id": "Reservations"
+    },
+    {
+      "kind": "entity",
+      "id": "ReservationCustomers"
+    },
+    {
+      "kind": "entity",
+      "id": "Resources"
+    },
+    {
+      "kind": "entity",
+      "id": "Sharedtickets"
+    },
+    {
+      "kind": "entity",
+      "id": "Shifts"
+    },
+    {
+      "kind": "entity",
+      "id": "ShiftBreaks"
+    },
+    {
+      "kind": "entity",
+      "id": "Stockcurrent"
+    },
+    {
+      "kind": "entity",
+      "id": "Stockdiary"
+    },
+    {
+      "kind": "entity",
+      "id": "Stocklevel"
+    },
+    {
+      "kind": "entity",
+      "id": "Taxes"
+    },
+    {
+      "kind": "entity",
+      "id": "Taxlines"
+    },
+    {
+      "kind": "entity",
+      "id": "Thirdparties"
+    },
+    {
+      "kind": "entity",
+      "id": "Tickets"
+    },
+    {
+      "kind": "entity",
+      "id": "Ticketlines"
+    },
+    {
+      "kind": "rule",
+      "id": "R-001"
+    },
+    {
+      "kind": "rule",
+      "id": "R-002"
+    },
+    {
+      "kind": "feature",
+      "id": "F-001",
+      "priority": "must"
+    }
+  ],
+  "entities": [
+    {
+      "name": "Applications",
+      "description": "Table APPLICATIONS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "version",
+          "label": "",
+          "type": "string",
+          "observed_as": "VERSION",
+          "required": true,
+          "max_length": 255
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "APPLICATIONS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE APPLICATIONS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Attribute",
+      "description": "Table ATTRIBUTE from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "ATTRIBUTE"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE ATTRIBUTE",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Attributeinstance",
+      "description": "Table ATTRIBUTEINSTANCE from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "attributesetinstance_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTESETINSTANCE_ID",
+          "required": true,
+          "ref": "Attributesetinstance"
+        },
+        {
+          "name": "attribute_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTE_ID",
+          "required": true,
+          "ref": "Attribute"
+        },
+        {
+          "name": "value",
+          "label": "",
+          "type": "string",
+          "observed_as": "VALUE",
+          "max_length": 255
+        }
+      ],
+      "relations": [
+        {
+          "to": "Attributesetinstance",
+          "kind": "many-to-one",
+          "via": "attributesetinstance_id"
+        },
+        {
+          "to": "Attribute",
+          "kind": "many-to-one",
+          "via": "attribute_id"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "ATTRIBUTEINSTANCE"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE ATTRIBUTEINSTANCE",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Attributeset",
+      "description": "Table ATTRIBUTESET from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "ATTRIBUTESET"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE ATTRIBUTESET",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Attributesetinstance",
+      "description": "Table ATTRIBUTESETINSTANCE from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "attributeset_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTESET_ID",
+          "required": true,
+          "ref": "Attributeset"
+        },
+        {
+          "name": "description",
+          "label": "",
+          "type": "string",
+          "observed_as": "DESCRIPTION",
+          "max_length": 255
+        }
+      ],
+      "relations": [
+        {
+          "to": "Attributeset",
+          "kind": "many-to-one",
+          "via": "attributeset_id"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "ATTRIBUTESETINSTANCE"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE ATTRIBUTESETINSTANCE",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Attributeuse",
+      "description": "Table ATTRIBUTEUSE from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "attributeset_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTESET_ID",
+          "required": true,
+          "ref": "Attributeset"
+        },
+        {
+          "name": "attribute_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTE_ID",
+          "required": true,
+          "ref": "Attribute"
+        },
+        {
+          "name": "lineno",
+          "label": "",
+          "type": "integer",
+          "observed_as": "LINENO"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Attributeset",
+          "kind": "many-to-one",
+          "via": "attributeset_id"
+        },
+        {
+          "to": "Attribute",
+          "kind": "many-to-one",
+          "via": "attribute_id"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "ATTRIBUTEUSE"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE ATTRIBUTEUSE",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Attributevalue",
+      "description": "Table ATTRIBUTEVALUE from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "attribute_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTE_ID",
+          "required": true,
+          "ref": "Attribute"
+        },
+        {
+          "name": "value",
+          "label": "",
+          "type": "string",
+          "observed_as": "VALUE",
+          "max_length": 255
+        }
+      ],
+      "relations": [
+        {
+          "to": "Attribute",
+          "kind": "many-to-one",
+          "via": "attribute_id"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "ATTRIBUTEVALUE"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE ATTRIBUTEVALUE",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Breaks",
+      "description": "Table BREAKS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "notes",
+          "label": "",
+          "type": "string",
+          "observed_as": "NOTES",
+          "max_length": 255
+        },
+        {
+          "name": "visible",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "VISIBLE",
+          "required": true
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "BREAKS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE BREAKS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "description": "Table CATEGORIES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "parentid",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PARENTID",
+          "ref": "Categories"
+        },
+        {
+          "name": "image",
+          "label": "",
+          "type": "file",
+          "observed_as": "IMAGE"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Categories",
+          "kind": "many-to-one",
+          "via": "parentid"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "CATEGORIES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE CATEGORIES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Closedcash",
+      "description": "Table CLOSEDCASH from the shipped database schema.",
+      "fields": [
+        {
+          "name": "money",
+          "label": "",
+          "type": "string",
+          "observed_as": "MONEY",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "host",
+          "label": "",
+          "type": "string",
+          "observed_as": "HOST",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "hostsequence",
+          "label": "",
+          "type": "integer",
+          "observed_as": "HOSTSEQUENCE",
+          "required": true
+        },
+        {
+          "name": "datestart",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "DATESTART",
+          "required": true
+        },
+        {
+          "name": "dateend",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "DATEEND"
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "CLOSEDCASH"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE CLOSEDCASH",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Csvimport",
+      "description": "Table csvimport from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "id",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "rownumber",
+          "label": "",
+          "type": "string",
+          "observed_as": "rownumber",
+          "max_length": 255
+        },
+        {
+          "name": "csverror",
+          "label": "",
+          "type": "string",
+          "observed_as": "csverror",
+          "max_length": 255
+        },
+        {
+          "name": "reference",
+          "label": "",
+          "type": "string",
+          "observed_as": "reference",
+          "max_length": 255
+        },
+        {
+          "name": "code",
+          "label": "",
+          "type": "string",
+          "observed_as": "code",
+          "max_length": 255
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "name",
+          "max_length": 255
+        },
+        {
+          "name": "pricebuy",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "pricebuy"
+        },
+        {
+          "name": "pricesell",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "pricesell"
+        },
+        {
+          "name": "previousbuy",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "previousbuy"
+        },
+        {
+          "name": "previoussell",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "previoussell"
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "csvimport"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE csvimport",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "description": "Table CUSTOMERS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "searchkey",
+          "label": "",
+          "type": "string",
+          "observed_as": "SEARCHKEY",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "taxid",
+          "label": "",
+          "type": "string",
+          "observed_as": "TAXID",
+          "max_length": 255
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "taxcategory",
+          "label": "",
+          "type": "ref",
+          "observed_as": "TAXCATEGORY",
+          "ref": "Taxcustcategories"
+        },
+        {
+          "name": "card",
+          "label": "",
+          "type": "string",
+          "observed_as": "CARD",
+          "max_length": 255
+        },
+        {
+          "name": "maxdebt",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "MAXDEBT",
+          "required": true
+        },
+        {
+          "name": "address",
+          "label": "",
+          "type": "string",
+          "observed_as": "ADDRESS",
+          "max_length": 255
+        },
+        {
+          "name": "address2",
+          "label": "",
+          "type": "string",
+          "observed_as": "ADDRESS2",
+          "max_length": 255
+        },
+        {
+          "name": "postal",
+          "label": "",
+          "type": "string",
+          "observed_as": "POSTAL",
+          "max_length": 255
+        },
+        {
+          "name": "city",
+          "label": "",
+          "type": "string",
+          "observed_as": "CITY",
+          "max_length": 255
+        },
+        {
+          "name": "region",
+          "label": "",
+          "type": "string",
+          "observed_as": "REGION",
+          "max_length": 255
+        },
+        {
+          "name": "country",
+          "label": "",
+          "type": "string",
+          "observed_as": "COUNTRY",
+          "max_length": 255
+        },
+        {
+          "name": "firstname",
+          "label": "",
+          "type": "string",
+          "observed_as": "FIRSTNAME",
+          "max_length": 255
+        },
+        {
+          "name": "lastname",
+          "label": "",
+          "type": "string",
+          "observed_as": "LASTNAME",
+          "max_length": 255
+        },
+        {
+          "name": "email",
+          "label": "",
+          "type": "string",
+          "observed_as": "EMAIL",
+          "max_length": 255
+        },
+        {
+          "name": "phone",
+          "label": "",
+          "type": "string",
+          "observed_as": "PHONE",
+          "max_length": 255
+        },
+        {
+          "name": "phone2",
+          "label": "",
+          "type": "string",
+          "observed_as": "PHONE2",
+          "max_length": 255
+        },
+        {
+          "name": "fax",
+          "label": "",
+          "type": "string",
+          "observed_as": "FAX",
+          "max_length": 255
+        },
+        {
+          "name": "notes",
+          "label": "",
+          "type": "string",
+          "observed_as": "NOTES",
+          "max_length": 255
+        },
+        {
+          "name": "visible",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "VISIBLE",
+          "required": true
+        },
+        {
+          "name": "curdate",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "CURDATE"
+        },
+        {
+          "name": "curdebt",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "CURDEBT"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Taxcustcategories",
+          "kind": "many-to-one",
+          "via": "taxcategory"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "CUSTOMERS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE CUSTOMERS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Floors",
+      "description": "Table FLOORS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "image",
+          "label": "",
+          "type": "file",
+          "observed_as": "IMAGE"
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "FLOORS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE FLOORS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Leaves",
+      "description": "Table LEAVES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "pplid",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PPLID",
+          "required": true,
+          "ref": "People"
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "startdate",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "STARTDATE",
+          "required": true
+        },
+        {
+          "name": "enddate",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "ENDDATE",
+          "required": true
+        },
+        {
+          "name": "notes",
+          "label": "",
+          "type": "string",
+          "observed_as": "NOTES",
+          "max_length": 255
+        }
+      ],
+      "relations": [
+        {
+          "to": "People",
+          "kind": "many-to-one",
+          "via": "pplid"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "LEAVES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE LEAVES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Locations",
+      "description": "Table LOCATIONS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "address",
+          "label": "",
+          "type": "string",
+          "observed_as": "ADDRESS",
+          "max_length": 255
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "LOCATIONS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE LOCATIONS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Moorers",
+      "description": "Table moorers from the shipped database schema.",
+      "fields": [
+        {
+          "name": "vesselname",
+          "label": "",
+          "type": "string",
+          "observed_as": "VesselName",
+          "max_length": 255
+        },
+        {
+          "name": "size",
+          "label": "",
+          "type": "integer",
+          "observed_as": "size"
+        },
+        {
+          "name": "days",
+          "label": "",
+          "type": "integer",
+          "observed_as": "days"
+        },
+        {
+          "name": "power",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "power",
+          "required": true
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "moorers"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE moorers",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "description": "Table PAYMENTS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "receipt",
+          "label": "",
+          "type": "ref",
+          "observed_as": "RECEIPT",
+          "required": true,
+          "ref": "Receipts"
+        },
+        {
+          "name": "payment",
+          "label": "",
+          "type": "string",
+          "observed_as": "PAYMENT",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "total",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "TOTAL",
+          "required": true
+        },
+        {
+          "name": "transid",
+          "label": "",
+          "type": "string",
+          "observed_as": "TRANSID",
+          "max_length": 255
+        },
+        {
+          "name": "returnmsg",
+          "label": "",
+          "type": "file",
+          "observed_as": "RETURNMSG"
+        },
+        {
+          "name": "notes",
+          "label": "",
+          "type": "string",
+          "observed_as": "NOTES",
+          "max_length": 255
+        }
+      ],
+      "relations": [
+        {
+          "to": "Receipts",
+          "kind": "many-to-one",
+          "via": "receipt"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "PAYMENTS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE PAYMENTS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "People",
+      "description": "Table PEOPLE from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "apppassword",
+          "label": "",
+          "type": "string",
+          "observed_as": "APPPASSWORD",
+          "max_length": 255
+        },
+        {
+          "name": "card",
+          "label": "",
+          "type": "string",
+          "observed_as": "CARD",
+          "max_length": 255
+        },
+        {
+          "name": "role",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ROLE",
+          "required": true,
+          "ref": "Roles"
+        },
+        {
+          "name": "visible",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "VISIBLE",
+          "required": true
+        },
+        {
+          "name": "image",
+          "label": "",
+          "type": "file",
+          "observed_as": "IMAGE"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Roles",
+          "kind": "many-to-one",
+          "via": "role"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "PEOPLE"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE PEOPLE",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Places",
+      "description": "Table PLACES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "x",
+          "label": "",
+          "type": "integer",
+          "observed_as": "X",
+          "required": true
+        },
+        {
+          "name": "y",
+          "label": "",
+          "type": "integer",
+          "observed_as": "Y",
+          "required": true
+        },
+        {
+          "name": "floor",
+          "label": "",
+          "type": "ref",
+          "observed_as": "FLOOR",
+          "required": true,
+          "ref": "Floors"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Floors",
+          "kind": "many-to-one",
+          "via": "floor"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "PLACES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE PLACES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "description": "Table PRODUCTS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "reference",
+          "label": "",
+          "type": "string",
+          "observed_as": "REFERENCE",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "code",
+          "label": "",
+          "type": "string",
+          "observed_as": "CODE",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "codetype",
+          "label": "",
+          "type": "string",
+          "observed_as": "CODETYPE",
+          "max_length": 255
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "pricebuy",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "PRICEBUY",
+          "required": true
+        },
+        {
+          "name": "pricesell",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "PRICESELL",
+          "required": true
+        },
+        {
+          "name": "category",
+          "label": "",
+          "type": "ref",
+          "observed_as": "CATEGORY",
+          "required": true,
+          "ref": "Categories"
+        },
+        {
+          "name": "taxcat",
+          "label": "",
+          "type": "ref",
+          "observed_as": "TAXCAT",
+          "required": true,
+          "ref": "Taxcategories"
+        },
+        {
+          "name": "attributeset_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTESET_ID",
+          "ref": "Attributeset"
+        },
+        {
+          "name": "stockcost",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "STOCKCOST"
+        },
+        {
+          "name": "stockvolume",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "STOCKVOLUME"
+        },
+        {
+          "name": "image",
+          "label": "",
+          "type": "file",
+          "observed_as": "IMAGE"
+        },
+        {
+          "name": "iscom",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "ISCOM",
+          "required": true
+        },
+        {
+          "name": "isscale",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "ISSCALE",
+          "required": true
+        },
+        {
+          "name": "iskitchen",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "ISKITCHEN",
+          "required": true
+        },
+        {
+          "name": "printkb",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "PRINTKB",
+          "required": true
+        },
+        {
+          "name": "sendstatus",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "SENDSTATUS",
+          "required": true
+        },
+        {
+          "name": "isservice",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "ISSERVICE",
+          "required": true
+        },
+        {
+          "name": "attributes",
+          "label": "",
+          "type": "file",
+          "observed_as": "ATTRIBUTES"
+        },
+        {
+          "name": "display",
+          "label": "",
+          "type": "string",
+          "observed_as": "DISPLAY",
+          "max_length": 255
+        }
+      ],
+      "relations": [
+        {
+          "to": "Categories",
+          "kind": "many-to-one",
+          "via": "category"
+        },
+        {
+          "to": "Taxcategories",
+          "kind": "many-to-one",
+          "via": "taxcat"
+        },
+        {
+          "to": "Attributeset",
+          "kind": "many-to-one",
+          "via": "attributeset_id"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "PRODUCTS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE PRODUCTS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "ProductsCat",
+      "description": "Table PRODUCTS_CAT from the shipped database schema.",
+      "fields": [
+        {
+          "name": "product",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PRODUCT",
+          "required": true,
+          "unique": true,
+          "ref": "Products"
+        },
+        {
+          "name": "catorder",
+          "label": "",
+          "type": "integer",
+          "observed_as": "CATORDER"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Products",
+          "kind": "many-to-one",
+          "via": "product"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "PRODUCTS_CAT"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE PRODUCTS_CAT",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "ProductsCom",
+      "description": "Table PRODUCTS_COM from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "product",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PRODUCT",
+          "required": true,
+          "ref": "Products"
+        },
+        {
+          "name": "product2",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PRODUCT2",
+          "required": true,
+          "ref": "Products"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Products",
+          "kind": "many-to-one",
+          "via": "product"
+        },
+        {
+          "to": "Products",
+          "kind": "many-to-one",
+          "via": "product2"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "PRODUCTS_COM"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE PRODUCTS_COM",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Receipts",
+      "description": "Table RECEIPTS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "money",
+          "label": "",
+          "type": "ref",
+          "observed_as": "MONEY",
+          "required": true,
+          "ref": "Closedcash"
+        },
+        {
+          "name": "datenew",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "DATENEW",
+          "required": true
+        },
+        {
+          "name": "attributes",
+          "label": "",
+          "type": "file",
+          "observed_as": "ATTRIBUTES"
+        },
+        {
+          "name": "person",
+          "label": "",
+          "type": "string",
+          "observed_as": "PERSON",
+          "max_length": 255
+        }
+      ],
+      "relations": [
+        {
+          "to": "Closedcash",
+          "kind": "many-to-one",
+          "via": "money"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "RECEIPTS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE RECEIPTS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "ReservationCustomers",
+      "description": "Table RESERVATION_CUSTOMERS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ID",
+          "required": true,
+          "unique": true,
+          "ref": "Reservations"
+        },
+        {
+          "name": "customer",
+          "label": "",
+          "type": "ref",
+          "observed_as": "CUSTOMER",
+          "required": true,
+          "ref": "Customers"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Reservations",
+          "kind": "many-to-one",
+          "via": "id"
+        },
+        {
+          "to": "Customers",
+          "kind": "many-to-one",
+          "via": "customer"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "RESERVATION_CUSTOMERS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE RESERVATION_CUSTOMERS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "description": "Table RESERVATIONS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "created",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "CREATED",
+          "required": true
+        },
+        {
+          "name": "datenew",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "DATENEW",
+          "required": true
+        },
+        {
+          "name": "title",
+          "label": "",
+          "type": "string",
+          "observed_as": "TITLE",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "chairs",
+          "label": "",
+          "type": "integer",
+          "observed_as": "CHAIRS",
+          "required": true
+        },
+        {
+          "name": "isdone",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "ISDONE",
+          "required": true
+        },
+        {
+          "name": "description",
+          "label": "",
+          "type": "string",
+          "observed_as": "DESCRIPTION",
+          "max_length": 255
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "RESERVATIONS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE RESERVATIONS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Resources",
+      "description": "Table RESOURCES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "restype",
+          "label": "",
+          "type": "integer",
+          "observed_as": "RESTYPE",
+          "required": true
+        },
+        {
+          "name": "content",
+          "label": "",
+          "type": "file",
+          "observed_as": "CONTENT"
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "RESOURCES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE RESOURCES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "description": "Table ROLES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "permissions",
+          "label": "",
+          "type": "file",
+          "observed_as": "PERMISSIONS"
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "ROLES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE ROLES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Sharedtickets",
+      "description": "Table SHAREDTICKETS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "content",
+          "label": "",
+          "type": "file",
+          "observed_as": "CONTENT"
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "SHAREDTICKETS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE SHAREDTICKETS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "ShiftBreaks",
+      "description": "Table SHIFT_BREAKS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "shiftid",
+          "label": "",
+          "type": "ref",
+          "observed_as": "SHIFTID",
+          "required": true,
+          "ref": "Shifts"
+        },
+        {
+          "name": "breakid",
+          "label": "",
+          "type": "ref",
+          "observed_as": "BREAKID",
+          "required": true,
+          "ref": "Breaks"
+        },
+        {
+          "name": "starttime",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "STARTTIME",
+          "required": true
+        },
+        {
+          "name": "endtime",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "ENDTIME"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Breaks",
+          "kind": "many-to-one",
+          "via": "breakid"
+        },
+        {
+          "to": "Shifts",
+          "kind": "many-to-one",
+          "via": "shiftid"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "SHIFT_BREAKS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE SHIFT_BREAKS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Shifts",
+      "description": "Table SHIFTS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "startshift",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "STARTSHIFT",
+          "required": true
+        },
+        {
+          "name": "endshift",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "ENDSHIFT"
+        },
+        {
+          "name": "pplid",
+          "label": "",
+          "type": "string",
+          "observed_as": "PPLID",
+          "required": true,
+          "max_length": 255
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "SHIFTS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE SHIFTS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Stockcurrent",
+      "description": "Table STOCKCURRENT from the shipped database schema.",
+      "fields": [
+        {
+          "name": "location",
+          "label": "",
+          "type": "ref",
+          "observed_as": "LOCATION",
+          "required": true,
+          "ref": "Locations"
+        },
+        {
+          "name": "product",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PRODUCT",
+          "required": true,
+          "ref": "Products"
+        },
+        {
+          "name": "attributesetinstance_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTESETINSTANCE_ID",
+          "ref": "Attributesetinstance"
+        },
+        {
+          "name": "units",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "UNITS",
+          "required": true
+        }
+      ],
+      "relations": [
+        {
+          "to": "Products",
+          "kind": "many-to-one",
+          "via": "product"
+        },
+        {
+          "to": "Attributesetinstance",
+          "kind": "many-to-one",
+          "via": "attributesetinstance_id"
+        },
+        {
+          "to": "Locations",
+          "kind": "many-to-one",
+          "via": "location"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "STOCKCURRENT"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE STOCKCURRENT",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Stockdiary",
+      "description": "Table STOCKDIARY from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "datenew",
+          "label": "",
+          "type": "datetime",
+          "observed_as": "DATENEW",
+          "required": true
+        },
+        {
+          "name": "reason",
+          "label": "",
+          "type": "integer",
+          "observed_as": "REASON",
+          "required": true
+        },
+        {
+          "name": "location",
+          "label": "",
+          "type": "ref",
+          "observed_as": "LOCATION",
+          "required": true,
+          "ref": "Locations"
+        },
+        {
+          "name": "product",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PRODUCT",
+          "required": true,
+          "ref": "Products"
+        },
+        {
+          "name": "attributesetinstance_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTESETINSTANCE_ID",
+          "ref": "Attributesetinstance"
+        },
+        {
+          "name": "units",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "UNITS",
+          "required": true
+        },
+        {
+          "name": "price",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "PRICE",
+          "required": true
+        }
+      ],
+      "relations": [
+        {
+          "to": "Products",
+          "kind": "many-to-one",
+          "via": "product"
+        },
+        {
+          "to": "Attributesetinstance",
+          "kind": "many-to-one",
+          "via": "attributesetinstance_id"
+        },
+        {
+          "to": "Locations",
+          "kind": "many-to-one",
+          "via": "location"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "STOCKDIARY"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE STOCKDIARY",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Stocklevel",
+      "description": "Table STOCKLEVEL from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "location",
+          "label": "",
+          "type": "ref",
+          "observed_as": "LOCATION",
+          "required": true,
+          "ref": "Locations"
+        },
+        {
+          "name": "product",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PRODUCT",
+          "required": true,
+          "ref": "Products"
+        },
+        {
+          "name": "stocksecurity",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "STOCKSECURITY"
+        },
+        {
+          "name": "stockmaximum",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "STOCKMAXIMUM"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Products",
+          "kind": "many-to-one",
+          "via": "product"
+        },
+        {
+          "to": "Locations",
+          "kind": "many-to-one",
+          "via": "location"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "STOCKLEVEL"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE STOCKLEVEL",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Taxcategories",
+      "description": "Table TAXCATEGORIES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "TAXCATEGORIES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE TAXCATEGORIES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Taxcustcategories",
+      "description": "Table TAXCUSTCATEGORIES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "TAXCUSTCATEGORIES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE TAXCUSTCATEGORIES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Taxes",
+      "description": "Table TAXES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "category",
+          "label": "",
+          "type": "ref",
+          "observed_as": "CATEGORY",
+          "required": true,
+          "ref": "Taxcategories"
+        },
+        {
+          "name": "custcategory",
+          "label": "",
+          "type": "ref",
+          "observed_as": "CUSTCATEGORY",
+          "ref": "Taxcustcategories"
+        },
+        {
+          "name": "parentid",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PARENTID",
+          "ref": "Taxes"
+        },
+        {
+          "name": "rate",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "RATE",
+          "required": true
+        },
+        {
+          "name": "ratecascade",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "RATECASCADE",
+          "required": true
+        },
+        {
+          "name": "rateorder",
+          "label": "",
+          "type": "integer",
+          "observed_as": "RATEORDER"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Taxcategories",
+          "kind": "many-to-one",
+          "via": "category"
+        },
+        {
+          "to": "Taxcustcategories",
+          "kind": "many-to-one",
+          "via": "custcategory"
+        },
+        {
+          "to": "Taxes",
+          "kind": "many-to-one",
+          "via": "parentid"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "TAXES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE TAXES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Taxlines",
+      "description": "Table TAXLINES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "receipt",
+          "label": "",
+          "type": "ref",
+          "observed_as": "RECEIPT",
+          "required": true,
+          "ref": "Receipts"
+        },
+        {
+          "name": "taxid",
+          "label": "",
+          "type": "ref",
+          "observed_as": "TAXID",
+          "required": true,
+          "ref": "Taxes"
+        },
+        {
+          "name": "base",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "BASE",
+          "required": true
+        },
+        {
+          "name": "amount",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "AMOUNT",
+          "required": true
+        }
+      ],
+      "relations": [
+        {
+          "to": "Taxes",
+          "kind": "many-to-one",
+          "via": "taxid"
+        },
+        {
+          "to": "Receipts",
+          "kind": "many-to-one",
+          "via": "receipt"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "TAXLINES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE TAXLINES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Thirdparties",
+      "description": "Table THIRDPARTIES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "string",
+          "observed_as": "ID",
+          "required": true,
+          "max_length": 255,
+          "unique": true
+        },
+        {
+          "name": "cif",
+          "label": "",
+          "type": "string",
+          "observed_as": "CIF",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "name",
+          "label": "",
+          "type": "string",
+          "observed_as": "NAME",
+          "required": true,
+          "max_length": 255
+        },
+        {
+          "name": "address",
+          "label": "",
+          "type": "string",
+          "observed_as": "ADDRESS",
+          "max_length": 255
+        },
+        {
+          "name": "contactcomm",
+          "label": "",
+          "type": "string",
+          "observed_as": "CONTACTCOMM",
+          "max_length": 255
+        },
+        {
+          "name": "contactfact",
+          "label": "",
+          "type": "string",
+          "observed_as": "CONTACTFACT",
+          "max_length": 255
+        },
+        {
+          "name": "payrule",
+          "label": "",
+          "type": "string",
+          "observed_as": "PAYRULE",
+          "max_length": 255
+        },
+        {
+          "name": "faxnumber",
+          "label": "",
+          "type": "string",
+          "observed_as": "FAXNUMBER",
+          "max_length": 255
+        },
+        {
+          "name": "phonenumber",
+          "label": "",
+          "type": "string",
+          "observed_as": "PHONENUMBER",
+          "max_length": 255
+        },
+        {
+          "name": "mobilenumber",
+          "label": "",
+          "type": "string",
+          "observed_as": "MOBILENUMBER",
+          "max_length": 255
+        },
+        {
+          "name": "email",
+          "label": "",
+          "type": "string",
+          "observed_as": "EMAIL",
+          "max_length": 255
+        },
+        {
+          "name": "webpage",
+          "label": "",
+          "type": "string",
+          "observed_as": "WEBPAGE",
+          "max_length": 255
+        },
+        {
+          "name": "notes",
+          "label": "",
+          "type": "string",
+          "observed_as": "NOTES",
+          "max_length": 255
+        }
+      ],
+      "relations": [],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "THIRDPARTIES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE THIRDPARTIES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Ticketlines",
+      "description": "Table TICKETLINES from the shipped database schema.",
+      "fields": [
+        {
+          "name": "ticket",
+          "label": "",
+          "type": "ref",
+          "observed_as": "TICKET",
+          "required": true,
+          "ref": "Tickets"
+        },
+        {
+          "name": "line",
+          "label": "",
+          "type": "integer",
+          "observed_as": "LINE",
+          "required": true
+        },
+        {
+          "name": "product",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PRODUCT",
+          "ref": "Products"
+        },
+        {
+          "name": "attributesetinstance_id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ATTRIBUTESETINSTANCE_ID",
+          "ref": "Attributesetinstance"
+        },
+        {
+          "name": "units",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "UNITS",
+          "required": true
+        },
+        {
+          "name": "price",
+          "label": "",
+          "type": "decimal",
+          "observed_as": "PRICE",
+          "required": true
+        },
+        {
+          "name": "taxid",
+          "label": "",
+          "type": "ref",
+          "observed_as": "TAXID",
+          "required": true,
+          "ref": "Taxes"
+        },
+        {
+          "name": "attributes",
+          "label": "",
+          "type": "file",
+          "observed_as": "ATTRIBUTES"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Tickets",
+          "kind": "many-to-one",
+          "via": "ticket"
+        },
+        {
+          "to": "Products",
+          "kind": "many-to-one",
+          "via": "product"
+        },
+        {
+          "to": "Attributesetinstance",
+          "kind": "many-to-one",
+          "via": "attributesetinstance_id"
+        },
+        {
+          "to": "Taxes",
+          "kind": "many-to-one",
+          "via": "taxid"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "TICKETLINES"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE TICKETLINES",
+          "note": "shipped SQL create script"
+        }
+      ]
+    },
+    {
+      "name": "Tickets",
+      "description": "Table TICKETS from the shipped database schema.",
+      "fields": [
+        {
+          "name": "id",
+          "label": "",
+          "type": "ref",
+          "observed_as": "ID",
+          "required": true,
+          "unique": true,
+          "ref": "Receipts"
+        },
+        {
+          "name": "tickettype",
+          "label": "",
+          "type": "integer",
+          "observed_as": "TICKETTYPE",
+          "required": true
+        },
+        {
+          "name": "ticketid",
+          "label": "",
+          "type": "integer",
+          "observed_as": "TICKETID",
+          "required": true
+        },
+        {
+          "name": "person",
+          "label": "",
+          "type": "ref",
+          "observed_as": "PERSON",
+          "required": true,
+          "ref": "People"
+        },
+        {
+          "name": "customer",
+          "label": "",
+          "type": "ref",
+          "observed_as": "CUSTOMER",
+          "ref": "Customers"
+        },
+        {
+          "name": "status",
+          "label": "",
+          "type": "integer",
+          "observed_as": "STATUS",
+          "required": true
+        }
+      ],
+      "relations": [
+        {
+          "to": "Receipts",
+          "kind": "many-to-one",
+          "via": "id"
+        },
+        {
+          "to": "People",
+          "kind": "many-to-one",
+          "via": "person"
+        },
+        {
+          "to": "Customers",
+          "kind": "many-to-one",
+          "via": "customer"
+        }
+      ],
+      "storage": {
+        "engine": "HSQLDB",
+        "observed_table": "TICKETS"
+      },
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "CREATE TABLE TICKETS",
+          "note": "shipped SQL create script"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "R-001",
+      "title": "Ticket line and ticket totals",
+      "kind": "computation",
+      "statement": "A ticket line total is units times unit price. The ticket total is the sum of its line totals plus the tax computed per tax rate. Each line references one tax (TICKETLINES.TAXID -> TAXES.RATE).",
+      "formula": "line_base  = TICKETLINES.UNITS * TICKETLINES.PRICE\nline_tax   = line_base * TAXES.RATE                 # per line's tax\nticket_base = sum(line_base)\nticket_tax  = sum(line_tax)                          # stored per rate in TAXLINES (BASE, AMOUNT)\nticket_total = ticket_base + ticket_tax\n",
+      "applies_to": [
+        "Ticketlines.units",
+        "Ticketlines.price",
+        "Taxes.rate",
+        "Taxlines.base",
+        "Taxlines.amount"
+      ],
+      "features": [
+        "F-001"
+      ],
+      "examples": [],
+      "status": "partial",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "TICKETLINES(UNITS DOUBLE, PRICE DOUBLE, TAXID->TAXES); TAXES(RATE DOUBLE, RATECASCADE, RATEORDER); TAXLINES(BASE, AMOUNT)",
+          "note": "shipped schema shows the computation chain"
+        }
+      ],
+      "contradictions": [],
+      "notes": "The schema proves the data path. Exact rounding (per line vs per ticket) and the RATECASCADE / RATEORDER compound-tax order are NOT yet observed: a run is needed. Amounts are DOUBLE in storage; a rebuild should still compute in integer minor units or a decimal type and confirm the rounding against an observed ticket."
+    },
+    {
+      "id": "R-002",
+      "title": "Payment and change",
+      "kind": "computation",
+      "statement": "A ticket is settled by one or more payments (cash, card, ...). The total paid must cover the ticket total; for cash, the change is the tendered amount minus the ticket total.",
+      "formula": "paid = sum(PAYMENTS.TOTAL for the receipt)\nchange = tendered_cash - ticket_total        # cash only\nsettled when paid >= ticket_total\n",
+      "applies_to": [
+        "Payments.total"
+      ],
+      "features": [
+        "F-001"
+      ],
+      "examples": [],
+      "status": "partial",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "PAYMENTS(RECEIPT->RECEIPTS, PAYMENT type, TOTAL DOUBLE); RECEIPTS one per ticket",
+          "note": "shipped schema"
+        }
+      ],
+      "contradictions": []
+    }
+  ],
+  "screens": [
+    {
+      "id": "S-001",
+      "title": "Sale screen (till)",
+      "purpose": "Ring up a ticket: pick products, see the lines and totals, take payment.",
+      "kind": "pos-pad",
+      "screenshots": [],
+      "layout": "Product pad/catalog on one side, the ticket lines grid with units/price/total in the middle, totals and the payment buttons at the bottom. (Inferred from the class names and the data model; confirm by a run.)",
+      "fields": [
+        {
+          "label": "Product",
+          "control": "grid",
+          "binds": "Ticketlines.product"
+        },
+        {
+          "label": "Units",
+          "control": "number",
+          "binds": "Ticketlines.units"
+        },
+        {
+          "label": "Price",
+          "control": "money",
+          "binds": "Ticketlines.price"
+        },
+        {
+          "label": "Total",
+          "control": "display"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Add product"
+        },
+        {
+          "label": "Payment",
+          "triggers": "F-001"
+        },
+        {
+          "label": "Delete line"
+        }
+      ],
+      "states": [
+        "editing",
+        "paid"
+      ],
+      "status": "hypothesis",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "TICKETS / TICKETLINES / PAYMENTS tables",
+          "note": "data model; the Swing screen itself not yet captured (U-001)"
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "id": "F-001",
+      "title": "Ring up a ticket and take payment",
+      "module": "Sales",
+      "priority": "must",
+      "status": "partial",
+      "confidence": "medium",
+      "user_goal": "As a cashier, I add products to a ticket, see the total with tax, take payment and get the change, so the sale is recorded.",
+      "actors": [
+        "cashier"
+      ],
+      "entry_points": [
+        {
+          "screen": "S-001",
+          "action": "Sale screen"
+        }
+      ],
+      "preconditions": [
+        "at least one product with a price and a tax category exists",
+        "a cash session is open (CLOSEDCASH)"
+      ],
+      "inputs": [
+        {
+          "label": "Product",
+          "field": "Ticketlines.product",
+          "type": "ref",
+          "required": true
+        },
+        {
+          "label": "Units",
+          "field": "Ticketlines.units",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "label": "Tendered",
+          "field": "Payments.total",
+          "type": "decimal"
+        }
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "actor": "user",
+          "does": "adds one or more products (each becomes a ticket line)",
+          "screen": "S-001"
+        },
+        {
+          "n": 2,
+          "actor": "system",
+          "does": "computes line totals and the ticket total with tax",
+          "rules": [
+            "R-001"
+          ]
+        },
+        {
+          "n": 3,
+          "actor": "user",
+          "does": "chooses a payment method and tenders an amount"
+        },
+        {
+          "n": 4,
+          "actor": "system",
+          "does": "computes change, records receipt, payment and tax lines",
+          "rules": [
+            "R-002"
+          ]
+        }
+      ],
+      "rules": [
+        "R-001",
+        "R-002"
+      ],
+      "outputs": [
+        {
+          "kind": "data-change",
+          "description": "ticket, ticket lines, receipt, payment(s) and tax lines stored",
+          "entities": [
+            "Tickets",
+            "Ticketlines",
+            "Receipts",
+            "Payments",
+            "Taxlines"
+          ]
+        },
+        {
+          "kind": "print",
+          "description": "customer ticket/receipt"
+        }
+      ],
+      "screens": [
+        "S-001"
+      ],
+      "entities": [
+        "Tickets",
+        "Ticketlines",
+        "Receipts",
+        "Payments",
+        "Taxlines",
+        "Products",
+        "Taxes"
+      ],
+      "acceptance": [
+        {
+          "id": "AC-001",
+          "given": "a product at 10.00 with a 20% tax, cash session open",
+          "when": "the cashier adds 3 units and tenders 40.00 cash",
+          "then": "ticket base 30.00, tax 6.00, total 36.00, change 4.00",
+          "expected_values": {}
+        }
+      ],
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "TICKETS, TICKETLINES, RECEIPTS, PAYMENTS, TAXLINES, TAXES.RATE",
+          "note": "shipped schema"
+        }
+      ],
+      "unknowns": [
+        "U-001",
+        "U-002"
+      ],
+      "rebuild_notes": "Data model is confirmed from the shipped schema. Build Ticket -> TicketLine (units, price, tax) -> Receipt -> Payment/TaxLine. Compute totals per R-001 but confirm the rounding and the RATECASCADE compound-tax order from an observed ticket before finalising. The sale screen (S-001) is a Swing panel built in code: capture it by a run.",
+      "discovery_trace": {
+        "grade": "partial",
+        "confidence": "medium",
+        "evidence": [
+          {
+            "ref": "sql:6ae1364b7d43e617",
+            "kind": "rea",
+            "locator": "TICKETS, TICKETLINES, RECEIPTS, PAYMENTS, TAXLINES, TAXES.RATE"
+          }
+        ],
+        "steps": [
+          {
+            "layer": "screen",
+            "ref": "S-001",
+            "from": "ui-inventory or run screenshot"
+          },
+          {
+            "layer": "data",
+            "ref": "Tickets"
+          },
+          {
+            "layer": "data",
+            "ref": "Ticketlines"
+          },
+          {
+            "layer": "data",
+            "ref": "Receipts"
+          },
+          {
+            "layer": "data",
+            "ref": "Payments"
+          },
+          {
+            "layer": "data",
+            "ref": "Taxlines"
+          },
+          {
+            "layer": "data",
+            "ref": "Products"
+          },
+          {
+            "layer": "data",
+            "ref": "Taxes"
+          },
+          {
+            "layer": "rule",
+            "ref": "R-001",
+            "grade": "partial",
+            "has_example": false
+          },
+          {
+            "layer": "rule",
+            "ref": "R-002",
+            "grade": "partial",
+            "has_example": false
+          },
+          {
+            "layer": "observed-value",
+            "present": false,
+            "note": "MISSING: no observed run; rule grades stay below confirmed until block 1 supplies values"
+          }
+        ]
+      }
+    }
+  ],
+  "migration_map": [
+    {
+      "entity": "Applications",
+      "new_field": "id",
+      "from_table": "APPLICATIONS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Applications",
+      "new_field": "name",
+      "from_table": "APPLICATIONS",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Applications",
+      "new_field": "version",
+      "from_table": "APPLICATIONS",
+      "from_column": "VERSION",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attribute",
+      "new_field": "id",
+      "from_table": "ATTRIBUTE",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attribute",
+      "new_field": "name",
+      "from_table": "ATTRIBUTE",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeinstance",
+      "new_field": "id",
+      "from_table": "ATTRIBUTEINSTANCE",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeinstance",
+      "new_field": "attributesetinstance_id",
+      "from_table": "ATTRIBUTEINSTANCE",
+      "from_column": "ATTRIBUTESETINSTANCE_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeinstance",
+      "new_field": "attribute_id",
+      "from_table": "ATTRIBUTEINSTANCE",
+      "from_column": "ATTRIBUTE_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeinstance",
+      "new_field": "value",
+      "from_table": "ATTRIBUTEINSTANCE",
+      "from_column": "VALUE",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeset",
+      "new_field": "id",
+      "from_table": "ATTRIBUTESET",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeset",
+      "new_field": "name",
+      "from_table": "ATTRIBUTESET",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributesetinstance",
+      "new_field": "id",
+      "from_table": "ATTRIBUTESETINSTANCE",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributesetinstance",
+      "new_field": "attributeset_id",
+      "from_table": "ATTRIBUTESETINSTANCE",
+      "from_column": "ATTRIBUTESET_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributesetinstance",
+      "new_field": "description",
+      "from_table": "ATTRIBUTESETINSTANCE",
+      "from_column": "DESCRIPTION",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeuse",
+      "new_field": "id",
+      "from_table": "ATTRIBUTEUSE",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeuse",
+      "new_field": "attributeset_id",
+      "from_table": "ATTRIBUTEUSE",
+      "from_column": "ATTRIBUTESET_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeuse",
+      "new_field": "attribute_id",
+      "from_table": "ATTRIBUTEUSE",
+      "from_column": "ATTRIBUTE_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributeuse",
+      "new_field": "lineno",
+      "from_table": "ATTRIBUTEUSE",
+      "from_column": "LINENO",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributevalue",
+      "new_field": "id",
+      "from_table": "ATTRIBUTEVALUE",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributevalue",
+      "new_field": "attribute_id",
+      "from_table": "ATTRIBUTEVALUE",
+      "from_column": "ATTRIBUTE_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Attributevalue",
+      "new_field": "value",
+      "from_table": "ATTRIBUTEVALUE",
+      "from_column": "VALUE",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Breaks",
+      "new_field": "id",
+      "from_table": "BREAKS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Breaks",
+      "new_field": "name",
+      "from_table": "BREAKS",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Breaks",
+      "new_field": "notes",
+      "from_table": "BREAKS",
+      "from_column": "NOTES",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Breaks",
+      "new_field": "visible",
+      "from_table": "BREAKS",
+      "from_column": "VISIBLE",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Categories",
+      "new_field": "id",
+      "from_table": "CATEGORIES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Categories",
+      "new_field": "name",
+      "from_table": "CATEGORIES",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Categories",
+      "new_field": "parentid",
+      "from_table": "CATEGORIES",
+      "from_column": "PARENTID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Categories",
+      "new_field": "image",
+      "from_table": "CATEGORIES",
+      "from_column": "IMAGE",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Closedcash",
+      "new_field": "money",
+      "from_table": "CLOSEDCASH",
+      "from_column": "MONEY",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Closedcash",
+      "new_field": "host",
+      "from_table": "CLOSEDCASH",
+      "from_column": "HOST",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Closedcash",
+      "new_field": "hostsequence",
+      "from_table": "CLOSEDCASH",
+      "from_column": "HOSTSEQUENCE",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Closedcash",
+      "new_field": "datestart",
+      "from_table": "CLOSEDCASH",
+      "from_column": "DATESTART",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Closedcash",
+      "new_field": "dateend",
+      "from_table": "CLOSEDCASH",
+      "from_column": "DATEEND",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "id",
+      "from_table": "csvimport",
+      "from_column": "id",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "rownumber",
+      "from_table": "csvimport",
+      "from_column": "rownumber",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "csverror",
+      "from_table": "csvimport",
+      "from_column": "csverror",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "reference",
+      "from_table": "csvimport",
+      "from_column": "reference",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "code",
+      "from_table": "csvimport",
+      "from_column": "code",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "name",
+      "from_table": "csvimport",
+      "from_column": "name",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "pricebuy",
+      "from_table": "csvimport",
+      "from_column": "pricebuy",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "pricesell",
+      "from_table": "csvimport",
+      "from_column": "pricesell",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "previousbuy",
+      "from_table": "csvimport",
+      "from_column": "previousbuy",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Csvimport",
+      "new_field": "previoussell",
+      "from_table": "csvimport",
+      "from_column": "previoussell",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "id",
+      "from_table": "CUSTOMERS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "searchkey",
+      "from_table": "CUSTOMERS",
+      "from_column": "SEARCHKEY",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "taxid",
+      "from_table": "CUSTOMERS",
+      "from_column": "TAXID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "name",
+      "from_table": "CUSTOMERS",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "taxcategory",
+      "from_table": "CUSTOMERS",
+      "from_column": "TAXCATEGORY",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "card",
+      "from_table": "CUSTOMERS",
+      "from_column": "CARD",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "maxdebt",
+      "from_table": "CUSTOMERS",
+      "from_column": "MAXDEBT",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "address",
+      "from_table": "CUSTOMERS",
+      "from_column": "ADDRESS",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "address2",
+      "from_table": "CUSTOMERS",
+      "from_column": "ADDRESS2",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "postal",
+      "from_table": "CUSTOMERS",
+      "from_column": "POSTAL",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "city",
+      "from_table": "CUSTOMERS",
+      "from_column": "CITY",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "region",
+      "from_table": "CUSTOMERS",
+      "from_column": "REGION",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "country",
+      "from_table": "CUSTOMERS",
+      "from_column": "COUNTRY",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "firstname",
+      "from_table": "CUSTOMERS",
+      "from_column": "FIRSTNAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "lastname",
+      "from_table": "CUSTOMERS",
+      "from_column": "LASTNAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "email",
+      "from_table": "CUSTOMERS",
+      "from_column": "EMAIL",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "phone",
+      "from_table": "CUSTOMERS",
+      "from_column": "PHONE",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "phone2",
+      "from_table": "CUSTOMERS",
+      "from_column": "PHONE2",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "fax",
+      "from_table": "CUSTOMERS",
+      "from_column": "FAX",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "notes",
+      "from_table": "CUSTOMERS",
+      "from_column": "NOTES",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "visible",
+      "from_table": "CUSTOMERS",
+      "from_column": "VISIBLE",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "curdate",
+      "from_table": "CUSTOMERS",
+      "from_column": "CURDATE",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Customers",
+      "new_field": "curdebt",
+      "from_table": "CUSTOMERS",
+      "from_column": "CURDEBT",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Floors",
+      "new_field": "id",
+      "from_table": "FLOORS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Floors",
+      "new_field": "name",
+      "from_table": "FLOORS",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Floors",
+      "new_field": "image",
+      "from_table": "FLOORS",
+      "from_column": "IMAGE",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Leaves",
+      "new_field": "id",
+      "from_table": "LEAVES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Leaves",
+      "new_field": "pplid",
+      "from_table": "LEAVES",
+      "from_column": "PPLID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Leaves",
+      "new_field": "name",
+      "from_table": "LEAVES",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Leaves",
+      "new_field": "startdate",
+      "from_table": "LEAVES",
+      "from_column": "STARTDATE",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Leaves",
+      "new_field": "enddate",
+      "from_table": "LEAVES",
+      "from_column": "ENDDATE",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Leaves",
+      "new_field": "notes",
+      "from_table": "LEAVES",
+      "from_column": "NOTES",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Locations",
+      "new_field": "id",
+      "from_table": "LOCATIONS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Locations",
+      "new_field": "name",
+      "from_table": "LOCATIONS",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Locations",
+      "new_field": "address",
+      "from_table": "LOCATIONS",
+      "from_column": "ADDRESS",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Moorers",
+      "new_field": "vesselname",
+      "from_table": "moorers",
+      "from_column": "VesselName",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Moorers",
+      "new_field": "size",
+      "from_table": "moorers",
+      "from_column": "size",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Moorers",
+      "new_field": "days",
+      "from_table": "moorers",
+      "from_column": "days",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Moorers",
+      "new_field": "power",
+      "from_table": "moorers",
+      "from_column": "power",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Payments",
+      "new_field": "id",
+      "from_table": "PAYMENTS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Payments",
+      "new_field": "receipt",
+      "from_table": "PAYMENTS",
+      "from_column": "RECEIPT",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Payments",
+      "new_field": "payment",
+      "from_table": "PAYMENTS",
+      "from_column": "PAYMENT",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Payments",
+      "new_field": "total",
+      "from_table": "PAYMENTS",
+      "from_column": "TOTAL",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Payments",
+      "new_field": "transid",
+      "from_table": "PAYMENTS",
+      "from_column": "TRANSID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Payments",
+      "new_field": "returnmsg",
+      "from_table": "PAYMENTS",
+      "from_column": "RETURNMSG",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Payments",
+      "new_field": "notes",
+      "from_table": "PAYMENTS",
+      "from_column": "NOTES",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "People",
+      "new_field": "id",
+      "from_table": "PEOPLE",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "People",
+      "new_field": "name",
+      "from_table": "PEOPLE",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "People",
+      "new_field": "apppassword",
+      "from_table": "PEOPLE",
+      "from_column": "APPPASSWORD",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "People",
+      "new_field": "card",
+      "from_table": "PEOPLE",
+      "from_column": "CARD",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "People",
+      "new_field": "role",
+      "from_table": "PEOPLE",
+      "from_column": "ROLE",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "People",
+      "new_field": "visible",
+      "from_table": "PEOPLE",
+      "from_column": "VISIBLE",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "People",
+      "new_field": "image",
+      "from_table": "PEOPLE",
+      "from_column": "IMAGE",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Places",
+      "new_field": "id",
+      "from_table": "PLACES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Places",
+      "new_field": "name",
+      "from_table": "PLACES",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Places",
+      "new_field": "x",
+      "from_table": "PLACES",
+      "from_column": "X",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Places",
+      "new_field": "y",
+      "from_table": "PLACES",
+      "from_column": "Y",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Places",
+      "new_field": "floor",
+      "from_table": "PLACES",
+      "from_column": "FLOOR",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "id",
+      "from_table": "PRODUCTS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "reference",
+      "from_table": "PRODUCTS",
+      "from_column": "REFERENCE",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "code",
+      "from_table": "PRODUCTS",
+      "from_column": "CODE",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "codetype",
+      "from_table": "PRODUCTS",
+      "from_column": "CODETYPE",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "name",
+      "from_table": "PRODUCTS",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "pricebuy",
+      "from_table": "PRODUCTS",
+      "from_column": "PRICEBUY",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "pricesell",
+      "from_table": "PRODUCTS",
+      "from_column": "PRICESELL",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "category",
+      "from_table": "PRODUCTS",
+      "from_column": "CATEGORY",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "taxcat",
+      "from_table": "PRODUCTS",
+      "from_column": "TAXCAT",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "attributeset_id",
+      "from_table": "PRODUCTS",
+      "from_column": "ATTRIBUTESET_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "stockcost",
+      "from_table": "PRODUCTS",
+      "from_column": "STOCKCOST",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "stockvolume",
+      "from_table": "PRODUCTS",
+      "from_column": "STOCKVOLUME",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "image",
+      "from_table": "PRODUCTS",
+      "from_column": "IMAGE",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "iscom",
+      "from_table": "PRODUCTS",
+      "from_column": "ISCOM",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "isscale",
+      "from_table": "PRODUCTS",
+      "from_column": "ISSCALE",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "iskitchen",
+      "from_table": "PRODUCTS",
+      "from_column": "ISKITCHEN",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "printkb",
+      "from_table": "PRODUCTS",
+      "from_column": "PRINTKB",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "sendstatus",
+      "from_table": "PRODUCTS",
+      "from_column": "SENDSTATUS",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "isservice",
+      "from_table": "PRODUCTS",
+      "from_column": "ISSERVICE",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "attributes",
+      "from_table": "PRODUCTS",
+      "from_column": "ATTRIBUTES",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "display",
+      "from_table": "PRODUCTS",
+      "from_column": "DISPLAY",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ProductsCat",
+      "new_field": "product",
+      "from_table": "PRODUCTS_CAT",
+      "from_column": "PRODUCT",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ProductsCat",
+      "new_field": "catorder",
+      "from_table": "PRODUCTS_CAT",
+      "from_column": "CATORDER",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ProductsCom",
+      "new_field": "id",
+      "from_table": "PRODUCTS_COM",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ProductsCom",
+      "new_field": "product",
+      "from_table": "PRODUCTS_COM",
+      "from_column": "PRODUCT",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ProductsCom",
+      "new_field": "product2",
+      "from_table": "PRODUCTS_COM",
+      "from_column": "PRODUCT2",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Receipts",
+      "new_field": "id",
+      "from_table": "RECEIPTS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Receipts",
+      "new_field": "money",
+      "from_table": "RECEIPTS",
+      "from_column": "MONEY",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Receipts",
+      "new_field": "datenew",
+      "from_table": "RECEIPTS",
+      "from_column": "DATENEW",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Receipts",
+      "new_field": "attributes",
+      "from_table": "RECEIPTS",
+      "from_column": "ATTRIBUTES",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Receipts",
+      "new_field": "person",
+      "from_table": "RECEIPTS",
+      "from_column": "PERSON",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ReservationCustomers",
+      "new_field": "id",
+      "from_table": "RESERVATION_CUSTOMERS",
+      "from_column": "ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ReservationCustomers",
+      "new_field": "customer",
+      "from_table": "RESERVATION_CUSTOMERS",
+      "from_column": "CUSTOMER",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Reservations",
+      "new_field": "id",
+      "from_table": "RESERVATIONS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Reservations",
+      "new_field": "created",
+      "from_table": "RESERVATIONS",
+      "from_column": "CREATED",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Reservations",
+      "new_field": "datenew",
+      "from_table": "RESERVATIONS",
+      "from_column": "DATENEW",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Reservations",
+      "new_field": "title",
+      "from_table": "RESERVATIONS",
+      "from_column": "TITLE",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Reservations",
+      "new_field": "chairs",
+      "from_table": "RESERVATIONS",
+      "from_column": "CHAIRS",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Reservations",
+      "new_field": "isdone",
+      "from_table": "RESERVATIONS",
+      "from_column": "ISDONE",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Reservations",
+      "new_field": "description",
+      "from_table": "RESERVATIONS",
+      "from_column": "DESCRIPTION",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Resources",
+      "new_field": "id",
+      "from_table": "RESOURCES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Resources",
+      "new_field": "name",
+      "from_table": "RESOURCES",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Resources",
+      "new_field": "restype",
+      "from_table": "RESOURCES",
+      "from_column": "RESTYPE",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Resources",
+      "new_field": "content",
+      "from_table": "RESOURCES",
+      "from_column": "CONTENT",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Roles",
+      "new_field": "id",
+      "from_table": "ROLES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Roles",
+      "new_field": "name",
+      "from_table": "ROLES",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Roles",
+      "new_field": "permissions",
+      "from_table": "ROLES",
+      "from_column": "PERMISSIONS",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Sharedtickets",
+      "new_field": "id",
+      "from_table": "SHAREDTICKETS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Sharedtickets",
+      "new_field": "name",
+      "from_table": "SHAREDTICKETS",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Sharedtickets",
+      "new_field": "content",
+      "from_table": "SHAREDTICKETS",
+      "from_column": "CONTENT",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ShiftBreaks",
+      "new_field": "id",
+      "from_table": "SHIFT_BREAKS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ShiftBreaks",
+      "new_field": "shiftid",
+      "from_table": "SHIFT_BREAKS",
+      "from_column": "SHIFTID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ShiftBreaks",
+      "new_field": "breakid",
+      "from_table": "SHIFT_BREAKS",
+      "from_column": "BREAKID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ShiftBreaks",
+      "new_field": "starttime",
+      "from_table": "SHIFT_BREAKS",
+      "from_column": "STARTTIME",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "ShiftBreaks",
+      "new_field": "endtime",
+      "from_table": "SHIFT_BREAKS",
+      "from_column": "ENDTIME",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Shifts",
+      "new_field": "id",
+      "from_table": "SHIFTS",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Shifts",
+      "new_field": "startshift",
+      "from_table": "SHIFTS",
+      "from_column": "STARTSHIFT",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Shifts",
+      "new_field": "endshift",
+      "from_table": "SHIFTS",
+      "from_column": "ENDSHIFT",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Shifts",
+      "new_field": "pplid",
+      "from_table": "SHIFTS",
+      "from_column": "PPLID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockcurrent",
+      "new_field": "location",
+      "from_table": "STOCKCURRENT",
+      "from_column": "LOCATION",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockcurrent",
+      "new_field": "product",
+      "from_table": "STOCKCURRENT",
+      "from_column": "PRODUCT",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockcurrent",
+      "new_field": "attributesetinstance_id",
+      "from_table": "STOCKCURRENT",
+      "from_column": "ATTRIBUTESETINSTANCE_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockcurrent",
+      "new_field": "units",
+      "from_table": "STOCKCURRENT",
+      "from_column": "UNITS",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockdiary",
+      "new_field": "id",
+      "from_table": "STOCKDIARY",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockdiary",
+      "new_field": "datenew",
+      "from_table": "STOCKDIARY",
+      "from_column": "DATENEW",
+      "type": "datetime",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockdiary",
+      "new_field": "reason",
+      "from_table": "STOCKDIARY",
+      "from_column": "REASON",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockdiary",
+      "new_field": "location",
+      "from_table": "STOCKDIARY",
+      "from_column": "LOCATION",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockdiary",
+      "new_field": "product",
+      "from_table": "STOCKDIARY",
+      "from_column": "PRODUCT",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockdiary",
+      "new_field": "attributesetinstance_id",
+      "from_table": "STOCKDIARY",
+      "from_column": "ATTRIBUTESETINSTANCE_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockdiary",
+      "new_field": "units",
+      "from_table": "STOCKDIARY",
+      "from_column": "UNITS",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stockdiary",
+      "new_field": "price",
+      "from_table": "STOCKDIARY",
+      "from_column": "PRICE",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stocklevel",
+      "new_field": "id",
+      "from_table": "STOCKLEVEL",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stocklevel",
+      "new_field": "location",
+      "from_table": "STOCKLEVEL",
+      "from_column": "LOCATION",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stocklevel",
+      "new_field": "product",
+      "from_table": "STOCKLEVEL",
+      "from_column": "PRODUCT",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stocklevel",
+      "new_field": "stocksecurity",
+      "from_table": "STOCKLEVEL",
+      "from_column": "STOCKSECURITY",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Stocklevel",
+      "new_field": "stockmaximum",
+      "from_table": "STOCKLEVEL",
+      "from_column": "STOCKMAXIMUM",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxcategories",
+      "new_field": "id",
+      "from_table": "TAXCATEGORIES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxcategories",
+      "new_field": "name",
+      "from_table": "TAXCATEGORIES",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxcustcategories",
+      "new_field": "id",
+      "from_table": "TAXCUSTCATEGORIES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxcustcategories",
+      "new_field": "name",
+      "from_table": "TAXCUSTCATEGORIES",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxes",
+      "new_field": "id",
+      "from_table": "TAXES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxes",
+      "new_field": "name",
+      "from_table": "TAXES",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxes",
+      "new_field": "category",
+      "from_table": "TAXES",
+      "from_column": "CATEGORY",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxes",
+      "new_field": "custcategory",
+      "from_table": "TAXES",
+      "from_column": "CUSTCATEGORY",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxes",
+      "new_field": "parentid",
+      "from_table": "TAXES",
+      "from_column": "PARENTID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxes",
+      "new_field": "rate",
+      "from_table": "TAXES",
+      "from_column": "RATE",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxes",
+      "new_field": "ratecascade",
+      "from_table": "TAXES",
+      "from_column": "RATECASCADE",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxes",
+      "new_field": "rateorder",
+      "from_table": "TAXES",
+      "from_column": "RATEORDER",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxlines",
+      "new_field": "id",
+      "from_table": "TAXLINES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxlines",
+      "new_field": "receipt",
+      "from_table": "TAXLINES",
+      "from_column": "RECEIPT",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxlines",
+      "new_field": "taxid",
+      "from_table": "TAXLINES",
+      "from_column": "TAXID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxlines",
+      "new_field": "base",
+      "from_table": "TAXLINES",
+      "from_column": "BASE",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Taxlines",
+      "new_field": "amount",
+      "from_table": "TAXLINES",
+      "from_column": "AMOUNT",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "id",
+      "from_table": "THIRDPARTIES",
+      "from_column": "ID",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "cif",
+      "from_table": "THIRDPARTIES",
+      "from_column": "CIF",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "name",
+      "from_table": "THIRDPARTIES",
+      "from_column": "NAME",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "address",
+      "from_table": "THIRDPARTIES",
+      "from_column": "ADDRESS",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "contactcomm",
+      "from_table": "THIRDPARTIES",
+      "from_column": "CONTACTCOMM",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "contactfact",
+      "from_table": "THIRDPARTIES",
+      "from_column": "CONTACTFACT",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "payrule",
+      "from_table": "THIRDPARTIES",
+      "from_column": "PAYRULE",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "faxnumber",
+      "from_table": "THIRDPARTIES",
+      "from_column": "FAXNUMBER",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "phonenumber",
+      "from_table": "THIRDPARTIES",
+      "from_column": "PHONENUMBER",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "mobilenumber",
+      "from_table": "THIRDPARTIES",
+      "from_column": "MOBILENUMBER",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "email",
+      "from_table": "THIRDPARTIES",
+      "from_column": "EMAIL",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "webpage",
+      "from_table": "THIRDPARTIES",
+      "from_column": "WEBPAGE",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Thirdparties",
+      "new_field": "notes",
+      "from_table": "THIRDPARTIES",
+      "from_column": "NOTES",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Ticketlines",
+      "new_field": "ticket",
+      "from_table": "TICKETLINES",
+      "from_column": "TICKET",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Ticketlines",
+      "new_field": "line",
+      "from_table": "TICKETLINES",
+      "from_column": "LINE",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Ticketlines",
+      "new_field": "product",
+      "from_table": "TICKETLINES",
+      "from_column": "PRODUCT",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Ticketlines",
+      "new_field": "attributesetinstance_id",
+      "from_table": "TICKETLINES",
+      "from_column": "ATTRIBUTESETINSTANCE_ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Ticketlines",
+      "new_field": "units",
+      "from_table": "TICKETLINES",
+      "from_column": "UNITS",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Ticketlines",
+      "new_field": "price",
+      "from_table": "TICKETLINES",
+      "from_column": "PRICE",
+      "type": "decimal",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Ticketlines",
+      "new_field": "taxid",
+      "from_table": "TICKETLINES",
+      "from_column": "TAXID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Ticketlines",
+      "new_field": "attributes",
+      "from_table": "TICKETLINES",
+      "from_column": "ATTRIBUTES",
+      "type": "file",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Tickets",
+      "new_field": "id",
+      "from_table": "TICKETS",
+      "from_column": "ID",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Tickets",
+      "new_field": "tickettype",
+      "from_table": "TICKETS",
+      "from_column": "TICKETTYPE",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Tickets",
+      "new_field": "ticketid",
+      "from_table": "TICKETS",
+      "from_column": "TICKETID",
+      "type": "integer",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Tickets",
+      "new_field": "person",
+      "from_table": "TICKETS",
+      "from_column": "PERSON",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Tickets",
+      "new_field": "customer",
+      "from_table": "TICKETS",
+      "from_column": "CUSTOMER",
+      "type": "ref",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Tickets",
+      "new_field": "status",
+      "from_table": "TICKETS",
+      "from_column": "STATUS",
+      "type": "integer",
+      "grade": "confirmed"
+    }
+  ],
+  "test_vectors": {
+    "from_rules": [],
+    "from_acceptance": [
+      {
+        "kind": "acceptance",
+        "id": "AC-001",
+        "feature": "F-001",
+        "given": "a product at 10.00 with a 20% tax, cash session open",
+        "when": "the cashier adds 3 units and tenders 40.00 cash",
+        "then": "ticket base 30.00, tax 6.00, total 36.00, change 4.00",
+        "expected": {}
+      }
+    ]
+  },
+  "open_questions": [
+    {
+      "id": "U-001",
+      "question": "What does the sale screen look like and what are the exact totals/change for a known ticket?",
+      "why": "F-001's acceptance AC-001 has no expected values; R-001/R-002 rounding is unconfirmed; the Swing screen is not captured.",
+      "blocks": [
+        "F-001"
+      ],
+      "probe": {
+        "kind": "h-mission",
+        "suggestion": "Open uniCenta, open a cash session, add 3 units of a 10.00 product taxed at 20%, tender 40.00 cash, read back base/tax/total/change and screenshot the sale screen.",
+        "mission": "M-002"
+      },
+      "status": "open",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "data model only; no runtime values",
+          "note": "shipped schema"
+        }
+      ]
+    },
+    {
+      "id": "U-002",
+      "question": "What do the STATUS / TICKETTYPE integer codes mean, and the RATECASCADE compound-tax order?",
+      "why": "the schema stores them as integers/booleans without labels; a rebuild needs the meanings.",
+      "probe": {
+        "kind": "h-mission",
+        "suggestion": "Create a normal sale, a refund and a layaway; note how TICKETTYPE/STATUS differ. Configure two cascading taxes and observe the order.",
+        "mission": "M-003"
+      },
+      "status": "open",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "locator": "TICKETS.TICKETTYPE, TICKETS.STATUS, TAXES.RATECASCADE/RATEORDER",
+          "note": "codes without labels"
+        }
+      ]
+    }
+  ]
+}

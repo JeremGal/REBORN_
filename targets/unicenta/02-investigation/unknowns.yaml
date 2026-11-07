@@ -1,0 +1,24 @@
+# Open questions. ui_steps make these runnable by a computer-use agent: node tools/reborn.mjs ask <target>
+target: unicenta
+unknowns:
+  - id: U-001
+    question: What does the sale screen look like and what are the exact totals/change for a known ticket?
+    why: F-001's acceptance AC-001 has no expected values; R-001/R-002 rounding is unconfirmed; the Swing screen is not captured.
+    blocks: [ F-001 ]
+    probe:
+      kind: h-mission
+      suggestion: "Open uniCenta, open a cash session, add 3 units of a 10.00 product taxed at 20%, tender 40.00 cash, read back base/tax/total/change and screenshot the sale screen."
+      mission: M-002
+    status: open
+    evidence:
+      - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "data model only; no runtime values", note: "shipped schema" }
+  - id: U-002
+    question: What do the STATUS / TICKETTYPE integer codes mean, and the RATECASCADE compound-tax order?
+    why: the schema stores them as integers/booleans without labels; a rebuild needs the meanings.
+    probe:
+      kind: h-mission
+      suggestion: "Create a normal sale, a refund and a layaway; note how TICKETTYPE/STATUS differ. Configure two cascading taxes and observe the order."
+      mission: M-003
+    status: open
+    evidence:
+      - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "TICKETS.TICKETTYPE, TICKETS.STATUS, TAXES.RATECASCADE/RATEORDER", note: "codes without labels" }

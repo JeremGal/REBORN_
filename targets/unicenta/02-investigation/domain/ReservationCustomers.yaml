@@ -1,0 +1,32 @@
+name: ReservationCustomers
+description: Table RESERVATION_CUSTOMERS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: ref
+    observed_as: ID
+    required: true
+    unique: true
+    ref: Reservations
+  - name: customer
+    label: ""
+    type: ref
+    observed_as: CUSTOMER
+    required: true
+    ref: Customers
+relations:
+  - to: Reservations
+    kind: many-to-one
+    via: id
+  - to: Customers
+    kind: many-to-one
+    via: customer
+storage:
+  engine: HSQLDB
+  observed_table: RESERVATION_CUSTOMERS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE RESERVATION_CUSTOMERS
+    note: shipped SQL create script

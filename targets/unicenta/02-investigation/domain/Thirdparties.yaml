@@ -1,0 +1,82 @@
+name: Thirdparties
+description: Table THIRDPARTIES from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: cif
+    label: ""
+    type: string
+    observed_as: CIF
+    required: true
+    max_length: 255
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: address
+    label: ""
+    type: string
+    observed_as: ADDRESS
+    max_length: 255
+  - name: contactcomm
+    label: ""
+    type: string
+    observed_as: CONTACTCOMM
+    max_length: 255
+  - name: contactfact
+    label: ""
+    type: string
+    observed_as: CONTACTFACT
+    max_length: 255
+  - name: payrule
+    label: ""
+    type: string
+    observed_as: PAYRULE
+    max_length: 255
+  - name: faxnumber
+    label: ""
+    type: string
+    observed_as: FAXNUMBER
+    max_length: 255
+  - name: phonenumber
+    label: ""
+    type: string
+    observed_as: PHONENUMBER
+    max_length: 255
+  - name: mobilenumber
+    label: ""
+    type: string
+    observed_as: MOBILENUMBER
+    max_length: 255
+  - name: email
+    label: ""
+    type: string
+    observed_as: EMAIL
+    max_length: 255
+  - name: webpage
+    label: ""
+    type: string
+    observed_as: WEBPAGE
+    max_length: 255
+  - name: notes
+    label: ""
+    type: string
+    observed_as: NOTES
+    max_length: 255
+relations: []
+storage:
+  engine: HSQLDB
+  observed_table: THIRDPARTIES
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE THIRDPARTIES
+    note: shipped SQL create script

@@ -1,0 +1,11 @@
+# Business behaviour noticed during runs. Each observation points to run steps; block 2 confirms or refutes it.
+target: unicenta
+observations: []
+# Example:
+# - id: O-001
+#   statement: The invoice total updates when a line quantity changes, VAT shown separately.
+#   kind: computation
+#   where: { screen: S-003, field: Total TTC }
+#   runs: [{ run: run-20261107-1030-m002, step: 7 }]
+#   suggests_rule: total_incl_tax = sum(lines) * (1 + vat_rate)
+#   confidence: medium

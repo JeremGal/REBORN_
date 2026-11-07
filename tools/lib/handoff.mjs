@@ -63,6 +63,33 @@ function testVectors(t) {
   return { from_rules: fromRules, from_acceptance: fromFeatures };
 }
 
+// What still blocks each feature from being rebuild-ready, and the mission (for the computer-use agent) that fills it.
+// This is the actionable answer to "is this enough to rebuild?": it names the exact gaps, not a vague "needs more".
+function toObserve(t) {
+  const missionByUnknown = new Map();
+  for (const u of t.unknowns) if (u.probe?.mission) missionByUnknown.set(u.id, u.probe.mission);
+  const ruleById = new Map(t.rules.map((r) => [r.id, r]));
+  const rows = [];
+  for (const f of t.features) {
+    const missing = [];
+    const accWithValues = (f.acceptance || []).filter((a) => a.expected_values && Object.keys(a.expected_values).length);
+    if (!accWithValues.length) missing.push("no acceptance scenario has observed expected values (run the feature and read them back)");
+    for (const rid of f.rules || []) {
+      const r = ruleById.get(rid);
+      if (r && !(r.examples || []).length) missing.push(`rule ${rid} has no worked example (capture one input/output pair)`);
+      if (r && r.status !== "confirmed") missing.push(`rule ${rid} is ${r.status} (confirm by observation)`);
+    }
+    for (const sid of f.screens || []) {
+      const s = (t.screens || []).find((x) => x.id === sid);
+      if (s && !(s.screenshots || []).length) missing.push(`screen ${sid} has no screenshot (capture it)`);
+    }
+    if (f.status === "confirmed" && !missing.length) continue;
+    const missions = [...new Set((f.unknowns || []).map((u) => missionByUnknown.get(u)).filter(Boolean))];
+    rows.push({ feature: f.id, grade: f.status, priority: f.priority, missing, missions });
+  }
+  return rows;
+}
+
 export function buildHandoff(target) {
   const t = loadTarget(target);
   const m = t.meta || {};
@@ -78,6 +105,7 @@ export function buildHandoff(target) {
       open_questions: t.unknowns.filter((u) => u.status === "open").length,
       note: "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values.",
     },
+    to_observe: toObserve(t),
     build_order: buildOrder(t),
     entities: t.entities,
     rules: t.rules,

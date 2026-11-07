@@ -1,0 +1,14 @@
+# Filled automatically by tools/reborn.mjs. Raw files live in the local evidence store (.evidence/<target>/), never in git.
+target: unicenta
+entries:
+  - id: sql:6ae1364b7d43e617
+    kind: rea
+    tool: reborn-schema
+    operation: sql-schema
+    subject:
+      label: HSQLDB-create.sql
+    created_at: 2026-11-07T15:08:44.548Z
+    file: schema/HSQLDB-create.sql
+    bytes: 27708
+    sha256: 6ae1364b7d43e617b986db7e57c209429b75c955dd74e221074b1abf3b5df777
+    summary: shipped SQL create script

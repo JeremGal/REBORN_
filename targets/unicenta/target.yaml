@@ -1,0 +1,31 @@
+# Identity of the software under study. Never commit the binary: only its name and SHA-256.
+id: unicenta
+name: uniCenta oPOS
+vendor: uniCenta
+domain: point of sale (retail and restaurant till)
+description: >-
+  Java desktop point-of-sale: products, categories, taxes, tickets with lines, payments, cash sessions (Z report),
+  stock. The "caisse" target of the three.
+kind: exe
+versions: ["unicentaopos.jar (from the official SourceForge file)"]
+platforms: [windows, linux, macos]
+access:
+  method: open-source
+  notes: unicentaopos.jar downloaded from the project's official SourceForge files by the user. It is a Java archive (a ZIP of class files and resources, including the database create scripts).
+legal:
+  basis: GPL-3.0 licence (Openbravo POS / uniCenta lineage) explicitly allows studying and modifying the program.
+  clean_room: true
+  restrictions:
+    - Do not reuse the uniCenta/Openbravo name, logo or theme in a rebuild.
+artifacts: []
+urls:
+  - { label: project files, url: "https://sourceforge.net/projects/unicenta/files/" }
+team:
+  explorer: ""
+  investigator: AlanECE
+  rebuilder: ""
+tech:
+  stack: Java (Swing desktop), Openbravo POS lineage; ships HSQLDB and Derby create scripts; 1089 classes under com.openbravo.pos
+  status: confirmed
+  evidence:
+    - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "scripts HSQLDB-create.sql / Derby-create.sql in the jar", note: "shipped schema" }

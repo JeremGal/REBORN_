@@ -14,7 +14,7 @@
       ]
     }
   },
-  "generated_at": "2026-11-07T14:51:09.991Z",
+  "generated_at": "2026-11-07T15:13:16.495Z",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -31,6 +31,25 @@
     "open_questions": 3,
     "note": "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values."
   },
+  "to_observe": [
+    {
+      "feature": "F-001",
+      "grade": "partial",
+      "priority": "must",
+      "missing": [
+        "no acceptance scenario has observed expected values (run the feature and read them back)",
+        "rule R-001 has no worked example (capture one input/output pair)",
+        "rule R-001 is partial (confirm by observation)",
+        "rule R-002 has no worked example (capture one input/output pair)",
+        "rule R-002 is partial (confirm by observation)",
+        "screen S-002 has no screenshot (capture it)"
+      ],
+      "missions": [
+        "M-002",
+        "M-003"
+      ]
+    }
+  ],
   "build_order": [
     {
       "kind": "entity",
@@ -1050,7 +1069,8 @@
       ],
       "probe": {
         "kind": "h-mission",
-        "suggestion": "Create a new book, two EUR accounts (Bank asset, Groceries expense), record 25.00 from Bank to Groceries, read back both balances and screenshot the register."
+        "suggestion": "Create a new book, two EUR accounts (Bank asset, Groceries expense), record 25.00 from Bank to Groceries, read back both balances and screenshot the register.",
+        "mission": "M-002"
       },
       "status": "open",
       "evidence": [
@@ -1071,7 +1091,8 @@
       ],
       "probe": {
         "kind": "h-mission",
-        "suggestion": "Save the book created above as an SQLite file (File > Save As, SQLite), then hand the .gnucash file to block 2 to run `reborn sqlite`."
+        "suggestion": "Save the book created above as an SQLite file (File > Save As, SQLite), then hand the .gnucash file to block 2 to run `reborn sqlite`.",
+        "mission": "M-003"
       },
       "status": "open",
       "evidence": [
@@ -1089,7 +1110,8 @@
       "why": "the data model shows invoices/customers/taxtables tables and the UI files list 111 windows, but the business flows are not mapped.",
       "probe": {
         "kind": "h-mission",
-        "suggestion": "Tour the Business menu (customers, invoices, process payment), screenshot each window."
+        "suggestion": "Tour the Business menu (customers, invoices, process payment), screenshot each window.",
+        "mission": "M-004"
       },
       "status": "open",
       "evidence": [

@@ -1,0 +1,26 @@
+name: Taxcategories
+description: Table TAXCATEGORIES from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+relations: []
+storage:
+  engine: HSQLDB
+  observed_table: TAXCATEGORIES
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE TAXCATEGORIES
+    note: shipped SQL create script

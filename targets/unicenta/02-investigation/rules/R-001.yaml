@@ -1,0 +1,24 @@
+id: R-001
+title: Ticket line and ticket totals
+kind: computation
+statement: >-
+  A ticket line total is units times unit price. The ticket total is the sum of its line totals plus the tax
+  computed per tax rate. Each line references one tax (TICKETLINES.TAXID -> TAXES.RATE).
+formula: |
+  line_base  = TICKETLINES.UNITS * TICKETLINES.PRICE
+  line_tax   = line_base * TAXES.RATE                 # per line's tax
+  ticket_base = sum(line_base)
+  ticket_tax  = sum(line_tax)                          # stored per rate in TAXLINES (BASE, AMOUNT)
+  ticket_total = ticket_base + ticket_tax
+applies_to: [Ticketlines.units, Ticketlines.price, Taxes.rate, Taxlines.base, Taxlines.amount]
+features: [F-001]
+examples: []   # rounding and compound-tax (RATECASCADE) behaviour to confirm by a run (block 1)
+status: partial
+confidence: medium
+evidence:
+  - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "TICKETLINES(UNITS DOUBLE, PRICE DOUBLE, TAXID->TAXES); TAXES(RATE DOUBLE, RATECASCADE, RATEORDER); TAXLINES(BASE, AMOUNT)", note: "shipped schema shows the computation chain" }
+contradictions: []
+notes: >-
+  The schema proves the data path. Exact rounding (per line vs per ticket) and the RATECASCADE / RATEORDER
+  compound-tax order are NOT yet observed: a run is needed. Amounts are DOUBLE in storage; a rebuild should still
+  compute in integer minor units or a decimal type and confirm the rounding against an observed ticket.

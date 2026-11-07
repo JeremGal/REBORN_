@@ -1,0 +1,43 @@
+name: Attributeinstance
+description: Table ATTRIBUTEINSTANCE from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: attributesetinstance_id
+    label: ""
+    type: ref
+    observed_as: ATTRIBUTESETINSTANCE_ID
+    required: true
+    ref: Attributesetinstance
+  - name: attribute_id
+    label: ""
+    type: ref
+    observed_as: ATTRIBUTE_ID
+    required: true
+    ref: Attribute
+  - name: value
+    label: ""
+    type: string
+    observed_as: VALUE
+    max_length: 255
+relations:
+  - to: Attributesetinstance
+    kind: many-to-one
+    via: attributesetinstance_id
+  - to: Attribute
+    kind: many-to-one
+    via: attribute_id
+storage:
+  engine: HSQLDB
+  observed_table: ATTRIBUTEINSTANCE
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE ATTRIBUTEINSTANCE
+    note: shipped SQL create script

@@ -1,0 +1,133 @@
+name: Customers
+description: Table CUSTOMERS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: searchkey
+    label: ""
+    type: string
+    observed_as: SEARCHKEY
+    required: true
+    max_length: 255
+  - name: taxid
+    label: ""
+    type: string
+    observed_as: TAXID
+    max_length: 255
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: taxcategory
+    label: ""
+    type: ref
+    observed_as: TAXCATEGORY
+    ref: Taxcustcategories
+  - name: card
+    label: ""
+    type: string
+    observed_as: CARD
+    max_length: 255
+  - name: maxdebt
+    label: ""
+    type: decimal
+    observed_as: MAXDEBT
+    required: true
+  - name: address
+    label: ""
+    type: string
+    observed_as: ADDRESS
+    max_length: 255
+  - name: address2
+    label: ""
+    type: string
+    observed_as: ADDRESS2
+    max_length: 255
+  - name: postal
+    label: ""
+    type: string
+    observed_as: POSTAL
+    max_length: 255
+  - name: city
+    label: ""
+    type: string
+    observed_as: CITY
+    max_length: 255
+  - name: region
+    label: ""
+    type: string
+    observed_as: REGION
+    max_length: 255
+  - name: country
+    label: ""
+    type: string
+    observed_as: COUNTRY
+    max_length: 255
+  - name: firstname
+    label: ""
+    type: string
+    observed_as: FIRSTNAME
+    max_length: 255
+  - name: lastname
+    label: ""
+    type: string
+    observed_as: LASTNAME
+    max_length: 255
+  - name: email
+    label: ""
+    type: string
+    observed_as: EMAIL
+    max_length: 255
+  - name: phone
+    label: ""
+    type: string
+    observed_as: PHONE
+    max_length: 255
+  - name: phone2
+    label: ""
+    type: string
+    observed_as: PHONE2
+    max_length: 255
+  - name: fax
+    label: ""
+    type: string
+    observed_as: FAX
+    max_length: 255
+  - name: notes
+    label: ""
+    type: string
+    observed_as: NOTES
+    max_length: 255
+  - name: visible
+    label: ""
+    type: boolean
+    observed_as: VISIBLE
+    required: true
+  - name: curdate
+    label: ""
+    type: datetime
+    observed_as: CURDATE
+  - name: curdebt
+    label: ""
+    type: decimal
+    observed_as: CURDEBT
+relations:
+  - to: Taxcustcategories
+    kind: many-to-one
+    via: taxcategory
+storage:
+  engine: HSQLDB
+  observed_table: CUSTOMERS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE CUSTOMERS
+    note: shipped SQL create script

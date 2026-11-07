@@ -1,0 +1,130 @@
+name: Products
+description: Table PRODUCTS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: reference
+    label: ""
+    type: string
+    observed_as: REFERENCE
+    required: true
+    max_length: 255
+  - name: code
+    label: ""
+    type: string
+    observed_as: CODE
+    required: true
+    max_length: 255
+  - name: codetype
+    label: ""
+    type: string
+    observed_as: CODETYPE
+    max_length: 255
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: pricebuy
+    label: ""
+    type: decimal
+    observed_as: PRICEBUY
+    required: true
+  - name: pricesell
+    label: ""
+    type: decimal
+    observed_as: PRICESELL
+    required: true
+  - name: category
+    label: ""
+    type: ref
+    observed_as: CATEGORY
+    required: true
+    ref: Categories
+  - name: taxcat
+    label: ""
+    type: ref
+    observed_as: TAXCAT
+    required: true
+    ref: Taxcategories
+  - name: attributeset_id
+    label: ""
+    type: ref
+    observed_as: ATTRIBUTESET_ID
+    ref: Attributeset
+  - name: stockcost
+    label: ""
+    type: decimal
+    observed_as: STOCKCOST
+  - name: stockvolume
+    label: ""
+    type: decimal
+    observed_as: STOCKVOLUME
+  - name: image
+    label: ""
+    type: file
+    observed_as: IMAGE
+  - name: iscom
+    label: ""
+    type: boolean
+    observed_as: ISCOM
+    required: true
+  - name: isscale
+    label: ""
+    type: boolean
+    observed_as: ISSCALE
+    required: true
+  - name: iskitchen
+    label: ""
+    type: boolean
+    observed_as: ISKITCHEN
+    required: true
+  - name: printkb
+    label: ""
+    type: boolean
+    observed_as: PRINTKB
+    required: true
+  - name: sendstatus
+    label: ""
+    type: boolean
+    observed_as: SENDSTATUS
+    required: true
+  - name: isservice
+    label: ""
+    type: boolean
+    observed_as: ISSERVICE
+    required: true
+  - name: attributes
+    label: ""
+    type: file
+    observed_as: ATTRIBUTES
+  - name: display
+    label: ""
+    type: string
+    observed_as: DISPLAY
+    max_length: 255
+relations:
+  - to: Categories
+    kind: many-to-one
+    via: category
+  - to: Taxcategories
+    kind: many-to-one
+    via: taxcat
+  - to: Attributeset
+    kind: many-to-one
+    via: attributeset_id
+storage:
+  engine: HSQLDB
+  observed_table: PRODUCTS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE PRODUCTS
+    note: shipped SQL create script

@@ -1,0 +1,34 @@
+name: Attributesetinstance
+description: Table ATTRIBUTESETINSTANCE from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: attributeset_id
+    label: ""
+    type: ref
+    observed_as: ATTRIBUTESET_ID
+    required: true
+    ref: Attributeset
+  - name: description
+    label: ""
+    type: string
+    observed_as: DESCRIPTION
+    max_length: 255
+relations:
+  - to: Attributeset
+    kind: many-to-one
+    via: attributeset_id
+storage:
+  engine: HSQLDB
+  observed_table: ATTRIBUTESETINSTANCE
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE ATTRIBUTESETINSTANCE
+    note: shipped SQL create script

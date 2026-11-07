@@ -1,0 +1,18 @@
+id: R-002
+title: Payment and change
+kind: computation
+statement: >-
+  A ticket is settled by one or more payments (cash, card, ...). The total paid must cover the ticket total;
+  for cash, the change is the tendered amount minus the ticket total.
+formula: |
+  paid = sum(PAYMENTS.TOTAL for the receipt)
+  change = tendered_cash - ticket_total        # cash only
+  settled when paid >= ticket_total
+applies_to: [Payments.total]
+features: [F-001]
+examples: []   # confirm change rounding and split-payment behaviour by a run
+status: partial
+confidence: medium
+evidence:
+  - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "PAYMENTS(RECEIPT->RECEIPTS, PAYMENT type, TOTAL DOUBLE); RECEIPTS one per ticket", note: "shipped schema" }
+contradictions: []

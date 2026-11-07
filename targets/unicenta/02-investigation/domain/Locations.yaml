@@ -1,0 +1,31 @@
+name: Locations
+description: Table LOCATIONS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: address
+    label: ""
+    type: string
+    observed_as: ADDRESS
+    max_length: 255
+relations: []
+storage:
+  engine: HSQLDB
+  observed_table: LOCATIONS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE LOCATIONS
+    note: shipped SQL create script

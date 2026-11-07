@@ -1,0 +1,47 @@
+name: ShiftBreaks
+description: Table SHIFT_BREAKS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: shiftid
+    label: ""
+    type: ref
+    observed_as: SHIFTID
+    required: true
+    ref: Shifts
+  - name: breakid
+    label: ""
+    type: ref
+    observed_as: BREAKID
+    required: true
+    ref: Breaks
+  - name: starttime
+    label: ""
+    type: datetime
+    observed_as: STARTTIME
+    required: true
+  - name: endtime
+    label: ""
+    type: datetime
+    observed_as: ENDTIME
+relations:
+  - to: Breaks
+    kind: many-to-one
+    via: breakid
+  - to: Shifts
+    kind: many-to-one
+    via: shiftid
+storage:
+  engine: HSQLDB
+  observed_table: SHIFT_BREAKS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE SHIFT_BREAKS
+    note: shipped SQL create script

@@ -1,0 +1,54 @@
+name: Payments
+description: Table PAYMENTS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: receipt
+    label: ""
+    type: ref
+    observed_as: RECEIPT
+    required: true
+    ref: Receipts
+  - name: payment
+    label: ""
+    type: string
+    observed_as: PAYMENT
+    required: true
+    max_length: 255
+  - name: total
+    label: ""
+    type: decimal
+    observed_as: TOTAL
+    required: true
+  - name: transid
+    label: ""
+    type: string
+    observed_as: TRANSID
+    max_length: 255
+  - name: returnmsg
+    label: ""
+    type: file
+    observed_as: RETURNMSG
+  - name: notes
+    label: ""
+    type: string
+    observed_as: NOTES
+    max_length: 255
+relations:
+  - to: Receipts
+    kind: many-to-one
+    via: receipt
+storage:
+  engine: HSQLDB
+  observed_table: PAYMENTS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE PAYMENTS
+    note: shipped SQL create script

@@ -1,0 +1,30 @@
+name: Roles
+description: Table ROLES from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: permissions
+    label: ""
+    type: file
+    observed_as: PERMISSIONS
+relations: []
+storage:
+  engine: HSQLDB
+  observed_table: ROLES
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE ROLES
+    note: shipped SQL create script

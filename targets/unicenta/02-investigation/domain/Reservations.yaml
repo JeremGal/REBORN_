@@ -1,0 +1,51 @@
+name: Reservations
+description: Table RESERVATIONS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: created
+    label: ""
+    type: datetime
+    observed_as: CREATED
+    required: true
+  - name: datenew
+    label: ""
+    type: datetime
+    observed_as: DATENEW
+    required: true
+  - name: title
+    label: ""
+    type: string
+    observed_as: TITLE
+    required: true
+    max_length: 255
+  - name: chairs
+    label: ""
+    type: integer
+    observed_as: CHAIRS
+    required: true
+  - name: isdone
+    label: ""
+    type: boolean
+    observed_as: ISDONE
+    required: true
+  - name: description
+    label: ""
+    type: string
+    observed_as: DESCRIPTION
+    max_length: 255
+relations: []
+storage:
+  engine: HSQLDB
+  observed_table: RESERVATIONS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE RESERVATIONS
+    note: shipped SQL create script

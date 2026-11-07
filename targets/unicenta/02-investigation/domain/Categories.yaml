@@ -1,0 +1,38 @@
+name: Categories
+description: Table CATEGORIES from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: parentid
+    label: ""
+    type: ref
+    observed_as: PARENTID
+    ref: Categories
+  - name: image
+    label: ""
+    type: file
+    observed_as: IMAGE
+relations:
+  - to: Categories
+    kind: many-to-one
+    via: parentid
+storage:
+  engine: HSQLDB
+  observed_table: CATEGORIES
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE CATEGORIES
+    note: shipped SQL create script

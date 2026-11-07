@@ -1,0 +1,35 @@
+name: Shifts
+description: Table SHIFTS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: startshift
+    label: ""
+    type: datetime
+    observed_as: STARTSHIFT
+    required: true
+  - name: endshift
+    label: ""
+    type: datetime
+    observed_as: ENDSHIFT
+  - name: pplid
+    label: ""
+    type: string
+    observed_as: PPLID
+    required: true
+    max_length: 255
+relations: []
+storage:
+  engine: HSQLDB
+  observed_table: SHIFTS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE SHIFTS
+    note: shipped SQL create script

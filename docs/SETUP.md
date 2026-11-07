@@ -49,9 +49,18 @@ All keys are optional: by default the CLI uses the current Node, finds a globall
 
 Claude Code asks you to approve project servers on first launch. Restart Claude Code after changing `.mcp.json`.
 
+## 4b. Web capture provider (block 2)
+
+`reborn doc <url>` and `reborn web <url>` capture public pages. The provider is pluggable:
+
+- default: **Crawl4AI** in Docker (`docker pull unclecode/crawl4ai`).
+- preferred when available: **Linkup** web agent. Set `WEB_PROVIDER=linkup` and `LINKUP_API_KEY=...` (env or `reborn.local.json.linkupApiKey`). The rest of the pipeline is unchanged; evidence is registered the same way.
+
 ## 5. Computer-use agent (block 1)
 
 H Company Agents API (browser and desktop computer use; API, SDK, MCP or CLI). Credentials go in environment variables, never in the repository. The adapter that converts its output into `run.yaml` is to be written in `tools/` (format: `contracts/run.schema.json`).
+
+The agent's work is pre-planned for it: `node tools/reborn.mjs ask <target>` turns every open question into a **computer-use-ready mission** (ordered `ui_steps` and the exact `read_values`, tied via `fills` to the acceptance scenario it completes). The handoff's `to_observe` lists, per feature, the minimal runs that would move it to `confirmed`.
 
 ## 6. Samples used to test the pipeline
 

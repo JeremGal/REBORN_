@@ -1,0 +1,66 @@
+name: Ticketlines
+description: Table TICKETLINES from the shipped database schema.
+fields:
+  - name: ticket
+    label: ""
+    type: ref
+    observed_as: TICKET
+    required: true
+    ref: Tickets
+  - name: line
+    label: ""
+    type: integer
+    observed_as: LINE
+    required: true
+  - name: product
+    label: ""
+    type: ref
+    observed_as: PRODUCT
+    ref: Products
+  - name: attributesetinstance_id
+    label: ""
+    type: ref
+    observed_as: ATTRIBUTESETINSTANCE_ID
+    ref: Attributesetinstance
+  - name: units
+    label: ""
+    type: decimal
+    observed_as: UNITS
+    required: true
+  - name: price
+    label: ""
+    type: decimal
+    observed_as: PRICE
+    required: true
+  - name: taxid
+    label: ""
+    type: ref
+    observed_as: TAXID
+    required: true
+    ref: Taxes
+  - name: attributes
+    label: ""
+    type: file
+    observed_as: ATTRIBUTES
+relations:
+  - to: Tickets
+    kind: many-to-one
+    via: ticket
+  - to: Products
+    kind: many-to-one
+    via: product
+  - to: Attributesetinstance
+    kind: many-to-one
+    via: attributesetinstance_id
+  - to: Taxes
+    kind: many-to-one
+    via: taxid
+storage:
+  engine: HSQLDB
+  observed_table: TICKETLINES
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE TICKETLINES
+    note: shipped SQL create script

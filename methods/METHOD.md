@@ -26,7 +26,7 @@ Rule: **never claim a static finding was observed at runtime.** Static says what
 
 A business application is three layers. Capture each from the cheapest honest source.
 
-- **Data layer (the backbone).** The data model is the most stable, most transferable thing in a legacy app. Get it from, in order of reliability: a real database created by the app (schema with types, keys, enums) > network payloads (SaaS) > table/column names found in the binary > field labels on screens. This layer drives everything else and is what makes a **migration** possible later.
+- **Data layer (the backbone).** The data model is the most stable, most transferable thing in a legacy app. Get it from, in order of reliability: a **shipped SQL create script** or a real database created by the app (schema with types, keys, enums, graded `confirmed`) > network payloads (SaaS) > table/column names found in the binary > field labels on screens. Many desktop apps ship their schema as a resource (uniCenta ships `HSQLDB-create.sql`); the `reborn schema` brick turns any such script straight into entity cards. This layer drives everything else and is what makes a **migration** possible later.
 - **Rule layer (the value).** The computations and constraints: totals, rounding, tax, numbering, posting workflow, validations, state machines. Find candidate rules by: observed input/output pairs from a run (strongest), worked examples in documentation, and functions located from an on-screen label (label -> strings -> functions). Every rule needs at least one worked numeric example; that example becomes a test.
 - **Screen layer (the surface).** The windows, their fields in order, required/validation, shortcuts, navigation. Get it from shipped UI definition files when they exist (GtkBuilder, Delphi DFM, .NET resources, Electron HTML), otherwise from run screenshots. This layer is the one we deliberately **modernise**; capture its behaviour, not its looks.
 
@@ -41,6 +41,13 @@ The receiving block gets a kit, not a report. See `docs/REBUILD-DOSSIER.md` for 
 - per feature, the **discovery trace**: screen -> label -> function -> table -> observed value, each step with its evidence id and grade, so the rebuilder sees what is sure and what is assumed;
 - a **migration map**: for each field of the new model, the original table and column it came from, so real customers can carry their data across (the single strongest reason a business would switch);
 - **test vectors**: every rule with its numeric examples, every feature with its expected values, ready to become automated tests and to be replayed on the rebuild for a parity score.
+
+## Built for a computer-use agent and pluggable tools
+
+Block 1 is a **computer-use agent** that walks the real interface. The method is built around that:
+- The kit's `to_observe` names, per feature, the **exact** remaining gaps (no acceptance values, a rule without an example, a screen without a screenshot) and the missions that close them. This is the actionable form of "is this enough to rebuild yet?".
+- Those missions are **computer-use-ready**: ordered UI steps and the precise values to read back, each tied (via `fills`) to the acceptance scenario or rule example it completes, so a run flows straight back and lifts the grade from `partial` to `confirmed`.
+- Tools are swappable, the method does not change: web capture goes through a provider (Linkup web agent when `LINKUP_API_KEY` is set, Crawl4AI in Docker otherwise); reading a binary goes through REA or Craft Anything; running the UI goes through the computer-use agent. A new or better tool is wired in at one seam without touching the contracts.
 
 ## The loop that proves it
 

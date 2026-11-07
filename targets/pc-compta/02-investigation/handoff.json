@@ -16,7 +16,7 @@
       ]
     }
   },
-  "generated_at": "2026-11-07T14:54:55.851Z",
+  "generated_at": "2026-11-07T15:13:18.255Z",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -32,6 +32,24 @@
     "open_questions": 3,
     "note": "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values."
   },
+  "to_observe": [
+    {
+      "feature": "F-001",
+      "grade": "hypothesis",
+      "priority": "must",
+      "missing": [
+        "no acceptance scenario has observed expected values (run the feature and read them back)",
+        "rule R-001 has no worked example (capture one input/output pair)",
+        "rule R-001 is hypothesis (confirm by observation)",
+        "rule R-002 is hypothesis (confirm by observation)",
+        "screen S-001 has no screenshot (capture it)"
+      ],
+      "missions": [
+        "M-002",
+        "M-003"
+      ]
+    }
+  ],
   "build_order": [
     {
       "kind": "entity",
@@ -711,7 +729,8 @@
       ],
       "probe": {
         "kind": "h-mission",
-        "suggestion": "On the official evaluation version, open a Sales journal, enter one balanced entry with an auxiliary, screenshot each step."
+        "suggestion": "On the official evaluation version, open a Sales journal, enter one balanced entry with an auxiliary, screenshot each step.",
+        "mission": "M-002"
       },
       "status": "open",
       "evidence": [
@@ -746,7 +765,8 @@
       "why": "the sheet gives caps (99 999 999 999,99 DA per entry) but not the rounding rule for tax/totals.",
       "probe": {
         "kind": "h-mission",
-        "suggestion": "Enter amounts with centimes and read back totals and any tax line."
+        "suggestion": "Enter amounts with centimes and read back totals and any tax line.",
+        "mission": "M-003"
       },
       "status": "open",
       "evidence": [

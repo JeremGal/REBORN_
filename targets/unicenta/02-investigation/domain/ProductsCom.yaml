@@ -1,0 +1,38 @@
+name: ProductsCom
+description: Table PRODUCTS_COM from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: product
+    label: ""
+    type: ref
+    observed_as: PRODUCT
+    required: true
+    ref: Products
+  - name: product2
+    label: ""
+    type: ref
+    observed_as: PRODUCT2
+    required: true
+    ref: Products
+relations:
+  - to: Products
+    kind: many-to-one
+    via: product
+  - to: Products
+    kind: many-to-one
+    via: product2
+storage:
+  engine: HSQLDB
+  observed_table: PRODUCTS_COM
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE PRODUCTS_COM
+    note: shipped SQL create script

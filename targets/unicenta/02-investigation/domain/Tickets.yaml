@@ -1,0 +1,55 @@
+name: Tickets
+description: Table TICKETS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: ref
+    observed_as: ID
+    required: true
+    unique: true
+    ref: Receipts
+  - name: tickettype
+    label: ""
+    type: integer
+    observed_as: TICKETTYPE
+    required: true
+  - name: ticketid
+    label: ""
+    type: integer
+    observed_as: TICKETID
+    required: true
+  - name: person
+    label: ""
+    type: ref
+    observed_as: PERSON
+    required: true
+    ref: People
+  - name: customer
+    label: ""
+    type: ref
+    observed_as: CUSTOMER
+    ref: Customers
+  - name: status
+    label: ""
+    type: integer
+    observed_as: STATUS
+    required: true
+relations:
+  - to: Receipts
+    kind: many-to-one
+    via: id
+  - to: People
+    kind: many-to-one
+    via: person
+  - to: Customers
+    kind: many-to-one
+    via: customer
+storage:
+  engine: HSQLDB
+  observed_table: TICKETS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE TICKETS
+    note: shipped SQL create script

@@ -1,0 +1,32 @@
+name: Applications
+description: Table APPLICATIONS from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: version
+    label: ""
+    type: string
+    observed_as: VERSION
+    required: true
+    max_length: 255
+relations: []
+storage:
+  engine: HSQLDB
+  observed_table: APPLICATIONS
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE APPLICATIONS
+    note: shipped SQL create script

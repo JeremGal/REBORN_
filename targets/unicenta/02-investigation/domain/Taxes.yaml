@@ -1,0 +1,65 @@
+name: Taxes
+description: Table TAXES from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: category
+    label: ""
+    type: ref
+    observed_as: CATEGORY
+    required: true
+    ref: Taxcategories
+  - name: custcategory
+    label: ""
+    type: ref
+    observed_as: CUSTCATEGORY
+    ref: Taxcustcategories
+  - name: parentid
+    label: ""
+    type: ref
+    observed_as: PARENTID
+    ref: Taxes
+  - name: rate
+    label: ""
+    type: decimal
+    observed_as: RATE
+    required: true
+  - name: ratecascade
+    label: ""
+    type: boolean
+    observed_as: RATECASCADE
+    required: true
+  - name: rateorder
+    label: ""
+    type: integer
+    observed_as: RATEORDER
+relations:
+  - to: Taxcategories
+    kind: many-to-one
+    via: category
+  - to: Taxcustcategories
+    kind: many-to-one
+    via: custcategory
+  - to: Taxes
+    kind: many-to-one
+    via: parentid
+storage:
+  engine: HSQLDB
+  observed_table: TAXES
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE TAXES
+    note: shipped SQL create script

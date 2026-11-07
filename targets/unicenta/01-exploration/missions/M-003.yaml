@@ -1,0 +1,19 @@
+id: M-003
+title: "Answer U-002: What do the STATUS / TICKETTYPE integer codes mean, and the RATECASCADE compound-tax order?"
+goal: Create a normal sale, a refund and a layaway; note how TICKETTYPE/STATUS differ. Configure two cascading taxes and observe the order.
+priority: should
+capture:
+  screenshots: every-step
+  read_values: []
+success_criteria:
+  - "The run answers: What do the STATUS / TICKETTYPE integer codes mean, and the RATECASCADE compound-tax order?"
+ui_steps:
+  - action: open
+    target: uniCenta oPOS
+  - action: note
+    target: Create a normal sale, a refund and a layaway; note how TICKETTYPE/STATUS differ. Configure two cascading taxes and observe the order.
+  - action: screenshot
+    target: each screen touched
+features: []
+requested_by: U-002
+status: todo

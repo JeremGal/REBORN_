@@ -1,0 +1,45 @@
+name: Places
+description: Table PLACES from the shipped database schema.
+fields:
+  - name: id
+    label: ""
+    type: string
+    observed_as: ID
+    required: true
+    max_length: 255
+    unique: true
+  - name: name
+    label: ""
+    type: string
+    observed_as: NAME
+    required: true
+    max_length: 255
+  - name: x
+    label: ""
+    type: integer
+    observed_as: X
+    required: true
+  - name: y
+    label: ""
+    type: integer
+    observed_as: Y
+    required: true
+  - name: floor
+    label: ""
+    type: ref
+    observed_as: FLOOR
+    required: true
+    ref: Floors
+relations:
+  - to: Floors
+    kind: many-to-one
+    via: floor
+storage:
+  engine: HSQLDB
+  observed_table: PLACES
+status: confirmed
+evidence:
+  - ref: sql:6ae1364b7d43e617
+    kind: rea
+    locator: CREATE TABLE PLACES
+    note: shipped SQL create script

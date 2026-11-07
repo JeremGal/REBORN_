@@ -1,0 +1,25 @@
+id: M-002
+title: "Answer U-001: What does the entry screen look like and what is the exact field order and folio workflow?"
+goal: On the official evaluation version, open a Sales journal, enter one balanced entry with an auxiliary, screenshot each step.
+priority: must
+capture:
+  screenshots: every-step
+  read_values:
+    - the amount lands on the expected side for a Sales journal and the auxiliary 41001 is accepted
+success_criteria:
+  - Acceptance AC-001 gets real expected values and U-001 is answered
+ui_steps:
+  - action: open
+    target: PC Compta Windows (DLG)
+  - action: note
+    target: On the official evaluation version, open a Sales journal, enter one balanced entry with an auxiliary, screenshot each step.
+  - action: read
+    capture: the values stated in the acceptance 'then'
+  - action: screenshot
+    target: each screen touched
+fills:
+  acceptance: AC-001
+features:
+  - F-001
+requested_by: U-001
+status: todo
