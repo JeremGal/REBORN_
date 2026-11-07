@@ -117,6 +117,12 @@ npm run crm:password              # copie le mot de passe admin (jamais affiché
 | Intégration | `contracts/` (10 schémas et des exemples), `clients/` (client et exemples) |
 | Documentation | README, ARCHITECTURE, DEMO, INTEGRATION_ALAN, INTEGRATION_MOUSS, LIMITATIONS, ce rapport |
 
-Ce travail n'est pas encore poussé sur GitHub :
-- la branche `rebuild/studio` du dépôt d'équipe contient l'état précédent ;
-- `main` a avancé depuis (8 commits de l'équipe).
+### Poussé sur GitHub le 7 novembre 2026
+
+- **Branche** : `rebuild/studio`, commit `579c38e`, dossier `studio/`. `main` n'a pas été modifié.
+- **Fusion** : `main` a été fusionné dans la branche sans conflit, puisque l'équipe ne touche pas à `studio/`.
+- **Vérifications avant envoi, sur l'arbre poussé** : aucun secret, 113/113 tests, contrôle des types sans erreur, validation de l'équipe (`tools/reborn.mjs validate`) sans erreur, aucun fichier interdit.
+- **CI GitHub (validate)** : l'étape « Tests » échoue à cause d'un bug déjà présent sur `main` depuis le commit `d2d874d`. Les 3 dernières exécutions de `main` échouent pareil.
+  - Cause : `"test": "node --test tests/"` passe un dossier, ce que `node --test` refuse.
+  - Correctif proposé à Alan : `"test": "node --test 'tests/*.test.mjs'"`. Essayé en local : 55 tests, 0 échec.
+  - Les autres étapes de la CI passent.
