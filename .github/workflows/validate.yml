@@ -1,0 +1,21 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - name: Validate every target against contracts/
+        run: node tools/reborn.mjs validate
+      - name: Forbidden files are not tracked
+        run: |
+          bad=$(git ls-files | grep -Ei '\.(exe|dll|msi|asar|har|saz|pcap|db|sqlite|mdb|accdb|fic|ndx)$|(^|/)\.evidence/|(^|/)\.env$' || true)
+          if [ -n "$bad" ]; then echo "Forbidden files tracked:"; echo "$bad"; exit 1; fi

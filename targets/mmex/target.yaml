@@ -1,0 +1,44 @@
+# Identity of the software under study. Never commit the binary: only its name and SHA-256 (reborn triage adds them).
+id: mmex
+name: Money Manager Ex
+vendor: Money Manager Ex community
+domain: personal and small-business accounting
+description: >-
+  Desktop bookkeeping software (accounts, transactions, payees, categories, budgets, reports), used here as a legally clean stand-in for legacy accounting executables.
+kind: exe
+versions: [ "1.9.4" ]
+platforms: [ windows ]
+access:
+  method: open-source
+  notes: Windows portable build mmex-1.9.4-win64-portable.zip from the official GitHub release, SHA-256 checked against GitHub's published digest.
+legal:
+  basis: GPL-2.0 licence explicitly allows studying and modifying the program.
+  clean_room: true
+  restrictions:
+    - Do not reuse the name, logo or icons in the rebuild.
+artifacts:
+  - name: mmex.exe
+    sha256: d55cb42fb112c40fa274df06c9a79722bb5a65ff2c278ff1b5dd9cfdbf43b24c
+    bytes: 7989760
+    source: local copy (not in git)
+tech:
+  stack: native x86_64 Windows executable linking wxWidgets 3.3.3 (C++ GUI toolkit), libcurl and the MSVC 2015+ runtime; no .NET metadata
+  status: confirmed
+  evidence:
+    - ref: ev_daa0dbca0ef8a1c2263ce11bb520931cb705b83e3b163237453888ed7ab04890
+      kind: rea
+      locator: imports wxmsw333u_*_vc_x64_mmex.dll, wxbase333u_*_vc_x64_mmex.dll, libcurl.dll, msvcp140.dll
+      note: inspect-pe-imports
+    - ref: ev_f339999176148237ba7907954cd62f7aadf9ea40d27479a7d565dcb14bda4d81
+      kind: rea
+      locator: classification.status = not-managed (cli-directory-absent)
+      note: inspect-managed-artifact
+urls:
+  - label: project
+    url: https://github.com/moneymanagerex/moneymanagerex
+  - label: release used
+    url: https://github.com/moneymanagerex/moneymanagerex/releases/tag/v1.9.4
+team:
+  explorer: ""
+  investigator: AlanECE
+  rebuilder: ""

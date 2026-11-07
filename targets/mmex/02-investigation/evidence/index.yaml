@@ -1,0 +1,175 @@
+# Filled automatically by tools/reborn.mjs. Raw files live in the local evidence store (.evidence/<target>/), never in git.
+target: mmex
+entries:
+  - id: ev_e28b18949330c901d378e4ef60b4cdcccec3a1d47e36fd19d7d51206c7af15d7
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-desktop-application
+    args: [ <path>/mmex-1.9.4-win64, --detail, summary, --evidence_output, <path>/20261107T131052Z-inspect-desktop-application.complete.json ]
+    subject: { label: mmex-1.9.4-win64 }
+    created_at: 2026-11-07T13:10:59.164Z
+    file: rea/20261107T131052Z-inspect-desktop-application.json
+    bytes: 4496
+    sha256: 839722d76ce3caae618eea1454faab016dc387cdab961be6d219921301b828f5
+  - id: ev_975d0dd5bd9d46487ce4a736ec73ae329e01ccbfdd7766c5a8c722a85fa833f2
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-desktop-application (complete evidence)
+    created_at: 2026-11-07T13:10:59.198Z
+    file: rea/20261107T131052Z-inspect-desktop-application.complete.json
+    bytes: 285754
+    sha256: 61622228ab51031740ec0595015e1faf1e887143351e707e55245f62fa23e150
+  - id: ev_daa0dbca0ef8a1c2263ce11bb520931cb705b83e3b163237453888ed7ab04890
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-pe-imports
+    args: [ <path>/mmex.exe ]
+    subject: { label: mmex.exe }
+    created_at: 2026-11-07T13:11:05.337Z
+    file: rea/20261107T131100Z-inspect-pe-imports.json
+    bytes: 529489
+    sha256: d418d261257b31772bfa5516e55caf29acc44d10dc138c33b0b76012d9f57a76
+  - id: ev_fc719235bbbc3f7d43c2b37ddfa418658c93ae8045a11c69bf7cb6b44a97ee92
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-pe-resources
+    args: [ <path>/mmex.exe ]
+    subject: { label: mmex.exe }
+    created_at: 2026-11-07T13:11:10.435Z
+    file: rea/20261107T131105Z-inspect-pe-resources.json
+    bytes: 67648
+    sha256: 5b9e5ed25e59ab303971fb82848443479513eb941929af48e4bc2c0979d7f5df
+  - id: ev_938e4fcc3bb0062fe2d9879b32ceb4cafbf9b55d62675556c6c4dae1097b6d6a
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-pe-certificates
+    args: [ <path>/mmex.exe ]
+    subject: { label: mmex.exe }
+    created_at: 2026-11-07T13:11:14.794Z
+    file: rea/20261107T131110Z-inspect-pe-certificates.json
+    bytes: 1854
+    sha256: 04a1c6f0cc219364a7bc9e899fbefae905871d1a07527298745ca16557b652da
+  - id: ev_baeea3411fcde1ed6e83c8553ab5612b72ccdd391ca39144bf7f97f11513c63d
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-pe-load-config
+    args: [ <path>/mmex.exe ]
+    subject: { label: mmex.exe }
+    created_at: 2026-11-07T13:11:19.149Z
+    file: rea/20261107T131114Z-inspect-pe-load-config.json
+    bytes: 5463
+    sha256: eeb6b6be1768255eb3b5daa8388d5861d2152cdcec16aa1143bb61a7dbe2959c
+  - id: ev_12025ae650be2a7fe4362025960dda0c45c20f9feeed25815cd919fcf1b016a5
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-native-exports
+    args: [ <path>/mmex.exe ]
+    subject: { label: mmex.exe }
+    created_at: 2026-11-07T13:11:23.732Z
+    file: rea/20261107T131119Z-inspect-native-exports.json
+    bytes: 2046
+    sha256: 669874c955a60f67daa942e4b87817fb43097fe448b08b49741ec73b64046335
+  - id: ev_f339999176148237ba7907954cd62f7aadf9ea40d27479a7d565dcb14bda4d81
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-managed-artifact
+    args: [ <path>/mmex.exe ]
+    subject: { label: mmex.exe }
+    created_at: 2026-11-07T13:11:29.161Z
+    file: rea/20261107T131123Z-inspect-managed-artifact.json
+    bytes: 2090
+    sha256: 4892a20023457e44149257b6e80c6c11df74d2b9cb1e451b6326bc190a538a25
+  - id: ev_8ba9f5ff8ef97a958d66ec708b82f16078e381712e2e4c726e93dbe7566bf326
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-go-binary
+    args: [ <path>/mmex.exe, --detail, summary, --evidence_output, <path>/20261107T131129Z-inspect-go-binary.complete.json ]
+    subject: { label: mmex.exe }
+    created_at: 2026-11-07T13:11:33.720Z
+    file: rea/20261107T131129Z-inspect-go-binary.json
+    bytes: 3583
+    sha256: 4581ba83c0661f6f53d2b7ff91a301f64136f55e76461cb7cb5758921fad4d13
+  - id: ev_ef9fa4f3692699c44e85ee17c216f5e4482d0d397894e2df0e09eafa960ad786
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-go-binary (complete evidence)
+    created_at: 2026-11-07T13:11:33.749Z
+    file: rea/20261107T131129Z-inspect-go-binary.complete.json
+    bytes: 2882
+    sha256: 75eaa0c7b5c8f01dfeca7e2dc271b315ecc4f513ec58ec3959eab2ebc95526cd
+  - id: ev_b9a661bcde98c8a3cfd04b31a4d573b961e4bda891d531578185357274816e76
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-rust-binary
+    args: [ <path>/mmex.exe, --detail, summary, --evidence_output, <path>/20261107T131133Z-inspect-rust-binary.complete.json ]
+    subject: { label: mmex.exe }
+    created_at: 2026-11-07T13:11:38.150Z
+    file: rea/20261107T131133Z-inspect-rust-binary.json
+    bytes: 4002
+    sha256: 9955742ea21174dc3a50c2a0e13a7a79b39049e42599c7da8267388e7a24e0b5
+  - id: ev_4c963fa5134f5ad1cfdf63ca3580268ca7965ee9b5f0d4462b08507736daf9ff
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-rust-binary (complete evidence)
+    created_at: 2026-11-07T13:11:38.166Z
+    file: rea/20261107T131133Z-inspect-rust-binary.complete.json
+    bytes: 3218
+    sha256: 8b1894e95078d05328413f67dc805513850c3216dab64bf649d4e1e5215185c6
+  - id: ev_68e79829f76219aba85578e7faceacc556e288d3c12ce828aa76853437315af4
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-artifact
+    args: [ <path>/mmex.exe, --detail, summary, --evidence_output, <path>/20261107T131138Z-inspect-artifact.complete.json, --integrity-policy, record-and-continue ]
+    subject: { label: mmex.exe }
+    created_at: 2026-11-07T13:11:43.481Z
+    file: rea/20261107T131138Z-inspect-artifact.json
+    bytes: 4467
+    sha256: ebca18ec262ed5341fdc9fa725f4c379a119bc9c1268f53a319dd89f89c38a6d
+  - id: ev_50fdbd36f8d33c465ae451a2b3b632396d08db0316d3c1b259d0f7c0d517900d
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-artifact (complete evidence)
+    created_at: 2026-11-07T13:11:43.509Z
+    file: rea/20261107T131138Z-inspect-artifact.complete.json
+    bytes: 9753
+    sha256: 52ff3e04332eb93dbfbe1903573094ea092cfe848c1e1149edd81144303e1281
+  - id: ev_c1678be0b290158188d40641501c7a5f3b052e2942bb7d6f2b058effbcbe7b20
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-sqlite-database
+    args: [ <path>/mmexini.db3 ]
+    subject: { label: mmexini.db3 }
+    created_at: 2026-11-07T13:11:48.765Z
+    file: rea/20261107T131144Z-inspect-sqlite-database.json
+    bytes: 4410
+    sha256: 77e9baefae2d3833924b1aceb2814a366d70f0a10545fc20d69e717c11c73558
+  - id: ev_612c8824521267675b4b240ccb92cfd89e6f5bbe279abcde0d9a2828dbf13f96
+    kind: craft
+    tool: craft-anything
+    operation: core-feature-find
+    args:
+      - <path>/mmex.exe
+      - --query
+      - New Transaction
+      - --deep
+    subject:
+      label: 'mmex.exe :: "New Transaction"'
+    created_at: 2026-11-07T13:30:37.217Z
+    file: craft/20261107T133034Z-core-feature-find.json
+    bytes: 3011
+    sha256: b3b479e34ad7a0258b091d3f65bd87a2cacfc402ff1fc4165d441edb0039c331

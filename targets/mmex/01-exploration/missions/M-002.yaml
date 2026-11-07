@@ -1,0 +1,12 @@
+id: M-002
+title: "Answer U-001: Which tables, fields and relations does the bookkeeping database contain?"
+goal: Start the portable application, create a new database in a scratch folder, then create one bank account, one payee, one category and two transactions (one deposit, one withdrawal) with fake data. Close the application and report the full path of the database file it created.
+priority: should
+capture:
+  screenshots: every-step
+  read_values: []
+success_criteria:
+  - "The run shows on screen the answer to: Which tables, fields and relations does the bookkeeping database contain?"
+features: []
+requested_by: U-001
+status: todo

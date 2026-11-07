@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reborn.dev/contracts/screen.schema.json",
+  "title": "Screen",
+  "description": "targets/<id>/02-investigation/screens/S-xxx.yaml: what one screen, window or dialog contains and does. Describes structure and behaviour so the rebuild can modernise the look.",
+  "type": "object",
+  "required": ["id", "title", "purpose", "kind", "status", "evidence"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/screenId" },
+    "title": { "type": "string" },
+    "purpose": { "type": "string" },
+    "kind": { "enum": ["login", "menu", "form", "list", "master-detail", "dashboard", "dialog", "report", "wizard", "pos-pad", "settings", "other"] },
+    "screenshots": { "type": "array", "items": { "type": "string" }, "description": "Paths under 01-exploration/runs (visible information, allowed in clean room)." },
+    "layout": { "type": "string", "description": "Regions and their order, in words." },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "control"],
+        "additionalProperties": false,
+        "properties": {
+          "label": { "type": "string" },
+          "control": { "enum": ["text", "number", "money", "date", "select", "checkbox", "radio", "grid", "display", "lookup", "other"] },
+          "binds": { "$ref": "common.schema.json#/$defs/fieldRef" },
+          "required": { "type": "boolean" },
+          "validation": { "type": "string" },
+          "columns": { "type": "array", "items": { "type": "string" }, "description": "For grids: visible column labels in order." }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label"],
+        "additionalProperties": false,
+        "properties": {
+          "label": { "type": "string" },
+          "shortcut": { "type": "string", "description": "F2, Ctrl+S... Legacy users rely on them: keep them." },
+          "triggers": { "$ref": "common.schema.json#/$defs/featureId" },
+          "navigates_to": { "$ref": "common.schema.json#/$defs/screenId" }
+        }
+      }
+    },
+    "states": { "type": "array", "items": { "type": "string" }, "description": "Read-only, editing, validated, locked period..." },
+    "status": { "$ref": "common.schema.json#/$defs/status" },
+    "evidence": { "$ref": "common.schema.json#/$defs/evidenceList", "minItems": 1 }
+  }
+}

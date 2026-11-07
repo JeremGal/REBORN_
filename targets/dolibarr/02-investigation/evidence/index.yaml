@@ -1,0 +1,79 @@
+# Filled automatically by tools/reborn.mjs. Raw files live in the local evidence store (.evidence/<target>/), never in git.
+target: dolibarr
+entries:
+  - id: ev_fca5553a02df71f606f1ddbf5c8dd243ee1516287eea382485d19b23a51ac570
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: list-browser-targets
+    args:
+      - http://127.0.0.1:9352
+    subject:
+      label: https://demo.dolibarr.org
+    created_at: 2026-11-07T13:18:31.885Z
+    file: rea/20261107T131828Z-list-browser-targets.json
+    bytes: 1763
+    sha256: 11b93a3c353a580380e8bc6a6d40a3cb8ea7cb4288fddb6c8131d05a81cc92df
+  - id: ev_54b61d5d483b69dd152bec33bef69444010739de77b11a3ab0b89b4022881a72
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-web-page
+    args:
+      - http://127.0.0.1:9352
+      - 35049326A8E42E830A4E71A757CE9863
+      - --observation-ms
+      - "3000"
+      - --include-script-sources
+      - --include-accessibility-text
+      - --include-json-body-shapes
+    subject:
+      label: https://demo.dolibarr.org/public/demo/index.php
+    created_at: 2026-11-07T13:18:38.409Z
+    file: rea/20261107T131831Z-inspect-web-page.json
+    bytes: 1682488
+    sha256: 324353825ad471e58ddbf585697e3adaa54e9a3c0fc79404226ae28099d6dc1f
+  - id: ev_adef2082199d270c1faffe220e7a0c3b6c3a72bb359317a283b8aad55afefae7
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: export-web-scripts
+    args:
+      - <path>/20261107T131831Z-inspect-web-page.json
+      - <path>/demo.dolibarr.org-1794057518425
+    subject:
+      label: https://demo.dolibarr.org/public/demo/index.php
+    created_at: 2026-11-07T13:18:42.047Z
+    file: rea/20261107T131838Z-export-web-scripts.json
+    bytes: 20019
+    sha256: 45395062ee0b08adb60f5a0f6f1f946e7dddd31ebf3182a8823ece7904be4b93
+  - id: ev_ec3ced9ce71260e2dc156a3e0527d10a8dbfb5fe47d51c2ef9b22ee0ac9c7d8c
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: analyze-javascript-application
+    args:
+      - <path>/demo.dolibarr.org-1794057518425
+      - --detail
+      - summary
+      - --evidence_output
+      - <path>/20261107T132614Z-analyze-javascript-application.complete.json
+      - --integrity-policy
+      - record-and-continue
+      - --source-paths-json
+      - <path>/20261107T132614Z-analyze-javascript-application.complete.sources.json
+    subject:
+      label: demo.dolibarr.org-1794057518425
+    created_at: 2026-11-07T13:28:15.922Z
+    file: rea/20261107T132615Z-analyze-javascript-application.json
+    bytes: 18716
+    sha256: 354504b320fbef1f85cb453efe21e7e49cf53d4a63d50eef1f496bfc9b53851c
+  - id: ev_1b85895779ec618ef1fd6ef0eb6ba856e120856d3b44170eafaa8f1abc9431ac
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: analyze-javascript-application (complete evidence)
+    created_at: 2026-11-07T13:28:15.948Z
+    file: rea/20261107T132614Z-analyze-javascript-application.complete.json
+    bytes: 99999005
+    sha256: d98f31b7101124b0ec4354f174c44e4de73cf34c75a2898c5efcf72a7f63aff1

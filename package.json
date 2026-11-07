@@ -1,0 +1,20 @@
+{
+  "name": "reborn",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Computer-use agents + REA + Craft Anything: understand legacy business software, then rebuild it.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "reborn": "node tools/reborn.mjs",
+    "validate": "node tools/reborn.mjs validate",
+    "status": "node tools/reborn.mjs status"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "yaml": "2.9.0"
+  }
+}

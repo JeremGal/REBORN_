@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reborn.dev/contracts/target.schema.json",
+  "title": "Target",
+  "description": "targets/<id>/target.yaml: the software under study. Never commit the binary itself, only its identity.",
+  "type": "object",
+  "required": ["id", "name", "kind", "access", "legal"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/targetId" },
+    "name": { "type": "string" },
+    "vendor": { "type": "string" },
+    "domain": { "type": "string", "description": "accounting, point-of-sale, driving-school, pharmacy, legal, ..." },
+    "description": { "type": "string" },
+    "kind": { "enum": ["exe", "saas", "both"] },
+    "versions": { "type": "array", "items": { "type": "string" } },
+    "platforms": { "type": "array", "items": { "enum": ["windows", "macos", "linux", "web", "android", "ios"] } },
+    "access": {
+      "type": "object",
+      "required": ["method"],
+      "additionalProperties": false,
+      "properties": {
+        "method": { "enum": ["open-source", "free-demo", "trial", "licence", "test-account", "provided-by-organizers"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "legal": {
+      "type": "object",
+      "required": ["basis", "clean_room"],
+      "additionalProperties": false,
+      "properties": {
+        "basis": { "type": "string", "description": "Why we may study it: licence, open-source licence, organizer authorization, EU Directive 2009/24 art. 5(3) observation by a lawful user..." },
+        "clean_room": { "const": true, "description": "Block 3 rebuilds from the dossier only. No code, assets or brand are copied." },
+        "restrictions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "sha256"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "source": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "urls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "url"],
+        "additionalProperties": false,
+        "properties": { "label": { "type": "string" }, "url": { "type": "string", "format": "uri" } }
+      }
+    },
+    "tech": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "stack": { "type": "string" },
+        "status": { "$ref": "common.schema.json#/$defs/status" },
+        "evidence": { "$ref": "common.schema.json#/$defs/evidenceList" }
+      }
+    },
+    "team": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "explorer": { "type": "string" },
+        "investigator": { "type": "string" },
+        "rebuilder": { "type": "string" }
+      }
+    }
+  }
+}

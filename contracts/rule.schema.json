@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reborn.dev/contracts/rule.schema.json",
+  "title": "Business rule",
+  "description": "targets/<id>/02-investigation/rules/R-xxx.yaml: one rule of the business logic (computation, validation, numbering, rounding, tax...), with worked examples.",
+  "type": "object",
+  "required": ["id", "title", "kind", "statement", "status", "confidence", "evidence"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/ruleId" },
+    "title": { "type": "string" },
+    "kind": { "enum": ["computation", "validation", "workflow", "permission", "numbering", "rounding", "tax", "date", "format", "integrity", "other"] },
+    "statement": { "type": "string", "description": "The rule in one or two plain sentences." },
+    "formula": { "type": "string", "description": "Pseudo-formula, language-neutral. Example: total_incl_tax = round(sum(line.qty * line.unit_price) * (1 + vat_rate), 2)" },
+    "applies_to": { "type": "array", "items": { "type": "string" }, "description": "Entity.field references or screen labels." },
+    "features": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/featureId" } },
+    "examples": {
+      "type": "array",
+      "description": "Observed input/output pairs. They become unit tests in block 3.",
+      "items": {
+        "type": "object",
+        "required": ["given", "expect"],
+        "additionalProperties": false,
+        "properties": {
+          "given": { "type": "object" },
+          "expect": { "type": "object" },
+          "source": { "$ref": "common.schema.json#/$defs/evidenceRef" }
+        }
+      }
+    },
+    "status": { "$ref": "common.schema.json#/$defs/status" },
+    "confidence": { "$ref": "common.schema.json#/$defs/confidence" },
+    "evidence": { "$ref": "common.schema.json#/$defs/evidenceList", "minItems": 1 },
+    "contradictions": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

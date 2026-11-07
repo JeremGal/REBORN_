@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reborn.dev/contracts/parity-report.schema.json",
+  "title": "Parity report (closing the loop)",
+  "description": "targets/<id>/03-reconstruction/parity/report.yaml: the computer-use agent replays the acceptance scenarios on the rebuild and we compare with the original runs.",
+  "type": "object",
+  "required": ["target", "generated_at", "rebuild", "results"],
+  "additionalProperties": false,
+  "properties": {
+    "target": { "$ref": "common.schema.json#/$defs/targetId" },
+    "generated_at": { "$ref": "common.schema.json#/$defs/dateTime" },
+    "rebuild": {
+      "type": "object",
+      "required": ["location"],
+      "additionalProperties": false,
+      "properties": {
+        "location": { "type": "string", "description": "apps/<target> or another repository." },
+        "commit": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["acceptance", "result"],
+        "additionalProperties": false,
+        "properties": {
+          "acceptance": { "$ref": "common.schema.json#/$defs/acceptanceId" },
+          "feature": { "$ref": "common.schema.json#/$defs/featureId" },
+          "original_run": { "$ref": "common.schema.json#/$defs/runId" },
+          "rebuild_run": { "$ref": "common.schema.json#/$defs/runId" },
+          "result": { "enum": ["match", "mismatch", "not-run", "blocked"] },
+          "diff": { "type": "string" }
+        }
+      }
+    }
+  }
+}

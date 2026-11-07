@@ -1,0 +1,30 @@
+# Identity of the software under study. Never commit the binary: only its name and SHA-256 (reborn triage adds them).
+id: dolibarr
+name: Dolibarr ERP/CRM (public demo)
+vendor: Dolibarr community
+domain: small-business ERP / CRM (invoicing, orders, stock, accounting)
+description: >-
+  Web ERP/CRM used here as a legally clean SaaS example: the software is GPL-3.0 and the public demo
+  is provided by the project for evaluation. Only passive inspection, no login, no data entered.
+kind: saas
+versions: []
+platforms: [web]
+access:
+  method: open-source
+  notes: Public demo at demo.dolibarr.org (provided by the project for evaluation). Never enter real data.
+legal:
+  basis: GPL-3.0 licence (source repository Dolibarr/dolibarr); the public demo exists to be tried.
+  clean_room: true
+  restrictions:
+    - Passive observation of public pages only, no load on the demo beyond normal browsing.
+    - Do not reuse the name, logo or theme in the rebuild.
+artifacts: []
+urls:
+  - label: public demo
+    url: https://demo.dolibarr.org/
+  - label: project
+    url: https://github.com/Dolibarr/dolibarr
+team:
+  explorer: ""
+  investigator: AlanECE
+  rebuilder: ""

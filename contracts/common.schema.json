@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reborn.dev/contracts/common.schema.json",
+  "title": "ReBorn shared definitions",
+  "description": "Identifiers, statuses and evidence references reused by every ReBorn contract.",
+  "$defs": {
+    "targetId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "featureId": { "type": "string", "pattern": "^F-[0-9]{3,}$" },
+    "ruleId": { "type": "string", "pattern": "^R-[0-9]{3,}$" },
+    "screenId": { "type": "string", "pattern": "^S-[0-9]{3,}$" },
+    "unknownId": { "type": "string", "pattern": "^U-[0-9]{3,}$" },
+    "missionId": { "type": "string", "pattern": "^M-[0-9]{3,}$" },
+    "observationId": { "type": "string", "pattern": "^O-[0-9]{3,}$" },
+    "acceptanceId": { "type": "string", "pattern": "^AC-[0-9]{3,}$" },
+    "runId": { "type": "string", "pattern": "^run-[A-Za-z0-9._-]+$" },
+    "entityName": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
+    "fieldRef": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Za-z0-9]*\\.[a-z_][a-z0-9_]*$",
+      "description": "Entity.field, for example Invoice.total_incl_tax"
+    },
+    "status": {
+      "enum": ["confirmed", "partial", "hypothesis", "refuted"],
+      "description": "confirmed = backed by at least two independent kinds of evidence or one exact observation; partial = some aspects proven; hypothesis = plausible, not proven; refuted = contradicted by evidence."
+    },
+    "confidence": { "enum": ["high", "medium", "low"] },
+    "priority": {
+      "enum": ["must", "should", "could"],
+      "description": "Rebuild priority: must = needed for the demo / MVP."
+    },
+    "evidenceRef": {
+      "type": "object",
+      "required": ["ref", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 3,
+          "description": "REA evidence id (ev_<64 hex>), run id (run-...), observation id (O-...), Craft Anything item (cany:...), screenshot path, or manual:<short label>."
+        },
+        "kind": { "enum": ["rea", "craft", "h-run", "observation", "screenshot", "manual"] },
+        "locator": { "type": "string", "description": "Where inside the evidence: run step, file:lines, address, module node_id, table name." },
+        "note": { "type": "string" }
+      }
+    },
+    "evidenceList": { "type": "array", "items": { "$ref": "#/$defs/evidenceRef" } },
+    "dateTime": { "type": "string", "format": "date-time" }
+  }
+}

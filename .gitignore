@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+target/
+__pycache__/
+.venv/
+
+# Machine-specific config and secrets
+reborn.local.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.claude/settings.local.json
+
+# Raw evidence: huge, may contain decompiled code -> never shared with block 3, never in git
+.evidence/
+
+# Binaries and archives of the software under study
+*.exe
+*.dll
+*.msi
+*.msix
+*.appx
+*.asar
+*.zip
+*.7z
+*.rar
+*.cab
+*.iso
+*.dmg
+*.apk
+*.ipa
+
+# Network captures (cookies, tokens)
+*.har
+*.saz
+*.pcap
+*.pcapng
+
+# Local databases of the software under study
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+*.accdb
+*.fic
+*.ndx
+*.mmo
+
+# OS noise
+.DS_Store
+Thumbs.db

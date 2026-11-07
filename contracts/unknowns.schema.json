@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reborn.dev/contracts/unknowns.schema.json",
+  "title": "Open questions",
+  "description": "targets/<id>/02-investigation/unknowns.yaml: what is still unknown, why it matters, and the probe that would answer it. Open unknowns with probe kind h-mission become new missions for block 1.",
+  "type": "object",
+  "required": ["target", "unknowns"],
+  "additionalProperties": false,
+  "properties": {
+    "target": { "$ref": "common.schema.json#/$defs/targetId" },
+    "unknowns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "why", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/unknownId" },
+          "question": { "type": "string" },
+          "why": { "type": "string", "description": "What the rebuild cannot do correctly without the answer." },
+          "blocks": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/featureId" } },
+          "probe": {
+            "type": "object",
+            "required": ["kind", "suggestion"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "enum": ["h-mission", "rea", "craft", "manual"] },
+              "suggestion": { "type": "string" },
+              "mission": { "$ref": "common.schema.json#/$defs/missionId" }
+            }
+          },
+          "status": { "enum": ["open", "answered", "wont-fix"] },
+          "answer": { "type": "string" },
+          "evidence": { "$ref": "common.schema.json#/$defs/evidenceList" }
+        }
+      }
+    }
+  }
+}

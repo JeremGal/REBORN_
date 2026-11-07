@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reborn.dev/contracts/feature.schema.json",
+  "title": "Feature card (block 2 output, block 3 input)",
+  "description": "targets/<id>/02-investigation/features/F-xxx.yaml: the unit of work for the rebuilder. Everything needed to rebuild one feature, described as behaviour, never as original code.",
+  "type": "object",
+  "required": ["id", "title", "module", "priority", "status", "confidence", "user_goal", "steps", "acceptance", "evidence"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/featureId" },
+    "title": { "type": "string" },
+    "module": { "type": "string", "description": "Sales, Purchases, Ledger, Planning, Cash register..." },
+    "priority": { "$ref": "common.schema.json#/$defs/priority" },
+    "status": { "$ref": "common.schema.json#/$defs/status" },
+    "confidence": { "$ref": "common.schema.json#/$defs/confidence" },
+    "user_goal": { "type": "string", "description": "As a <persona>, I want to <action> so that <benefit>." },
+    "actors": { "type": "array", "items": { "type": "string" } },
+    "entry_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["screen"],
+        "additionalProperties": false,
+        "properties": {
+          "screen": { "$ref": "common.schema.json#/$defs/screenId" },
+          "action": { "type": "string", "description": "Menu path, button label or shortcut." }
+        }
+      }
+    },
+    "preconditions": { "type": "array", "items": { "type": "string" } },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label"],
+        "additionalProperties": false,
+        "properties": {
+          "label": { "type": "string", "description": "Label as shown to the user." },
+          "field": { "$ref": "common.schema.json#/$defs/fieldRef" },
+          "type": { "type": "string" },
+          "required": { "type": "boolean" },
+          "default": { "type": ["string", "number", "boolean", "null"] },
+          "validation": { "type": "string", "description": "Constraint and the exact error message if observed." },
+          "evidence": { "$ref": "common.schema.json#/$defs/evidenceList" }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["n", "actor", "does"],
+        "additionalProperties": false,
+        "properties": {
+          "n": { "type": "integer", "minimum": 1 },
+          "actor": { "enum": ["user", "system"] },
+          "does": { "type": "string" },
+          "screen": { "$ref": "common.schema.json#/$defs/screenId" },
+          "rules": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ruleId" } }
+        }
+      }
+    },
+    "rules": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ruleId" } },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["data-change", "document", "print", "export", "notification", "navigation", "other"] },
+          "description": { "type": "string" },
+          "entities": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/entityName" } },
+          "format": { "type": "string", "description": "PDF layout, ticket width, CSV columns, file naming..." }
+        }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["when", "behaviour"],
+        "additionalProperties": false,
+        "properties": {
+          "when": { "type": "string" },
+          "behaviour": { "type": "string" },
+          "message": { "type": "string", "description": "Exact text if observed." },
+          "evidence": { "$ref": "common.schema.json#/$defs/evidenceList" }
+        }
+      }
+    },
+    "screens": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/screenId" } },
+    "entities": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/entityName" } },
+    "acceptance": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Testable scenarios. Block 3 turns them into tests; block 1 replays them on the rebuild for the parity report.",
+      "items": {
+        "type": "object",
+        "required": ["id", "given", "when", "then"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/acceptanceId" },
+          "given": { "type": "string" },
+          "when": { "type": "string" },
+          "then": { "type": "string" },
+          "expected_values": { "type": "object" },
+          "source_run": { "$ref": "common.schema.json#/$defs/runId" },
+          "mission": { "$ref": "common.schema.json#/$defs/missionId" }
+        }
+      }
+    },
+    "evidence": { "$ref": "common.schema.json#/$defs/evidenceList", "minItems": 1 },
+    "unknowns": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/unknownId" } },
+    "rebuild_notes": { "type": "string", "description": "Implementation guidance written from behaviour (data structures, edge cases, suggested approach). Never paste decompiled or original code." }
+  }
+}

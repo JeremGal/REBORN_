@@ -1,0 +1,22 @@
+# Identity of the software under study. Never commit the binary: only its name and SHA-256 (reborn triage adds them).
+id: __TARGET_ID__
+name: __TARGET_NAME__
+vendor: ""
+domain: ""            # accounting, point-of-sale, driving-school, pharmacy, legal...
+description: ""
+kind: __TARGET_KIND__ # exe | saas | both
+versions: []
+platforms: []         # windows, web, macos, linux, android, ios
+access:
+  method: free-demo   # open-source | free-demo | trial | licence | test-account | provided-by-organizers
+  notes: ""
+legal:
+  basis: ""           # why we may study it (licence, open-source licence, organizer authorization...)
+  clean_room: true    # block 3 rebuilds from the dossier only
+  restrictions: []
+artifacts: []
+urls: []
+team:
+  explorer: ""
+  investigator: ""
+  rebuilder: ""

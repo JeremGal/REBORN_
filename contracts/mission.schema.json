@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reborn.dev/contracts/mission.schema.json",
+  "title": "Exploration mission (block 1 input)",
+  "description": "targets/<id>/01-exploration/missions/M-xxx.yaml: one task the computer-use agent performs on the original software.",
+  "type": "object",
+  "required": ["id", "title", "goal", "success_criteria", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/missionId" },
+    "title": { "type": "string" },
+    "goal": { "type": "string", "description": "Plain-language objective, written as the instruction given to the agent." },
+    "persona": { "type": "string", "description": "accountant, cashier, admin, student..." },
+    "priority": { "$ref": "common.schema.json#/$defs/priority" },
+    "start_state": { "type": "string" },
+    "steps_hint": { "type": "array", "items": { "type": "string" } },
+    "test_data": { "type": "object", "description": "Fake data only. Never real customer data." },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "screenshots": { "enum": ["every-step", "key-steps"] },
+        "read_values": { "type": "array", "items": { "type": "string" }, "description": "Values the agent must read back on screen (totals, numbers, messages)." },
+        "network": { "type": "boolean", "description": "SaaS only: also export a HAR of the session." }
+      }
+    },
+    "success_criteria": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "features": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/featureId" } },
+    "requested_by": { "type": "string", "description": "kickoff, or the unknown U-xxx this mission should answer." },
+    "status": { "enum": ["todo", "running", "done", "blocked"] }
+  }
+}

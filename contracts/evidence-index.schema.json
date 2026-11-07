@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reborn.dev/contracts/evidence-index.schema.json",
+  "title": "Evidence index",
+  "description": "targets/<id>/02-investigation/evidence/index.yaml: register of raw evidence files. The files themselves live in the local, gitignored evidence store (.evidence/<target>/): they can be huge and may contain decompiled code, which must never reach block 3.",
+  "type": "object",
+  "required": ["target", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "target": { "$ref": "common.schema.json#/$defs/targetId" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "tool", "operation", "created_at", "file"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "description": "ev_<64 hex> for REA, otherwise a stable id." },
+          "kind": { "enum": ["rea", "craft", "h-run", "manual"] },
+          "tool": { "type": "string" },
+          "tool_version": { "type": "string" },
+          "operation": { "type": "string" },
+          "args": { "type": "array", "items": { "type": "string" } },
+          "subject": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string" },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+            }
+          },
+          "created_at": { "$ref": "common.schema.json#/$defs/dateTime" },
+          "file": { "type": "string", "description": "Path relative to the evidence store." },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "summary": { "type": "string" }
+        }
+      }
+    }
+  }
+}

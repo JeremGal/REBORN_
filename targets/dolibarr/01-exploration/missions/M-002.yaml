@@ -1,0 +1,12 @@
+id: M-002
+title: "Answer U-001: Which business screens and API calls sit behind the demo's entry page (invoices, customers, products)?"
+goal: On the public demo, enter with the demo access offered on the page, open the customer invoices list, create one draft invoice for a fake customer with two lines, read back the totals, then delete the draft. Screenshot every step and export a HAR of the session (kept out of git).
+priority: should
+capture:
+  screenshots: every-step
+  read_values: []
+success_criteria:
+  - "The run shows on screen the answer to: Which business screens and API calls sit behind the demo's entry page (invoices, customers, products)?"
+features: []
+requested_by: U-001
+status: todo

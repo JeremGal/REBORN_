@@ -1,0 +1,3 @@
+# Filled automatically by tools/reborn.mjs. Raw files live in the local evidence store (.evidence/<target>/), never in git.
+target: __TARGET_ID__
+entries: []

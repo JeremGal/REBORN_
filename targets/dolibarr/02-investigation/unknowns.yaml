@@ -1,0 +1,20 @@
+# Open questions. A probe of kind h-mission becomes a block 1 mission with: node tools/reborn.mjs ask <target>
+target: dolibarr
+unknowns:
+  - id: U-001
+    question: Which business screens and API calls sit behind the demo's entry page (invoices, customers, products)?
+    why: >-
+      Only the public entry page was inspected (passive observation, no login). Its 17 exported scripts were analysed statically (16 under 300 KB; one 742 KB bundle skipped as likely third-party). Business screens, their fields and the requests they send are not observed yet, so no feature card can be written.
+    probe:
+      kind: h-mission
+      suggestion: >-
+        On the public demo, enter with the demo access offered on the page, open the customer invoices list, create one draft invoice for a fake customer with two lines, read back the totals, then delete the draft. Screenshot every step and export a HAR of the session (kept out of git).
+      mission: M-002
+    status: open
+    evidence:
+      - ref: ev_54b61d5d483b69dd152bec33bef69444010739de77b11a3ab0b89b4022881a72
+        kind: rea
+        note: inspect-web-page on https://demo.dolibarr.org/ (DOM, scripts, network metadata, 3 s passive window)
+      - ref: ev_ec3ced9ce71260e2dc156a3e0527d10a8dbfb5fe47d51c2ef9b22ee0ac9c7d8c
+        kind: rea
+        note: analyze-javascript-application on the exported scripts (coverage partial)
