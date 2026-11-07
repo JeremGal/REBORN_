@@ -14,7 +14,7 @@
       ]
     }
   },
-  "generated_at": "2026-11-07T15:13:16.495Z",
+  "generated_at": "2026-11-07T16:07:24.304Z",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -613,6 +613,68 @@
           "kind": "rea",
           "locator": "gnucash.exe imports libgnc-register-gnome.dll / libgnc-ledger-core (register UI)",
           "note": "the register is a code-built UI; columns inferred from the data model, to confirm by a run"
+        }
+      ]
+    },
+    {
+      "id": "S-003",
+      "title": "New book assistant",
+      "purpose": "First-run setup that creates the chart of accounts before any entry.",
+      "kind": "wizard",
+      "screenshots": [
+        "01-exploration/runs/run-20261107-1600-m001/s01.png"
+      ],
+      "layout": "Step list on the left (6 steps), step content on the right, navigation buttons bottom right.",
+      "fields": [
+        {
+          "label": "New account hierarchy",
+          "control": "other"
+        },
+        {
+          "label": "New book options",
+          "control": "other"
+        },
+        {
+          "label": "Currency",
+          "control": "select",
+          "binds": "Commodity.guid"
+        },
+        {
+          "label": "Accounts to create",
+          "control": "grid"
+        },
+        {
+          "label": "Define selected accounts",
+          "control": "grid"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Appliquer"
+        },
+        {
+          "label": "Précédent"
+        },
+        {
+          "label": "Annuler"
+        }
+      ],
+      "states": [
+        "step 1 to 6"
+      ],
+      "status": "confirmed",
+      "evidence": [
+        {
+          "ref": "run-20261107-1600-m001",
+          "kind": "h-run",
+          "locator": "step 1, s01.png",
+          "note": "observed at first launch"
+        },
+        {
+          "ref": "ui:02c4602aa307314d",
+          "kind": "manual",
+          "locator": "gtkbuilder/assistant-hierarchy.glade 'Finish Account Setup'",
+          "note": "shipped UI file"
         }
       ]
     }

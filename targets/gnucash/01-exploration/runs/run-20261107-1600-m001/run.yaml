@@ -1,0 +1,29 @@
+id: run-20261107-1600-m001
+mission: M-001
+subject: original
+agent:
+  provider: local-capture
+  product: "reborn capture script (launch, capture visible windows, close; no input sent)"
+target:
+  id: gnucash
+  version: "5.17"
+  environment: Windows 10, portable extract of the official installer, first launch (no existing book)
+started_at: 2026-11-07T15:59:30Z
+ended_at: 2026-11-07T16:00:10Z
+outcome: partial
+steps:
+  - n: 1
+    action: { type: screenshot, target_desc: "first-run assistant window" }
+    screenshot: s01.png
+    screen: S-003
+    observation: >-
+      On first launch the app opens a new-book assistant before anything else. Left column lists 6 steps:
+      new account hierarchy, new book options, choose currency, choose accounts to create, define selected accounts,
+      finish. Final step text: Apply creates the accounts, Previous goes back, Cancel closes without creating.
+    extracted: { steps: 6, buttons: [Appliquer, Précédent, Annuler], language: fr }
+  - n: 2
+    action: { type: screenshot, target_desc: "main window behind the assistant" }
+    screenshot: s02.png
+    observation: "Main window title 'Livre non enregistré - GnuCash' (unsaved book) sits behind the assistant; its content is hidden by the assistant."
+    extracted: { main_window_title: "Livre non enregistré - GnuCash" }
+notes: No click or keystroke was sent (input automation on the desktop is not allowed); the register and account tree need a computer-use run to be captured.
