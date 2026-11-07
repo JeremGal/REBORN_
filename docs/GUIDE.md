@@ -74,6 +74,15 @@ For each run that `fills` an acceptance scenario: copy the values read into `exp
 
 Build in `apps/<id>/`. Turn every test vector into an automated test. Features graded `hypothesis` go behind a clear TODO. If something is missing, add an open question instead of guessing. After block 1 replays the scenarios on the rebuild, fill `03-reconstruction/parity/report.yaml`.
 
+## 3b. Checking that a rebuild is faithful
+
+A rebuild that passes its own tests is not proof of fidelity: the tests only restate the rules the kit wrote down. Check in this order:
+
+1. `node tools/reborn.mjs coverage <target>` shows how many of the original's windows and tables the cards cover. Feature coverage stays `unknown` until an independent feature list (user manual, menu tree) is added to the evidence; never read it as complete.
+2. Every rule example and acceptance scenario must come from a block 1 run (`source_run`). Expected values written by hand are labelled as such in the rebuild.
+3. Replay the same scenarios on the original and on the rebuild with the computer-use agent, then fill `parity/report.yaml`. This is the only comparison that counts.
+4. Keep a list of known divergences in `03-reconstruction/README.md` (what the rebuild does differently on purpose, and what it does not reproduce yet). Each divergence becomes an open question and a mission.
+
 ## 4. Hand-off checklist
 
 | From to | Ready when |

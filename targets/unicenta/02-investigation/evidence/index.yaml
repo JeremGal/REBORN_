@@ -2,6 +2,7 @@
 target: unicenta
 entries:
   - id: sql:6ae1364b7d43e617
+    counts: { tables: 40 }
     kind: rea
     tool: reborn-schema
     operation: sql-schema

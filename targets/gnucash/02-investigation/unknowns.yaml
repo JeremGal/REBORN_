@@ -33,3 +33,15 @@ unknowns:
     status: open
     evidence:
       - { ref: "ui:02c4602aa307314d", kind: manual, locator: "111 windows inventoried (dialog-invoice, dialog-customer, dialog-tax-info ...)", note: "reborn ui" }
+
+  - id: U-004
+    question: What exactly happens when the user saves an unbalanced entry in the register (dialog, choices offered, default)?
+    why: R-001 was inferred from engine function names (repair and import handling). Public sources describe a Rebalance Transaction dialog at entry time that the rebuild does not reproduce; the rebuild silently adds the balancing split instead.
+    blocks: [ F-001 ]
+    probe:
+      kind: h-mission
+      suggestion: "In a register, enter a transaction whose two amounts differ (for example 100.00 out of Bank and 90.00 into Groceries) and press Enter. Screenshot the dialog that appears, note every choice offered and which one is the default. Then repeat on separate transactions choosing each option in turn and read back the resulting splits and any Imbalance account."
+      mission: M-005
+    status: open
+    evidence:
+      - { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "engine functions xaccTransScrubImbalance and get_balance_split (repair-time behaviour)", note: "does not show the entry-time dialog" }

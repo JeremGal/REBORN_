@@ -14,7 +14,7 @@
       ]
     }
   },
-  "generated_at": "2026-11-07T16:07:24.304Z",
+  "generated_at": "2026-11-07T16:14:37.684Z",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -27,8 +27,28 @@
       "partial": 3,
       "hypothesis": 1
     },
+    "coverage": {
+      "screens": {
+        "carded": 3,
+        "inventoried": 111,
+        "ratio": 3,
+        "source": "window inventory (counts.windows)"
+      },
+      "entities": {
+        "carded": 4,
+        "inventoried": 23,
+        "ratio": 17,
+        "source": "table inventory (counts.tables)"
+      },
+      "features": {
+        "carded": 1,
+        "inventoried": null,
+        "ratio": null,
+        "note": "no independent feature inventory yet (user manual or menu tree needed): coverage is unknown, not complete"
+      }
+    },
     "has_observed_values": false,
-    "open_questions": 3,
+    "open_questions": 4,
     "note": "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values."
   },
   "to_observe": [
@@ -429,7 +449,7 @@
       ],
       "examples": [],
       "status": "partial",
-      "confidence": "medium",
+      "confidence": "low",
       "evidence": [
         {
           "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
@@ -438,7 +458,9 @@
           "note": "core-feature-find on 'Imbalance'"
         }
       ],
-      "contradictions": [],
+      "contradictions": [
+        "Public sources describe a Rebalance Transaction dialog shown at entry time (choices include balancing by hand or letting the software create a balancing split). The functions found (xaccTransScrubImbalance and related) show repair-time and import-time handling, so this statement may not match what the register does when the user saves an unbalanced entry. See U-004."
+      ],
       "notes": "Static evidence only (functions and strings in the engine). The exact rounding/currency behaviour is unconfirmed until a run is observed."
     },
     {
@@ -1182,6 +1204,28 @@
           "kind": "manual",
           "locator": "111 windows inventoried (dialog-invoice, dialog-customer, dialog-tax-info ...)",
           "note": "reborn ui"
+        }
+      ]
+    },
+    {
+      "id": "U-004",
+      "question": "What exactly happens when the user saves an unbalanced entry in the register (dialog, choices offered, default)?",
+      "why": "R-001 was inferred from engine function names (repair and import handling). Public sources describe a Rebalance Transaction dialog at entry time that the rebuild does not reproduce; the rebuild silently adds the balancing split instead.",
+      "blocks": [
+        "F-001"
+      ],
+      "probe": {
+        "kind": "h-mission",
+        "suggestion": "In a register, enter a transaction whose two amounts differ (for example 100.00 out of Bank and 90.00 into Groceries) and press Enter. Screenshot the dialog that appears, note every choice offered and which one is the default. Then repeat on separate transactions choosing each option in turn and read back the resulting splits and any Imbalance account.",
+        "mission": "M-005"
+      },
+      "status": "open",
+      "evidence": [
+        {
+          "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
+          "kind": "craft",
+          "locator": "engine functions xaccTransScrubImbalance and get_balance_split (repair-time behaviour)",
+          "note": "does not show the entry-time dialog"
         }
       ]
     }

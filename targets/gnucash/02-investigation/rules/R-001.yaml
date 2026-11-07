@@ -12,8 +12,9 @@ applies_to: [Transaction, Split.value_num, Split.value_denom]
 features: [F-001]
 examples: []   # MISSING: needs an observed run (e.g. a 100.00 debit vs 100.00 credit) to become a test; block 1 mission raised
 status: partial
-confidence: medium
+confidence: low
 evidence:
   - { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "libgnc-engine.dll functions xaccTransGetImbalance, xaccTransGetImbalanceValue, xaccTransScrubImbalance, get_balance_split (uses string 'Imbalance')", note: "core-feature-find on 'Imbalance'" }
-contradictions: []
+contradictions:
+  - "Public sources describe a Rebalance Transaction dialog shown at entry time (choices include balancing by hand or letting the software create a balancing split). The functions found (xaccTransScrubImbalance and related) show repair-time and import-time handling, so this statement may not match what the register does when the user saves an unbalanced entry. See U-004."
 notes: Static evidence only (functions and strings in the engine). The exact rounding/currency behaviour is unconfirmed until a run is observed.

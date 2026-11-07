@@ -1,0 +1,25 @@
+id: M-005
+title: "Answer U-004: What exactly happens when the user saves an unbalanced entry in the register (dialog, choices offered, def"
+goal: In a register, enter a transaction whose two amounts differ (for example 100.00 out of Bank and 90.00 into Groceries) and press Enter. Screenshot the dialog that appears, note every choice offered and which one is the default. Then repeat on separate transactions choosing each option in turn and read back the resulting splits and any Imbalance account.
+priority: must
+capture:
+  screenshots: every-step
+  read_values:
+    - Bank decreases by 25.00, Groceries increases by 25.00, the transaction balances to zero
+success_criteria:
+  - Acceptance AC-001 gets real expected values and U-004 is answered
+ui_steps:
+  - action: open
+    target: GnuCash
+  - action: note
+    target: In a register, enter a transaction whose two amounts differ (for example 100.00 out of Bank and 90.00 into Groceries) and press Enter. Screenshot the dialog that appears, note every choice offered and which one is the default. Then repeat on separate transactions choosing each option in turn and read back the resulting splits and any Imbalance account.
+  - action: read
+    capture: the values stated in the acceptance 'then'
+  - action: screenshot
+    target: each screen touched
+fills:
+  acceptance: AC-001
+features:
+  - F-001
+requested_by: U-004
+status: todo

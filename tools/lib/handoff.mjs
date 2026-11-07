@@ -90,6 +90,18 @@ function toObserve(t) {
   return rows;
 }
 
+// How much of the original the cards cover. The denominator is only what the evidence inventoried (a lower bound),
+// and there is no independent feature list yet: feature coverage is reported as unknown, never as complete.
+export function computeCoverage(t) {
+  const found = (key) => t.evidence.reduce((m, e) => Math.max(m, Number(e.counts?.[key]) || 0), 0) || null;
+  const row = (carded, inventoried, source) => ({ carded, inventoried, ratio: inventoried ? Math.round((carded / inventoried) * 100) : null, source });
+  return {
+    screens: row(t.screens.length, found("windows"), "window inventory (counts.windows)"),
+    entities: row(t.entities.length, found("tables"), "table inventory (counts.tables)"),
+    features: { carded: t.features.length, inventoried: null, ratio: null, note: "no independent feature inventory yet (user manual or menu tree needed): coverage is unknown, not complete" },
+  };
+}
+
 export function buildHandoff(target) {
   const t = loadTarget(target);
   const m = t.meta || {};
@@ -101,6 +113,7 @@ export function buildHandoff(target) {
     clean_room: true,
     readiness: {
       features: grade(t.features), rules: grade(t.rules), entities: grade(t.entities),
+      coverage: computeCoverage(t),
       has_observed_values: t.features.some((f) => (f.acceptance || []).some((a) => a.source_run)),
       open_questions: t.unknowns.filter((u) => u.status === "open").length,
       note: "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values.",

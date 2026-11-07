@@ -16,7 +16,7 @@
       ]
     }
   },
-  "generated_at": "2026-11-07T15:13:18.255Z",
+  "generated_at": "2026-11-07T16:14:41.660Z",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -27,6 +27,26 @@
     },
     "entities": {
       "hypothesis": 4
+    },
+    "coverage": {
+      "screens": {
+        "carded": 1,
+        "inventoried": null,
+        "ratio": null,
+        "source": "window inventory (counts.windows)"
+      },
+      "entities": {
+        "carded": 4,
+        "inventoried": null,
+        "ratio": null,
+        "source": "table inventory (counts.tables)"
+      },
+      "features": {
+        "carded": 1,
+        "inventoried": null,
+        "ratio": null,
+        "note": "no independent feature inventory yet (user manual or menu tree needed): coverage is unknown, not complete"
+      }
     },
     "has_observed_values": false,
     "open_questions": 3,

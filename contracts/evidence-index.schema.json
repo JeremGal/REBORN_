@@ -33,7 +33,8 @@
           "file": { "type": "string", "description": "Path relative to the evidence store." },
           "bytes": { "type": "integer", "minimum": 0 },
           "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
-          "summary": { "type": "string" }
+          "summary": { "type": "string" },
+          "counts": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 }, "description": "Size of the inventory this evidence found (windows, tables...). Used for coverage: what was found, not a guarantee of completeness." }
         }
       }
     }

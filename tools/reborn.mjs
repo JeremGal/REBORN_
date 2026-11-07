@@ -12,7 +12,7 @@ import { listTargets, loadTarget } from "./lib/load.mjs";
 import { validateTarget } from "./lib/validate.mjs";
 import { renderDossier } from "./lib/dossier.mjs";
 import { inventoryUi } from "./lib/ui-extract.mjs";
-import { buildHandoff } from "./lib/handoff.mjs";
+import { buildHandoff, computeCoverage } from "./lib/handoff.mjs";
 import { schemaToEntities } from "./lib/sql-schema.mjs";
 
 const HELP = `ReBorn CLI
@@ -24,6 +24,7 @@ Project
   dossier <target>                                     render 02-investigation/dossier.md (human read)
   handoff <target>                                      build 02-investigation/handoff.json (machine kit for the rebuild block)
   ask <target>                                         turn open unknowns (probe h-mission) into block 1 missions
+  coverage <target>                                    how much of the original the cards cover (screens, entities; features unknown)
 
 Investigation (block 2): evidence goes to .evidence/<target>/ (gitignored) and is registered in evidence/index.yaml
   analyze <target> <file|folder|url>                   detect the kind and run the right command (routes like REA/Craft)
@@ -466,6 +467,16 @@ async function web(target, url) {
   }
 }
 
+// How much of the original the cards cover (screens vs windows found, entities vs tables found; features unknown).
+function coverage(target) {
+  needTarget(target);
+  const c = computeCoverage(loadTarget(target));
+  console.log(`coverage of ${target} (denominators are what the evidence found, a lower bound, not a guarantee of completeness)`);
+  for (const [k, v] of Object.entries(c)) {
+    console.log(`  ${k.padEnd(9)} ${String(v.carded).padStart(3)} carded / ${v.inventoried ?? "?"} found${v.ratio != null ? ` (${v.ratio}%)` : ""}${v.note ? `   ${v.note}` : ""}`);
+  }
+}
+
 // A shipped SQL create script -> entity cards with real types/keys (graded confirmed). Reusable across targets.
 function schema(target, input) {
   needTarget(target);
@@ -479,7 +490,7 @@ function schema(target, input) {
   const copy = path.join(evDir, path.basename(p));
   fs.copyFileSync(p, copy);
   const sha = sha256File(copy);
-  register(target, { id: `sql:${sha.slice(0, 16)}`, kind: "rea", tool: "reborn-schema", operation: "sql-schema", subject: { label: path.basename(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), copy).split(path.sep).join("/"), bytes: fs.statSync(copy).size, sha256: sha, summary: "shipped SQL create script" });
+  register(target, { id: `sql:${sha.slice(0, 16)}`, kind: "rea", tool: "reborn-schema", operation: "sql-schema", subject: { label: path.basename(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), copy).split(path.sep).join("/"), bytes: fs.statSync(copy).size, sha256: sha, summary: "shipped SQL create script", counts: { tables: (fs.readFileSync(p, "utf8").match(/CREATE\s+(?:CACHED\s+|MEMORY\s+)?TABLE/gi) || []).length } });
   const entities = schemaToEntities(fs.readFileSync(p, "utf8"), { engine: path.basename(p).split("-")[0], sourceRef: `sql:${sha.slice(0, 16)}` });
   const domainDir = path.join(targetDir(target), "02-investigation", "domain");
   fs.mkdirSync(domainDir, { recursive: true });
@@ -540,7 +551,7 @@ function ui(target, input) {
   const out = path.join(dir, `${new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z")}-gtkbuilder-inventory.json`);
   fs.writeFileSync(out, JSON.stringify(inv, null, 1));
   const sha = sha256File(out);
-  register(target, { id: `ui:${sha.slice(0, 16)}`, kind: "manual", tool: "reborn-ui", operation: "gtkbuilder-inventory", subject: { label: path.basename(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes: fs.statSync(out).size, sha256: sha, summary: `${inv.files} UI definition files, ${inv.screens.length} top-level windows / panels` });
+  register(target, { id: `ui:${sha.slice(0, 16)}`, kind: "manual", tool: "reborn-ui", operation: "gtkbuilder-inventory", subject: { label: path.basename(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes: fs.statSync(out).size, sha256: sha, summary: `${inv.files} UI definition files, ${inv.screens.length} top-level windows / panels`, counts: { windows: inv.screens.length, files: inv.files } });
   console.log(`OK  ui inventory  ${inv.files} files, ${inv.screens.length} windows/panels  ui:${sha.slice(0, 16)}`);
   for (const s of inv.screens.filter((s) => s.title).slice(0, 40)) console.log(`  - ${s.title.padEnd(42)} ${s.class.padEnd(14)} inputs ${String(s.inputs.length).padStart(2)} | checks ${String(s.checks.length).padStart(2)} | buttons ${String(s.buttons.length).padStart(2)}  (${s.file})`);
 }
@@ -631,6 +642,7 @@ switch (cmd) {
   case "dossier": { needTarget(t); console.log(`written ${path.relative(ROOT, renderDossier(t))}`); break; }
   case "handoff": { needTarget(t); const { out, kit } = buildHandoff(t); console.log(`written ${path.relative(ROOT, out)}`); console.log(`  build order: ${kit.build_order.length} steps | migration rows: ${kit.migration_map.length} | test vectors: ${kit.test_vectors.from_rules.length + kit.test_vectors.from_acceptance.length} | observed values: ${kit.readiness.has_observed_values ? "yes" : "NO (block 1 pending)"}`); break; }
   case "ask": ask(t); break;
+  case "coverage": coverage(t); break;
   case "analyze": analyze(t, argv[0]); break;
   case "triage": triage(t, argv[0]); break;
   case "js": js(t, argv[0]); break;

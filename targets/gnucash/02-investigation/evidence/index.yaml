@@ -253,6 +253,7 @@ entries:
     bytes: 9697
     sha256: 9b21b1c4cbda4aa8cd6b968ee1b8afdde00f67d806d42f7f9a3211b1d2bb26aa
   - id: ev_9dbde950c155b3a18a3025101337cf0d369506e9e056fb095af3378286abd75f
+    counts: { tables: 23 }
     kind: craft
     tool: craft-anything
     operation: native-strings-find
@@ -306,6 +307,7 @@ entries:
     bytes: 23824
     sha256: c78e1fb69d24f251a4def86fe6b2753389eddc693e3ecd67b9c37d283249be4e
   - id: ui:02c4602aa307314d
+    counts: { windows: 111, files: 66 }
     kind: manual
     tool: reborn-ui
     operation: gtkbuilder-inventory
