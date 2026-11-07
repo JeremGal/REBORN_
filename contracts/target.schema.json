@@ -10,6 +10,7 @@
     "id": { "$ref": "common.schema.json#/$defs/targetId" },
     "name": { "type": "string" },
     "vendor": { "type": "string" },
+    "kit_title": { "type": "string", "description": "Neutral description used in the dossier and the kit instead of the product's name and vendor (for example: Open-source double-entry accounting desktop application). The rebuild must not carry the original's branding." },
     "domain": { "type": "string", "description": "accounting, point-of-sale, driving-school, pharmacy, legal, ..." },
     "description": { "type": "string" },
     "kind": { "enum": ["exe", "saas", "both"] },

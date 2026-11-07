@@ -1,0 +1,31 @@
+name: WorkstationType
+description: A kind of workstation, with its costs. Document type "Workstation Type" (module Manufacturing).
+fields:
+  - name: workstation_type
+    label: Workstation Type
+    type: string
+    observed_as: workstation_type
+    required: true
+    unique: true
+  - name: hour_rate
+    label: Net Hour Rate
+    type: money
+    observed_as: hour_rate
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+relations:
+  - to: WorkstationCost
+    kind: one-to-many
+    via: workstation_costs
+    description: lines (Operating Components Cost)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkstation Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workstation Type
+    note: declared by the program and served by its API

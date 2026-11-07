@@ -1,0 +1,35 @@
+name: TransactionDeletionRecordDetails
+description: 'Document type "Transaction Deletion Record Details" (module Accounts): lines of another document.'
+fields:
+  - name: doctype_name
+    label: DocType
+    type: ref
+    observed_as: doctype_name
+    required: true
+    ref: DocType
+  - name: docfield_name
+    label: DocField
+    type: string
+    observed_as: docfield_name
+  - name: no_of_docs
+    label: No of Docs
+    type: integer
+    observed_as: no_of_docs
+  - name: done
+    label: Done
+    type: boolean
+    observed_as: done
+    default: "0"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: doctype_name
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTransaction Deletion Record Details
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Transaction Deletion Record Details
+    note: declared by the program and served by its API

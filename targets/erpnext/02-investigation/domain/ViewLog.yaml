@@ -1,0 +1,29 @@
+name: ViewLog
+description: Document type "View Log" (module Core).
+fields:
+  - name: viewed_by
+    label: Viewed By
+    type: string
+    observed_as: viewed_by
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Reference name
+    type: string
+    observed_as: reference_name
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabView Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of View Log
+    note: declared by the program and served by its API

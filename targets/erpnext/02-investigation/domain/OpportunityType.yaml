@@ -1,0 +1,16 @@
+name: OpportunityType
+description: Document type "Opportunity Type" (module CRM).
+fields:
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOpportunity Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Opportunity Type
+    note: declared by the program and served by its API

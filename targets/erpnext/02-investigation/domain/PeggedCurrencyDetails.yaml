@@ -1,0 +1,33 @@
+name: PeggedCurrencyDetails
+description: 'Document type "Pegged Currency Details" (module Accounts): lines of another document.'
+fields:
+  - name: source_currency
+    label: Currency
+    type: ref
+    observed_as: source_currency
+    ref: Currency
+  - name: pegged_against
+    label: Pegged Against
+    type: ref
+    observed_as: pegged_against
+    ref: Currency
+  - name: pegged_exchange_rate
+    label: Exchange Rate
+    type: string
+    observed_as: pegged_exchange_rate
+relations:
+  - to: Currency
+    kind: many-to-one
+    via: source_currency
+  - to: Currency
+    kind: many-to-one
+    via: pegged_against
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPegged Currency Details
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Pegged Currency Details
+    note: declared by the program and served by its API

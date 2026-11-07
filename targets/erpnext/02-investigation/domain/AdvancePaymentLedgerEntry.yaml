@@ -1,0 +1,75 @@
+name: AdvancePaymentLedgerEntry
+description: Document type "Advance Payment Ledger Entry" (module Accounts).
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: voucher_type
+    label: Voucher Type
+    type: ref
+    observed_as: voucher_type
+    ref: DocType
+  - name: voucher_no
+    label: Voucher No
+    type: string
+    observed_as: voucher_no
+  - name: against_voucher_type
+    label: Against Voucher Type
+    type: ref
+    observed_as: against_voucher_type
+    ref: DocType
+  - name: against_voucher_no
+    label: Against Voucher No
+    type: string
+    observed_as: against_voucher_no
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: exchange_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: exchange_rate
+    precision: 9
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: base_amount
+    label: Amount (Company Currency)
+    type: money
+    observed_as: base_amount
+  - name: event
+    label: Event
+    type: string
+    observed_as: event
+  - name: delinked
+    label: DeLinked
+    type: boolean
+    observed_as: delinked
+    default: "0"
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DocType
+    kind: many-to-one
+    via: voucher_type
+  - to: DocType
+    kind: many-to-one
+    via: against_voucher_type
+  - to: Currency
+    kind: many-to-one
+    via: currency
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAdvance Payment Ledger Entry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Advance Payment Ledger Entry
+    note: declared by the program and served by its API

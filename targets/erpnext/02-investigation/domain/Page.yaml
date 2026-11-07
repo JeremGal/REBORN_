@@ -1,0 +1,61 @@
+name: Page
+description: Document type "Page" (module Core).
+fields:
+  - name: system_page
+    label: System Page
+    type: boolean
+    observed_as: system_page
+    default: "0"
+  - name: page_name
+    label: Page Name
+    type: string
+    observed_as: page_name
+    required: true
+    unique: true
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: icon
+    label: icon
+    type: string
+    observed_as: icon
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    required: true
+    ref: ModuleDef
+  - name: restrict_to_domain
+    label: Restrict To Domain
+    type: ref
+    observed_as: restrict_to_domain
+    ref: Domain
+  - name: standard
+    label: Standard
+    type: enum
+    observed_as: standard
+    required: true
+    enum_values:
+      - Yes
+      - No
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: Domain
+    kind: many-to-one
+    via: restrict_to_domain
+  - to: HasRole
+    kind: one-to-many
+    via: roles
+    description: lines (Roles)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPage
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Page
+    note: declared by the program and served by its API

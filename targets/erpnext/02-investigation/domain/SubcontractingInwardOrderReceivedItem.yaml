@@ -1,0 +1,103 @@
+name: SubcontractingInwardOrderReceivedItem
+description: 'Document type "Subcontracting Inward Order Received Item" (module Subcontracting): lines of another document.'
+fields:
+  - name: main_item_code
+    label: Item Code
+    type: ref
+    observed_as: main_item_code
+    required: true
+    ref: Item
+  - name: rm_item_code
+    label: Raw Material Item Code
+    type: ref
+    observed_as: rm_item_code
+    required: true
+    ref: Item
+  - name: is_customer_provided_item
+    label: Is Customer Provided Item
+    type: boolean
+    observed_as: is_customer_provided_item
+    required: true
+    default: "0"
+  - name: is_additional_item
+    label: Is Additional Item
+    type: boolean
+    observed_as: is_additional_item
+    default: "0"
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: bom_detail_no
+    label: BOM Detail No
+    type: string
+    observed_as: bom_detail_no
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+    required: true
+  - name: required_qty
+    label: Required Qty
+    type: decimal
+    observed_as: required_qty
+    default: "0"
+  - name: billed_qty
+    label: Billed Qty
+    type: decimal
+    observed_as: billed_qty
+    default: "0"
+  - name: received_qty
+    label: Received Qty
+    type: decimal
+    observed_as: received_qty
+    default: "0"
+  - name: consumed_qty
+    label: Consumed Qty
+    type: decimal
+    observed_as: consumed_qty
+    default: "0"
+  - name: work_order_qty
+    label: Work Order Qty
+    type: decimal
+    observed_as: work_order_qty
+    default: "0"
+  - name: returned_qty
+    label: Returned Qty
+    type: decimal
+    observed_as: returned_qty
+    default: "0"
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: main_item_code
+  - to: Item
+    kind: many-to-one
+    via: rm_item_code
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Inward Order Received Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Inward Order Received Item
+    note: declared by the program and served by its API

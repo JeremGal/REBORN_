@@ -1,0 +1,70 @@
+name: ListFilter
+description: Document type "List Filter" (module Desk).
+fields:
+  - name: filter_name
+    label: Filter Name
+    type: string
+    observed_as: filter_name
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: layout_order
+    label: Layout Order
+    type: integer
+    observed_as: layout_order
+  - name: sort_field
+    label: Sort Field
+    type: string
+    observed_as: sort_field
+  - name: sort_order
+    label: Sort Order
+    type: string
+    observed_as: sort_order
+  - name: for_user
+    label: For User
+    type: ref
+    observed_as: for_user
+    ref: User
+  - name: route_signature
+    label: Route Signature
+    type: text
+    observed_as: route_signature
+  - name: filters
+    label: Filters
+    type: text
+    observed_as: filters
+  - name: columns
+    label: Columns
+    type: text
+    observed_as: columns
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: User
+    kind: many-to-one
+    via: for_user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabList Filter
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of List Filter
+    note: declared by the program and served by its API

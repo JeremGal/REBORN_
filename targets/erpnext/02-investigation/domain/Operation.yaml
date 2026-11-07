@@ -1,0 +1,56 @@
+name: Operation
+description: A step in making an item, like cutting or assembly. Document type "Operation" (module Manufacturing).
+fields:
+  - name: workstation
+    label: Default Workstation
+    type: ref
+    observed_as: workstation
+    ref: Workstation
+  - name: is_corrective_operation
+    label: Is Corrective Operation
+    type: boolean
+    observed_as: is_corrective_operation
+    default: "0"
+  - name: create_job_card_based_on_batch_size
+    label: Create Job Card based on Batch Size
+    type: boolean
+    observed_as: create_job_card_based_on_batch_size
+    default: "0"
+  - name: quality_inspection_template
+    label: Quality Inspection Template
+    type: ref
+    observed_as: quality_inspection_template
+    ref: QualityInspectionTemplate
+  - name: batch_size
+    label: Batch Size
+    type: integer
+    observed_as: batch_size
+    default: "1"
+  - name: total_operation_time
+    label: Total Operation Time
+    type: decimal
+    observed_as: total_operation_time
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+relations:
+  - to: Workstation
+    kind: many-to-one
+    via: workstation
+  - to: QualityInspectionTemplate
+    kind: many-to-one
+    via: quality_inspection_template
+  - to: SubOperation
+    kind: one-to-many
+    via: sub_operations
+    description: lines (sub_operations)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOperation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Operation
+    note: declared by the program and served by its API

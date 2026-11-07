@@ -1,0 +1,39 @@
+name: QualityFeedback
+description: Feedback on your quality from a customer or employee. Document type "Quality Feedback" (module Quality Management).
+fields:
+  - name: template
+    label: Template
+    type: ref
+    observed_as: template
+    required: true
+    ref: QualityFeedbackTemplate
+  - name: document_type
+    label: Type
+    type: enum
+    observed_as: document_type
+    required: true
+    enum_values:
+      - User
+      - Customer
+  - name: document_name
+    label: Feedback By
+    type: string
+    observed_as: document_name
+    required: true
+relations:
+  - to: QualityFeedbackTemplate
+    kind: many-to-one
+    via: template
+  - to: QualityFeedbackParameter
+    kind: one-to-many
+    via: parameters
+    description: lines (Parameters)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Feedback
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Feedback
+    note: declared by the program and served by its API

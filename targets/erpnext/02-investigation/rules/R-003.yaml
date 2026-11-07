@@ -1,0 +1,23 @@
+id: R-003
+title: Discount on the whole invoice
+kind: computation
+statement: >-
+  A discount percentage can apply to the whole invoice, either on the net total or on the grand total. On the net total
+  it lowers the base before taxes. On the grand total it is computed on the amount including tax and spread back so
+  that the net total and the taxes both shrink. With a single tax on the net total, both give the same totals.
+formula: |
+  on Net Total:   net_total = sum(amount) * (1 - pct);  taxes on the reduced net
+  on Grand Total: discount = grand_total_before * pct;  net and taxes reduced so grand_total = before - discount
+applies_to: [SalesInvoice.apply_discount_on, SalesInvoice.additional_discount_percentage, SalesInvoice.discount_amount]
+features: [F-001]
+examples:
+  - { given: { lines: 100, discount: "5% on Net Total", tax: "20% On Net Total" }, expect: { net_total: 95, taxes: 19, grand_total: 114 }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 3 (SI-03)" } }
+  - { given: { lines: 100, discount: "5% on Grand Total", tax: "20% On Net Total" }, expect: { net_total: 95, taxes: 19, grand_total: 114 }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 4 (SI-04)" } }
+status: confirmed
+confidence: medium
+evidence:
+  - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "steps 3-4" }
+contradictions: []
+notes: >-
+  Observed with one tax on the net total only. With a fixed charge or a compound tax, the two modes should differ;
+  that case is not observed yet (U-002).

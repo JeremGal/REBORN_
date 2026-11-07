@@ -109,6 +109,21 @@ fields:
     type: string
     observed_as: DISPLAY
     max_length: 255
+  - name: isvprice
+    label: ""
+    type: boolean
+    observed_as: ISVPRICE
+    required: true
+  - name: isverpatrib
+    label: ""
+    type: boolean
+    observed_as: ISVERPATRIB
+    required: true
+  - name: texttip
+    label: ""
+    type: string
+    observed_as: TEXTTIP
+    max_length: 255
 relations:
   - to: Categories
     kind: many-to-one

@@ -1,0 +1,70 @@
+name: SubcontractingInwardOrderServiceItem
+description: 'Document type "Subcontracting Inward Order Service Item" (module Subcontracting): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+    required: true
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    required: true
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+  - name: fg_item
+    label: Finished Good Item
+    type: ref
+    observed_as: fg_item
+    required: true
+    ref: Item
+  - name: fg_item_qty
+    label: Finished Good Item Quantity
+    type: decimal
+    observed_as: fg_item_qty
+    required: true
+    default: "1"
+  - name: sales_order_item
+    label: Sales Order Item
+    type: string
+    observed_as: sales_order_item
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: Item
+    kind: many-to-one
+    via: fg_item
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Inward Order Service Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Inward Order Service Item
+    note: declared by the program and served by its API

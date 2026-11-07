@@ -1,0 +1,165 @@
+name: BOMOperation
+description: 'Document type "BOM Operation" (module Manufacturing): lines of another document.'
+fields:
+  - name: operation
+    label: Operation
+    type: ref
+    observed_as: operation
+    required: true
+    ref: Operation
+  - name: sequence_id
+    label: Sequence ID
+    type: integer
+    observed_as: sequence_id
+  - name: finished_good
+    label: Output Item
+    type: ref
+    observed_as: finished_good
+    ref: Item
+  - name: finished_good_qty
+    label: Output Qty
+    type: decimal
+    observed_as: finished_good_qty
+    default: "1"
+  - name: bom_no
+    label: Output Item BOM
+    type: ref
+    observed_as: bom_no
+    ref: BOM
+  - name: workstation_type
+    label: Workstation Type
+    type: ref
+    observed_as: workstation_type
+    ref: WorkstationType
+  - name: workstation
+    label: Workstation
+    type: ref
+    observed_as: workstation
+    ref: Workstation
+  - name: time_in_mins
+    label: Operation Time
+    type: decimal
+    observed_as: time_in_mins
+    required: true
+  - name: fixed_time
+    label: Fixed Time
+    type: boolean
+    observed_as: fixed_time
+    default: "0"
+  - name: is_subcontracted
+    label: Is Subcontracted
+    type: boolean
+    observed_as: is_subcontracted
+    default: "0"
+  - name: is_final_finished_good
+    label: Last Step
+    type: boolean
+    observed_as: is_final_finished_good
+    default: "0"
+  - name: set_cost_based_on_bom_qty
+    label: Set Operating Cost Based On BOM Quantity
+    type: boolean
+    observed_as: set_cost_based_on_bom_qty
+    default: "0"
+  - name: quality_inspection_required
+    label: Quality Inspection Required
+    type: boolean
+    observed_as: quality_inspection_required
+    default: "0"
+  - name: skip_material_transfer
+    label: " Skip Material Transfer"
+    type: boolean
+    observed_as: skip_material_transfer
+    default: "0"
+  - name: backflush_from_wip_warehouse
+    label: Backflush Materials From WIP Warehouse
+    type: boolean
+    observed_as: backflush_from_wip_warehouse
+    default: "0"
+  - name: source_warehouse
+    label: Source Warehouse
+    type: ref
+    observed_as: source_warehouse
+    ref: Warehouse
+  - name: wip_warehouse
+    label: WIP Warehouse
+    type: ref
+    observed_as: wip_warehouse
+    ref: Warehouse
+  - name: fg_warehouse
+    label: Finished Goods Warehouse
+    type: ref
+    observed_as: fg_warehouse
+    ref: Warehouse
+  - name: hour_rate
+    label: Hour Rate
+    type: money
+    observed_as: hour_rate
+    precision: 2
+  - name: base_hour_rate
+    label: Base Hour Rate(Company Currency)
+    type: money
+    observed_as: base_hour_rate
+  - name: batch_size
+    label: Batch Size
+    type: decimal
+    observed_as: batch_size
+    default: "1"
+  - name: cost_per_unit
+    label: Cost Per Unit
+    type: decimal
+    observed_as: cost_per_unit
+  - name: base_cost_per_unit
+    label: Base Cost Per Unit
+    type: decimal
+    observed_as: base_cost_per_unit
+  - name: operating_cost
+    label: Operating Cost
+    type: money
+    observed_as: operating_cost
+  - name: base_operating_cost
+    label: Operating Cost(Company Currency)
+    type: money
+    observed_as: base_operating_cost
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+relations:
+  - to: Operation
+    kind: many-to-one
+    via: operation
+  - to: Item
+    kind: many-to-one
+    via: finished_good
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: WorkstationType
+    kind: many-to-one
+    via: workstation_type
+  - to: Workstation
+    kind: many-to-one
+    via: workstation
+  - to: Warehouse
+    kind: many-to-one
+    via: source_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: wip_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: fg_warehouse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Operation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Operation
+    note: declared by the program and served by its API

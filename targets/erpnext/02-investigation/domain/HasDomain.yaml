@@ -1,0 +1,21 @@
+name: HasDomain
+description: 'Document type "Has Domain" (module Core): lines of another document.'
+fields:
+  - name: domain
+    label: Domain
+    type: ref
+    observed_as: domain
+    ref: Domain
+relations:
+  - to: Domain
+    kind: many-to-one
+    via: domain
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabHas Domain
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Has Domain
+    note: declared by the program and served by its API

@@ -1,0 +1,99 @@
+name: PurchaseReceiptItemSupplied
+description: 'Document type "Purchase Receipt Item Supplied" (module Buying): lines of another document.'
+fields:
+  - name: main_item_code
+    label: Item Code
+    type: ref
+    observed_as: main_item_code
+    ref: Item
+  - name: rm_item_code
+    label: Raw Material Item Code
+    type: ref
+    observed_as: rm_item_code
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: bom_detail_no
+    label: BOM Detail No
+    type: string
+    observed_as: bom_detail_no
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: stock_uom
+    label: Stock Uom
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: required_qty
+    label: Available Qty For Consumption
+    type: decimal
+    observed_as: required_qty
+  - name: consumed_qty
+    label: Qty to Be Consumed
+    type: decimal
+    observed_as: consumed_qty
+    required: true
+  - name: current_stock
+    label: Current Stock
+    type: decimal
+    observed_as: current_stock
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: purchase_order
+    label: Purchase Order
+    type: ref
+    observed_as: purchase_order
+    ref: PurchaseOrder
+relations:
+  - to: Item
+    kind: many-to-one
+    via: main_item_code
+  - to: Item
+    kind: many-to-one
+    via: rm_item_code
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: PurchaseOrder
+    kind: many-to-one
+    via: purchase_order
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPurchase Receipt Item Supplied
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Purchase Receipt Item Supplied
+    note: declared by the program and served by its API

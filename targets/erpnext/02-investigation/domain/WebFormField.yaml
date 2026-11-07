@@ -1,0 +1,127 @@
+name: WebFormField
+description: 'Document type "Web Form Field" (module Website): lines of another document.'
+fields:
+  - name: fieldname
+    label: Field
+    type: string
+    observed_as: fieldname
+  - name: fieldtype
+    label: Fieldtype
+    type: enum
+    observed_as: fieldtype
+    enum_values:
+      - Attach
+      - Attach Image
+      - Check
+      - Currency
+      - Color
+      - Data
+      - Date
+      - Datetime
+      - Duration
+      - Float
+      - HTML
+      - Int
+      - Link
+      - Password
+      - Phone
+      - Rating
+      - Select
+      - Signature
+      - Small Text
+      - Text
+      - Text Editor
+      - Table
+      - Time
+      - Section Break
+      - Column Break
+      - Page Break
+  - name: label
+    label: Custom Label
+    type: string
+    observed_as: label
+  - name: allow_read_on_all_link_options
+    label: Allow Read On All Link Options
+    type: boolean
+    observed_as: allow_read_on_all_link_options
+    default: "0"
+  - name: reqd
+    label: Mandatory
+    type: boolean
+    observed_as: reqd
+    default: "0"
+  - name: read_only
+    label: Read Only
+    type: boolean
+    observed_as: read_only
+    default: "0"
+  - name: show_in_filter
+    label: Show in filter
+    type: boolean
+    observed_as: show_in_filter
+    default: "0"
+  - name: hidden
+    label: Hidden
+    type: boolean
+    observed_as: hidden
+    default: "0"
+  - name: options
+    label: Options
+    type: text
+    observed_as: options
+  - name: max_length
+    label: Max Length
+    type: integer
+    observed_as: max_length
+  - name: max_value
+    label: Max Value
+    type: integer
+    observed_as: max_value
+  - name: precision
+    label: Precision
+    type: enum
+    observed_as: precision
+    enum_values:
+      - "0"
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+  - name: depends_on
+    label: Display Depends On
+    type: text
+    observed_as: depends_on
+  - name: mandatory_depends_on
+    label: Mandatory Depends On
+    type: text
+    observed_as: mandatory_depends_on
+  - name: read_only_depends_on
+    label: Read Only Depends On
+    type: text
+    observed_as: read_only_depends_on
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: default
+    label: Default
+    type: string
+    observed_as: default
+  - name: placeholder
+    label: Placeholder
+    type: string
+    observed_as: placeholder
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWeb Form Field
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Web Form Field
+    note: declared by the program and served by its API

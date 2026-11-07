@@ -1,0 +1,74 @@
+name: SalesPerson
+description: Someone who sells for you, with targets and commission. Document type "Sales Person" (module Setup).
+fields:
+  - name: sales_person_name
+    label: Sales Person Name
+    type: string
+    observed_as: sales_person_name
+    required: true
+    unique: true
+  - name: parent_sales_person
+    label: Parent Sales Person
+    type: ref
+    observed_as: parent_sales_person
+    ref: SalesPerson
+  - name: commission_rate
+    label: Commission Rate
+    type: string
+    observed_as: commission_rate
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    required: true
+    default: "0"
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: employee
+    label: Employee
+    type: ref
+    observed_as: employee
+    ref: Employee
+  - name: department
+    label: Department
+    type: ref
+    observed_as: department
+    ref: Department
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: old_parent
+    type: string
+    observed_as: old_parent
+relations:
+  - to: SalesPerson
+    kind: many-to-one
+    via: parent_sales_person
+  - to: Employee
+    kind: many-to-one
+    via: employee
+  - to: Department
+    kind: many-to-one
+    via: department
+  - to: TargetDetail
+    kind: one-to-many
+    via: targets
+    description: lines (Targets)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSales Person
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sales Person
+    note: declared by the program and served by its API

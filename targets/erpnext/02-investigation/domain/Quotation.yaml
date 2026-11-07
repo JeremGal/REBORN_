@@ -1,0 +1,523 @@
+name: Quotation
+description: 'Prices you offer a customer or lead. Document type "Quotation" (module Selling): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - SAL-QTN-.YYYY.-
+  - name: quotation_to
+    label: Quotation To
+    type: ref
+    observed_as: quotation_to
+    required: true
+    ref: DocType
+    default: Customer
+  - name: party_name
+    label: Party
+    type: string
+    observed_as: party_name
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: transaction_date
+    label: Date
+    type: date
+    observed_as: transaction_date
+    required: true
+    default: Today
+  - name: valid_till
+    label: Valid Till
+    type: date
+    observed_as: valid_till
+  - name: order_type
+    label: Order Type
+    type: enum
+    observed_as: order_type
+    required: true
+    enum_values:
+      - Sales
+      - Maintenance
+      - Shopping Cart
+    default: Sales
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: has_unit_price_items
+    label: Has Unit Price Items
+    type: boolean
+    observed_as: has_unit_price_items
+    default: "0"
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: Quotation
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: conversion_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: conversion_rate
+    required: true
+    precision: 9
+  - name: selling_price_list
+    label: Price List
+    type: ref
+    observed_as: selling_price_list
+    required: true
+    ref: PriceList
+  - name: price_list_currency
+    label: Price List Currency
+    type: ref
+    observed_as: price_list_currency
+    required: true
+    ref: Currency
+  - name: plc_conversion_rate
+    label: Price List Exchange Rate
+    type: decimal
+    observed_as: plc_conversion_rate
+    required: true
+    precision: 9
+  - name: ignore_pricing_rule
+    label: Ignore Pricing Rule
+    type: boolean
+    observed_as: ignore_pricing_rule
+    default: "0"
+  - name: scan_barcode
+    label: Scan Barcode
+    type: string
+    observed_as: scan_barcode
+  - name: last_scanned_warehouse
+    label: Last Scanned Warehouse
+    type: string
+    observed_as: last_scanned_warehouse
+  - name: total_qty
+    label: Total Quantity
+    type: decimal
+    observed_as: total_qty
+  - name: total_net_weight
+    label: Total Net Weight
+    type: decimal
+    observed_as: total_net_weight
+  - name: base_total
+    label: Total (Company Currency)
+    type: money
+    observed_as: base_total
+  - name: base_net_total
+    label: Net Total (Company Currency)
+    type: money
+    observed_as: base_net_total
+  - name: total
+    label: Total
+    type: money
+    observed_as: total
+  - name: net_total
+    label: Net Total
+    type: money
+    observed_as: net_total
+  - name: tax_category
+    label: Tax Category
+    type: ref
+    observed_as: tax_category
+    ref: TaxCategory
+  - name: taxes_and_charges
+    label: Sales Taxes and Charges Template
+    type: ref
+    observed_as: taxes_and_charges
+    ref: SalesTaxesAndChargesTemplate
+  - name: shipping_rule
+    label: Shipping Rule
+    type: ref
+    observed_as: shipping_rule
+    ref: ShippingRule
+  - name: incoterm
+    label: Incoterm
+    type: ref
+    observed_as: incoterm
+    ref: Incoterm
+  - name: named_place
+    label: Named Place
+    type: string
+    observed_as: named_place
+  - name: base_total_taxes_and_charges
+    label: Total Taxes and Charges (Company Currency)
+    type: money
+    observed_as: base_total_taxes_and_charges
+  - name: total_taxes_and_charges
+    label: Total Taxes and Charges
+    type: money
+    observed_as: total_taxes_and_charges
+  - name: base_grand_total
+    label: Grand Total (Company Currency)
+    type: money
+    observed_as: base_grand_total
+  - name: base_rounding_adjustment
+    label: Rounding Adjustment (Company Currency)
+    type: money
+    observed_as: base_rounding_adjustment
+  - name: base_rounded_total
+    label: Rounded Total (Company Currency)
+    type: money
+    observed_as: base_rounded_total
+  - name: base_in_words
+    label: In Words (Company Currency)
+    type: string
+    observed_as: base_in_words
+    max_length: 240
+  - name: grand_total
+    label: Grand Total
+    type: money
+    observed_as: grand_total
+  - name: rounding_adjustment
+    label: Rounding Adjustment
+    type: money
+    observed_as: rounding_adjustment
+  - name: rounded_total
+    label: Rounded Total
+    type: money
+    observed_as: rounded_total
+  - name: disable_rounded_total
+    label: Disable Rounded Total
+    type: boolean
+    observed_as: disable_rounded_total
+    default: "0"
+  - name: in_words
+    label: In Words
+    type: string
+    observed_as: in_words
+    max_length: 240
+  - name: apply_discount_on
+    label: Apply Additional Discount On
+    type: enum
+    observed_as: apply_discount_on
+    enum_values:
+      - Grand Total
+      - Net Total
+    default: Grand Total
+  - name: base_discount_amount
+    label: Additional Discount Amount (Company Currency)
+    type: money
+    observed_as: base_discount_amount
+  - name: coupon_code
+    label: Coupon Code
+    type: ref
+    observed_as: coupon_code
+    ref: CouponCode
+  - name: additional_discount_percentage
+    label: Additional Discount Percentage
+    type: decimal
+    observed_as: additional_discount_percentage
+  - name: discount_amount
+    label: Additional Discount Amount
+    type: money
+    observed_as: discount_amount
+  - name: referral_sales_partner
+    label: Referral Sales Partner
+    type: ref
+    observed_as: referral_sales_partner
+    ref: SalesPartner
+  - name: other_charges_calculation
+    label: Taxes and Charges Calculation
+    type: text
+    observed_as: other_charges_calculation
+  - name: customer_address
+    label: Customer Address
+    type: ref
+    observed_as: customer_address
+    ref: Address
+  - name: address_display
+    label: Address
+    type: text
+    observed_as: address_display
+  - name: contact_person
+    label: Contact Person
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: contact_display
+    label: Contact
+    type: text
+    observed_as: contact_display
+  - name: contact_mobile
+    label: Mobile No
+    type: text
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: string
+    observed_as: contact_email
+  - name: shipping_address_name
+    label: Shipping Address
+    type: ref
+    observed_as: shipping_address_name
+    ref: Address
+  - name: shipping_address
+    label: Shipping Address
+    type: text
+    observed_as: shipping_address
+  - name: company_address
+    label: Company Address Name
+    type: ref
+    observed_as: company_address
+    ref: Address
+  - name: company_address_display
+    label: Company Address
+    type: text
+    observed_as: company_address_display
+  - name: company_contact_person
+    label: Company Contact Person
+    type: ref
+    observed_as: company_contact_person
+    ref: Contact
+  - name: payment_terms_template
+    label: Payment Terms Template
+    type: ref
+    observed_as: payment_terms_template
+    ref: PaymentTermsTemplate
+  - name: tc_name
+    label: Terms
+    type: ref
+    observed_as: tc_name
+    ref: TermsAndConditions
+  - name: terms
+    label: Term Details
+    type: text
+    observed_as: terms
+  - name: auto_repeat
+    label: Auto Repeat
+    type: ref
+    observed_as: auto_repeat
+    ref: AutoRepeat
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: group_same_items
+    label: Group same items
+    type: boolean
+    observed_as: group_same_items
+    default: "0"
+  - name: select_print_heading
+    label: Print Heading
+    type: ref
+    observed_as: select_print_heading
+    ref: PrintHeading
+  - name: language
+    label: Print Language
+    type: ref
+    observed_as: language
+    ref: Language
+  - name: order_lost_reason
+    label: Detailed Reason
+    type: text
+    observed_as: order_lost_reason
+  - name: utm_source
+    label: Source
+    type: ref
+    observed_as: utm_source
+    ref: UTMSource
+  - name: utm_medium
+    label: Medium
+    type: ref
+    observed_as: utm_medium
+    ref: UTMMedium
+  - name: utm_campaign
+    label: Campaign
+    type: ref
+    observed_as: utm_campaign
+    ref: UTMCampaign
+  - name: utm_content
+    label: Content
+    type: string
+    observed_as: utm_content
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - Open
+      - Replied
+      - Partially Ordered
+      - Ordered
+      - Lost
+      - Cancelled
+      - Expired
+    default: Draft
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: opportunity
+    label: Opportunity
+    type: ref
+    observed_as: opportunity
+    ref: Opportunity
+  - name: enq_det
+    label: Opportunity Item
+    type: text
+    observed_as: enq_det
+  - name: supplier_quotation
+    label: Supplier Quotation
+    type: ref
+    observed_as: supplier_quotation
+    ref: SupplierQuotation
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: quotation_to
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Quotation
+    kind: many-to-one
+    via: amended_from
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: PriceList
+    kind: many-to-one
+    via: selling_price_list
+  - to: Currency
+    kind: many-to-one
+    via: price_list_currency
+  - to: QuotationItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: TaxCategory
+    kind: many-to-one
+    via: tax_category
+  - to: SalesTaxesAndChargesTemplate
+    kind: many-to-one
+    via: taxes_and_charges
+  - to: ShippingRule
+    kind: many-to-one
+    via: shipping_rule
+  - to: Incoterm
+    kind: many-to-one
+    via: incoterm
+  - to: SalesTaxesAndCharges
+    kind: one-to-many
+    via: taxes
+    description: lines (Sales Taxes and Charges)
+  - to: CouponCode
+    kind: many-to-one
+    via: coupon_code
+  - to: SalesPartner
+    kind: many-to-one
+    via: referral_sales_partner
+  - to: ItemWiseTaxDetail
+    kind: one-to-many
+    via: item_wise_tax_details
+    description: lines (Item Wise Tax Details)
+  - to: PackedItem
+    kind: one-to-many
+    via: packed_items
+    description: lines (Bundle Items)
+  - to: PricingRuleDetail
+    kind: one-to-many
+    via: pricing_rules
+    description: lines (Pricing Rule Detail)
+  - to: Address
+    kind: many-to-one
+    via: customer_address
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Address
+    kind: many-to-one
+    via: shipping_address_name
+  - to: Address
+    kind: many-to-one
+    via: company_address
+  - to: Contact
+    kind: many-to-one
+    via: company_contact_person
+  - to: PaymentTermsTemplate
+    kind: many-to-one
+    via: payment_terms_template
+  - to: PaymentSchedule
+    kind: one-to-many
+    via: payment_schedule
+    description: lines (Payment Schedule)
+  - to: TermsAndConditions
+    kind: many-to-one
+    via: tc_name
+  - to: AutoRepeat
+    kind: many-to-one
+    via: auto_repeat
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: PrintHeading
+    kind: many-to-one
+    via: select_print_heading
+  - to: Language
+    kind: many-to-one
+    via: language
+  - to: QuotationLostReasonDetail
+    kind: one-to-many
+    via: lost_reasons
+    description: lines (Lost Reasons)
+  - to: CompetitorDetail
+    kind: one-to-many
+    via: competitors
+    description: lines (Competitors)
+  - to: UTMSource
+    kind: many-to-one
+    via: utm_source
+  - to: UTMMedium
+    kind: many-to-one
+    via: utm_medium
+  - to: UTMCampaign
+    kind: many-to-one
+    via: utm_campaign
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: Opportunity
+    kind: many-to-one
+    via: opportunity
+  - to: SupplierQuotation
+    kind: many-to-one
+    via: supplier_quotation
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuotation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quotation
+    note: declared by the program and served by its API

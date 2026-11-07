@@ -1,0 +1,82 @@
+name: OpportunityItem
+description: 'Document type "Opportunity Item" (module CRM): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: qty
+    label: Qty
+    type: decimal
+    observed_as: qty
+    default: "1"
+  - name: brand
+    label: Brand
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: base_rate
+    label: Rate (Company Currency)
+    type: money
+    observed_as: base_rate
+    required: true
+  - name: base_amount
+    label: Amount (Company Currency)
+    type: money
+    observed_as: base_amount
+    required: true
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    required: true
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOpportunity Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Opportunity Item
+    note: declared by the program and served by its API

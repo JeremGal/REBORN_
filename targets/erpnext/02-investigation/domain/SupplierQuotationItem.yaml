@@ -1,0 +1,290 @@
+name: SupplierQuotationItem
+description: 'Document type "Supplier Quotation Item" (module Buying): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: supplier_part_no
+    label: Supplier Part Number
+    type: string
+    observed_as: supplier_part_no
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: lead_time_days
+    label: Supplier Lead Time (days)
+    type: integer
+    observed_as: lead_time_days
+  - name: expected_delivery_date
+    label: Expected Delivery Date
+    type: date
+    observed_as: expected_delivery_date
+  - name: is_free_item
+    label: Is Free Item
+    type: boolean
+    observed_as: is_free_item
+    default: "0"
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: brand
+    label: Brand
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: conversion_factor
+    label: UOM Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    required: true
+    precision: 9
+  - name: stock_qty
+    label: Qty as per Stock UOM
+    type: decimal
+    observed_as: stock_qty
+  - name: price_list_rate
+    label: Price List Rate
+    type: money
+    observed_as: price_list_rate
+  - name: base_price_list_rate
+    label: Price List Rate (Company Currency)
+    type: money
+    observed_as: base_price_list_rate
+  - name: margin_type
+    label: Margin Type
+    type: enum
+    observed_as: margin_type
+    enum_values:
+      - Percentage
+      - Amount
+  - name: margin_rate_or_amount
+    label: Margin Rate or Amount
+    type: decimal
+    observed_as: margin_rate_or_amount
+  - name: rate_with_margin
+    label: Rate With Margin
+    type: money
+    observed_as: rate_with_margin
+  - name: discount_percentage
+    label: Discount on Price List Rate (%)
+    type: percent
+    observed_as: discount_percentage
+  - name: discount_amount
+    label: Discount Amount
+    type: money
+    observed_as: discount_amount
+  - name: distributed_discount_amount
+    label: Distributed Discount Amount
+    type: money
+    observed_as: distributed_discount_amount
+  - name: mapped_additional_discount_amount
+    label: Additional Discount per Stock Unit
+    type: money
+    observed_as: mapped_additional_discount_amount
+    precision: 9
+    default: "0"
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: item_tax_template
+    label: Item Tax Template
+    type: ref
+    observed_as: item_tax_template
+    ref: ItemTaxTemplate
+  - name: base_rate
+    label: Rate (Company Currency)
+    type: money
+    observed_as: base_rate
+    required: true
+  - name: base_amount
+    label: Amount (Company Currency)
+    type: money
+    observed_as: base_amount
+    required: true
+  - name: pricing_rules
+    label: Pricing Rules
+    type: text
+    observed_as: pricing_rules
+  - name: net_rate
+    label: Net Rate
+    type: money
+    observed_as: net_rate
+  - name: net_amount
+    label: Net Amount
+    type: money
+    observed_as: net_amount
+  - name: base_net_rate
+    label: Net Rate (Company Currency)
+    type: money
+    observed_as: base_net_rate
+  - name: base_net_amount
+    label: Net Amount (Company Currency)
+    type: money
+    observed_as: base_net_amount
+  - name: weight_per_unit
+    label: Weight Per Unit
+    type: decimal
+    observed_as: weight_per_unit
+  - name: total_weight
+    label: Total Weight
+    type: decimal
+    observed_as: total_weight
+  - name: weight_uom
+    label: Weight UOM
+    type: ref
+    observed_as: weight_uom
+    ref: UOM
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: prevdoc_doctype
+    label: Reference Document Type
+    type: string
+    observed_as: prevdoc_doctype
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    ref: SalesOrder
+  - name: request_for_quotation
+    label: Request for Quotation
+    type: ref
+    observed_as: request_for_quotation
+    ref: RequestForQuotation
+  - name: material_request_item
+    label: Material Request Item
+    type: string
+    observed_as: material_request_item
+  - name: request_for_quotation_item
+    label: Request for Quotation Item
+    type: string
+    observed_as: request_for_quotation_item
+  - name: item_tax_rate
+    label: Item Tax Rate
+    type: text
+    observed_as: item_tax_rate
+  - name: manufacturer
+    label: Manufacturer
+    type: ref
+    observed_as: manufacturer
+    ref: Manufacturer
+  - name: manufacturer_part_no
+    label: Manufacturer Part Number
+    type: string
+    observed_as: manufacturer_part_no
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: page_break
+    label: Page Break
+    type: boolean
+    observed_as: page_break
+    default: "0"
+  - name: ordered_qty
+    label: Ordered Qty
+    type: decimal
+    observed_as: ordered_qty
+    required: true
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: ItemTaxTemplate
+    kind: many-to-one
+    via: item_tax_template
+  - to: UOM
+    kind: many-to-one
+    via: weight_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: RequestForQuotation
+    kind: many-to-one
+    via: request_for_quotation
+  - to: Manufacturer
+    kind: many-to-one
+    via: manufacturer
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSupplier Quotation Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Supplier Quotation Item
+    note: declared by the program and served by its API

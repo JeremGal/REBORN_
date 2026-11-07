@@ -1,0 +1,60 @@
+name: Territory
+description: A region you sell in, to group customers and set targets. Document type "Territory" (module Setup).
+fields:
+  - name: territory_name
+    label: Territory Name
+    type: string
+    observed_as: territory_name
+    required: true
+    unique: true
+  - name: parent_territory
+    label: Parent Territory
+    type: ref
+    observed_as: parent_territory
+    ref: Territory
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: territory_manager
+    label: Territory Manager
+    type: ref
+    observed_as: territory_manager
+    ref: SalesPerson
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: old_parent
+    type: ref
+    observed_as: old_parent
+    ref: Territory
+relations:
+  - to: Territory
+    kind: many-to-one
+    via: parent_territory
+  - to: SalesPerson
+    kind: many-to-one
+    via: territory_manager
+  - to: Territory
+    kind: many-to-one
+    via: old_parent
+  - to: TargetDetail
+    kind: one-to-many
+    via: targets
+    description: lines (Targets)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTerritory
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Territory
+    note: declared by the program and served by its API

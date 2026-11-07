@@ -1,0 +1,153 @@
+name: PickListItem
+description: 'Document type "Pick List Item" (module Stock): lines of another document.'
+fields:
+  - name: item_code
+    label: Item
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: item_group
+    label: Item Group
+    type: string
+    observed_as: item_group
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: qty
+    label: Qty
+    type: decimal
+    observed_as: qty
+    required: true
+    default: "1"
+  - name: stock_qty
+    label: Qty (in Stock UOM)
+    type: decimal
+    observed_as: stock_qty
+  - name: picked_qty
+    label: Picked Qty (in Stock UOM)
+    type: decimal
+    observed_as: picked_qty
+  - name: stock_reserved_qty
+    label: Stock Reserved Qty (in Stock UOM)
+    type: decimal
+    observed_as: stock_reserved_qty
+    default: "0"
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: conversion_factor
+    label: UOM Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: delivered_qty
+    label: Delivered Qty (in Stock UOM)
+    type: decimal
+    observed_as: delivered_qty
+    default: "0"
+  - name: transferred_qty
+    label: Transferred Qty (in Stock UOM)
+    type: decimal
+    observed_as: transferred_qty
+    default: "0"
+  - name: actual_qty
+    label: Qty (Warehouse)
+    type: decimal
+    observed_as: actual_qty
+  - name: company_total_stock
+    label: Qty (Company)
+    type: decimal
+    observed_as: company_total_stock
+  - name: serial_and_batch_bundle
+    label: Serial and Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: use_serial_batch_fields
+    label: Use Serial No / Batch Fields
+    type: boolean
+    observed_as: use_serial_batch_fields
+    default: "0"
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    ref: SalesOrder
+  - name: sales_order_item
+    label: Sales Order Item
+    type: string
+    observed_as: sales_order_item
+  - name: product_bundle_item
+    label: Product Bundle Item
+    type: string
+    observed_as: product_bundle_item
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: material_request_item
+    label: Material Request Item
+    type: string
+    observed_as: material_request_item
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPick List Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Pick List Item
+    note: declared by the program and served by its API

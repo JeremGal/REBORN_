@@ -1,0 +1,37 @@
+name: WebsiteRouteRedirect
+description: 'Document type "Website Route Redirect" (module Website): lines of another document.'
+fields:
+  - name: source
+    label: Source
+    type: text
+    observed_as: source
+    required: true
+  - name: target
+    label: Target
+    type: text
+    observed_as: target
+    required: true
+  - name: forward_query_parameters
+    label: Forward Query Parameters
+    type: boolean
+    observed_as: forward_query_parameters
+    default: "0"
+  - name: redirect_http_status
+    label: Redirect HTTP Status
+    type: enum
+    observed_as: redirect_http_status
+    enum_values:
+      - "301"
+      - "302"
+      - "307"
+      - "308"
+    default: "301"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWebsite Route Redirect
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Website Route Redirect
+    note: declared by the program and served by its API

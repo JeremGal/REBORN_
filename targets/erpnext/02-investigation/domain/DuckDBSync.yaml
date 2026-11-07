@@ -1,0 +1,42 @@
+name: DuckDBSync
+description: 'Document type "DuckDB Sync" (module Core): draft, submitted, cancelled life cycle.'
+fields:
+  - name: doc_type
+    label: Doctype
+    type: ref
+    observed_as: doc_type
+    required: true
+    ref: DocType
+  - name: filename
+    label: Filename
+    type: string
+    observed_as: filename
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: DuckDBSync
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: doc_type
+  - to: DuckDBSyncItem
+    kind: one-to-many
+    via: db_tables
+    description: lines (DB Tables)
+  - to: DuckDBSync
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDuckDB Sync
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DuckDB Sync
+    note: declared by the program and served by its API

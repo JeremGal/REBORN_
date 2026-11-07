@@ -1,0 +1,311 @@
+name: SubcontractingReceipt
+description: 'Items received from a subcontractor. Document type "Subcontracting Receipt" (module Subcontracting): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MAT-SCR-.YYYY.-
+      - MAT-SCR-RET-.YYYY.-
+  - name: supplier
+    label: Job Worker
+    type: ref
+    observed_as: supplier
+    required: true
+    ref: Supplier
+  - name: supplier_name
+    label: Job Worker Name
+    type: string
+    observed_as: supplier_name
+  - name: supplier_delivery_note
+    label: Job Worker Delivery Note
+    type: string
+    observed_as: supplier_delivery_note
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: posting_date
+    label: Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+    required: true
+    default: Now
+  - name: set_posting_time
+    label: Edit Posting Date and Time
+    type: boolean
+    observed_as: set_posting_time
+    default: "0"
+  - name: is_return
+    label: Is Return
+    type: boolean
+    observed_as: is_return
+    default: "0"
+  - name: return_against
+    label: Return Against Subcontracting Receipt
+    type: ref
+    observed_as: return_against
+    ref: SubcontractingReceipt
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: set_warehouse
+    label: Accepted Warehouse
+    type: ref
+    observed_as: set_warehouse
+    ref: Warehouse
+  - name: rejected_warehouse
+    label: Rejected Warehouse
+    type: ref
+    observed_as: rejected_warehouse
+    ref: Warehouse
+  - name: supplier_warehouse
+    label: Job Worker Warehouse
+    type: ref
+    observed_as: supplier_warehouse
+    ref: Warehouse
+  - name: total_qty
+    label: Total Quantity
+    type: decimal
+    observed_as: total_qty
+  - name: total
+    label: Total
+    type: money
+    observed_as: total
+  - name: in_words
+    label: In Words
+    type: string
+    observed_as: in_words
+    max_length: 240
+  - name: bill_no
+    label: Bill No
+    type: string
+    observed_as: bill_no
+  - name: bill_date
+    label: Bill Date
+    type: date
+    observed_as: bill_date
+  - name: supplier_address
+    label: Select Job Worker Address
+    type: ref
+    observed_as: supplier_address
+    ref: Address
+  - name: contact_person
+    label: Contact Person
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: address_display
+    label: Address
+    type: text
+    observed_as: address_display
+  - name: contact_display
+    label: Contact
+    type: text
+    observed_as: contact_display
+  - name: contact_mobile
+    label: Mobile No
+    type: text
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: text
+    observed_as: contact_email
+  - name: shipping_address
+    label: Select Shipping Address
+    type: ref
+    observed_as: shipping_address
+    ref: Address
+  - name: shipping_address_display
+    label: Shipping Address
+    type: text
+    observed_as: shipping_address_display
+  - name: billing_address
+    label: Select Billing Address
+    type: ref
+    observed_as: billing_address
+    ref: Address
+  - name: billing_address_display
+    label: Billing Address
+    type: text
+    observed_as: billing_address_display
+  - name: distribute_additional_costs_based_on
+    label: "Distribute Additional Costs Based On "
+    type: enum
+    observed_as: distribute_additional_costs_based_on
+    enum_values:
+      - Qty
+      - Amount
+    default: Qty
+  - name: total_additional_costs
+    label: Total Additional Costs
+    type: money
+    observed_as: total_additional_costs
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: SubcontractingReceipt
+  - name: range
+    label: Range
+    type: string
+    observed_as: range
+  - name: represents_company
+    label: Represents Company
+    type: ref
+    observed_as: represents_company
+    ref: Company
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - Completed
+      - Return
+      - Return Issued
+      - Cancelled
+      - Closed
+    default: Draft
+  - name: per_returned
+    label: "% Returned"
+    type: percent
+    observed_as: per_returned
+  - name: auto_repeat
+    label: Auto Repeat
+    type: ref
+    observed_as: auto_repeat
+    ref: AutoRepeat
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: language
+    label: Print Language
+    type: string
+    observed_as: language
+  - name: instructions
+    label: Instructions
+    type: text
+    observed_as: instructions
+  - name: select_print_heading
+    label: Print Heading
+    type: ref
+    observed_as: select_print_heading
+    ref: PrintHeading
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+  - name: transporter_name
+    label: Transporter Name
+    type: string
+    observed_as: transporter_name
+  - name: lr_no
+    label: Vehicle Number
+    type: string
+    observed_as: lr_no
+  - name: lr_date
+    label: Vehicle Date
+    type: date
+    observed_as: lr_date
+relations:
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: SubcontractingReceipt
+    kind: many-to-one
+    via: return_against
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Warehouse
+    kind: many-to-one
+    via: set_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: rejected_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: supplier_warehouse
+  - to: SubcontractingReceiptItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: SubcontractingReceiptSuppliedItem
+    kind: one-to-many
+    via: supplied_items
+    description: lines (Consumed Items)
+  - to: Address
+    kind: many-to-one
+    via: supplier_address
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Address
+    kind: many-to-one
+    via: shipping_address
+  - to: Address
+    kind: many-to-one
+    via: billing_address
+  - to: LandedCostTaxesAndCharges
+    kind: one-to-many
+    via: additional_costs
+    description: lines (Additional Costs)
+  - to: SubcontractingReceipt
+    kind: many-to-one
+    via: amended_from
+  - to: Company
+    kind: many-to-one
+    via: represents_company
+  - to: AutoRepeat
+    kind: many-to-one
+    via: auto_repeat
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: PrintHeading
+    kind: many-to-one
+    via: select_print_heading
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Receipt
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Receipt
+    note: declared by the program and served by its API

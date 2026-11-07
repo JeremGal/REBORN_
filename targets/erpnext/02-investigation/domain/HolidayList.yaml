@@ -1,0 +1,67 @@
+name: HolidayList
+description: The holidays and weekly offs of a company or employee. Document type "Holiday List" (module Setup).
+fields:
+  - name: holiday_list_name
+    label: Holiday List Name
+    type: string
+    observed_as: holiday_list_name
+    required: true
+    unique: true
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+    required: true
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+    required: true
+  - name: total_holidays
+    label: Total Holidays
+    type: decimal
+    observed_as: total_holidays
+    precision: 1
+  - name: weekly_off
+    label: Weekly Off
+    type: enum
+    observed_as: weekly_off
+    enum_values:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+  - name: is_half_day
+    label: Is Half Day
+    type: boolean
+    observed_as: is_half_day
+    default: "0"
+  - name: country
+    label: Country
+    type: string
+    observed_as: country
+  - name: subdivision
+    label: Subdivision
+    type: string
+    observed_as: subdivision
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+relations:
+  - to: Holiday
+    kind: one-to-many
+    via: holidays
+    description: lines (Holidays)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabHoliday List
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Holiday List
+    note: declared by the program and served by its API

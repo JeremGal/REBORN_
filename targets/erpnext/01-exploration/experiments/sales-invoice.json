@@ -1,0 +1,44 @@
+{
+  "mission": "M-002",
+  "seed": [
+    { "doctype": "Customer", "customer_name": "TEST-Client Alpha", "customer_type": "Company", "customer_group": "Commercial", "territory": "France" },
+    { "doctype": "Item", "item_code": "TEST-ART-001", "item_name": "TEST Article 1", "item_group": "Products", "stock_uom": "Nos", "is_stock_item": 0, "standard_rate": 10 },
+    { "doctype": "Item", "item_code": "TEST-ART-002", "item_name": "TEST Article 2", "item_group": "Products", "stock_uom": "Nos", "is_stock_item": 0, "standard_rate": 33.33 }
+  ],
+  "doctype": "Sales Invoice",
+  "defaults": {
+    "customer": "TEST-Client Alpha",
+    "company": "Digital Solution Service",
+    "currency": "USD",
+    "selling_price_list": "Standard Selling",
+    "debit_to": "4111 - Clients - Ventes de biens ou de prestations de services - DSS",
+    "update_stock": 0
+  },
+  "item_defaults": { "income_account": "7071 - Marchandises (ou groupe) A - DSS" },
+  "tax_account": "44587 - Taxes sur le chiffre d'affaires sur factures à établir - DSS",
+  "read": ["total", "net_total", "discount_amount", "additional_discount_percentage", "apply_discount_on", "total_taxes_and_charges", "grand_total", "rounding_adjustment", "rounded_total", "outstanding_amount"],
+  "read_items": ["item_code", "qty", "price_list_rate", "discount_percentage", "rate", "amount", "net_rate", "net_amount"],
+  "read_taxes": ["charge_type", "row_id", "rate", "included_in_print_rate", "tax_amount", "total"],
+  "cases": [
+    { "id": "SI-01", "title": "one line, 20% tax on the net total",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 3, "rate": 10 }], "taxes": [{ "charge_type": "On Net Total", "rate": 20, "description": "VAT 20%" }] } },
+    { "id": "SI-02", "title": "10% line discount, 20% tax",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 3, "price_list_rate": 10, "discount_percentage": 10 }], "taxes": [{ "charge_type": "On Net Total", "rate": 20, "description": "VAT 20%" }] } },
+    { "id": "SI-03", "title": "5% discount on the net total, then 20% tax",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 10, "rate": 10 }], "apply_discount_on": "Net Total", "additional_discount_percentage": 5, "taxes": [{ "charge_type": "On Net Total", "rate": 20, "description": "VAT 20%" }] } },
+    { "id": "SI-04", "title": "5% discount on the grand total, 20% tax",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 10, "rate": 10 }], "apply_discount_on": "Grand Total", "additional_discount_percentage": 5, "taxes": [{ "charge_type": "On Net Total", "rate": 20, "description": "VAT 20%" }] } },
+    { "id": "SI-05", "title": "10% on the net total, then 5% on the previous row total (cascade)",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 10, "rate": 10 }], "taxes": [{ "charge_type": "On Net Total", "rate": 10, "description": "tax A 10%" }, { "charge_type": "On Previous Row Total", "row_id": "1", "rate": 5, "description": "tax B 5% on A's total" }] } },
+    { "id": "SI-06", "title": "10% on the net total, then 50% of that tax (previous row amount)",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 10, "rate": 10 }], "taxes": [{ "charge_type": "On Net Total", "rate": 10, "description": "tax A 10%" }, { "charge_type": "On Previous Row Amount", "row_id": "1", "rate": 50, "description": "tax B 50% of A" }] } },
+    { "id": "SI-07", "title": "fixed charge of 15.00 plus 20% tax",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 2, "rate": 10 }], "taxes": [{ "charge_type": "Actual", "tax_amount": 15, "description": "shipping 15.00" }, { "charge_type": "On Net Total", "rate": 20, "description": "VAT 20%" }] } },
+    { "id": "SI-08", "title": "price includes the 20% tax (TTC price 12.00)",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 3, "rate": 12 }], "taxes": [{ "charge_type": "On Net Total", "rate": 20, "description": "VAT 20% included", "included_in_print_rate": 1 }] } },
+    { "id": "SI-09", "title": "decimal quantity and odd price, 20% tax (rounding of each amount)",
+      "doc": { "items": [{ "item_code": "TEST-ART-002", "qty": 2.5, "rate": 33.33 }, { "item_code": "TEST-ART-001", "qty": 1, "rate": 0.125 }], "taxes": [{ "charge_type": "On Net Total", "rate": 20, "description": "VAT 20%" }] } },
+    { "id": "SI-10", "title": "grand total with cents: rounded total and rounding adjustment",
+      "doc": { "items": [{ "item_code": "TEST-ART-002", "qty": 1, "rate": 33.33 }], "taxes": [{ "charge_type": "On Net Total", "rate": 20, "description": "VAT 20%" }] } }
+  ]
+}

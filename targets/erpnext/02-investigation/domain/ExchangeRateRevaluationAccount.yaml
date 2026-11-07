@@ -1,0 +1,78 @@
+name: ExchangeRateRevaluationAccount
+description: 'Document type "Exchange Rate Revaluation Account" (module Accounts): lines of another document.'
+fields:
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+  - name: account_currency
+    label: Account Currency
+    type: ref
+    observed_as: account_currency
+    ref: Currency
+  - name: balance_in_account_currency
+    label: Balance In Account Currency
+    type: money
+    observed_as: balance_in_account_currency
+  - name: new_balance_in_account_currency
+    label: New Balance In Account Currency
+    type: money
+    observed_as: new_balance_in_account_currency
+  - name: current_exchange_rate
+    label: Current Exchange Rate
+    type: decimal
+    observed_as: current_exchange_rate
+    precision: 9
+  - name: new_exchange_rate
+    label: New Exchange Rate
+    type: decimal
+    observed_as: new_exchange_rate
+    required: true
+    precision: 9
+  - name: balance_in_base_currency
+    label: Balance In Base Currency
+    type: money
+    observed_as: balance_in_base_currency
+  - name: new_balance_in_base_currency
+    label: New Balance In Base Currency
+    type: money
+    observed_as: new_balance_in_base_currency
+  - name: gain_loss
+    label: Gain/Loss
+    type: money
+    observed_as: gain_loss
+  - name: zero_balance
+    label: Zero Balance
+    type: boolean
+    observed_as: zero_balance
+    default: "0"
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: Currency
+    kind: many-to-one
+    via: account_currency
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabExchange Rate Revaluation Account
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Exchange Rate Revaluation Account
+    note: declared by the program and served by its API

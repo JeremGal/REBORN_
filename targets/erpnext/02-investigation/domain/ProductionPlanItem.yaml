@@ -1,0 +1,127 @@
+name: ProductionPlanItem
+description: 'Document type "Production Plan Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: include_exploded_items
+    label: Include Exploded Items
+    type: boolean
+    observed_as: include_exploded_items
+    default: "1"
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: bom_no
+    label: BOM No
+    type: ref
+    observed_as: bom_no
+    required: true
+    ref: BOM
+  - name: planned_qty
+    label: Planned Qty
+    type: decimal
+    observed_as: planned_qty
+    required: true
+  - name: process_loss_percentage
+    label: "% Process Loss"
+    type: percent
+    observed_as: process_loss_percentage
+  - name: stock_uom
+    label: UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: warehouse
+    label: Finished Goods Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: planned_start_date
+    label: Planned Start Date
+    type: datetime
+    observed_as: planned_start_date
+    required: true
+    default: Today
+  - name: pending_qty
+    label: Pending Qty
+    type: decimal
+    observed_as: pending_qty
+    default: "0"
+  - name: ordered_qty
+    label: Ordered Qty
+    type: decimal
+    observed_as: ordered_qty
+    default: "0"
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: produced_qty
+    label: Produced Qty
+    type: decimal
+    observed_as: produced_qty
+    default: "0"
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    ref: SalesOrder
+  - name: sales_order_item
+    label: Sales Order Item
+    type: string
+    observed_as: sales_order_item
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: material_request_item
+    label: material_request_item
+    type: string
+    observed_as: material_request_item
+  - name: product_bundle_item
+    label: Product Bundle Item
+    type: ref
+    observed_as: product_bundle_item
+    ref: Item
+  - name: item_reference
+    label: Item Reference
+    type: string
+    observed_as: item_reference
+  - name: temporary_name
+    label: temporary name
+    type: string
+    observed_as: temporary_name
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+  - to: Item
+    kind: many-to-one
+    via: product_bundle_item
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProduction Plan Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Production Plan Item
+    note: declared by the program and served by its API

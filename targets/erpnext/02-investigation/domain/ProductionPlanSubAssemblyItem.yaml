@@ -1,0 +1,158 @@
+name: ProductionPlanSubAssemblyItem
+description: 'Document type "Production Plan Sub Assembly Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: production_item
+    label: Sub Assembly Item Code
+    type: ref
+    observed_as: production_item
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: fg_warehouse
+    label: Target Warehouse
+    type: ref
+    observed_as: fg_warehouse
+    ref: Warehouse
+  - name: parent_item_code
+    label: Finished Good
+    type: ref
+    observed_as: parent_item_code
+    ref: Item
+  - name: bom_no
+    label: BOM No
+    type: ref
+    observed_as: bom_no
+    ref: BOM
+  - name: bom_level
+    label: Level (BOM)
+    type: integer
+    observed_as: bom_level
+  - name: type_of_manufacturing
+    label: Manufacturing Type
+    type: enum
+    observed_as: type_of_manufacturing
+    enum_values:
+      - In House
+      - Subcontract
+      - Material Request
+    default: In House
+  - name: required_qty
+    label: Required Qty
+    type: decimal
+    observed_as: required_qty
+  - name: process_loss_percentage
+    label: "% Process Loss"
+    type: percent
+    observed_as: process_loss_percentage
+  - name: projected_qty
+    label: Projected Qty
+    type: decimal
+    observed_as: projected_qty
+  - name: qty
+    label: Qty to Order
+    type: decimal
+    observed_as: qty
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: purchase_order
+    label: Purchase Order
+    type: ref
+    observed_as: purchase_order
+    ref: PurchaseOrder
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    ref: SalesOrder
+  - name: sales_order_item
+    label: Sales Order Item
+    type: string
+    observed_as: sales_order_item
+  - name: production_plan_item
+    label: Production Plan Item
+    type: string
+    observed_as: production_plan_item
+  - name: wo_produced_qty
+    label: Produced Qty
+    type: decimal
+    observed_as: wo_produced_qty
+  - name: stock_reserved_qty
+    label: Stock Reserved Qty
+    type: decimal
+    observed_as: stock_reserved_qty
+  - name: ordered_qty
+    label: Ordered Qty
+    type: decimal
+    observed_as: ordered_qty
+  - name: received_qty
+    label: Received Qty
+    type: decimal
+    observed_as: received_qty
+  - name: indent
+    label: Indent
+    type: integer
+    observed_as: indent
+  - name: schedule_date
+    label: Schedule Date
+    type: datetime
+    observed_as: schedule_date
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: actual_qty
+    label: Actual Qty
+    type: decimal
+    observed_as: actual_qty
+  - name: description
+    label: description
+    type: text
+    observed_as: description
+relations:
+  - to: Item
+    kind: many-to-one
+    via: production_item
+  - to: Warehouse
+    kind: many-to-one
+    via: fg_warehouse
+  - to: Item
+    kind: many-to-one
+    via: parent_item_code
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: PurchaseOrder
+    kind: many-to-one
+    via: purchase_order
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProduction Plan Sub Assembly Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Production Plan Sub Assembly Item
+    note: declared by the program and served by its API

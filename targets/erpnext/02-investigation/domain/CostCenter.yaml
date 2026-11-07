@@ -1,0 +1,66 @@
+name: CostCenter
+description: A part of your business you track income and expenses for, like a branch or product line. Document type "Cost Center" (module Accounts).
+fields:
+  - name: cost_center_name
+    label: Cost Center Name
+    type: string
+    observed_as: cost_center_name
+    required: true
+  - name: cost_center_number
+    label: Cost Center Number
+    type: string
+    observed_as: cost_center_number
+  - name: parent_cost_center
+    label: Parent Cost Center
+    type: ref
+    observed_as: parent_cost_center
+    required: true
+    ref: CostCenter
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: old_parent
+    type: ref
+    observed_as: old_parent
+    ref: CostCenter
+relations:
+  - to: CostCenter
+    kind: many-to-one
+    via: parent_cost_center
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: CostCenter
+    kind: many-to-one
+    via: old_parent
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCost Center
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Cost Center
+    note: declared by the program and served by its API

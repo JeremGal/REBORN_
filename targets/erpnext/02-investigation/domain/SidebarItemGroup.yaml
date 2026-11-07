@@ -1,0 +1,30 @@
+name: SidebarItemGroup
+description: Document type "Sidebar Item Group" (module Desk).
+fields:
+  - name: sidebar
+    label: Sidebar
+    type: ref
+    observed_as: sidebar
+    unique: true
+    ref: WorkspaceSidebar
+  - name: app
+    label: App
+    type: string
+    observed_as: app
+relations:
+  - to: WorkspaceSidebar
+    kind: many-to-one
+    via: sidebar
+  - to: SidebarItemGroupLink
+    kind: one-to-many
+    via: links
+    description: lines (Links)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSidebar Item Group
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sidebar Item Group
+    note: declared by the program and served by its API

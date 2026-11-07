@@ -1,0 +1,41 @@
+name: PartySpecificItem
+description: Document type "Party Specific Item" (module Selling).
+fields:
+  - name: party_type
+    label: Party Type
+    type: enum
+    observed_as: party_type
+    required: true
+    enum_values:
+      - Customer
+      - Customer Group
+      - Supplier
+      - Supplier Group
+  - name: party
+    label: Party Name
+    type: string
+    observed_as: party
+    required: true
+  - name: restrict_based_on
+    label: Restrict Items Based On
+    type: enum
+    observed_as: restrict_based_on
+    required: true
+    enum_values:
+      - Item
+      - Item Group
+      - Brand
+  - name: based_on_value
+    label: Based On Value
+    type: string
+    observed_as: based_on_value
+    required: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabParty Specific Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Party Specific Item
+    note: declared by the program and served by its API

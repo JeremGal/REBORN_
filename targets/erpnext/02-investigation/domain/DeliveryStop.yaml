@@ -1,0 +1,101 @@
+name: DeliveryStop
+description: 'Document type "Delivery Stop" (module Stock): lines of another document.'
+fields:
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: address
+    label: Address Name
+    type: ref
+    observed_as: address
+    required: true
+    ref: Address
+  - name: locked
+    label: Locked
+    type: boolean
+    observed_as: locked
+    default: "0"
+  - name: customer_address
+    label: Customer Address
+    type: text
+    observed_as: customer_address
+  - name: visited
+    label: Visited
+    type: boolean
+    observed_as: visited
+    default: "0"
+  - name: delivery_note
+    label: Delivery Note
+    type: ref
+    observed_as: delivery_note
+    ref: DeliveryNote
+  - name: grand_total
+    label: Grand Total
+    type: money
+    observed_as: grand_total
+  - name: contact
+    label: Contact Name
+    type: ref
+    observed_as: contact
+    ref: Contact
+  - name: email_sent_to
+    label: Email sent to
+    type: string
+    observed_as: email_sent_to
+  - name: customer_contact
+    label: Customer Contact
+    type: text
+    observed_as: customer_contact
+  - name: distance
+    label: Distance
+    type: decimal
+    observed_as: distance
+    precision: 2
+  - name: estimated_arrival
+    label: Estimated Arrival
+    type: datetime
+    observed_as: estimated_arrival
+  - name: lat
+    label: Latitude
+    type: decimal
+    observed_as: lat
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: lng
+    label: Longitude
+    type: decimal
+    observed_as: lng
+  - name: details
+    label: Details
+    type: text
+    observed_as: details
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Address
+    kind: many-to-one
+    via: address
+  - to: DeliveryNote
+    kind: many-to-one
+    via: delivery_note
+  - to: Contact
+    kind: many-to-one
+    via: contact
+  - to: UOM
+    kind: many-to-one
+    via: uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDelivery Stop
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Delivery Stop
+    note: declared by the program and served by its API

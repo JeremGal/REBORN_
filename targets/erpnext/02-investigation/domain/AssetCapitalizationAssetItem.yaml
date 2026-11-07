@@ -1,0 +1,80 @@
+name: AssetCapitalizationAssetItem
+description: 'Document type "Asset Capitalization Asset Item" (module Assets): lines of another document.'
+fields:
+  - name: asset
+    label: Asset
+    type: ref
+    observed_as: asset
+    required: true
+    ref: Asset
+  - name: asset_name
+    label: Asset Name
+    type: string
+    observed_as: asset_name
+  - name: finance_book
+    label: Finance Book
+    type: ref
+    observed_as: finance_book
+    ref: FinanceBook
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: current_asset_value
+    label: Current Asset Value
+    type: money
+    observed_as: current_asset_value
+  - name: asset_value
+    label: Asset Value
+    type: money
+    observed_as: asset_value
+    default: "0"
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: fixed_asset_account
+    label: Fixed Asset Account
+    type: ref
+    observed_as: fixed_asset_account
+    ref: Account
+relations:
+  - to: Asset
+    kind: many-to-one
+    via: asset
+  - to: FinanceBook
+    kind: many-to-one
+    via: finance_book
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Account
+    kind: many-to-one
+    via: fixed_asset_account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Capitalization Asset Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Capitalization Asset Item
+    note: declared by the program and served by its API

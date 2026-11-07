@@ -1,0 +1,44 @@
+name: TaxWithholdingRate
+description: 'Document type "Tax Withholding Rate" (module Accounts): lines of another document.'
+fields:
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+    required: true
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+    required: true
+  - name: tax_withholding_group
+    label: Tax Withholding Group
+    type: ref
+    observed_as: tax_withholding_group
+    ref: TaxWithholdingGroup
+  - name: tax_withholding_rate
+    label: Tax Withholding Rate
+    type: decimal
+    observed_as: tax_withholding_rate
+    required: true
+  - name: cumulative_threshold
+    label: Cumulative Threshold
+    type: decimal
+    observed_as: cumulative_threshold
+  - name: single_threshold
+    label: Transaction Threshold
+    type: decimal
+    observed_as: single_threshold
+relations:
+  - to: TaxWithholdingGroup
+    kind: many-to-one
+    via: tax_withholding_group
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTax Withholding Rate
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Tax Withholding Rate
+    note: declared by the program and served by its API

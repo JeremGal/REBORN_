@@ -25,7 +25,7 @@ rules: [R-001, R-002]
 outputs:
   - { kind: data-change, description: "one transaction and two splits stored", entities: [Transaction, Split] }
 errors:
-  - { when: "the entry does not balance and no second account is given", behaviour: "the amount is posted to an Imbalance-<CUR> account so the books still balance", evidence: [ { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "get_balance_split uses string 'Imbalance'" } ] }
+  - { when: "the entry does not balance and no second account is given", behaviour: "the amount is posted to an Imbalance-<CUR> account so the books still balance", evidence: [ { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "repair code that uses the text 'Imbalance'" } ] }
 screens: [S-002]
 entities: [Transaction, Split, Account]
 acceptance:

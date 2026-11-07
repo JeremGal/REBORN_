@@ -1,0 +1,60 @@
+name: BOMCreatorOperation
+description: 'Document type "BOM Creator Operation" (module Manufacturing): lines of another document.'
+fields:
+  - name: operation_id
+    label: Operation ID
+    type: integer
+    observed_as: operation_id
+  - name: bom_node_id
+    label: BOM Node
+    type: integer
+    observed_as: bom_node_id
+    default: "0"
+  - name: operation
+    label: Operation
+    type: ref
+    observed_as: operation
+    required: true
+    ref: Operation
+  - name: workstation_type
+    label: Workstation Type
+    type: ref
+    observed_as: workstation_type
+    ref: WorkstationType
+  - name: time_in_mins
+    label: Operation Time (Minutes)
+    type: decimal
+    observed_as: time_in_mins
+  - name: output_node_id
+    label: Output Node
+    type: integer
+    observed_as: output_node_id
+  - name: output_item
+    label: Output Item
+    type: ref
+    observed_as: output_item
+    ref: Item
+  - name: output_quantity
+    label: Output Quantity
+    type: decimal
+    observed_as: output_quantity
+    default: "1"
+relations:
+  - to: Operation
+    kind: many-to-one
+    via: operation
+  - to: WorkstationType
+    kind: many-to-one
+    via: workstation_type
+  - to: Item
+    kind: many-to-one
+    via: output_item
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Creator Operation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Creator Operation
+    note: declared by the program and served by its API

@@ -1,0 +1,92 @@
+name: AssignmentRule
+description: Automatically Assign Documents to Users Document type "Assignment Rule" (module Automation).
+fields:
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: due_date_based_on
+    label: Due Date Based On
+    type: string
+    observed_as: due_date_based_on
+  - name: priority
+    label: Priority
+    type: integer
+    observed_as: priority
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+    required: true
+    default: Automatic Assignment
+  - name: assign_condition
+    label: Assign Condition
+    type: text
+    observed_as: assign_condition
+    required: true
+  - name: unassign_condition
+    label: Unassign Condition
+    type: text
+    observed_as: unassign_condition
+  - name: close_condition
+    label: Close Condition
+    type: text
+    observed_as: close_condition
+  - name: rule
+    label: Rule
+    type: enum
+    observed_as: rule
+    required: true
+    enum_values:
+      - Round Robin
+      - Load Balancing
+      - Based on Field
+      - Weighted Distribution
+  - name: field
+    label: Field
+    type: string
+    observed_as: field
+  - name: last_user
+    label: Last User
+    type: ref
+    observed_as: last_user
+    ref: User
+  - name: current_index
+    label: Current Index
+    type: integer
+    observed_as: current_index
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: AssignmentRuleDay
+    kind: one-to-many
+    via: assignment_days
+    description: lines (Assignment Days)
+  - to: AssignmentRuleUser
+    kind: one-to-many
+    via: users
+    description: lines (Users)
+  - to: AssignmentRuleUser
+    kind: one-to-many
+    via: weighted_users
+    description: lines (Users)
+  - to: User
+    kind: many-to-one
+    via: last_user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAssignment Rule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Assignment Rule
+    note: declared by the program and served by its API

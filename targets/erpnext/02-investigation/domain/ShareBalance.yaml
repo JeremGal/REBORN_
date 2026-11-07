@@ -1,0 +1,59 @@
+name: ShareBalance
+description: 'Document type "Share Balance" (module Accounts): lines of another document.'
+fields:
+  - name: share_type
+    label: Share Type
+    type: ref
+    observed_as: share_type
+    required: true
+    ref: ShareType
+  - name: from_no
+    label: From No
+    type: integer
+    observed_as: from_no
+    required: true
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    required: true
+  - name: no_of_shares
+    label: No of Shares
+    type: integer
+    observed_as: no_of_shares
+    required: true
+  - name: to_no
+    label: To No
+    type: integer
+    observed_as: to_no
+    required: true
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+  - name: is_company
+    label: Is Company
+    type: boolean
+    observed_as: is_company
+    default: "0"
+  - name: current_state
+    label: Current State
+    type: enum
+    observed_as: current_state
+    enum_values:
+      - Issued
+      - Purchased
+relations:
+  - to: ShareType
+    kind: many-to-one
+    via: share_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabShare Balance
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Share Balance
+    note: declared by the program and served by its API

@@ -1,0 +1,165 @@
+name: StockReservationEntry
+description: 'Stock set aside for a sales order or production. Document type "Stock Reservation Entry" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: voucher_type
+    label: Voucher Type
+    type: enum
+    observed_as: voucher_type
+    enum_values:
+      - Sales Order
+      - Work Order
+      - Subcontracting Inward Order
+      - Production Plan
+      - Subcontracting Order
+  - name: voucher_no
+    label: Voucher No
+    type: string
+    observed_as: voucher_no
+  - name: voucher_detail_no
+    label: Voucher Detail No
+    type: string
+    observed_as: voucher_detail_no
+  - name: voucher_qty
+    label: Voucher Qty
+    type: decimal
+    observed_as: voucher_qty
+    default: "0"
+  - name: available_qty
+    label: Available Qty to Reserve
+    type: decimal
+    observed_as: available_qty
+    default: "0"
+  - name: reserved_qty
+    label: Reserved Qty
+    type: decimal
+    observed_as: reserved_qty
+  - name: delivered_qty
+    label: Delivered Qty
+    type: decimal
+    observed_as: delivered_qty
+    default: "0"
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: has_serial_no
+    label: Has Serial No
+    type: boolean
+    observed_as: has_serial_no
+    default: "0"
+  - name: has_batch_no
+    label: Has Batch No
+    type: boolean
+    observed_as: has_batch_no
+    default: "0"
+  - name: from_voucher_type
+    label: From Voucher Type
+    type: enum
+    observed_as: from_voucher_type
+    enum_values:
+      - Pick List
+      - Purchase Receipt
+      - Stock Entry
+      - Work Order
+      - Production Plan
+      - Subcontracting Inward Order
+  - name: from_voucher_no
+    label: From Voucher No
+    type: string
+    observed_as: from_voucher_no
+  - name: from_voucher_detail_no
+    label: From Voucher Detail No
+    type: string
+    observed_as: from_voucher_detail_no
+  - name: transferred_qty
+    label: Transferred Qty
+    type: decimal
+    observed_as: transferred_qty
+  - name: consumed_qty
+    label: Consumed Qty
+    type: decimal
+    observed_as: consumed_qty
+  - name: reservation_based_on
+    label: Reservation Based On
+    type: enum
+    observed_as: reservation_based_on
+    enum_values:
+      - Qty
+      - Serial and Batch
+    default: Qty
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Partially Reserved
+      - Reserved
+      - Partially Delivered
+      - Partially Used
+      - Delivered
+      - Cancelled
+      - Closed
+    default: Draft
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: StockReservationEntry
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: SerialAndBatchEntry
+    kind: one-to-many
+    via: sb_entries
+    description: lines (sb_entries)
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: StockReservationEntry
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Reservation Entry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Reservation Entry
+    note: declared by the program and served by its API

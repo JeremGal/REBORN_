@@ -1,0 +1,215 @@
+name: Notification
+description: Document type "Notification" (module Email).
+fields:
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: channel
+    label: Channel
+    type: enum
+    observed_as: channel
+    required: true
+    enum_values:
+      - Email
+      - Slack
+      - System Notification
+      - SMS
+    default: Email
+  - name: slack_webhook_url
+    label: Slack Channel
+    type: ref
+    observed_as: slack_webhook_url
+    ref: SlackWebhookURL
+  - name: subject
+    label: Subject
+    type: string
+    observed_as: subject
+  - name: event
+    label: Send Alert On
+    type: enum
+    observed_as: event
+    required: true
+    enum_values:
+      - New
+      - Save
+      - Submit
+      - Cancel
+      - Days After
+      - Days Before
+      - Minutes After
+      - Minutes Before
+      - Value Change
+      - Method
+      - Custom
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: method
+    label: Trigger Method
+    type: string
+    observed_as: method
+  - name: date_changed
+    label: Reference Date
+    type: string
+    observed_as: date_changed
+  - name: datetime_changed
+    label: Reference Datetime
+    type: string
+    observed_as: datetime_changed
+  - name: days_in_advance
+    label: Days Before or After
+    type: integer
+    observed_as: days_in_advance
+    default: "0"
+  - name: minutes_offset
+    label: Minutes Offset
+    type: integer
+    observed_as: minutes_offset
+    default: "0"
+  - name: datetime_last_run
+    label: Last Run
+    type: datetime
+    observed_as: datetime_last_run
+  - name: value_changed
+    label: Value Changed
+    type: string
+    observed_as: value_changed
+  - name: sender
+    label: Sender
+    type: ref
+    observed_as: sender
+    ref: EmailAccount
+  - name: send_system_notification
+    label: Send System Notification
+    type: boolean
+    observed_as: send_system_notification
+    default: "0"
+  - name: notification_type
+    label: Notification Type
+    type: ref
+    observed_as: notification_type
+    ref: NotificationType
+    default: Alert
+  - name: sender_email
+    label: Sender Email
+    type: string
+    observed_as: sender_email
+  - name: condition_type
+    label: Condition Type
+    type: enum
+    observed_as: condition_type
+    enum_values:
+      - Python
+      - Filters
+    default: Python
+  - name: condition
+    label: Condition
+    type: text
+    observed_as: condition
+  - name: filters
+    label: Filters
+    type: text
+    observed_as: filters
+  - name: set_property_after_alert
+    label: Set Property After Alert
+    type: string
+    observed_as: set_property_after_alert
+  - name: property_value
+    label: Value To Be Set
+    type: string
+    observed_as: property_value
+  - name: send_to_all_assignees
+    label: Send To All Assignees
+    type: boolean
+    observed_as: send_to_all_assignees
+    default: "0"
+  - name: email_template
+    label: Email Template
+    type: ref
+    observed_as: email_template
+    ref: EmailTemplate
+  - name: message_type
+    label: Message Type
+    type: enum
+    observed_as: message_type
+    enum_values:
+      - Markdown
+      - HTML
+      - Plain Text
+    default: Markdown
+  - name: message
+    label: Message
+    type: text
+    observed_as: message
+    default: Add your message here
+  - name: attach_print
+    label: Attach Print
+    type: boolean
+    observed_as: attach_print
+    default: "0"
+  - name: print_format
+    label: Print Format
+    type: ref
+    observed_as: print_format
+    ref: PrintFormat
+  - name: attach_files
+    label: Attach Files
+    type: enum
+    observed_as: attach_files
+    enum_values:
+      - From Field
+      - All
+  - name: from_attach_field
+    label: From Attach Field
+    type: string
+    observed_as: from_attach_field
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: SlackWebhookURL
+    kind: many-to-one
+    via: slack_webhook_url
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: EmailAccount
+    kind: many-to-one
+    via: sender
+  - to: NotificationType
+    kind: many-to-one
+    via: notification_type
+  - to: NotificationRecipient
+    kind: one-to-many
+    via: recipients
+    description: lines (Recipients)
+  - to: EmailTemplate
+    kind: many-to-one
+    via: email_template
+  - to: PrintFormat
+    kind: many-to-one
+    via: print_format
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNotification
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Notification
+    note: declared by the program and served by its API

@@ -1,0 +1,55 @@
+name: OpeningInvoiceCreationTool
+description: 'Document type "Opening Invoice Creation Tool" (module Accounts): single settings record.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: create_missing_party
+    label: Create Missing Party
+    type: boolean
+    observed_as: create_missing_party
+    default: "0"
+  - name: invoice_type
+    label: Invoice Type
+    type: enum
+    observed_as: invoice_type
+    required: true
+    enum_values:
+      - Sales
+      - Purchase
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: OpeningInvoiceCreationToolItem
+    kind: one-to-many
+    via: invoices
+    description: lines (invoices)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOpening Invoice Creation Tool
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Opening Invoice Creation Tool
+    note: declared by the program and served by its API

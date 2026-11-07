@@ -1,0 +1,50 @@
+name: ErrorLog
+description: Document type "Error Log" (module Core).
+fields:
+  - name: seen
+    label: Seen
+    type: boolean
+    observed_as: seen
+    default: "0"
+  - name: reference_doctype
+    label: Reference DocType
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: method
+    label: Title
+    type: string
+    observed_as: method
+  - name: error
+    label: Error
+    type: text
+    observed_as: error
+  - name: trace_id
+    label: Trace ID
+    type: string
+    observed_as: trace_id
+  - name: fingerprint
+    label: Fingerprint
+    type: string
+    observed_as: fingerprint
+  - name: metadata
+    label: Metadata
+    type: text
+    observed_as: metadata
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabError Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Error Log
+    note: declared by the program and served by its API

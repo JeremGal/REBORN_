@@ -1,0 +1,165 @@
+name: Workspace
+description: Document type "Workspace" (module Desk).
+fields:
+  - name: label
+    label: Name
+    type: string
+    observed_as: label
+    required: true
+    unique: true
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: sequence_id
+    label: Sequence Id
+    type: decimal
+    observed_as: sequence_id
+  - name: for_user
+    label: For User
+    type: string
+    observed_as: for_user
+  - name: parent_page
+    label: Parent Page
+    type: ref
+    observed_as: parent_page
+    ref: Workspace
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    required: true
+    ref: ModuleDef
+  - name: type
+    label: Type
+    type: enum
+    observed_as: type
+    required: true
+    enum_values:
+      - Workspace
+      - Link
+      - URL
+    default: Workspace
+  - name: link_type
+    label: Link Type
+    type: enum
+    observed_as: link_type
+    enum_values:
+      - DocType
+      - Page
+      - Report
+  - name: link_to
+    label: Link To
+    type: string
+    observed_as: link_to
+  - name: external_link
+    label: External Link
+    type: string
+    observed_as: external_link
+  - name: standard
+    label: Standard
+    type: boolean
+    observed_as: standard
+    default: "0"
+  - name: indicator_color
+    label: Indicator Color
+    type: enum
+    observed_as: indicator_color
+    enum_values:
+      - green
+      - cyan
+      - blue
+      - orange
+      - yellow
+      - gray
+      - grey
+      - red
+      - pink
+      - darkgrey
+      - purple
+      - light-blue
+  - name: restrict_to_domain
+    label: Restrict to Domain
+    type: ref
+    observed_as: restrict_to_domain
+    ref: Domain
+  - name: hide_custom
+    label: Hide Custom DocTypes and Reports
+    type: boolean
+    observed_as: hide_custom
+    default: "0"
+  - name: public
+    label: Public
+    type: boolean
+    observed_as: public
+    default: "0"
+  - name: is_hidden
+    label: Is Hidden
+    type: boolean
+    observed_as: is_hidden
+    default: "0"
+  - name: content
+    label: Content
+    type: text
+    observed_as: content
+    default: "[]"
+  - name: module_onboarding
+    label: Module Onboarding
+    type: ref
+    observed_as: module_onboarding
+    ref: ModuleOnboarding
+relations:
+  - to: Workspace
+    kind: many-to-one
+    via: parent_page
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: Domain
+    kind: many-to-one
+    via: restrict_to_domain
+  - to: ModuleOnboarding
+    kind: many-to-one
+    via: module_onboarding
+  - to: WorkspaceNumberCard
+    kind: one-to-many
+    via: number_cards
+    description: lines (Number Cards)
+  - to: WorkspaceChart
+    kind: one-to-many
+    via: charts
+    description: lines (Charts)
+  - to: WorkspaceShortcut
+    kind: one-to-many
+    via: shortcuts
+    description: lines (Shortcuts)
+  - to: WorkspaceLink
+    kind: one-to-many
+    via: links
+    description: lines (Links)
+  - to: WorkspaceQuickList
+    kind: one-to-many
+    via: quick_lists
+    description: lines (Quick Lists)
+  - to: WorkspaceCustomBlock
+    kind: one-to-many
+    via: custom_blocks
+    description: lines (Custom Blocks)
+  - to: HasRole
+    kind: one-to-many
+    via: roles
+    description: lines (Roles)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkspace
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workspace
+    note: declared by the program and served by its API

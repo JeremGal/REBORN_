@@ -1,0 +1,168 @@
+name: PrintSettings
+description: 'Document type "Print Settings" (module Printing): single settings record.'
+fields:
+  - name: send_print_as_pdf
+    label: Send Print as PDF
+    type: boolean
+    observed_as: send_print_as_pdf
+    default: "1"
+  - name: repeat_header_footer
+    label: Repeat Header and Footer
+    type: boolean
+    observed_as: repeat_header_footer
+    default: "1"
+  - name: print_generated_pdf
+    label: Print the PDF
+    type: boolean
+    observed_as: print_generated_pdf
+    default: "0"
+  - name: pdf_generator
+    label: PDF Generator
+    type: enum
+    observed_as: pdf_generator
+    enum_values:
+      - wkhtmltopdf
+      - chrome
+      - PlutoPrint
+    default: chrome
+  - name: max_bulk_print_docs
+    label: Max Bulk Print Documents
+    type: integer
+    observed_as: max_bulk_print_docs
+    default: "100"
+  - name: max_concurrent_bulk_exports
+    label: Max Concurrent Bulk Exports Per User
+    type: integer
+    observed_as: max_concurrent_bulk_exports
+    default: "5"
+  - name: pdf_page_size
+    label: PDF Page Size
+    type: enum
+    observed_as: pdf_page_size
+    enum_values:
+      - A0
+      - A1
+      - A2
+      - A3
+      - A4
+      - A5
+      - A6
+      - A7
+      - A8
+      - A9
+      - B0
+      - B1
+      - B2
+      - B3
+      - B4
+      - B5
+      - B6
+      - B7
+      - B8
+      - B9
+      - B10
+      - C5E
+      - Comm10E
+      - DLE
+      - Executive
+      - Folio
+      - Ledger
+      - Legal
+      - Letter
+      - Tabloid
+      - Custom
+    default: A4
+  - name: pdf_page_height
+    label: PDF Page Height (in mm)
+    type: decimal
+    observed_as: pdf_page_height
+  - name: pdf_page_width
+    label: PDF Page Width (in mm)
+    type: decimal
+    observed_as: pdf_page_width
+  - name: with_letterhead
+    label: Print with letterhead
+    type: boolean
+    observed_as: with_letterhead
+    default: "1"
+  - name: compact_item_print
+    label: Compact Item Print
+    type: boolean
+    observed_as: compact_item_print
+    default: "1"
+  - name: print_uom_after_quantity
+    label: Print UOM after Quantity
+    type: boolean
+    observed_as: print_uom_after_quantity
+    default: "0"
+  - name: allow_print_for_draft
+    label: Allow Print for Draft
+    type: boolean
+    observed_as: allow_print_for_draft
+    default: "1"
+  - name: add_draft_heading
+    label: Always add "Draft" Heading for printing draft documents
+    type: boolean
+    observed_as: add_draft_heading
+    default: "1"
+  - name: allow_page_break_inside_tables
+    label: Allow page break inside tables
+    type: boolean
+    observed_as: allow_page_break_inside_tables
+    default: "0"
+  - name: allow_print_for_cancelled
+    label: Allow Print for Cancelled
+    type: boolean
+    observed_as: allow_print_for_cancelled
+    default: "0"
+  - name: print_taxes_with_zero_amount
+    label: Print taxes with zero amount
+    type: boolean
+    observed_as: print_taxes_with_zero_amount
+    default: "0"
+  - name: enable_print_server
+    label: Enable Print Server
+    type: boolean
+    observed_as: enable_print_server
+    default: "0"
+  - name: enable_raw_printing
+    label: Enable Raw Printing
+    type: boolean
+    observed_as: enable_raw_printing
+    default: "0"
+  - name: print_style
+    label: Print Style
+    type: ref
+    observed_as: print_style
+    ref: PrintStyle
+    default: Redesign
+  - name: font
+    label: Font
+    type: enum
+    observed_as: font
+    enum_values:
+      - Default
+      - Helvetica Neue
+      - Arial
+      - Helvetica
+      - Inter
+      - Verdana
+      - Monospace
+    default: Default
+  - name: font_size
+    label: Font Size
+    type: decimal
+    observed_as: font_size
+relations:
+  - to: PrintStyle
+    kind: many-to-one
+    via: print_style
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPrint Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Print Settings
+    note: declared by the program and served by its API

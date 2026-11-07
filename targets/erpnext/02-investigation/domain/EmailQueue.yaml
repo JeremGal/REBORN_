@@ -1,0 +1,125 @@
+name: EmailQueue
+description: Email Queue records. Document type "Email Queue" (module Email).
+fields:
+  - name: sender
+    label: Sender
+    type: string
+    observed_as: sender
+  - name: show_as_cc
+    label: Show as cc
+    type: text
+    observed_as: show_as_cc
+  - name: message
+    label: Message
+    type: text
+    observed_as: message
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Not Sent
+      - Sending
+      - Sent
+      - Partially Sent
+      - Error
+    default: Not Sent
+  - name: error
+    label: Error
+    type: text
+    observed_as: error
+  - name: message_id
+    label: Message ID
+    type: text
+    observed_as: message_id
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Reference DocName
+    type: string
+    observed_as: reference_name
+  - name: communication
+    label: Communication
+    type: ref
+    observed_as: communication
+    ref: Communication
+  - name: send_after
+    label: Send After
+    type: datetime
+    observed_as: send_after
+  - name: priority
+    label: Priority
+    type: integer
+    observed_as: priority
+    default: "1"
+  - name: add_unsubscribe_link
+    label: Add Unsubscribe Link
+    type: boolean
+    observed_as: add_unsubscribe_link
+    default: "1"
+  - name: unsubscribe_params
+    label: Unsubscribe Params
+    type: text
+    observed_as: unsubscribe_params
+  - name: unsubscribe_method
+    label: Unsubscribe Method
+    type: string
+    observed_as: unsubscribe_method
+  - name: email_read_tracker_url
+    label: Email Read Tracker URL
+    type: text
+    observed_as: email_read_tracker_url
+  - name: expose_recipients
+    label: Expose Recipients
+    type: string
+    observed_as: expose_recipients
+  - name: attachments
+    label: Attachments
+    type: text
+    observed_as: attachments
+  - name: retry
+    label: Retry
+    type: integer
+    observed_as: retry
+    default: "0"
+  - name: email_account
+    label: Email Account
+    type: ref
+    observed_as: email_account
+    ref: EmailAccount
+  - name: raw_html
+    label: Send As Raw HTML
+    type: boolean
+    observed_as: raw_html
+    default: "0"
+  - name: redact_message_after_send
+    label: Redact Message After Send
+    type: boolean
+    observed_as: redact_message_after_send
+    default: "0"
+relations:
+  - to: EmailQueueRecipient
+    kind: one-to-many
+    via: recipients
+    description: lines (Recipient)
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: Communication
+    kind: many-to-one
+    via: communication
+  - to: EmailAccount
+    kind: many-to-one
+    via: email_account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Queue
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Queue
+    note: declared by the program and served by its API

@@ -1,0 +1,26 @@
+name: AboutUsTeamMember
+description: 'Document type "About Us Team Member" (module Website): lines of another document.'
+fields:
+  - name: full_name
+    label: Full Name
+    type: string
+    observed_as: full_name
+    required: true
+  - name: image_link
+    label: Image Link
+    type: file
+    observed_as: image_link
+  - name: bio
+    label: Bio
+    type: text
+    observed_as: bio
+    required: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAbout Us Team Member
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of About Us Team Member
+    note: declared by the program and served by its API

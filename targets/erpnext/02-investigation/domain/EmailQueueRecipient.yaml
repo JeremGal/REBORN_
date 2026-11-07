@@ -1,0 +1,28 @@
+name: EmailQueueRecipient
+description: 'Document type "Email Queue Recipient" (module Email): lines of another document.'
+fields:
+  - name: recipient
+    label: Recipient
+    type: string
+    observed_as: recipient
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Not Sent
+      - Sent
+    default: Not Sent
+  - name: error
+    label: Error
+    type: text
+    observed_as: error
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Queue Recipient
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Queue Recipient
+    note: declared by the program and served by its API

@@ -1,0 +1,156 @@
+name: Subscription
+description: Bills a customer or supplier for the same things on a schedule. Document type "Subscription" (module Accounts).
+fields:
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    required: true
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Trialing
+      - Active
+      - Grace Period
+      - Cancelled
+      - Unpaid
+      - Completed
+  - name: start_date
+    label: Subscription Start Date
+    type: date
+    observed_as: start_date
+  - name: end_date
+    label: Subscription End Date
+    type: date
+    observed_as: end_date
+  - name: cancelation_date
+    label: Cancelation Date
+    type: date
+    observed_as: cancelation_date
+  - name: trial_period_start
+    label: Trial Period Start Date
+    type: date
+    observed_as: trial_period_start
+  - name: trial_period_end
+    label: Trial Period End Date
+    type: date
+    observed_as: trial_period_end
+  - name: follow_calendar_months
+    label: Follow Calendar Months
+    type: boolean
+    observed_as: follow_calendar_months
+    default: "0"
+  - name: generate_new_invoices_past_due_date
+    label: Generate New Invoices Past Due Date
+    type: boolean
+    observed_as: generate_new_invoices_past_due_date
+    default: "0"
+  - name: submit_invoice
+    label: Submit Generated Invoices
+    type: boolean
+    observed_as: submit_invoice
+    default: "1"
+  - name: current_invoice_start
+    label: Current Invoice Start Date
+    type: date
+    observed_as: current_invoice_start
+  - name: current_invoice_end
+    label: Current Invoice End Date
+    type: date
+    observed_as: current_invoice_end
+  - name: days_until_due
+    label: Days Until Due
+    type: integer
+    observed_as: days_until_due
+    default: "0"
+  - name: generate_invoice_at
+    label: Generate Invoice At
+    type: enum
+    observed_as: generate_invoice_at
+    required: true
+    enum_values:
+      - End of the current subscription period
+      - Beginning of the current subscription period
+      - Days before the current subscription period
+    default: End of the current subscription period
+  - name: number_of_days
+    label: Number of Days
+    type: integer
+    observed_as: number_of_days
+  - name: cancel_at_period_end
+    label: Cancel At End Of Period
+    type: boolean
+    observed_as: cancel_at_period_end
+    default: "0"
+  - name: sales_tax_template
+    label: Sales Taxes and Charges Template
+    type: ref
+    observed_as: sales_tax_template
+    ref: SalesTaxesAndChargesTemplate
+  - name: purchase_tax_template
+    label: Purchase Taxes and Charges Template
+    type: ref
+    observed_as: purchase_tax_template
+    ref: PurchaseTaxesAndChargesTemplate
+  - name: apply_additional_discount
+    label: Apply Additional Discount On
+    type: enum
+    observed_as: apply_additional_discount
+    enum_values:
+      - Grand Total
+      - Net Total
+  - name: additional_discount_percentage
+    label: Additional Discount Percentage
+    type: percent
+    observed_as: additional_discount_percentage
+  - name: additional_discount_amount
+    label: Additional Discount Amount
+    type: money
+    observed_as: additional_discount_amount
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: SubscriptionPlanDetail
+    kind: one-to-many
+    via: plans
+    description: lines (Plans)
+  - to: SalesTaxesAndChargesTemplate
+    kind: many-to-one
+    via: sales_tax_template
+  - to: PurchaseTaxesAndChargesTemplate
+    kind: many-to-one
+    via: purchase_tax_template
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubscription
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subscription
+    note: declared by the program and served by its API

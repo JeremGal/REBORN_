@@ -1,0 +1,62 @@
+name: BisectNodes
+description: Document type "Bisect Nodes" (module Accounts).
+fields:
+  - name: root
+    label: Root
+    type: ref
+    observed_as: root
+    ref: BisectNodes
+  - name: left_child
+    label: Left Child
+    type: ref
+    observed_as: left_child
+    ref: BisectNodes
+  - name: right_child
+    label: Right Child
+    type: ref
+    observed_as: right_child
+    ref: BisectNodes
+  - name: period_from_date
+    label: Period_from_date
+    type: datetime
+    observed_as: period_from_date
+  - name: period_to_date
+    label: Period To Date
+    type: datetime
+    observed_as: period_to_date
+  - name: difference
+    label: Difference
+    type: decimal
+    observed_as: difference
+  - name: balance_sheet_summary
+    label: Balance Sheet Summary
+    type: decimal
+    observed_as: balance_sheet_summary
+  - name: profit_loss_summary
+    label: Profit and Loss Summary
+    type: decimal
+    observed_as: profit_loss_summary
+  - name: generated
+    label: Generated
+    type: boolean
+    observed_as: generated
+    default: "0"
+relations:
+  - to: BisectNodes
+    kind: many-to-one
+    via: root
+  - to: BisectNodes
+    kind: many-to-one
+    via: left_child
+  - to: BisectNodes
+    kind: many-to-one
+    via: right_child
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBisect Nodes
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bisect Nodes
+    note: declared by the program and served by its API

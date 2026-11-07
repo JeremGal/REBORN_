@@ -1,0 +1,33 @@
+name: Package
+description: Document type "Package" (module Core).
+fields:
+  - name: package_name
+    label: Package Name
+    type: string
+    observed_as: package_name
+    required: true
+  - name: readme
+    label: Readme
+    type: text
+    observed_as: readme
+  - name: license_type
+    label: License Type
+    type: enum
+    observed_as: license_type
+    enum_values:
+      - MIT License
+      - GNU General Public License
+      - GNU Affero General Public License
+  - name: license
+    label: License
+    type: text
+    observed_as: license
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPackage
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Package
+    note: declared by the program and served by its API

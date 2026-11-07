@@ -1,0 +1,25 @@
+name: RepostPaymentLedgerItems
+description: 'Document type "Repost Payment Ledger Items" (module Accounts): lines of another document.'
+fields:
+  - name: voucher_type
+    label: Voucher Type
+    type: ref
+    observed_as: voucher_type
+    ref: DocType
+  - name: voucher_no
+    label: Voucher No
+    type: string
+    observed_as: voucher_no
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: voucher_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRepost Payment Ledger Items
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Repost Payment Ledger Items
+    note: declared by the program and served by its API

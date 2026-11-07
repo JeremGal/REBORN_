@@ -1,0 +1,220 @@
+name: SellingSettings
+description: 'How quotations, sales orders and pricing work. Document type "Selling Settings" (module Selling): single settings record.'
+fields:
+  - name: cust_master_name
+    label: Customer Naming By
+    type: enum
+    observed_as: cust_master_name
+    enum_values:
+      - Customer Name
+      - Naming Series
+      - Auto Name
+    default: Customer Name
+  - name: naming_series_details
+    label: Naming Series options
+    type: text
+    observed_as: naming_series_details
+  - name: customer_group
+    label: Default Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: territory
+    label: Default Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: selling_price_list
+    label: Default Price List
+    type: ref
+    observed_as: selling_price_list
+    ref: PriceList
+  - name: fallback_to_default_price_list
+    label: Use prices from Default Price List as fallback
+    type: boolean
+    observed_as: fallback_to_default_price_list
+    default: "0"
+  - name: editable_price_list_rate
+    label: Allow editing Price List rate in transactions
+    type: boolean
+    observed_as: editable_price_list_rate
+    default: "0"
+  - name: maintain_same_sales_rate
+    label: Maintain same rate throughout sales cycle
+    type: boolean
+    observed_as: maintain_same_sales_rate
+    default: "0"
+  - name: maintain_same_rate_action
+    label: Action if same rate is not maintained throughout sales cycle
+    type: enum
+    observed_as: maintain_same_rate_action
+    enum_values:
+      - Stop
+      - Warn
+    default: Stop
+  - name: role_to_override_stop_action
+    label: Role allowed to override stop action
+    type: ref
+    observed_as: role_to_override_stop_action
+    ref: Role
+  - name: validate_selling_price
+    label: Validate selling price for Item against purchase or valuation rate
+    type: boolean
+    observed_as: validate_selling_price
+    default: "0"
+  - name: editable_bundle_item_rates
+    label: Calculate Product Bundle price based on child Item's rates
+    type: boolean
+    observed_as: editable_bundle_item_rates
+    default: "0"
+  - name: allow_negative_rates_for_items
+    label: Allow negative rates for Items
+    type: boolean
+    observed_as: allow_negative_rates_for_items
+    default: "0"
+  - name: so_required
+    label: Is Sales Order required to create Sales Invoice/Delivery Note?
+    type: enum
+    observed_as: so_required
+    enum_values:
+      - No
+      - Yes
+  - name: dn_required
+    label: Is Delivery Note required to create Sales Invoice?
+    type: enum
+    observed_as: dn_required
+    enum_values:
+      - No
+      - Yes
+  - name: sales_update_frequency
+    label: How often should sales data be updated in Company/Project?
+    type: enum
+    observed_as: sales_update_frequency
+    required: true
+    enum_values:
+      - Monthly
+      - Each Transaction
+      - Daily
+    default: Daily
+  - name: allow_multiple_items
+    label: Allow same Item to be added multiple times in a transaction
+    type: boolean
+    observed_as: allow_multiple_items
+    default: "0"
+  - name: allow_against_multiple_purchase_orders
+    label: Allow multiple Sales Orders against a customer's Purchase Order
+    type: boolean
+    observed_as: allow_against_multiple_purchase_orders
+    default: "0"
+  - name: hide_tax_id
+    label: Hide Customer's Tax ID from sales transactions
+    type: boolean
+    observed_as: hide_tax_id
+    default: "0"
+  - name: allow_sales_order_creation_for_expired_quotation
+    label: Allow Sales Order creation for expired Quotation
+    type: boolean
+    observed_as: allow_sales_order_creation_for_expired_quotation
+    default: "0"
+  - name: dont_reserve_sales_order_qty_on_sales_return
+    label: Don't reserve Sales Order qty on sales return
+    type: boolean
+    observed_as: dont_reserve_sales_order_qty_on_sales_return
+    default: "0"
+  - name: enable_cutoff_date_on_bulk_delivery_note_creation
+    label: Enable cut-off date on creating bulk Delivery Notes
+    type: boolean
+    observed_as: enable_cutoff_date_on_bulk_delivery_note_creation
+    default: "0"
+  - name: set_zero_rate_for_expired_batch
+    label: Set incoming rate as zero for expired Batch
+    type: boolean
+    observed_as: set_zero_rate_for_expired_batch
+    default: "0"
+  - name: allow_zero_qty_in_quotation
+    label: Allow Quotation with zero quantity
+    type: boolean
+    observed_as: allow_zero_qty_in_quotation
+    default: "0"
+  - name: allow_zero_qty_in_sales_order
+    label: Allow Sales Order with zero quantity
+    type: boolean
+    observed_as: allow_zero_qty_in_sales_order
+    default: "0"
+  - name: blanket_order_allowance
+    label: Blanket Order Allowance (%)
+    type: decimal
+    observed_as: blanket_order_allowance
+  - name: enable_proforma_invoice
+    label: Enable Proforma Invoice
+    type: boolean
+    observed_as: enable_proforma_invoice
+    default: "0"
+  - name: default_proforma_print_format
+    label: Default Proforma Print Format
+    type: ref
+    observed_as: default_proforma_print_format
+    ref: PrintFormat
+  - name: proforma_email_template
+    label: Proforma Email Template
+    type: ref
+    observed_as: proforma_email_template
+    ref: EmailTemplate
+  - name: enable_tracking_sales_commissions
+    label: Enable tracking sales commissions
+    type: boolean
+    observed_as: enable_tracking_sales_commissions
+    default: "0"
+  - name: enable_discount_accounting
+    label: Enable discount accounting for selling
+    type: boolean
+    observed_as: enable_discount_accounting
+    default: "0"
+  - name: enable_utm
+    label: Enable UTM
+    type: boolean
+    observed_as: enable_utm
+    default: "0"
+  - name: use_legacy_js_reactivity
+    label: Use Legacy (Client side) Reactivity
+    type: boolean
+    observed_as: use_legacy_js_reactivity
+    default: "0"
+  - name: allow_delivery_of_overproduced_qty
+    label: Allow delivery of overproduced quantity
+    type: boolean
+    observed_as: allow_delivery_of_overproduced_qty
+    default: "0"
+  - name: deliver_secondary_items
+    label: Deliver secondary Items
+    type: boolean
+    observed_as: deliver_secondary_items
+    default: "0"
+relations:
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: PriceList
+    kind: many-to-one
+    via: selling_price_list
+  - to: Role
+    kind: many-to-one
+    via: role_to_override_stop_action
+  - to: PrintFormat
+    kind: many-to-one
+    via: default_proforma_print_format
+  - to: EmailTemplate
+    kind: many-to-one
+    via: proforma_email_template
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSelling Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Selling Settings
+    note: declared by the program and served by its API

@@ -1,0 +1,203 @@
+name: Task
+description: A piece of work to be done, often part of a project. Document type "Task" (module Projects).
+fields:
+  - name: subject
+    label: Subject
+    type: string
+    observed_as: subject
+    required: true
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: issue
+    label: Issue
+    type: ref
+    observed_as: issue
+    ref: Issue
+  - name: type
+    label: Type
+    type: ref
+    observed_as: type
+    ref: TaskType
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Open
+      - Working
+      - Pending Review
+      - Overdue
+      - Template
+      - Completed
+      - Cancelled
+  - name: priority
+    label: Priority
+    type: enum
+    observed_as: priority
+    enum_values:
+      - Low
+      - Medium
+      - High
+      - Urgent
+  - name: task_weight
+    label: Weight
+    type: decimal
+    observed_as: task_weight
+  - name: parent_task
+    label: Parent Task
+    type: ref
+    observed_as: parent_task
+    ref: Task
+  - name: completed_by
+    label: Completed By
+    type: ref
+    observed_as: completed_by
+    ref: User
+  - name: completed_on
+    label: Completed On
+    type: date
+    observed_as: completed_on
+  - name: is_template
+    label: Is Template
+    type: boolean
+    observed_as: is_template
+    default: "0"
+  - name: start
+    label: Begin On (Days)
+    type: integer
+    observed_as: start
+  - name: duration
+    label: Duration (Days)
+    type: integer
+    observed_as: duration
+  - name: exp_start_date
+    label: Expected Start Date
+    type: datetime
+    observed_as: exp_start_date
+  - name: expected_time
+    label: Expected Time (in hours)
+    type: decimal
+    observed_as: expected_time
+    default: "0"
+  - name: exp_end_date
+    label: Expected End Date
+    type: datetime
+    observed_as: exp_end_date
+  - name: progress
+    label: "% Progress"
+    type: percent
+    observed_as: progress
+  - name: is_milestone
+    label: Is Milestone
+    type: boolean
+    observed_as: is_milestone
+    default: "0"
+  - name: description
+    label: Task Description
+    type: text
+    observed_as: description
+  - name: depends_on_tasks
+    label: Depends on Tasks
+    type: text
+    observed_as: depends_on_tasks
+  - name: act_start_date
+    label: Actual Start Date (via Timesheet)
+    type: date
+    observed_as: act_start_date
+  - name: actual_time
+    label: Actual Time in Hours (via Timesheet)
+    type: decimal
+    observed_as: actual_time
+  - name: act_end_date
+    label: Actual End Date (via Timesheet)
+    type: date
+    observed_as: act_end_date
+  - name: total_costing_amount
+    label: Total Costing Amount (via Timesheet)
+    type: money
+    observed_as: total_costing_amount
+  - name: total_billing_amount
+    label: Total Billable Amount (via Timesheet)
+    type: money
+    observed_as: total_billing_amount
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: review_date
+    label: Review Date
+    type: date
+    observed_as: review_date
+  - name: closing_date
+    label: Closing Date
+    type: date
+    observed_as: closing_date
+  - name: department
+    label: Department
+    type: ref
+    observed_as: department
+    ref: Department
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: Old Parent
+    type: string
+    observed_as: old_parent
+  - name: template_task
+    label: Template Task
+    type: string
+    observed_as: template_task
+relations:
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Issue
+    kind: many-to-one
+    via: issue
+  - to: TaskType
+    kind: many-to-one
+    via: type
+  - to: Task
+    kind: many-to-one
+    via: parent_task
+  - to: User
+    kind: many-to-one
+    via: completed_by
+  - to: TaskDependsOn
+    kind: one-to-many
+    via: depends_on
+    description: lines (Dependent Tasks)
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Department
+    kind: many-to-one
+    via: department
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTask
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Task
+    note: declared by the program and served by its API

@@ -1,0 +1,44 @@
+name: DocTypeAction
+description: 'Document type "DocType Action" (module Core): lines of another document.'
+fields:
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+    required: true
+  - name: action_type
+    label: Action Type
+    type: enum
+    observed_as: action_type
+    required: true
+    enum_values:
+      - Server Action
+      - Route
+  - name: action
+    label: Action / Route
+    type: text
+    observed_as: action
+    required: true
+  - name: group
+    label: Group
+    type: string
+    observed_as: group
+  - name: hidden
+    label: Hidden
+    type: boolean
+    observed_as: hidden
+    default: "0"
+  - name: custom
+    label: Custom
+    type: boolean
+    observed_as: custom
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocType Action
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DocType Action
+    note: declared by the program and served by its API

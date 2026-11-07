@@ -1,0 +1,147 @@
+name: NumberCard
+description: Document type "Number Card" (module Desk).
+fields:
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+    required: true
+  - name: type
+    label: Type
+    type: enum
+    observed_as: type
+    enum_values:
+      - Document Type
+      - Report
+      - Custom
+  - name: report_name
+    label: Report Name
+    type: ref
+    observed_as: report_name
+    ref: Report
+  - name: method
+    label: Method
+    type: string
+    observed_as: method
+  - name: function
+    label: Function
+    type: enum
+    observed_as: function
+    enum_values:
+      - Count
+      - Sum
+      - Average
+      - Minimum
+      - Maximum
+  - name: aggregate_function_based_on
+    label: Aggregate Function Based On
+    type: string
+    observed_as: aggregate_function_based_on
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    ref: DocType
+  - name: parent_document_type
+    label: Parent Document Type
+    type: ref
+    observed_as: parent_document_type
+    ref: DocType
+  - name: report_field
+    label: Field
+    type: string
+    observed_as: report_field
+  - name: report_function
+    label: Function
+    type: enum
+    observed_as: report_function
+    enum_values:
+      - Sum
+      - Average
+      - Minimum
+      - Maximum
+  - name: is_public
+    label: Is Public
+    type: boolean
+    observed_as: is_public
+    default: "0"
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: show_full_number
+    label: Show Full Number
+    type: boolean
+    observed_as: show_full_number
+    default: "0"
+  - name: filters_config
+    label: Filters Configuration
+    type: text
+    observed_as: filters_config
+  - name: show_percentage_stats
+    label: Show Percentage Stats
+    type: boolean
+    observed_as: show_percentage_stats
+    default: "1"
+  - name: stats_time_interval
+    label: Stats Time Interval
+    type: enum
+    observed_as: stats_time_interval
+    enum_values:
+      - Daily
+      - Weekly
+      - Monthly
+      - Yearly
+    default: Daily
+  - name: filters_json
+    label: Filters JSON
+    type: text
+    observed_as: filters_json
+  - name: dynamic_filters_json
+    label: Dynamic Filters JSON
+    type: text
+    observed_as: dynamic_filters_json
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+  - name: background_color
+    label: Background Color
+    type: string
+    observed_as: background_color
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: Report
+    kind: many-to-one
+    via: report_name
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: DocType
+    kind: many-to-one
+    via: parent_document_type
+  - to: Currency
+    kind: many-to-one
+    via: currency
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNumber Card
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Number Card
+    note: declared by the program and served by its API

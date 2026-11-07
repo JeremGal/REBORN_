@@ -1,0 +1,27 @@
+name: BudgetAccount
+description: 'Document type "Budget Account" (module Accounts): lines of another document.'
+fields:
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: budget_amount
+    label: Budget Amount
+    type: money
+    observed_as: budget_amount
+    required: true
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBudget Account
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Budget Account
+    note: declared by the program and served by its API

@@ -13,5 +13,5 @@ examples: []   # MISSING: confirm denom for a known currency from a real book cr
 status: partial
 confidence: medium
 evidence:
-  - { ref: ev_cbf4056701a84d18acffbdb4d89393e12eaa59fa7ca5fd6c609a892d290cce3e, kind: craft, locator: "libgnc-backend-sql.dll format strings '%s_num' / '%s_denom'; symbols gnc_numeric_num / gnc_numeric_denom", note: "fraction storage observed as a pattern; exact column prefixes inferred" }
+  - { ref: ev_cbf4056701a84d18acffbdb4d89393e12eaa59fa7ca5fd6c609a892d290cce3e, kind: craft, locator: "database layer: amount column naming pattern (numerator / denominator)", note: "fraction storage observed as a pattern; exact column prefixes inferred" }
 contradictions: []

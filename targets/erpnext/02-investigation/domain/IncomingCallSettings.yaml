@@ -1,0 +1,37 @@
+name: IncomingCallSettings
+description: Who answers incoming calls, and when. Document type "Incoming Call Settings" (module Telephony).
+fields:
+  - name: call_routing
+    label: Call Routing
+    type: enum
+    observed_as: call_routing
+    enum_values:
+      - Sequential
+      - Simultaneous
+    default: Sequential
+  - name: greeting_message
+    label: Greeting Message
+    type: string
+    observed_as: greeting_message
+  - name: agent_busy_message
+    label: Agent Busy Message
+    type: string
+    observed_as: agent_busy_message
+  - name: agent_unavailable_message
+    label: Agent Unavailable Message
+    type: string
+    observed_as: agent_unavailable_message
+relations:
+  - to: IncomingCallHandlingSchedule
+    kind: one-to-many
+    via: call_handling_schedule
+    description: lines (Call Handling Schedule)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabIncoming Call Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Incoming Call Settings
+    note: declared by the program and served by its API

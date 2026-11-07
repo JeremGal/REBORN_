@@ -1,0 +1,55 @@
+name: AccountingPeriod
+description: A date range you can close so no one posts into it. Document type "Accounting Period" (module Accounts).
+fields:
+  - name: period_name
+    label: Period Name
+    type: string
+    observed_as: period_name
+    required: true
+    unique: true
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+    required: true
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: exempted_role
+    label: Exempted Role
+    type: ref
+    observed_as: exempted_role
+    ref: Role
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Role
+    kind: many-to-one
+    via: exempted_role
+  - to: ClosedDocument
+    kind: one-to-many
+    via: closed_documents
+    description: lines (Closed Documents)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAccounting Period
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Accounting Period
+    note: declared by the program and served by its API

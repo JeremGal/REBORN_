@@ -1,0 +1,147 @@
+name: AssetCapitalization
+description: 'Turns stock items or services into an asset, or one asset into another. Document type "Asset Capitalization" (module Assets): draft, submitted, cancelled life cycle.'
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - ACC-ASC-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: target_asset
+    label: Target Asset
+    type: ref
+    observed_as: target_asset
+    required: true
+    ref: Asset
+  - name: target_asset_name
+    label: Asset Name
+    type: string
+    observed_as: target_asset_name
+  - name: finance_book
+    label: Finance Book
+    type: ref
+    observed_as: finance_book
+    ref: FinanceBook
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+    required: true
+    default: Now
+  - name: set_posting_time
+    label: Edit Posting Date and Time
+    type: boolean
+    observed_as: set_posting_time
+    default: "0"
+  - name: target_item_code
+    label: Target Item Code
+    type: ref
+    observed_as: target_item_code
+    ref: Item
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: AssetCapitalization
+  - name: stock_items_total
+    label: Consumed Stock Total Value
+    type: money
+    observed_as: stock_items_total
+  - name: asset_items_total
+    label: Consumed Asset Total Value
+    type: money
+    observed_as: asset_items_total
+  - name: service_items_total
+    label: Service Expense Total Amount
+    type: money
+    observed_as: service_items_total
+  - name: total_value
+    label: Total Value
+    type: money
+    observed_as: total_value
+  - name: target_incoming_rate
+    label: Target Incoming Rate
+    type: money
+    observed_as: target_incoming_rate
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: target_fixed_asset_account
+    label: Target Fixed Asset Account
+    type: ref
+    observed_as: target_fixed_asset_account
+    ref: Account
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Asset
+    kind: many-to-one
+    via: target_asset
+  - to: FinanceBook
+    kind: many-to-one
+    via: finance_book
+  - to: Item
+    kind: many-to-one
+    via: target_item_code
+  - to: AssetCapitalization
+    kind: many-to-one
+    via: amended_from
+  - to: AssetCapitalizationStockItem
+    kind: one-to-many
+    via: stock_items
+    description: lines (Stock Items)
+  - to: AssetCapitalizationAssetItem
+    kind: one-to-many
+    via: asset_items
+    description: lines (Assets)
+  - to: AssetCapitalizationServiceItem
+    kind: one-to-many
+    via: service_items
+    description: lines (Services)
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Account
+    kind: many-to-one
+    via: target_fixed_asset_account
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Capitalization
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Capitalization
+    note: declared by the program and served by its API

@@ -1,6 +1,7 @@
 # Identity of the software under study. Never commit the binary: only its name and SHA-256 (reborn triage adds them).
 id: mmex
 name: Money Manager Ex
+kit_title: Open-source personal finance desktop application
 vendor: Money Manager Ex community
 domain: personal and small-business accounting
 description: >-

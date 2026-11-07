@@ -1,0 +1,34 @@
+name: VideoSettings
+description: 'Document type "Video Settings" (module Utilities): single settings record.'
+fields:
+  - name: enable_youtube_tracking
+    label: Enable YouTube Tracking
+    type: boolean
+    observed_as: enable_youtube_tracking
+    default: "0"
+  - name: api_key
+    label: API Key
+    type: string
+    observed_as: api_key
+  - name: frequency
+    label: Frequency
+    type: enum
+    observed_as: frequency
+    enum_values:
+      - 1 hr
+      - 6 hrs
+      - Daily
+    default: 1 hr
+  - name: last_youtube_update
+    label: Last YouTube Update
+    type: datetime
+    observed_as: last_youtube_update
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabVideo Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Video Settings
+    note: declared by the program and served by its API

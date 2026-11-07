@@ -1,0 +1,39 @@
+name: ProcessPeriodClosingVoucherDetail
+description: 'Document type "Process Period Closing Voucher Detail" (module Accounts): lines of another document.'
+fields:
+  - name: processing_date
+    label: Processing Date
+    type: date
+    observed_as: processing_date
+  - name: report_type
+    label: Report Type
+    type: enum
+    observed_as: report_type
+    enum_values:
+      - Profit and Loss
+      - Balance Sheet
+    default: Profit and Loss
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Queued
+      - Running
+      - Paused
+      - Completed
+      - Cancelled
+    default: Queued
+  - name: closing_balance
+    label: Closing Balance
+    type: json
+    observed_as: closing_balance
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProcess Period Closing Voucher Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Process Period Closing Voucher Detail
+    note: declared by the program and served by its API

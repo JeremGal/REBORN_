@@ -1,0 +1,185 @@
+name: WorkOrderOperation
+description: 'Document type "Work Order Operation" (module Manufacturing): lines of another document.'
+fields:
+  - name: operation
+    label: Operation
+    type: ref
+    observed_as: operation
+    required: true
+    ref: Operation
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Pending
+      - Work in Progress
+      - Completed
+    default: Pending
+  - name: completed_qty
+    label: Completed Qty
+    type: decimal
+    observed_as: completed_qty
+  - name: process_loss_qty
+    label: Process Loss Qty
+    type: decimal
+    observed_as: process_loss_qty
+  - name: pending_qty
+    label: Pending Qty
+    type: decimal
+    observed_as: pending_qty
+  - name: bom
+    label: BOM
+    type: ref
+    observed_as: bom
+    ref: BOM
+  - name: bom_operation
+    label: BOM Operation
+    type: string
+    observed_as: bom_operation
+  - name: workstation_type
+    label: Workstation Type
+    type: ref
+    observed_as: workstation_type
+    ref: WorkstationType
+  - name: workstation
+    label: Workstation
+    type: ref
+    observed_as: workstation
+    ref: Workstation
+  - name: sequence_id
+    label: Sequence ID
+    type: integer
+    observed_as: sequence_id
+  - name: quality_inspection_required
+    label: Quality Inspection Required
+    type: boolean
+    observed_as: quality_inspection_required
+    default: "0"
+  - name: bom_no
+    label: Output Item BOM
+    type: ref
+    observed_as: bom_no
+    ref: BOM
+  - name: finished_good
+    label: Output Item
+    type: ref
+    observed_as: finished_good
+    ref: Item
+  - name: output_qty
+    label: Output Qty
+    type: decimal
+    observed_as: output_qty
+  - name: is_subcontracted
+    label: Is Subcontracted
+    type: boolean
+    observed_as: is_subcontracted
+    default: "0"
+  - name: skip_material_transfer
+    label: Skip Material Transfer
+    type: boolean
+    observed_as: skip_material_transfer
+    default: "0"
+  - name: backflush_from_wip_warehouse
+    label: Backflush Materials From WIP Warehouse
+    type: boolean
+    observed_as: backflush_from_wip_warehouse
+    default: "0"
+  - name: source_warehouse
+    label: Source Warehouse
+    type: ref
+    observed_as: source_warehouse
+    ref: Warehouse
+  - name: wip_warehouse
+    label: WIP WH
+    type: ref
+    observed_as: wip_warehouse
+    ref: Warehouse
+  - name: fg_warehouse
+    label: Finished Goods Warehouse
+    type: ref
+    observed_as: fg_warehouse
+    ref: Warehouse
+  - name: description
+    label: Operation Description
+    type: text
+    observed_as: description
+  - name: planned_start_time
+    label: Planned Start Time
+    type: datetime
+    observed_as: planned_start_time
+  - name: hour_rate
+    label: Hour Rate
+    type: decimal
+    observed_as: hour_rate
+  - name: time_in_mins
+    label: Time
+    type: decimal
+    observed_as: time_in_mins
+    required: true
+  - name: planned_end_time
+    label: Planned End Time
+    type: datetime
+    observed_as: planned_end_time
+  - name: batch_size
+    label: Batch Size
+    type: decimal
+    observed_as: batch_size
+    default: "1"
+  - name: planned_operating_cost
+    label: Planned Operating Cost
+    type: money
+    observed_as: planned_operating_cost
+  - name: actual_start_time
+    label: Actual Start Time
+    type: datetime
+    observed_as: actual_start_time
+  - name: actual_operation_time
+    label: Actual Operation Time
+    type: decimal
+    observed_as: actual_operation_time
+  - name: actual_end_time
+    label: Actual End Time
+    type: datetime
+    observed_as: actual_end_time
+  - name: actual_operating_cost
+    label: Actual Operating Cost
+    type: money
+    observed_as: actual_operating_cost
+relations:
+  - to: Operation
+    kind: many-to-one
+    via: operation
+  - to: BOM
+    kind: many-to-one
+    via: bom
+  - to: WorkstationType
+    kind: many-to-one
+    via: workstation_type
+  - to: Workstation
+    kind: many-to-one
+    via: workstation
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: Item
+    kind: many-to-one
+    via: finished_good
+  - to: Warehouse
+    kind: many-to-one
+    via: source_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: wip_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: fg_warehouse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWork Order Operation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Work Order Operation
+    note: declared by the program and served by its API

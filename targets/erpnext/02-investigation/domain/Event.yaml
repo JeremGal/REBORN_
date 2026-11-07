@@ -1,0 +1,204 @@
+name: Event
+description: Document type "Event" (module Desk).
+fields:
+  - name: subject
+    label: Subject
+    type: text
+    observed_as: subject
+    required: true
+  - name: event_category
+    label: Event Category
+    type: enum
+    observed_as: event_category
+    enum_values:
+      - Event
+      - Meeting
+      - Call
+      - Sent/Received Email
+      - Other
+  - name: event_type
+    label: Event Type
+    type: enum
+    observed_as: event_type
+    required: true
+    enum_values:
+      - Private
+      - Public
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+  - name: repeat_this_event
+    label: Repeat this Event
+    type: boolean
+    observed_as: repeat_this_event
+    default: "0"
+  - name: location
+    label: Location
+    type: string
+    observed_as: location
+  - name: starts_on
+    label: Starts on
+    type: datetime
+    observed_as: starts_on
+    required: true
+  - name: ends_on
+    label: Ends on
+    type: datetime
+    observed_as: ends_on
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Open
+      - Completed
+      - Closed
+      - Cancelled
+    default: Open
+  - name: sender
+    label: Sender
+    type: string
+    observed_as: sender
+  - name: attending
+    label: Attending
+    type: enum
+    observed_as: attending
+    enum_values:
+      - Yes
+      - No
+      - Maybe
+  - name: all_day
+    label: All Day
+    type: boolean
+    observed_as: all_day
+    default: "0"
+  - name: sync_with_google_calendar
+    label: Sync with Google Calendar
+    type: boolean
+    observed_as: sync_with_google_calendar
+    default: "0"
+  - name: add_video_conferencing
+    label: Add Video Conferencing
+    type: boolean
+    observed_as: add_video_conferencing
+    default: "0"
+  - name: google_calendar
+    label: Google Calendar
+    type: ref
+    observed_as: google_calendar
+    ref: GoogleCalendar
+  - name: google_calendar_id
+    label: Google Calendar ID
+    type: string
+    observed_as: google_calendar_id
+  - name: google_calendar_event_id
+    label: Google Calendar Event ID
+    type: string
+    observed_as: google_calendar_event_id
+    max_length: 320
+  - name: google_meet_link
+    label: Google Meet Link
+    type: text
+    observed_as: google_meet_link
+  - name: pulled_from_google_calendar
+    label: Pulled from Google Calendar
+    type: boolean
+    observed_as: pulled_from_google_calendar
+    default: "0"
+  - name: repeat_on
+    label: Repeat On
+    type: enum
+    observed_as: repeat_on
+    enum_values:
+      - Daily
+      - Weekly
+      - Monthly
+      - Quarterly
+      - Half Yearly
+      - Yearly
+  - name: repeat_till
+    label: Repeat Till
+    type: date
+    observed_as: repeat_till
+  - name: monday
+    label: Monday
+    type: boolean
+    observed_as: monday
+    default: "0"
+  - name: tuesday
+    label: Tuesday
+    type: boolean
+    observed_as: tuesday
+    default: "0"
+  - name: wednesday
+    label: Wednesday
+    type: boolean
+    observed_as: wednesday
+    default: "0"
+  - name: thursday
+    label: Thursday
+    type: boolean
+    observed_as: thursday
+    default: "0"
+  - name: friday
+    label: Friday
+    type: boolean
+    observed_as: friday
+    default: "0"
+  - name: saturday
+    label: Saturday
+    type: boolean
+    observed_as: saturday
+    default: "0"
+  - name: sunday
+    label: Sunday
+    type: boolean
+    observed_as: sunday
+    default: "0"
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_docname
+    label: Reference Doc
+    type: string
+    observed_as: reference_docname
+  - name: send_reminder
+    label: Send an email reminder in the morning
+    type: boolean
+    observed_as: send_reminder
+    default: "1"
+relations:
+  - to: GoogleCalendar
+    kind: many-to-one
+    via: google_calendar
+  - to: EventParticipants
+    kind: one-to-many
+    via: event_participants
+    description: lines (Event Participants)
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: DynamicLink
+    kind: one-to-many
+    via: links
+    description: lines (Links)
+  - to: EventNotifications
+    kind: one-to-many
+    via: notifications
+    description: lines (Notifications)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEvent
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Event
+    note: declared by the program and served by its API

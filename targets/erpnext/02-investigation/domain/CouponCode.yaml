@@ -1,0 +1,82 @@
+name: CouponCode
+description: A code customers enter to get a discount from a pricing rule. Document type "Coupon Code" (module Accounts).
+fields:
+  - name: coupon_name
+    label: Coupon Name
+    type: string
+    observed_as: coupon_name
+    required: true
+    unique: true
+  - name: coupon_type
+    label: Coupon Type
+    type: enum
+    observed_as: coupon_type
+    required: true
+    enum_values:
+      - Promotional
+      - Gift Card
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: coupon_code
+    label: Coupon Code
+    type: string
+    observed_as: coupon_code
+    unique: true
+  - name: from_external_ecomm_platform
+    label: From External Ecomm Platform
+    type: boolean
+    observed_as: from_external_ecomm_platform
+    default: "0"
+  - name: pricing_rule
+    label: Pricing Rule
+    type: ref
+    observed_as: pricing_rule
+    ref: PricingRule
+  - name: valid_from
+    label: Valid From
+    type: date
+    observed_as: valid_from
+  - name: valid_upto
+    label: Valid Up To
+    type: date
+    observed_as: valid_upto
+  - name: maximum_use
+    label: Maximum Use
+    type: integer
+    observed_as: maximum_use
+  - name: used
+    label: Used
+    type: integer
+    observed_as: used
+    default: "0"
+  - name: description
+    label: Coupon Description
+    type: text
+    observed_as: description
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: CouponCode
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: PricingRule
+    kind: many-to-one
+    via: pricing_rule
+  - to: CouponCode
+    kind: many-to-one
+    via: amended_from
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCoupon Code
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Coupon Code
+    note: declared by the program and served by its API

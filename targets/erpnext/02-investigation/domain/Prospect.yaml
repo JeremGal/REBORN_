@@ -1,0 +1,102 @@
+name: Prospect
+description: A company you are trying to win as a customer, with its leads. Document type "Prospect" (module CRM).
+fields:
+  - name: company_name
+    label: Company Name
+    type: string
+    observed_as: company_name
+    unique: true
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: no_of_employees
+    label: No. of Employees
+    type: enum
+    observed_as: no_of_employees
+    enum_values:
+      - 1-10
+      - 11-50
+      - 51-200
+      - 201-500
+      - 501-1000
+      - 1000+
+  - name: annual_revenue
+    label: Annual Revenue
+    type: money
+    observed_as: annual_revenue
+  - name: market_segment
+    label: Market Segment
+    type: ref
+    observed_as: market_segment
+    ref: MarketSegment
+  - name: industry
+    label: Industry
+    type: ref
+    observed_as: industry
+    ref: IndustryType
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: prospect_owner
+    label: Prospect Owner
+    type: ref
+    observed_as: prospect_owner
+    ref: User
+  - name: website
+    label: Website
+    type: string
+    observed_as: website
+  - name: fax
+    label: Fax
+    type: string
+    observed_as: fax
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+relations:
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: MarketSegment
+    kind: many-to-one
+    via: market_segment
+  - to: IndustryType
+    kind: many-to-one
+    via: industry
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: User
+    kind: many-to-one
+    via: prospect_owner
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: ProspectLead
+    kind: one-to-many
+    via: leads
+    description: lines (leads)
+  - to: ProspectOpportunity
+    kind: one-to-many
+    via: opportunities
+    description: lines (Opportunities)
+  - to: CRMNote
+    kind: one-to-many
+    via: notes
+    description: lines (Notes)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProspect
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Prospect
+    note: declared by the program and served by its API

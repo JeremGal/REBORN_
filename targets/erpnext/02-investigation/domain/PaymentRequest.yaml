@@ -1,0 +1,264 @@
+name: PaymentRequest
+description: 'Ask a customer to pay, by email with a payment link. Document type "Payment Request" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: payment_request_type
+    label: Payment Request Type
+    type: enum
+    observed_as: payment_request_type
+    required: true
+    enum_values:
+      - Outward
+      - Inward
+    default: Inward
+  - name: transaction_date
+    label: Transaction Date
+    type: date
+    observed_as: transaction_date
+  - name: failed_reason
+    label: Reason for Failure
+    type: string
+    observed_as: failed_reason
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - ACC-PRQ-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    ref: ModeOfPayment
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+  - name: party_name
+    label: Party Name
+    type: string
+    observed_as: party_name
+  - name: reference_doctype
+    label: Reference Doctype
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: grand_total
+    label: Amount
+    type: money
+    observed_as: grand_total
+    required: true
+  - name: currency
+    label: Transaction Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: is_a_subscription
+    label: Is a Subscription
+    type: boolean
+    observed_as: is_a_subscription
+    default: "0"
+  - name: outstanding_amount
+    label: Outstanding Amount
+    type: money
+    observed_as: outstanding_amount
+  - name: party_account_currency
+    label: Party Account Currency
+    type: ref
+    observed_as: party_account_currency
+    ref: Currency
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    ref: BankAccount
+  - name: bank
+    label: Bank
+    type: ref
+    observed_as: bank
+    ref: Bank
+  - name: bank_account_no
+    label: Bank Account No
+    type: string
+    observed_as: bank_account_no
+  - name: account
+    label: Account
+    type: string
+    observed_as: account
+  - name: iban
+    label: IBAN
+    type: string
+    observed_as: iban
+  - name: branch_code
+    label: Branch Code
+    type: string
+    observed_as: branch_code
+  - name: swift_number
+    label: SWIFT Number
+    type: string
+    observed_as: swift_number
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: print_format
+    label: Print Format
+    type: string
+    observed_as: print_format
+  - name: email_to
+    label: To
+    type: string
+    observed_as: email_to
+  - name: subject
+    label: Subject
+    type: string
+    observed_as: subject
+  - name: payment_gateway_account
+    label: Payment Gateway Account
+    type: ref
+    observed_as: payment_gateway_account
+    ref: PaymentGatewayAccount
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Requested
+      - Initiated
+      - Partially Paid
+      - Payment Ordered
+      - Paid
+      - Failed
+      - Cancelled
+    default: Draft
+  - name: make_sales_invoice
+    label: Make Sales Invoice
+    type: boolean
+    observed_as: make_sales_invoice
+    default: "0"
+  - name: message
+    label: Message
+    type: text
+    observed_as: message
+  - name: mute_email
+    label: Mute Email
+    type: boolean
+    observed_as: mute_email
+    default: "0"
+  - name: payment_gateway
+    label: Payment Gateway
+    type: string
+    observed_as: payment_gateway
+  - name: payment_account
+    label: Payment Account
+    type: string
+    observed_as: payment_account
+  - name: payment_channel
+    label: Payment Channel
+    type: enum
+    observed_as: payment_channel
+    enum_values:
+      - Email
+      - Phone
+      - Other
+  - name: payment_order
+    label: Payment Order
+    type: ref
+    observed_as: payment_order
+    ref: PaymentOrder
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: PaymentRequest
+  - name: payment_url
+    label: Payment URL
+    type: string
+    observed_as: payment_url
+    max_length: 500
+  - name: phone_number
+    label: Phone Number
+    type: string
+    observed_as: phone_number
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: PaymentReference
+    kind: one-to-many
+    via: payment_reference
+    description: lines (Payment Reference)
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: Currency
+    kind: many-to-one
+    via: party_account_currency
+  - to: SubscriptionPlanDetail
+    kind: one-to-many
+    via: subscription_plans
+    description: lines (Subscription Plans)
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: Bank
+    kind: many-to-one
+    via: bank
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: PaymentGatewayAccount
+    kind: many-to-one
+    via: payment_gateway_account
+  - to: PaymentOrder
+    kind: many-to-one
+    via: payment_order
+  - to: PaymentRequest
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Request
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Request
+    note: declared by the program and served by its API

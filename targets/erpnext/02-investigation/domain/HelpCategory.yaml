@@ -1,0 +1,34 @@
+name: HelpCategory
+description: Document type "Help Category" (module Website).
+fields:
+  - name: category_name
+    label: Category Name
+    type: string
+    observed_as: category_name
+    required: true
+  - name: category_description
+    label: Category Description
+    type: text
+    observed_as: category_description
+  - name: published
+    label: Published
+    type: boolean
+    observed_as: published
+    default: "0"
+  - name: help_articles
+    label: Help Articles
+    type: integer
+    observed_as: help_articles
+  - name: route
+    label: Route
+    type: string
+    observed_as: route
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabHelp Category
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Help Category
+    note: declared by the program and served by its API

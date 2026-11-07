@@ -1,0 +1,60 @@
+name: BlanketOrderItem
+description: 'Document type "Blanket Order Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: party_item_code
+    label: Party Item Code
+    type: string
+    observed_as: party_item_code
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+  - name: price_list_rate
+    label: Price List Rate
+    type: money
+    observed_as: price_list_rate
+  - name: base_price_list_rate
+    label: Price List Rate (Company Currency)
+    type: money
+    observed_as: base_price_list_rate
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    required: true
+  - name: base_rate
+    label: Rate (Company Currency)
+    type: money
+    observed_as: base_rate
+    required: true
+  - name: ordered_qty
+    label: Ordered Quantity
+    type: decimal
+    observed_as: ordered_qty
+  - name: terms_and_conditions
+    label: Terms and Conditions
+    type: text
+    observed_as: terms_and_conditions
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBlanket Order Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Blanket Order Item
+    note: declared by the program and served by its API

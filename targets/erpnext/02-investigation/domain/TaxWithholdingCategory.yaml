@@ -1,0 +1,54 @@
+name: TaxWithholdingCategory
+description: Rates and thresholds for tax withheld on payments, like TDS. Document type "Tax Withholding Category" (module Accounts).
+fields:
+  - name: category_name
+    label: Category Name
+    type: string
+    observed_as: category_name
+  - name: tax_deduction_basis
+    label: Deduct Tax On Basis
+    type: enum
+    observed_as: tax_deduction_basis
+    required: true
+    enum_values:
+      - Gross Total
+      - Net Total
+    default: Net Total
+  - name: round_off_tax_amount
+    label: Round Off Tax Amount
+    type: boolean
+    observed_as: round_off_tax_amount
+    default: "0"
+  - name: tax_on_excess_amount
+    label: "Only Deduct Tax On Excess Amount "
+    type: boolean
+    observed_as: tax_on_excess_amount
+    default: "0"
+  - name: disable_cumulative_threshold
+    label: Disable Cumulative Threshold
+    type: boolean
+    observed_as: disable_cumulative_threshold
+    default: "0"
+  - name: disable_transaction_threshold
+    label: Disable Transaction Threshold
+    type: boolean
+    observed_as: disable_transaction_threshold
+    default: "0"
+relations:
+  - to: TaxWithholdingRate
+    kind: one-to-many
+    via: rates
+    description: lines (Rates)
+  - to: TaxWithholdingAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Accounts)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTax Withholding Category
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Tax Withholding Category
+    note: declared by the program and served by its API

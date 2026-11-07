@@ -1,0 +1,25 @@
+name: AllowedDimension
+description: 'Document type "Allowed Dimension" (module Accounts): lines of another document.'
+fields:
+  - name: accounting_dimension
+    label: Accounting Dimension
+    type: ref
+    observed_as: accounting_dimension
+    ref: DocType
+  - name: dimension_value
+    label: ""
+    type: string
+    observed_as: dimension_value
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: accounting_dimension
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAllowed Dimension
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Allowed Dimension
+    note: declared by the program and served by its API

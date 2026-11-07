@@ -1,0 +1,270 @@
+name: ProcessStatementOfAccounts
+description: Emails customers their statements on a schedule. Document type "Process Statement Of Accounts" (module Accounts).
+fields:
+  - name: report
+    label: Report
+    type: enum
+    observed_as: report
+    required: true
+    enum_values:
+      - General Ledger
+      - Accounts Receivable
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    default: Today
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: categorize_by
+    label: Categorize By
+    type: enum
+    observed_as: categorize_by
+    enum_values:
+      - Categorize by Voucher
+      - Categorize by Voucher (Consolidated)
+    default: Categorize by Voucher (Consolidated)
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: show_opening_entries
+    label: Show Opening Entries
+    type: boolean
+    observed_as: show_opening_entries
+    default: "0"
+  - name: ignore_exchange_rate_revaluation_journals
+    label: Ignore Exchange Rate Revaluation and Gain / Loss Journals
+    type: boolean
+    observed_as: ignore_exchange_rate_revaluation_journals
+    default: "0"
+  - name: ignore_cr_dr_notes
+    label: Ignore System Generated Credit / Debit Notes
+    type: boolean
+    observed_as: ignore_cr_dr_notes
+    default: "0"
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+  - name: finance_book
+    label: Finance Book
+    type: ref
+    observed_as: finance_book
+    ref: FinanceBook
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: payment_terms_template
+    label: Payment Terms Template
+    type: ref
+    observed_as: payment_terms_template
+    ref: PaymentTermsTemplate
+  - name: sales_partner
+    label: Sales Partner
+    type: ref
+    observed_as: sales_partner
+    ref: SalesPartner
+  - name: sales_person
+    label: Sales Person
+    type: ref
+    observed_as: sales_person
+    ref: SalesPerson
+  - name: show_remarks
+    label: Show Remarks
+    type: boolean
+    observed_as: show_remarks
+    default: "0"
+  - name: based_on_payment_terms
+    label: Based On Payment Terms
+    type: boolean
+    observed_as: based_on_payment_terms
+    default: "0"
+  - name: show_future_payments
+    label: Show Future Payments
+    type: boolean
+    observed_as: show_future_payments
+    default: "0"
+  - name: customer_collection
+    label: Select Customers By
+    type: enum
+    observed_as: customer_collection
+    enum_values:
+      - Customer Group
+      - Territory
+      - Sales Partner
+      - Sales Person
+  - name: collection_name
+    label: Recipient
+    type: string
+    observed_as: collection_name
+  - name: primary_mandatory
+    label: Send To Primary Contact
+    type: boolean
+    observed_as: primary_mandatory
+    default: "1"
+  - name: show_net_values_in_party_account
+    label: Show Net Values in Party Account
+    type: boolean
+    observed_as: show_net_values_in_party_account
+    default: "0"
+  - name: print_format
+    label: Print Format
+    type: ref
+    observed_as: print_format
+    ref: PrintFormat
+  - name: orientation
+    label: Orientation
+    type: enum
+    observed_as: orientation
+    enum_values:
+      - Landscape
+      - Portrait
+  - name: include_break
+    label: Page Break After Each SoA
+    type: boolean
+    observed_as: include_break
+    default: "1"
+  - name: include_ageing
+    label: Include Ageing Summary
+    type: boolean
+    observed_as: include_ageing
+    default: "0"
+  - name: ageing_based_on
+    label: Ageing Based On
+    type: enum
+    observed_as: ageing_based_on
+    enum_values:
+      - Due Date
+      - Posting Date
+    default: Due Date
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: terms_and_conditions
+    label: Terms and Conditions
+    type: ref
+    observed_as: terms_and_conditions
+    ref: TermsAndConditions
+  - name: enable_auto_email
+    label: Enable Auto Email
+    type: boolean
+    observed_as: enable_auto_email
+    default: "0"
+  - name: sender
+    label: Sender
+    type: ref
+    observed_as: sender
+    ref: EmailAccount
+  - name: frequency
+    label: Frequency
+    type: enum
+    observed_as: frequency
+    enum_values:
+      - Daily
+      - Weekly
+      - Biweekly
+      - Monthly
+      - Quarterly
+  - name: filter_duration
+    label: Filter Duration (Months)
+    type: integer
+    observed_as: filter_duration
+    default: "1"
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+    default: Today
+  - name: pdf_name
+    label: PDF Name
+    type: string
+    observed_as: pdf_name
+  - name: subject
+    label: Subject
+    type: string
+    observed_as: subject
+  - name: body
+    label: Body
+    type: text
+    observed_as: body
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: PSOACostCenter
+    kind: one-to-many
+    via: cost_center
+    description: lines (Cost Center)
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: FinanceBook
+    kind: many-to-one
+    via: finance_book
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: PSOAProject
+    kind: one-to-many
+    via: project
+    description: lines (Project)
+  - to: PaymentTermsTemplate
+    kind: many-to-one
+    via: payment_terms_template
+  - to: SalesPartner
+    kind: many-to-one
+    via: sales_partner
+  - to: SalesPerson
+    kind: many-to-one
+    via: sales_person
+  - to: ProcessStatementOfAccountsCustomer
+    kind: one-to-many
+    via: customers
+    description: lines (Customers)
+  - to: PrintFormat
+    kind: many-to-one
+    via: print_format
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: TermsAndConditions
+    kind: many-to-one
+    via: terms_and_conditions
+  - to: EmailAccount
+    kind: many-to-one
+    via: sender
+  - to: ProcessStatementOfAccountsCC
+    kind: one-to-many
+    via: cc_to
+    description: lines (CC To)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProcess Statement Of Accounts
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Process Statement Of Accounts
+    note: declared by the program and served by its API

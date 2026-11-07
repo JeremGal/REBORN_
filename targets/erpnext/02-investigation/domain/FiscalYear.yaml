@@ -1,0 +1,48 @@
+name: FiscalYear
+description: The year your books are kept and closed for. Document type "Fiscal Year" (module Accounts).
+fields:
+  - name: year
+    label: Year Name
+    type: string
+    observed_as: year
+    required: true
+    unique: true
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: is_short_year
+    label: Is Short/Long Year
+    type: boolean
+    observed_as: is_short_year
+    default: "0"
+  - name: year_start_date
+    label: Year Start Date
+    type: date
+    observed_as: year_start_date
+    required: true
+  - name: year_end_date
+    label: Year End Date
+    type: date
+    observed_as: year_end_date
+    required: true
+  - name: auto_created
+    label: Auto Created
+    type: boolean
+    observed_as: auto_created
+    default: "0"
+relations:
+  - to: FiscalYearCompany
+    kind: one-to-many
+    via: companies
+    description: lines (Companies)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabFiscal Year
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Fiscal Year
+    note: declared by the program and served by its API

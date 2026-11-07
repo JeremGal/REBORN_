@@ -1,0 +1,36 @@
+name: EmailFlagQueue
+description: Document type "Email Flag Queue" (module Email).
+fields:
+  - name: is_completed
+    label: Is Completed
+    type: boolean
+    observed_as: is_completed
+    default: "0"
+  - name: communication
+    label: Communication
+    type: string
+    observed_as: communication
+  - name: action
+    label: Action
+    type: enum
+    observed_as: action
+    enum_values:
+      - Read
+      - Unread
+  - name: email_account
+    label: Email Account
+    type: string
+    observed_as: email_account
+  - name: uid
+    label: UID
+    type: string
+    observed_as: uid
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Flag Queue
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Flag Queue
+    note: declared by the program and served by its API

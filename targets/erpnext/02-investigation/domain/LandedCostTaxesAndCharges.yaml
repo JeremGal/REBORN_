@@ -1,0 +1,86 @@
+name: LandedCostTaxesAndCharges
+description: 'Document type "Landed Cost Taxes and Charges" (module Stock): lines of another document.'
+fields:
+  - name: expense_account
+    label: Expense Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: account_currency
+    label: Account Currency
+    type: ref
+    observed_as: account_currency
+    ref: Currency
+  - name: exchange_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: exchange_rate
+    precision: 9
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+    required: true
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+  - name: base_amount
+    label: Amount (Company Currency)
+    type: money
+    observed_as: base_amount
+  - name: has_corrective_cost
+    label: Has Corrective Cost
+    type: boolean
+    observed_as: has_corrective_cost
+    default: "0"
+  - name: has_operating_cost
+    label: Has Operating Cost
+    type: boolean
+    observed_as: has_operating_cost
+    default: "0"
+  - name: operation_id
+    label: Operation ID
+    type: string
+    observed_as: operation_id
+  - name: qty
+    label: Qty
+    type: decimal
+    observed_as: qty
+  - name: operating_component
+    label: Operating Component
+    type: string
+    observed_as: operating_component
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+relations:
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: Currency
+    kind: many-to-one
+    via: account_currency
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLanded Cost Taxes and Charges
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Landed Cost Taxes and Charges
+    note: declared by the program and served by its API

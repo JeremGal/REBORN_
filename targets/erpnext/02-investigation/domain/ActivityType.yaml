@@ -1,0 +1,31 @@
+name: ActivityType
+description: A kind of work you track time against, like design or support. Document type "Activity Type" (module Projects).
+fields:
+  - name: activity_type
+    label: Activity Type
+    type: string
+    observed_as: activity_type
+    required: true
+    unique: true
+  - name: costing_rate
+    label: Default Costing Rate
+    type: money
+    observed_as: costing_rate
+  - name: billing_rate
+    label: Default Billing Rate
+    type: money
+    observed_as: billing_rate
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabActivity Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Activity Type
+    note: declared by the program and served by its API

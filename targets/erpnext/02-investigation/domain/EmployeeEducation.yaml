@@ -1,0 +1,40 @@
+name: EmployeeEducation
+description: 'Document type "Employee Education" (module Setup): lines of another document.'
+fields:
+  - name: school_univ
+    label: School/University
+    type: text
+    observed_as: school_univ
+  - name: qualification
+    label: Qualification
+    type: string
+    observed_as: qualification
+  - name: level
+    label: Level
+    type: enum
+    observed_as: level
+    enum_values:
+      - Graduate
+      - Post Graduate
+      - Under Graduate
+  - name: year_of_passing
+    label: Year of Passing
+    type: integer
+    observed_as: year_of_passing
+  - name: class_per
+    label: Class / Percentage
+    type: string
+    observed_as: class_per
+  - name: maj_opt_subj
+    label: Major/Optional Subjects
+    type: text
+    observed_as: maj_opt_subj
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmployee Education
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Employee Education
+    note: declared by the program and served by its API

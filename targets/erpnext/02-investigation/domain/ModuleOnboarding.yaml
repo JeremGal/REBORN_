@@ -1,0 +1,40 @@
+name: ModuleOnboarding
+description: Document type "Module Onboarding" (module Desk).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    required: true
+    ref: ModuleDef
+  - name: is_complete
+    label: Is Complete
+    type: boolean
+    observed_as: is_complete
+    default: "0"
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: OnboardingPermission
+    kind: one-to-many
+    via: allow_roles
+    description: lines (Allow Roles)
+  - to: OnboardingStepMap
+    kind: one-to-many
+    via: steps
+    description: lines (Steps)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabModule Onboarding
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Module Onboarding
+    note: declared by the program and served by its API

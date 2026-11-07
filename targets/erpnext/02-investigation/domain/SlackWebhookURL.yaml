@@ -1,0 +1,28 @@
+name: SlackWebhookURL
+description: Document type "Slack Webhook URL" (module Integrations).
+fields:
+  - name: webhook_name
+    label: Name
+    type: string
+    observed_as: webhook_name
+    required: true
+    unique: true
+  - name: webhook_url
+    label: Webhook URL
+    type: string
+    observed_as: webhook_url
+    required: true
+  - name: show_document_link
+    label: Show link to document
+    type: boolean
+    observed_as: show_document_link
+    default: "1"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSlack Webhook URL
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Slack Webhook URL
+    note: declared by the program and served by its API

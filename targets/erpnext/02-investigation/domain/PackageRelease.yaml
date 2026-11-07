@@ -1,0 +1,47 @@
+name: PackageRelease
+description: Document type "Package Release" (module Core).
+fields:
+  - name: package
+    label: Package
+    type: ref
+    observed_as: package
+    required: true
+    ref: Package
+  - name: publish
+    label: Publish
+    type: boolean
+    observed_as: publish
+    default: "0"
+  - name: path
+    label: Path
+    type: text
+    observed_as: path
+  - name: major
+    label: Major
+    type: integer
+    observed_as: major
+  - name: minor
+    label: Minor
+    type: integer
+    observed_as: minor
+  - name: patch
+    label: Patch
+    type: integer
+    observed_as: patch
+  - name: release_notes
+    label: Release Notes
+    type: text
+    observed_as: release_notes
+relations:
+  - to: Package
+    kind: many-to-one
+    via: package
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPackage Release
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Package Release
+    note: declared by the program and served by its API

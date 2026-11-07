@@ -1,0 +1,130 @@
+name: ItemPrice
+description: The price of an item in a price list. Document type "Item Price" (module Stock).
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: packing_unit
+    label: Packing Unit
+    type: integer
+    observed_as: packing_unit
+    default: "0"
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: brand
+    label: Brand
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: item_description
+    label: Item Description
+    type: text
+    observed_as: item_description
+  - name: price_list
+    label: Price List
+    type: ref
+    observed_as: price_list
+    required: true
+    ref: PriceList
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: buying
+    label: Buying
+    type: boolean
+    observed_as: buying
+    default: "0"
+  - name: selling
+    label: Selling
+    type: boolean
+    observed_as: selling
+    default: "0"
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: price_list_rate
+    label: Rate
+    type: money
+    observed_as: price_list_rate
+    required: true
+  - name: valid_from
+    label: Valid From
+    type: date
+    observed_as: valid_from
+    default: Today
+  - name: lead_time_days
+    label: Lead Time in days
+    type: integer
+    observed_as: lead_time_days
+    default: "0"
+  - name: valid_upto
+    label: Valid Up To
+    type: date
+    observed_as: valid_upto
+  - name: note
+    label: Note
+    type: text
+    observed_as: note
+  - name: reference
+    label: Reference
+    type: string
+    observed_as: reference
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: PriceList
+    kind: many-to-one
+    via: price_list
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: Currency
+    kind: many-to-one
+    via: currency
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Price
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Price
+    note: declared by the program and served by its API

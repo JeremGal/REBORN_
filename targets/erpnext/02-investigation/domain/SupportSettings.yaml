@@ -1,0 +1,79 @@
+name: SupportSettings
+description: 'Document type "Support Settings" (module Support): single settings record.'
+fields:
+  - name: track_service_level_agreement
+    label: Track Service Level Agreement
+    type: boolean
+    observed_as: track_service_level_agreement
+    default: "0"
+  - name: allow_resetting_service_level_agreement
+    label: Allow Resetting Service Level Agreement
+    type: boolean
+    observed_as: allow_resetting_service_level_agreement
+    default: "0"
+  - name: close_issue_after_days
+    label: Close Issue After Days
+    type: integer
+    observed_as: close_issue_after_days
+    default: "7"
+  - name: get_started_sections
+    label: Get Started Sections
+    type: text
+    observed_as: get_started_sections
+  - name: show_latest_forum_posts
+    label: Show Latest Forum Posts
+    type: boolean
+    observed_as: show_latest_forum_posts
+    default: "0"
+  - name: forum_url
+    label: Forum URL
+    type: string
+    observed_as: forum_url
+  - name: get_latest_query
+    label: Get Latest Query
+    type: string
+    observed_as: get_latest_query
+  - name: response_key_list
+    label: Response Key List
+    type: string
+    observed_as: response_key_list
+  - name: post_title_key
+    label: Post Title Key
+    type: string
+    observed_as: post_title_key
+  - name: post_description_key
+    label: Post Description Key
+    type: string
+    observed_as: post_description_key
+  - name: post_route_key
+    label: Post Route Key
+    type: string
+    observed_as: post_route_key
+  - name: post_route_string
+    label: Post Route String
+    type: string
+    observed_as: post_route_string
+  - name: greeting_title
+    label: Greeting Title
+    type: string
+    observed_as: greeting_title
+    default: We're here to help
+  - name: greeting_subtitle
+    label: Greeting Subtitle
+    type: string
+    observed_as: greeting_subtitle
+    default: Browse help topics
+relations:
+  - to: SupportSearchSource
+    kind: one-to-many
+    via: search_apis
+    description: lines (Search APIs)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSupport Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Support Settings
+    note: declared by the program and served by its API

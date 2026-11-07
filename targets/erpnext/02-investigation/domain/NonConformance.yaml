@@ -1,0 +1,56 @@
+name: NonConformance
+description: Something that did not meet your quality standard. Document type "Non Conformance" (module Quality Management).
+fields:
+  - name: subject
+    label: Subject
+    type: string
+    observed_as: subject
+    required: true
+  - name: procedure
+    label: Procedure
+    type: ref
+    observed_as: procedure
+    required: true
+    ref: QualityProcedure
+  - name: process_owner
+    label: Process Owner
+    type: string
+    observed_as: process_owner
+  - name: full_name
+    label: Full Name
+    type: string
+    observed_as: full_name
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Open
+      - Resolved
+      - Cancelled
+  - name: details
+    label: Details
+    type: text
+    observed_as: details
+  - name: corrective_action
+    label: Corrective Action
+    type: text
+    observed_as: corrective_action
+  - name: preventive_action
+    label: Preventive Action
+    type: text
+    observed_as: preventive_action
+relations:
+  - to: QualityProcedure
+    kind: many-to-one
+    via: procedure
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNon Conformance
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Non Conformance
+    note: declared by the program and served by its API

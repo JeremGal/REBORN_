@@ -1,0 +1,75 @@
+name: SupplierScorecardStanding
+description: A band of scores, and what happens to suppliers in it. Document type "Supplier Scorecard Standing" (module Buying).
+fields:
+  - name: standing_name
+    label: Standing Name
+    type: string
+    observed_as: standing_name
+    unique: true
+  - name: standing_color
+    label: Color
+    type: enum
+    observed_as: standing_color
+    enum_values:
+      - Blue
+      - Purple
+      - Green
+      - Yellow
+      - Orange
+      - Red
+  - name: min_grade
+    label: Min Grade
+    type: percent
+    observed_as: min_grade
+  - name: max_grade
+    label: Max Grade
+    type: percent
+    observed_as: max_grade
+  - name: warn_rfqs
+    label: Warn RFQs
+    type: boolean
+    observed_as: warn_rfqs
+    default: "0"
+  - name: warn_pos
+    label: Warn Purchase Orders
+    type: boolean
+    observed_as: warn_pos
+    default: "0"
+  - name: prevent_rfqs
+    label: Prevent RFQs
+    type: boolean
+    observed_as: prevent_rfqs
+    default: "0"
+  - name: prevent_pos
+    label: Prevent Purchase Orders
+    type: boolean
+    observed_as: prevent_pos
+    default: "0"
+  - name: notify_supplier
+    label: Notify Supplier
+    type: boolean
+    observed_as: notify_supplier
+    default: "0"
+  - name: notify_employee
+    label: Notify Other
+    type: boolean
+    observed_as: notify_employee
+    default: "0"
+  - name: employee_link
+    label: Other
+    type: ref
+    observed_as: employee_link
+    ref: Employee
+relations:
+  - to: Employee
+    kind: many-to-one
+    via: employee_link
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSupplier Scorecard Standing
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Supplier Scorecard Standing
+    note: declared by the program and served by its API

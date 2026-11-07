@@ -1,0 +1,158 @@
+id: run-20261107T191620-api-sales-invoice-2
+mission: M-002
+subject: original
+agent:
+  provider: api
+  product: frappe-rest
+  version: Frappe 16.55.2 / ERPNext 16.51.2
+target:
+  id: erpnext
+  version: 16.51.2
+  environment: Alan's own Frappe Cloud site, fictitious data
+started_at: 2026-11-07T19:16:20.956Z
+ended_at: 2026-11-07T19:16:22.356Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-05b: cascade with two accounts: 10% on the net total, then 5% on the previous row total)"
+      value: "{\"items\":[{\"item_code\":\"TEST-ART-001\",\"qty\":10,\"rate\":10}],\"taxes\":[{\"charge_type\":\"On Net Total\",\"rate\":10,\"description\":\"tax A 10%\"},{\"charge_type\":\"On Previous Row Total\",\"row_id\":\"1\",\"rate\":5,\"description\":\"tax B 5% on A's total\",\"account_head\":\"44578 - Taxes assimilées à la TVA - DSS\"}]}"
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00010)
+    extracted:
+      case: SI-05b
+      total: 100
+      net_total: 100
+      discount_amount: 0
+      total_taxes_and_charges: 15.5
+      grand_total: 115.5
+      rounding_adjustment: 0
+      rounded_total: 115.5
+      items:
+        - item_code: TEST-ART-001
+          qty: 10
+          uom: Nos
+          rate: 10
+          amount: 100
+          net_amount: 100
+      taxes:
+        - charge_type: On Net Total
+          account_head: 44587 - Taxes sur le chiffre d'affaires sur factures à établir - DSS
+          rate: 10
+          tax_amount: 10
+          total: 110
+        - charge_type: On Previous Row Total
+          account_head: 44578 - Taxes assimilées à la TVA - DSS
+          row_id: "1"
+          rate: 5
+          tax_amount: 5.5
+          total: 115.5
+  - n: 2
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-06b: two accounts: 10% on the net total, then 50% of that tax (previous row amount))"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":10,"rate":10}],"taxes":[{"charge_type":"On Net Total","rate":10,"description":"tax A 10%"},{"charge_type":"On Previous Row Amount","row_id":"1","rate":50,"description":"tax B 50% of A","account_head":"44578 - Taxes assimilées à la TVA - DSS"}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00011)
+    extracted:
+      case: SI-06b
+      total: 100
+      net_total: 100
+      discount_amount: 0
+      total_taxes_and_charges: 15
+      grand_total: 115
+      rounding_adjustment: 0
+      rounded_total: 115
+      items:
+        - item_code: TEST-ART-001
+          qty: 10
+          uom: Nos
+          rate: 10
+          amount: 100
+          net_amount: 100
+      taxes:
+        - charge_type: On Net Total
+          account_head: 44587 - Taxes sur le chiffre d'affaires sur factures à établir - DSS
+          rate: 10
+          tax_amount: 10
+          total: 110
+        - charge_type: On Previous Row Amount
+          account_head: 44578 - Taxes assimilées à la TVA - DSS
+          row_id: "1"
+          rate: 50
+          tax_amount: 5
+          total: 115
+  - n: 3
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-09b: decimal quantity in a unit that allows it: 2.5 kg at 0.25 (amount exactly halfway, 0.625))"
+      value: '{"items":[{"item_code":"TEST-ART-003","qty":2.5,"rate":0.25}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00012)
+    extracted:
+      case: SI-09b
+      total: 0.62
+      net_total: 0.62
+      discount_amount: 0
+      total_taxes_and_charges: 0
+      grand_total: 0.62
+      rounding_adjustment: 0
+      rounded_total: 0.62
+      items:
+        - item_code: TEST-ART-003
+          qty: 2.5
+          uom: Kg
+          rate: 0.25
+          amount: 0.62
+          net_amount: 0.62
+      taxes: []
+  - n: 4
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-11: unit price exactly halfway (0.125), quantity 1)"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":1,"rate":0.125}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00013)
+    extracted:
+      case: SI-11
+      total: 0.12
+      net_total: 0.12
+      discount_amount: 0
+      total_taxes_and_charges: 0
+      grand_total: 0.12
+      rounding_adjustment: 0
+      rounded_total: 0.12
+      items:
+        - item_code: TEST-ART-001
+          qty: 1
+          uom: Nos
+          rate: 0.12
+          amount: 0.12
+          net_amount: 0.12
+      taxes: []
+  - n: 5
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-12: grand total with 50 cents (33.75 + 20%): what the rounded total does)"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":1,"rate":33.75}],"taxes":[{"charge_type":"On Net Total","rate":20,"description":"VAT 20%"}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00014)
+    extracted:
+      case: SI-12
+      total: 33.75
+      net_total: 33.75
+      discount_amount: 0
+      total_taxes_and_charges: 6.75
+      grand_total: 40.5
+      rounding_adjustment: 0
+      rounded_total: 40.5
+      items:
+        - item_code: TEST-ART-001
+          qty: 1
+          uom: Nos
+          rate: 33.75
+          amount: 33.75
+          net_amount: 33.75
+      taxes:
+        - charge_type: On Net Total
+          account_head: 44587 - Taxes sur le chiffre d'affaires sur factures à établir - DSS
+          rate: 20
+          tax_amount: 6.75
+          total: 40.5
+notes: "Drafts created (never submitted): ACC-SINV-2026-00010, ACC-SINV-2026-00011, ACC-SINV-2026-00012, ACC-SINV-2026-00013, ACC-SINV-2026-00014."

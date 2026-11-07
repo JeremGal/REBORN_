@@ -1,0 +1,140 @@
+name: TaxWithholdingEntry
+description: 'Document type "Tax Withholding Entry" (module Accounts): lines of another document.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+  - name: tax_id
+    label: Tax ID
+    type: string
+    observed_as: tax_id
+  - name: tax_withholding_category
+    label: Tax Withholding Category
+    type: ref
+    observed_as: tax_withholding_category
+    ref: TaxWithholdingCategory
+  - name: tax_withholding_group
+    label: Tax Withholding Group
+    type: ref
+    observed_as: tax_withholding_group
+    ref: TaxWithholdingGroup
+  - name: taxable_amount
+    label: Base Taxable Amount
+    type: money
+    observed_as: taxable_amount
+  - name: tax_rate
+    label: Tax Rate
+    type: percent
+    observed_as: tax_rate
+  - name: withholding_amount
+    label: Base Tax Withheld
+    type: money
+    observed_as: withholding_amount
+  - name: taxable_doctype
+    label: Taxable Document Type
+    type: ref
+    observed_as: taxable_doctype
+    ref: DocType
+  - name: taxable_name
+    label: Taxable Document Name
+    type: string
+    observed_as: taxable_name
+  - name: taxable_date
+    label: Taxable Date
+    type: date
+    observed_as: taxable_date
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: conversion_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: conversion_rate
+    precision: 9
+  - name: under_withheld_reason
+    label: Under Withheld Reason
+    type: enum
+    observed_as: under_withheld_reason
+    enum_values:
+      - Threshold Exemption
+      - Lower Deduction Certificate
+  - name: lower_deduction_certificate
+    label: Lower Deduction Certificate
+    type: ref
+    observed_as: lower_deduction_certificate
+    ref: LowerDeductionCertificate
+  - name: withholding_doctype
+    label: Withholding Document Type
+    type: ref
+    observed_as: withholding_doctype
+    ref: DocType
+  - name: withholding_name
+    label: Withholding Document Name
+    type: string
+    observed_as: withholding_name
+  - name: withholding_date
+    label: Withholding Date
+    type: date
+    observed_as: withholding_date
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Settled
+      - Under Withheld
+      - Over Withheld
+      - Duplicate
+      - Cancelled
+  - name: created_by_migration
+    label: Created By Migration
+    type: boolean
+    observed_as: created_by_migration
+    default: "0"
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: TaxWithholdingCategory
+    kind: many-to-one
+    via: tax_withholding_category
+  - to: TaxWithholdingGroup
+    kind: many-to-one
+    via: tax_withholding_group
+  - to: DocType
+    kind: many-to-one
+    via: taxable_doctype
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: LowerDeductionCertificate
+    kind: many-to-one
+    via: lower_deduction_certificate
+  - to: DocType
+    kind: many-to-one
+    via: withholding_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTax Withholding Entry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Tax Withholding Entry
+    note: declared by the program and served by its API

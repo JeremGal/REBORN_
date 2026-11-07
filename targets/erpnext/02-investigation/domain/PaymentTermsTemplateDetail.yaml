@@ -1,0 +1,82 @@
+name: PaymentTermsTemplateDetail
+description: 'Document type "Payment Terms Template Detail" (module Accounts): lines of another document.'
+fields:
+  - name: payment_term
+    label: Payment Term
+    type: ref
+    observed_as: payment_term
+    ref: PaymentTerm
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: invoice_portion
+    label: Invoice Portion (%)
+    type: decimal
+    observed_as: invoice_portion
+    required: true
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    ref: ModeOfPayment
+  - name: due_date_based_on
+    label: Due Date Based On
+    type: enum
+    observed_as: due_date_based_on
+    required: true
+    enum_values:
+      - Day(s) after invoice date
+      - Day(s) after the end of the invoice month
+      - Month(s) after the end of the invoice month
+  - name: credit_days
+    label: Credit Days
+    type: integer
+    observed_as: credit_days
+    default: "0"
+  - name: credit_months
+    label: Credit Months
+    type: integer
+    observed_as: credit_months
+    default: "0"
+  - name: discount_type
+    label: Discount Type
+    type: enum
+    observed_as: discount_type
+    enum_values:
+      - Percentage
+      - Amount
+    default: Percentage
+  - name: discount
+    label: Discount
+    type: decimal
+    observed_as: discount
+  - name: discount_validity_based_on
+    label: Discount Validity Based On
+    type: enum
+    observed_as: discount_validity_based_on
+    enum_values:
+      - Day(s) after invoice date
+      - Day(s) after the end of the invoice month
+      - Month(s) after the end of the invoice month
+    default: Day(s) after invoice date
+  - name: discount_validity
+    label: Discount Validity
+    type: integer
+    observed_as: discount_validity
+relations:
+  - to: PaymentTerm
+    kind: many-to-one
+    via: payment_term
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Terms Template Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Terms Template Detail
+    note: declared by the program and served by its API

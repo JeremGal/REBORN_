@@ -1,0 +1,57 @@
+name: SubmissionQueue
+description: Document type "Submission Queue" (module Core).
+fields:
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Queued
+      - Finished
+      - Failed
+  - name: created_at
+    label: Created At
+    type: datetime
+    observed_as: created_at
+  - name: enqueued_by
+    label: Enqueued By
+    type: string
+    observed_as: enqueued_by
+  - name: job_id
+    label: Job Id
+    type: ref
+    observed_as: job_id
+    ref: RQJob
+  - name: ended_at
+    label: Ended At
+    type: datetime
+    observed_as: ended_at
+  - name: ref_doctype
+    label: Reference DocType
+    type: ref
+    observed_as: ref_doctype
+    ref: DocType
+  - name: ref_docname
+    label: Reference Docname
+    type: string
+    observed_as: ref_docname
+  - name: exception
+    label: Exception
+    type: text
+    observed_as: exception
+relations:
+  - to: RQJob
+    kind: many-to-one
+    via: job_id
+  - to: DocType
+    kind: many-to-one
+    via: ref_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubmission Queue
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Submission Queue
+    note: declared by the program and served by its API

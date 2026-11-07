@@ -1,0 +1,115 @@
+name: PaymentEntryReference
+description: 'Document type "Payment Entry Reference" (module Accounts): lines of another document.'
+fields:
+  - name: reference_doctype
+    label: Type
+    type: ref
+    observed_as: reference_doctype
+    required: true
+    ref: DocType
+  - name: reference_name
+    label: Name
+    type: string
+    observed_as: reference_name
+    required: true
+  - name: due_date
+    label: Due Date
+    type: date
+    observed_as: due_date
+  - name: bill_no
+    label: Supplier Invoice No
+    type: string
+    observed_as: bill_no
+  - name: payment_term
+    label: Payment Term
+    type: ref
+    observed_as: payment_term
+    ref: PaymentTerm
+  - name: payment_term_outstanding
+    label: Payment Term Outstanding
+    type: decimal
+    observed_as: payment_term_outstanding
+  - name: payment_term_discount
+    label: Payment Term Discount
+    type: money
+    observed_as: payment_term_discount
+  - name: account_type
+    label: Account Type
+    type: string
+    observed_as: account_type
+  - name: payment_type
+    label: Payment Type
+    type: string
+    observed_as: payment_type
+  - name: reconcile_effect_on
+    label: Reconcile Effect On
+    type: date
+    observed_as: reconcile_effect_on
+  - name: total_amount
+    label: Grand Total
+    type: money
+    observed_as: total_amount
+  - name: outstanding_amount
+    label: Outstanding
+    type: money
+    observed_as: outstanding_amount
+  - name: allocated_amount
+    label: Allocated
+    type: money
+    observed_as: allocated_amount
+  - name: exchange_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: exchange_rate
+  - name: exchange_gain_loss
+    label: Exchange Gain/Loss
+    type: money
+    observed_as: exchange_gain_loss
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: payment_request
+    label: Payment Request
+    type: ref
+    observed_as: payment_request
+    ref: PaymentRequest
+  - name: payment_request_outstanding
+    label: Payment Request Outstanding
+    type: decimal
+    observed_as: payment_request_outstanding
+  - name: advance_voucher_type
+    label: Advance Voucher Type
+    type: ref
+    observed_as: advance_voucher_type
+    ref: DocType
+  - name: advance_voucher_no
+    label: Advance Voucher No
+    type: string
+    observed_as: advance_voucher_no
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: PaymentTerm
+    kind: many-to-one
+    via: payment_term
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: PaymentRequest
+    kind: many-to-one
+    via: payment_request
+  - to: DocType
+    kind: many-to-one
+    via: advance_voucher_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Entry Reference
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Entry Reference
+    note: declared by the program and served by its API

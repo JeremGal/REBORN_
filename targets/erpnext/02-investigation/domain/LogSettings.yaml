@@ -1,0 +1,21 @@
+name: LogSettings
+description: 'Document type "Log Settings" (module Core): single settings record.'
+fields:
+  - name: name
+    label: ID
+    type: string
+    observed_as: name
+relations:
+  - to: LogsToClear
+    kind: one-to-many
+    via: logs_to_clear
+    description: lines (Logs to Clear)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLog Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Log Settings
+    note: declared by the program and served by its API

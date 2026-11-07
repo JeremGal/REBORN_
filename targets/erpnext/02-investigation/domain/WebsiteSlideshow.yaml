@@ -1,0 +1,27 @@
+name: WebsiteSlideshow
+description: Slideshow like display for the website Document type "Website Slideshow" (module Website).
+fields:
+  - name: slideshow_name
+    label: Slideshow Name
+    type: string
+    observed_as: slideshow_name
+    required: true
+    unique: true
+  - name: header
+    label: Header
+    type: text
+    observed_as: header
+relations:
+  - to: WebsiteSlideshowItem
+    kind: one-to-many
+    via: slideshow_items
+    description: lines (Slideshow Items)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWebsite Slideshow
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Website Slideshow
+    note: declared by the program and served by its API

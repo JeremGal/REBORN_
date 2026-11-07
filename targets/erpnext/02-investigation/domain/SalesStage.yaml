@@ -1,0 +1,17 @@
+name: SalesStage
+description: A step in your sales process, like qualification or negotiation. Document type "Sales Stage" (module CRM).
+fields:
+  - name: stage_name
+    label: Stage Name
+    type: string
+    observed_as: stage_name
+    unique: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSales Stage
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sales Stage
+    note: declared by the program and served by its API

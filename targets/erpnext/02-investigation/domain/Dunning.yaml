@@ -1,0 +1,230 @@
+name: Dunning
+description: 'A reminder to a customer about an overdue invoice. Document type "Dunning" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - DUNN-.MM.-.YY.-
+    default: DUNN-.MM.-.YY.-
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: posting_date
+    label: Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Resolved
+      - Unresolved
+      - Cancelled
+    default: Draft
+  - name: superseded_by
+    label: Superseded By
+    type: ref
+    observed_as: superseded_by
+    ref: Dunning
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: conversion_rate
+    label: Conversion Rate
+    type: decimal
+    observed_as: conversion_rate
+  - name: dunning_type
+    label: Dunning Type
+    type: ref
+    observed_as: dunning_type
+    ref: DunningType
+  - name: rate_of_interest
+    label: Rate of Interest (%) Yearly
+    type: decimal
+    observed_as: rate_of_interest
+    default: "0"
+  - name: total_interest
+    label: Total Interest
+    type: money
+    observed_as: total_interest
+    precision: 2
+    default: "0"
+  - name: dunning_fee
+    label: Dunning Fee
+    type: money
+    observed_as: dunning_fee
+    precision: 2
+  - name: dunning_amount
+    label: Dunning Amount
+    type: money
+    observed_as: dunning_amount
+    default: "0"
+  - name: base_dunning_amount
+    label: Dunning Amount (Company Currency)
+    type: money
+    observed_as: base_dunning_amount
+    default: "0"
+  - name: spacer
+    label: Spacer
+    type: string
+    observed_as: spacer
+  - name: total_outstanding
+    label: Total Outstanding
+    type: money
+    observed_as: total_outstanding
+  - name: grand_total
+    label: Grand Total
+    type: money
+    observed_as: grand_total
+    precision: 2
+    default: "0"
+  - name: language
+    label: Print Language
+    type: ref
+    observed_as: language
+    ref: Language
+  - name: body_text
+    label: Body Text
+    type: text
+    observed_as: body_text
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: closing_text
+    label: Closing Text
+    type: text
+    observed_as: closing_text
+  - name: income_account
+    label: Income Account
+    type: ref
+    observed_as: income_account
+    ref: Account
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: Dunning
+  - name: customer_address
+    label: Customer Address
+    type: ref
+    observed_as: customer_address
+    ref: Address
+  - name: address_display
+    label: Address
+    type: text
+    observed_as: address_display
+  - name: contact_person
+    label: Contact Person
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: contact_display
+    label: Contact
+    type: text
+    observed_as: contact_display
+  - name: contact_mobile
+    label: Mobile No
+    type: text
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: string
+    observed_as: contact_email
+  - name: company_address
+    label: Company Address
+    type: ref
+    observed_as: company_address
+    ref: Address
+  - name: company_address_display
+    label: Company Address Display
+    type: text
+    observed_as: company_address_display
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Dunning
+    kind: many-to-one
+    via: superseded_by
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: DunningType
+    kind: many-to-one
+    via: dunning_type
+  - to: OverduePayment
+    kind: one-to-many
+    via: overdue_payments
+    description: lines (Overdue Payments)
+  - to: Language
+    kind: many-to-one
+    via: language
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: Account
+    kind: many-to-one
+    via: income_account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Dunning
+    kind: many-to-one
+    via: amended_from
+  - to: Address
+    kind: many-to-one
+    via: customer_address
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Address
+    kind: many-to-one
+    via: company_address
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDunning
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Dunning
+    note: declared by the program and served by its API

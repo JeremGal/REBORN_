@@ -13,8 +13,19 @@ export function localConfig() {
   return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : {};
 }
 
+// Target ids and REA/Craft operation names become path segments: only plain slugs are accepted, so nothing can climb out of
+// targets/ or the evidence store (a target "..", an operation "../../x").
+export const isTargetId = (s) => typeof s === "string" && /^[a-z0-9][a-z0-9-]*$/.test(s);
+export const isOpName = (s) => typeof s === "string" && /^[a-z][a-z0-9-]*$/.test(s);
+
+// REBORN_TARGETS_DIR points the tools at another folder of targets (used by the tests to work on throwaway copies).
+export function targetsRoot() {
+  return process.env.REBORN_TARGETS_DIR ? path.resolve(process.env.REBORN_TARGETS_DIR) : path.join(ROOT, "targets");
+}
+
 export function targetDir(target) {
-  return path.join(ROOT, "targets", target);
+  if (!isTargetId(target)) throw new Error(`invalid target id "${target}" (lowercase letters, digits and dashes)`);
+  return path.join(targetsRoot(), target);
 }
 
 export function evidenceDir(target) {
@@ -49,6 +60,23 @@ export function reaCommand() {
   if (js) return { cmd: node, args: [js], via: `node ${js}` };
   const npx = process.platform === "win32" ? "npx.cmd" : "npx";
   return { cmd: npx, args: ["-y", `rea-agents@${REA_VERSION}`], via: "npx", shell: process.platform === "win32" };
+}
+
+// Environment REA's native providers need (Ghidra + JDK 21). Values come from the real environment first,
+// then from reborn.local.json (ghidraInstallDir, javaHome, ghidraStartupTimeoutMs). Never overrides an explicit variable.
+export function reaEnv() {
+  const cfg = localConfig();
+  const env = {};
+  const set = (k, v) => { if (v && !process.env[k]) env[k] = String(v); };
+  set("GHIDRA_INSTALL_DIR", cfg.ghidraInstallDir);
+  set("JAVA_HOME", cfg.javaHome);
+  set("REA_GHIDRA_STARTUP_TIMEOUT_MS", cfg.ghidraStartupTimeoutMs);
+  return env;
+}
+
+// Detect It Easy command line (diec): identifies compiler, framework, installer and packer from a file's headers.
+export function dieCommand() {
+  return process.env.REBORN_DIE || localConfig().dieCli || "diec";
 }
 
 export function craftCommand() {

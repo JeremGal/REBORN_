@@ -1,0 +1,73 @@
+name: ImportSupplierInvoice
+description: Document type "Import Supplier Invoice" (module Regional).
+fields:
+  - name: invoice_series
+    label: Invoice Series
+    type: enum
+    observed_as: invoice_series
+    required: true
+    enum_values:
+      - ACC-PINV-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: supplier_group
+    label: Supplier Group
+    type: ref
+    observed_as: supplier_group
+    required: true
+    ref: SupplierGroup
+  - name: tax_account
+    label: Tax Account
+    type: ref
+    observed_as: tax_account
+    required: true
+    ref: Account
+  - name: default_buying_price_list
+    label: Default Buying Price List
+    type: ref
+    observed_as: default_buying_price_list
+    required: true
+    ref: PriceList
+  - name: zip_file
+    label: Zip File
+    type: file
+    observed_as: zip_file
+  - name: status
+    label: Status
+    type: string
+    observed_as: status
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: SupplierGroup
+    kind: many-to-one
+    via: supplier_group
+  - to: Account
+    kind: many-to-one
+    via: tax_account
+  - to: PriceList
+    kind: many-to-one
+    via: default_buying_price_list
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabImport Supplier Invoice
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Import Supplier Invoice
+    note: declared by the program and served by its API

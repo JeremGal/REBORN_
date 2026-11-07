@@ -1,0 +1,42 @@
+name: StockEntryType
+description: A kind of stock entry, like material transfer or manufacture. Document type "Stock Entry Type" (module Stock).
+fields:
+  - name: purpose
+    label: Purpose
+    type: enum
+    observed_as: purpose
+    required: true
+    enum_values:
+      - Material Issue
+      - Material Receipt
+      - Material Transfer
+      - Material Transfer for Manufacture
+      - Material Consumption for Manufacture
+      - Manufacture
+      - Repack
+      - Send to Subcontractor
+      - Disassemble
+      - Receive from Customer
+      - Return Raw Material to Customer
+      - Subcontracting Delivery
+      - Subcontracting Return
+    default: Material Issue
+  - name: add_to_transit
+    label: Add to Transit
+    type: boolean
+    observed_as: add_to_transit
+    default: "0"
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Entry Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Entry Type
+    note: declared by the program and served by its API

@@ -1,12 +1,3 @@
 {
-  "mcpServers": {
-    "rea": {
-      "command": "node",
-      "args": ["tools/mcp-rea.mjs"]
-    },
-    "craft-anything": {
-      "command": "craft-anything-cli",
-      "args": ["mcp"]
-    }
-  }
+  "mcpServers": {}
 }

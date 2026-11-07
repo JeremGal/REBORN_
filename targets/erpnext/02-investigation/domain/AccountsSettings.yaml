@@ -1,0 +1,367 @@
+name: AccountsSettings
+description: 'Document type "Accounts Settings" (module Accounts): single settings record.'
+fields:
+  - name: unlink_payment_on_cancellation_of_invoice
+    label: Unlink Payment on cancellation of invoice
+    type: boolean
+    observed_as: unlink_payment_on_cancellation_of_invoice
+    default: "1"
+  - name: unlink_advance_payment_on_cancelation_of_order
+    label: Unlink Advance Payment on cancellation of order
+    type: boolean
+    observed_as: unlink_advance_payment_on_cancelation_of_order
+    default: "1"
+  - name: delete_linked_ledger_entries
+    label: Delete Accounting and Stock Ledger entries on deletion of transaction
+    type: boolean
+    observed_as: delete_linked_ledger_entries
+    default: "0"
+  - name: enable_immutable_ledger
+    label: Enable Immutable Ledger
+    type: boolean
+    observed_as: enable_immutable_ledger
+    default: "0"
+  - name: check_supplier_invoice_uniqueness
+    label: Check Supplier invoice number uniqueness
+    type: boolean
+    observed_as: check_supplier_invoice_uniqueness
+    default: "0"
+  - name: automatically_fetch_payment_terms
+    label: Automatically fetch Payment Terms from Order/Quotation
+    type: boolean
+    observed_as: automatically_fetch_payment_terms
+    default: "0"
+  - name: enable_subscription
+    label: Enable Subscription
+    type: boolean
+    observed_as: enable_subscription
+    default: "1"
+  - name: enable_common_party_accounting
+    label: Enable Common Party Accounting
+    type: boolean
+    observed_as: enable_common_party_accounting
+    default: "0"
+  - name: allow_multi_currency_invoices_against_single_party_account
+    label: "Allow multi-currency invoices against single party account "
+    type: boolean
+    observed_as: allow_multi_currency_invoices_against_single_party_account
+    default: "0"
+  - name: confirm_before_resetting_posting_date
+    label: Confirm before resetting posting date
+    type: boolean
+    observed_as: confirm_before_resetting_posting_date
+    default: "1"
+  - name: book_stock_expense_gl_entries
+    label: Book Stock Expense GL Entries
+    type: boolean
+    observed_as: book_stock_expense_gl_entries
+    default: "0"
+  - name: enable_discounts_and_margin
+    label: Enable Discounts and Margin
+    type: boolean
+    observed_as: enable_discounts_and_margin
+    default: "0"
+  - name: enable_accounting_dimensions
+    label: Enable Accounting Dimensions
+    type: boolean
+    observed_as: enable_accounting_dimensions
+    default: "0"
+  - name: merge_similar_account_heads
+    label: Merge similar Account Heads
+    type: boolean
+    observed_as: merge_similar_account_heads
+    default: "0"
+  - name: book_deferred_entries_based_on
+    label: Book Deferred entries based on
+    type: enum
+    observed_as: book_deferred_entries_based_on
+    enum_values:
+      - Days
+      - Months
+    default: Days
+  - name: automatically_process_deferred_accounting_entry
+    label: Automatically process deferred Accounting entry
+    type: boolean
+    observed_as: automatically_process_deferred_accounting_entry
+    default: "1"
+  - name: book_deferred_entries_via_journal_entry
+    label: Book deferred entries via Journal Entry
+    type: boolean
+    observed_as: book_deferred_entries_via_journal_entry
+    default: "0"
+  - name: submit_journal_entries
+    label: Submit Journal entries
+    type: boolean
+    observed_as: submit_journal_entries
+    default: "0"
+  - name: determine_address_tax_category_from
+    label: Determine Address Tax Category from
+    type: enum
+    observed_as: determine_address_tax_category_from
+    enum_values:
+      - Billing Address
+      - Shipping Address
+    default: Billing Address
+  - name: add_taxes_from_item_tax_template
+    label: Automatically add Taxes and Charges from Item Tax Template
+    type: boolean
+    observed_as: add_taxes_from_item_tax_template
+    default: "1"
+  - name: add_taxes_from_taxes_and_charges_template
+    label: Automatically add taxes from Taxes and Charges Template
+    type: boolean
+    observed_as: add_taxes_from_taxes_and_charges_template
+    default: "0"
+  - name: book_tax_discount_loss
+    label: Book tax loss on early payment discount
+    type: boolean
+    observed_as: book_tax_discount_loss
+    default: "0"
+  - name: round_row_wise_tax
+    label: Round tax amount row-wise
+    type: boolean
+    observed_as: round_row_wise_tax
+    default: "0"
+  - name: show_inclusive_tax_in_print
+    label: Show inclusive tax in print
+    type: boolean
+    observed_as: show_inclusive_tax_in_print
+    default: "0"
+  - name: show_taxes_as_table_in_print
+    label: Show taxes as table in print
+    type: boolean
+    observed_as: show_taxes_as_table_in_print
+    default: "0"
+  - name: show_payment_schedule_in_print
+    label: Show Payment Schedule in print
+    type: boolean
+    observed_as: show_payment_schedule_in_print
+    default: "0"
+  - name: maintain_same_internal_transaction_rate
+    label: Maintain same rate throughout internal Transaction
+    type: boolean
+    observed_as: maintain_same_internal_transaction_rate
+    default: "0"
+  - name: fetch_valuation_rate_for_internal_transaction
+    label: Fetch valuation rate for internal Transaction
+    type: boolean
+    observed_as: fetch_valuation_rate_for_internal_transaction
+    default: "0"
+  - name: maintain_same_rate_action
+    label: Action if same rate is not maintained throughout internal transaction
+    type: enum
+    observed_as: maintain_same_rate_action
+    enum_values:
+      - Stop
+      - Warn
+    default: Stop
+  - name: role_to_override_stop_action
+    label: Role allowed to override stop action
+    type: ref
+    observed_as: role_to_override_stop_action
+    ref: Role
+  - name: allow_stale
+    label: Allow Stale Exchange Rates
+    type: boolean
+    observed_as: allow_stale
+    default: "1"
+  - name: allow_pegged_currencies_exchange_rates
+    label: Allow Implicit Pegged Currency Conversion
+    type: boolean
+    observed_as: allow_pegged_currencies_exchange_rates
+    default: "0"
+  - name: stale_days
+    label: Stale Days
+    type: integer
+    observed_as: stale_days
+    default: "1"
+  - name: auto_reconcile_payments
+    label: Auto reconcile Payments
+    type: boolean
+    observed_as: auto_reconcile_payments
+    default: "0"
+  - name: exchange_gain_loss_posting_date
+    label: Posting Date inheritance for exchange gain / loss
+    type: enum
+    observed_as: exchange_gain_loss_posting_date
+    enum_values:
+      - Invoice
+      - Payment
+      - Reconciliation Date
+    default: Payment
+  - name: auto_reconciliation_job_trigger
+    label: Auto Reconciliation job trigger
+    type: integer
+    observed_as: auto_reconciliation_job_trigger
+    default: "15"
+  - name: reconciliation_queue_size
+    label: Reconciliation queue size
+    type: integer
+    observed_as: reconciliation_queue_size
+    default: "5"
+  - name: fetch_payment_schedule_in_payment_request
+    label: Fetch Payment Schedule in Payment Request
+    type: boolean
+    observed_as: fetch_payment_schedule_in_payment_request
+    default: "1"
+  - name: enable_loyalty_point_program
+    label: Enable Loyalty Point Program
+    type: boolean
+    observed_as: enable_loyalty_point_program
+    default: "0"
+  - name: make_payment_via_journal_entry
+    label: Make Payment via Journal Entry
+    type: boolean
+    observed_as: make_payment_via_journal_entry
+    default: "0"
+  - name: over_billing_allowance
+    label: Over Billing Allowance (%)
+    type: money
+    observed_as: over_billing_allowance
+  - name: credit_controller
+    label: Role allowed to bypass credit limit
+    type: ref
+    observed_as: credit_controller
+    ref: Role
+  - name: role_allowed_to_over_bill
+    label: "Role Allowed to over bill "
+    type: ref
+    observed_as: role_allowed_to_over_bill
+    ref: Role
+  - name: enable_overdue_billing_threshold
+    label: Prevent Sales Invoice when Customer is Overdue
+    type: boolean
+    observed_as: enable_overdue_billing_threshold
+    default: "0"
+  - name: role_allowed_to_bypass_overdue_billing
+    label: Role Allowed to Bypass Over Billing Restriction
+    type: ref
+    observed_as: role_allowed_to_bypass_overdue_billing
+    ref: Role
+  - name: book_asset_depreciation_entry_automatically
+    label: Book Asset Depreciation entry automatically
+    type: boolean
+    observed_as: book_asset_depreciation_entry_automatically
+    default: "1"
+  - name: calculate_depr_using_total_days
+    label: Calculate daily depreciation using total days in depreciation period
+    type: boolean
+    observed_as: calculate_depr_using_total_days
+    default: "0"
+  - name: role_to_notify_on_depreciation_failure
+    label: Role to Notify on Depreciation Failure
+    type: ref
+    observed_as: role_to_notify_on_depreciation_failure
+    ref: Role
+  - name: ignore_account_closing_balance
+    label: Ignore Account closing balance
+    type: boolean
+    observed_as: ignore_account_closing_balance
+    default: "0"
+  - name: use_legacy_controller_for_pcv
+    label: Use legacy controller for Period Closing Voucher
+    type: boolean
+    observed_as: use_legacy_controller_for_pcv
+    default: "1"
+  - name: pcv_job_timeout
+    label: PCV Job Timeout (seconds)
+    type: integer
+    observed_as: pcv_job_timeout
+    default: "3600"
+  - name: disable_include_dimensions
+    label: Disable "Consider Accounting Dimension" Filter
+    type: boolean
+    observed_as: disable_include_dimensions
+    default: "0"
+  - name: general_ledger_remarks_length
+    label: General Ledger remarks length
+    type: integer
+    observed_as: general_ledger_remarks_length
+    default: "0"
+  - name: receivable_payable_fetch_method
+    label: Data fetch method
+    type: enum
+    observed_as: receivable_payable_fetch_method
+    enum_values:
+      - Buffered Cursor
+      - UnBuffered Cursor
+    default: Buffered Cursor
+  - name: default_ageing_range
+    label: Default Ageing Range
+    type: string
+    observed_as: default_ageing_range
+    default: 30, 60, 90, 120
+  - name: receivable_payable_remarks_length
+    label: Accounts Receivable / Payable remarks length
+    type: integer
+    observed_as: receivable_payable_remarks_length
+    default: "0"
+  - name: ignore_is_opening_check_for_reporting
+    label: Ignore Is Opening check for reporting
+    type: boolean
+    observed_as: ignore_is_opening_check_for_reporting
+    default: "0"
+  - name: show_balance_in_coa
+    label: Show balances in Chart of Accounts
+    type: boolean
+    observed_as: show_balance_in_coa
+    default: "1"
+  - name: enable_party_matching
+    label: Enable Automatic Party Matching
+    type: boolean
+    observed_as: enable_party_matching
+    default: "0"
+  - name: automatically_run_rules_on_unreconciled_transactions
+    label: Automatically run rules on unreconciled transactions
+    type: boolean
+    observed_as: automatically_run_rules_on_unreconciled_transactions
+    default: "1"
+  - name: enable_fuzzy_matching
+    label: Enable Fuzzy Matching
+    type: boolean
+    observed_as: enable_fuzzy_matching
+    default: "0"
+  - name: transfer_match_days
+    label: Match transfers within 'N' days
+    type: integer
+    observed_as: transfer_match_days
+    default: "3"
+  - name: create_pr_in_draft_status
+    label: Create payment requests in Draft status
+    type: boolean
+    observed_as: create_pr_in_draft_status
+    default: "1"
+  - name: use_legacy_budget_controller
+    label: Use legacy Budget Controller
+    type: boolean
+    observed_as: use_legacy_budget_controller
+    default: "0"
+relations:
+  - to: Role
+    kind: many-to-one
+    via: role_to_override_stop_action
+  - to: RepostAllowedTypes
+    kind: one-to-many
+    via: repost_allowed_types
+    description: lines (Allowed DocTypes)
+  - to: Role
+    kind: many-to-one
+    via: credit_controller
+  - to: Role
+    kind: many-to-one
+    via: role_allowed_to_over_bill
+  - to: Role
+    kind: many-to-one
+    via: role_allowed_to_bypass_overdue_billing
+  - to: Role
+    kind: many-to-one
+    via: role_to_notify_on_depreciation_failure
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAccounts Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Accounts Settings
+    note: declared by the program and served by its API

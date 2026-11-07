@@ -1,0 +1,38 @@
+name: ContractFulfilmentChecklist
+description: 'Document type "Contract Fulfilment Checklist" (module CRM): lines of another document, draft, submitted, cancelled life cycle.'
+fields:
+  - name: fulfilled
+    label: Fulfilled
+    type: boolean
+    observed_as: fulfilled
+    default: "0"
+  - name: requirement
+    label: Requirement
+    type: string
+    observed_as: requirement
+  - name: notes
+    label: Notes
+    type: text
+    observed_as: notes
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: ContractFulfilmentChecklist
+relations:
+  - to: ContractFulfilmentChecklist
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabContract Fulfilment Checklist
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Contract Fulfilment Checklist
+    note: declared by the program and served by its API

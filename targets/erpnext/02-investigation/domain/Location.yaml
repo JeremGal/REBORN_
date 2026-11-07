@@ -1,0 +1,73 @@
+name: Location
+description: A place where your assets are kept. Document type "Location" (module Assets).
+fields:
+  - name: location_name
+    label: Location Name
+    type: string
+    observed_as: location_name
+    required: true
+    unique: true
+  - name: parent_location
+    label: Parent Location
+    type: ref
+    observed_as: parent_location
+    ref: Location
+  - name: is_container
+    label: Is Container
+    type: boolean
+    observed_as: is_container
+    default: "0"
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: latitude
+    label: Latitude
+    type: decimal
+    observed_as: latitude
+  - name: longitude
+    label: Longitude
+    type: decimal
+    observed_as: longitude
+  - name: area
+    label: Area
+    type: decimal
+    observed_as: area
+  - name: area_uom
+    label: Area UOM
+    type: ref
+    observed_as: area_uom
+    ref: UOM
+  - name: location
+    label: Location
+    type: json
+    observed_as: location
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: Old Parent
+    type: string
+    observed_as: old_parent
+relations:
+  - to: Location
+    kind: many-to-one
+    via: parent_location
+  - to: UOM
+    kind: many-to-one
+    via: area_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLocation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Location
+    note: declared by the program and served by its API

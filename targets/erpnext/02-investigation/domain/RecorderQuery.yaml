@@ -1,0 +1,45 @@
+name: RecorderQuery
+description: 'Document type "Recorder Query" (module Core): lines of another document.'
+fields:
+  - name: index
+    label: Index
+    type: integer
+    observed_as: index
+  - name: query
+    label: Query
+    type: string
+    observed_as: query
+    max_length: 2
+  - name: duration
+    label: Duration
+    type: decimal
+    observed_as: duration
+  - name: exact_copies
+    label: Exact Copies
+    type: integer
+    observed_as: exact_copies
+  - name: normalized_query
+    label: Normalized Query
+    type: string
+    observed_as: normalized_query
+  - name: normalized_copies
+    label: Normalized Copies
+    type: integer
+    observed_as: normalized_copies
+  - name: stack
+    label: ""
+    type: text
+    observed_as: stack
+  - name: explain_result
+    label: ""
+    type: text
+    observed_as: explain_result
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRecorder Query
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Recorder Query
+    note: declared by the program and served by its API

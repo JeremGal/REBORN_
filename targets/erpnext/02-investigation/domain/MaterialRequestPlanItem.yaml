@@ -1,0 +1,146 @@
+name: MaterialRequestPlanItem
+description: 'Document type "Material Request Plan Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: from_warehouse
+    label: From Warehouse
+    type: ref
+    observed_as: from_warehouse
+    ref: Warehouse
+  - name: warehouse
+    label: For Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: material_request_type
+    label: Type
+    type: enum
+    observed_as: material_request_type
+    enum_values:
+      - Purchase
+      - Material Transfer
+      - Material Issue
+      - Manufacture
+      - Subcontracting
+      - Customer Provided
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+  - name: from_bom
+    label: From BOM
+    type: ref
+    observed_as: from_bom
+    ref: BOM
+  - name: main_item_code
+    label: Main Item Code
+    type: ref
+    observed_as: main_item_code
+    ref: Item
+  - name: required_bom_qty
+    label: Reqd Qty (BOM)
+    type: decimal
+    observed_as: required_bom_qty
+  - name: projected_qty
+    label: Projected Qty
+    type: decimal
+    observed_as: projected_qty
+  - name: quantity
+    label: Required Qty
+    type: decimal
+    observed_as: quantity
+    required: true
+  - name: stock_reserved_qty
+    label: Stock Reserved Qty
+    type: decimal
+    observed_as: stock_reserved_qty
+  - name: schedule_date
+    label: Required By
+    type: date
+    observed_as: schedule_date
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: min_order_qty
+    label: Minimum Order Quantity
+    type: decimal
+    observed_as: min_order_qty
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    ref: SalesOrder
+  - name: sub_assembly_item_reference
+    label: Sub Assembly Item Reference
+    type: string
+    observed_as: sub_assembly_item_reference
+  - name: actual_qty
+    label: Qty In Stock
+    type: decimal
+    observed_as: actual_qty
+    default: "0"
+  - name: requested_qty
+    label: Requested Qty
+    type: decimal
+    observed_as: requested_qty
+    default: "0"
+  - name: reserved_qty_for_production
+    label: Reserved Qty for Production
+    type: decimal
+    observed_as: reserved_qty_for_production
+  - name: ordered_qty
+    label: Ordered Qty
+    type: decimal
+    observed_as: ordered_qty
+  - name: safety_stock
+    label: Safety Stock
+    type: decimal
+    observed_as: safety_stock
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: from_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: BOM
+    kind: many-to-one
+    via: from_bom
+  - to: Item
+    kind: many-to-one
+    via: main_item_code
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMaterial Request Plan Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Material Request Plan Item
+    note: declared by the program and served by its API

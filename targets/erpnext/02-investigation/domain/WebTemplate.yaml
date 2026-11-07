@@ -1,0 +1,44 @@
+name: WebTemplate
+description: Document type "Web Template" (module Website).
+fields:
+  - name: type
+    label: Type
+    type: enum
+    observed_as: type
+    enum_values:
+      - Component
+      - Section
+      - Navbar
+      - Footer
+    default: Section
+  - name: standard
+    label: Standard
+    type: boolean
+    observed_as: standard
+    default: "0"
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: template
+    label: Template
+    type: text
+    observed_as: template
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: WebTemplateField
+    kind: one-to-many
+    via: fields
+    description: lines (Fields)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWeb Template
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Web Template
+    note: declared by the program and served by its API

@@ -1,0 +1,69 @@
+name: DocShare
+description: Internal record of document shares Document type "DocShare" (module Core).
+fields:
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: share_doctype
+    label: Document Type
+    type: ref
+    observed_as: share_doctype
+    required: true
+    ref: DocType
+  - name: share_name
+    label: Document Name
+    type: string
+    observed_as: share_name
+    required: true
+  - name: read
+    label: Read
+    type: boolean
+    observed_as: read
+    default: "0"
+  - name: write
+    label: Write
+    type: boolean
+    observed_as: write
+    default: "0"
+  - name: share
+    label: Share
+    type: boolean
+    observed_as: share
+    default: "0"
+  - name: submit
+    label: Submit
+    type: boolean
+    observed_as: submit
+    default: "0"
+  - name: everyone
+    label: Everyone
+    type: boolean
+    observed_as: everyone
+    default: "0"
+  - name: notify_by_email
+    label: Notify by email
+    type: boolean
+    observed_as: notify_by_email
+    default: "1"
+  - name: impersonate
+    label: Impersonate
+    type: boolean
+    observed_as: impersonate
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: DocType
+    kind: many-to-one
+    via: share_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocShare
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DocShare
+    note: declared by the program and served by its API

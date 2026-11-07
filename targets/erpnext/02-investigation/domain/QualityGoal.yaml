@@ -1,0 +1,90 @@
+name: QualityGoal
+description: Something you measure and improve on a schedule, like on-time delivery. Document type "Quality Goal" (module Quality Management).
+fields:
+  - name: goal
+    label: Goal
+    type: string
+    observed_as: goal
+    required: true
+    unique: true
+  - name: frequency
+    label: Monitoring Frequency
+    type: enum
+    observed_as: frequency
+    enum_values:
+      - None
+      - Daily
+      - Weekly
+      - Monthly
+      - Quarterly
+    default: None
+  - name: procedure
+    label: Procedure
+    type: ref
+    observed_as: procedure
+    ref: QualityProcedure
+  - name: weekday
+    label: Weekday
+    type: enum
+    observed_as: weekday
+    enum_values:
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+  - name: date
+    label: Date
+    type: enum
+    observed_as: date
+    enum_values:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+      - "10"
+      - "11"
+      - "12"
+      - "13"
+      - "14"
+      - "15"
+      - "16"
+      - "17"
+      - "18"
+      - "19"
+      - "20"
+      - "21"
+      - "22"
+      - "23"
+      - "24"
+      - "25"
+      - "26"
+      - "27"
+      - "28"
+      - "29"
+      - "30"
+      - "31"
+relations:
+  - to: QualityProcedure
+    kind: many-to-one
+    via: procedure
+  - to: QualityGoalObjective
+    kind: one-to-many
+    via: objectives
+    description: lines (Objectives)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Goal
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Goal
+    note: declared by the program and served by its API

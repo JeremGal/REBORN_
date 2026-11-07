@@ -1,0 +1,415 @@
+name: PaymentEntry
+description: 'Money you received or paid, matched against invoices. Document type "Payment Entry" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - ACC-PAY-.YYYY.-
+  - name: payment_type
+    label: Payment Type
+    type: enum
+    observed_as: payment_type
+    required: true
+    enum_values:
+      - Receive
+      - Pay
+      - Internal Transfer
+  - name: payment_order_status
+    label: Payment Order Status
+    type: enum
+    observed_as: payment_order_status
+    enum_values:
+      - Initiated
+      - Payment Ordered
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    ref: ModeOfPayment
+  - name: bank_account
+    label: Company Bank Account
+    type: ref
+    observed_as: bank_account
+    ref: BankAccount
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+  - name: party_name
+    label: Party Name
+    type: string
+    observed_as: party_name
+  - name: book_advance_payments_in_separate_party_account
+    label: Book Advance Payments in Separate Party Account
+    type: boolean
+    observed_as: book_advance_payments_in_separate_party_account
+    default: "0"
+  - name: reconcile_on_advance_payment_date
+    label: Reconcile on Advance Payment Date
+    type: boolean
+    observed_as: reconcile_on_advance_payment_date
+    default: "0"
+  - name: apply_tds
+    label: Consider for Tax Withholding
+    type: boolean
+    observed_as: apply_tds
+    default: "0"
+  - name: tax_withholding_category
+    label: Tax Withholding Category
+    type: ref
+    observed_as: tax_withholding_category
+    ref: TaxWithholdingCategory
+  - name: party_bank_account
+    label: Party Bank Account
+    type: ref
+    observed_as: party_bank_account
+    ref: BankAccount
+  - name: contact_person
+    label: Contact
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: contact_email
+    label: Email
+    type: string
+    observed_as: contact_email
+  - name: paid_from
+    label: Account Paid From
+    type: ref
+    observed_as: paid_from
+    required: true
+    ref: Account
+  - name: paid_from_account_type
+    label: Paid From Account Type
+    type: string
+    observed_as: paid_from_account_type
+  - name: paid_from_account_currency
+    label: Account Currency (From)
+    type: ref
+    observed_as: paid_from_account_currency
+    required: true
+    ref: Currency
+  - name: reference_no
+    label: Cheque/Reference No
+    type: string
+    observed_as: reference_no
+  - name: paid_to
+    label: Account Paid To
+    type: ref
+    observed_as: paid_to
+    required: true
+    ref: Account
+  - name: paid_to_account_type
+    label: Paid To Account Type
+    type: string
+    observed_as: paid_to_account_type
+  - name: paid_to_account_currency
+    label: Account Currency (To)
+    type: ref
+    observed_as: paid_to_account_currency
+    required: true
+    ref: Currency
+  - name: reference_date
+    label: Cheque/Reference Date
+    type: date
+    observed_as: reference_date
+  - name: clearance_date
+    label: Clearance Date
+    type: date
+    observed_as: clearance_date
+  - name: paid_amount
+    label: Paid Amount
+    type: money
+    observed_as: paid_amount
+    required: true
+  - name: paid_amount_after_tax
+    label: Paid Amount After Tax
+    type: money
+    observed_as: paid_amount_after_tax
+  - name: source_exchange_rate
+    label: Source Exchange Rate
+    type: decimal
+    observed_as: source_exchange_rate
+    required: true
+    precision: 9
+  - name: base_paid_amount
+    label: Paid Amount (Company Currency)
+    type: money
+    observed_as: base_paid_amount
+    required: true
+  - name: base_paid_amount_after_tax
+    label: Paid Amount After Tax (Company Currency)
+    type: money
+    observed_as: base_paid_amount_after_tax
+  - name: received_amount
+    label: Received Amount
+    type: money
+    observed_as: received_amount
+    required: true
+  - name: received_amount_after_tax
+    label: Received Amount After Tax
+    type: money
+    observed_as: received_amount_after_tax
+  - name: target_exchange_rate
+    label: Target Exchange Rate
+    type: decimal
+    observed_as: target_exchange_rate
+    required: true
+    precision: 9
+  - name: base_received_amount
+    label: Received Amount (Company Currency)
+    type: money
+    observed_as: base_received_amount
+    required: true
+  - name: base_received_amount_after_tax
+    label: Received Amount After Tax (Company Currency)
+    type: money
+    observed_as: base_received_amount_after_tax
+  - name: payment_term_discounts_calculated
+    label: Payment Term Discounts Calculated
+    type: boolean
+    observed_as: payment_term_discounts_calculated
+    default: "0"
+  - name: total_allocated_amount
+    label: Total Allocated Amount
+    type: money
+    observed_as: total_allocated_amount
+  - name: base_total_allocated_amount
+    label: Total Allocated Amount (Company Currency)
+    type: money
+    observed_as: base_total_allocated_amount
+  - name: unallocated_amount
+    label: Unallocated Amount
+    type: money
+    observed_as: unallocated_amount
+  - name: difference_amount
+    label: Difference Amount (Company Currency)
+    type: money
+    observed_as: difference_amount
+  - name: purchase_taxes_and_charges_template
+    label: Purchase Taxes and Charges Template
+    type: ref
+    observed_as: purchase_taxes_and_charges_template
+    ref: PurchaseTaxesAndChargesTemplate
+  - name: sales_taxes_and_charges_template
+    label: Sales Taxes and Charges Template
+    type: ref
+    observed_as: sales_taxes_and_charges_template
+    ref: SalesTaxesAndChargesTemplate
+  - name: base_total_taxes_and_charges
+    label: Total Taxes and Charges (Company Currency)
+    type: money
+    observed_as: base_total_taxes_and_charges
+  - name: total_taxes_and_charges
+    label: Total Taxes and Charges
+    type: money
+    observed_as: total_taxes_and_charges
+  - name: tax_withholding_group
+    label: Tax Withholding Group
+    type: ref
+    observed_as: tax_withholding_group
+    ref: TaxWithholdingGroup
+  - name: ignore_tax_withholding_threshold
+    label: Ignore Tax Withholding Threshold
+    type: boolean
+    observed_as: ignore_tax_withholding_threshold
+    default: "0"
+  - name: override_tax_withholding_entries
+    label: Edit Tax Withholding Entries
+    type: boolean
+    observed_as: override_tax_withholding_entries
+    default: "0"
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Submitted
+      - Cancelled
+    default: Draft
+  - name: custom_remarks
+    label: Custom Remarks
+    type: boolean
+    observed_as: custom_remarks
+    default: "0"
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+  - name: base_in_words
+    label: In Words (Company Currency)
+    type: text
+    observed_as: base_in_words
+  - name: is_opening
+    label: Is Opening
+    type: enum
+    observed_as: is_opening
+    enum_values:
+      - No
+      - Yes
+    default: No
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: print_heading
+    label: Print Heading
+    type: ref
+    observed_as: print_heading
+    ref: PrintHeading
+  - name: bank
+    label: Bank
+    type: string
+    observed_as: bank
+  - name: bank_account_no
+    label: Bank Account No
+    type: string
+    observed_as: bank_account_no
+  - name: payment_order
+    label: Payment Order
+    type: ref
+    observed_as: payment_order
+    ref: PaymentOrder
+  - name: in_words
+    label: In Words
+    type: text
+    observed_as: in_words
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: PaymentEntry
+  - name: auto_repeat
+    label: Auto Repeat
+    type: ref
+    observed_as: auto_repeat
+    ref: AutoRepeat
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: TaxWithholdingCategory
+    kind: many-to-one
+    via: tax_withholding_category
+  - to: BankAccount
+    kind: many-to-one
+    via: party_bank_account
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Account
+    kind: many-to-one
+    via: paid_from
+  - to: Currency
+    kind: many-to-one
+    via: paid_from_account_currency
+  - to: Account
+    kind: many-to-one
+    via: paid_to
+  - to: Currency
+    kind: many-to-one
+    via: paid_to_account_currency
+  - to: PaymentEntryReference
+    kind: one-to-many
+    via: references
+    description: lines (Payment References)
+  - to: PurchaseTaxesAndChargesTemplate
+    kind: many-to-one
+    via: purchase_taxes_and_charges_template
+  - to: SalesTaxesAndChargesTemplate
+    kind: many-to-one
+    via: sales_taxes_and_charges_template
+  - to: AdvanceTaxesAndCharges
+    kind: one-to-many
+    via: taxes
+    description: lines (Advance Taxes and Charges)
+  - to: PaymentEntryDeduction
+    kind: one-to-many
+    via: deductions
+    description: lines (Payment Deductions or Loss)
+  - to: TaxWithholdingGroup
+    kind: many-to-one
+    via: tax_withholding_group
+  - to: TaxWithholdingEntry
+    kind: one-to-many
+    via: tax_withholding_entries
+    description: lines (Tax Withholding Entries)
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: PrintHeading
+    kind: many-to-one
+    via: print_heading
+  - to: PaymentOrder
+    kind: many-to-one
+    via: payment_order
+  - to: PaymentEntry
+    kind: many-to-one
+    via: amended_from
+  - to: AutoRepeat
+    kind: many-to-one
+    via: auto_repeat
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Entry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Entry
+    note: declared by the program and served by its API

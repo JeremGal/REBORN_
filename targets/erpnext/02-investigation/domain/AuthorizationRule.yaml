@@ -1,0 +1,110 @@
+name: AuthorizationRule
+description: Requires approval for transactions above a limit. Document type "Authorization Rule" (module Setup).
+fields:
+  - name: transaction
+    label: Transaction
+    type: enum
+    observed_as: transaction
+    required: true
+    enum_values:
+      - Sales Order
+      - Purchase Order
+      - Quotation
+      - Delivery Note
+      - Sales Invoice
+      - Purchase Invoice
+      - Purchase Receipt
+  - name: based_on
+    label: Based On
+    type: enum
+    observed_as: based_on
+    required: true
+    enum_values:
+      - Grand Total
+      - Average Discount
+      - Customerwise Discount
+      - Itemwise Discount
+      - Item Group wise Discount
+      - Not Applicable
+  - name: customer_or_item
+    label: Customer or Item
+    type: enum
+    observed_as: customer_or_item
+    enum_values:
+      - Customer
+      - Item
+      - Item Group
+  - name: master_name
+    label: Customer / Item / Item Group
+    type: string
+    observed_as: master_name
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: value
+    label: Authorized Value
+    type: decimal
+    observed_as: value
+  - name: system_role
+    label: Applicable To (Role)
+    type: ref
+    observed_as: system_role
+    ref: Role
+  - name: to_emp
+    label: Applicable To (Employee)
+    type: ref
+    observed_as: to_emp
+    ref: Employee
+  - name: system_user
+    label: Applicable To (User)
+    type: ref
+    observed_as: system_user
+    ref: User
+  - name: to_designation
+    label: Applicable To (Designation)
+    type: ref
+    observed_as: to_designation
+    ref: Designation
+  - name: approving_role
+    label: Approving Role (above authorized value)
+    type: ref
+    observed_as: approving_role
+    ref: Role
+  - name: approving_user
+    label: Approving User  (above authorized value)
+    type: ref
+    observed_as: approving_user
+    ref: User
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Role
+    kind: many-to-one
+    via: system_role
+  - to: Employee
+    kind: many-to-one
+    via: to_emp
+  - to: User
+    kind: many-to-one
+    via: system_user
+  - to: Designation
+    kind: many-to-one
+    via: to_designation
+  - to: Role
+    kind: many-to-one
+    via: approving_role
+  - to: User
+    kind: many-to-one
+    via: approving_user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAuthorization Rule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Authorization Rule
+    note: declared by the program and served by its API

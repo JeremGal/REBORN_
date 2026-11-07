@@ -1,0 +1,161 @@
+name: PackedItem
+description: 'Document type "Packed Item" (module Stock): lines of another document.'
+fields:
+  - name: parent_item
+    label: Parent Item
+    type: ref
+    observed_as: parent_item
+    ref: Item
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: delivered_by_supplier
+    label: Supplier delivers to Customer
+    type: boolean
+    observed_as: delivered_by_supplier
+    default: "0"
+  - name: reserve_stock
+    label: Reserve Stock
+    type: boolean
+    observed_as: reserve_stock
+    default: "0"
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: warehouse
+    label: From Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: target_warehouse
+    label: To Warehouse (Optional)
+    type: ref
+    observed_as: target_warehouse
+    ref: Warehouse
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+  - name: qty
+    label: Qty
+    type: decimal
+    observed_as: qty
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: use_serial_batch_fields
+    label: Use Serial No / Batch Fields
+    type: boolean
+    observed_as: use_serial_batch_fields
+    default: "0"
+  - name: serial_and_batch_bundle
+    label: Serial and Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: actual_batch_qty
+    label: Actual Batch Quantity
+    type: decimal
+    observed_as: actual_batch_qty
+  - name: actual_qty
+    label: Actual Qty
+    type: decimal
+    observed_as: actual_qty
+  - name: projected_qty
+    label: Projected Qty
+    type: decimal
+    observed_as: projected_qty
+  - name: ordered_qty
+    label: Ordered Qty
+    type: decimal
+    observed_as: ordered_qty
+  - name: packed_qty
+    label: Packed Qty
+    type: decimal
+    observed_as: packed_qty
+    default: "0"
+  - name: received_qty
+    label: Received Qty
+    type: decimal
+    observed_as: received_qty
+    default: "0"
+  - name: requested_qty
+    label: Requested Qty
+    type: decimal
+    observed_as: requested_qty
+    default: "0"
+  - name: incoming_rate
+    label: Incoming Rate
+    type: money
+    observed_as: incoming_rate
+  - name: picked_qty
+    label: Picked Qty
+    type: decimal
+    observed_as: picked_qty
+  - name: page_break
+    label: Page Break
+    type: boolean
+    observed_as: page_break
+    default: "0"
+  - name: prevdoc_doctype
+    label: Prevdoc DocType
+    type: string
+    observed_as: prevdoc_doctype
+  - name: parent_detail_docname
+    label: Parent Detail docname
+    type: string
+    observed_as: parent_detail_docname
+relations:
+  - to: Item
+    kind: many-to-one
+    via: parent_item
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: target_warehouse
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPacked Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Packed Item
+    note: declared by the program and served by its API

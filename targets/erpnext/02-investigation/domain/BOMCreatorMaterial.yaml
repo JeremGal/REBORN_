@@ -1,0 +1,51 @@
+name: BOMCreatorMaterial
+description: 'Document type "BOM Creator Material" (module Manufacturing): lines of another document.'
+fields:
+  - name: bom_node_id
+    label: BOM Node
+    type: integer
+    observed_as: bom_node_id
+    default: "0"
+  - name: operation_id
+    label: Operation ID
+    type: integer
+    observed_as: operation_id
+  - name: from_operation_id
+    label: Output of Operation ID
+    type: integer
+    observed_as: from_operation_id
+  - name: part_node_id
+    label: Part Node
+    type: integer
+    observed_as: part_node_id
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: UOM
+    kind: many-to-one
+    via: uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Creator Material
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Creator Material
+    note: declared by the program and served by its API

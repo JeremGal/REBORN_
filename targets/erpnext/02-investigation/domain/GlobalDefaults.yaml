@@ -1,0 +1,82 @@
+name: GlobalDefaults
+description: 'Document type "Global Defaults" (module Setup): single settings record.'
+fields:
+  - name: default_company
+    label: Default Company
+    type: ref
+    observed_as: default_company
+    ref: Company
+  - name: country
+    label: Country
+    type: ref
+    observed_as: country
+    ref: Country
+  - name: default_distance_unit
+    label: Default Distance Unit
+    type: ref
+    observed_as: default_distance_unit
+    ref: UOM
+  - name: default_currency
+    label: Default Currency
+    type: ref
+    observed_as: default_currency
+    required: true
+    ref: Currency
+    default: INR
+  - name: hide_currency_symbol
+    label: Hide Currency Symbol
+    type: enum
+    observed_as: hide_currency_symbol
+    enum_values:
+      - No
+      - Yes
+  - name: disable_rounded_total
+    label: Disable Rounded Total
+    type: boolean
+    observed_as: disable_rounded_total
+    default: "0"
+  - name: disable_in_words
+    label: Disable In Words
+    type: boolean
+    observed_as: disable_in_words
+    default: "0"
+  - name: use_posting_datetime_for_naming_documents
+    label: Use Posting Datetime for Naming Documents
+    type: boolean
+    observed_as: use_posting_datetime_for_naming_documents
+    default: "0"
+  - name: demo_company
+    label: Demo Company
+    type: ref
+    observed_as: demo_company
+    ref: Company
+  - name: enable_item_search_index
+    label: Enable Item Search Index
+    type: boolean
+    observed_as: enable_item_search_index
+    default: "0"
+relations:
+  - to: Company
+    kind: many-to-one
+    via: default_company
+  - to: Country
+    kind: many-to-one
+    via: country
+  - to: UOM
+    kind: many-to-one
+    via: default_distance_unit
+  - to: Currency
+    kind: many-to-one
+    via: default_currency
+  - to: Company
+    kind: many-to-one
+    via: demo_company
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabGlobal Defaults
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Global Defaults
+    note: declared by the program and served by its API

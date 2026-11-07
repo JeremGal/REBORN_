@@ -1,0 +1,21 @@
+name: POSSearchFields
+description: 'Document type "POS Search Fields" (module Accounts): lines of another document.'
+fields:
+  - name: field
+    label: Field
+    type: string
+    observed_as: field
+    required: true
+  - name: fieldname
+    label: Fieldname
+    type: string
+    observed_as: fieldname
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPOS Search Fields
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of POS Search Fields
+    note: declared by the program and served by its API

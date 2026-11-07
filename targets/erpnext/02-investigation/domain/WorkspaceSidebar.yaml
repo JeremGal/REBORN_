@@ -1,0 +1,55 @@
+name: WorkspaceSidebar
+description: Archive of the previous navigation. Nothing reads it at runtime; it is kept as the migration's source so the conversion to module sidebars can be run again. Document type "Workspace Sidebar" (module Desk).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    unique: true
+  - name: header_icon
+    label: Header Icon
+    type: string
+    observed_as: header_icon
+  - name: for_user
+    label: For User
+    type: ref
+    observed_as: for_user
+    ref: User
+  - name: module
+    label: Module
+    type: text
+    observed_as: module
+  - name: standard
+    label: Standard
+    type: boolean
+    observed_as: standard
+    default: "0"
+  - name: app
+    label: App
+    type: string
+    observed_as: app
+  - name: module_onboarding
+    label: Module Onboarding
+    type: ref
+    observed_as: module_onboarding
+    ref: ModuleOnboarding
+relations:
+  - to: User
+    kind: many-to-one
+    via: for_user
+  - to: ModuleOnboarding
+    kind: many-to-one
+    via: module_onboarding
+  - to: WorkspaceSidebarItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkspace Sidebar
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workspace Sidebar
+    note: declared by the program and served by its API

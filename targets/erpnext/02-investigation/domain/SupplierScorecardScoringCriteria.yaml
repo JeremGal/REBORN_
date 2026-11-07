@@ -1,0 +1,40 @@
+name: SupplierScorecardScoringCriteria
+description: 'Document type "Supplier Scorecard Scoring Criteria" (module Buying): lines of another document.'
+fields:
+  - name: criteria_name
+    label: Criteria Name
+    type: ref
+    observed_as: criteria_name
+    required: true
+    ref: SupplierScorecardCriteria
+  - name: score
+    label: Score
+    type: percent
+    observed_as: score
+  - name: weight
+    label: Criteria Weight
+    type: percent
+    observed_as: weight
+    required: true
+  - name: max_score
+    label: Max Score
+    type: decimal
+    observed_as: max_score
+    default: "100"
+  - name: formula
+    label: Criteria Formula
+    type: text
+    observed_as: formula
+relations:
+  - to: SupplierScorecardCriteria
+    kind: many-to-one
+    via: criteria_name
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSupplier Scorecard Scoring Criteria
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Supplier Scorecard Scoring Criteria
+    note: declared by the program and served by its API

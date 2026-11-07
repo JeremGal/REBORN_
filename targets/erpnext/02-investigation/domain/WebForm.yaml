@@ -1,0 +1,218 @@
+name: WebForm
+description: Document type "Web Form" (module Website).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: route
+    label: Route
+    type: string
+    observed_as: route
+    unique: true
+  - name: published
+    label: Published
+    type: boolean
+    observed_as: published
+    default: "0"
+  - name: doc_type
+    label: Select DocType
+    type: ref
+    observed_as: doc_type
+    required: true
+    ref: DocType
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: is_standard
+    label: Is standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: introduction_text
+    label: Introduction
+    type: text
+    observed_as: introduction_text
+  - name: key_required
+    label: Key required
+    type: boolean
+    observed_as: key_required
+    default: "0"
+  - name: anonymous
+    label: Anonymous responses
+    type: boolean
+    observed_as: anonymous
+    default: "0"
+  - name: login_required
+    label: Login required
+    type: boolean
+    observed_as: login_required
+    default: "0"
+  - name: apply_document_permissions
+    label: Apply document permissions
+    type: boolean
+    observed_as: apply_document_permissions
+    default: "0"
+  - name: allow_edit
+    label: Allow editing after submit
+    type: boolean
+    observed_as: allow_edit
+    default: "0"
+  - name: allow_multiple
+    label: Allow multiple responses
+    type: boolean
+    observed_as: allow_multiple
+    default: "0"
+  - name: allow_delete
+    label: Allow delete
+    type: boolean
+    observed_as: allow_delete
+    default: "0"
+  - name: allow_incomplete
+    label: Allow incomplete forms
+    type: boolean
+    observed_as: allow_incomplete
+    default: "0"
+  - name: allow_comments
+    label: Allow comments
+    type: boolean
+    observed_as: allow_comments
+    default: "0"
+  - name: allow_print
+    label: Allow print
+    type: boolean
+    observed_as: allow_print
+    default: "0"
+  - name: print_format
+    label: Print Format
+    type: ref
+    observed_as: print_format
+    ref: PrintFormat
+  - name: max_attachment_size
+    label: Max attachment size
+    type: integer
+    observed_as: max_attachment_size
+  - name: show_attachments
+    label: Show attachments
+    type: boolean
+    observed_as: show_attachments
+    default: "0"
+  - name: hide_navbar
+    label: Hide navbar
+    type: boolean
+    observed_as: hide_navbar
+    default: "0"
+  - name: hide_footer
+    label: Hide footer
+    type: boolean
+    observed_as: hide_footer
+    default: "0"
+  - name: allowed_embedding_domains
+    label: Allowed embedding domains
+    type: text
+    observed_as: allowed_embedding_domains
+  - name: condition_json
+    label: Condition JSON
+    type: json
+    observed_as: condition_json
+  - name: dynamic_filters_json
+    label: Dynamic Filters JSON
+    type: json
+    observed_as: dynamic_filters_json
+  - name: show_list
+    label: Show list
+    type: boolean
+    observed_as: show_list
+    default: "0"
+  - name: list_title
+    label: Title
+    type: string
+    observed_as: list_title
+  - name: show_sidebar
+    label: Show sidebar
+    type: boolean
+    observed_as: show_sidebar
+    default: "0"
+  - name: website_sidebar
+    label: Website Sidebar
+    type: ref
+    observed_as: website_sidebar
+    ref: WebsiteSidebar
+  - name: button_label
+    label: Submit button label
+    type: string
+    observed_as: button_label
+    default: Save
+  - name: banner_image
+    label: Banner Image
+    type: file
+    observed_as: banner_image
+  - name: breadcrumbs
+    label: Breadcrumbs
+    type: text
+    observed_as: breadcrumbs
+  - name: success_title
+    label: Success title
+    type: string
+    observed_as: success_title
+  - name: success_url
+    label: Success URL
+    type: string
+    observed_as: success_url
+  - name: success_message
+    label: Success message
+    type: text
+    observed_as: success_message
+  - name: meta_title
+    label: Meta title
+    type: string
+    observed_as: meta_title
+  - name: meta_description
+    label: Meta description
+    type: text
+    observed_as: meta_description
+  - name: meta_image
+    label: Meta image
+    type: file
+    observed_as: meta_image
+  - name: client_script
+    label: Client script
+    type: text
+    observed_as: client_script
+  - name: custom_css
+    label: Custom CSS
+    type: text
+    observed_as: custom_css
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: doc_type
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: WebFormField
+    kind: one-to-many
+    via: web_form_fields
+    description: lines (Web Form Fields)
+  - to: PrintFormat
+    kind: many-to-one
+    via: print_format
+  - to: WebFormListColumn
+    kind: one-to-many
+    via: list_columns
+    description: lines (List Columns)
+  - to: WebsiteSidebar
+    kind: many-to-one
+    via: website_sidebar
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWeb Form
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Web Form
+    note: declared by the program and served by its API

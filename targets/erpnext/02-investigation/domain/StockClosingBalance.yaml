@@ -1,0 +1,109 @@
+name: StockClosingBalance
+description: Document type "Stock Closing Balance" (module Stock).
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+  - name: posting_datetime
+    label: Posting Datetime
+    type: datetime
+    observed_as: posting_datetime
+  - name: actual_qty
+    label: Qty Change
+    type: decimal
+    observed_as: actual_qty
+  - name: valuation_rate
+    label: Valuation Rate
+    type: money
+    observed_as: valuation_rate
+  - name: stock_value
+    label: Balance Stock Value
+    type: money
+    observed_as: stock_value
+  - name: stock_value_difference
+    label: Change in Stock Value
+    type: money
+    observed_as: stock_value_difference
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: stock_closing_entry
+    label: Stock Closing Entry
+    type: ref
+    observed_as: stock_closing_entry
+    ref: StockClosingEntry
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: inventory_dimension_key
+    label: Inventory Dimension key
+    type: text
+    observed_as: inventory_dimension_key
+  - name: fifo_queue
+    label: FIFO Queue
+    type: text
+    observed_as: fifo_queue
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: StockClosingEntry
+    kind: many-to-one
+    via: stock_closing_entry
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Closing Balance
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Closing Balance
+    note: declared by the program and served by its API

@@ -1,0 +1,113 @@
+name: ProcessPaymentReconciliation
+description: 'Matches payments to invoices in the background. Document type "Process Payment Reconciliation" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    required: true
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+    required: true
+  - name: receivable_payable_account
+    label: Receivable/Payable Account
+    type: ref
+    observed_as: receivable_payable_account
+    required: true
+    ref: Account
+  - name: default_advance_account
+    label: Default Advance Account
+    type: ref
+    observed_as: default_advance_account
+    ref: Account
+  - name: from_invoice_date
+    label: From Invoice Date
+    type: date
+    observed_as: from_invoice_date
+  - name: to_invoice_date
+    label: To Invoice Date
+    type: date
+    observed_as: to_invoice_date
+  - name: from_payment_date
+    label: From Payment Date
+    type: date
+    observed_as: from_payment_date
+  - name: to_payment_date
+    label: To Payment Date
+    type: date
+    observed_as: to_payment_date
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: bank_cash_account
+    label: Bank/Cash Account
+    type: ref
+    observed_as: bank_cash_account
+    ref: Account
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Queued
+      - Running
+      - Paused
+      - Completed
+      - Partially Reconciled
+      - Failed
+      - Cancelled
+  - name: error_log
+    label: Error Log
+    type: text
+    observed_as: error_log
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: ProcessPaymentReconciliation
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: Account
+    kind: many-to-one
+    via: receivable_payable_account
+  - to: Account
+    kind: many-to-one
+    via: default_advance_account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Account
+    kind: many-to-one
+    via: bank_cash_account
+  - to: ProcessPaymentReconciliation
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProcess Payment Reconciliation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Process Payment Reconciliation
+    note: declared by the program and served by its API

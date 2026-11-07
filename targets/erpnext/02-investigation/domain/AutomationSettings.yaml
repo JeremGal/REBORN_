@@ -1,0 +1,67 @@
+name: AutomationSettings
+description: 'Tuning for the automation engine: dispatch limits, drain behaviour, retention and payload limits. Document type "Automation Settings" (module Automation): single settings record.'
+fields:
+  - name: disable_automations
+    label: Disable Automations
+    type: boolean
+    observed_as: disable_automations
+    default: "0"
+  - name: max_depth
+    label: Maximum Recursion Depth
+    type: integer
+    observed_as: max_depth
+    default: "3"
+  - name: failure_threshold
+    label: Failure Threshold
+    type: integer
+    observed_as: failure_threshold
+    default: "10"
+  - name: stale_running_minutes
+    label: Stale Running Minutes
+    type: integer
+    observed_as: stale_running_minutes
+    default: "30"
+  - name: max_attempts
+    label: Maximum Attempts
+    type: integer
+    observed_as: max_attempts
+    default: "3"
+  - name: drain_seconds
+    label: Drain Seconds
+    type: decimal
+    observed_as: drain_seconds
+    default: "0"
+  - name: commit_every
+    label: Commit Every
+    type: integer
+    observed_as: commit_every
+    default: "50"
+  - name: queue_retention_days
+    label: Queue Retention Days
+    type: integer
+    observed_as: queue_retention_days
+    default: "7"
+  - name: step_output_limit
+    label: Step Output Limit
+    type: integer
+    observed_as: step_output_limit
+    default: "65536"
+  - name: event_payload_limit
+    label: Event Payload Limit
+    type: integer
+    observed_as: event_payload_limit
+    default: "65536"
+  - name: allow_unregistered_events
+    label: Allow Unregistered Events
+    type: boolean
+    observed_as: allow_unregistered_events
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAutomation Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Automation Settings
+    note: declared by the program and served by its API

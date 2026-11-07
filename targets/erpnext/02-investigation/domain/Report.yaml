@@ -1,0 +1,136 @@
+name: Report
+description: Document type "Report" (module Core).
+fields:
+  - name: report_name
+    label: Report Name
+    type: string
+    observed_as: report_name
+    required: true
+    unique: true
+  - name: ref_doctype
+    label: Ref DocType
+    type: ref
+    observed_as: ref_doctype
+    required: true
+    ref: DocType
+  - name: reference_report
+    label: Reference Report
+    type: string
+    observed_as: reference_report
+  - name: is_standard
+    label: Is Standard
+    type: enum
+    observed_as: is_standard
+    required: true
+    enum_values:
+      - No
+      - Yes
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: documentation_url
+    label: Documentation URL
+    type: string
+    observed_as: documentation_url
+  - name: report_type
+    label: Report Type
+    type: enum
+    observed_as: report_type
+    required: true
+    enum_values:
+      - Report Builder
+      - Query Report
+      - Script Report
+      - Custom Report
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: add_total_row
+    label: Add Total Row
+    type: boolean
+    observed_as: add_total_row
+    default: "0"
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: prepared_report
+    label: Prepared Report
+    type: boolean
+    observed_as: prepared_report
+    default: "0"
+  - name: snapshot_report
+    label: Snapshot Report
+    type: boolean
+    observed_as: snapshot_report
+    default: "0"
+  - name: disable_prepared_report_automation
+    label: Disable Prepared Report Automation
+    type: boolean
+    observed_as: disable_prepared_report_automation
+    default: "0"
+  - name: add_translate_data
+    label: Add Translate Data
+    type: boolean
+    observed_as: add_translate_data
+    default: "0"
+  - name: timeout
+    label: Timeout (In Seconds)
+    type: integer
+    observed_as: timeout
+  - name: query
+    label: Query
+    type: text
+    observed_as: query
+  - name: report_script
+    label: Script
+    type: text
+    observed_as: report_script
+  - name: javascript
+    label: Javascript
+    type: text
+    observed_as: javascript
+  - name: json
+    label: JSON
+    type: text
+    observed_as: json
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: ref_doctype
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: DoctypeToSync
+    kind: one-to-many
+    via: doctype_to_sync
+    description: lines (Doctype To Sync)
+  - to: ReportFilter
+    kind: one-to-many
+    via: filters
+    description: lines (Filters)
+  - to: ReportColumn
+    kind: one-to-many
+    via: columns
+    description: lines (Columns)
+  - to: HasRole
+    kind: one-to-many
+    via: roles
+    description: lines (Roles)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabReport
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Report
+    note: declared by the program and served by its API

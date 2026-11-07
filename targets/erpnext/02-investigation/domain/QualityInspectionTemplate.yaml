@@ -1,0 +1,23 @@
+name: QualityInspectionTemplate
+description: The parameters to check an item for. Document type "Quality Inspection Template" (module Stock).
+fields:
+  - name: quality_inspection_template_name
+    label: Quality Inspection Template Name
+    type: string
+    observed_as: quality_inspection_template_name
+    required: true
+    unique: true
+relations:
+  - to: ItemQualityInspectionParameter
+    kind: one-to-many
+    via: item_quality_inspection_parameter
+    description: lines (Item Quality Inspection Parameter)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Inspection Template
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Inspection Template
+    note: declared by the program and served by its API

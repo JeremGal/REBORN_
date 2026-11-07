@@ -1,0 +1,27 @@
+name: LDAPGroupMapping
+description: 'Document type "LDAP Group Mapping" (module Integrations): lines of another document.'
+fields:
+  - name: ldap_group
+    label: LDAP Group
+    type: string
+    observed_as: ldap_group
+    required: true
+  - name: erpnext_role
+    label: User Role
+    type: ref
+    observed_as: erpnext_role
+    required: true
+    ref: Role
+relations:
+  - to: Role
+    kind: many-to-one
+    via: erpnext_role
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLDAP Group Mapping
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of LDAP Group Mapping
+    note: declared by the program and served by its API

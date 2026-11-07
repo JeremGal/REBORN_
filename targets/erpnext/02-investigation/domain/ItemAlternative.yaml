@@ -1,0 +1,44 @@
+name: ItemAlternative
+description: An item you can use in place of another. Document type "Item Alternative" (module Stock).
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: alternative_item_code
+    label: Alternative Item Code
+    type: ref
+    observed_as: alternative_item_code
+    required: true
+    ref: Item
+  - name: two_way
+    label: Two-way
+    type: boolean
+    observed_as: two_way
+    default: "0"
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: alternative_item_name
+    label: Alternative Item Name
+    type: string
+    observed_as: alternative_item_name
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Item
+    kind: many-to-one
+    via: alternative_item_code
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Alternative
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Alternative
+    note: declared by the program and served by its API

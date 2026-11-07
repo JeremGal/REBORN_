@@ -1,0 +1,52 @@
+name: CurrencyExchange
+description: The rate to convert one currency into another. Document type "Currency Exchange" (module Setup).
+fields:
+  - name: date
+    label: Date
+    type: date
+    observed_as: date
+    required: true
+  - name: from_currency
+    label: From Currency
+    type: ref
+    observed_as: from_currency
+    required: true
+    ref: Currency
+  - name: to_currency
+    label: To Currency
+    type: ref
+    observed_as: to_currency
+    required: true
+    ref: Currency
+  - name: exchange_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: exchange_rate
+    required: true
+    precision: 9
+  - name: for_buying
+    label: For Buying
+    type: boolean
+    observed_as: for_buying
+    default: "1"
+  - name: for_selling
+    label: For Selling
+    type: boolean
+    observed_as: for_selling
+    default: "1"
+relations:
+  - to: Currency
+    kind: many-to-one
+    via: from_currency
+  - to: Currency
+    kind: many-to-one
+    via: to_currency
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCurrency Exchange
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Currency Exchange
+    note: declared by the program and served by its API

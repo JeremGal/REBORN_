@@ -1,0 +1,38 @@
+name: GoogleSettings
+description: 'Document type "Google Settings" (module Integrations): single settings record.'
+fields:
+  - name: enable
+    label: Enable
+    type: boolean
+    observed_as: enable
+    default: "0"
+  - name: client_id
+    label: Client ID
+    type: string
+    observed_as: client_id
+  - name: client_secret
+    label: Client Secret
+    type: string
+    observed_as: client_secret
+  - name: api_key
+    label: API Key
+    type: string
+    observed_as: api_key
+  - name: google_drive_picker_enabled
+    label: Google Drive Picker Enabled
+    type: boolean
+    observed_as: google_drive_picker_enabled
+    default: "0"
+  - name: app_id
+    label: App ID
+    type: string
+    observed_as: app_id
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabGoogle Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Google Settings
+    note: declared by the program and served by its API

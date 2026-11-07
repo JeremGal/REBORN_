@@ -1,0 +1,95 @@
+name: FinancialReportRow
+description: 'Document type "Financial Report Row" (module Accounts): lines of another document.'
+fields:
+  - name: reference_code
+    label: Line Reference
+    type: string
+    observed_as: reference_code
+  - name: display_name
+    label: Display Name
+    type: string
+    observed_as: display_name
+  - name: indentation_level
+    label: Indent Level
+    type: integer
+    observed_as: indentation_level
+  - name: data_source
+    label: Data Source
+    type: enum
+    observed_as: data_source
+    enum_values:
+      - Account Data
+      - Calculated Amount
+      - Custom API
+      - Blank Line
+      - Column Break
+      - Section Break
+  - name: balance_type
+    label: Balance Type
+    type: enum
+    observed_as: balance_type
+    enum_values:
+      - Opening Balance
+      - Closing Balance
+      - Period Movement (Debits - Credits)
+  - name: fieldtype
+    label: Value Type
+    type: enum
+    observed_as: fieldtype
+    enum_values:
+      - Currency
+      - Float
+      - Int
+      - Percent
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+  - name: bold_text
+    label: Bold Text
+    type: boolean
+    observed_as: bold_text
+    default: "0"
+  - name: italic_text
+    label: Italic Text
+    type: boolean
+    observed_as: italic_text
+    default: "0"
+  - name: hidden_calculation
+    label: Hidden Line (Internal Use Only)
+    type: boolean
+    observed_as: hidden_calculation
+    default: "0"
+  - name: hide_when_empty
+    label: Hide If Zero
+    type: boolean
+    observed_as: hide_when_empty
+    default: "0"
+  - name: reverse_sign
+    label: Reverse Sign
+    type: boolean
+    observed_as: reverse_sign
+    default: "0"
+  - name: include_in_charts
+    label: Include in Charts
+    type: boolean
+    observed_as: include_in_charts
+    default: "0"
+  - name: advanced_filtering
+    label: Advanced Filtering
+    type: boolean
+    observed_as: advanced_filtering
+    default: "0"
+  - name: calculation_formula
+    label: Formula or Account Filter
+    type: text
+    observed_as: calculation_formula
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabFinancial Report Row
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Financial Report Row
+    note: declared by the program and served by its API

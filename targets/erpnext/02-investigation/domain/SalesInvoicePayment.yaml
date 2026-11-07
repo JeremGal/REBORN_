@@ -1,0 +1,57 @@
+name: SalesInvoicePayment
+description: 'Document type "Sales Invoice Payment" (module Accounts): lines of another document.'
+fields:
+  - name: default
+    label: Default
+    type: boolean
+    observed_as: default
+    default: "0"
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    required: true
+    ref: ModeOfPayment
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+    default: "0"
+  - name: reference_no
+    label: Reference No
+    type: string
+    observed_as: reference_no
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: type
+    label: Type
+    type: string
+    observed_as: type
+  - name: base_amount
+    label: Base Amount (Company Currency)
+    type: money
+    observed_as: base_amount
+  - name: clearance_date
+    label: Clearance Date
+    type: date
+    observed_as: clearance_date
+relations:
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+  - to: Account
+    kind: many-to-one
+    via: account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSales Invoice Payment
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sales Invoice Payment
+    note: declared by the program and served by its API

@@ -1,0 +1,44 @@
+name: LandedCostPurchaseReceipt
+description: 'Document type "Landed Cost Purchase Receipt" (module Stock): lines of another document.'
+fields:
+  - name: receipt_document_type
+    label: Receipt Document Type
+    type: enum
+    observed_as: receipt_document_type
+    required: true
+    enum_values:
+      - Purchase Invoice
+      - Purchase Receipt
+      - Stock Entry
+      - Subcontracting Receipt
+  - name: receipt_document
+    label: Receipt Document
+    type: string
+    observed_as: receipt_document
+    required: true
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+  - name: grand_total
+    label: Grand Total
+    type: money
+    observed_as: grand_total
+relations:
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLanded Cost Purchase Receipt
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Landed Cost Purchase Receipt
+    note: declared by the program and served by its API

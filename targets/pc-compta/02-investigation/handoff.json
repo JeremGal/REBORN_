@@ -1,22 +1,14 @@
 {
-  "schema": "reborn/handoff@1",
+  "schema": "reborn/handoff@2",
   "target": {
     "id": "pc-compta",
-    "name": "PC Compta Windows (DLG)",
+    "title": "Windows desktop accounting software for small businesses",
     "domain": "general / auxiliary / analytical accounting (Algerian SCF)",
     "kind": "exe",
     "tech": null,
-    "legal": {
-      "basis": "Public vendor documentation (dlg-net.com) is freely readable. No reverse engineering of the binary; the protection is never bypassed.",
-      "clean_room": true,
-      "restrictions": [
-        "No binary analysis, no decompilation, no dongle circumvention.",
-        "Deep mode is forbidden for this target (access.method is not open-source/licence/organizer).",
-        "Do not reuse the PC Compta name or branding in a rebuild."
-      ]
-    }
+    "access": "free-demo"
   },
-  "generated_at": "2026-11-07T15:13:18.255Z",
+  "inputs_sha256": "98c64bbcccd210db7c331f8c32ca15625913dad7ef1aa2915c4b91e9f4d4ef82",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -28,9 +20,30 @@
     "entities": {
       "hypothesis": 4
     },
+    "ready_features": 0,
+    "coverage": {
+      "screens": {
+        "carded": 1,
+        "inventoried": null,
+        "ratio": null,
+        "source": "window inventory (counts.windows)"
+      },
+      "entities": {
+        "carded": 4,
+        "inventoried": null,
+        "ratio": null,
+        "source": "table inventory (counts.tables)"
+      },
+      "features": {
+        "carded": 1,
+        "inventoried": null,
+        "ratio": null,
+        "note": "no independent feature inventory yet (run: reborn manual <target> <manual.chm|pdf>): coverage is unknown, not complete"
+      }
+    },
     "has_observed_values": false,
     "open_questions": 3,
-    "note": "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values."
+    "note": "A feature is ready (see its `ready` flag) only when it is confirmed or partial, none of its rules is refuted, and a run on the original supplied expected values for at least one acceptance scenario."
   },
   "to_observe": [
     {
@@ -44,44 +57,110 @@
         "rule R-002 is hypothesis (confirm by observation)",
         "screen S-001 has no screenshot (capture it)"
       ],
+      "unknowns": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
       "missions": [
         "M-002",
         "M-003"
       ]
     }
   ],
+  "expectations": [
+    {
+      "id": "X-R-001",
+      "kind": "rule",
+      "ref": "R-001",
+      "grade": "hypothesis",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-R-002",
+      "kind": "rule",
+      "ref": "R-002",
+      "grade": "hypothesis",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal",
+        "rejected input"
+      ],
+      "has_examples": true
+    },
+    {
+      "id": "X-R-003",
+      "kind": "rule",
+      "ref": "R-003",
+      "grade": "hypothesis",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-AC-001",
+      "kind": "acceptance",
+      "ref": "AC-001",
+      "feature": "F-001",
+      "grade": "hypothesis",
+      "proof_needed": "live-run",
+      "observed": false
+    },
+    {
+      "id": "X-S-001",
+      "kind": "screen",
+      "ref": "S-001",
+      "grade": "hypothesis",
+      "proof_needed": "built-app",
+      "controls": 8
+    }
+  ],
   "build_order": [
     {
       "kind": "entity",
-      "id": "Account"
+      "id": "Account",
+      "grade": "hypothesis"
     },
     {
       "kind": "entity",
-      "id": "Auxiliary"
+      "id": "Auxiliary",
+      "grade": "hypothesis"
     },
     {
       "kind": "entity",
-      "id": "Journal"
+      "id": "Journal",
+      "grade": "hypothesis"
     },
     {
       "kind": "entity",
-      "id": "Entry"
+      "id": "Entry",
+      "grade": "hypothesis"
     },
     {
       "kind": "rule",
-      "id": "R-001"
+      "id": "R-001",
+      "grade": "hypothesis"
     },
     {
       "kind": "rule",
-      "id": "R-002"
+      "id": "R-002",
+      "grade": "hypothesis"
     },
     {
       "kind": "rule",
-      "id": "R-003"
+      "id": "R-003",
+      "grade": "hypothesis"
     },
     {
       "kind": "feature",
       "id": "F-001",
+      "grade": "hypothesis",
       "priority": "must"
     }
   ],
@@ -136,8 +215,7 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "section TABLES > 2. COMPTES (lettrable, soumis a auxiliaires, prefixe auxiliaire)",
-          "note": "vendor technical sheet"
+          "basis": "documentation"
         }
       ]
     },
@@ -200,8 +278,7 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "section TABLES > 3. AUXILIAIRES (coordonnees completes, 14 car.)",
-          "note": "vendor technical sheet"
+          "basis": "documentation"
         }
       ]
     },
@@ -296,8 +373,7 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "sections SAISIE DES ECRITURES, POSTES/NATURES/UNITES (3 extra codes per entry; amount up to 99 999 999 999,99 DA)",
-          "note": "vendor technical sheet"
+          "basis": "documentation"
         }
       ]
     },
@@ -346,8 +422,7 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "section TABLES > 1. JOURNAUX",
-          "note": "vendor technical sheet; confirm by observation (block 1)"
+          "basis": "documentation"
         }
       ]
     }
@@ -372,7 +447,7 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "1. JOURNAUX: 'La saisie des ecritures tient compte de la nature pour se positionner correctement au debit ou credit'"
+          "basis": "documentation"
         }
       ],
       "contradictions": []
@@ -418,7 +493,7 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "2. COMPTES > Prefixe auxiliaire (example with 470 / 47)"
+          "basis": "documentation"
         }
       ],
       "contradictions": [],
@@ -440,7 +515,7 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "2. COMPTES: 'au debut d'exercice, un compte lettrable recoit ... toutes les ecritures non lettrees'"
+          "basis": "documentation"
         }
       ],
       "contradictions": []
@@ -500,7 +575,7 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "SAISIE DES ECRITURES > LES FONCTIONS DISPONIBLES EN SAISIE"
+          "basis": "documentation"
         }
       ]
     }
@@ -615,7 +690,7 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "JOURNAUX, COMPTES, SAISIE DES ECRITURES"
+          "basis": "documentation"
         }
       ],
       "unknowns": [
@@ -624,6 +699,7 @@
         "U-003"
       ],
       "rebuild_notes": "Everything here is from the vendor's public sheet (status hypothesis). Do not build from this alone: block 1 must confirm the field order, the debit/credit behaviour and the prefix rule on the official evaluation version before this feature is implemented. Keep the 14-char code / 30-char label widths and the three analytical axes.",
+      "ready": false,
       "discovery_trace": {
         "grade": "hypothesis",
         "confidence": "low",
@@ -631,7 +707,7 @@
           {
             "ref": "doc:f89df11c9fd39e7e",
             "kind": "manual",
-            "locator": "JOURNAUX, COMPTES, SAISIE DES ECRITURES"
+            "basis": "documentation"
           }
         ],
         "steps": [
@@ -684,6 +760,7 @@
         "kind": "rule",
         "id": "R-002#1",
         "rule": "R-002",
+        "grade": "hypothesis",
         "given": {
           "account": "470",
           "prefix": "47",
@@ -697,6 +774,7 @@
         "kind": "rule",
         "id": "R-002#2",
         "rule": "R-002",
+        "grade": "hypothesis",
         "given": {
           "account": "470",
           "prefix": "47",
@@ -707,15 +785,11 @@
         }
       }
     ],
-    "from_acceptance": [
+    "from_acceptance": [],
+    "unobserved_acceptance": [
       {
-        "kind": "acceptance",
         "id": "AC-001",
-        "feature": "F-001",
-        "given": "a Sales journal, account 411 subject to auxiliaries with prefix 41",
-        "when": "the accountant enters a 1000,00 DA line with auxiliary 41001",
-        "then": "the amount lands on the expected side for a Sales journal and the auxiliary 41001 is accepted",
-        "expected": {}
+        "feature": "F-001"
       }
     ]
   },
@@ -737,9 +811,14 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "SAISIE DES ECRITURES (folios, functions available)"
+          "basis": "documentation"
         }
-      ]
+      ],
+      "severity": "blocking",
+      "required_basis": [
+        "runtime"
+      ],
+      "prediction": "Entries are keyed per journal and folio, one line per account movement, with a running balance check before validation."
     },
     {
       "id": "U-002",
@@ -755,9 +834,16 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "no storage detail in the public sheet"
+          "basis": "documentation"
         }
-      ]
+      ],
+      "severity": "major",
+      "required_basis": [
+        "runtime",
+        "documentation"
+      ],
+      "prediction": "Data is kept in one proprietary file per accounting file (dossier).",
+      "searched": "Public documentation only; reading the program's code is not allowed on this target (trial licence)."
     },
     {
       "id": "U-003",
@@ -773,9 +859,16 @@
         {
           "ref": "doc:f89df11c9fd39e7e",
           "kind": "manual",
-          "locator": "SAISIE: amount caps"
+          "basis": "documentation"
         }
-      ]
+      ],
+      "severity": "major",
+      "required_basis": [
+        "runtime",
+        "documentation"
+      ],
+      "prediction": "Amounts are kept to 2 decimals with rounding half up, and a maximum amount per entry exists.",
+      "refuted_if": "A halfway amount rounds down or to even."
     }
   ]
 }

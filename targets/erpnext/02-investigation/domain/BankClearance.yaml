@@ -1,0 +1,62 @@
+name: BankClearance
+description: 'Document type "Bank Clearance" (module Accounts): single settings record.'
+fields:
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: account_currency
+    label: Account Currency
+    type: ref
+    observed_as: account_currency
+    ref: Currency
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+    required: true
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+    required: true
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    ref: BankAccount
+  - name: include_reconciled_entries
+    label: Include Reconciled Entries
+    type: boolean
+    observed_as: include_reconciled_entries
+    default: "0"
+  - name: include_pos_transactions
+    label: Include POS Transactions
+    type: boolean
+    observed_as: include_pos_transactions
+    default: "0"
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: Currency
+    kind: many-to-one
+    via: account_currency
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: BankClearanceDetail
+    kind: one-to-many
+    via: payment_entries
+    description: lines (Payment Entries)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Clearance
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Clearance
+    note: declared by the program and served by its API

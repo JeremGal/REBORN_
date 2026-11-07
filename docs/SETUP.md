@@ -18,7 +18,12 @@ Machine-specific paths go in `reborn.local.json` (gitignored):
   "reaJs": "C:\\path\\to\\node_modules\\rea-agents\\scripts\\rea.mjs",
   "craftCli": "C:\\Users\\<you>\\.cargo\\bin\\craft-anything-cli.exe",
   "chrome": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-  "evidenceDir": "D:\\reborn-evidence"
+  "evidenceDir": "D:\\reborn-evidence",
+  "ghidraInstallDir": "C:\\path\\to\\ghidra_12.1.4_PUBLIC",
+  "javaHome": "C:\\path\\to\\jdk-21.0.13+9",
+  "ghidraStartupTimeoutMs": 600000,
+  "ghidraMcpJar": "C:\\path\\to\\ghidra-mcp\\GhidraMCP-7.0.0.jar",
+  "ghidraMcpUrl": "http://127.0.0.1:8089"
 }
 ```
 
@@ -29,7 +34,29 @@ All keys are optional: by default the CLI uses the current Node, finds a globall
 - Needs **Node ^22.23.4, ^24.22.1 or >=26.12.1**. If your system Node is older, use a portable Node just for REA (no admin needed) and point `reaNode` to it.
 - `npm install --global rea-agents@6.8.0 --omit=optional` (`--omit=optional` skips Frida, which instruments running targets and is not needed).
 - Check: `rea --version`, `rea mcp doctor --json` (expects 229 tools, 6 prompts).
-- Native engines (Ghidra, Hopper, IDA, JADX) are **optional**: JavaScript/Electron, .NET, web pages, HAR, SQLite, PE resources/imports work without them.
+- Native engines (Ghidra, Hopper, IDA, JADX) are **optional**: JavaScript/Electron, .NET, web pages, HAR, SQLite, PE resources/imports work without them. Without one, REA sees only the resources and imports of a native `.exe`/`.dll`.
+
+## 2b. Ghidra for native code (block 2, optional but recommended)
+
+Tested on 07/11/2026, no admin rights:
+
+- **JDK 21**: Eclipse Temurin 21 zip (we used 21.0.13+9), extracted anywhere. Verify the SHA-256 published with the release.
+- **Ghidra 12.1.x**: `ghidra_12.1.4_PUBLIC_*.zip` from the NationalSecurityAgency/ghidra GitHub release, extracted anywhere. Verify the SHA-256 GitHub shows for the asset.
+- Point `ghidraInstallDir` and `javaHome` in `reborn.local.json` at them (or set `GHIDRA_INSTALL_DIR` / `JAVA_HOME`). The CLI and `tools/mcp-rea.mjs` pass them to REA.
+- Check: `node tools/reborn.mjs doctor`, then `node tools/reborn.mjs rea <target> doctor --provider ghidra` (expects `healthy: true`). The first native call of a binary takes minutes: Ghidra imports and analyses it.
+
+**ghidra-mcp** (github.com/bethington/ghidra-mcp, Apache-2.0) keeps the program loaded in a headless Ghidra server, so after the first analysis each decompilation takes about a second instead of minutes:
+
+- Download `GhidraMCP-7.0.0.zip` from its GitHub release (verify the SHA-256) and extract `GhidraMCP-7.0.0.jar`. Version 7.0.0 is built for Ghidra 12.1.4 (see `extension.properties`), so the same Ghidra serves REA and ghidra-mcp. Set `ghidraMcpJar` in `reborn.local.json`.
+- Start: `powershell -ExecutionPolicy Bypass -File tools\ghidra-mcp.ps1 -Root <samples folder>`. It binds `127.0.0.1:8089`, leaves script execution off, and `-Root` limits which files can be imported.
+- Use: `node tools/reborn.mjs native <target> <binary> --engine ghidra-mcp --find "<regex>"`. Raw output stays in `.evidence/`.
+- Optional MCP bridge for a block-2 Claude Code session: `pip install ghidra_mcp_bridge-7.0.0-py3-none-any.whl` in a venv, then run `bridge-mcp-ghidra` with `GHIDRA_MCP_URL=http://127.0.0.1:8089`. It is deliberately **not** in the repository's `.mcp.json`: block 3 works in this repository and must not have a decompiler.
+
+## 2c. Readers for legacy formats (block 2, optional)
+
+- **Detect It Easy** (compiler, framework, installer, packer): portable zip `die_win64_portable_3.21_x64.zip` from the horsicq/DIE-engine GitHub release, verify the SHA-256 GitHub shows, extract anywhere, set `dieCli` (path to `diec.exe`) in `reborn.local.json`. Used by `reborn identify`.
+- **dBase/FoxPro and Access**: a Python venv outside the repository, `python -m venv <tools>/py-readers`, then `<tools>/py-readers/Scripts/python -m pip install dbfread==2.0.7 access-parser==0.0.6`. Set `readersPython` in `reborn.local.json`. Used by `reborn db` (via `tools/db2sqlite.py`, run with `python -I`). Tested on dBase files; Access is installed but not yet tested on a real file.
+- **User manuals**: `.chm` needs nothing more on Windows (`hh.exe` is built in). A PDF or Word manual must first be converted to markdown, for example with Docling (`pip install docling`, then `docling --to md <file>`); Docling is not installed on our machine.
 
 ## 3. Craft Anything (block 2, and block 3 in clean room)
 
@@ -42,12 +69,16 @@ All keys are optional: by default the CLI uses the current Node, finds a globall
 
 ## 4. MCP servers for Claude Code
 
-`.mcp.json` at the repository root registers:
+`.mcp.json` at the repository root is **empty on purpose**: every Claude Code session in this folder reads it, block 3 included, and REA can decompile. The block 2 servers are in `.mcp.block2.json`:
 
-- `rea` through `node tools/mcp-rea.mjs` (picks the right Node and package from `reborn.local.json`, turns off output schemas: catalog 295 KB instead of 3.4 MB);
-- `craft-anything` through `craft-anything-cli mcp`.
+- `rea` through `node tools/mcp-rea.mjs` (picks the right Node and package from `reborn.local.json`, turns off output schemas: catalog 295 KB instead of 3.4 MB). It sets `REBORN_BLOCK=2` and refuses to start without it;
+- `craft-anything` through `craft-anything-cli mcp --clean-room` (Deep mode goes through `reborn craft ... --deep`, which checks the legal basis in `target.yaml`).
 
-Claude Code asks you to approve project servers on first launch. Restart Claude Code after changing `.mcp.json`.
+Start a block 2 session with `claude --mcp-config .mcp.block2.json`. Claude Code asks you to approve project servers on first launch.
+
+Block 3 works from the folder made by `node tools/reborn.mjs export-kit <target> <folder>`, never from this repository's `.evidence/` or `context.md`.
+
+Run the tests with `npm test` (Node 20 or later; 41 tests).
 
 ## 4b. Web capture provider (block 2)
 
@@ -56,9 +87,16 @@ Claude Code asks you to approve project servers on first launch. Restart Claude 
 - default: **Crawl4AI** in Docker (`docker pull unclecode/crawl4ai`).
 - preferred when available: **Linkup** web agent. Set `WEB_PROVIDER=linkup` and `LINKUP_API_KEY=...` (env or `reborn.local.json.linkupApiKey`). The rest of the pipeline is unchanged; evidence is registered the same way.
 
+## 4c. Frappe / ERPNext sites (block 2)
+
+Put `FRAPPE_URL`, `FRAPPE_API_KEY` and `FRAPPE_API_SECRET` (a user's API key and secret, from the user's settings in the site) in a secrets file outside the repository, and point `secretsEnvFile` in `reborn.local.json` to it (or set them as environment variables). The CLI reads them at run time and never prints or writes them. Only use a site you own, with fictitious data.
+
 ## 5. Computer-use agent (block 1)
 
-H Company Agents API (browser and desktop computer use; API, SDK, MCP or CLI). Credentials go in environment variables, never in the repository. The adapter that converts its output into `run.yaml` is to be written in `tools/` (format: `contracts/run.schema.json`).
+Elias's explorer lives in `h-explorer/` (read its `HANDOFF.md` first). It drives H Company agents in a browser and writes experiments as `experiments/EXP_xxx.json`. `node tools/reborn.mjs import-run <target> <h-explorer>/experiments --mission M-xxx --root <h-explorer>` turns them into runs of the target, with screenshots copied, so block 2 can cite them as observations. The explorer reads the H Company key from `HAI_API_KEY` (or the first `hk-...` value in its own `.env`); never commit it.
+
+
+H Company Agents API (browser and desktop computer use; API, SDK, MCP or CLI). Credentials go in environment variables, never in the repository. The adapter that converts its output into `run.yaml` is `tools/lib/h-import.mjs` (`reborn import-run`).
 
 The agent's work is pre-planned for it: `node tools/reborn.mjs ask <target>` turns every open question into a **computer-use-ready mission** (ordered `ui_steps` and the exact `read_values`, tied via `fills` to the acceptance scenario it completes). The handoff's `to_observe` lists, per feature, the minimal runs that would move it to `confirmed`.
 

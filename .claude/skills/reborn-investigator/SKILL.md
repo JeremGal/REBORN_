@@ -30,11 +30,21 @@ You turn what the software **is** (artifacts) and what it **does** (block 1 runs
 ## Rules
 
 - Cite evidence on every card: REA `evidence_id` (from `evidence/index.yaml`), `run-...`, `O-...`, screenshots. Keep REA's limitations and partial coverage visible.
-- `status: confirmed` only with an exact observation or two independent kinds of evidence. Otherwise `partial` / `hypothesis`.
+- `status: confirmed` only with an observation of the running program, or two different kinds of proof (runtime, shipped-data, static-code, documentation; two tools reading one binary count once), or an entity from a shipped SQL script. `validate` enforces it. Otherwise `partial` / `hypothesis`.
+- Cards never name functions, methods or classes read out of the original: locators and notes describe where and what in plain words; the evidence id carries the exact trace.
 - Static analysis is not runtime: write "the resources contain", "the code declares", never "the app does" unless a run shows it.
 - Never paste decompiled code, original strings in bulk, images or icons into cards. Describe behaviour in your own words; quote only short UI labels and error messages needed to reproduce behaviour.
 - Raw evidence stays in `.evidence/` (gitignored). Never move it into `targets/`.
 - REA conduct (from the `reverse-engineer-anything` skill): summary first, then `inspect-analysis-view` pages, then a precise trace; never repeat an identical analysis; on `artifact_integrity_mismatch` use `--integrity-policy record-and-continue` and say so.
+
+## Investigation discipline (from REA and Craft Anything)
+
+1. **Brief first.** One sentence: the question, and what "answered" looks like. Find the right entry point before analysing: `symbols` (export table, seconds), `find` (label seen on screen -> functions), `java --query` (Java), `manual` (documented topics), then `native` to decompile only what these point to.
+2. **Predict before looking.** For each open question, write `prediction` and `refuted_if` in `unknowns.yaml` before running the probe, and `required_basis`: the kind of proof that can close it. A question on a closed target cannot require `static-code`.
+3. **Label every finding.** Observed (a run showed it), derived (computed from observed facts), inferred (read in code or docs). Only observed findings make a card `confirmed` on their own.
+4. **Absence is not proof.** When a search finds nothing, write what was searched in `searched`; never write "does not exist", write "not found in ...".
+5. **Contradictions are evidence.** Record evidence that disagrees in `evidence_against` or `contradictions`; never drop it to make a card look clean.
+6. **Close the session with a handoff.** Before stopping, update `context.md`: what was learned, what is still open, which traps to avoid next time.
 
 ## Done when
 

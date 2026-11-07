@@ -1,0 +1,64 @@
+name: EmailCampaign
+description: A series of emails sent to leads or contacts on a schedule. Document type "Email Campaign" (module CRM).
+fields:
+  - name: campaign_name
+    label: Campaign
+    type: ref
+    observed_as: campaign_name
+    required: true
+    ref: Campaign
+  - name: email_campaign_for
+    label: "Email Campaign For "
+    type: enum
+    observed_as: email_campaign_for
+    required: true
+    enum_values:
+      - Lead
+      - Contact
+      - Email Group
+    default: Lead
+  - name: recipient
+    label: Recipient
+    type: string
+    observed_as: recipient
+    required: true
+  - name: sender
+    label: Sender
+    type: ref
+    observed_as: sender
+    ref: User
+    default: __user
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+    required: true
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Scheduled
+      - In Progress
+      - Completed
+      - Unsubscribed
+relations:
+  - to: Campaign
+    kind: many-to-one
+    via: campaign_name
+  - to: User
+    kind: many-to-one
+    via: sender
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Campaign
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Campaign
+    note: declared by the program and served by its API

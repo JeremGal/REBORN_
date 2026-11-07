@@ -1,0 +1,33 @@
+name: DashboardChartSource
+description: Document type "Dashboard Chart Source" (module Desk).
+fields:
+  - name: source_name
+    label: Source Name
+    type: string
+    observed_as: source_name
+    required: true
+    unique: true
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    required: true
+    ref: ModuleDef
+  - name: timeseries
+    label: Timeseries
+    type: boolean
+    observed_as: timeseries
+    default: "0"
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDashboard Chart Source
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Dashboard Chart Source
+    note: declared by the program and served by its API

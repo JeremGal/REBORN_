@@ -1,0 +1,42 @@
+name: POSField
+description: 'Document type "POS Field" (module Accounts): lines of another document.'
+fields:
+  - name: fieldname
+    label: Fieldname
+    type: string
+    observed_as: fieldname
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+  - name: fieldtype
+    label: Fieldtype
+    type: string
+    observed_as: fieldtype
+  - name: options
+    label: Options
+    type: text
+    observed_as: options
+  - name: default_value
+    label: Default Value
+    type: string
+    observed_as: default_value
+  - name: reqd
+    label: Mandatory
+    type: boolean
+    observed_as: reqd
+    default: "0"
+  - name: read_only
+    label: Read Only
+    type: boolean
+    observed_as: read_only
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPOS Field
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of POS Field
+    note: declared by the program and served by its API

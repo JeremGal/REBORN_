@@ -1,0 +1,27 @@
+name: DocTypeSettingsMapItem
+description: 'Document type "DocType Settings Map Item" (module Core): lines of another document.'
+fields:
+  - name: settings_doctype
+    label: Settings DocType
+    type: ref
+    observed_as: settings_doctype
+    required: true
+    ref: DocType
+  - name: setting_field
+    label: Setting Field
+    type: string
+    observed_as: setting_field
+    required: true
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: settings_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocType Settings Map Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DocType Settings Map Item
+    note: declared by the program and served by its API

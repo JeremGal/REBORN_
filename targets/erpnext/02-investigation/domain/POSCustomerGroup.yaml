@@ -1,0 +1,22 @@
+name: POSCustomerGroup
+description: 'Document type "POS Customer Group" (module Accounts): lines of another document.'
+fields:
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    required: true
+    ref: CustomerGroup
+relations:
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPOS Customer Group
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of POS Customer Group
+    note: declared by the program and served by its API

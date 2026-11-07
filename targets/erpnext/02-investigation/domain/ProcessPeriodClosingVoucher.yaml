@@ -1,0 +1,61 @@
+name: ProcessPeriodClosingVoucher
+description: 'Document type "Process Period Closing Voucher" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: parent_pcv
+    label: PCV
+    type: ref
+    observed_as: parent_pcv
+    required: true
+    ref: PeriodClosingVoucher
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Queued
+      - Running
+      - Paused
+      - Completed
+      - Cancelled
+    default: Queued
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: ProcessPeriodClosingVoucher
+  - name: p_l_closing_balance
+    label: P&L Closing Balance
+    type: json
+    observed_as: p_l_closing_balance
+  - name: bs_closing_balance
+    label: Balance Sheet Closing Balance
+    type: json
+    observed_as: bs_closing_balance
+relations:
+  - to: PeriodClosingVoucher
+    kind: many-to-one
+    via: parent_pcv
+  - to: ProcessPeriodClosingVoucher
+    kind: many-to-one
+    via: amended_from
+  - to: ProcessPeriodClosingVoucherDetail
+    kind: one-to-many
+    via: normal_balances
+    description: lines (Dates to Process)
+  - to: ProcessPeriodClosingVoucherDetail
+    kind: one-to-many
+    via: z_opening_balances
+    description: lines (Opening Balances)
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProcess Period Closing Voucher
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Process Period Closing Voucher
+    note: declared by the program and served by its API

@@ -1,0 +1,22 @@
+id: M-002
+title: Observe how sales invoices are computed
+goal: >-
+  Create fictitious draft sales invoices covering line discounts, a discount on the whole invoice (on the net total and
+  on the grand total), several taxes (on the net total, on the previous row amount, on the previous row total, a fixed
+  amount), a price that includes tax, decimal quantities and rounding. Read back every amount the program computes:
+  line rate and amount, net total, each tax amount and running total, discount, grand total, rounding adjustment,
+  rounded total.
+persona: accountant
+priority: must
+start_state: Alan's own site with fictitious customers and items prefixed TEST-
+steps_hint:
+  - create each invoice as a draft (never submitted), then read it back
+  - keep the inputs and the values read side by side
+capture:
+  screenshots: key-steps
+  read_values: [line rate, line amount, net total, tax amounts, tax running totals, discount amount, grand total, rounding adjustment, rounded total]
+  network: false
+success_criteria:
+  - every case has its inputs and the amounts the program computed
+requested_by: block 2 (rules of computation)
+status: todo

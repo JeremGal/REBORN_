@@ -1,0 +1,39 @@
+name: Dock
+description: "One layer of one app's dock. Three of them share this table, told apart by `app`, `user` and `standard`: the app's own dock, which an app ships as an exported document and a developer authors; the site's arrangement of it, curated by a Workspace Manager and applying to everyone; and one person's own Document type \"Dock\" (module Desk)."
+fields:
+  - name: app
+    label: App
+    type: string
+    observed_as: app
+    required: true
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: standard
+    label: Standard
+    type: boolean
+    observed_as: standard
+    default: "0"
+  - name: mount_on
+    label: Mount On
+    type: string
+    observed_as: mount_on
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: DockItem
+    kind: one-to-many
+    via: items
+    description: lines (Dock Items)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDock
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Dock
+    note: declared by the program and served by its API

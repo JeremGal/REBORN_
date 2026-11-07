@@ -30,8 +30,14 @@
             }
           },
           "status": { "enum": ["open", "answered", "wont-fix"] },
+          "severity": { "enum": ["blocking", "major", "minor"], "description": "blocking = a must feature cannot be rebuilt correctly without the answer." },
+          "required_basis": { "type": "array", "minItems": 1, "items": { "enum": ["runtime", "shipped-data", "static-code", "documentation"] }, "description": "Kinds of proof that can close this question. 'answered' needs evidence of one of them. static-code is refused on a target whose legal basis does not allow reading the code." },
+          "prediction": { "type": "string", "description": "What we expect to find, written BEFORE looking, so the answer can confirm or refute it." },
+          "refuted_if": { "type": "string", "description": "The observation that would prove the prediction wrong." },
+          "searched": { "type": "string", "description": "Where we already looked without finding the answer. Absence of evidence is not evidence of absence: say what was searched." },
           "answer": { "type": "string" },
-          "evidence": { "$ref": "common.schema.json#/$defs/evidenceList" }
+          "evidence": { "$ref": "common.schema.json#/$defs/evidenceList" },
+          "evidence_against": { "$ref": "common.schema.json#/$defs/evidenceList", "description": "Evidence that contradicts the prediction or a proposed answer." }
         }
       }
     }

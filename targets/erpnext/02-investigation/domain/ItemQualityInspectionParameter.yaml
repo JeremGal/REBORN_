@@ -1,0 +1,56 @@
+name: ItemQualityInspectionParameter
+description: 'Document type "Item Quality Inspection Parameter" (module Stock): lines of another document.'
+fields:
+  - name: specification
+    label: Parameter
+    type: ref
+    observed_as: specification
+    required: true
+    ref: QualityInspectionParameter
+  - name: parameter_group
+    label: Parameter Group
+    type: ref
+    observed_as: parameter_group
+    ref: QualityInspectionParameterGroup
+  - name: value
+    label: Acceptance Criteria Value
+    type: string
+    observed_as: value
+  - name: numeric
+    label: Numeric
+    type: boolean
+    observed_as: numeric
+    default: "1"
+  - name: min_value
+    label: Minimum Value
+    type: decimal
+    observed_as: min_value
+  - name: max_value
+    label: Maximum Value
+    type: decimal
+    observed_as: max_value
+  - name: formula_based_criteria
+    label: Formula Based Criteria
+    type: boolean
+    observed_as: formula_based_criteria
+    default: "0"
+  - name: acceptance_formula
+    label: Acceptance Criteria Formula
+    type: text
+    observed_as: acceptance_formula
+relations:
+  - to: QualityInspectionParameter
+    kind: many-to-one
+    via: specification
+  - to: QualityInspectionParameterGroup
+    kind: many-to-one
+    via: parameter_group
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Quality Inspection Parameter
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Quality Inspection Parameter
+    note: declared by the program and served by its API

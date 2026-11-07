@@ -1,0 +1,110 @@
+name: BankStatementImportLog
+description: Document type "Bank Statement Import Log" (module Accounts).
+fields:
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    required: true
+    ref: BankAccount
+  - name: file
+    label: File
+    type: file
+    observed_as: file
+    required: true
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Not Started
+      - Completed
+    default: Not Started
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: number_of_transactions
+    label: Number of Transactions
+    type: integer
+    observed_as: number_of_transactions
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+  - name: closing_balance
+    label: Closing Balance
+    type: money
+    observed_as: closing_balance
+  - name: total_debits
+    label: Total Debits
+    type: money
+    observed_as: total_debits
+  - name: total_credits
+    label: Total Credits
+    type: money
+    observed_as: total_credits
+  - name: total_debit_transactions
+    label: Total Debit Transactions
+    type: integer
+    observed_as: total_debit_transactions
+  - name: total_credit_transactions
+    label: Total Credit Transactions
+    type: integer
+    observed_as: total_credit_transactions
+  - name: detected_date_format
+    label: Detected Date Format
+    type: string
+    observed_as: detected_date_format
+  - name: detected_amount_format
+    label: Detected Amount Format
+    type: enum
+    observed_as: detected_amount_format
+    enum_values:
+      - Separate columns for withdrawal and deposit
+      - Amount column has "CR"/"DR" values
+      - Amount column has positive/negative values
+      - Transaction type column has "CR"/"DR" values
+      - Transaction type column has "Deposit"/"Withdrawal" values
+      - Transaction type column has "C"/"D" values
+  - name: detected_header_index
+    label: Detected Header Index
+    type: integer
+    observed_as: detected_header_index
+  - name: detected_transaction_starting_index
+    label: Detected Transaction Starting Index
+    type: integer
+    observed_as: detected_transaction_starting_index
+  - name: detected_transaction_ending_index
+    label: Detected Transaction Ending Index
+    type: integer
+    observed_as: detected_transaction_ending_index
+  - name: pdf_tables
+    label: PDF Tables
+    type: json
+    observed_as: pdf_tables
+relations:
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: BankStatementImportLogColumnMap
+    kind: one-to-many
+    via: column_mapping
+    description: lines (Column Mapping)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Statement Import Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Statement Import Log
+    note: declared by the program and served by its API

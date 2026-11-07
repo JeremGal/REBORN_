@@ -1,0 +1,101 @@
+name: ActivityLog
+description: Keep track of all update feeds Document type "Activity Log" (module Core).
+fields:
+  - name: subject
+    label: Subject
+    type: text
+    observed_as: subject
+    required: true
+  - name: content
+    label: Message
+    type: text
+    observed_as: content
+  - name: communication_date
+    label: Date
+    type: datetime
+    observed_as: communication_date
+    default: Now
+  - name: ip_address
+    label: IP Address
+    type: string
+    observed_as: ip_address
+  - name: operation
+    label: Operation
+    type: enum
+    observed_as: operation
+    enum_values:
+      - Login
+      - Logout
+      - Impersonate
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Success
+      - Failed
+      - Linked
+      - Closed
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: reference_owner
+    label: Reference Owner
+    type: string
+    observed_as: reference_owner
+  - name: timeline_doctype
+    label: Timeline DocType
+    type: ref
+    observed_as: timeline_doctype
+    ref: DocType
+  - name: timeline_name
+    label: Timeline Name
+    type: string
+    observed_as: timeline_name
+  - name: link_doctype
+    label: Link DocType
+    type: ref
+    observed_as: link_doctype
+    ref: DocType
+  - name: link_name
+    label: Link Name
+    type: string
+    observed_as: link_name
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+    default: __user
+  - name: full_name
+    label: Full Name
+    type: string
+    observed_as: full_name
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: DocType
+    kind: many-to-one
+    via: timeline_doctype
+  - to: DocType
+    kind: many-to-one
+    via: link_doctype
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabActivity Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Activity Log
+    note: declared by the program and served by its API

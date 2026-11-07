@@ -1,0 +1,98 @@
+name: NotificationLog
+description: Document type "Notification Log" (module Desk).
+fields:
+  - name: type
+    label: Type
+    type: ref
+    observed_as: type
+    ref: NotificationType
+  - name: title
+    label: Title
+    type: text
+    observed_as: title
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    ref: DocType
+  - name: document_name
+    label: Document Name
+    type: string
+    observed_as: document_name
+  - name: source_doctype
+    label: Source Document Type
+    type: ref
+    observed_as: source_doctype
+    ref: DocType
+  - name: source_name
+    label: Source Document Name
+    type: string
+    observed_as: source_name
+  - name: app
+    label: App
+    type: string
+    observed_as: app
+  - name: link
+    label: Link
+    type: text
+    observed_as: link
+  - name: for_user
+    label: For User
+    type: ref
+    observed_as: for_user
+    ref: User
+  - name: from_user
+    label: From User
+    type: ref
+    observed_as: from_user
+    ref: User
+  - name: read
+    label: Read
+    type: boolean
+    observed_as: read
+    default: "0"
+  - name: attached_file
+    label: Attached File
+    type: text
+    observed_as: attached_file
+  - name: subject
+    label: Subject
+    type: text
+    observed_as: subject
+  - name: email_content
+    label: Message
+    type: text
+    observed_as: email_content
+  - name: email_header
+    label: Email Header
+    type: string
+    observed_as: email_header
+relations:
+  - to: NotificationType
+    kind: many-to-one
+    via: type
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: DocType
+    kind: many-to-one
+    via: source_doctype
+  - to: User
+    kind: many-to-one
+    via: for_user
+  - to: User
+    kind: many-to-one
+    via: from_user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNotification Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Notification Log
+    note: declared by the program and served by its API

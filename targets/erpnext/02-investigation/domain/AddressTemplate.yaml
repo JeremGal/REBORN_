@@ -1,0 +1,32 @@
+name: AddressTemplate
+description: Document type "Address Template" (module Contacts).
+fields:
+  - name: country
+    label: Country
+    type: ref
+    observed_as: country
+    required: true
+    unique: true
+    ref: Country
+  - name: is_default
+    label: Is Default
+    type: boolean
+    observed_as: is_default
+    default: "0"
+  - name: template
+    label: Template
+    type: text
+    observed_as: template
+relations:
+  - to: Country
+    kind: many-to-one
+    via: country
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAddress Template
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Address Template
+    note: declared by the program and served by its API

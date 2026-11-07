@@ -1,0 +1,272 @@
+name: Supplier
+description: A company or person you buy goods or services from. Document type "Supplier" (module Buying).
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - SUP-.YYYY.-
+  - name: supplier_name
+    label: Supplier Name
+    type: string
+    observed_as: supplier_name
+    required: true
+  - name: supplier_type
+    label: Supplier Type
+    type: enum
+    observed_as: supplier_type
+    required: true
+    enum_values:
+      - Company
+      - Individual
+      - Partnership
+    default: Company
+  - name: alias
+    label: Alias
+    type: string
+    observed_as: alias
+    unique: true
+  - name: gender
+    label: Gender
+    type: ref
+    observed_as: gender
+    ref: Gender
+  - name: supplier_group
+    label: Supplier Group
+    type: ref
+    observed_as: supplier_group
+    ref: SupplierGroup
+  - name: country
+    label: Country
+    type: ref
+    observed_as: country
+    ref: Country
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: default_currency
+    label: Billing Currency
+    type: ref
+    observed_as: default_currency
+    ref: Currency
+  - name: default_bank_account
+    label: Company Bank Account
+    type: ref
+    observed_as: default_bank_account
+    ref: BankAccount
+  - name: default_price_list
+    label: Price List
+    type: ref
+    observed_as: default_price_list
+    ref: PriceList
+  - name: payment_terms
+    label: Payment Terms Template
+    type: ref
+    observed_as: payment_terms
+    ref: PaymentTermsTemplate
+  - name: supplier_primary_address
+    label: Primary Address
+    type: ref
+    observed_as: supplier_primary_address
+    ref: Address
+  - name: primary_address
+    label: Primary Address Preview
+    type: text
+    observed_as: primary_address
+  - name: supplier_primary_contact
+    label: Primary Contact
+    type: ref
+    observed_as: supplier_primary_contact
+    ref: Contact
+  - name: mobile_no
+    label: Mobile No
+    type: string
+    observed_as: mobile_no
+  - name: email_id
+    label: Email ID
+    type: string
+    observed_as: email_id
+  - name: is_internal_supplier
+    label: Is Internal Supplier
+    type: boolean
+    observed_as: is_internal_supplier
+    default: "0"
+  - name: represents_company
+    label: Represents Company
+    type: ref
+    observed_as: represents_company
+    ref: Company
+  - name: tax_id
+    label: Tax ID
+    type: string
+    observed_as: tax_id
+  - name: tax_category
+    label: Tax Category
+    type: ref
+    observed_as: tax_category
+    ref: TaxCategory
+  - name: tax_withholding_category
+    label: Tax Withholding Category
+    type: ref
+    observed_as: tax_withholding_category
+    ref: TaxWithholdingCategory
+  - name: tax_withholding_group
+    label: Tax Withholding Group
+    type: ref
+    observed_as: tax_withholding_group
+    ref: TaxWithholdingGroup
+  - name: restrict_to_companies
+    label: Restrict to Companies
+    type: boolean
+    observed_as: restrict_to_companies
+    default: "0"
+  - name: is_transporter
+    label: Is Transporter
+    type: boolean
+    observed_as: is_transporter
+    default: "0"
+  - name: allow_purchase_invoice_creation_without_purchase_order
+    label: Allow purchase invoice creation without purchase order
+    type: boolean
+    observed_as: allow_purchase_invoice_creation_without_purchase_order
+    default: "0"
+  - name: allow_purchase_invoice_creation_without_purchase_receipt
+    label: Allow purchase invoice creation without purchase receipt
+    type: boolean
+    observed_as: allow_purchase_invoice_creation_without_purchase_receipt
+    default: "0"
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: is_frozen
+    label: Is Frozen
+    type: boolean
+    observed_as: is_frozen
+    default: "0"
+  - name: on_hold
+    label: Block Supplier
+    type: boolean
+    observed_as: on_hold
+    default: "0"
+  - name: hold_type
+    label: Hold Type
+    type: enum
+    observed_as: hold_type
+    enum_values:
+      - All
+      - Invoices
+      - Payments
+    default: All
+  - name: release_date
+    label: Release Date
+    type: date
+    observed_as: release_date
+  - name: warn_rfqs
+    label: Warn RFQs
+    type: boolean
+    observed_as: warn_rfqs
+    default: "0"
+  - name: prevent_rfqs
+    label: Prevent RFQs
+    type: boolean
+    observed_as: prevent_rfqs
+    default: "0"
+  - name: warn_pos
+    label: Warn POs
+    type: boolean
+    observed_as: warn_pos
+    default: "0"
+  - name: prevent_pos
+    label: Prevent POs
+    type: boolean
+    observed_as: prevent_pos
+    default: "0"
+  - name: website
+    label: Website
+    type: string
+    observed_as: website
+  - name: language
+    label: Print Language
+    type: ref
+    observed_as: language
+    ref: Language
+  - name: supplier_details
+    label: Supplier Details
+    type: text
+    observed_as: supplier_details
+relations:
+  - to: Gender
+    kind: many-to-one
+    via: gender
+  - to: SupplierGroup
+    kind: many-to-one
+    via: supplier_group
+  - to: Country
+    kind: many-to-one
+    via: country
+  - to: Currency
+    kind: many-to-one
+    via: default_currency
+  - to: BankAccount
+    kind: many-to-one
+    via: default_bank_account
+  - to: PriceList
+    kind: many-to-one
+    via: default_price_list
+  - to: PaymentTermsTemplate
+    kind: many-to-one
+    via: payment_terms
+  - to: Address
+    kind: many-to-one
+    via: supplier_primary_address
+  - to: Contact
+    kind: many-to-one
+    via: supplier_primary_contact
+  - to: PartyAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Per-Company Accounts)
+  - to: Company
+    kind: many-to-one
+    via: represents_company
+  - to: AllowedToTransactWith
+    kind: one-to-many
+    via: companies
+    description: lines (Allowed to transact with)
+  - to: TaxCategory
+    kind: many-to-one
+    via: tax_category
+  - to: TaxWithholdingCategory
+    kind: many-to-one
+    via: tax_withholding_category
+  - to: TaxWithholdingGroup
+    kind: many-to-one
+    via: tax_withholding_group
+  - to: CompanyRestriction
+    kind: one-to-many
+    via: allowed_companies
+    description: lines (Allowed Companies)
+  - to: PortalUser
+    kind: one-to-many
+    via: portal_users
+    description: lines (Supplier Portal Users)
+  - to: Language
+    kind: many-to-one
+    via: language
+  - to: CustomerNumberAtSupplier
+    kind: one-to-many
+    via: customer_numbers
+    description: lines (Customer Numbers)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSupplier
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Supplier
+    note: declared by the program and served by its API

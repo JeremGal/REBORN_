@@ -1,0 +1,644 @@
+name: DeliveryNote
+description: 'Items shipped to a customer. Document type "Delivery Note" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MAT-DN-.YYYY.-
+      - MAT-DN-RET-.YYYY.-
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: tax_id
+    label: Tax Id
+    type: string
+    observed_as: tax_id
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: posting_date
+    label: Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+    required: true
+    default: Now
+  - name: set_posting_time
+    label: Edit Posting Date and Time
+    type: boolean
+    observed_as: set_posting_time
+    default: "0"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: DeliveryNote
+  - name: is_return
+    label: Is Return
+    type: boolean
+    observed_as: is_return
+    default: "0"
+  - name: issue_credit_note
+    label: Issue Credit Note
+    type: boolean
+    observed_as: issue_credit_note
+    default: "0"
+  - name: return_against
+    label: Return Against Delivery Note
+    type: ref
+    observed_as: return_against
+    ref: DeliveryNote
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: conversion_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: conversion_rate
+    required: true
+    precision: 9
+  - name: selling_price_list
+    label: Price List
+    type: ref
+    observed_as: selling_price_list
+    required: true
+    ref: PriceList
+  - name: price_list_currency
+    label: Price List Currency
+    type: ref
+    observed_as: price_list_currency
+    required: true
+    ref: Currency
+  - name: plc_conversion_rate
+    label: Price List Exchange Rate
+    type: decimal
+    observed_as: plc_conversion_rate
+    required: true
+    precision: 9
+  - name: ignore_pricing_rule
+    label: Ignore Pricing Rule
+    type: boolean
+    observed_as: ignore_pricing_rule
+    default: "0"
+  - name: scan_barcode
+    label: Scan Barcode
+    type: string
+    observed_as: scan_barcode
+  - name: last_scanned_warehouse
+    label: Last Scanned Warehouse
+    type: string
+    observed_as: last_scanned_warehouse
+  - name: set_warehouse
+    label: Set Source Warehouse
+    type: ref
+    observed_as: set_warehouse
+    ref: Warehouse
+  - name: set_target_warehouse
+    label: Set Target Warehouse
+    type: ref
+    observed_as: set_target_warehouse
+    ref: Warehouse
+  - name: total_qty
+    label: Total Quantity
+    type: decimal
+    observed_as: total_qty
+  - name: total_net_weight
+    label: Total Net Weight
+    type: decimal
+    observed_as: total_net_weight
+  - name: base_total
+    label: Total (Company Currency)
+    type: money
+    observed_as: base_total
+  - name: base_net_total
+    label: Net Total (Company Currency)
+    type: money
+    observed_as: base_net_total
+  - name: total
+    label: Total
+    type: money
+    observed_as: total
+  - name: net_total
+    label: Net Total
+    type: money
+    observed_as: net_total
+  - name: tax_category
+    label: Tax Category
+    type: ref
+    observed_as: tax_category
+    ref: TaxCategory
+  - name: taxes_and_charges
+    label: Sales Taxes and Charges Template
+    type: ref
+    observed_as: taxes_and_charges
+    ref: SalesTaxesAndChargesTemplate
+  - name: shipping_rule
+    label: Shipping Rule
+    type: ref
+    observed_as: shipping_rule
+    ref: ShippingRule
+  - name: incoterm
+    label: Incoterm
+    type: ref
+    observed_as: incoterm
+    ref: Incoterm
+  - name: named_place
+    label: Named Place
+    type: string
+    observed_as: named_place
+  - name: base_total_taxes_and_charges
+    label: Total Taxes and Charges (Company Currency)
+    type: money
+    observed_as: base_total_taxes_and_charges
+  - name: total_taxes_and_charges
+    label: Total Taxes and Charges
+    type: money
+    observed_as: total_taxes_and_charges
+  - name: grand_total
+    label: Grand Total
+    type: money
+    observed_as: grand_total
+  - name: in_words
+    label: In Words
+    type: string
+    observed_as: in_words
+    max_length: 240
+  - name: disable_rounded_total
+    label: Disable Rounded Total
+    type: boolean
+    observed_as: disable_rounded_total
+    default: "0"
+  - name: rounding_adjustment
+    label: Rounding Adjustment
+    type: money
+    observed_as: rounding_adjustment
+  - name: rounded_total
+    label: Rounded Total
+    type: money
+    observed_as: rounded_total
+  - name: base_grand_total
+    label: Grand Total
+    type: money
+    observed_as: base_grand_total
+  - name: base_in_words
+    label: In Words
+    type: string
+    observed_as: base_in_words
+    max_length: 240
+  - name: base_rounding_adjustment
+    label: Rounding Adjustment
+    type: money
+    observed_as: base_rounding_adjustment
+  - name: base_rounded_total
+    label: Rounded Total
+    type: money
+    observed_as: base_rounded_total
+  - name: apply_discount_on
+    label: Apply Additional Discount On
+    type: enum
+    observed_as: apply_discount_on
+    enum_values:
+      - Grand Total
+      - Net Total
+    default: Grand Total
+  - name: base_discount_amount
+    label: Additional Discount Amount (Company Currency)
+    type: money
+    observed_as: base_discount_amount
+  - name: additional_discount_percentage
+    label: Additional Discount Percentage
+    type: decimal
+    observed_as: additional_discount_percentage
+  - name: discount_amount
+    label: Additional Discount Amount
+    type: money
+    observed_as: discount_amount
+  - name: other_charges_calculation
+    label: Taxes and Charges Calculation
+    type: text
+    observed_as: other_charges_calculation
+  - name: customer_address
+    label: Billing Address Name
+    type: ref
+    observed_as: customer_address
+    ref: Address
+  - name: address_display
+    label: Billing Address
+    type: text
+    observed_as: address_display
+  - name: contact_person
+    label: Contact Person
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: contact_display
+    label: Contact
+    type: text
+    observed_as: contact_display
+  - name: contact_mobile
+    label: Mobile No
+    type: text
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: string
+    observed_as: contact_email
+  - name: shipping_address_name
+    label: Shipping Address
+    type: ref
+    observed_as: shipping_address_name
+    ref: Address
+  - name: shipping_address
+    label: Shipping Address
+    type: text
+    observed_as: shipping_address
+  - name: dispatch_address_name
+    label: Dispatch Address Name
+    type: ref
+    observed_as: dispatch_address_name
+    ref: Address
+  - name: dispatch_address
+    label: Dispatch Address
+    type: text
+    observed_as: dispatch_address
+  - name: company_address
+    label: Company Address Name
+    type: ref
+    observed_as: company_address
+    ref: Address
+  - name: company_address_display
+    label: Company Address
+    type: text
+    observed_as: company_address_display
+  - name: company_contact_person
+    label: Company Contact Person
+    type: ref
+    observed_as: company_contact_person
+    ref: Contact
+  - name: tc_name
+    label: Terms
+    type: ref
+    observed_as: tc_name
+    ref: TermsAndConditions
+  - name: terms
+    label: Terms and Conditions Details
+    type: text
+    observed_as: terms
+  - name: per_billed
+    label: "% Amount Billed"
+    type: percent
+    observed_as: per_billed
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - To Bill
+      - Partially Billed
+      - Completed
+      - Return
+      - Return Issued
+      - Cancelled
+      - Closed
+    default: Draft
+  - name: per_installed
+    label: "% Installed"
+    type: percent
+    observed_as: per_installed
+  - name: installation_status
+    label: Installation Status
+    type: string
+    observed_as: installation_status
+  - name: per_returned
+    label: "% Returned"
+    type: percent
+    observed_as: per_returned
+  - name: transporter
+    label: Transporter
+    type: ref
+    observed_as: transporter
+    ref: Supplier
+  - name: lr_no
+    label: Transport Receipt No
+    type: string
+    observed_as: lr_no
+  - name: delivery_trip
+    label: Delivery Trip
+    type: ref
+    observed_as: delivery_trip
+    ref: DeliveryTrip
+  - name: driver
+    label: Driver
+    type: ref
+    observed_as: driver
+    ref: Driver
+  - name: transporter_name
+    label: Transporter Name
+    type: string
+    observed_as: transporter_name
+  - name: lr_date
+    label: Transport Receipt Date
+    type: date
+    observed_as: lr_date
+    default: Today
+  - name: vehicle_no
+    label: Vehicle No
+    type: string
+    observed_as: vehicle_no
+  - name: driver_name
+    label: Driver Name
+    type: string
+    observed_as: driver_name
+  - name: po_no
+    label: Customer's Purchase Order No
+    type: text
+    observed_as: po_no
+  - name: po_date
+    label: Customer's Purchase Order Date
+    type: date
+    observed_as: po_date
+  - name: sales_partner
+    label: Sales Partner
+    type: ref
+    observed_as: sales_partner
+    ref: SalesPartner
+  - name: amount_eligible_for_commission
+    label: Amount Eligible for Commission
+    type: money
+    observed_as: amount_eligible_for_commission
+  - name: commission_rate
+    label: Commission Rate (%)
+    type: decimal
+    observed_as: commission_rate
+  - name: total_commission
+    label: Total Commission
+    type: money
+    observed_as: total_commission
+  - name: auto_repeat
+    label: Auto Repeat
+    type: ref
+    observed_as: auto_repeat
+    ref: AutoRepeat
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: print_without_amount
+    label: Print Without Amount
+    type: boolean
+    observed_as: print_without_amount
+    default: "0"
+  - name: group_same_items
+    label: Group same items
+    type: boolean
+    observed_as: group_same_items
+    default: "0"
+  - name: select_print_heading
+    label: Print Heading
+    type: ref
+    observed_as: select_print_heading
+    ref: PrintHeading
+  - name: language
+    label: Print Language
+    type: ref
+    observed_as: language
+    ref: Language
+  - name: utm_source
+    label: Source
+    type: ref
+    observed_as: utm_source
+    ref: UTMSource
+  - name: utm_medium
+    label: Medium
+    type: ref
+    observed_as: utm_medium
+    ref: UTMMedium
+  - name: utm_campaign
+    label: Campaign
+    type: ref
+    observed_as: utm_campaign
+    ref: UTMCampaign
+  - name: utm_content
+    label: Content
+    type: string
+    observed_as: utm_content
+  - name: is_internal_customer
+    label: Is Internal Customer
+    type: boolean
+    observed_as: is_internal_customer
+    default: "0"
+  - name: represents_company
+    label: Represents Company
+    type: ref
+    observed_as: represents_company
+    ref: Company
+  - name: inter_company_reference
+    label: Inter Company Reference
+    type: ref
+    observed_as: inter_company_reference
+    ref: PurchaseReceipt
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: excise_page
+    label: Excise Page Number
+    type: string
+    observed_as: excise_page
+  - name: instructions
+    label: Instructions
+    type: text
+    observed_as: instructions
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DeliveryNote
+    kind: many-to-one
+    via: amended_from
+  - to: DeliveryNote
+    kind: many-to-one
+    via: return_against
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: PriceList
+    kind: many-to-one
+    via: selling_price_list
+  - to: Currency
+    kind: many-to-one
+    via: price_list_currency
+  - to: Warehouse
+    kind: many-to-one
+    via: set_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: set_target_warehouse
+  - to: DeliveryNoteItem
+    kind: one-to-many
+    via: items
+    description: lines (Delivery Note Item)
+  - to: TaxCategory
+    kind: many-to-one
+    via: tax_category
+  - to: SalesTaxesAndChargesTemplate
+    kind: many-to-one
+    via: taxes_and_charges
+  - to: ShippingRule
+    kind: many-to-one
+    via: shipping_rule
+  - to: Incoterm
+    kind: many-to-one
+    via: incoterm
+  - to: SalesTaxesAndCharges
+    kind: one-to-many
+    via: taxes
+    description: lines (Sales Taxes and Charges)
+  - to: ItemWiseTaxDetail
+    kind: one-to-many
+    via: item_wise_tax_details
+    description: lines (Item Wise Tax Details)
+  - to: PackedItem
+    kind: one-to-many
+    via: packed_items
+    description: lines (Packed Items)
+  - to: PricingRuleDetail
+    kind: one-to-many
+    via: pricing_rules
+    description: lines (Pricing Rule Detail)
+  - to: Address
+    kind: many-to-one
+    via: customer_address
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Address
+    kind: many-to-one
+    via: shipping_address_name
+  - to: Address
+    kind: many-to-one
+    via: dispatch_address_name
+  - to: Address
+    kind: many-to-one
+    via: company_address
+  - to: Contact
+    kind: many-to-one
+    via: company_contact_person
+  - to: TermsAndConditions
+    kind: many-to-one
+    via: tc_name
+  - to: Supplier
+    kind: many-to-one
+    via: transporter
+  - to: DeliveryTrip
+    kind: many-to-one
+    via: delivery_trip
+  - to: Driver
+    kind: many-to-one
+    via: driver
+  - to: SalesPartner
+    kind: many-to-one
+    via: sales_partner
+  - to: SalesTeam
+    kind: one-to-many
+    via: sales_team
+    description: lines (Sales Team)
+  - to: AutoRepeat
+    kind: many-to-one
+    via: auto_repeat
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: PrintHeading
+    kind: many-to-one
+    via: select_print_heading
+  - to: Language
+    kind: many-to-one
+    via: language
+  - to: UTMSource
+    kind: many-to-one
+    via: utm_source
+  - to: UTMMedium
+    kind: many-to-one
+    via: utm_medium
+  - to: UTMCampaign
+    kind: many-to-one
+    via: utm_campaign
+  - to: Company
+    kind: many-to-one
+    via: represents_company
+  - to: PurchaseReceipt
+    kind: many-to-one
+    via: inter_company_reference
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: Territory
+    kind: many-to-one
+    via: territory
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDelivery Note
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Delivery Note
+    note: declared by the program and served by its API

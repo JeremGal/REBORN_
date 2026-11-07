@@ -1,0 +1,58 @@
+name: QuickStockBalance
+description: 'Document type "Quick Stock Balance" (module Stock): single settings record.'
+fields:
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: date
+    label: Date
+    type: date
+    observed_as: date
+    required: true
+    default: Today
+  - name: item_barcode
+    label: Item Barcode
+    type: string
+    observed_as: item_barcode
+  - name: item
+    label: Item Code
+    type: ref
+    observed_as: item
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: item_description
+    label: Item Description
+    type: text
+    observed_as: item_description
+    default: "  "
+  - name: qty
+    label: Available Quantity
+    type: decimal
+    observed_as: qty
+  - name: value
+    label: Stock Value
+    type: money
+    observed_as: value
+relations:
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Item
+    kind: many-to-one
+    via: item
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuick Stock Balance
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quick Stock Balance
+    note: declared by the program and served by its API

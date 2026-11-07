@@ -1,0 +1,176 @@
+name: BOMCreatorItem
+description: 'Document type "BOM Creator Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: part_number
+    label: Part Number
+    type: string
+    observed_as: part_number
+  - name: part_name
+    label: Part Name
+    type: string
+    observed_as: part_name
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    default: "1"
+  - name: design_quantity
+    label: Design Quantity
+    type: decimal
+    observed_as: design_quantity
+  - name: node_id
+    label: Node
+    type: integer
+    observed_as: node_id
+  - name: parent_node_id
+    label: Parent Node
+    type: integer
+    observed_as: parent_node_id
+  - name: is_expandable
+    label: Is Assembly
+    type: boolean
+    observed_as: is_expandable
+    default: "0"
+  - name: source
+    label: Source
+    type: enum
+    observed_as: source
+    enum_values:
+      - CAD File
+      - Manual
+    default: Manual
+  - name: change_type
+    label: Change
+    type: enum
+    observed_as: change_type
+    enum_values:
+      - Added
+      - Quantity Changed
+  - name: exclude_from_bom
+    label: Exclude from BOM
+    type: boolean
+    observed_as: exclude_from_bom
+    default: "0"
+  - name: description
+    label: ""
+    type: text
+    observed_as: description
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: is_phantom_item
+    label: Is Phantom Item
+    type: boolean
+    observed_as: is_phantom_item
+    default: "0"
+  - name: sourced_by_supplier
+    label: Sourced by Supplier
+    type: boolean
+    observed_as: sourced_by_supplier
+    default: "0"
+  - name: bom_created
+    label: BOM Created
+    type: boolean
+    observed_as: bom_created
+    default: "0"
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: stock_qty
+    label: Stock Qty
+    type: decimal
+    observed_as: stock_qty
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: base_rate
+    label: Base Rate
+    type: money
+    observed_as: base_rate
+  - name: base_amount
+    label: Base Amount
+    type: money
+    observed_as: base_amount
+  - name: do_not_explode
+    label: Do Not Explode
+    type: boolean
+    observed_as: do_not_explode
+    default: "1"
+  - name: bom_no
+    label: BOM No
+    type: ref
+    observed_as: bom_no
+    ref: BOM
+  - name: operation
+    label: Operation
+    type: ref
+    observed_as: operation
+    ref: Operation
+  - name: instruction
+    label: Instruction
+    type: text
+    observed_as: instruction
+  - name: model_file
+    label: 3D Model
+    type: file
+    observed_as: model_file
+  - name: placements
+    label: Placements in Model
+    type: json
+    observed_as: placements
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: Operation
+    kind: many-to-one
+    via: operation
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Creator Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Creator Item
+    note: declared by the program and served by its API

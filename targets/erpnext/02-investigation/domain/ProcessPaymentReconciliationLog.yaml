@@ -1,0 +1,59 @@
+name: ProcessPaymentReconciliationLog
+description: Document type "Process Payment Reconciliation Log" (module Accounts).
+fields:
+  - name: process_pr
+    label: Parent Document
+    type: ref
+    observed_as: process_pr
+    required: true
+    ref: ProcessPaymentReconciliation
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Running
+      - Paused
+      - Reconciled
+      - Partially Reconciled
+      - Failed
+      - Cancelled
+  - name: allocated
+    label: Allocated
+    type: boolean
+    observed_as: allocated
+    default: "0"
+  - name: reconciled
+    label: Reconciled
+    type: boolean
+    observed_as: reconciled
+    default: "0"
+  - name: total_allocations
+    label: Total Allocations
+    type: integer
+    observed_as: total_allocations
+  - name: reconciled_entries
+    label: Reconciled Entries
+    type: integer
+    observed_as: reconciled_entries
+  - name: error_log
+    label: Reconciliation Error Log
+    type: text
+    observed_as: error_log
+relations:
+  - to: ProcessPaymentReconciliation
+    kind: many-to-one
+    via: process_pr
+  - to: ProcessPaymentReconciliationLogAllocations
+    kind: one-to-many
+    via: allocations
+    description: lines (Allocations)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProcess Payment Reconciliation Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Process Payment Reconciliation Log
+    note: declared by the program and served by its API

@@ -1,0 +1,4 @@
+hai-agents[browser]>=1.4.3
+python-dotenv>=1.0
+truststore>=0.10
+linkup-sdk>=0.2

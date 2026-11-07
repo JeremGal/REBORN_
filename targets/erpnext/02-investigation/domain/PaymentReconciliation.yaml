@@ -1,0 +1,139 @@
+name: PaymentReconciliation
+description: 'Document type "Payment Reconciliation" (module Accounts): single settings record.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    required: true
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+    required: true
+  - name: receivable_payable_account
+    label: Receivable / Payable Account
+    type: ref
+    observed_as: receivable_payable_account
+    required: true
+    ref: Account
+  - name: default_advance_account
+    label: Default Advance Account
+    type: ref
+    observed_as: default_advance_account
+    ref: Account
+  - name: from_invoice_date
+    label: From Invoice Date
+    type: date
+    observed_as: from_invoice_date
+  - name: from_payment_date
+    label: From Payment Date
+    type: date
+    observed_as: from_payment_date
+  - name: minimum_invoice_amount
+    label: Minimum Invoice Amount
+    type: money
+    observed_as: minimum_invoice_amount
+  - name: minimum_payment_amount
+    label: Minimum Payment Amount
+    type: money
+    observed_as: minimum_payment_amount
+  - name: to_invoice_date
+    label: To Invoice Date
+    type: date
+    observed_as: to_invoice_date
+  - name: to_payment_date
+    label: To Payment Date
+    type: date
+    observed_as: to_payment_date
+  - name: maximum_invoice_amount
+    label: Maximum Invoice Amount
+    type: money
+    observed_as: maximum_invoice_amount
+  - name: maximum_payment_amount
+    label: Maximum Payment Amount
+    type: money
+    observed_as: maximum_payment_amount
+  - name: invoice_limit
+    label: Invoice Limit
+    type: integer
+    observed_as: invoice_limit
+    default: "50"
+  - name: payment_limit
+    label: Payment Limit
+    type: integer
+    observed_as: payment_limit
+    default: "50"
+  - name: bank_cash_account
+    label: Bank / Cash Account
+    type: ref
+    observed_as: bank_cash_account
+    ref: Account
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: invoice_name
+    label: Filter on Invoice
+    type: string
+    observed_as: invoice_name
+  - name: payment_name
+    label: Filter on Payment
+    type: string
+    observed_as: payment_name
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: Account
+    kind: many-to-one
+    via: receivable_payable_account
+  - to: Account
+    kind: many-to-one
+    via: default_advance_account
+  - to: Account
+    kind: many-to-one
+    via: bank_cash_account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: PaymentReconciliationInvoice
+    kind: one-to-many
+    via: invoices
+    description: lines (Invoices)
+  - to: PaymentReconciliationPayment
+    kind: one-to-many
+    via: payments
+    description: lines (Payments)
+  - to: PaymentReconciliationAllocation
+    kind: one-to-many
+    via: allocation
+    description: lines (Allocation)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Reconciliation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Reconciliation
+    note: declared by the program and served by its API

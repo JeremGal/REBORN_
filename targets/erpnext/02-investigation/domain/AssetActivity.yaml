@@ -1,0 +1,42 @@
+name: AssetActivity
+description: Document type "Asset Activity" (module Assets).
+fields:
+  - name: asset
+    label: Asset
+    type: ref
+    observed_as: asset
+    required: true
+    ref: Asset
+  - name: date
+    label: Date
+    type: datetime
+    observed_as: date
+    required: true
+    default: now
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    required: true
+    ref: User
+  - name: subject
+    label: Subject
+    type: text
+    observed_as: subject
+    required: true
+relations:
+  - to: Asset
+    kind: many-to-one
+    via: asset
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Activity
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Activity
+    note: declared by the program and served by its API

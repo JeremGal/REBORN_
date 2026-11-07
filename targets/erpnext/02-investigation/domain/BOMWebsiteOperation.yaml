@@ -1,0 +1,43 @@
+name: BOMWebsiteOperation
+description: 'Document type "BOM Website Operation" (module Manufacturing): lines of another document.'
+fields:
+  - name: operation
+    label: Operation
+    type: ref
+    observed_as: operation
+    required: true
+    ref: Operation
+  - name: workstation
+    label: Workstation
+    type: ref
+    observed_as: workstation
+    ref: Workstation
+  - name: time_in_mins
+    label: Operation Time
+    type: decimal
+    observed_as: time_in_mins
+    required: true
+  - name: website_image
+    label: Image
+    type: file
+    observed_as: website_image
+  - name: thumbnail
+    label: Thumbnail
+    type: string
+    observed_as: thumbnail
+relations:
+  - to: Operation
+    kind: many-to-one
+    via: operation
+  - to: Workstation
+    kind: many-to-one
+    via: workstation
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Website Operation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Website Operation
+    note: declared by the program and served by its API

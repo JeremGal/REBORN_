@@ -1,0 +1,100 @@
+name: LoyaltyProgram
+description: Rewards customers with points they can spend on later purchases. Document type "Loyalty Program" (module Accounts).
+fields:
+  - name: loyalty_program_name
+    label: Loyalty Program Name
+    type: string
+    observed_as: loyalty_program_name
+    required: true
+    unique: true
+  - name: loyalty_program_type
+    label: Loyalty Program Type
+    type: enum
+    observed_as: loyalty_program_type
+    enum_values:
+      - Single Tier Program
+      - Multiple Tier Program
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+    required: true
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: customer_territory
+    label: Customer Territory
+    type: ref
+    observed_as: customer_territory
+    ref: Territory
+  - name: auto_opt_in
+    label: Auto Opt In (For all customers)
+    type: boolean
+    observed_as: auto_opt_in
+    default: "0"
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+  - name: expiry_duration
+    label: Expiry Duration (in days)
+    type: integer
+    observed_as: expiry_duration
+  - name: expense_account
+    label: Expense Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+relations:
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: Territory
+    kind: many-to-one
+    via: customer_territory
+  - to: LoyaltyProgramCollection
+    kind: one-to-many
+    via: collection_rules
+    description: lines (Collection Rules)
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLoyalty Program
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Loyalty Program
+    note: declared by the program and served by its API

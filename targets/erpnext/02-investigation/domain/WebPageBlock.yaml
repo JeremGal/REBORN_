@@ -1,0 +1,77 @@
+name: WebPageBlock
+description: 'Document type "Web Page Block" (module Website): lines of another document.'
+fields:
+  - name: web_template
+    label: Web Template
+    type: ref
+    observed_as: web_template
+    ref: WebTemplate
+  - name: web_template_values
+    label: Web Template Values
+    type: text
+    observed_as: web_template_values
+  - name: css_class
+    label: CSS Class
+    type: text
+    observed_as: css_class
+  - name: section_id
+    label: Section ID
+    type: string
+    observed_as: section_id
+  - name: add_container
+    label: Add Container
+    type: boolean
+    observed_as: add_container
+    default: "1"
+  - name: add_top_padding
+    label: Add Space at Top
+    type: boolean
+    observed_as: add_top_padding
+    default: "1"
+  - name: add_bottom_padding
+    label: Add Space at Bottom
+    type: boolean
+    observed_as: add_bottom_padding
+    default: "1"
+  - name: add_border_at_top
+    label: Add Border at Top
+    type: boolean
+    observed_as: add_border_at_top
+    default: "0"
+  - name: add_border_at_bottom
+    label: Add Border at Bottom
+    type: boolean
+    observed_as: add_border_at_bottom
+    default: "0"
+  - name: add_shade
+    label: Add Gray Background
+    type: boolean
+    observed_as: add_shade
+    default: "0"
+  - name: hide_block
+    label: Hide Block
+    type: boolean
+    observed_as: hide_block
+    default: "0"
+  - name: add_background_image
+    label: Add Background Image
+    type: boolean
+    observed_as: add_background_image
+    default: "0"
+  - name: background_image
+    label: Background Image
+    type: file
+    observed_as: background_image
+relations:
+  - to: WebTemplate
+    kind: many-to-one
+    via: web_template
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWeb Page Block
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Web Page Block
+    note: declared by the program and served by its API

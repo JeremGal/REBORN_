@@ -1,0 +1,86 @@
+name: WorkspaceLink
+description: 'Document type "Workspace Link" (module Desk): lines of another document.'
+fields:
+  - name: type
+    label: Type
+    type: enum
+    observed_as: type
+    required: true
+    enum_values:
+      - Link
+      - Card Break
+    default: Link
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+    required: true
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: hidden
+    label: Hidden
+    type: boolean
+    observed_as: hidden
+    default: "0"
+  - name: link_type
+    label: Link Type
+    type: enum
+    observed_as: link_type
+    enum_values:
+      - DocType
+      - Page
+      - Report
+  - name: link_to
+    label: Link To
+    type: string
+    observed_as: link_to
+  - name: report_ref_doctype
+    label: Report Ref DocType
+    type: ref
+    observed_as: report_ref_doctype
+    ref: DocType
+  - name: dependencies
+    label: Dependencies
+    type: string
+    observed_as: dependencies
+  - name: only_for
+    label: Only for
+    type: ref
+    observed_as: only_for
+    ref: Country
+  - name: onboard
+    label: Onboard
+    type: boolean
+    observed_as: onboard
+    default: "0"
+  - name: is_query_report
+    label: Is Query Report
+    type: boolean
+    observed_as: is_query_report
+    default: "0"
+  - name: link_count
+    label: Link Count
+    type: integer
+    observed_as: link_count
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: report_ref_doctype
+  - to: Country
+    kind: many-to-one
+    via: only_for
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkspace Link
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workspace Link
+    note: declared by the program and served by its API

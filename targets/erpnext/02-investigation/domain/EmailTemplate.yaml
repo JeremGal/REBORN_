@@ -1,0 +1,39 @@
+name: EmailTemplate
+description: Document type "Email Template" (module Email).
+fields:
+  - name: subject
+    label: Subject
+    type: string
+    observed_as: subject
+    required: true
+  - name: reference_doctype
+    label: Reference DocType
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: use_html
+    label: Use HTML
+    type: boolean
+    observed_as: use_html
+    default: "0"
+  - name: response_html
+    label: Response
+    type: text
+    observed_as: response_html
+  - name: response
+    label: Response
+    type: text
+    observed_as: response
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Template
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Template
+    note: declared by the program and served by its API

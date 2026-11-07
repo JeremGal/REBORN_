@@ -1,0 +1,319 @@
+name: Opportunity
+description: A potential sale to a lead or customer. Document type "Opportunity" (module CRM).
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - CRM-OPP-.YYYY.-
+  - name: opportunity_from
+    label: Opportunity From
+    type: ref
+    observed_as: opportunity_from
+    required: true
+    ref: DocType
+  - name: party_name
+    label: Party
+    type: string
+    observed_as: party_name
+    required: true
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Open
+      - Quotation
+      - Converted
+      - Lost
+      - Replied
+      - Closed
+    default: Open
+  - name: opportunity_type
+    label: Opportunity Type
+    type: ref
+    observed_as: opportunity_type
+    ref: OpportunityType
+  - name: opportunity_owner
+    label: Opportunity Owner
+    type: ref
+    observed_as: opportunity_owner
+    ref: User
+  - name: sales_stage
+    label: Sales Stage
+    type: ref
+    observed_as: sales_stage
+    ref: SalesStage
+    default: Prospecting
+  - name: expected_closing
+    label: Expected Closing Date
+    type: date
+    observed_as: expected_closing
+  - name: probability
+    label: Probability (%)
+    type: percent
+    observed_as: probability
+    default: "100"
+  - name: no_of_employees
+    label: No of Employees
+    type: enum
+    observed_as: no_of_employees
+    enum_values:
+      - 1-10
+      - 11-50
+      - 51-200
+      - 201-500
+      - 501-1000
+      - 1000+
+  - name: annual_revenue
+    label: Annual Revenue
+    type: money
+    observed_as: annual_revenue
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: industry
+    label: Industry
+    type: ref
+    observed_as: industry
+    ref: IndustryType
+  - name: market_segment
+    label: Market Segment
+    type: ref
+    observed_as: market_segment
+    ref: MarketSegment
+  - name: website
+    label: Website
+    type: string
+    observed_as: website
+  - name: city
+    label: City
+    type: string
+    observed_as: city
+  - name: state
+    label: State/Province
+    type: string
+    observed_as: state
+  - name: country
+    label: Country
+    type: ref
+    observed_as: country
+    ref: Country
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: conversion_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: conversion_rate
+  - name: opportunity_amount
+    label: Opportunity Amount
+    type: money
+    observed_as: opportunity_amount
+  - name: base_opportunity_amount
+    label: Opportunity Amount (Company Currency)
+    type: money
+    observed_as: base_opportunity_amount
+  - name: utm_source
+    label: Source
+    type: ref
+    observed_as: utm_source
+    ref: UTMSource
+  - name: utm_medium
+    label: Medium
+    type: ref
+    observed_as: utm_medium
+    ref: UTMMedium
+  - name: utm_campaign
+    label: Campaign
+    type: ref
+    observed_as: utm_campaign
+    ref: UTMCampaign
+  - name: utm_content
+    label: Content
+    type: string
+    observed_as: utm_content
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: transaction_date
+    label: Opportunity Date
+    type: date
+    observed_as: transaction_date
+    required: true
+    default: Today
+  - name: language
+    label: Print Language
+    type: ref
+    observed_as: language
+    ref: Language
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: Opportunity
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: first_response_time
+    label: First Response Time
+    type: integer
+    observed_as: first_response_time
+  - name: order_lost_reason
+    label: Detailed Reason
+    type: text
+    observed_as: order_lost_reason
+  - name: lost_on
+    label: Lost On
+    type: date
+    observed_as: lost_on
+  - name: contact_person
+    label: Contact Person
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: job_title
+    label: Job Title
+    type: string
+    observed_as: job_title
+  - name: contact_email
+    label: Contact Email
+    type: string
+    observed_as: contact_email
+  - name: contact_mobile
+    label: Contact Mobile
+    type: string
+    observed_as: contact_mobile
+  - name: whatsapp
+    label: WhatsApp
+    type: string
+    observed_as: whatsapp
+  - name: phone
+    label: Phone
+    type: string
+    observed_as: phone
+  - name: phone_ext
+    label: Phone Ext.
+    type: string
+    observed_as: phone_ext
+  - name: customer_address
+    label: Customer / Lead Address
+    type: ref
+    observed_as: customer_address
+    ref: Address
+  - name: address_display
+    label: Address
+    type: text
+    observed_as: address_display
+  - name: contact_display
+    label: Contact
+    type: text
+    observed_as: contact_display
+  - name: base_total
+    label: Total (Company Currency)
+    type: money
+    observed_as: base_total
+  - name: total
+    label: Total
+    type: money
+    observed_as: total
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: opportunity_from
+  - to: OpportunityType
+    kind: many-to-one
+    via: opportunity_type
+  - to: User
+    kind: many-to-one
+    via: opportunity_owner
+  - to: SalesStage
+    kind: many-to-one
+    via: sales_stage
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: IndustryType
+    kind: many-to-one
+    via: industry
+  - to: MarketSegment
+    kind: many-to-one
+    via: market_segment
+  - to: Country
+    kind: many-to-one
+    via: country
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: UTMSource
+    kind: many-to-one
+    via: utm_source
+  - to: UTMMedium
+    kind: many-to-one
+    via: utm_medium
+  - to: UTMCampaign
+    kind: many-to-one
+    via: utm_campaign
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Language
+    kind: many-to-one
+    via: language
+  - to: Opportunity
+    kind: many-to-one
+    via: amended_from
+  - to: OpportunityLostReasonDetail
+    kind: one-to-many
+    via: lost_reasons
+    description: lines (Lost Reasons)
+  - to: CompetitorDetail
+    kind: one-to-many
+    via: competitors
+    description: lines (Competitors)
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Address
+    kind: many-to-one
+    via: customer_address
+  - to: OpportunityItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: CRMNote
+    kind: one-to-many
+    via: notes
+    description: lines (Notes)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOpportunity
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Opportunity
+    note: declared by the program and served by its API

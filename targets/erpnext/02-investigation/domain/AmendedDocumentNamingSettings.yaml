@@ -1,0 +1,32 @@
+name: AmendedDocumentNamingSettings
+description: 'Document type "Amended Document Naming Settings" (module Core): lines of another document.'
+fields:
+  - name: document_type
+    label: DocType
+    type: ref
+    observed_as: document_type
+    required: true
+    unique: true
+    ref: DocType
+  - name: action
+    label: Action
+    type: enum
+    observed_as: action
+    required: true
+    enum_values:
+      - Amend Counter
+      - Default Naming
+    default: Amend Counter
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAmended Document Naming Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Amended Document Naming Settings
+    note: declared by the program and served by its API

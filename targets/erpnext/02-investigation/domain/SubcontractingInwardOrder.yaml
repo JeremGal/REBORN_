@@ -1,0 +1,154 @@
+name: SubcontractingInwardOrder
+description: 'An order to make items for a customer from materials they send. Document type "Subcontracting Inward Order" (module Subcontracting): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - SCI-ORD-.YYYY.-
+  - name: sales_order
+    label: Subcontracting Sales Order
+    type: ref
+    observed_as: sales_order
+    required: true
+    ref: SalesOrder
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+    required: true
+  - name: currency
+    label: Customer Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: transaction_date
+    label: Date
+    type: date
+    observed_as: transaction_date
+    required: true
+    default: Today
+  - name: customer_warehouse
+    label: Customer Warehouse
+    type: ref
+    observed_as: customer_warehouse
+    required: true
+    ref: Warehouse
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: SubcontractingInwardOrder
+  - name: set_delivery_warehouse
+    label: Set Delivery Warehouse
+    type: ref
+    observed_as: set_delivery_warehouse
+    ref: Warehouse
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - Open
+      - Ongoing
+      - Produced
+      - Delivered
+      - Returned
+      - Cancelled
+      - Closed
+    default: Draft
+  - name: per_raw_material_received
+    label: "% Raw Material Received"
+    type: percent
+    observed_as: per_raw_material_received
+  - name: per_produced
+    label: "% Produced"
+    type: percent
+    observed_as: per_produced
+  - name: per_delivered
+    label: "% Delivered"
+    type: percent
+    observed_as: per_delivered
+  - name: per_raw_material_returned
+    label: "% Raw Material Returned"
+    type: percent
+    observed_as: per_raw_material_returned
+  - name: per_process_loss
+    label: "% Process Loss"
+    type: percent
+    observed_as: per_process_loss
+  - name: per_returned
+    label: "% Returned"
+    type: percent
+    observed_as: per_returned
+relations:
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Warehouse
+    kind: many-to-one
+    via: customer_warehouse
+  - to: SubcontractingInwardOrder
+    kind: many-to-one
+    via: amended_from
+  - to: Warehouse
+    kind: many-to-one
+    via: set_delivery_warehouse
+  - to: SubcontractingInwardOrderItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: SubcontractingInwardOrderReceivedItem
+    kind: one-to-many
+    via: received_items
+    description: lines (Required Items)
+  - to: SubcontractingInwardOrderSecondaryItem
+    kind: one-to-many
+    via: secondary_items
+    description: lines (Secondary Items)
+  - to: SubcontractingInwardOrderServiceItem
+    kind: one-to-many
+    via: service_items
+    description: lines (Service Items)
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Inward Order
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Inward Order
+    note: declared by the program and served by its API

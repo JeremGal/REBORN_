@@ -1,0 +1,51 @@
+name: Reminder
+description: Document type "Reminder" (module Automation).
+fields:
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    required: true
+    ref: User
+    default: __user
+  - name: remind_at
+    label: Remind At
+    type: datetime
+    observed_as: remind_at
+    required: true
+    default: now
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+    required: true
+  - name: reminder_doctype
+    label: Document Type
+    type: ref
+    observed_as: reminder_doctype
+    ref: DocType
+  - name: reminder_docname
+    label: Document Name
+    type: string
+    observed_as: reminder_docname
+  - name: notified
+    label: notified
+    type: boolean
+    observed_as: notified
+    default: "0"
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: DocType
+    kind: many-to-one
+    via: reminder_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabReminder
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Reminder
+    note: declared by the program and served by its API

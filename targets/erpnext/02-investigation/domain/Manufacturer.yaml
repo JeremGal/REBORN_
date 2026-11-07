@@ -1,0 +1,43 @@
+name: Manufacturer
+description: A company that makes the items you buy or sell. Document type "Manufacturer" (module Stock).
+fields:
+  - name: short_name
+    label: Short Name
+    type: string
+    observed_as: short_name
+    required: true
+    unique: true
+  - name: full_name
+    label: Full Name
+    type: string
+    observed_as: full_name
+  - name: website
+    label: Website
+    type: string
+    observed_as: website
+  - name: country
+    label: Country
+    type: ref
+    observed_as: country
+    ref: Country
+  - name: logo
+    label: Logo
+    type: file
+    observed_as: logo
+  - name: notes
+    label: Notes
+    type: text
+    observed_as: notes
+relations:
+  - to: Country
+    kind: many-to-one
+    via: country
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabManufacturer
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Manufacturer
+    note: declared by the program and served by its API

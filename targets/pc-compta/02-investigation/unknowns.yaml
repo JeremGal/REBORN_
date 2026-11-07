@@ -12,6 +12,10 @@ unknowns:
     status: open
     evidence:
       - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "SAISIE DES ECRITURES (folios, functions available)" }
+    severity: blocking
+    required_basis:
+      - runtime
+    prediction: Entries are keyed per journal and folio, one line per account movement, with a running balance check before validation.
   - id: U-002
     question: How is data stored (file format, tables, types)?
     why: the data model is inferred from the technical sheet; without the real files, types/keys are unknown and no migration can be written.
@@ -22,6 +26,12 @@ unknowns:
     status: open
     evidence:
       - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "no storage detail in the public sheet" }
+    severity: major
+    required_basis:
+      - runtime
+      - documentation
+    prediction: Data is kept in one proprietary file per accounting file (dossier).
+    searched: Public documentation only; reading the program's code is not allowed on this target (trial licence).
   - id: U-003
     question: Exact rounding and the maximum amounts behaviour.
     why: the sheet gives caps (99 999 999 999,99 DA per entry) but not the rounding rule for tax/totals.
@@ -32,3 +42,9 @@ unknowns:
     status: open
     evidence:
       - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "SAISIE: amount caps" }
+    severity: major
+    required_basis:
+      - runtime
+      - documentation
+    prediction: Amounts are kept to 2 decimals with rounding half up, and a maximum amount per entry exists.
+    refuted_if: A halfway amount rounds down or to even.

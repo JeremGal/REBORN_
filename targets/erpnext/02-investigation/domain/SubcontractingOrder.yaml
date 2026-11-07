@@ -1,0 +1,269 @@
+name: SubcontractingOrder
+description: 'An order for a subcontractor to make items from your materials. Document type "Subcontracting Order" (module Subcontracting): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - SC-ORD-.YYYY.-
+  - name: purchase_order
+    label: Subcontracting Purchase Order
+    type: ref
+    observed_as: purchase_order
+    required: true
+    ref: PurchaseOrder
+  - name: supplier
+    label: Job Worker
+    type: ref
+    observed_as: supplier
+    required: true
+    ref: Supplier
+  - name: supplier_name
+    label: Job Worker Name
+    type: string
+    observed_as: supplier_name
+    required: true
+  - name: supplier_warehouse
+    label: Job Worker Warehouse
+    type: ref
+    observed_as: supplier_warehouse
+    required: true
+    ref: Warehouse
+  - name: supplier_currency
+    label: Job Worker Currency
+    type: ref
+    observed_as: supplier_currency
+    ref: Currency
+  - name: conversion_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: conversion_rate
+    precision: 9
+    default: "1"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: transaction_date
+    label: Date
+    type: date
+    observed_as: transaction_date
+    required: true
+    default: Today
+  - name: schedule_date
+    label: Required By
+    type: date
+    observed_as: schedule_date
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: SubcontractingOrder
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: set_warehouse
+    label: Set Target Warehouse
+    type: ref
+    observed_as: set_warehouse
+    ref: Warehouse
+  - name: total_qty
+    label: Total Quantity
+    type: decimal
+    observed_as: total_qty
+  - name: total
+    label: Total
+    type: money
+    observed_as: total
+  - name: set_reserve_warehouse
+    label: Set Reserve Warehouse
+    type: ref
+    observed_as: set_reserve_warehouse
+    ref: Warehouse
+  - name: reserve_stock
+    label: Reserve Stock
+    type: boolean
+    observed_as: reserve_stock
+    default: "0"
+  - name: supplier_address
+    label: Job Worker Address
+    type: ref
+    observed_as: supplier_address
+    ref: Address
+  - name: address_display
+    label: Job Worker Address Details
+    type: text
+    observed_as: address_display
+  - name: contact_person
+    label: Job Worker Contact
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: contact_display
+    label: Contact Name
+    type: text
+    observed_as: contact_display
+  - name: contact_mobile
+    label: Contact Mobile No
+    type: text
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: text
+    observed_as: contact_email
+  - name: shipping_address
+    label: Company Shipping Address
+    type: ref
+    observed_as: shipping_address
+    ref: Address
+  - name: shipping_address_display
+    label: Shipping Address Details
+    type: text
+    observed_as: shipping_address_display
+  - name: billing_address
+    label: Company Billing Address
+    type: ref
+    observed_as: billing_address
+    ref: Address
+  - name: billing_address_display
+    label: Billing Address Details
+    type: text
+    observed_as: billing_address_display
+  - name: distribute_additional_costs_based_on
+    label: "Distribute Additional Costs Based On "
+    type: enum
+    observed_as: distribute_additional_costs_based_on
+    enum_values:
+      - Qty
+      - Amount
+    default: Qty
+  - name: total_additional_costs
+    label: Total Additional Costs
+    type: money
+    observed_as: total_additional_costs
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - Open
+      - Partially Received
+      - Completed
+      - Material Transferred
+      - Partial Material Transferred
+      - Cancelled
+      - Closed
+    default: Draft
+  - name: per_received
+    label: "% Received"
+    type: percent
+    observed_as: per_received
+  - name: select_print_heading
+    label: Print Heading
+    type: ref
+    observed_as: select_print_heading
+    ref: PrintHeading
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: production_plan
+    label: Production Plan
+    type: string
+    observed_as: production_plan
+relations:
+  - to: PurchaseOrder
+    kind: many-to-one
+    via: purchase_order
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: Warehouse
+    kind: many-to-one
+    via: supplier_warehouse
+  - to: Currency
+    kind: many-to-one
+    via: supplier_currency
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: SubcontractingOrder
+    kind: many-to-one
+    via: amended_from
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Warehouse
+    kind: many-to-one
+    via: set_warehouse
+  - to: SubcontractingOrderItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: SubcontractingOrderServiceItem
+    kind: one-to-many
+    via: service_items
+    description: lines (Service Items)
+  - to: Warehouse
+    kind: many-to-one
+    via: set_reserve_warehouse
+  - to: SubcontractingOrderSuppliedItem
+    kind: one-to-many
+    via: supplied_items
+    description: lines (Supplied Items)
+  - to: Address
+    kind: many-to-one
+    via: supplier_address
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Address
+    kind: many-to-one
+    via: shipping_address
+  - to: Address
+    kind: many-to-one
+    via: billing_address
+  - to: LandedCostTaxesAndCharges
+    kind: one-to-many
+    via: additional_costs
+    description: lines (Additional Costs)
+  - to: PrintHeading
+    kind: many-to-one
+    via: select_print_heading
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Order
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Order
+    note: declared by the program and served by its API

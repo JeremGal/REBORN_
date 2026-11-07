@@ -1,0 +1,197 @@
+name: WebsiteSettings
+description: 'Document type "Website Settings" (module Website): single settings record.'
+fields:
+  - name: home_page
+    label: Home Page
+    type: string
+    observed_as: home_page
+  - name: title_prefix
+    label: Title Prefix
+    type: string
+    observed_as: title_prefix
+  - name: app_name
+    label: App Name
+    type: string
+    observed_as: app_name
+    default: Frappe
+  - name: disable_signup
+    label: Disable signups
+    type: boolean
+    observed_as: disable_signup
+    default: "1"
+  - name: show_footer_on_login
+    label: Show footer on login
+    type: boolean
+    observed_as: show_footer_on_login
+    default: "0"
+  - name: app_logo
+    label: App Logo
+    type: file
+    observed_as: app_logo
+  - name: website_theme
+    label: Website Theme
+    type: ref
+    observed_as: website_theme
+    ref: WebsiteTheme
+    default: Standard
+  - name: website_theme_image_link
+    label: Website Theme image link
+    type: text
+    observed_as: website_theme_image_link
+  - name: banner_image
+    label: Brand Image
+    type: file
+    observed_as: banner_image
+  - name: splash_image
+    label: Splash Image
+    type: file
+    observed_as: splash_image
+  - name: brand_html
+    label: Brand HTML
+    type: text
+    observed_as: brand_html
+  - name: favicon
+    label: FavIcon
+    type: file
+    observed_as: favicon
+  - name: hide_login
+    label: Hide Login
+    type: boolean
+    observed_as: hide_login
+    default: "0"
+  - name: show_language_picker
+    label: Show Language Picker
+    type: boolean
+    observed_as: show_language_picker
+    default: "0"
+  - name: navbar_template
+    label: Navbar Template
+    type: ref
+    observed_as: navbar_template
+    ref: WebTemplate
+  - name: navbar_template_values
+    label: Navbar Template Values
+    type: text
+    observed_as: navbar_template_values
+  - name: call_to_action
+    label: Call To Action
+    type: string
+    observed_as: call_to_action
+  - name: call_to_action_url
+    label: Call To Action URL
+    type: string
+    observed_as: call_to_action_url
+  - name: banner_html
+    label: Banner HTML
+    type: text
+    observed_as: banner_html
+  - name: copyright
+    label: Copyright
+    type: string
+    observed_as: copyright
+  - name: footer_logo
+    label: Footer Logo
+    type: file
+    observed_as: footer_logo
+  - name: hide_footer_signup
+    label: Hide footer signup
+    type: boolean
+    observed_as: hide_footer_signup
+    default: "0"
+  - name: address
+    label: Address
+    type: text
+    observed_as: address
+  - name: footer_powered
+    label: Footer "Powered By"
+    type: text
+    observed_as: footer_powered
+  - name: footer_template
+    label: Footer Template
+    type: ref
+    observed_as: footer_template
+    ref: WebTemplate
+  - name: footer_template_values
+    label: Footer Template Values
+    type: text
+    observed_as: footer_template_values
+  - name: enable_view_tracking
+    label: Enable in-app website tracking
+    type: boolean
+    observed_as: enable_view_tracking
+    default: "0"
+  - name: enable_google_indexing
+    label: Enable Google indexing
+    type: boolean
+    observed_as: enable_google_indexing
+    default: "0"
+  - name: indexing_refresh_token
+    label: Indexing refresh token
+    type: string
+    observed_as: indexing_refresh_token
+  - name: indexing_authorization_code
+    label: Indexing authorization code
+    type: string
+    observed_as: indexing_authorization_code
+  - name: google_analytics_id
+    label: Google Analytics ID
+    type: string
+    observed_as: google_analytics_id
+  - name: google_analytics_anonymize_ip
+    label: Google Analytics anonymise IP
+    type: boolean
+    observed_as: google_analytics_anonymize_ip
+    default: "1"
+  - name: auto_account_deletion
+    label: Automatically delete account within (hours)
+    type: integer
+    observed_as: auto_account_deletion
+    default: "72"
+  - name: show_account_deletion_link
+    label: Show account deletion link in My Account page
+    type: boolean
+    observed_as: show_account_deletion_link
+    default: "0"
+  - name: subdomain
+    label: Subdomain
+    type: text
+    observed_as: subdomain
+  - name: head_html
+    label: "&lt;head&gt; HTML"
+    type: text
+    observed_as: head_html
+  - name: robots_txt
+    label: Robots.txt
+    type: text
+    observed_as: robots_txt
+relations:
+  - to: WebsiteTheme
+    kind: many-to-one
+    via: website_theme
+  - to: TopBarItem
+    kind: one-to-many
+    via: top_bar_items
+    description: lines (Top Bar Items)
+  - to: WebTemplate
+    kind: many-to-one
+    via: navbar_template
+  - to: TopBarItem
+    kind: one-to-many
+    via: footer_items
+    description: lines (Footer Items)
+  - to: WebTemplate
+    kind: many-to-one
+    via: footer_template
+  - to: WebsiteRouteRedirect
+    kind: one-to-many
+    via: route_redirects
+    description: lines (Route Redirects)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWebsite Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Website Settings
+    note: declared by the program and served by its API

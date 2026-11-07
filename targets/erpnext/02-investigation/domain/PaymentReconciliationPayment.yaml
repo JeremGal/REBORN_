@@ -1,0 +1,69 @@
+name: PaymentReconciliationPayment
+description: 'Document type "Payment Reconciliation Payment" (module Accounts): lines of another document.'
+fields:
+  - name: reference_type
+    label: Reference Type
+    type: ref
+    observed_as: reference_type
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+  - name: is_advance
+    label: Is Advance
+    type: string
+    observed_as: is_advance
+  - name: reference_row
+    label: Reference Row
+    type: string
+    observed_as: reference_row
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: difference_amount
+    label: Difference Amount
+    type: money
+    observed_as: difference_amount
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: exchange_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: exchange_rate
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_type
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Reconciliation Payment
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Reconciliation Payment
+    note: declared by the program and served by its API

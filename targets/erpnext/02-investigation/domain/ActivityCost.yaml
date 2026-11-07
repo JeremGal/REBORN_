@@ -1,0 +1,56 @@
+name: ActivityCost
+description: What an employee costs and bills per hour for an activity. Document type "Activity Cost" (module Projects).
+fields:
+  - name: activity_type
+    label: Activity Type
+    type: ref
+    observed_as: activity_type
+    required: true
+    ref: ActivityType
+  - name: employee
+    label: Employee
+    type: ref
+    observed_as: employee
+    ref: Employee
+  - name: employee_name
+    label: Employee Name
+    type: string
+    observed_as: employee_name
+  - name: department
+    label: Department
+    type: ref
+    observed_as: department
+    ref: Department
+  - name: billing_rate
+    label: Billing Rate
+    type: money
+    observed_as: billing_rate
+    default: "0"
+  - name: costing_rate
+    label: Costing Rate
+    type: money
+    observed_as: costing_rate
+    default: "0"
+  - name: title
+    label: title
+    type: string
+    observed_as: title
+relations:
+  - to: ActivityType
+    kind: many-to-one
+    via: activity_type
+  - to: Employee
+    kind: many-to-one
+    via: employee
+  - to: Department
+    kind: many-to-one
+    via: department
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabActivity Cost
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Activity Cost
+    note: declared by the program and served by its API

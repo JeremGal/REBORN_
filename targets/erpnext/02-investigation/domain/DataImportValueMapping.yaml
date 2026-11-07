@@ -1,0 +1,78 @@
+name: DataImportValueMapping
+description: 'Document type "Data Import Value Mapping" (module Core): lines of another document.'
+fields:
+  - name: column_label
+    label: Column
+    type: string
+    observed_as: column_label
+  - name: source_value
+    label: Value in File
+    type: string
+    observed_as: source_value
+    required: true
+  - name: no_of_rows
+    label: No. of Rows
+    type: string
+    observed_as: no_of_rows
+  - name: row_numbers
+    label: Row Numbers
+    type: text
+    observed_as: row_numbers
+  - name: target_value
+    label: Map To
+    type: string
+    observed_as: target_value
+  - name: create_new
+    label: Create New
+    type: boolean
+    observed_as: create_new
+    default: "0"
+  - name: can_create
+    label: Can Create
+    type: boolean
+    observed_as: can_create
+    default: "0"
+  - name: column
+    label: Column
+    type: integer
+    observed_as: column
+    required: true
+  - name: fieldname
+    label: Fieldname
+    type: string
+    observed_as: fieldname
+    required: true
+  - name: parent_field
+    label: Parent Field
+    type: string
+    observed_as: parent_field
+  - name: fieldtype
+    label: Fieldtype
+    type: enum
+    observed_as: fieldtype
+    required: true
+    enum_values:
+      - Select
+      - Link
+  - name: link_doctype
+    label: Link DocType
+    type: ref
+    observed_as: link_doctype
+    ref: DocType
+  - name: select_options
+    label: Select Options
+    type: text
+    observed_as: select_options
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: link_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabData Import Value Mapping
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Data Import Value Mapping
+    note: declared by the program and served by its API

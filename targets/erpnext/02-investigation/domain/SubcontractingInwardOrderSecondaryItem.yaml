@@ -1,0 +1,76 @@
+name: SubcontractingInwardOrderSecondaryItem
+description: 'Document type "Subcontracting Inward Order Secondary Item" (module Subcontracting): lines of another document.'
+fields:
+  - name: secondary_item_type
+    label: Type
+    type: enum
+    observed_as: secondary_item_type
+    required: true
+    enum_values:
+      - Co-Product
+      - By-Product
+      - Scrap
+      - Additional Finished Good
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+    required: true
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: fg_item_code
+    label: Finished Good Item Code
+    type: ref
+    observed_as: fg_item_code
+    required: true
+    ref: Item
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: produced_qty
+    label: Produced Qty
+    type: decimal
+    observed_as: produced_qty
+    required: true
+    default: "0"
+  - name: delivered_qty
+    label: Delivered Qty
+    type: decimal
+    observed_as: delivered_qty
+    required: true
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Item
+    kind: many-to-one
+    via: fg_item_code
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Inward Order Secondary Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Inward Order Secondary Item
+    note: declared by the program and served by its API

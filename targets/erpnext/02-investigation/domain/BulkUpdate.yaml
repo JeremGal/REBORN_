@@ -1,0 +1,41 @@
+name: BulkUpdate
+description: 'Document type "Bulk Update" (module Desk): single settings record.'
+fields:
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: field
+    label: Field
+    type: string
+    observed_as: field
+    required: true
+  - name: update_value
+    label: Update Value
+    type: text
+    observed_as: update_value
+    required: true
+  - name: condition
+    label: Condition
+    type: text
+    observed_as: condition
+  - name: limit
+    label: Limit
+    type: integer
+    observed_as: limit
+    default: "500"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBulk Update
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bulk Update
+    note: declared by the program and served by its API

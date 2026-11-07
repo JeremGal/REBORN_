@@ -1,0 +1,21 @@
+name: WorkflowTransitionTasks
+description: Document type "Workflow Transition Tasks" (module Workflow).
+fields:
+  - name: name
+    label: ID
+    type: string
+    observed_as: name
+relations:
+  - to: WorkflowTransitionTask
+    kind: one-to-many
+    via: tasks
+    description: lines (Tasks)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkflow Transition Tasks
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workflow Transition Tasks
+    note: declared by the program and served by its API

@@ -1,0 +1,40 @@
+name: QualityActionResolution
+description: 'Document type "Quality Action Resolution" (module Quality Management): lines of another document.'
+fields:
+  - name: problem
+    label: Problem
+    type: text
+    observed_as: problem
+  - name: resolution
+    label: Resolution
+    type: text
+    observed_as: resolution
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Open
+      - Completed
+  - name: responsible
+    label: Responsible
+    type: ref
+    observed_as: responsible
+    ref: User
+  - name: completion_by
+    label: Completion By
+    type: date
+    observed_as: completion_by
+relations:
+  - to: User
+    kind: many-to-one
+    via: responsible
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Action Resolution
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Action Resolution
+    note: declared by the program and served by its API

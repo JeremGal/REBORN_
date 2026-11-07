@@ -1,0 +1,101 @@
+name: Webhook
+description: Document type "Webhook" (module Integrations).
+fields:
+  - name: webhook_doctype
+    label: DocType
+    type: ref
+    observed_as: webhook_doctype
+    required: true
+    ref: DocType
+  - name: webhook_docevent
+    label: Doc Event
+    type: enum
+    observed_as: webhook_docevent
+    enum_values:
+      - after_insert
+      - on_update
+      - on_submit
+      - on_cancel
+      - on_trash
+      - on_update_after_submit
+      - on_change
+      - workflow_transition
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: condition
+    label: Condition
+    type: text
+    observed_as: condition
+  - name: request_url
+    label: Request URL
+    type: text
+    observed_as: request_url
+    required: true
+  - name: is_dynamic_url
+    label: Is Dynamic URL?
+    type: boolean
+    observed_as: is_dynamic_url
+    default: "0"
+  - name: timeout
+    label: Request Timeout
+    type: integer
+    observed_as: timeout
+    default: "5"
+  - name: background_jobs_queue
+    label: Background Jobs Queue
+    type: string
+    observed_as: background_jobs_queue
+  - name: request_method
+    label: Request Method
+    type: enum
+    observed_as: request_method
+    required: true
+    enum_values:
+      - POST
+      - PUT
+      - DELETE
+    default: POST
+  - name: request_structure
+    label: Request Structure
+    type: enum
+    observed_as: request_structure
+    enum_values:
+      - Form URL-Encoded
+      - JSON
+  - name: enable_security
+    label: Enable Security
+    type: boolean
+    observed_as: enable_security
+    default: "0"
+  - name: webhook_secret
+    label: Webhook Secret
+    type: string
+    observed_as: webhook_secret
+  - name: webhook_json
+    label: JSON Request Body
+    type: text
+    observed_as: webhook_json
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: webhook_doctype
+  - to: WebhookHeader
+    kind: one-to-many
+    via: webhook_headers
+    description: lines (Headers)
+  - to: WebhookData
+    kind: one-to-many
+    via: webhook_data
+    description: lines (Data)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWebhook
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Webhook
+    note: declared by the program and served by its API

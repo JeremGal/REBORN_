@@ -1,0 +1,71 @@
+name: QualityAction
+description: What you did to fix or prevent a quality problem. Document type "Quality Action" (module Quality Management).
+fields:
+  - name: corrective_preventive
+    label: Corrective/Preventive
+    type: enum
+    observed_as: corrective_preventive
+    required: true
+    enum_values:
+      - Corrective
+      - Preventive
+    default: Corrective
+  - name: review
+    label: Review
+    type: ref
+    observed_as: review
+    ref: QualityReview
+  - name: feedback
+    label: Feedback
+    type: ref
+    observed_as: feedback
+    ref: QualityFeedback
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Open
+      - Completed
+    default: Open
+  - name: date
+    label: Date
+    type: date
+    observed_as: date
+    default: Today
+  - name: goal
+    label: Goal
+    type: ref
+    observed_as: goal
+    ref: QualityGoal
+  - name: procedure
+    label: Procedure
+    type: ref
+    observed_as: procedure
+    ref: QualityProcedure
+relations:
+  - to: QualityReview
+    kind: many-to-one
+    via: review
+  - to: QualityFeedback
+    kind: many-to-one
+    via: feedback
+  - to: QualityGoal
+    kind: many-to-one
+    via: goal
+  - to: QualityProcedure
+    kind: many-to-one
+    via: procedure
+  - to: QualityActionResolution
+    kind: one-to-many
+    via: resolutions
+    description: lines (Resolutions)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Action
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Action
+    note: declared by the program and served by its API

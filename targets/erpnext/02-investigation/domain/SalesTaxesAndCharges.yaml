@@ -1,0 +1,128 @@
+name: SalesTaxesAndCharges
+description: 'Document type "Sales Taxes and Charges" (module Accounts): lines of another document.'
+fields:
+  - name: charge_type
+    label: Type
+    type: enum
+    observed_as: charge_type
+    required: true
+    enum_values:
+      - Actual
+      - On Net Total
+      - On Previous Row Amount
+      - On Previous Row Total
+      - On Item Quantity
+  - name: row_id
+    label: "Reference Row #"
+    type: string
+    observed_as: row_id
+  - name: account_head
+    label: Account Head
+    type: ref
+    observed_as: account_head
+    required: true
+    ref: Account
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+    required: true
+  - name: included_in_print_rate
+    label: Is this Tax included in Basic Rate?
+    type: boolean
+    observed_as: included_in_print_rate
+    default: "0"
+  - name: included_in_paid_amount
+    label: Considered In Paid Amount
+    type: boolean
+    observed_as: included_in_paid_amount
+    default: "0"
+  - name: set_by_item_tax_template
+    label: Set by Item Tax Template
+    type: boolean
+    observed_as: set_by_item_tax_template
+    default: "0"
+  - name: is_tax_withholding_account
+    label: Is Tax Withholding Account
+    type: boolean
+    observed_as: is_tax_withholding_account
+    default: "0"
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+    default: :Company
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: rate
+    label: Tax Rate
+    type: decimal
+    observed_as: rate
+  - name: account_currency
+    label: Account Currency
+    type: ref
+    observed_as: account_currency
+    ref: Currency
+  - name: net_amount
+    label: Net Amount
+    type: money
+    observed_as: net_amount
+  - name: tax_amount
+    label: Amount
+    type: money
+    observed_as: tax_amount
+  - name: total
+    label: Total
+    type: money
+    observed_as: total
+  - name: tax_amount_after_discount_amount
+    label: Tax Amount After Discount Amount
+    type: money
+    observed_as: tax_amount_after_discount_amount
+  - name: base_net_amount
+    label: Net Amount (Company Currency)
+    type: money
+    observed_as: base_net_amount
+  - name: base_tax_amount
+    label: Amount (Company Currency)
+    type: money
+    observed_as: base_tax_amount
+  - name: base_total
+    label: Total (Company Currency)
+    type: money
+    observed_as: base_total
+  - name: base_tax_amount_after_discount_amount
+    label: Tax Amount After Discount Amount (Company Currency)
+    type: money
+    observed_as: base_tax_amount_after_discount_amount
+  - name: dont_recompute_tax
+    label: Don't Recompute Tax
+    type: boolean
+    observed_as: dont_recompute_tax
+    default: "0"
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account_head
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Currency
+    kind: many-to-one
+    via: account_currency
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSales Taxes and Charges
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sales Taxes and Charges
+    note: declared by the program and served by its API

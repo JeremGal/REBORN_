@@ -1,0 +1,68 @@
+name: Video
+description: Document type "Video" (module Utilities).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+    unique: true
+  - name: provider
+    label: Provider
+    type: enum
+    observed_as: provider
+    required: true
+    enum_values:
+      - YouTube
+      - Vimeo
+  - name: url
+    label: URL
+    type: string
+    observed_as: url
+    required: true
+  - name: youtube_video_id
+    label: Youtube ID
+    type: string
+    observed_as: youtube_video_id
+  - name: publish_date
+    label: Publish Date
+    type: date
+    observed_as: publish_date
+  - name: duration
+    label: Duration
+    type: integer
+    observed_as: duration
+  - name: like_count
+    label: Likes
+    type: decimal
+    observed_as: like_count
+  - name: view_count
+    label: Views
+    type: decimal
+    observed_as: view_count
+  - name: dislike_count
+    label: Dislikes
+    type: decimal
+    observed_as: dislike_count
+  - name: comment_count
+    label: Comments
+    type: decimal
+    observed_as: comment_count
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+    required: true
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabVideo
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Video
+    note: declared by the program and served by its API

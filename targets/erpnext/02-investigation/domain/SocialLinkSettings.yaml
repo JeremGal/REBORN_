@@ -1,0 +1,29 @@
+name: SocialLinkSettings
+description: 'Document type "Social Link Settings" (module Website): lines of another document.'
+fields:
+  - name: social_link_type
+    label: Social Link Type
+    type: enum
+    observed_as: social_link_type
+    enum_values:
+      - facebook
+      - linkedin
+      - twitter
+      - email
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+  - name: background_color
+    label: Background Color
+    type: string
+    observed_as: background_color
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSocial Link Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Social Link Settings
+    note: declared by the program and served by its API

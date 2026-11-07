@@ -1,0 +1,84 @@
+name: OverduePayment
+description: 'Document type "Overdue Payment" (module Accounts): lines of another document.'
+fields:
+  - name: sales_invoice
+    label: Sales Invoice
+    type: ref
+    observed_as: sales_invoice
+    required: true
+    ref: SalesInvoice
+  - name: payment_schedule
+    label: Payment Schedule
+    type: string
+    observed_as: payment_schedule
+  - name: dunning_level
+    label: Dunning Level
+    type: integer
+    observed_as: dunning_level
+    default: "1"
+  - name: payment_term
+    label: Payment Term
+    type: ref
+    observed_as: payment_term
+    ref: PaymentTerm
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: due_date
+    label: Due Date
+    type: date
+    observed_as: due_date
+  - name: overdue_days
+    label: Overdue Days
+    type: string
+    observed_as: overdue_days
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    ref: ModeOfPayment
+  - name: invoice_portion
+    label: Invoice Portion
+    type: percent
+    observed_as: invoice_portion
+  - name: payment_amount
+    label: Payment Amount
+    type: money
+    observed_as: payment_amount
+  - name: outstanding
+    label: Outstanding
+    type: money
+    observed_as: outstanding
+  - name: paid_amount
+    label: Paid Amount
+    type: money
+    observed_as: paid_amount
+  - name: discounted_amount
+    label: Discounted Amount
+    type: money
+    observed_as: discounted_amount
+    default: "0"
+  - name: interest
+    label: Interest
+    type: money
+    observed_as: interest
+relations:
+  - to: SalesInvoice
+    kind: many-to-one
+    via: sales_invoice
+  - to: PaymentTerm
+    kind: many-to-one
+    via: payment_term
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOverdue Payment
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Overdue Payment
+    note: declared by the program and served by its API

@@ -1,0 +1,51 @@
+name: DocumentNamingRule
+description: Document type "Document Naming Rule" (module Core).
+fields:
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: priority
+    label: Priority
+    type: integer
+    observed_as: priority
+  - name: prefix
+    label: Prefix
+    type: string
+    observed_as: prefix
+    required: true
+  - name: counter
+    label: Counter
+    type: integer
+    observed_as: counter
+    default: "0"
+  - name: prefix_digits
+    label: Digits
+    type: integer
+    observed_as: prefix_digits
+    required: true
+    default: "5"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: DocumentNamingRuleCondition
+    kind: one-to-many
+    via: conditions
+    description: lines (Conditions)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocument Naming Rule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Document Naming Rule
+    note: declared by the program and served by its API

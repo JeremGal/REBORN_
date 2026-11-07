@@ -1,0 +1,413 @@
+name: PricingRule
+description: Changes a price or gives a discount when its conditions are met. Document type "Pricing Rule" (module Accounts).
+fields:
+  - name: naming_series
+    label: Naming Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - PRLE-.####
+    default: PRLE-.####
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: disable
+    label: Disable
+    type: boolean
+    observed_as: disable
+    default: "0"
+  - name: apply_on
+    label: Apply On
+    type: enum
+    observed_as: apply_on
+    required: true
+    enum_values:
+      - Item Code
+      - Item Group
+      - Brand
+      - Transaction
+    default: Item Code
+  - name: price_or_product_discount
+    label: Price or Product Discount
+    type: enum
+    observed_as: price_or_product_discount
+    required: true
+    enum_values:
+      - Price
+      - Product
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: mixed_conditions
+    label: Mixed Conditions
+    type: boolean
+    observed_as: mixed_conditions
+    default: "0"
+  - name: is_cumulative
+    label: Is Cumulative
+    type: boolean
+    observed_as: is_cumulative
+    default: "0"
+  - name: coupon_code_based
+    label: Coupon Code Based
+    type: boolean
+    observed_as: coupon_code_based
+    default: "0"
+  - name: apply_rule_on_other
+    label: Apply Rule On Other
+    type: enum
+    observed_as: apply_rule_on_other
+    enum_values:
+      - Item Code
+      - Item Group
+      - Brand
+  - name: other_item_code
+    label: Item Code
+    type: ref
+    observed_as: other_item_code
+    ref: Item
+  - name: other_item_group
+    label: Item Group
+    type: ref
+    observed_as: other_item_group
+    ref: ItemGroup
+  - name: other_brand
+    label: Brand
+    type: ref
+    observed_as: other_brand
+    ref: Brand
+  - name: selling
+    label: Selling
+    type: boolean
+    observed_as: selling
+    default: "0"
+  - name: buying
+    label: Buying
+    type: boolean
+    observed_as: buying
+    default: "0"
+  - name: applicable_for
+    label: Applicable For
+    type: enum
+    observed_as: applicable_for
+    enum_values:
+      - Customer
+      - Customer Group
+      - Territory
+      - Sales Partner
+      - Campaign
+      - Supplier
+      - Supplier Group
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: sales_partner
+    label: Sales Partner
+    type: ref
+    observed_as: sales_partner
+    ref: SalesPartner
+  - name: campaign
+    label: Campaign
+    type: ref
+    observed_as: campaign
+    ref: UTMCampaign
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: supplier_group
+    label: Supplier Group
+    type: ref
+    observed_as: supplier_group
+    ref: SupplierGroup
+  - name: min_qty
+    label: Min Qty (As Per Stock UOM)
+    type: decimal
+    observed_as: min_qty
+  - name: max_qty
+    label: Max Qty (As Per Stock UOM)
+    type: decimal
+    observed_as: max_qty
+  - name: min_amt
+    label: Min Amt
+    type: money
+    observed_as: min_amt
+    default: "0"
+  - name: max_amt
+    label: Max Amt
+    type: money
+    observed_as: max_amt
+    default: "0"
+  - name: same_item
+    label: Same Item
+    type: boolean
+    observed_as: same_item
+    default: "0"
+  - name: free_item
+    label: Free Item
+    type: ref
+    observed_as: free_item
+    ref: Item
+  - name: free_qty
+    label: Qty
+    type: decimal
+    observed_as: free_qty
+    default: "0"
+  - name: free_item_rate
+    label: Free Item Rate
+    type: money
+    observed_as: free_item_rate
+  - name: free_item_uom
+    label: UOM
+    type: ref
+    observed_as: free_item_uom
+    ref: UOM
+  - name: round_free_qty
+    label: Round Free Qty
+    type: boolean
+    observed_as: round_free_qty
+    default: "0"
+  - name: dont_enforce_free_item_qty
+    label: Don't Enforce Free Item Qty
+    type: boolean
+    observed_as: dont_enforce_free_item_qty
+    default: "0"
+  - name: is_recursive
+    label: Is Recursive
+    type: boolean
+    observed_as: is_recursive
+    default: "0"
+  - name: recurse_for
+    label: Recurse Every (As Per Transaction UOM)
+    type: decimal
+    observed_as: recurse_for
+  - name: apply_recursion_over
+    label: Apply Recursion Over (As Per Transaction UOM)
+    type: decimal
+    observed_as: apply_recursion_over
+    default: "0"
+  - name: valid_from
+    label: Valid From
+    type: date
+    observed_as: valid_from
+    default: Today
+  - name: valid_upto
+    label: Valid Up To
+    type: date
+    observed_as: valid_upto
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: margin_type
+    label: Margin Type
+    type: enum
+    observed_as: margin_type
+    enum_values:
+      - Percentage
+      - Amount
+    default: Percentage
+  - name: margin_rate_or_amount
+    label: Margin Rate or Amount
+    type: decimal
+    observed_as: margin_rate_or_amount
+    default: "0"
+  - name: rate_or_discount
+    label: Rate or Discount
+    type: enum
+    observed_as: rate_or_discount
+    enum_values:
+      - Rate
+      - Discount Percentage
+      - Discount Amount
+    default: Discount Percentage
+  - name: apply_discount_on
+    label: Apply Discount On
+    type: enum
+    observed_as: apply_discount_on
+    enum_values:
+      - Grand Total
+      - Net Total
+    default: Grand Total
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    default: "0"
+  - name: discount_amount
+    label: Discount Amount
+    type: money
+    observed_as: discount_amount
+    default: "0"
+  - name: discount_percentage
+    label: Discount Percentage
+    type: decimal
+    observed_as: discount_percentage
+  - name: for_price_list
+    label: For Price List
+    type: ref
+    observed_as: for_price_list
+    ref: PriceList
+  - name: condition
+    label: Condition
+    type: text
+    observed_as: condition
+  - name: apply_multiple_pricing_rules
+    label: Apply Multiple Pricing Rules
+    type: boolean
+    observed_as: apply_multiple_pricing_rules
+    default: "0"
+  - name: apply_discount_on_rate
+    label: Apply Discount on Discounted Rate
+    type: boolean
+    observed_as: apply_discount_on_rate
+    default: "0"
+  - name: threshold_percentage
+    label: Threshold for Suggestion (In Percentage)
+    type: percent
+    observed_as: threshold_percentage
+  - name: validate_applied_rule
+    label: Validate Applied Rule
+    type: boolean
+    observed_as: validate_applied_rule
+    default: "0"
+  - name: rule_description
+    label: Rule Description
+    type: text
+    observed_as: rule_description
+  - name: has_priority
+    label: Has Priority
+    type: boolean
+    observed_as: has_priority
+    default: "0"
+  - name: priority
+    label: Priority
+    type: enum
+    observed_as: priority
+    enum_values:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+      - "10"
+      - "11"
+      - "12"
+      - "13"
+      - "14"
+      - "15"
+      - "16"
+      - "17"
+      - "18"
+      - "19"
+      - "20"
+  - name: promotional_scheme_id
+    label: Promotional Scheme Id
+    type: string
+    observed_as: promotional_scheme_id
+  - name: promotional_scheme
+    label: Promotional Scheme
+    type: ref
+    observed_as: promotional_scheme
+    ref: PromotionalScheme
+relations:
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: PricingRuleItemCode
+    kind: one-to-many
+    via: items
+    description: lines (Apply Rule On Item Code)
+  - to: PricingRuleItemGroup
+    kind: one-to-many
+    via: item_groups
+    description: lines (Apply Rule On Item Group)
+  - to: PricingRuleBrand
+    kind: one-to-many
+    via: brands
+    description: lines (Apply Rule On Brand)
+  - to: Item
+    kind: many-to-one
+    via: other_item_code
+  - to: ItemGroup
+    kind: many-to-one
+    via: other_item_group
+  - to: Brand
+    kind: many-to-one
+    via: other_brand
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: SalesPartner
+    kind: many-to-one
+    via: sales_partner
+  - to: UTMCampaign
+    kind: many-to-one
+    via: campaign
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: SupplierGroup
+    kind: many-to-one
+    via: supplier_group
+  - to: Item
+    kind: many-to-one
+    via: free_item
+  - to: UOM
+    kind: many-to-one
+    via: free_item_uom
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: PriceList
+    kind: many-to-one
+    via: for_price_list
+  - to: PromotionalScheme
+    kind: many-to-one
+    via: promotional_scheme
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPricing Rule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Pricing Rule
+    note: declared by the program and served by its API

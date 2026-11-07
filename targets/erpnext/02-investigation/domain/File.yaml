@@ -1,0 +1,95 @@
+name: File
+description: Document type "File" (module Core).
+fields:
+  - name: file_name
+    label: File Name
+    type: string
+    observed_as: file_name
+  - name: is_private
+    label: Is Private
+    type: boolean
+    observed_as: is_private
+    default: "0"
+  - name: file_type
+    label: File Type
+    type: string
+    observed_as: file_type
+  - name: is_home_folder
+    label: Is Home Folder
+    type: boolean
+    observed_as: is_home_folder
+    default: "0"
+  - name: is_attachments_folder
+    label: Is Attachments Folder
+    type: boolean
+    observed_as: is_attachments_folder
+    default: "0"
+  - name: file_size
+    label: File Size
+    type: integer
+    observed_as: file_size
+  - name: file_url
+    label: File URL
+    type: text
+    observed_as: file_url
+  - name: thumbnail_url
+    label: Thumbnail URL
+    type: text
+    observed_as: thumbnail_url
+  - name: folder
+    label: Folder
+    type: ref
+    observed_as: folder
+    ref: File
+  - name: is_folder
+    label: Is Folder
+    type: boolean
+    observed_as: is_folder
+    default: "0"
+  - name: attached_to_doctype
+    label: Attached To DocType
+    type: ref
+    observed_as: attached_to_doctype
+    ref: DocType
+  - name: attached_to_name
+    label: Attached To Name
+    type: string
+    observed_as: attached_to_name
+  - name: attached_to_field
+    label: Attached To Field
+    type: string
+    observed_as: attached_to_field
+  - name: old_parent
+    label: old_parent
+    type: string
+    observed_as: old_parent
+  - name: content_hash
+    label: Content Hash
+    type: string
+    observed_as: content_hash
+  - name: uploaded_to_dropbox
+    label: Uploaded To Dropbox
+    type: boolean
+    observed_as: uploaded_to_dropbox
+    default: "0"
+  - name: uploaded_to_google_drive
+    label: Uploaded To Google Drive
+    type: boolean
+    observed_as: uploaded_to_google_drive
+    default: "0"
+relations:
+  - to: File
+    kind: many-to-one
+    via: folder
+  - to: DocType
+    kind: many-to-one
+    via: attached_to_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabFile
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of File
+    note: declared by the program and served by its API

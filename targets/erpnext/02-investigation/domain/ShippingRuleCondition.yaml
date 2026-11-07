@@ -1,0 +1,26 @@
+name: ShippingRuleCondition
+description: 'A condition for a Shipping Rule Document type "Shipping Rule Condition" (module Accounts): lines of another document.'
+fields:
+  - name: from_value
+    label: From Value
+    type: decimal
+    observed_as: from_value
+    required: true
+  - name: to_value
+    label: To Value
+    type: decimal
+    observed_as: to_value
+  - name: shipping_amount
+    label: Shipping Amount
+    type: money
+    observed_as: shipping_amount
+    required: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabShipping Rule Condition
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Shipping Rule Condition
+    note: declared by the program and served by its API

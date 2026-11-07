@@ -1,0 +1,297 @@
+name: Shipment
+description: 'A parcel you send through a carrier. Document type "Shipment" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: pickup_from_type
+    label: Pickup from
+    type: enum
+    observed_as: pickup_from_type
+    enum_values:
+      - Company
+      - Customer
+      - Supplier
+    default: Company
+  - name: pickup_company
+    label: Company
+    type: ref
+    observed_as: pickup_company
+    ref: Company
+  - name: pickup_customer
+    label: Customer
+    type: ref
+    observed_as: pickup_customer
+    ref: Customer
+  - name: pickup_supplier
+    label: Supplier
+    type: ref
+    observed_as: pickup_supplier
+    ref: Supplier
+  - name: pickup
+    label: Pickup From
+    type: string
+    observed_as: pickup
+  - name: pickup_address_name
+    label: Address
+    type: ref
+    observed_as: pickup_address_name
+    required: true
+    ref: Address
+  - name: pickup_address
+    label: ""
+    type: text
+    observed_as: pickup_address
+  - name: pickup_contact_person
+    label: Pickup Contact Person
+    type: ref
+    observed_as: pickup_contact_person
+    ref: User
+  - name: pickup_contact_name
+    label: Contact
+    type: ref
+    observed_as: pickup_contact_name
+    ref: Contact
+  - name: pickup_contact_email
+    label: Contact Email
+    type: string
+    observed_as: pickup_contact_email
+  - name: pickup_contact
+    label: ""
+    type: text
+    observed_as: pickup_contact
+  - name: delivery_to_type
+    label: Delivery to
+    type: enum
+    observed_as: delivery_to_type
+    enum_values:
+      - Company
+      - Customer
+      - Supplier
+    default: Customer
+  - name: delivery_company
+    label: Company
+    type: ref
+    observed_as: delivery_company
+    ref: Company
+  - name: delivery_customer
+    label: Customer
+    type: ref
+    observed_as: delivery_customer
+    ref: Customer
+  - name: delivery_supplier
+    label: Supplier
+    type: ref
+    observed_as: delivery_supplier
+    ref: Supplier
+  - name: delivery_to
+    label: Delivery To
+    type: string
+    observed_as: delivery_to
+  - name: delivery_address_name
+    label: Address
+    type: ref
+    observed_as: delivery_address_name
+    required: true
+    ref: Address
+  - name: delivery_address
+    label: ""
+    type: text
+    observed_as: delivery_address
+  - name: delivery_contact_name
+    label: Contact
+    type: ref
+    observed_as: delivery_contact_name
+    ref: Contact
+  - name: delivery_contact_email
+    label: Contact Email
+    type: string
+    observed_as: delivery_contact_email
+  - name: delivery_contact
+    label: ""
+    type: text
+    observed_as: delivery_contact
+  - name: parcel_template
+    label: Parcel Template
+    type: ref
+    observed_as: parcel_template
+    ref: ShipmentParcelTemplate
+  - name: total_weight
+    label: Total Weight (kg)
+    type: decimal
+    observed_as: total_weight
+  - name: pallets
+    label: Pallets
+    type: enum
+    observed_as: pallets
+    enum_values:
+      - No
+      - Yes
+    default: No
+  - name: value_of_goods
+    label: Value of Goods
+    type: money
+    observed_as: value_of_goods
+    required: true
+    precision: 2
+  - name: pickup_date
+    label: Pickup Date
+    type: date
+    observed_as: pickup_date
+    required: true
+  - name: pickup_from
+    label: Pickup from
+    type: time
+    observed_as: pickup_from
+    required: true
+    default: 09:00
+  - name: pickup_to
+    label: Pickup to
+    type: time
+    observed_as: pickup_to
+    required: true
+    default: 17:00
+  - name: shipment_type
+    label: Shipment Type
+    type: enum
+    observed_as: shipment_type
+    enum_values:
+      - Goods
+      - Documents
+    default: Goods
+  - name: pickup_type
+    label: Pickup Type
+    type: enum
+    observed_as: pickup_type
+    enum_values:
+      - Pickup
+      - Self delivery
+    default: Pickup
+  - name: incoterm
+    label: Incoterm
+    type: ref
+    observed_as: incoterm
+    ref: Incoterm
+  - name: description_of_content
+    label: Description of Content
+    type: text
+    observed_as: description_of_content
+    required: true
+  - name: service_provider
+    label: Service Provider
+    type: string
+    observed_as: service_provider
+  - name: shipment_id
+    label: Shipment ID
+    type: string
+    observed_as: shipment_id
+  - name: shipment_amount
+    label: Shipment Amount
+    type: money
+    observed_as: shipment_amount
+    precision: 2
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Submitted
+      - Booked
+      - Cancelled
+      - Completed
+  - name: tracking_url
+    label: Tracking URL
+    type: text
+    observed_as: tracking_url
+  - name: carrier
+    label: Carrier
+    type: string
+    observed_as: carrier
+  - name: carrier_service
+    label: Carrier Service
+    type: string
+    observed_as: carrier_service
+  - name: awb_number
+    label: AWB Number
+    type: string
+    observed_as: awb_number
+  - name: tracking_status
+    label: Tracking Status
+    type: enum
+    observed_as: tracking_status
+    enum_values:
+      - In Progress
+      - Delivered
+      - Returned
+      - Lost
+  - name: tracking_status_info
+    label: Tracking Status Info
+    type: string
+    observed_as: tracking_status_info
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: Shipment
+relations:
+  - to: Company
+    kind: many-to-one
+    via: pickup_company
+  - to: Customer
+    kind: many-to-one
+    via: pickup_customer
+  - to: Supplier
+    kind: many-to-one
+    via: pickup_supplier
+  - to: Address
+    kind: many-to-one
+    via: pickup_address_name
+  - to: User
+    kind: many-to-one
+    via: pickup_contact_person
+  - to: Contact
+    kind: many-to-one
+    via: pickup_contact_name
+  - to: Company
+    kind: many-to-one
+    via: delivery_company
+  - to: Customer
+    kind: many-to-one
+    via: delivery_customer
+  - to: Supplier
+    kind: many-to-one
+    via: delivery_supplier
+  - to: Address
+    kind: many-to-one
+    via: delivery_address_name
+  - to: Contact
+    kind: many-to-one
+    via: delivery_contact_name
+  - to: ShipmentParcel
+    kind: one-to-many
+    via: shipment_parcel
+    description: lines (Shipment Parcel)
+  - to: ShipmentParcelTemplate
+    kind: many-to-one
+    via: parcel_template
+  - to: ShipmentDeliveryNote
+    kind: one-to-many
+    via: shipment_delivery_note
+    description: lines (Shipment Delivery Note)
+  - to: Incoterm
+    kind: many-to-one
+    via: incoterm
+  - to: Shipment
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabShipment
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Shipment
+    note: declared by the program and served by its API

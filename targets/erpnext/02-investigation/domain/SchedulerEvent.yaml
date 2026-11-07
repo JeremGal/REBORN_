@@ -1,0 +1,26 @@
+name: SchedulerEvent
+description: Document type "Scheduler Event" (module Core).
+fields:
+  - name: scheduled_against
+    label: Scheduled Against
+    type: ref
+    observed_as: scheduled_against
+    required: true
+    ref: DocType
+  - name: method
+    label: Method
+    type: string
+    observed_as: method
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: scheduled_against
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabScheduler Event
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Scheduler Event
+    note: declared by the program and served by its API

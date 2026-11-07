@@ -1,0 +1,446 @@
+name: Item
+description: A product or service you buy, sell or keep in stock. Document type "Item" (module Stock).
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - STO-ITEM-.YYYY.-
+  - name: item_code
+    label: Item Code
+    type: string
+    observed_as: item_code
+    required: true
+    unique: true
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    required: true
+    ref: ItemGroup
+  - name: stock_uom
+    label: Default Unit of Measure
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: is_stock_item
+    label: Maintain Stock
+    type: boolean
+    observed_as: is_stock_item
+    default: "1"
+  - name: is_fixed_asset
+    label: Is Fixed Asset
+    type: boolean
+    observed_as: is_fixed_asset
+    default: "0"
+  - name: auto_create_assets
+    label: Auto create assets on purchase
+    type: boolean
+    observed_as: auto_create_assets
+    default: "0"
+  - name: is_grouped_asset
+    label: Create Grouped Asset
+    type: boolean
+    observed_as: is_grouped_asset
+    default: "0"
+  - name: asset_category
+    label: Asset Category
+    type: ref
+    observed_as: asset_category
+    ref: AssetCategory
+  - name: asset_naming_series
+    label: Asset Naming Series
+    type: string
+    observed_as: asset_naming_series
+  - name: is_sales_item
+    label: Allow Sales
+    type: boolean
+    observed_as: is_sales_item
+    default: "1"
+  - name: allow_alternative_item
+    label: Allow Alternative Item
+    type: boolean
+    observed_as: allow_alternative_item
+    default: "0"
+  - name: has_variants
+    label: Has Variants
+    type: boolean
+    observed_as: has_variants
+    default: "0"
+  - name: is_purchase_item
+    label: Allow Purchase
+    type: boolean
+    observed_as: is_purchase_item
+    default: "1"
+  - name: is_customer_provided_item
+    label: Is Customer Provided Item
+    type: boolean
+    observed_as: is_customer_provided_item
+    default: "0"
+  - name: standard_rate
+    label: Standard Selling Rate
+    type: money
+    observed_as: standard_rate
+  - name: opening_stock
+    label: Opening Stock
+    type: decimal
+    observed_as: opening_stock
+  - name: over_delivery_receipt_allowance
+    label: Over Delivery/Receipt Allowance (%)
+    type: decimal
+    observed_as: over_delivery_receipt_allowance
+  - name: over_billing_allowance
+    label: Over Billing Allowance (%)
+    type: decimal
+    observed_as: over_billing_allowance
+  - name: restrict_to_companies
+    label: Restrict to Companies
+    type: boolean
+    observed_as: restrict_to_companies
+    default: "0"
+  - name: brand
+    label: Brand
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: enable_deferred_expense
+    label: Enable Deferred Expense
+    type: boolean
+    observed_as: enable_deferred_expense
+    default: "0"
+  - name: no_of_months_exp
+    label: No of Months (Expense)
+    type: integer
+    observed_as: no_of_months_exp
+  - name: enable_deferred_revenue
+    label: Enable Deferred Revenue
+    type: boolean
+    observed_as: enable_deferred_revenue
+    default: "0"
+  - name: no_of_months
+    label: No of Months (Revenue)
+    type: integer
+    observed_as: no_of_months
+  - name: purchase_tax_withholding_category
+    label: Purchase Tax Withholding Category
+    type: ref
+    observed_as: purchase_tax_withholding_category
+    ref: TaxWithholdingCategory
+  - name: sales_tax_withholding_category
+    label: Sales Tax Withholding Category
+    type: ref
+    observed_as: sales_tax_withholding_category
+    ref: TaxWithholdingCategory
+  - name: valuation_method
+    label: Valuation Method
+    type: enum
+    observed_as: valuation_method
+    enum_values:
+      - FIFO
+      - Moving Average
+      - LIFO
+  - name: valuation_rate
+    label: Valuation Rate
+    type: money
+    observed_as: valuation_rate
+  - name: end_of_life
+    label: End of Life
+    type: date
+    observed_as: end_of_life
+    default: 2099-12-31
+  - name: default_material_request_type
+    label: Default Material Request Type
+    type: enum
+    observed_as: default_material_request_type
+    enum_values:
+      - Purchase
+      - Material Transfer
+      - Material Issue
+      - Manufacture
+      - Customer Provided
+    default: Purchase
+  - name: warranty_period
+    label: Warranty Period (in days)
+    type: string
+    observed_as: warranty_period
+  - name: weight_per_unit
+    label: Weight Per Unit
+    type: decimal
+    observed_as: weight_per_unit
+  - name: weight_uom
+    label: Weight UOM
+    type: ref
+    observed_as: weight_uom
+    ref: UOM
+  - name: allow_negative_stock
+    label: Allow Negative Stock
+    type: boolean
+    observed_as: allow_negative_stock
+    default: "0"
+  - name: has_batch_no
+    label: Has Batch No
+    type: boolean
+    observed_as: has_batch_no
+    default: "0"
+  - name: create_new_batch
+    label: Automatically Create New Batch
+    type: boolean
+    observed_as: create_new_batch
+    default: "0"
+  - name: batch_number_series
+    label: Batch Number Series
+    type: string
+    observed_as: batch_number_series
+  - name: has_expiry_date
+    label: Has Expiry Date
+    type: boolean
+    observed_as: has_expiry_date
+    default: "0"
+  - name: shelf_life_in_days
+    label: Shelf Life In Days
+    type: integer
+    observed_as: shelf_life_in_days
+  - name: retain_sample
+    label: Retain Sample
+    type: boolean
+    observed_as: retain_sample
+    default: "0"
+  - name: sample_quantity
+    label: Max Sample Quantity
+    type: integer
+    observed_as: sample_quantity
+  - name: has_serial_no
+    label: Has Serial No
+    type: boolean
+    observed_as: has_serial_no
+    default: "0"
+  - name: serial_no_series
+    label: Serial Number Series
+    type: string
+    observed_as: serial_no_series
+  - name: use_serial_no_wise_valuation
+    label: Use Serial No Wise Valuation
+    type: boolean
+    observed_as: use_serial_no_wise_valuation
+    default: "1"
+  - name: variant_of
+    label: Variant Of
+    type: ref
+    observed_as: variant_of
+    ref: Item
+  - name: variant_based_on
+    label: Variant Based On
+    type: enum
+    observed_as: variant_based_on
+    enum_values:
+      - Item Attribute
+      - Manufacturer
+    default: Item Attribute
+  - name: purchase_uom
+    label: Default Purchase Unit of Measure
+    type: ref
+    observed_as: purchase_uom
+    ref: UOM
+  - name: min_order_qty
+    label: Minimum Order Qty
+    type: decimal
+    observed_as: min_order_qty
+    default: "0.00"
+  - name: safety_stock
+    label: Safety Stock
+    type: decimal
+    observed_as: safety_stock
+  - name: lead_time_days
+    label: Lead Time in days
+    type: integer
+    observed_as: lead_time_days
+  - name: last_purchase_rate
+    label: Last Purchase Rate
+    type: decimal
+    observed_as: last_purchase_rate
+  - name: delivered_by_supplier
+    label: Delivered by Supplier (Drop Ship)
+    type: boolean
+    observed_as: delivered_by_supplier
+    default: "0"
+  - name: country_of_origin
+    label: Country of Origin
+    type: ref
+    observed_as: country_of_origin
+    ref: Country
+  - name: customs_tariff_number
+    label: Customs Tariff Number
+    type: ref
+    observed_as: customs_tariff_number
+    ref: CustomsTariffNumber
+  - name: sales_uom
+    label: Default Sales Unit of Measure
+    type: ref
+    observed_as: sales_uom
+    ref: UOM
+  - name: grant_commission
+    label: Grant Commission
+    type: boolean
+    observed_as: grant_commission
+    default: "1"
+  - name: max_discount
+    label: Max Discount (%)
+    type: decimal
+    observed_as: max_discount
+  - name: include_item_in_manufacturing
+    label: Include Item In Manufacturing
+    type: boolean
+    observed_as: include_item_in_manufacturing
+    default: "1"
+  - name: is_sub_contracted_item
+    label: Is Subcontracted Item
+    type: boolean
+    observed_as: is_sub_contracted_item
+    default: "0"
+  - name: default_bom
+    label: Default BOM
+    type: ref
+    observed_as: default_bom
+    ref: BOM
+  - name: total_projected_qty
+    label: Total Projected Qty
+    type: decimal
+    observed_as: total_projected_qty
+  - name: default_manufacturer_part_no
+    label: Default Manufacturer Part No
+    type: string
+    observed_as: default_manufacturer_part_no
+  - name: default_item_manufacturer
+    label: Default Item Manufacturer
+    type: ref
+    observed_as: default_item_manufacturer
+    ref: Manufacturer
+  - name: customer_code
+    label: Customer Code
+    type: text
+    observed_as: customer_code
+  - name: inspection_required_before_purchase
+    label: Inspection Required before Purchase
+    type: boolean
+    observed_as: inspection_required_before_purchase
+    default: "0"
+  - name: inspection_required_before_delivery
+    label: Inspection Required before Delivery
+    type: boolean
+    observed_as: inspection_required_before_delivery
+    default: "0"
+  - name: quality_inspection_template
+    label: Quality Inspection Template
+    type: ref
+    observed_as: quality_inspection_template
+    ref: QualityInspectionTemplate
+relations:
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: AssetCategory
+    kind: many-to-one
+    via: asset_category
+  - to: CompanyRestriction
+    kind: one-to-many
+    via: allowed_companies
+    description: lines (Allowed Companies)
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: ItemDefault
+    kind: one-to-many
+    via: item_defaults
+    description: lines (Item Defaults)
+  - to: UOMConversionDetail
+    kind: one-to-many
+    via: uoms
+    description: lines (uoms)
+  - to: ItemTax
+    kind: one-to-many
+    via: taxes
+    description: lines (Taxes)
+  - to: TaxWithholdingCategory
+    kind: many-to-one
+    via: purchase_tax_withholding_category
+  - to: TaxWithholdingCategory
+    kind: many-to-one
+    via: sales_tax_withholding_category
+  - to: UOM
+    kind: many-to-one
+    via: weight_uom
+  - to: ItemBarcode
+    kind: one-to-many
+    via: barcodes
+    description: lines (Barcodes)
+  - to: ItemReorder
+    kind: one-to-many
+    via: reorder_levels
+    description: lines (Reorder level based on Warehouse)
+  - to: Item
+    kind: many-to-one
+    via: variant_of
+  - to: ItemVariantAttribute
+    kind: one-to-many
+    via: attributes
+    description: lines (Variant Attributes)
+  - to: UOM
+    kind: many-to-one
+    via: purchase_uom
+  - to: ItemSupplier
+    kind: one-to-many
+    via: supplier_items
+    description: lines (Item Supplier)
+  - to: Country
+    kind: many-to-one
+    via: country_of_origin
+  - to: CustomsTariffNumber
+    kind: many-to-one
+    via: customs_tariff_number
+  - to: UOM
+    kind: many-to-one
+    via: sales_uom
+  - to: ItemCustomerDetail
+    kind: one-to-many
+    via: customer_items
+    description: lines (Customer Items)
+  - to: BOM
+    kind: many-to-one
+    via: default_bom
+  - to: Manufacturer
+    kind: many-to-one
+    via: default_item_manufacturer
+  - to: QualityInspectionTemplate
+    kind: many-to-one
+    via: quality_inspection_template
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item
+    note: declared by the program and served by its API

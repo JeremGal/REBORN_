@@ -18,3 +18,8 @@ unknowns:
       - ref: ev_ec3ced9ce71260e2dc156a3e0527d10a8dbfb5fe47d51c2ef9b22ee0ac9c7d8c
         kind: rea
         note: analyze-javascript-application on the exported scripts (coverage partial)
+    severity: major
+    required_basis:
+      - runtime
+      - shipped-data
+    prediction: Each business module (invoices, customers, products) has its own list and card pages, each backed by a REST resource.

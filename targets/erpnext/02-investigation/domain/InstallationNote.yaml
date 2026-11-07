@@ -1,0 +1,138 @@
+name: InstallationNote
+description: 'Document type "Installation Note" (module Selling): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MAT-INS-.YYYY.-
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: customer_address
+    label: Customer Address
+    type: ref
+    observed_as: customer_address
+    ref: Address
+  - name: contact_person
+    label: Contact Person
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: customer_name
+    label: Name
+    type: string
+    observed_as: customer_name
+  - name: address_display
+    label: Address
+    type: text
+    observed_as: address_display
+  - name: contact_display
+    label: Contact
+    type: text
+    observed_as: contact_display
+  - name: contact_mobile
+    label: Mobile No
+    type: text
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: string
+    observed_as: contact_email
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    required: true
+    ref: Territory
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: inst_date
+    label: Installation Date
+    type: date
+    observed_as: inst_date
+    required: true
+  - name: inst_time
+    label: Installation Time
+    type: time
+    observed_as: inst_time
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - Submitted
+      - Cancelled
+    default: Draft
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: InstallationNote
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Address
+    kind: many-to-one
+    via: customer_address
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: InstallationNote
+    kind: many-to-one
+    via: amended_from
+  - to: InstallationNoteItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabInstallation Note
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Installation Note
+    note: declared by the program and served by its API

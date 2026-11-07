@@ -1,0 +1,43 @@
+name: DepreciationSchedule
+description: 'Document type "Depreciation Schedule" (module Assets): lines of another document.'
+fields:
+  - name: schedule_date
+    label: Schedule Date
+    type: date
+    observed_as: schedule_date
+    required: true
+  - name: depreciation_amount
+    label: Depreciation Amount
+    type: money
+    observed_as: depreciation_amount
+    required: true
+  - name: accumulated_depreciation_amount
+    label: Accumulated Depreciation Amount
+    type: money
+    observed_as: accumulated_depreciation_amount
+  - name: journal_entry
+    label: Journal Entry
+    type: ref
+    observed_as: journal_entry
+    ref: JournalEntry
+  - name: shift
+    label: Shift
+    type: ref
+    observed_as: shift
+    ref: AssetShiftFactor
+relations:
+  - to: JournalEntry
+    kind: many-to-one
+    via: journal_entry
+  - to: AssetShiftFactor
+    kind: many-to-one
+    via: shift
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDepreciation Schedule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Depreciation Schedule
+    note: declared by the program and served by its API

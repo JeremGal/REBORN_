@@ -1,0 +1,44 @@
+name: AssetMaintenanceTeam
+description: The people responsible for maintaining assets. Document type "Asset Maintenance Team" (module Assets).
+fields:
+  - name: maintenance_team_name
+    label: Maintenance Team Name
+    type: string
+    observed_as: maintenance_team_name
+    required: true
+    unique: true
+  - name: maintenance_manager
+    label: Maintenance Manager
+    type: ref
+    observed_as: maintenance_manager
+    ref: User
+  - name: maintenance_manager_name
+    label: Maintenance Manager Name
+    type: string
+    observed_as: maintenance_manager_name
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+relations:
+  - to: User
+    kind: many-to-one
+    via: maintenance_manager
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: MaintenanceTeamMember
+    kind: one-to-many
+    via: maintenance_team_members
+    description: lines (Maintenance Team Members)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Maintenance Team
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Maintenance Team
+    note: declared by the program and served by its API

@@ -1,0 +1,51 @@
+name: Role
+description: Document type "Role" (module Core).
+fields:
+  - name: role_name
+    label: Role Name
+    type: string
+    observed_as: role_name
+    required: true
+    unique: true
+  - name: home_page
+    label: Home Page
+    type: string
+    observed_as: home_page
+  - name: restrict_to_domain
+    label: Restrict To Domain
+    type: ref
+    observed_as: restrict_to_domain
+    ref: Domain
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: is_custom
+    label: Is Custom
+    type: boolean
+    observed_as: is_custom
+    default: "0"
+  - name: desk_access
+    label: Desk Access
+    type: boolean
+    observed_as: desk_access
+    default: "1"
+  - name: two_factor_auth
+    label: Two Factor Authentication
+    type: boolean
+    observed_as: two_factor_auth
+    default: "0"
+relations:
+  - to: Domain
+    kind: many-to-one
+    via: restrict_to_domain
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRole
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Role
+    note: declared by the program and served by its API

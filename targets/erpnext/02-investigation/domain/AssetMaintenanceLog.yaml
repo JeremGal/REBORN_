@@ -1,0 +1,115 @@
+name: AssetMaintenanceLog
+description: 'A record of maintenance done on an asset. Document type "Asset Maintenance Log" (module Assets): draft, submitted, cancelled life cycle.'
+fields:
+  - name: asset_maintenance
+    label: Asset Maintenance
+    type: ref
+    observed_as: asset_maintenance
+    ref: AssetMaintenance
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - ACC-AML-.YYYY.-
+  - name: asset_name
+    label: Asset Name
+    type: string
+    observed_as: asset_name
+  - name: item_code
+    label: Item Code
+    type: string
+    observed_as: item_code
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: task
+    label: Task
+    type: ref
+    observed_as: task
+    ref: AssetMaintenanceTask
+  - name: task_name
+    label: Task Name
+    type: string
+    observed_as: task_name
+  - name: maintenance_type
+    label: Maintenance Type
+    type: string
+    observed_as: maintenance_type
+  - name: periodicity
+    label: Periodicity
+    type: string
+    observed_as: periodicity
+  - name: has_certificate
+    label: "Has Certificate "
+    type: boolean
+    observed_as: has_certificate
+    default: "0"
+  - name: certificate_attachement
+    label: Certificate
+    type: file
+    observed_as: certificate_attachement
+  - name: maintenance_status
+    label: Maintenance Status
+    type: enum
+    observed_as: maintenance_status
+    required: true
+    enum_values:
+      - Planned
+      - Completed
+      - Cancelled
+      - Overdue
+  - name: assign_to_name
+    label: Assign To
+    type: string
+    observed_as: assign_to_name
+  - name: task_assignee_email
+    label: Task Assignee Email
+    type: string
+    observed_as: task_assignee_email
+  - name: due_date
+    label: Due Date
+    type: date
+    observed_as: due_date
+  - name: completion_date
+    label: Completion Date
+    type: date
+    observed_as: completion_date
+  - name: description
+    label: Description
+    type: string
+    observed_as: description
+  - name: actions_performed
+    label: Actions performed
+    type: text
+    observed_as: actions_performed
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: AssetMaintenanceLog
+relations:
+  - to: AssetMaintenance
+    kind: many-to-one
+    via: asset_maintenance
+  - to: AssetMaintenanceTask
+    kind: many-to-one
+    via: task
+  - to: AssetMaintenanceLog
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Maintenance Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Maintenance Log
+    note: declared by the program and served by its API

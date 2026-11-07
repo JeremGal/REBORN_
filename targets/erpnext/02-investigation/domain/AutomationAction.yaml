@@ -1,0 +1,57 @@
+name: AutomationAction
+description: 'Document type "Automation Action" (module Automation): lines of another document.'
+fields:
+  - name: step_key
+    label: Step Key
+    type: string
+    observed_as: step_key
+  - name: step_type
+    label: Step Type
+    type: string
+    observed_as: step_type
+    default: Action
+  - name: action_type
+    label: Action Type
+    type: string
+    observed_as: action_type
+  - name: target
+    label: Target
+    type: string
+    observed_as: target
+    default: trigger
+  - name: output_alias
+    label: Output Alias
+    type: string
+    observed_as: output_alias
+  - name: params
+    label: Parameters
+    type: json
+    observed_as: params
+  - name: step_condition
+    label: Step Condition
+    type: text
+    observed_as: step_condition
+  - name: related_condition
+    label: Related Record Condition
+    type: json
+    observed_as: related_condition
+  - name: parent_step
+    label: Parent Step
+    type: integer
+    observed_as: parent_step
+  - name: branch
+    label: Parent Step Branch
+    type: enum
+    observed_as: branch
+    enum_values:
+      - If
+      - Else
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAutomation Action
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Automation Action
+    note: declared by the program and served by its API

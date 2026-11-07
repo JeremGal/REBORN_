@@ -1,0 +1,66 @@
+name: AutomationEventSubscription
+description: Document type "Automation Event Subscription" (module Automation).
+fields:
+  - name: event_name
+    label: Event Name
+    type: string
+    observed_as: event_name
+    required: true
+  - name: correlation_key
+    label: Correlation Key
+    type: string
+    observed_as: correlation_key
+    required: true
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Waiting
+      - Matched
+      - Timed Out
+      - Cancelled
+    default: Waiting
+  - name: expires_at
+    label: Expires At
+    type: datetime
+    observed_as: expires_at
+    required: true
+  - name: run
+    label: Run
+    type: ref
+    observed_as: run
+    required: true
+    ref: AutomationRun
+  - name: step_key
+    label: Step Key
+    type: string
+    observed_as: step_key
+    required: true
+  - name: resume_queue
+    label: Resume Queue
+    type: ref
+    observed_as: resume_queue
+    required: true
+    ref: AutomationTriggerQueue
+  - name: event_payload
+    label: Event Payload
+    type: json
+    observed_as: event_payload
+relations:
+  - to: AutomationRun
+    kind: many-to-one
+    via: run
+  - to: AutomationTriggerQueue
+    kind: many-to-one
+    via: resume_queue
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAutomation Event Subscription
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Automation Event Subscription
+    note: declared by the program and served by its API

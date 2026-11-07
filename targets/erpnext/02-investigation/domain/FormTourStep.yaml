@@ -1,0 +1,132 @@
+name: FormTourStep
+description: 'Document type "Form Tour Step" (module Desk): lines of another document.'
+fields:
+  - name: ui_tour
+    label: UI Tour
+    type: boolean
+    observed_as: ui_tour
+    default: "0"
+  - name: is_table_field
+    label: Is Table Field
+    type: boolean
+    observed_as: is_table_field
+    default: "0"
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: parent_fieldname
+    label: Parent Field
+    type: string
+    observed_as: parent_fieldname
+  - name: fieldname
+    label: Fieldname
+    type: string
+    observed_as: fieldname
+  - name: element_selector
+    label: Element Selector
+    type: string
+    observed_as: element_selector
+  - name: parent_element_selector
+    label: Parent Element Selector
+    type: string
+    observed_as: parent_element_selector
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+    required: true
+  - name: ondemand_description
+    label: Popover or Modal Description
+    type: text
+    observed_as: ondemand_description
+  - name: position
+    label: Position
+    type: enum
+    observed_as: position
+    enum_values:
+      - Left
+      - Left Center
+      - Left Bottom
+      - Top
+      - Top Center
+      - Top Right
+      - Right
+      - Right Center
+      - Right Bottom
+      - Bottom
+      - Bottom Center
+      - Bottom Right
+      - Mid Center
+    default: Bottom
+  - name: hide_buttons
+    label: Hide Buttons
+    type: boolean
+    observed_as: hide_buttons
+    default: "0"
+  - name: popover_element
+    label: Popover Element
+    type: boolean
+    observed_as: popover_element
+    default: "0"
+  - name: modal_trigger
+    label: Modal Trigger
+    type: boolean
+    observed_as: modal_trigger
+    default: "0"
+  - name: offset_x
+    label: Offset X
+    type: integer
+    observed_as: offset_x
+    default: "0"
+  - name: offset_y
+    label: Offset Y
+    type: integer
+    observed_as: offset_y
+    default: "0"
+  - name: next_on_click
+    label: Next on Click
+    type: boolean
+    observed_as: next_on_click
+    default: "0"
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+  - name: fieldtype
+    label: Fieldtype
+    type: string
+    observed_as: fieldtype
+    default: "0"
+  - name: has_next_condition
+    label: Has Next Condition
+    type: boolean
+    observed_as: has_next_condition
+    default: "0"
+  - name: next_step_condition
+    label: Next Step Condition
+    type: text
+    observed_as: next_step_condition
+  - name: next_form_tour
+    label: Next Form Tour
+    type: ref
+    observed_as: next_form_tour
+    ref: FormTour
+  - name: child_doctype
+    label: Child Doctype
+    type: string
+    observed_as: child_doctype
+relations:
+  - to: FormTour
+    kind: many-to-one
+    via: next_form_tour
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabForm Tour Step
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Form Tour Step
+    note: declared by the program and served by its API

@@ -1,0 +1,285 @@
+name: StockSettings
+description: 'How items, warehouses and stock transactions work. Document type "Stock Settings" (module Stock): single settings record.'
+fields:
+  - name: item_naming_by
+    label: Item Naming By
+    type: enum
+    observed_as: item_naming_by
+    enum_values:
+      - Item Code
+      - Naming Series
+    default: Item Code
+  - name: naming_series_details
+    label: Naming Series options
+    type: text
+    observed_as: naming_series_details
+  - name: item_group
+    label: Default Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: valuation_method
+    label: Default Valuation Method
+    type: enum
+    observed_as: valuation_method
+    enum_values:
+      - FIFO
+      - Moving Average
+      - LIFO
+  - name: auto_insert_price_list_rate_if_missing
+    label: Auto insert Item Price if missing
+    type: boolean
+    observed_as: auto_insert_price_list_rate_if_missing
+    default: "0"
+  - name: update_existing_price_list_rate
+    label: Update existing Price List Rate
+    type: boolean
+    observed_as: update_existing_price_list_rate
+    default: "0"
+  - name: update_price_list_based_on
+    label: Update Price List based on
+    type: enum
+    observed_as: update_price_list_based_on
+    enum_values:
+      - Rate
+      - Price List Rate
+    default: Rate
+  - name: stock_uom
+    label: Default Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: allow_to_edit_stock_uom_qty_for_sales
+    label: Allow to edit stock UOM qty for Sales documents
+    type: boolean
+    observed_as: allow_to_edit_stock_uom_qty_for_sales
+    default: "0"
+  - name: allow_to_edit_stock_uom_qty_for_purchase
+    label: Allow to edit stock UOM qty for Purchase documents
+    type: boolean
+    observed_as: allow_to_edit_stock_uom_qty_for_purchase
+    default: "0"
+  - name: allow_to_edit_stock_uom_qty_for_stock_entry
+    label: Allow to edit stock UOM qty for Stock Entry
+    type: boolean
+    observed_as: allow_to_edit_stock_uom_qty_for_stock_entry
+    default: "0"
+  - name: allow_uom_with_conversion_rate_defined_in_item
+    label: Allow UOM with conversion rate defined in Item
+    type: boolean
+    observed_as: allow_uom_with_conversion_rate_defined_in_item
+    default: "0"
+  - name: allow_negative_stock
+    label: Allow negative stock
+    type: boolean
+    observed_as: allow_negative_stock
+    default: "0"
+  - name: over_delivery_receipt_allowance
+    label: Over Delivery/Receipt Allowance (%)
+    type: decimal
+    observed_as: over_delivery_receipt_allowance
+  - name: mr_qty_allowance
+    label: Over Transfer Allowance (%)
+    type: decimal
+    observed_as: mr_qty_allowance
+  - name: over_picking_allowance
+    label: Over Picking Allowance (%)
+    type: percent
+    observed_as: over_picking_allowance
+  - name: role_allowed_to_over_deliver_receive
+    label: Role Allowed to Over Deliver/Receive
+    type: ref
+    observed_as: role_allowed_to_over_deliver_receive
+    ref: Role
+  - name: show_barcode_field
+    label: Show barcode field in stock transactions
+    type: boolean
+    observed_as: show_barcode_field
+    default: "1"
+  - name: clean_description_html
+    label: Convert Item description to clean HTML in transactions
+    type: boolean
+    observed_as: clean_description_html
+    default: "1"
+  - name: allow_internal_transfer_at_arms_length_price
+    label: Allow internal transfers at user-defined rate
+    type: boolean
+    observed_as: allow_internal_transfer_at_arms_length_price
+    default: "0"
+  - name: validate_material_transfer_warehouses
+    label: Validate Material Transfer warehouses
+    type: boolean
+    observed_as: validate_material_transfer_warehouses
+    default: "0"
+  - name: enable_serial_and_batch_no_for_item
+    label: Activate Serial / Batch No for Item
+    type: boolean
+    observed_as: enable_serial_and_batch_no_for_item
+    default: "0"
+  - name: pick_serial_and_batch_based_on
+    label: Pick Serial / Batch Based On
+    type: enum
+    observed_as: pick_serial_and_batch_based_on
+    enum_values:
+      - FIFO
+      - LIFO
+      - Expiry
+    default: FIFO
+  - name: allow_existing_serial_no
+    label: Allow existing Serial No to be Manufactured/Received again
+    type: boolean
+    observed_as: allow_existing_serial_no
+    default: "1"
+  - name: use_serial_batch_fields
+    label: Use Serial / Batch fields
+    type: boolean
+    observed_as: use_serial_batch_fields
+    default: "1"
+  - name: disable_serial_no_and_batch_selector
+    label: Disable Serial No and Batch selector
+    type: boolean
+    observed_as: disable_serial_no_and_batch_selector
+    default: "0"
+  - name: allow_negative_stock_for_batch
+    label: Allow negative stock for Batch
+    type: boolean
+    observed_as: allow_negative_stock_for_batch
+    default: "0"
+  - name: do_not_use_batchwise_valuation
+    label: Do not use Batch-wise Valuation
+    type: boolean
+    observed_as: do_not_use_batchwise_valuation
+    default: "0"
+  - name: use_naming_series
+    label: Have default Naming Series for Batch ID?
+    type: boolean
+    observed_as: use_naming_series
+    default: "0"
+  - name: naming_series_prefix
+    label: Naming Series Prefix
+    type: string
+    observed_as: naming_series_prefix
+    default: BATCH-
+  - name: auto_create_serial_and_batch_bundle_for_outward
+    label: Auto create Serial and Batch Bundle for outward
+    type: boolean
+    observed_as: auto_create_serial_and_batch_bundle_for_outward
+    default: "1"
+  - name: do_not_update_serial_batch_on_creation_of_auto_bundle
+    label: Do not update Serial / Batch on creation of auto bundle
+    type: boolean
+    observed_as: do_not_update_serial_batch_on_creation_of_auto_bundle
+    default: "1"
+  - name: auto_map_raw_materials_to_finished_goods
+    label: Auto Map Raw Materials to Finished Goods
+    type: boolean
+    observed_as: auto_map_raw_materials_to_finished_goods
+    default: "0"
+  - name: set_serial_and_batch_bundle_naming_based_on_naming_series
+    label: Set Serial and Batch Bundle Naming Based on Naming Series
+    type: boolean
+    observed_as: set_serial_and_batch_bundle_naming_based_on_naming_series
+    default: "0"
+  - name: naming_series_preview
+    label: Naming Series options
+    type: text
+    observed_as: naming_series_preview
+  - name: enable_stock_reservation
+    label: Enable stock reservation
+    type: boolean
+    observed_as: enable_stock_reservation
+    default: "0"
+  - name: auto_reserve_stock
+    label: Auto reserve stock
+    type: boolean
+    observed_as: auto_reserve_stock
+    default: "0"
+  - name: allow_partial_reservation
+    label: Allow partial reservation
+    type: boolean
+    observed_as: allow_partial_reservation
+    default: "1"
+  - name: auto_reserve_stock_for_sales_order_on_purchase
+    label: Auto reserve Stock for Sales Order on Purchase
+    type: boolean
+    observed_as: auto_reserve_stock_for_sales_order_on_purchase
+    default: "0"
+  - name: auto_reserve_serial_and_batch
+    label: Auto reserve Serial and Batch Nos
+    type: boolean
+    observed_as: auto_reserve_serial_and_batch
+    default: "1"
+  - name: allow_to_make_quality_inspection_after_purchase_or_delivery
+    label: Allow to make Quality Inspection after Purchase / Delivery
+    type: boolean
+    observed_as: allow_to_make_quality_inspection_after_purchase_or_delivery
+    default: "0"
+  - name: action_if_quality_inspection_is_rejected
+    label: Action if Quality Inspection is rejected
+    type: enum
+    observed_as: action_if_quality_inspection_is_rejected
+    enum_values:
+      - Stop
+      - Warn
+    default: Stop
+  - name: action_if_quality_inspection_is_not_submitted
+    label: Action if Quality Inspection is not submitted
+    type: enum
+    observed_as: action_if_quality_inspection_is_not_submitted
+    enum_values:
+      - Stop
+      - Warn
+    default: Stop
+  - name: auto_indent
+    label: Raise Material Request when stock reaches re-order level
+    type: boolean
+    observed_as: auto_indent
+    default: "0"
+  - name: reorder_email_notify
+    label: Notify by email on creation of automatic Material Request
+    type: boolean
+    observed_as: reorder_email_notify
+    default: "0"
+  - name: stock_frozen_upto_days
+    label: Freeze stocks older than (days)
+    type: integer
+    observed_as: stock_frozen_upto_days
+  - name: stock_frozen_upto
+    label: Stock frozen up to
+    type: date
+    observed_as: stock_frozen_upto
+  - name: stock_auth_role
+    label: Role allowed to edit frozen stock
+    type: ref
+    observed_as: stock_auth_role
+    ref: Role
+  - name: role_allowed_to_create_edit_back_dated_transactions
+    label: Role allowed to create/edit back-dated transactions
+    type: ref
+    observed_as: role_allowed_to_create_edit_back_dated_transactions
+    ref: Role
+relations:
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Role
+    kind: many-to-one
+    via: role_allowed_to_over_deliver_receive
+  - to: Role
+    kind: many-to-one
+    via: stock_auth_role
+  - to: Role
+    kind: many-to-one
+    via: role_allowed_to_create_edit_back_dated_transactions
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Settings
+    note: declared by the program and served by its API

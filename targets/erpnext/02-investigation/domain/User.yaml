@@ -1,0 +1,407 @@
+name: User
+description: Someone who can log in to your site. Document type "User" (module Core).
+fields:
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: email
+    label: Email
+    type: string
+    observed_as: email
+    required: true
+  - name: first_name
+    label: First Name
+    type: string
+    observed_as: first_name
+    required: true
+  - name: middle_name
+    label: Middle Name
+    type: string
+    observed_as: middle_name
+  - name: last_name
+    label: Last Name
+    type: string
+    observed_as: last_name
+  - name: full_name
+    label: Full Name
+    type: string
+    observed_as: full_name
+  - name: username
+    label: Username
+    type: string
+    observed_as: username
+    unique: true
+  - name: language
+    label: Language
+    type: ref
+    observed_as: language
+    ref: Language
+  - name: time_zone
+    label: Time Zone
+    type: string
+    observed_as: time_zone
+  - name: send_welcome_email
+    label: Send Welcome Email
+    type: boolean
+    observed_as: send_welcome_email
+    default: "1"
+  - name: unsubscribed
+    label: Unsubscribed
+    type: boolean
+    observed_as: unsubscribed
+    default: "0"
+  - name: user_image
+    label: User Image
+    type: file
+    observed_as: user_image
+  - name: role_profile_name
+    label: Role Profile
+    type: ref
+    observed_as: role_profile_name
+    ref: RoleProfile
+  - name: module_profile
+    label: Module Profile
+    type: ref
+    observed_as: module_profile
+    ref: ModuleProfile
+  - name: home_settings
+    label: Home Settings
+    type: text
+    observed_as: home_settings
+  - name: gender
+    label: Gender
+    type: ref
+    observed_as: gender
+    ref: Gender
+  - name: birth_date
+    label: Birth Date
+    type: date
+    observed_as: birth_date
+  - name: interest
+    label: Interests
+    type: text
+    observed_as: interest
+  - name: phone
+    label: Phone
+    type: string
+    observed_as: phone
+  - name: location
+    label: Location
+    type: string
+    observed_as: location
+  - name: bio
+    label: Bio
+    type: text
+    observed_as: bio
+  - name: mobile_no
+    label: Mobile No
+    type: string
+    observed_as: mobile_no
+    unique: true
+  - name: mute_sounds
+    label: Mute Sounds
+    type: boolean
+    observed_as: mute_sounds
+    default: "0"
+  - name: desk_theme
+    label: Desk Theme
+    type: enum
+    observed_as: desk_theme
+    enum_values:
+      - Light
+      - Dark
+      - Automatic
+  - name: code_editor_type
+    label: Code Editor Type
+    type: enum
+    observed_as: code_editor_type
+    enum_values:
+      - vscode
+      - vim
+      - emacs
+    default: vscode
+  - name: banner_image
+    label: Banner Image
+    type: file
+    observed_as: banner_image
+  - name: search_bar
+    label: Search Bar
+    type: boolean
+    observed_as: search_bar
+    default: "1"
+  - name: notifications
+    label: Notifications
+    type: boolean
+    observed_as: notifications
+    default: "1"
+  - name: show_my_space
+    label: Show My Space
+    type: boolean
+    observed_as: show_my_space
+    default: "0"
+  - name: dock_mode
+    label: Dock
+    type: enum
+    observed_as: dock_mode
+    enum_values:
+      - Floating
+      - Pinned
+    default: Pinned
+  - name: list_sidebar
+    label: Sidebar
+    type: boolean
+    observed_as: list_sidebar
+    default: "1"
+  - name: bulk_actions
+    label: Bulk Actions
+    type: boolean
+    observed_as: bulk_actions
+    default: "1"
+  - name: view_switcher
+    label: View Switcher
+    type: boolean
+    observed_as: view_switcher
+    default: "1"
+  - name: form_sidebar
+    label: Sidebar
+    type: boolean
+    observed_as: form_sidebar
+    default: "1"
+  - name: form_navigation_buttons
+    label: Show navigation buttons
+    type: boolean
+    observed_as: form_navigation_buttons
+    default: "1"
+  - name: timeline
+    label: Timeline
+    type: boolean
+    observed_as: timeline
+    default: "1"
+  - name: dashboard
+    label: Dashboard
+    type: boolean
+    observed_as: dashboard
+    default: "1"
+  - name: show_absolute_datetime_in_timeline
+    label: Show Absolute Datetime in Timeline
+    type: boolean
+    observed_as: show_absolute_datetime_in_timeline
+    default: "0"
+  - name: report_split_view
+    label: Split view in reports
+    type: boolean
+    observed_as: report_split_view
+    default: "1"
+  - name: new_password
+    label: Set New Password
+    type: string
+    observed_as: new_password
+  - name: logout_all_sessions
+    label: Logout From All Devices After Changing Password
+    type: boolean
+    observed_as: logout_all_sessions
+    default: "1"
+  - name: reset_password_key
+    label: Reset Password Key
+    type: string
+    observed_as: reset_password_key
+  - name: last_reset_password_key_generated_on
+    label: Last Reset Password Key Generated On
+    type: datetime
+    observed_as: last_reset_password_key_generated_on
+  - name: last_password_reset_date
+    label: Last Password Reset Date
+    type: date
+    observed_as: last_password_reset_date
+  - name: redirect_url
+    label: Redirect URL
+    type: text
+    observed_as: redirect_url
+  - name: document_follow_notify
+    label: Send Notifications For Documents Followed By Me
+    type: boolean
+    observed_as: document_follow_notify
+    default: "0"
+  - name: document_follow_frequency
+    label: Frequency
+    type: enum
+    observed_as: document_follow_frequency
+    enum_values:
+      - Hourly
+      - Daily
+      - Weekly
+    default: Daily
+  - name: follow_created_documents
+    label: Auto follow documents that you create
+    type: boolean
+    observed_as: follow_created_documents
+    default: "0"
+  - name: follow_commented_documents
+    label: Auto follow documents that you comment on
+    type: boolean
+    observed_as: follow_commented_documents
+    default: "0"
+  - name: follow_liked_documents
+    label: Auto follow documents that you Like
+    type: boolean
+    observed_as: follow_liked_documents
+    default: "0"
+  - name: follow_assigned_documents
+    label: Auto follow documents that are assigned to you
+    type: boolean
+    observed_as: follow_assigned_documents
+    default: "0"
+  - name: follow_shared_documents
+    label: Auto follow documents that are shared with you
+    type: boolean
+    observed_as: follow_shared_documents
+    default: "0"
+  - name: email_signature
+    label: Email Signature
+    type: text
+    observed_as: email_signature
+  - name: thread_notify
+    label: Send Notifications For Email Threads
+    type: boolean
+    observed_as: thread_notify
+    default: "1"
+  - name: send_me_a_copy
+    label: Send Me A Copy of Outgoing Emails
+    type: boolean
+    observed_as: send_me_a_copy
+    default: "0"
+  - name: send_read_receipt
+    label: Send Read Receipt
+    type: boolean
+    observed_as: send_read_receipt
+    default: "0"
+  - name: allowed_in_mentions
+    label: Allowed In Mentions
+    type: boolean
+    observed_as: allowed_in_mentions
+    default: "1"
+  - name: default_workspace
+    label: Default Workspace
+    type: ref
+    observed_as: default_workspace
+    ref: Workspace
+  - name: default_app
+    label: Default App
+    type: string
+    observed_as: default_app
+  - name: simultaneous_sessions
+    label: Simultaneous Sessions
+    type: integer
+    observed_as: simultaneous_sessions
+    default: "2"
+  - name: restrict_ip
+    label: Restrict IP
+    type: text
+    observed_as: restrict_ip
+  - name: last_ip
+    label: Last IP
+    type: string
+    observed_as: last_ip
+  - name: login_after
+    label: Login After
+    type: integer
+    observed_as: login_after
+  - name: user_type
+    label: User Type
+    type: ref
+    observed_as: user_type
+    ref: UserType
+    default: System User
+  - name: last_active
+    label: Last Active
+    type: datetime
+    observed_as: last_active
+  - name: login_before
+    label: Login Before
+    type: integer
+    observed_as: login_before
+  - name: bypass_restrict_ip_check_if_2fa_enabled
+    label: Bypass Restricted IP Address Check If Two Factor Auth Enabled
+    type: boolean
+    observed_as: bypass_restrict_ip_check_if_2fa_enabled
+    default: "0"
+  - name: last_login
+    label: Last Login
+    type: string
+    observed_as: last_login
+  - name: last_known_versions
+    label: Last Known Versions
+    type: text
+    observed_as: last_known_versions
+  - name: api_key
+    label: API Key
+    type: string
+    observed_as: api_key
+    unique: true
+  - name: api_secret
+    label: API Secret
+    type: string
+    observed_as: api_secret
+  - name: onboarding_status
+    label: Onboarding Status
+    type: text
+    observed_as: onboarding_status
+    default: "{}"
+relations:
+  - to: Language
+    kind: many-to-one
+    via: language
+  - to: RoleProfile
+    kind: many-to-one
+    via: role_profile_name
+  - to: UserRoleProfile
+    kind: one-to-many
+    via: role_profiles
+    description: lines (Role Profiles)
+  - to: HasRole
+    kind: one-to-many
+    via: roles
+    description: lines (Roles Assigned)
+  - to: ModuleProfile
+    kind: many-to-one
+    via: module_profile
+  - to: BlockModule
+    kind: one-to-many
+    via: block_modules
+    description: lines (Block Modules)
+  - to: Gender
+    kind: many-to-one
+    via: gender
+  - to: UserEmail
+    kind: one-to-many
+    via: user_emails
+    description: lines (User Emails)
+  - to: Workspace
+    kind: many-to-one
+    via: default_workspace
+  - to: DefaultValue
+    kind: one-to-many
+    via: defaults
+    description: lines (User Defaults)
+  - to: UserType
+    kind: many-to-one
+    via: user_type
+  - to: UserSocialLogin
+    kind: one-to-many
+    via: social_logins
+    description: lines (Social Logins)
+  - to: UserSessionDisplay
+    kind: one-to-many
+    via: active_sessions
+    description: lines (Active Sessions)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUser
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of User
+    note: declared by the program and served by its API

@@ -1,0 +1,111 @@
+name: Batch
+description: A group of units of an item made or received together. Document type "Batch" (module Stock).
+fields:
+  - name: batch_id
+    label: Batch ID
+    type: string
+    observed_as: batch_id
+    required: true
+    unique: true
+  - name: item
+    label: Item
+    type: ref
+    observed_as: item
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: parent_batch
+    label: Parent Batch
+    type: ref
+    observed_as: parent_batch
+    ref: Batch
+  - name: manufacturing_date
+    label: Manufacturing Date
+    type: date
+    observed_as: manufacturing_date
+  - name: batch_qty
+    label: Batch Quantity
+    type: decimal
+    observed_as: batch_qty
+  - name: stock_uom
+    label: Batch UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: expiry_date
+    label: Expiry Date
+    type: date
+    observed_as: expiry_date
+  - name: use_batchwise_valuation
+    label: Use Batch-wise Valuation
+    type: boolean
+    observed_as: use_batchwise_valuation
+    default: "0"
+  - name: allow_negative_stock_for_batch
+    label: Allow Negative Stock for Batch
+    type: boolean
+    observed_as: allow_negative_stock_for_batch
+    default: "0"
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: reference_doctype
+    label: Source Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Source Document Name
+    type: string
+    observed_as: reference_name
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: description
+    label: Batch Description
+    type: text
+    observed_as: description
+  - name: qty_to_produce
+    label: Qty To Produce
+    type: decimal
+    observed_as: qty_to_produce
+  - name: produced_qty
+    label: Produced Qty
+    type: decimal
+    observed_as: produced_qty
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item
+  - to: Batch
+    kind: many-to-one
+    via: parent_batch
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBatch
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Batch
+    note: declared by the program and served by its API

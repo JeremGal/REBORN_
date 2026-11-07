@@ -1,0 +1,83 @@
+name: Appointment
+description: A meeting booked with a lead or customer. Document type "Appointment" (module CRM).
+fields:
+  - name: scheduled_time
+    label: Scheduled Time
+    type: datetime
+    observed_as: scheduled_time
+    required: true
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Open
+      - Unverified
+      - Closed
+  - name: created_through_portal
+    label: Created through Portal
+    type: boolean
+    observed_as: created_through_portal
+    default: "0"
+  - name: email_verified
+    label: Email Verified
+    type: boolean
+    observed_as: email_verified
+    default: "0"
+  - name: verification_token
+    label: Verification Token
+    type: string
+    observed_as: verification_token
+  - name: customer_name
+    label: Name
+    type: string
+    observed_as: customer_name
+    required: true
+  - name: customer_phone_number
+    label: Phone Number
+    type: string
+    observed_as: customer_phone_number
+  - name: customer_skype
+    label: Skype ID
+    type: string
+    observed_as: customer_skype
+  - name: customer_email
+    label: Email
+    type: string
+    observed_as: customer_email
+    required: true
+  - name: customer_details
+    label: Details
+    type: text
+    observed_as: customer_details
+  - name: appointment_with
+    label: Appointment With
+    type: ref
+    observed_as: appointment_with
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+  - name: calendar_event
+    label: Calendar Event
+    type: ref
+    observed_as: calendar_event
+    ref: Event
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: appointment_with
+  - to: Event
+    kind: many-to-one
+    via: calendar_event
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAppointment
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Appointment
+    note: declared by the program and served by its API

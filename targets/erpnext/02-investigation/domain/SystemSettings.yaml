@@ -1,0 +1,504 @@
+name: SystemSettings
+description: 'Document type "System Settings" (module Core): single settings record.'
+fields:
+  - name: app_name
+    label: Application Name
+    type: string
+    observed_as: app_name
+    default: Frappe
+  - name: country
+    label: Country
+    type: ref
+    observed_as: country
+    ref: Country
+  - name: language
+    label: Language
+    type: ref
+    observed_as: language
+    required: true
+    ref: Language
+  - name: time_zone
+    label: Time Zone
+    type: string
+    observed_as: time_zone
+    required: true
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: enable_onboarding
+    label: Enable Onboarding
+    type: boolean
+    observed_as: enable_onboarding
+    default: "0"
+  - name: setup_complete
+    label: Setup Complete
+    type: boolean
+    observed_as: setup_complete
+    default: "0"
+  - name: disable_document_sharing
+    label: Disable Document Sharing
+    type: boolean
+    observed_as: disable_document_sharing
+    default: "0"
+  - name: date_format
+    label: Date Format
+    type: enum
+    observed_as: date_format
+    required: true
+    enum_values:
+      - yyyy-mm-dd
+      - dd-mm-yyyy
+      - dd/mm/yyyy
+      - dd.mm.yyyy
+      - mm/dd/yyyy
+      - mm-dd-yyyy
+  - name: time_format
+    label: Time Format
+    type: enum
+    observed_as: time_format
+    required: true
+    enum_values:
+      - HH:mm:ss
+      - HH:mm
+    default: HH:mm:ss
+  - name: number_format
+    label: Number Format
+    type: enum
+    observed_as: number_format
+    required: true
+    enum_values:
+      - "#,###.##"
+      - "#.###,##"
+      - "# ###.##"
+      - "# ###,##"
+      - "#'###.##"
+      - "#, ###.##"
+      - "#,##,###.##"
+      - "#,###.###"
+      - "#.###"
+      - "#,###"
+  - name: use_number_format_from_currency
+    label: Use Number Format from Currency
+    type: boolean
+    observed_as: use_number_format_from_currency
+    default: "0"
+  - name: first_day_of_the_week
+    label: First Day of the Week
+    type: enum
+    observed_as: first_day_of_the_week
+    enum_values:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+    default: Sunday
+  - name: float_precision
+    label: Float Precision
+    type: enum
+    observed_as: float_precision
+    enum_values:
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+  - name: currency_precision
+    label: Currency Precision
+    type: enum
+    observed_as: currency_precision
+    enum_values:
+      - "0"
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+  - name: rounding_method
+    label: Rounding Method
+    type: enum
+    observed_as: rounding_method
+    enum_values:
+      - Banker's Rounding (legacy)
+      - Banker's Rounding
+      - Commercial Rounding
+    default: Banker's Rounding (legacy)
+  - name: show_absolute_datetime_in_timeline
+    label: Show Absolute Datetime in Timeline
+    type: boolean
+    observed_as: show_absolute_datetime_in_timeline
+    default: "0"
+  - name: apply_strict_user_permissions
+    label: Apply Strict User Permissions
+    type: boolean
+    observed_as: apply_strict_user_permissions
+    default: "0"
+  - name: show_external_link_warning
+    label: Show External Link Warning
+    type: enum
+    observed_as: show_external_link_warning
+    enum_values:
+      - Never
+      - Ask
+      - Always
+    default: Never
+  - name: session_expiry
+    label: Session Expiry (idle timeout)
+    type: string
+    observed_as: session_expiry
+    default: 170:00
+  - name: document_share_key_expiry
+    label: Document Share Key Expiry (in Days)
+    type: integer
+    observed_as: document_share_key_expiry
+    default: "30"
+  - name: deny_multiple_sessions
+    label: Allow only one session per user
+    type: boolean
+    observed_as: deny_multiple_sessions
+    default: "0"
+  - name: disable_user_pass_login
+    label: Disable Username/Password Login
+    type: boolean
+    observed_as: disable_user_pass_login
+    default: "0"
+  - name: max_signups_allowed_per_hour
+    label: Max signups allowed per hour
+    type: integer
+    observed_as: max_signups_allowed_per_hour
+    default: "300"
+  - name: allow_login_using_mobile_number
+    label: Allow Login using Mobile Number
+    type: boolean
+    observed_as: allow_login_using_mobile_number
+    default: "0"
+  - name: allow_login_using_user_name
+    label: Allow Login using User Name
+    type: boolean
+    observed_as: allow_login_using_user_name
+    default: "0"
+  - name: login_with_email_link
+    label: Login with email link
+    type: boolean
+    observed_as: login_with_email_link
+    default: "1"
+  - name: login_with_email_link_expiry
+    label: Login with email link expiry (in minutes)
+    type: integer
+    observed_as: login_with_email_link_expiry
+    default: "10"
+  - name: rate_limit_email_link_login
+    label: Rate limit for email link login
+    type: integer
+    observed_as: rate_limit_email_link_login
+  - name: allow_consecutive_login_attempts
+    label: Allow Consecutive Login Attempts
+    type: integer
+    observed_as: allow_consecutive_login_attempts
+    default: "10"
+  - name: allow_login_after_fail
+    label: Allow Login After Fail
+    type: integer
+    observed_as: allow_login_after_fail
+    default: "60"
+  - name: enable_two_factor_auth
+    label: Enable Two Factor Auth
+    type: boolean
+    observed_as: enable_two_factor_auth
+    default: "0"
+  - name: bypass_2fa_for_retricted_ip_users
+    label: Bypass Two Factor Auth for users who login from restricted IP Address
+    type: boolean
+    observed_as: bypass_2fa_for_retricted_ip_users
+    default: "0"
+  - name: bypass_restrict_ip_check_if_2fa_enabled
+    label: Bypass restricted IP Address check If Two Factor Auth Enabled
+    type: boolean
+    observed_as: bypass_restrict_ip_check_if_2fa_enabled
+    default: "0"
+  - name: two_factor_method
+    label: Two Factor Authentication method
+    type: enum
+    observed_as: two_factor_method
+    enum_values:
+      - OTP App
+      - SMS
+      - Email
+    default: OTP App
+  - name: lifespan_qrcode_image
+    label: Expiry time of QR Code Image Page
+    type: integer
+    observed_as: lifespan_qrcode_image
+  - name: otp_issuer_name
+    label: OTP Issuer Name
+    type: string
+    observed_as: otp_issuer_name
+    default: Frappe Framework
+  - name: otp_sms_template
+    label: OTP SMS Template
+    type: text
+    observed_as: otp_sms_template
+  - name: logout_on_password_reset
+    label: Logout All Sessions on Password Reset
+    type: boolean
+    observed_as: logout_on_password_reset
+    default: "1"
+  - name: force_user_to_reset_password
+    label: Force User to Reset Password
+    type: integer
+    observed_as: force_user_to_reset_password
+  - name: reset_password_link_expiry_duration
+    label: Reset Password Link Expiry Duration
+    type: integer
+    observed_as: reset_password_link_expiry_duration
+    default: "1200"
+  - name: password_reset_limit
+    label: Password Reset Link Generation Limit
+    type: integer
+    observed_as: password_reset_limit
+    default: "3"
+  - name: enable_password_policy
+    label: Enable Password Policy
+    type: boolean
+    observed_as: enable_password_policy
+    default: "1"
+  - name: minimum_password_score
+    label: Minimum Password Score
+    type: enum
+    observed_as: minimum_password_score
+    enum_values:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+    default: "2"
+  - name: email_footer_address
+    label: Email Footer Address
+    type: text
+    observed_as: email_footer_address
+  - name: email_retry_limit
+    label: Email Retry Limit
+    type: integer
+    observed_as: email_retry_limit
+    default: "3"
+  - name: disable_standard_email_footer
+    label: Disable Standard Email Footer
+    type: boolean
+    observed_as: disable_standard_email_footer
+    default: "0"
+  - name: hide_footer_in_auto_email_reports
+    label: Hide footer in auto email reports
+    type: boolean
+    observed_as: hide_footer_in_auto_email_reports
+    default: "0"
+  - name: attach_view_link
+    label: Include Web View Link in Email
+    type: boolean
+    observed_as: attach_view_link
+    default: "1"
+  - name: store_attached_pdf_document
+    label: Store Attached PDF Document
+    type: boolean
+    observed_as: store_attached_pdf_document
+    default: "1"
+  - name: welcome_email_template
+    label: Welcome Email Template
+    type: ref
+    observed_as: welcome_email_template
+    ref: EmailTemplate
+  - name: reset_password_template
+    label: Reset Password Template
+    type: ref
+    observed_as: reset_password_template
+    ref: EmailTemplate
+  - name: max_file_size
+    label: Max File Size (MB)
+    type: integer
+    observed_as: max_file_size
+  - name: max_zip_extract_size
+    label: Max Zip Extract Size (MB)
+    type: integer
+    observed_as: max_zip_extract_size
+  - name: allow_guests_to_upload_files
+    label: Allow Guests to Upload Files
+    type: boolean
+    observed_as: allow_guests_to_upload_files
+    default: "0"
+  - name: force_web_capture_mode_for_uploads
+    label: Force Web Capture Mode for Uploads
+    type: boolean
+    observed_as: force_web_capture_mode_for_uploads
+    default: "0"
+  - name: strip_exif_metadata_from_uploaded_images
+    label: Strip EXIF tags from uploaded images
+    type: boolean
+    observed_as: strip_exif_metadata_from_uploaded_images
+    default: "1"
+  - name: only_allow_system_managers_to_upload_public_files
+    label: Only allow System Managers to upload public files
+    type: boolean
+    observed_as: only_allow_system_managers_to_upload_public_files
+    default: "0"
+  - name: delete_background_exported_reports_after
+    label: Delete Background Exported Reports After (Hours)
+    type: integer
+    observed_as: delete_background_exported_reports_after
+    default: "48"
+  - name: allowed_file_extensions
+    label: Allowed File Extensions
+    type: text
+    observed_as: allowed_file_extensions
+  - name: allowed_doctypes_for_guest_uploads
+    label: Allowed Doctypes for Guest Uploads
+    type: text
+    observed_as: allowed_doctypes_for_guest_uploads
+  - name: default_app
+    label: Default App
+    type: string
+    observed_as: default_app
+  - name: disable_system_update_notification
+    label: Disable System Update Notification
+    type: boolean
+    observed_as: disable_system_update_notification
+    default: "0"
+  - name: disable_change_log_notification
+    label: Disable Change Log Notification
+    type: boolean
+    observed_as: disable_change_log_notification
+    default: "0"
+  - name: hide_empty_read_only_fields
+    label: Hide Empty Read-Only Fields
+    type: boolean
+    observed_as: hide_empty_read_only_fields
+    default: "1"
+  - name: disable_product_suggestion
+    label: Disable Product Suggestion
+    type: boolean
+    observed_as: disable_product_suggestion
+    default: "0"
+  - name: backup_limit
+    label: Number of Backups
+    type: integer
+    observed_as: backup_limit
+    default: "3"
+  - name: encrypt_backup
+    label: Encrypt Backups
+    type: boolean
+    observed_as: encrypt_backup
+    default: "0"
+  - name: max_auto_email_report_per_user
+    label: Max auto email report per user
+    type: integer
+    observed_as: max_auto_email_report_per_user
+    default: "20"
+  - name: max_report_rows
+    label: Max Report Rows
+    type: integer
+    observed_as: max_report_rows
+    default: "100000"
+  - name: enable_snapshot_reports
+    label: Enable Snapshot Reports
+    type: boolean
+    observed_as: enable_snapshot_reports
+    default: "0"
+  - name: sync_in_batch
+    label: Sync In Batches
+    type: boolean
+    observed_as: sync_in_batch
+    default: "1"
+  - name: frequency
+    label: Frequency
+    type: enum
+    observed_as: frequency
+    enum_values:
+      - Daily
+      - Weekly
+    default: Weekly
+  - name: sync_timeout
+    label: Sync Timeout (Seconds)
+    type: integer
+    observed_as: sync_timeout
+  - name: enable_scheduler
+    label: Enable Scheduled Jobs
+    type: boolean
+    observed_as: enable_scheduler
+    default: "0"
+  - name: dormant_days
+    label: Run Jobs only Daily if Inactive For (Days)
+    type: integer
+    observed_as: dormant_days
+    default: "4"
+  - name: allow_error_traceback
+    label: Show Full Error and Allow Reporting of Issues to the Developer
+    type: boolean
+    observed_as: allow_error_traceback
+    default: "1"
+  - name: enable_telemetry
+    label: Allow Sending Usage Data for Improving Applications
+    type: boolean
+    observed_as: enable_telemetry
+    default: "1"
+  - name: link_field_results_limit
+    label: Link Field Results Limit
+    type: integer
+    observed_as: link_field_results_limit
+    default: "10"
+  - name: allow_clearing_link_fields
+    label: Allow Clearing Link Fields
+    type: boolean
+    observed_as: allow_clearing_link_fields
+    default: "0"
+  - name: log_api_requests
+    label: Log API Requests
+    type: boolean
+    observed_as: log_api_requests
+    default: "0"
+  - name: enable_mcp
+    label: Enable MCP
+    type: boolean
+    observed_as: enable_mcp
+    default: "1"
+  - name: server_name
+    label: Server Name
+    type: string
+    observed_as: server_name
+  - name: agent_instructions
+    label: Agent Instructions
+    type: text
+    observed_as: agent_instructions
+relations:
+  - to: Country
+    kind: many-to-one
+    via: country
+  - to: Language
+    kind: many-to-one
+    via: language
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: EmailTemplate
+    kind: many-to-one
+    via: welcome_email_template
+  - to: EmailTemplate
+    kind: many-to-one
+    via: reset_password_template
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSystem Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of System Settings
+    note: declared by the program and served by its API

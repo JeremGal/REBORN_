@@ -1,0 +1,57 @@
+name: WebhookRequestLog
+description: Document type "Webhook Request Log" (module Integrations).
+fields:
+  - name: webhook
+    label: Webhook
+    type: ref
+    observed_as: webhook
+    ref: Webhook
+  - name: reference_doctype
+    label: Reference Doctype
+    type: string
+    observed_as: reference_doctype
+  - name: reference_document
+    label: Reference Document
+    type: string
+    observed_as: reference_document
+  - name: headers
+    label: Headers
+    type: text
+    observed_as: headers
+  - name: data
+    label: Data
+    type: text
+    observed_as: data
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: url
+    label: URL
+    type: text
+    observed_as: url
+  - name: response
+    label: Response
+    type: text
+    observed_as: response
+  - name: error
+    label: Error
+    type: text
+    observed_as: error
+relations:
+  - to: Webhook
+    kind: many-to-one
+    via: webhook
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWebhook Request Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Webhook Request Log
+    note: declared by the program and served by its API

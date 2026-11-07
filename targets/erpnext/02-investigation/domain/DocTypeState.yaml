@@ -1,0 +1,39 @@
+name: DocTypeState
+description: 'Document type "DocType State" (module Core): lines of another document.'
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: color
+    label: Color
+    type: enum
+    observed_as: color
+    required: true
+    enum_values:
+      - Blue
+      - Cyan
+      - Gray
+      - Green
+      - Light Blue
+      - Orange
+      - Pink
+      - Purple
+      - Red
+      - Yellow
+    default: Blue
+  - name: custom
+    label: Custom
+    type: boolean
+    observed_as: custom
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocType State
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DocType State
+    note: declared by the program and served by its API

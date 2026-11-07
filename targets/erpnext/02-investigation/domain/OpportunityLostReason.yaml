@@ -1,0 +1,17 @@
+name: OpportunityLostReason
+description: Document type "Opportunity Lost Reason" (module CRM).
+fields:
+  - name: lost_reason
+    label: Lost Reason
+    type: string
+    observed_as: lost_reason
+    unique: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOpportunity Lost Reason
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Opportunity Lost Reason
+    note: declared by the program and served by its API

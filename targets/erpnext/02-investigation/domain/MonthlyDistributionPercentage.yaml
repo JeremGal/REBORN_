@@ -1,0 +1,21 @@
+name: MonthlyDistributionPercentage
+description: 'Document type "Monthly Distribution Percentage" (module Accounts): lines of another document.'
+fields:
+  - name: month
+    label: Month
+    type: string
+    observed_as: month
+    required: true
+  - name: percentage_allocation
+    label: Percentage Allocation
+    type: decimal
+    observed_as: percentage_allocation
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMonthly Distribution Percentage
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Monthly Distribution Percentage
+    note: declared by the program and served by its API

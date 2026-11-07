@@ -1,0 +1,139 @@
+name: StockReconciliationItem
+description: 'Document type "Stock Reconciliation Item" (module Stock): lines of another document.'
+fields:
+  - name: barcode
+    label: Barcode
+    type: string
+    observed_as: barcode
+  - name: has_item_scanned
+    label: Has Item Scanned
+    type: string
+    observed_as: has_item_scanned
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: valuation_rate
+    label: Valuation Rate
+    type: money
+    observed_as: valuation_rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: allow_zero_valuation_rate
+    label: Allow Zero Valuation Rate
+    type: boolean
+    observed_as: allow_zero_valuation_rate
+    default: "0"
+  - name: use_serial_batch_fields
+    label: Use Serial No / Batch Fields
+    type: boolean
+    observed_as: use_serial_batch_fields
+    default: "0"
+  - name: reconcile_all_serial_batch
+    label: Reconcile All Serial Nos / Batches
+    type: boolean
+    observed_as: reconcile_all_serial_batch
+    default: "0"
+  - name: serial_and_batch_bundle
+    label: Serial / Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: current_serial_and_batch_bundle
+    label: Current Serial / Batch Bundle
+    type: ref
+    observed_as: current_serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: current_qty
+    label: Current Qty
+    type: decimal
+    observed_as: current_qty
+    default: "0"
+  - name: current_amount
+    label: Current Amount
+    type: money
+    observed_as: current_amount
+  - name: current_valuation_rate
+    label: Current Valuation Rate
+    type: money
+    observed_as: current_valuation_rate
+  - name: current_serial_no
+    label: Current Serial No
+    type: text
+    observed_as: current_serial_no
+  - name: quantity_difference
+    label: Quantity Difference
+    type: string
+    observed_as: quantity_difference
+  - name: amount_difference
+    label: Amount Difference
+    type: money
+    observed_as: amount_difference
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: current_serial_and_batch_bundle
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Reconciliation Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Reconciliation Item
+    note: declared by the program and served by its API

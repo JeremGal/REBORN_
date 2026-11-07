@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "rea": {
+      "command": "node",
+      "args": ["tools/mcp-rea.mjs"],
+      "env": { "REBORN_BLOCK": "2" }
+    },
+    "craft-anything": {
+      "command": "craft-anything-cli",
+      "args": ["mcp", "--clean-room"]
+    }
+  }
+}

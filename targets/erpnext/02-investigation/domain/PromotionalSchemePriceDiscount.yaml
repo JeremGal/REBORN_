@@ -1,0 +1,124 @@
+name: PromotionalSchemePriceDiscount
+description: 'Document type "Promotional Scheme Price Discount" (module Accounts): lines of another document.'
+fields:
+  - name: disable
+    label: Disable
+    type: boolean
+    observed_as: disable
+    default: "0"
+  - name: apply_multiple_pricing_rules
+    label: Apply Multiple Pricing Rules
+    type: boolean
+    observed_as: apply_multiple_pricing_rules
+    default: "0"
+  - name: rule_description
+    label: Rule Description
+    type: text
+    observed_as: rule_description
+    required: true
+  - name: min_qty
+    label: Min Qty
+    type: decimal
+    observed_as: min_qty
+    default: "0"
+  - name: max_qty
+    label: Max Qty
+    type: decimal
+    observed_as: max_qty
+    default: "0"
+  - name: min_amount
+    label: Min Amount
+    type: money
+    observed_as: min_amount
+    default: "0"
+  - name: max_amount
+    label: Max Amount
+    type: money
+    observed_as: max_amount
+    default: "0"
+  - name: rate_or_discount
+    label: Discount Type
+    type: enum
+    observed_as: rate_or_discount
+    enum_values:
+      - Rate
+      - Discount Percentage
+      - Discount Amount
+    default: Discount Percentage
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: discount_amount
+    label: Discount Amount
+    type: money
+    observed_as: discount_amount
+  - name: discount_percentage
+    label: Discount Percentage
+    type: decimal
+    observed_as: discount_percentage
+  - name: for_price_list
+    label: For Price List
+    type: ref
+    observed_as: for_price_list
+    ref: PriceList
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: threshold_percentage
+    label: Threshold for Suggestion
+    type: percent
+    observed_as: threshold_percentage
+  - name: validate_applied_rule
+    label: Validate Applied Rule
+    type: boolean
+    observed_as: validate_applied_rule
+    default: "0"
+  - name: priority
+    label: Priority
+    type: enum
+    observed_as: priority
+    enum_values:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+      - "10"
+      - "11"
+      - "12"
+      - "13"
+      - "14"
+      - "15"
+      - "16"
+      - "17"
+      - "18"
+      - "19"
+      - "20"
+  - name: apply_discount_on_rate
+    label: Apply Discount on Rate
+    type: boolean
+    observed_as: apply_discount_on_rate
+    default: "0"
+relations:
+  - to: PriceList
+    kind: many-to-one
+    via: for_price_list
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPromotional Scheme Price Discount
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Promotional Scheme Price Discount
+    note: declared by the program and served by its API

@@ -1,0 +1,35 @@
+name: AvailabilityOfSlots
+description: 'Document type "Availability Of Slots" (module CRM): lines of another document.'
+fields:
+  - name: day_of_week
+    label: Day Of Week
+    type: enum
+    observed_as: day_of_week
+    required: true
+    enum_values:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+  - name: from_time
+    label: From Time
+    type: time
+    observed_as: from_time
+    required: true
+  - name: to_time
+    label: To Time
+    type: time
+    observed_as: to_time
+    required: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAvailability Of Slots
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Availability Of Slots
+    note: declared by the program and served by its API

@@ -1,0 +1,76 @@
+name: AppointmentBookingSettings
+description: 'Document type "Appointment Booking Settings" (module CRM): single settings record.'
+fields:
+  - name: appointment_duration
+    label: Appointment Duration (In Minutes)
+    type: integer
+    observed_as: appointment_duration
+    required: true
+    default: "60"
+  - name: email_reminders
+    label: Notify Via Email
+    type: boolean
+    observed_as: email_reminders
+    default: "0"
+  - name: number_of_agents
+    label: Number of Concurrent Appointments
+    type: integer
+    observed_as: number_of_agents
+  - name: enable_scheduling
+    label: Enable Appointment Scheduling
+    type: boolean
+    observed_as: enable_scheduling
+    default: "0"
+  - name: advance_booking_days
+    label: Number of days appointments can be booked in advance
+    type: integer
+    observed_as: advance_booking_days
+    default: "7"
+  - name: holiday_list
+    label: Holiday List
+    type: ref
+    observed_as: holiday_list
+    ref: HolidayList
+  - name: enable_appointment_portal
+    label: Enable Appointment Booking Through Portal
+    type: boolean
+    observed_as: enable_appointment_portal
+    default: "0"
+  - name: verification_link_expiry_duration
+    label: Verification Link Expiry Duration
+    type: integer
+    observed_as: verification_link_expiry_duration
+    default: "30"
+  - name: success_redirect_url
+    label: Success Redirect URL
+    type: string
+    observed_as: success_redirect_url
+  - name: action_for_expired_unverified_appointments
+    label: Action for Expired Unverified Appointments
+    type: enum
+    observed_as: action_for_expired_unverified_appointments
+    enum_values:
+      - Mark as Closed
+      - Delete Permanently
+    default: Mark as Closed
+relations:
+  - to: AssignmentRuleUser
+    kind: one-to-many
+    via: agent_list
+    description: lines (Agents)
+  - to: AppointmentBookingSlots
+    kind: one-to-many
+    via: availability_of_slots
+    description: lines (Availability Of Slots)
+  - to: HolidayList
+    kind: many-to-one
+    via: holiday_list
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAppointment Booking Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Appointment Booking Settings
+    note: declared by the program and served by its API

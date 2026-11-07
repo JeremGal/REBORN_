@@ -1,0 +1,31 @@
+name: ItemTaxTemplateDetail
+description: 'Document type "Item Tax Template Detail" (module Accounts): lines of another document.'
+fields:
+  - name: tax_type
+    label: Tax
+    type: ref
+    observed_as: tax_type
+    required: true
+    ref: Account
+  - name: tax_rate
+    label: Tax Rate
+    type: decimal
+    observed_as: tax_rate
+  - name: not_applicable
+    label: Not Applicable
+    type: boolean
+    observed_as: not_applicable
+    default: "0"
+relations:
+  - to: Account
+    kind: many-to-one
+    via: tax_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Tax Template Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Tax Template Detail
+    note: declared by the program and served by its API

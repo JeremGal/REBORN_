@@ -1,0 +1,61 @@
+name: AssetShiftAllocation
+description: 'Changes how many shifts an asset works, which changes its depreciation. Document type "Asset Shift Allocation" (module Assets): draft, submitted, cancelled life cycle.'
+fields:
+  - name: asset
+    label: Asset
+    type: ref
+    observed_as: asset
+    required: true
+    ref: Asset
+  - name: naming_series
+    label: Naming Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - ACC-ASA-.YYYY.-
+  - name: finance_book
+    label: Finance Book
+    type: ref
+    observed_as: finance_book
+    ref: FinanceBook
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: AssetShiftAllocation
+  - name: previous_depreciation_schedule
+    label: Previous Depreciation Schedule
+    type: ref
+    observed_as: previous_depreciation_schedule
+    ref: AssetDepreciationSchedule
+relations:
+  - to: Asset
+    kind: many-to-one
+    via: asset
+  - to: FinanceBook
+    kind: many-to-one
+    via: finance_book
+  - to: AssetShiftAllocation
+    kind: many-to-one
+    via: amended_from
+  - to: AssetDepreciationSchedule
+    kind: many-to-one
+    via: previous_depreciation_schedule
+  - to: DepreciationSchedule
+    kind: one-to-many
+    via: depreciation_schedule
+    description: lines (Depreciation Schedule)
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Shift Allocation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Shift Allocation
+    note: declared by the program and served by its API

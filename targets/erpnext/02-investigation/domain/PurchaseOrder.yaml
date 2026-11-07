@@ -1,0 +1,620 @@
+name: PurchaseOrder
+description: 'An order you place with a supplier. Document type "Purchase Order" (module Buying): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - PUR-ORD-.YYYY.-
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    required: true
+    ref: Supplier
+  - name: supplier_name
+    label: Supplier Name
+    type: string
+    observed_as: supplier_name
+  - name: order_confirmation_no
+    label: Order Confirmation No
+    type: string
+    observed_as: order_confirmation_no
+  - name: order_confirmation_date
+    label: Order Confirmation Date
+    type: date
+    observed_as: order_confirmation_date
+  - name: transaction_date
+    label: Date
+    type: date
+    observed_as: transaction_date
+    required: true
+    default: Today
+  - name: transaction_time
+    label: Time
+    type: time
+    observed_as: transaction_time
+    default: Now
+  - name: schedule_date
+    label: Required By
+    type: date
+    observed_as: schedule_date
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: is_subcontracted
+    label: Is Subcontracted
+    type: boolean
+    observed_as: is_subcontracted
+    default: "0"
+  - name: has_unit_price_items
+    label: Has Unit Price Items
+    type: boolean
+    observed_as: has_unit_price_items
+    default: "0"
+  - name: supplier_warehouse
+    label: Supplier Warehouse
+    type: ref
+    observed_as: supplier_warehouse
+    ref: Warehouse
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: conversion_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: conversion_rate
+    required: true
+    precision: 9
+  - name: buying_price_list
+    label: Price List
+    type: ref
+    observed_as: buying_price_list
+    ref: PriceList
+  - name: price_list_currency
+    label: Price List Currency
+    type: ref
+    observed_as: price_list_currency
+    ref: Currency
+  - name: plc_conversion_rate
+    label: Price List Exchange Rate
+    type: decimal
+    observed_as: plc_conversion_rate
+    precision: 9
+  - name: ignore_pricing_rule
+    label: Ignore Pricing Rule
+    type: boolean
+    observed_as: ignore_pricing_rule
+    default: "0"
+  - name: scan_barcode
+    label: Scan Barcode
+    type: string
+    observed_as: scan_barcode
+  - name: last_scanned_warehouse
+    label: Last Scanned Warehouse
+    type: string
+    observed_as: last_scanned_warehouse
+  - name: set_from_warehouse
+    label: Set From Warehouse
+    type: ref
+    observed_as: set_from_warehouse
+    ref: Warehouse
+  - name: set_warehouse
+    label: Set Target Warehouse
+    type: ref
+    observed_as: set_warehouse
+    ref: Warehouse
+  - name: total_qty
+    label: Total Quantity
+    type: decimal
+    observed_as: total_qty
+  - name: total_net_weight
+    label: Total Net Weight
+    type: decimal
+    observed_as: total_net_weight
+  - name: base_total
+    label: Total (Company Currency)
+    type: money
+    observed_as: base_total
+  - name: base_net_total
+    label: Net Total (Company Currency)
+    type: money
+    observed_as: base_net_total
+  - name: total
+    label: Total
+    type: money
+    observed_as: total
+  - name: net_total
+    label: Net Total
+    type: money
+    observed_as: net_total
+  - name: set_reserve_warehouse
+    label: Set Reserve Warehouse
+    type: ref
+    observed_as: set_reserve_warehouse
+    ref: Warehouse
+  - name: tax_category
+    label: Tax Category
+    type: ref
+    observed_as: tax_category
+    ref: TaxCategory
+  - name: taxes_and_charges
+    label: Purchase Taxes and Charges Template
+    type: ref
+    observed_as: taxes_and_charges
+    ref: PurchaseTaxesAndChargesTemplate
+  - name: shipping_rule
+    label: Shipping Rule
+    type: ref
+    observed_as: shipping_rule
+    ref: ShippingRule
+  - name: incoterm
+    label: Incoterm
+    type: ref
+    observed_as: incoterm
+    ref: Incoterm
+  - name: named_place
+    label: Named Place
+    type: string
+    observed_as: named_place
+  - name: base_taxes_and_charges_added
+    label: Taxes and Charges Added (Company Currency)
+    type: money
+    observed_as: base_taxes_and_charges_added
+  - name: base_taxes_and_charges_deducted
+    label: Taxes and Charges Deducted (Company Currency)
+    type: money
+    observed_as: base_taxes_and_charges_deducted
+  - name: base_total_taxes_and_charges
+    label: Total Taxes and Charges (Company Currency)
+    type: money
+    observed_as: base_total_taxes_and_charges
+  - name: taxes_and_charges_added
+    label: Taxes and Charges Added
+    type: money
+    observed_as: taxes_and_charges_added
+  - name: taxes_and_charges_deducted
+    label: Taxes and Charges Deducted
+    type: money
+    observed_as: taxes_and_charges_deducted
+  - name: total_taxes_and_charges
+    label: Total Taxes and Charges
+    type: money
+    observed_as: total_taxes_and_charges
+  - name: grand_total
+    label: Grand Total
+    type: money
+    observed_as: grand_total
+  - name: in_words
+    label: In Words
+    type: string
+    observed_as: in_words
+    max_length: 240
+  - name: disable_rounded_total
+    label: Disable Rounded Total
+    type: boolean
+    observed_as: disable_rounded_total
+    default: "0"
+  - name: rounding_adjustment
+    label: Rounding Adjustment
+    type: money
+    observed_as: rounding_adjustment
+  - name: rounded_total
+    label: Rounded Total
+    type: money
+    observed_as: rounded_total
+  - name: base_grand_total
+    label: Grand Total
+    type: money
+    observed_as: base_grand_total
+  - name: base_in_words
+    label: In Words
+    type: string
+    observed_as: base_in_words
+    max_length: 240
+  - name: base_rounding_adjustment
+    label: Rounding Adjustment
+    type: money
+    observed_as: base_rounding_adjustment
+  - name: base_rounded_total
+    label: Rounded Total
+    type: money
+    observed_as: base_rounded_total
+  - name: advance_paid
+    label: Advance Paid (Company Currency)
+    type: money
+    observed_as: advance_paid
+  - name: apply_discount_on
+    label: Apply Additional Discount On
+    type: enum
+    observed_as: apply_discount_on
+    enum_values:
+      - Grand Total
+      - Net Total
+    default: Grand Total
+  - name: base_discount_amount
+    label: Additional Discount Amount (Company Currency)
+    type: money
+    observed_as: base_discount_amount
+  - name: additional_discount_percentage
+    label: Additional Discount Percentage
+    type: decimal
+    observed_as: additional_discount_percentage
+  - name: discount_amount
+    label: Additional Discount Amount
+    type: money
+    observed_as: discount_amount
+  - name: other_charges_calculation
+    label: Taxes and Charges Calculation
+    type: text
+    observed_as: other_charges_calculation
+  - name: supplier_address
+    label: Supplier Address
+    type: ref
+    observed_as: supplier_address
+    ref: Address
+  - name: address_display
+    label: Supplier Address Details
+    type: text
+    observed_as: address_display
+  - name: supplier_group
+    label: Supplier Group
+    type: ref
+    observed_as: supplier_group
+    ref: SupplierGroup
+  - name: contact_person
+    label: Supplier Contact
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: contact_display
+    label: Contact Name
+    type: text
+    observed_as: contact_display
+  - name: contact_mobile
+    label: Contact Mobile No
+    type: text
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: text
+    observed_as: contact_email
+  - name: dispatch_address
+    label: Dispatch Address
+    type: ref
+    observed_as: dispatch_address
+    ref: Address
+  - name: dispatch_address_display
+    label: Dispatch Address Details
+    type: text
+    observed_as: dispatch_address_display
+  - name: shipping_address
+    label: Shipping Address
+    type: ref
+    observed_as: shipping_address
+    ref: Address
+  - name: shipping_address_display
+    label: Shipping Address Details
+    type: text
+    observed_as: shipping_address_display
+  - name: billing_address
+    label: Company Billing Address
+    type: ref
+    observed_as: billing_address
+    ref: Address
+  - name: billing_address_display
+    label: Billing Address Details
+    type: text
+    observed_as: billing_address_display
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: customer_contact_person
+    label: Customer Contact
+    type: ref
+    observed_as: customer_contact_person
+    ref: Contact
+  - name: customer_contact_display
+    label: Customer Contact
+    type: text
+    observed_as: customer_contact_display
+  - name: customer_contact_mobile
+    label: Customer Mobile No
+    type: text
+    observed_as: customer_contact_mobile
+  - name: customer_contact_email
+    label: Customer Contact Email
+    type: text
+    observed_as: customer_contact_email
+  - name: payment_terms_template
+    label: Payment Terms Template
+    type: ref
+    observed_as: payment_terms_template
+    ref: PaymentTermsTemplate
+  - name: tc_name
+    label: Terms
+    type: ref
+    observed_as: tc_name
+    ref: TermsAndConditions
+  - name: terms
+    label: Terms and Conditions
+    type: text
+    observed_as: terms
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - On Hold
+      - To Pay
+      - To Receive and Bill
+      - To Bill
+      - To Receive
+      - Completed
+      - Cancelled
+      - Closed
+      - Delivered
+    default: Draft
+  - name: advance_payment_status
+    label: Advance Payment Status
+    type: enum
+    observed_as: advance_payment_status
+    enum_values:
+      - Not Initiated
+      - Initiated
+      - Partially Paid
+      - Fully Paid
+  - name: per_billed
+    label: "% Billed"
+    type: percent
+    observed_as: per_billed
+  - name: per_received
+    label: "% Received"
+    type: percent
+    observed_as: per_received
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: group_same_items
+    label: Group same items
+    type: boolean
+    observed_as: group_same_items
+    default: "0"
+  - name: select_print_heading
+    label: Print Heading
+    type: ref
+    observed_as: select_print_heading
+    ref: PrintHeading
+  - name: language
+    label: Print Language
+    type: string
+    observed_as: language
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+  - name: auto_repeat
+    label: Auto Repeat
+    type: ref
+    observed_as: auto_repeat
+    ref: AutoRepeat
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: party_account_currency
+    label: Party Account Currency
+    type: ref
+    observed_as: party_account_currency
+    ref: Currency
+  - name: represents_company
+    label: Represents Company
+    type: ref
+    observed_as: represents_company
+    ref: Company
+  - name: ref_sq
+    label: Supplier Quotation
+    type: ref
+    observed_as: ref_sq
+    ref: SupplierQuotation
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: PurchaseOrder
+  - name: mps
+    label: MPS
+    type: ref
+    observed_as: mps
+    ref: MasterProductionSchedule
+  - name: is_internal_supplier
+    label: Is Internal Supplier
+    type: boolean
+    observed_as: is_internal_supplier
+    default: "0"
+  - name: inter_company_order_reference
+    label: Inter Company Order Reference
+    type: ref
+    observed_as: inter_company_order_reference
+    ref: SalesOrder
+  - name: is_old_subcontracting_flow
+    label: Is Old Subcontracting Flow
+    type: boolean
+    observed_as: is_old_subcontracting_flow
+    default: "0"
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+relations:
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Warehouse
+    kind: many-to-one
+    via: supplier_warehouse
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: PriceList
+    kind: many-to-one
+    via: buying_price_list
+  - to: Currency
+    kind: many-to-one
+    via: price_list_currency
+  - to: Warehouse
+    kind: many-to-one
+    via: set_from_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: set_warehouse
+  - to: PurchaseOrderItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: PricingRuleDetail
+    kind: one-to-many
+    via: pricing_rules
+    description: lines (Purchase Order Pricing Rule)
+  - to: Warehouse
+    kind: many-to-one
+    via: set_reserve_warehouse
+  - to: TaxCategory
+    kind: many-to-one
+    via: tax_category
+  - to: PurchaseTaxesAndChargesTemplate
+    kind: many-to-one
+    via: taxes_and_charges
+  - to: ShippingRule
+    kind: many-to-one
+    via: shipping_rule
+  - to: Incoterm
+    kind: many-to-one
+    via: incoterm
+  - to: PurchaseTaxesAndCharges
+    kind: one-to-many
+    via: taxes
+    description: lines (Purchase Taxes and Charges)
+  - to: ItemWiseTaxDetail
+    kind: one-to-many
+    via: item_wise_tax_details
+    description: lines (Item Wise Tax Details)
+  - to: Address
+    kind: many-to-one
+    via: supplier_address
+  - to: SupplierGroup
+    kind: many-to-one
+    via: supplier_group
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Address
+    kind: many-to-one
+    via: dispatch_address
+  - to: Address
+    kind: many-to-one
+    via: shipping_address
+  - to: Address
+    kind: many-to-one
+    via: billing_address
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Contact
+    kind: many-to-one
+    via: customer_contact_person
+  - to: PaymentTermsTemplate
+    kind: many-to-one
+    via: payment_terms_template
+  - to: PaymentSchedule
+    kind: one-to-many
+    via: payment_schedule
+    description: lines (Payment Schedule)
+  - to: TermsAndConditions
+    kind: many-to-one
+    via: tc_name
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: PrintHeading
+    kind: many-to-one
+    via: select_print_heading
+  - to: AutoRepeat
+    kind: many-to-one
+    via: auto_repeat
+  - to: Currency
+    kind: many-to-one
+    via: party_account_currency
+  - to: Company
+    kind: many-to-one
+    via: represents_company
+  - to: SupplierQuotation
+    kind: many-to-one
+    via: ref_sq
+  - to: PurchaseOrder
+    kind: many-to-one
+    via: amended_from
+  - to: MasterProductionSchedule
+    kind: many-to-one
+    via: mps
+  - to: SalesOrder
+    kind: many-to-one
+    via: inter_company_order_reference
+  - to: PurchaseOrderItemSupplied
+    kind: one-to-many
+    via: supplied_items
+    description: lines (Supplied Items)
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPurchase Order
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Purchase Order
+    note: declared by the program and served by its API

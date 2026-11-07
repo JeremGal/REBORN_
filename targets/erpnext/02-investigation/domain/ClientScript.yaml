@@ -1,0 +1,47 @@
+name: ClientScript
+description: Adds a custom client script to a DocType Document type "Client Script" (module Custom).
+fields:
+  - name: dt
+    label: DocType
+    type: ref
+    observed_as: dt
+    required: true
+    ref: DocType
+  - name: view
+    label: Apply To
+    type: enum
+    observed_as: view
+    enum_values:
+      - List
+      - Form
+    default: Form
+  - name: module
+    label: Module (for export)
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "0"
+  - name: script
+    label: Script
+    type: text
+    observed_as: script
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: dt
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabClient Script
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Client Script
+    note: declared by the program and served by its API

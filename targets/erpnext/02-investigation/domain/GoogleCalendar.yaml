@@ -1,0 +1,64 @@
+name: GoogleCalendar
+description: Document type "Google Calendar" (module Integrations).
+fields:
+  - name: enable
+    label: Enable
+    type: boolean
+    observed_as: enable
+    default: "1"
+  - name: calendar_name
+    label: Calendar Name
+    type: string
+    observed_as: calendar_name
+    required: true
+    unique: true
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    required: true
+    ref: User
+  - name: pull_from_google_calendar
+    label: Pull from Google Calendar
+    type: boolean
+    observed_as: pull_from_google_calendar
+    default: "1"
+  - name: sync_as_public
+    label: Sync events from Google as public
+    type: boolean
+    observed_as: sync_as_public
+    default: "0"
+  - name: push_to_google_calendar
+    label: Push to Google Calendar
+    type: boolean
+    observed_as: push_to_google_calendar
+    default: "1"
+  - name: google_calendar_id
+    label: Google Calendar ID
+    type: string
+    observed_as: google_calendar_id
+  - name: refresh_token
+    label: Refresh Token
+    type: string
+    observed_as: refresh_token
+  - name: authorization_code
+    label: Authorization Code
+    type: string
+    observed_as: authorization_code
+  - name: next_sync_token
+    label: Next Sync Token
+    type: string
+    observed_as: next_sync_token
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabGoogle Calendar
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Google Calendar
+    note: declared by the program and served by its API

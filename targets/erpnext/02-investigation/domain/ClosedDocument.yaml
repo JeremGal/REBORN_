@@ -1,0 +1,27 @@
+name: ClosedDocument
+description: 'Document type "Closed Document" (module Accounts): lines of another document.'
+fields:
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: closed
+    label: Closed
+    type: boolean
+    observed_as: closed
+    default: "0"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabClosed Document
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Closed Document
+    note: declared by the program and served by its API

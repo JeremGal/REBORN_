@@ -1,0 +1,66 @@
+name: ProcessDeferredAccounting
+description: 'Books deferred revenue or expense for a period. Document type "Process Deferred Accounting" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: type
+    label: Type
+    type: enum
+    observed_as: type
+    required: true
+    enum_values:
+      - Income
+      - Expense
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: start_date
+    label: Service Start Date
+    type: date
+    observed_as: start_date
+    required: true
+  - name: end_date
+    label: Service End Date
+    type: date
+    observed_as: end_date
+    required: true
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: ProcessDeferredAccounting
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: ProcessDeferredAccounting
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProcess Deferred Accounting
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Process Deferred Accounting
+    note: declared by the program and served by its API

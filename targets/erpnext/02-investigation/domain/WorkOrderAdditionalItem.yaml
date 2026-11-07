@@ -1,0 +1,45 @@
+name: WorkOrderAdditionalItem
+description: 'Document type "Work Order Additional Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: type
+    label: Type
+    type: string
+    observed_as: type
+  - name: qty
+    label: Qty
+    type: decimal
+    observed_as: qty
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: UOM
+    kind: many-to-one
+    via: uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWork Order Additional Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Work Order Additional Item
+    note: declared by the program and served by its API

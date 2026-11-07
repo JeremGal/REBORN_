@@ -12,6 +12,11 @@ unknowns:
     status: open
     evidence:
       - { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "balance functions only (static)", note: "no runtime value yet" }
+    severity: blocking
+    required_basis:
+      - runtime
+    prediction: Recording 25.00 from Bank to Groceries changes both balances by exactly 25.00 with opposite signs, shown with 2 decimals.
+    refuted_if: A balance changes by another amount, or the sign convention differs between the two accounts.
   - id: U-002
     question: What is the real database schema (types, primary and foreign keys, the denominator per currency)?
     why: the entity cards have column names from the binary but no types or keys; R-002 needs the denominator confirmed.
@@ -23,6 +28,13 @@ unknowns:
     status: open
     evidence:
       - { ref: ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf, kind: craft, locator: "column names only, no types", note: "native-strings-find" }
+    severity: blocking
+    required_basis:
+      - shipped-data
+      - runtime
+    prediction: Every amount is stored as an integer numerator and denominator pair; the denominator is 100 for a 2-decimal currency.
+    refuted_if: An amount column holds a floating-point or text value.
+    searched: Column names found as strings in the database layer; no types or keys without a saved book.
   - id: U-003
     question: Which screens exist for invoices, customers, taxes, and how do they flow?
     why: the data model shows invoices/customers/taxtables tables and the UI files list 111 windows, but the business flows are not mapped.
@@ -33,3 +45,28 @@ unknowns:
     status: open
     evidence:
       - { ref: "ui:02c4602aa307314d", kind: manual, locator: "111 windows inventoried (dialog-invoice, dialog-customer, dialog-tax-info ...)", note: "reborn ui" }
+    severity: major
+    required_basis:
+      - runtime
+      - documentation
+    prediction: Customers, vendors, invoices, bills and payments are separate windows reached from a Business menu.
+    refuted_if: The business documents are edited inside the account register.
+    searched: 111 window definitions found in the UI files; the manual (341 topics) now lists the Business Features chapter.
+
+  - id: U-004
+    question: What exactly happens when the user saves an unbalanced entry in the register (dialog, choices offered, default)?
+    why: R-001 was inferred from engine function names (repair and import handling). Public sources describe a Rebalance Transaction dialog at entry time that the rebuild does not reproduce; the rebuild silently adds the balancing split instead.
+    blocks: [ F-001 ]
+    probe:
+      kind: h-mission
+      suggestion: "In a register, enter a transaction whose two amounts differ (for example 100.00 out of Bank and 90.00 into Groceries) and press Enter. Screenshot the dialog that appears, note every choice offered and which one is the default. Then repeat on separate transactions choosing each option in turn and read back the resulting splits and any Imbalance account."
+      mission: M-005
+    status: open
+    evidence:
+      - { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "engine repair code for imbalance (repair-time behaviour)", note: "does not show the entry-time dialog" }
+    severity: blocking
+    required_basis:
+      - runtime
+    prediction: Saving an unbalanced entry opens a dialog offering to balance it by hand, to let the program add a balancing line to an imbalance account, or to change an amount.
+    refuted_if: The entry is saved without any dialog, or saving is refused outright.
+    searched: The engine repair code adds a balancing line, but it runs at repair and import time; nothing found yet for entry time.

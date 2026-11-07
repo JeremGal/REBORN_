@@ -1,0 +1,41 @@
+name: SMSSettings
+description: 'Document type "SMS Settings" (module Core): single settings record.'
+fields:
+  - name: sms_gateway_url
+    label: SMS Gateway URL
+    type: text
+    observed_as: sms_gateway_url
+    required: true
+  - name: message_parameter
+    label: Message Parameter
+    type: string
+    observed_as: message_parameter
+    required: true
+  - name: receiver_parameter
+    label: Receiver Parameter
+    type: string
+    observed_as: receiver_parameter
+    required: true
+  - name: use_post
+    label: Use POST
+    type: boolean
+    observed_as: use_post
+    default: "0"
+relations:
+  - to: SMSParameter
+    kind: one-to-many
+    via: parameters
+    description: lines (Static Parameters)
+  - to: HasRole
+    kind: one-to-many
+    via: allowed_roles
+    description: lines (Allowed Roles)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSMS Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of SMS Settings
+    note: declared by the program and served by its API

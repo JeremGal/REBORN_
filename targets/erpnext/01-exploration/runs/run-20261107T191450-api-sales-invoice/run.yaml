@@ -1,0 +1,336 @@
+id: run-20261107T191450-api-sales-invoice
+mission: M-002
+subject: original
+agent:
+  provider: api
+  product: frappe-rest
+  version: Frappe 16.55.2 / ERPNext 16.51.2
+target:
+  id: erpnext
+  version: 16.51.2
+  environment: Alan's own Frappe Cloud site, fictitious data
+started_at: 2026-11-07T19:14:50.886Z
+ended_at: 2026-11-07T19:14:58.169Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-01: one line, 20% tax on the net total)"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":3,"rate":10}],"taxes":[{"charge_type":"On Net Total","rate":20,"description":"VAT 20%"}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00001)
+    extracted:
+      case: SI-01
+      total: 30
+      net_total: 30
+      discount_amount: 0
+      additional_discount_percentage: 0
+      apply_discount_on: Grand Total
+      total_taxes_and_charges: 6
+      grand_total: 36
+      rounding_adjustment: 0
+      rounded_total: 36
+      outstanding_amount: 36
+      items:
+        - item_code: TEST-ART-001
+          qty: 3
+          price_list_rate: 10
+          discount_percentage: 0
+          rate: 10
+          amount: 30
+          net_rate: 10
+          net_amount: 30
+      taxes:
+        - charge_type: On Net Total
+          rate: 20
+          included_in_print_rate: 0
+          tax_amount: 6
+          total: 36
+  - n: 2
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-02: 10% line discount, 20% tax)"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":3,"price_list_rate":10,"discount_percentage":10}],"taxes":[{"charge_type":"On Net Total","rate":20,"description":"VAT 20%"}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00002)
+    extracted:
+      case: SI-02
+      total: 27
+      net_total: 27
+      discount_amount: 0
+      additional_discount_percentage: 0
+      apply_discount_on: Grand Total
+      total_taxes_and_charges: 5.4
+      grand_total: 32.4
+      rounding_adjustment: 0
+      rounded_total: 32.4
+      outstanding_amount: 32.4
+      items:
+        - item_code: TEST-ART-001
+          qty: 3
+          price_list_rate: 10
+          discount_percentage: 10
+          rate: 9
+          amount: 27
+          net_rate: 9
+          net_amount: 27
+      taxes:
+        - charge_type: On Net Total
+          rate: 20
+          included_in_print_rate: 0
+          tax_amount: 5.4
+          total: 32.4
+  - n: 3
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-03: 5% discount on the net total, then 20% tax)"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":10,"rate":10}],"apply_discount_on":"Net Total","additional_discount_percentage":5,"taxes":[{"charge_type":"On Net Total","rate":20,"description":"VAT 20%"}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00003)
+    extracted:
+      case: SI-03
+      total: 100
+      net_total: 95
+      discount_amount: 5
+      additional_discount_percentage: 5
+      apply_discount_on: Net Total
+      total_taxes_and_charges: 19
+      grand_total: 114
+      rounding_adjustment: 0
+      rounded_total: 114
+      outstanding_amount: 114
+      items:
+        - item_code: TEST-ART-001
+          qty: 10
+          price_list_rate: 10
+          discount_percentage: 0
+          rate: 10
+          amount: 100
+          net_rate: 9.5
+          net_amount: 95
+      taxes:
+        - charge_type: On Net Total
+          rate: 20
+          included_in_print_rate: 0
+          tax_amount: 19
+          total: 114
+  - n: 4
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-04: 5% discount on the grand total, 20% tax)"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":10,"rate":10}],"apply_discount_on":"Grand Total","additional_discount_percentage":5,"taxes":[{"charge_type":"On Net Total","rate":20,"description":"VAT 20%"}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00004)
+    extracted:
+      case: SI-04
+      total: 100
+      net_total: 95
+      discount_amount: 6
+      additional_discount_percentage: 5
+      apply_discount_on: Grand Total
+      total_taxes_and_charges: 19
+      grand_total: 114
+      rounding_adjustment: 0
+      rounded_total: 114
+      outstanding_amount: 114
+      items:
+        - item_code: TEST-ART-001
+          qty: 10
+          price_list_rate: 10
+          discount_percentage: 0
+          rate: 10
+          amount: 100
+          net_rate: 9.5
+          net_amount: 95
+      taxes:
+        - charge_type: On Net Total
+          rate: 20
+          included_in_print_rate: 0
+          tax_amount: 20
+          total: 114
+  - n: 5
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-05: 10% on the net total, then 5% on the previous row total (cascade))"
+      value: "{\"items\":[{\"item_code\":\"TEST-ART-001\",\"qty\":10,\"rate\":10}],\"taxes\":[{\"charge_type\":\"On Net Total\",\"rate\":10,\"description\":\"tax A 10%\"},{\"charge_type\":\"On Previous Row Total\",\"row_id\":\"1\",\"rate\":5,\"description\":\"tax B 5% on A's total\"}]}"
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00005)
+    extracted:
+      case: SI-05
+      total: 100
+      net_total: 100
+      discount_amount: 0
+      additional_discount_percentage: 0
+      apply_discount_on: Grand Total
+      total_taxes_and_charges: 10.25
+      grand_total: 110.25
+      rounding_adjustment: 0
+      rounded_total: 110.25
+      outstanding_amount: 110.25
+      items:
+        - item_code: TEST-ART-001
+          qty: 10
+          price_list_rate: 10
+          discount_percentage: 0
+          rate: 10
+          amount: 100
+          net_rate: 10
+          net_amount: 100
+      taxes:
+        - charge_type: On Net Total
+          rate: 10
+          included_in_print_rate: 0
+          tax_amount: 5
+          total: 105
+        - charge_type: On Previous Row Total
+          row_id: "1"
+          rate: 5
+          included_in_print_rate: 0
+          tax_amount: 5.25
+          total: 110.25
+  - n: 6
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-06: 10% on the net total, then 50% of that tax (previous row amount))"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":10,"rate":10}],"taxes":[{"charge_type":"On Net Total","rate":10,"description":"tax A 10%"},{"charge_type":"On Previous Row Amount","row_id":"1","rate":50,"description":"tax B 50% of A"}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00006)
+    extracted:
+      case: SI-06
+      total: 100
+      net_total: 100
+      discount_amount: 0
+      additional_discount_percentage: 0
+      apply_discount_on: Grand Total
+      total_taxes_and_charges: 75
+      grand_total: 175
+      rounding_adjustment: 0
+      rounded_total: 175
+      outstanding_amount: 175
+      items:
+        - item_code: TEST-ART-001
+          qty: 10
+          price_list_rate: 10
+          discount_percentage: 0
+          rate: 10
+          amount: 100
+          net_rate: 10
+          net_amount: 100
+      taxes:
+        - charge_type: On Net Total
+          rate: 10
+          included_in_print_rate: 0
+          tax_amount: 50
+          total: 150
+        - charge_type: On Previous Row Amount
+          row_id: "1"
+          rate: 50
+          included_in_print_rate: 0
+          tax_amount: 25
+          total: 175
+  - n: 7
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-07: fixed charge of 15.00 plus 20% tax)"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":2,"rate":10}],"taxes":[{"charge_type":"Actual","tax_amount":15,"description":"shipping 15.00"},{"charge_type":"On Net Total","rate":20,"description":"VAT 20%"}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00007)
+    extracted:
+      case: SI-07
+      total: 20
+      net_total: 20
+      discount_amount: 0
+      additional_discount_percentage: 0
+      apply_discount_on: Grand Total
+      total_taxes_and_charges: 19
+      grand_total: 39
+      rounding_adjustment: 0
+      rounded_total: 39
+      outstanding_amount: 39
+      items:
+        - item_code: TEST-ART-001
+          qty: 2
+          price_list_rate: 10
+          discount_percentage: 0
+          rate: 10
+          amount: 20
+          net_rate: 10
+          net_amount: 20
+      taxes:
+        - charge_type: Actual
+          rate: 0
+          included_in_print_rate: 0
+          tax_amount: 15
+          total: 35
+        - charge_type: On Net Total
+          rate: 20
+          included_in_print_rate: 0
+          tax_amount: 4
+          total: 39
+  - n: 8
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-08: price includes the 20% tax (TTC price 12.00))"
+      value: '{"items":[{"item_code":"TEST-ART-001","qty":3,"rate":12}],"taxes":[{"charge_type":"On Net Total","rate":20,"description":"VAT 20% included","included_in_print_rate":1}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00008)
+    extracted:
+      case: SI-08
+      total: 36
+      net_total: 30
+      discount_amount: 0
+      additional_discount_percentage: 0
+      apply_discount_on: Grand Total
+      total_taxes_and_charges: 6
+      grand_total: 36
+      rounding_adjustment: 0
+      rounded_total: 36
+      outstanding_amount: 36
+      items:
+        - item_code: TEST-ART-001
+          qty: 3
+          price_list_rate: 10
+          discount_percentage: 0
+          rate: 12
+          amount: 36
+          net_rate: 10
+          net_amount: 30
+      taxes:
+        - charge_type: On Net Total
+          rate: 20
+          included_in_print_rate: 1
+          tax_amount: 6
+          total: 36
+  - n: 9
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-09: decimal quantity and odd price, 20% tax (rounding of each amount))"
+      value: '{"items":[{"item_code":"TEST-ART-002","qty":2.5,"rate":33.33},{"item_code":"TEST-ART-001","qty":1,"rate":0.125}],"taxes":[{"charge_type":"On Net Total","rate":20,"description":"VAT 20%"}]}'
+    observation: "refused by the program: POST /api/resource/Sales%20Invoice: 417 erpnext.utilities.transaction_base.UOMMustBeIntegerError: Ligne 1: la quantité (2.5) ne peut pas être une fraction. Pour autoriser cela, désactivez «<strong>Doit être un Nombre Entier</strong>» dans UdM <strong>Nos</strong>."
+  - n: 10
+    action:
+      type: other
+      target_desc: "create draft Sales Invoice (SI-10: grand total with cents: rounded total and rounding adjustment)"
+      value: '{"items":[{"item_code":"TEST-ART-002","qty":1,"rate":33.33}],"taxes":[{"charge_type":"On Net Total","rate":20,"description":"VAT 20%"}]}'
+    observation: draft saved; amounts computed by the program read back (ACC-SINV-2026-00009)
+    extracted:
+      case: SI-10
+      total: 33.33
+      net_total: 33.33
+      discount_amount: 0
+      additional_discount_percentage: 0
+      apply_discount_on: Grand Total
+      total_taxes_and_charges: 6.67
+      grand_total: 40
+      rounding_adjustment: 0
+      rounded_total: 40
+      outstanding_amount: 40
+      items:
+        - item_code: TEST-ART-002
+          qty: 1
+          price_list_rate: 33.33
+          discount_percentage: 0
+          rate: 33.33
+          amount: 33.33
+          net_rate: 33.33
+          net_amount: 33.33
+      taxes:
+        - charge_type: On Net Total
+          rate: 20
+          included_in_print_rate: 0
+          tax_amount: 6.67
+          total: 40
+notes: "Drafts created (never submitted): ACC-SINV-2026-00001, ACC-SINV-2026-00002, ACC-SINV-2026-00003, ACC-SINV-2026-00004, ACC-SINV-2026-00005, ACC-SINV-2026-00006, ACC-SINV-2026-00007, ACC-SINV-2026-00008, ACC-SINV-2026-00009."

@@ -1,0 +1,29 @@
+name: NetworkPrinterSettings
+description: Document type "Network Printer Settings" (module Printing).
+fields:
+  - name: server_ip
+    label: Server IP
+    type: string
+    observed_as: server_ip
+    required: true
+    default: localhost
+  - name: port
+    label: Port
+    type: integer
+    observed_as: port
+    required: true
+    default: "631"
+  - name: printer_name
+    label: Printer Name
+    type: string
+    observed_as: printer_name
+    required: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNetwork Printer Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Network Printer Settings
+    note: declared by the program and served by its API

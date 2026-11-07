@@ -1,0 +1,256 @@
+name: Project
+description: A piece of work with tasks, time and costs. Document type "Project" (module Projects).
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - PROJ-.####
+  - name: project_name
+    label: Project Name
+    type: string
+    observed_as: project_name
+    required: true
+    unique: true
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Open
+      - On hold
+      - Completed
+      - Cancelled
+    default: Open
+  - name: project_type
+    label: Project Type
+    type: ref
+    observed_as: project_type
+    ref: ProjectType
+  - name: percent_complete_method
+    label: "% Complete Method"
+    type: enum
+    observed_as: percent_complete_method
+    enum_values:
+      - Manual
+      - Task Completion
+      - Task Progress
+      - Task Weight
+    default: Task Completion
+  - name: project_template
+    label: From Template
+    type: ref
+    observed_as: project_template
+    ref: ProjectTemplate
+  - name: priority
+    label: Priority
+    type: enum
+    observed_as: priority
+    enum_values:
+      - Medium
+      - Low
+      - High
+  - name: department
+    label: Department
+    type: ref
+    observed_as: department
+    ref: Department
+  - name: is_active
+    label: Is Active
+    type: enum
+    observed_as: is_active
+    enum_values:
+      - Yes
+      - No
+  - name: percent_complete
+    label: "% Completed"
+    type: percent
+    observed_as: percent_complete
+  - name: expected_start_date
+    label: Expected Start Date
+    type: date
+    observed_as: expected_start_date
+  - name: actual_start_date
+    label: Actual Start Date (via Timesheet)
+    type: date
+    observed_as: actual_start_date
+  - name: actual_time
+    label: Actual Time in Hours (via Timesheet)
+    type: decimal
+    observed_as: actual_time
+  - name: expected_end_date
+    label: Expected End Date
+    type: date
+    observed_as: expected_end_date
+  - name: actual_end_date
+    label: Actual End Date (via Timesheet)
+    type: date
+    observed_as: actual_end_date
+  - name: estimated_costing
+    label: Estimated Cost
+    type: money
+    observed_as: estimated_costing
+  - name: total_costing_amount
+    label: Total Costing Amount (via Timesheet)
+    type: money
+    observed_as: total_costing_amount
+  - name: total_purchase_cost
+    label: Total Purchase Cost (via Purchase Invoice)
+    type: money
+    observed_as: total_purchase_cost
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: total_sales_amount
+    label: Total Sales Amount (via Sales Order)
+    type: money
+    observed_as: total_sales_amount
+  - name: total_billable_amount
+    label: Total Billable Amount (via Timesheet)
+    type: money
+    observed_as: total_billable_amount
+  - name: total_billed_amount
+    label: Total Billed Amount (via Sales Invoice)
+    type: money
+    observed_as: total_billed_amount
+  - name: total_consumed_material_cost
+    label: Total Consumed Material Cost
+    type: money
+    observed_as: total_consumed_material_cost
+  - name: cost_center
+    label: Default Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: gross_margin
+    label: Gross Margin
+    type: money
+    observed_as: gross_margin
+  - name: per_gross_margin
+    label: Gross Margin %
+    type: percent
+    observed_as: per_gross_margin
+  - name: collect_progress
+    label: Collect Progress
+    type: boolean
+    observed_as: collect_progress
+    default: "0"
+  - name: holiday_list
+    label: Holiday List
+    type: ref
+    observed_as: holiday_list
+    ref: HolidayList
+  - name: frequency
+    label: Frequency To Collect Progress
+    type: enum
+    observed_as: frequency
+    enum_values:
+      - Hourly
+      - Twice Daily
+      - Daily
+      - Weekly
+  - name: from_time
+    label: From Time
+    type: time
+    observed_as: from_time
+  - name: to_time
+    label: To Time
+    type: time
+    observed_as: to_time
+  - name: first_email
+    label: First Email
+    type: time
+    observed_as: first_email
+  - name: second_email
+    label: Second Email
+    type: time
+    observed_as: second_email
+  - name: daily_time_to_send
+    label: Daily Time to send
+    type: time
+    observed_as: daily_time_to_send
+  - name: day_to_send
+    label: Day to Send
+    type: enum
+    observed_as: day_to_send
+    enum_values:
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+  - name: weekly_time_to_send
+    label: Weekly Time to send
+    type: time
+    observed_as: weekly_time_to_send
+  - name: subject
+    label: Subject
+    type: string
+    observed_as: subject
+  - name: message
+    label: Message
+    type: text
+    observed_as: message
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    ref: SalesOrder
+  - name: copied_from
+    label: Copied From
+    type: string
+    observed_as: copied_from
+  - name: notes
+    label: Notes
+    type: text
+    observed_as: notes
+relations:
+  - to: ProjectType
+    kind: many-to-one
+    via: project_type
+  - to: ProjectTemplate
+    kind: many-to-one
+    via: project_template
+  - to: Department
+    kind: many-to-one
+    via: department
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: HolidayList
+    kind: many-to-one
+    via: holiday_list
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: ProjectUser
+    kind: one-to-many
+    via: users
+    description: lines (Users)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProject
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Project
+    note: declared by the program and served by its API

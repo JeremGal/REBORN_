@@ -1,0 +1,44 @@
+name: ModuleDef
+description: Document type "Module Def" (module Core).
+fields:
+  - name: module_name
+    label: Module Name
+    type: string
+    observed_as: module_name
+    required: true
+    unique: true
+  - name: app_name
+    label: App Name
+    type: string
+    observed_as: app_name
+  - name: restrict_to_domain
+    label: Restrict To Domain
+    type: ref
+    observed_as: restrict_to_domain
+    ref: Domain
+  - name: package
+    label: Package
+    type: ref
+    observed_as: package
+    ref: Package
+  - name: custom
+    label: Custom
+    type: boolean
+    observed_as: custom
+    default: "0"
+relations:
+  - to: Domain
+    kind: many-to-one
+    via: restrict_to_domain
+  - to: Package
+    kind: many-to-one
+    via: package
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabModule Def
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Module Def
+    note: declared by the program and served by its API

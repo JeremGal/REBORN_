@@ -1,0 +1,166 @@
+name: ItemDefault
+description: 'Document type "Item Default" (module Stock): lines of another document.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: default_warehouse
+    label: Default Warehouse
+    type: ref
+    observed_as: default_warehouse
+    ref: Warehouse
+  - name: default_price_list
+    label: Default Price List
+    type: ref
+    observed_as: default_price_list
+    ref: PriceList
+  - name: default_discount_account
+    label: Default Discount Account
+    type: ref
+    observed_as: default_discount_account
+    ref: Account
+  - name: default_inventory_account
+    label: Default Inventory Account
+    type: ref
+    observed_as: default_inventory_account
+    ref: Account
+  - name: inventory_account_currency
+    label: Inventory Account Currency
+    type: ref
+    observed_as: inventory_account_currency
+    ref: Currency
+  - name: buying_cost_center
+    label: Default Buying Cost Center
+    type: ref
+    observed_as: buying_cost_center
+    ref: CostCenter
+  - name: default_supplier
+    label: Default Supplier
+    type: ref
+    observed_as: default_supplier
+    ref: Supplier
+  - name: expense_account
+    label: Default Expense Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: default_provisional_account
+    label: Default Provisional Account (Service)
+    type: ref
+    observed_as: default_provisional_account
+    ref: Account
+  - name: purchase_expense_account
+    label: Purchase Expense Account
+    type: ref
+    observed_as: purchase_expense_account
+    ref: Account
+  - name: purchase_expense_contra_account
+    label: Purchase Expense Contra Account
+    type: ref
+    observed_as: purchase_expense_contra_account
+    ref: Account
+  - name: expenses_added_to_stock_account
+    label: Expenses Added To Stock Account
+    type: ref
+    observed_as: expenses_added_to_stock_account
+    ref: Account
+  - name: expenses_added_to_stock_contra_account
+    label: Expenses Added To Stock Contra Account
+    type: ref
+    observed_as: expenses_added_to_stock_contra_account
+    ref: Account
+  - name: selling_cost_center
+    label: Default Selling Cost Center
+    type: ref
+    observed_as: selling_cost_center
+    ref: CostCenter
+  - name: income_account
+    label: Default Income Account
+    type: ref
+    observed_as: income_account
+    ref: Account
+  - name: default_cogs_account
+    label: Default COGS Account
+    type: ref
+    observed_as: default_cogs_account
+    ref: Account
+  - name: deferred_expense_account
+    label: Deferred Expense Account
+    type: ref
+    observed_as: deferred_expense_account
+    ref: Account
+  - name: deferred_revenue_account
+    label: Deferred Revenue Account
+    type: ref
+    observed_as: deferred_revenue_account
+    ref: Account
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Warehouse
+    kind: many-to-one
+    via: default_warehouse
+  - to: PriceList
+    kind: many-to-one
+    via: default_price_list
+  - to: Account
+    kind: many-to-one
+    via: default_discount_account
+  - to: Account
+    kind: many-to-one
+    via: default_inventory_account
+  - to: Currency
+    kind: many-to-one
+    via: inventory_account_currency
+  - to: CostCenter
+    kind: many-to-one
+    via: buying_cost_center
+  - to: Supplier
+    kind: many-to-one
+    via: default_supplier
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: Account
+    kind: many-to-one
+    via: default_provisional_account
+  - to: Account
+    kind: many-to-one
+    via: purchase_expense_account
+  - to: Account
+    kind: many-to-one
+    via: purchase_expense_contra_account
+  - to: Account
+    kind: many-to-one
+    via: expenses_added_to_stock_account
+  - to: Account
+    kind: many-to-one
+    via: expenses_added_to_stock_contra_account
+  - to: CostCenter
+    kind: many-to-one
+    via: selling_cost_center
+  - to: Account
+    kind: many-to-one
+    via: income_account
+  - to: Account
+    kind: many-to-one
+    via: default_cogs_account
+  - to: Account
+    kind: many-to-one
+    via: deferred_expense_account
+  - to: Account
+    kind: many-to-one
+    via: deferred_revenue_account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Default
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Default
+    note: declared by the program and served by its API

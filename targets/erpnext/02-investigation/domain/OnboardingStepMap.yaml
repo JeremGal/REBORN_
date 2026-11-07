@@ -1,0 +1,27 @@
+name: OnboardingStepMap
+description: 'Document type "Onboarding Step Map" (module Desk): lines of another document.'
+fields:
+  - name: step
+    label: Step
+    type: ref
+    observed_as: step
+    required: true
+    ref: OnboardingStep
+  - name: is_optional
+    label: Is Optional
+    type: boolean
+    observed_as: is_optional
+    default: "0"
+relations:
+  - to: OnboardingStep
+    kind: many-to-one
+    via: step
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOnboarding Step Map
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Onboarding Step Map
+    note: declared by the program and served by its API

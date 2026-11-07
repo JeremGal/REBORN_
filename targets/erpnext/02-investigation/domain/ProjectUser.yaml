@@ -1,0 +1,53 @@
+name: ProjectUser
+description: 'Document type "Project User" (module Projects): lines of another document.'
+fields:
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    required: true
+    ref: User
+  - name: email
+    label: Email
+    type: string
+    observed_as: email
+  - name: image
+    label: Image
+    type: string
+    observed_as: image
+  - name: full_name
+    label: Full Name
+    type: string
+    observed_as: full_name
+  - name: welcome_email_sent
+    label: Welcome email sent
+    type: boolean
+    observed_as: welcome_email_sent
+    default: "0"
+  - name: view_attachments
+    label: View attachments
+    type: boolean
+    observed_as: view_attachments
+    default: "0"
+  - name: hide_timesheets
+    label: Hide timesheets
+    type: boolean
+    observed_as: hide_timesheets
+    default: "0"
+  - name: project_status
+    label: Project Status
+    type: text
+    observed_as: project_status
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProject User
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Project User
+    note: declared by the program and served by its API

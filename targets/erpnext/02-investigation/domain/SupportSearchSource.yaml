@@ -1,0 +1,77 @@
+name: SupportSearchSource
+description: 'Document type "Support Search Source" (module Support): lines of another document.'
+fields:
+  - name: source_name
+    label: Source Name
+    type: string
+    observed_as: source_name
+  - name: source_type
+    label: Source Type
+    type: enum
+    observed_as: source_type
+    required: true
+    enum_values:
+      - API
+      - Link
+  - name: base_url
+    label: Base URL
+    type: string
+    observed_as: base_url
+  - name: query_route
+    label: Query Route String
+    type: string
+    observed_as: query_route
+  - name: search_term_param_name
+    label: Search Term Param Name
+    type: string
+    observed_as: search_term_param_name
+  - name: response_result_key_path
+    label: Response Result Key Path
+    type: string
+    observed_as: response_result_key_path
+  - name: post_route
+    label: Post Route String
+    type: string
+    observed_as: post_route
+  - name: post_route_key_list
+    label: Post Route Key List
+    type: string
+    observed_as: post_route_key_list
+  - name: post_title_key
+    label: Post Title Key
+    type: string
+    observed_as: post_title_key
+  - name: post_description_key
+    label: Post Description Key
+    type: string
+    observed_as: post_description_key
+  - name: source_doctype
+    label: Source DocType
+    type: ref
+    observed_as: source_doctype
+    ref: DocType
+  - name: result_title_field
+    label: Result Title Field
+    type: string
+    observed_as: result_title_field
+  - name: result_preview_field
+    label: Result Preview Field
+    type: string
+    observed_as: result_preview_field
+  - name: result_route_field
+    label: Result Route Field
+    type: string
+    observed_as: result_route_field
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: source_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSupport Search Source
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Support Search Source
+    note: declared by the program and served by its API

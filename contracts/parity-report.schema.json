@@ -19,6 +19,23 @@
         "url": { "type": "string" }
       }
     },
+    "kit_inputs_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "inputs_sha256 of the kit the rebuild was made from: a different value means the rebuild started from an outdated kit." },
+    "expectations": {
+      "type": "array",
+      "description": "One entry per kit expectation checked (handoff.json expectations[].id). A pass counts as proven only when verified_by is at least the expectation's proof_needed (unit-test < built-app < live-run).",
+      "items": {
+        "type": "object",
+        "required": ["id", "verified_by", "result"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^X-" },
+          "verified_by": { "enum": ["unit-test", "built-app", "live-run"] },
+          "result": { "enum": ["pass", "fail", "unknown"] },
+          "test": { "type": "string", "description": "Test name, run id or screenshot that holds the proof." },
+          "note": { "type": "string" }
+        }
+      }
+    },
     "results": {
       "type": "array",
       "items": {

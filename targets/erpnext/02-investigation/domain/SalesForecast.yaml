@@ -1,0 +1,93 @@
+name: SalesForecast
+description: 'How much you expect to sell, to plan production. Document type "Sales Forecast" (module Manufacturing): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Naming Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - SF.YY.-.######
+    default: SF.YY.-.######
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    default: Today
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+    required: true
+    default: Today
+  - name: frequency
+    label: Frequency
+    type: enum
+    observed_as: frequency
+    required: true
+    enum_values:
+      - Weekly
+      - Monthly
+    default: Monthly
+  - name: demand_number
+    label: Number of Weeks / Months
+    type: integer
+    observed_as: demand_number
+    required: true
+    default: "6"
+  - name: parent_warehouse
+    label: Parent Warehouse
+    type: ref
+    observed_as: parent_warehouse
+    required: true
+    ref: Warehouse
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: SalesForecast
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Planned
+      - MPS Generated
+      - Cancelled
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: SalesForecastItem
+    kind: one-to-many
+    via: selected_items
+    description: lines (Select Items)
+  - to: Warehouse
+    kind: many-to-one
+    via: parent_warehouse
+  - to: SalesForecastItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: SalesForecast
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSales Forecast
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sales Forecast
+    note: declared by the program and served by its API

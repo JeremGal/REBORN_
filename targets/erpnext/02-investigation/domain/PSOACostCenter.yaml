@@ -1,0 +1,22 @@
+name: PSOACostCenter
+description: 'Document type "PSOA Cost Center" (module Accounts): lines of another document.'
+fields:
+  - name: cost_center_name
+    label: Cost Center
+    type: ref
+    observed_as: cost_center_name
+    required: true
+    ref: CostCenter
+relations:
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center_name
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPSOA Cost Center
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of PSOA Cost Center
+    note: declared by the program and served by its API

@@ -1,0 +1,42 @@
+name: TermsAndConditions
+description: Standard terms to add to quotes, orders and invoices. Document type "Terms and Conditions" (module Setup).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+    unique: true
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: copy_attachments_to_transaction
+    label: Copy Attachments to Transaction
+    type: boolean
+    observed_as: copy_attachments_to_transaction
+    default: "0"
+  - name: selling
+    label: Selling
+    type: boolean
+    observed_as: selling
+    default: "1"
+  - name: buying
+    label: Buying
+    type: boolean
+    observed_as: buying
+    default: "1"
+  - name: terms
+    label: Terms and Conditions
+    type: text
+    observed_as: terms
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTerms and Conditions
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Terms and Conditions
+    note: declared by the program and served by its API

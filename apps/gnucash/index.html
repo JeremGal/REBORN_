@@ -123,9 +123,9 @@ ul.list{margin:0;padding:.4rem 1.2rem .9rem}
   </section>
 
   <section id="view-tests" class="panel" hidden>
-    <div class="hd"><h2>Tests issus du kit de reconstruction</h2><span id="testBadge"></span></div>
+    <div class="hd"><h2>Tests des règles du kit</h2><span id="testBadge"></span></div>
     <div class="scroll"><table><thead><tr><th>Test</th><th>Source dans le kit</th><th>Attendu</th><th>Résultat</th></tr></thead><tbody id="testBody"></tbody></table></div>
-    <p class="note">Ces tests rejouent les vecteurs de test du fichier handoff.json : le scénario AC-001, la règle d'équilibre R-001 et la règle des montants exacts R-002.</p>
+    <p class="note"><strong>Limite.</strong> Ces tests vérifient que la refonte applique les règles écrites dans le kit (scénario AC-001, règles R-001 et R-002). Le kit n'a pas encore de valeur relevée sur l'original : AC-001 a des valeurs attendues vides, donc les résultats attendus ci-dessus viennent de la règle écrite, pas de mesures. Seul un rejeu des mêmes scénarios sur l'original peut dire s'ils coïncident.</p>
   </section>
 
   <section id="view-compare" class="panel" hidden>
@@ -138,8 +138,9 @@ ul.list{margin:0;padding:.4rem 1.2rem .9rem}
     <ul class="list">
       <li>La création du livre tient en 3 étapes courtes, avec un plan comptable prêt à cocher.</li>
       <li>Le registre affiche débit, crédit et solde courant sur des lignes réglées, lisibles d'un coup d'œil.</li>
-      <li>L'équilibre de chaque écriture se voit pendant la saisie ; un écart est soldé sur le compte Déséquilibre, comme dans l'original (règle R-001).</li>
+      <li>L'équilibre de chaque écriture se voit pendant la saisie ; un écart est soldé sur un compte Déséquilibre (règle R-001). <strong>Écart connu :</strong> d'après des sources publiques anciennes, l'original affiche d'abord une fenêtre de choix « Rebalance Transaction » (équilibrer à la main ou laisser le logiciel créer une ligne de solde). Cette fenêtre n'est pas reprise ici et reste à vérifier sur l'original.</li>
       <li>Les montants sont stockés en centimes entiers, sans erreur d'arrondi (règle R-002).</li>
+      <li><strong>Pas encore couvert :</strong> factures, clients et fournisseurs, taxes, rapprochement, budgets, opérations planifiées, imports (QIF, CSV), rapports, banque en ligne. La refonte reprend 3 écrans sur les 111 fenêtres inventoriées dans l'original.</li>
     </ul>
   </section>
 </div>

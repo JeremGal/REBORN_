@@ -1,0 +1,338 @@
+name: Asset
+description: 'Something your business owns and uses over time, like a machine or a laptop. Document type "Asset" (module Assets): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - ACC-ASS-.YYYY.-
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: asset_name
+    label: Asset Name
+    type: string
+    observed_as: asset_name
+    required: true
+  - name: location
+    label: Location
+    type: ref
+    observed_as: location
+    required: true
+    ref: Location
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: asset_category
+    label: Asset Category
+    type: ref
+    observed_as: asset_category
+    ref: AssetCategory
+  - name: asset_type
+    label: Asset Type
+    type: enum
+    observed_as: asset_type
+    enum_values:
+      - Existing Asset
+      - Composite Asset
+      - Composite Component
+  - name: maintenance_required
+    label: Maintenance Required
+    type: boolean
+    observed_as: maintenance_required
+    default: "0"
+  - name: calculate_depreciation
+    label: Calculate Depreciation
+    type: boolean
+    observed_as: calculate_depreciation
+    default: "0"
+  - name: purchase_receipt
+    label: Purchase Receipt
+    type: ref
+    observed_as: purchase_receipt
+    ref: PurchaseReceipt
+  - name: purchase_receipt_item
+    label: Purchase Receipt Item
+    type: string
+    observed_as: purchase_receipt_item
+  - name: purchase_invoice
+    label: Purchase Invoice
+    type: ref
+    observed_as: purchase_invoice
+    ref: PurchaseInvoice
+  - name: purchase_invoice_item
+    label: Purchase Invoice Item
+    type: string
+    observed_as: purchase_invoice_item
+  - name: purchase_date
+    label: Purchase Date
+    type: date
+    observed_as: purchase_date
+    required: true
+  - name: available_for_use_date
+    label: Available for Use Date
+    type: date
+    observed_as: available_for_use_date
+  - name: disposal_date
+    label: Disposal Date
+    type: date
+    observed_as: disposal_date
+  - name: net_purchase_amount
+    label: Net Purchase Amount
+    type: money
+    observed_as: net_purchase_amount
+  - name: purchase_amount
+    label: Purchase Amount
+    type: money
+    observed_as: purchase_amount
+  - name: asset_quantity
+    label: Asset Quantity
+    type: integer
+    observed_as: asset_quantity
+    default: "1"
+  - name: additional_asset_cost
+    label: Additional Asset Cost
+    type: money
+    observed_as: additional_asset_cost
+    default: "0"
+  - name: value_adjustment_amount
+    label: Value Adjustment Amount
+    type: money
+    observed_as: value_adjustment_amount
+  - name: total_asset_cost
+    label: Total Asset Cost
+    type: money
+    observed_as: total_asset_cost
+  - name: opening_accumulated_depreciation
+    label: Opening Accumulated Depreciation
+    type: money
+    observed_as: opening_accumulated_depreciation
+  - name: is_fully_depreciated
+    label: Is Fully Depreciated
+    type: boolean
+    observed_as: is_fully_depreciated
+    default: "0"
+  - name: opening_number_of_booked_depreciations
+    label: Opening Number of Booked Depreciations
+    type: integer
+    observed_as: opening_number_of_booked_depreciations
+  - name: depreciation_method
+    label: Depreciation Method
+    type: enum
+    observed_as: depreciation_method
+    enum_values:
+      - Straight Line
+      - Double Declining Balance
+      - Written Down Value
+      - Manual
+  - name: value_after_depreciation
+    label: Value After Depreciation
+    type: money
+    observed_as: value_after_depreciation
+  - name: frequency_of_depreciation
+    label: Frequency of Depreciation (Months)
+    type: integer
+    observed_as: frequency_of_depreciation
+  - name: next_depreciation_date
+    label: Next Depreciation Date
+    type: date
+    observed_as: next_depreciation_date
+  - name: total_number_of_depreciations
+    label: Total Number of Depreciations
+    type: integer
+    observed_as: total_number_of_depreciations
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: asset_owner
+    label: Asset Owner
+    type: enum
+    observed_as: asset_owner
+    enum_values:
+      - Company
+      - Supplier
+      - Customer
+    default: Company
+  - name: asset_owner_company
+    label: Asset Owner Company
+    type: ref
+    observed_as: asset_owner_company
+    ref: Company
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: policy_number
+    label: Policy number
+    type: string
+    observed_as: policy_number
+  - name: insurer
+    label: Insurer
+    type: string
+    observed_as: insurer
+  - name: insured_value
+    label: Insured value
+    type: string
+    observed_as: insured_value
+  - name: insurance_start_date
+    label: Insurance Start Date
+    type: date
+    observed_as: insurance_start_date
+  - name: insurance_end_date
+    label: Insurance End Date
+    type: date
+    observed_as: insurance_end_date
+  - name: comprehensive_insurance
+    label: Comprehensive Insurance
+    type: string
+    observed_as: comprehensive_insurance
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Submitted
+      - Cancelled
+      - Partially Depreciated
+      - Fully Depreciated
+      - Sold
+      - Scrapped
+      - In Maintenance
+      - Out of Order
+      - Issue
+      - Receipt
+      - Capitalized
+      - Work In Progress
+    default: Draft
+  - name: custodian
+    label: Custodian
+    type: ref
+    observed_as: custodian
+    ref: Employee
+  - name: department
+    label: Department
+    type: ref
+    observed_as: department
+    ref: Department
+  - name: default_finance_book
+    label: Default Finance Book
+    type: ref
+    observed_as: default_finance_book
+    ref: FinanceBook
+  - name: depr_entry_posting_status
+    label: Depreciation Entry Posting Status
+    type: enum
+    observed_as: depr_entry_posting_status
+    enum_values:
+      - Successful
+      - Failed
+  - name: journal_entry_for_scrap
+    label: Journal Entry for Scrap
+    type: ref
+    observed_as: journal_entry_for_scrap
+    ref: JournalEntry
+  - name: split_from
+    label: Split From
+    type: ref
+    observed_as: split_from
+    ref: Asset
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: Asset
+  - name: booked_fixed_asset
+    label: Booked Fixed Asset
+    type: boolean
+    observed_as: booked_fixed_asset
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Location
+    kind: many-to-one
+    via: location
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: AssetCategory
+    kind: many-to-one
+    via: asset_category
+  - to: PurchaseReceipt
+    kind: many-to-one
+    via: purchase_receipt
+  - to: PurchaseInvoice
+    kind: many-to-one
+    via: purchase_invoice
+  - to: AssetFinanceBook
+    kind: one-to-many
+    via: finance_books
+    description: lines (Finance Books)
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Company
+    kind: many-to-one
+    via: asset_owner_company
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: Employee
+    kind: many-to-one
+    via: custodian
+  - to: Department
+    kind: many-to-one
+    via: department
+  - to: FinanceBook
+    kind: many-to-one
+    via: default_finance_book
+  - to: JournalEntry
+    kind: many-to-one
+    via: journal_entry_for_scrap
+  - to: Asset
+    kind: many-to-one
+    via: split_from
+  - to: Asset
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset
+    note: declared by the program and served by its API

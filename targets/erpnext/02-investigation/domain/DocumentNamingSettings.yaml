@@ -1,0 +1,55 @@
+name: DocumentNamingSettings
+description: 'Configure various aspects of how document naming works like naming series, current counter. Document type "Document Naming Settings" (module Core): single settings record.'
+fields:
+  - name: transaction_type
+    label: Select Transaction
+    type: string
+    observed_as: transaction_type
+  - name: naming_series_options
+    label: Series List for this Transaction
+    type: text
+    observed_as: naming_series_options
+  - name: user_must_always_select
+    label: User must always select
+    type: boolean
+    observed_as: user_must_always_select
+    default: "0"
+  - name: try_naming_series
+    label: Try a Naming Series
+    type: string
+    observed_as: try_naming_series
+  - name: series_preview
+    label: Preview of generated names
+    type: text
+    observed_as: series_preview
+  - name: prefix
+    label: Prefix
+    type: string
+    observed_as: prefix
+  - name: current_value
+    label: Current Value
+    type: integer
+    observed_as: current_value
+  - name: default_amend_naming
+    label: Default Amendment Naming
+    type: enum
+    observed_as: default_amend_naming
+    required: true
+    enum_values:
+      - Amend Counter
+      - Default Naming
+    default: Amend Counter
+relations:
+  - to: AmendedDocumentNamingSettings
+    kind: one-to-many
+    via: amend_naming_override
+    description: lines (Amendment Naming Override)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocument Naming Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Document Naming Settings
+    note: declared by the program and served by its API

@@ -1,0 +1,85 @@
+name: EmailDomain
+description: Document type "Email Domain" (module Email).
+fields:
+  - name: domain_name
+    label: Domain Name
+    type: string
+    observed_as: domain_name
+    required: true
+    unique: true
+  - name: email_server
+    label: Incoming Server
+    type: string
+    observed_as: email_server
+    required: true
+  - name: use_imap
+    label: Use IMAP
+    type: boolean
+    observed_as: use_imap
+    default: "0"
+  - name: use_ssl
+    label: Use SSL
+    type: boolean
+    observed_as: use_ssl
+    default: "0"
+  - name: validate_ssl_certificate
+    label: Validate SSL Certificate
+    type: boolean
+    observed_as: validate_ssl_certificate
+    default: "1"
+  - name: use_starttls
+    label: Use STARTTLS
+    type: boolean
+    observed_as: use_starttls
+    default: "0"
+  - name: incoming_port
+    label: Port
+    type: string
+    observed_as: incoming_port
+  - name: attachment_limit
+    label: Attachment Limit (MB)
+    type: integer
+    observed_as: attachment_limit
+  - name: smtp_server
+    label: Outgoing Server
+    type: string
+    observed_as: smtp_server
+    required: true
+  - name: use_tls
+    label: Use TLS
+    type: boolean
+    observed_as: use_tls
+    default: "0"
+  - name: use_ssl_for_outgoing
+    label: Use SSL
+    type: boolean
+    observed_as: use_ssl_for_outgoing
+    default: "0"
+  - name: validate_ssl_certificate_for_outgoing
+    label: Validate SSL Certificate
+    type: boolean
+    observed_as: validate_ssl_certificate_for_outgoing
+    default: "1"
+  - name: smtp_port
+    label: Port
+    type: string
+    observed_as: smtp_port
+  - name: append_emails_to_sent_folder
+    label: Append Emails to Sent Folder
+    type: boolean
+    observed_as: append_emails_to_sent_folder
+    default: "0"
+  - name: sent_folder_name
+    label: Sent Folder Name
+    type: string
+    observed_as: sent_folder_name
+    default: Sent
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Domain
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Domain
+    note: declared by the program and served by its API

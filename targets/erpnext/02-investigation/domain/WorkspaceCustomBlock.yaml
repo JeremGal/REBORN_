@@ -1,0 +1,25 @@
+name: WorkspaceCustomBlock
+description: 'Document type "Workspace Custom Block" (module Desk): lines of another document.'
+fields:
+  - name: custom_block_name
+    label: Custom Block Name
+    type: ref
+    observed_as: custom_block_name
+    ref: CustomHTMLBlock
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+relations:
+  - to: CustomHTMLBlock
+    kind: many-to-one
+    via: custom_block_name
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkspace Custom Block
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workspace Custom Block
+    note: declared by the program and served by its API

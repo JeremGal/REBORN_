@@ -1,0 +1,75 @@
+name: PaymentTerm
+description: When part of an invoice is due, like 50% in 30 days. Document type "Payment Term" (module Accounts).
+fields:
+  - name: payment_term_name
+    label: Payment Term Name
+    type: string
+    observed_as: payment_term_name
+    unique: true
+  - name: invoice_portion
+    label: Invoice Portion (%)
+    type: decimal
+    observed_as: invoice_portion
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    ref: ModeOfPayment
+  - name: due_date_based_on
+    label: Due Date Based On
+    type: enum
+    observed_as: due_date_based_on
+    enum_values:
+      - Day(s) after invoice date
+      - Day(s) after the end of the invoice month
+      - Month(s) after the end of the invoice month
+  - name: credit_days
+    label: Credit Days
+    type: integer
+    observed_as: credit_days
+  - name: credit_months
+    label: Credit Months
+    type: integer
+    observed_as: credit_months
+  - name: discount_type
+    label: Discount Type
+    type: enum
+    observed_as: discount_type
+    enum_values:
+      - Percentage
+      - Amount
+    default: Percentage
+  - name: discount
+    label: Discount
+    type: decimal
+    observed_as: discount
+  - name: discount_validity_based_on
+    label: Discount Validity Based On
+    type: enum
+    observed_as: discount_validity_based_on
+    enum_values:
+      - Day(s) after invoice date
+      - Day(s) after the end of the invoice month
+      - Month(s) after the end of the invoice month
+    default: Day(s) after invoice date
+  - name: discount_validity
+    label: Discount Validity
+    type: integer
+    observed_as: discount_validity
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+relations:
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Term
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Term
+    note: declared by the program and served by its API

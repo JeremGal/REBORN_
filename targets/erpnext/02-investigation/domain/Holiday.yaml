@@ -1,0 +1,32 @@
+name: Holiday
+description: 'Document type "Holiday" (module Setup): lines of another document.'
+fields:
+  - name: holiday_date
+    label: Date
+    type: date
+    observed_as: holiday_date
+    required: true
+  - name: weekly_off
+    label: Weekly Off
+    type: boolean
+    observed_as: weekly_off
+    default: "0"
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+    required: true
+  - name: is_half_day
+    label: Is Half Day
+    type: boolean
+    observed_as: is_half_day
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabHoliday
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Holiday
+    note: declared by the program and served by its API

@@ -1,0 +1,21 @@
+name: DocTypeLayoutField
+description: 'Document type "DocType Layout Field" (module Custom): lines of another document.'
+fields:
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+  - name: fieldname
+    label: Fieldname
+    type: string
+    observed_as: fieldname
+    required: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocType Layout Field
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DocType Layout Field
+    note: declared by the program and served by its API

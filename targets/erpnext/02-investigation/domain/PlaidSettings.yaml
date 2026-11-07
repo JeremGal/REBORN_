@@ -1,0 +1,43 @@
+name: PlaidSettings
+description: 'Document type "Plaid Settings" (module ERPNext Integrations): single settings record.'
+fields:
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "0"
+  - name: automatic_sync
+    label: Synchronize all accounts every hour
+    type: boolean
+    observed_as: automatic_sync
+    default: "0"
+  - name: plaid_client_id
+    label: Plaid Client ID
+    type: string
+    observed_as: plaid_client_id
+  - name: plaid_secret
+    label: Plaid Secret
+    type: string
+    observed_as: plaid_secret
+  - name: plaid_env
+    label: Plaid Environment
+    type: enum
+    observed_as: plaid_env
+    enum_values:
+      - sandbox
+      - development
+      - production
+  - name: enable_european_access
+    label: Enable European Access
+    type: boolean
+    observed_as: enable_european_access
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPlaid Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Plaid Settings
+    note: declared by the program and served by its API

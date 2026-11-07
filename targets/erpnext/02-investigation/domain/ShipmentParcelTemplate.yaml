@@ -1,0 +1,39 @@
+name: ShipmentParcelTemplate
+description: A parcel size you ship often. Document type "Shipment Parcel Template" (module Stock).
+fields:
+  - name: parcel_template_name
+    label: Parcel Template Name
+    type: string
+    observed_as: parcel_template_name
+    required: true
+    unique: true
+  - name: length
+    label: Length (cm)
+    type: decimal
+    observed_as: length
+    required: true
+  - name: width
+    label: Width (cm)
+    type: decimal
+    observed_as: width
+    required: true
+  - name: height
+    label: Height (cm)
+    type: decimal
+    observed_as: height
+    required: true
+  - name: weight
+    label: Weight (kg)
+    type: decimal
+    observed_as: weight
+    required: true
+    precision: 1
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabShipment Parcel Template
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Shipment Parcel Template
+    note: declared by the program and served by its API

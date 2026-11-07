@@ -1,0 +1,127 @@
+name: AssetDepreciationSchedule
+description: 'When an asset depreciates, and by how much. Document type "Asset Depreciation Schedule" (module Assets): draft, submitted, cancelled life cycle.'
+fields:
+  - name: asset
+    label: Asset
+    type: ref
+    observed_as: asset
+    required: true
+    ref: Asset
+  - name: naming_series
+    label: Naming Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - ACC-ADS-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: net_purchase_amount
+    label: Net Purchase Amount
+    type: money
+    observed_as: net_purchase_amount
+  - name: opening_accumulated_depreciation
+    label: Opening Accumulated Depreciation
+    type: money
+    observed_as: opening_accumulated_depreciation
+  - name: opening_number_of_booked_depreciations
+    label: Opening Number of Booked Depreciations
+    type: integer
+    observed_as: opening_number_of_booked_depreciations
+  - name: finance_book
+    label: Finance Book
+    type: ref
+    observed_as: finance_book
+    ref: FinanceBook
+  - name: finance_book_id
+    label: Finance Book Id
+    type: integer
+    observed_as: finance_book_id
+  - name: depreciation_method
+    label: Depreciation Method
+    type: enum
+    observed_as: depreciation_method
+    enum_values:
+      - Straight Line
+      - Double Declining Balance
+      - Written Down Value
+      - Manual
+  - name: total_number_of_depreciations
+    label: Total Number of Depreciations
+    type: integer
+    observed_as: total_number_of_depreciations
+  - name: rate_of_depreciation
+    label: Rate of Depreciation
+    type: percent
+    observed_as: rate_of_depreciation
+  - name: daily_prorata_based
+    label: Depreciate based on daily pro-rata
+    type: boolean
+    observed_as: daily_prorata_based
+    default: "0"
+  - name: shift_based
+    label: Depreciate based on shifts
+    type: boolean
+    observed_as: shift_based
+    default: "0"
+  - name: frequency_of_depreciation
+    label: Frequency of Depreciation (Months)
+    type: integer
+    observed_as: frequency_of_depreciation
+  - name: expected_value_after_useful_life
+    label: Expected Value After Useful Life
+    type: money
+    observed_as: expected_value_after_useful_life
+  - name: value_after_depreciation
+    label: Value After Depreciation
+    type: money
+    observed_as: value_after_depreciation
+  - name: notes
+    label: Notes
+    type: text
+    observed_as: notes
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Active
+      - Cancelled
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: AssetDepreciationSchedule
+relations:
+  - to: Asset
+    kind: many-to-one
+    via: asset
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: FinanceBook
+    kind: many-to-one
+    via: finance_book
+  - to: DepreciationSchedule
+    kind: one-to-many
+    via: depreciation_schedule
+    description: lines (Depreciation Schedule)
+  - to: AssetDepreciationSchedule
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Depreciation Schedule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Depreciation Schedule
+    note: declared by the program and served by its API

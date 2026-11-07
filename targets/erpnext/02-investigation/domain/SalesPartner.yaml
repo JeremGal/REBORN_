@@ -1,0 +1,77 @@
+name: SalesPartner
+description: A distributor, dealer or reseller who sells for you on commission. Document type "Sales Partner" (module Setup).
+fields:
+  - name: partner_name
+    label: Sales Partner Name
+    type: string
+    observed_as: partner_name
+    required: true
+    unique: true
+  - name: partner_type
+    label: Partner Type
+    type: ref
+    observed_as: partner_type
+    ref: SalesPartnerType
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    required: true
+    ref: Territory
+  - name: commission_rate
+    label: Commission Rate
+    type: decimal
+    observed_as: commission_rate
+    required: true
+  - name: show_in_website
+    label: Show In Website
+    type: boolean
+    observed_as: show_in_website
+    default: "0"
+  - name: referral_code
+    label: Referral Code
+    type: string
+    observed_as: referral_code
+    unique: true
+    max_length: 8
+  - name: route
+    label: Route
+    type: string
+    observed_as: route
+    unique: true
+  - name: logo
+    label: Logo
+    type: file
+    observed_as: logo
+  - name: partner_website
+    label: Partner website
+    type: string
+    observed_as: partner_website
+  - name: introduction
+    label: Introduction
+    type: text
+    observed_as: introduction
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+relations:
+  - to: SalesPartnerType
+    kind: many-to-one
+    via: partner_type
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: TargetDetail
+    kind: one-to-many
+    via: targets
+    description: lines (Targets)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSales Partner
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sales Partner
+    note: declared by the program and served by its API

@@ -1,0 +1,98 @@
+name: AssetValueAdjustment
+description: "Changes an asset's value outside its depreciation. Document type \"Asset Value Adjustment\" (module Assets): draft, submitted, cancelled life cycle."
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: asset
+    label: Asset
+    type: ref
+    observed_as: asset
+    required: true
+    ref: Asset
+  - name: asset_category
+    label: Asset Category
+    type: string
+    observed_as: asset_category
+  - name: date
+    label: Date
+    type: date
+    observed_as: date
+    required: true
+  - name: finance_book
+    label: Finance Book
+    type: ref
+    observed_as: finance_book
+    ref: FinanceBook
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: AssetValueAdjustment
+  - name: current_asset_value
+    label: Current Asset Value
+    type: money
+    observed_as: current_asset_value
+    required: true
+  - name: new_asset_value
+    label: New Asset Value
+    type: money
+    observed_as: new_asset_value
+    required: true
+  - name: difference_amount
+    label: Difference Amount
+    type: money
+    observed_as: difference_amount
+  - name: difference_account
+    label: Difference Account
+    type: ref
+    observed_as: difference_account
+    required: true
+    ref: Account
+  - name: journal_entry
+    label: Journal Entry
+    type: ref
+    observed_as: journal_entry
+    ref: JournalEntry
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Asset
+    kind: many-to-one
+    via: asset
+  - to: FinanceBook
+    kind: many-to-one
+    via: finance_book
+  - to: AssetValueAdjustment
+    kind: many-to-one
+    via: amended_from
+  - to: Account
+    kind: many-to-one
+    via: difference_account
+  - to: JournalEntry
+    kind: many-to-one
+    via: journal_entry
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Value Adjustment
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Value Adjustment
+    note: declared by the program and served by its API

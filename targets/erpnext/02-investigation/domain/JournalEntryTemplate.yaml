@@ -1,0 +1,69 @@
+name: JournalEntryTemplate
+description: A saved set of accounts to start journal entries from. Document type "Journal Entry Template" (module Accounts).
+fields:
+  - name: template_title
+    label: Template Title
+    type: string
+    observed_as: template_title
+    required: true
+    unique: true
+  - name: voucher_type
+    label: Journal Entry Type
+    type: enum
+    observed_as: voucher_type
+    required: true
+    enum_values:
+      - Journal Entry
+      - Inter Company Journal Entry
+      - Bank Entry
+      - Cash Entry
+      - Credit Card Entry
+      - Debit Note
+      - Credit Note
+      - Contra Entry
+      - Excise Entry
+      - Write Off Entry
+      - Opening Entry
+      - Depreciation Entry
+      - Exchange Rate Revaluation
+  - name: naming_series
+    label: Series
+    type: string
+    observed_as: naming_series
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: is_opening
+    label: Is Opening
+    type: enum
+    observed_as: is_opening
+    enum_values:
+      - No
+      - Yes
+    default: No
+  - name: multi_currency
+    label: Multi Currency
+    type: boolean
+    observed_as: multi_currency
+    default: "0"
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: JournalEntryTemplateAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Accounting Entries)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabJournal Entry Template
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Journal Entry Template
+    note: declared by the program and served by its API

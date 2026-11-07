@@ -1,0 +1,27 @@
+name: WorkstationCost
+description: 'Document type "Workstation Cost" (module Manufacturing): lines of another document.'
+fields:
+  - name: operating_component
+    label: Operating Component
+    type: ref
+    observed_as: operating_component
+    required: true
+    ref: WorkstationOperatingComponent
+  - name: operating_cost
+    label: Operating Cost
+    type: money
+    observed_as: operating_cost
+    required: true
+relations:
+  - to: WorkstationOperatingComponent
+    kind: many-to-one
+    via: operating_component
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkstation Cost
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workstation Cost
+    note: declared by the program and served by its API

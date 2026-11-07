@@ -1,0 +1,134 @@
+name: AssetRepair
+description: 'A repair made to an asset, and what it cost. Document type "Asset Repair" (module Assets): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - ACC-ASR-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: asset
+    label: Asset
+    type: ref
+    observed_as: asset
+    required: true
+    ref: Asset
+  - name: asset_name
+    label: Asset Name
+    type: string
+    observed_as: asset_name
+  - name: repair_status
+    label: Repair Status
+    type: enum
+    observed_as: repair_status
+    enum_values:
+      - Pending
+      - Completed
+      - Cancelled
+    default: Pending
+  - name: failure_date
+    label: Failure Date
+    type: datetime
+    observed_as: failure_date
+    required: true
+  - name: completion_date
+    label: Completion Date
+    type: datetime
+    observed_as: completion_date
+  - name: downtime
+    label: Downtime
+    type: string
+    observed_as: downtime
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: AssetRepair
+  - name: description
+    label: Error Description
+    type: text
+    observed_as: description
+  - name: actions_performed
+    label: Actions performed
+    type: text
+    observed_as: actions_performed
+  - name: repair_cost
+    label: Repair Cost
+    type: money
+    observed_as: repair_cost
+    default: "0"
+  - name: consumed_items_cost
+    label: Consumed Items Cost
+    type: money
+    observed_as: consumed_items_cost
+  - name: capitalize_repair_cost
+    label: Capitalize Repair Cost
+    type: boolean
+    observed_as: capitalize_repair_cost
+    default: "0"
+  - name: increase_in_asset_life
+    label: Increase In Asset Life(Months)
+    type: integer
+    observed_as: increase_in_asset_life
+  - name: asset_value_updated
+    label: Asset Value Updated
+    type: boolean
+    observed_as: asset_value_updated
+    default: "0"
+  - name: total_repair_cost
+    label: Total Repair Cost
+    type: money
+    observed_as: total_repair_cost
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Asset
+    kind: many-to-one
+    via: asset
+  - to: AssetRepair
+    kind: many-to-one
+    via: amended_from
+  - to: AssetRepairPurchaseInvoice
+    kind: one-to-many
+    via: invoices
+    description: lines (Repair Purchase Invoices)
+  - to: AssetRepairConsumedItem
+    kind: one-to-many
+    via: stock_items
+    description: lines (Stock Items)
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Repair
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Repair
+    note: declared by the program and served by its API

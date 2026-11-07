@@ -1,0 +1,44 @@
+name: BankTransactionPayments
+description: 'Document type "Bank Transaction Payments" (module Accounts): lines of another document.'
+fields:
+  - name: payment_document
+    label: Payment Document
+    type: ref
+    observed_as: payment_document
+    required: true
+    ref: DocType
+  - name: payment_entry
+    label: Payment Entry
+    type: string
+    observed_as: payment_entry
+    required: true
+  - name: allocated_amount
+    label: Allocated Amount
+    type: money
+    observed_as: allocated_amount
+    required: true
+  - name: clearance_date
+    label: Clearance Date
+    type: date
+    observed_as: clearance_date
+  - name: reconciliation_type
+    label: Reconciliation Type
+    type: enum
+    observed_as: reconciliation_type
+    enum_values:
+      - Matched
+      - Voucher Created
+    default: Matched
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: payment_document
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Transaction Payments
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Transaction Payments
+    note: declared by the program and served by its API

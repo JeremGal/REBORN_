@@ -1,0 +1,25 @@
+name: SystemHealthReportFailingJobs
+description: 'Document type "System Health Report Failing Jobs" (module Desk): lines of another document.'
+fields:
+  - name: scheduled_job_type
+    label: Scheduled Job Type
+    type: ref
+    observed_as: scheduled_job_type
+    ref: ScheduledJobType
+  - name: failure_rate
+    label: Failure Rate
+    type: percent
+    observed_as: failure_rate
+relations:
+  - to: ScheduledJobType
+    kind: many-to-one
+    via: scheduled_job_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSystem Health Report Failing Jobs
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of System Health Report Failing Jobs
+    note: declared by the program and served by its API

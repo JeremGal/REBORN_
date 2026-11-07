@@ -1,0 +1,27 @@
+id: R-004
+title: Order and compounding of several taxes
+kind: tax
+statement: >-
+  When a line carries several taxes, they are applied in their configured application order. A tax marked as
+  cascading is computed on the running base, which already includes the taxes applied before it; a tax that is not
+  cascading is computed on the original base.
+formula: |
+  base = line_base
+  for tax in taxes ordered by application_order:
+    if tax.cascade: amount = base * tax.rate          # base already includes earlier taxes
+    else:           amount = line_base * tax.rate
+    base = base + amount
+applies_to: [Taxes.rate, Taxes.ratecascade, Taxes.rateorder]
+features: [F-001]
+examples: []   # a run with two cascading taxes shows the order and the compounding
+status: confirmed
+confidence: medium
+evidence:
+  - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "tax rate, cascade flag and application order columns", note: "shipped schema stores the order and the cascade flag" }
+  - { ref: ev_04c25272fcfeb9b2596e5844e6c671487c42a460a128cb0bf9e92ee55b6d6996, kind: craft, locator: "per-line tax computation", note: "code: cascading taxes use the running base" }
+  - { ref: ev_f420b9650704386a678d09e48a68e36a14939bbd31aab4880f7a57a5fb4ec396, kind: craft, locator: "tax ordering", note: "code: taxes sorted by application order" }
+contradictions: []
+notes: >-
+  Confirmed by two different kinds of proof: the schema stores the cascade flag and the order, and the code shows how
+  they are used. The meaning of the edge cases (equal orders, a cascade with no earlier tax) is not observed; a run
+  with two cascading taxes gives the worked example.

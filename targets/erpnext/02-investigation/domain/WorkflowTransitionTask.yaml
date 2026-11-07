@@ -1,0 +1,31 @@
+name: WorkflowTransitionTask
+description: 'Document type "Workflow Transition Task" (module Workflow): lines of another document.'
+fields:
+  - name: task
+    label: Task
+    type: string
+    observed_as: task
+    required: true
+  - name: asynchronous
+    label: Asynchronous
+    type: boolean
+    observed_as: asynchronous
+    default: "0"
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: link
+    label: Link
+    type: string
+    observed_as: link
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkflow Transition Task
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workflow Transition Task
+    note: declared by the program and served by its API

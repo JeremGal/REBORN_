@@ -1,0 +1,79 @@
+name: JobCardItem
+description: 'Document type "Job Card Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: source_warehouse
+    label: Source Warehouse
+    type: ref
+    observed_as: source_warehouse
+    ref: Warehouse
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: required_qty
+    label: Required Qty
+    type: decimal
+    observed_as: required_qty
+  - name: transferred_qty
+    label: Transferred Qty
+    type: decimal
+    observed_as: transferred_qty
+  - name: consumed_qty
+    label: Consumed Qty
+    type: decimal
+    observed_as: consumed_qty
+  - name: allow_alternative_item
+    label: Allow Alternative Item
+    type: boolean
+    observed_as: allow_alternative_item
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: source_warehouse
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabJob Card Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Job Card Item
+    note: declared by the program and served by its API

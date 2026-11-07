@@ -1,0 +1,128 @@
+name: InvoiceDiscounting
+description: 'Raise money against unpaid sales invoices. Document type "Invoice Discounting" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: loan_start_date
+    label: Loan Start Date
+    type: date
+    observed_as: loan_start_date
+  - name: loan_period
+    label: Loan Period (Days)
+    type: integer
+    observed_as: loan_period
+  - name: loan_end_date
+    label: Loan End Date
+    type: date
+    observed_as: loan_end_date
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Sanctioned
+      - Disbursed
+      - Settled
+      - Cancelled
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: total_amount
+    label: Total Amount
+    type: money
+    observed_as: total_amount
+  - name: bank_charges
+    label: Bank Charges
+    type: money
+    observed_as: bank_charges
+  - name: short_term_loan
+    label: Short Term Loan Account
+    type: ref
+    observed_as: short_term_loan
+    required: true
+    ref: Account
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    required: true
+    ref: Account
+  - name: bank_charges_account
+    label: Bank Charges Account
+    type: ref
+    observed_as: bank_charges_account
+    required: true
+    ref: Account
+  - name: accounts_receivable_credit
+    label: Accounts Receivable Credit Account
+    type: ref
+    observed_as: accounts_receivable_credit
+    required: true
+    ref: Account
+  - name: accounts_receivable_discounted
+    label: Accounts Receivable Discounted Account
+    type: ref
+    observed_as: accounts_receivable_discounted
+    required: true
+    ref: Account
+  - name: accounts_receivable_unpaid
+    label: Accounts Receivable Unpaid Account
+    type: ref
+    observed_as: accounts_receivable_unpaid
+    required: true
+    ref: Account
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: InvoiceDiscounting
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DiscountedInvoice
+    kind: one-to-many
+    via: invoices
+    description: lines (Invoices)
+  - to: Account
+    kind: many-to-one
+    via: short_term_loan
+  - to: Account
+    kind: many-to-one
+    via: bank_account
+  - to: Account
+    kind: many-to-one
+    via: bank_charges_account
+  - to: Account
+    kind: many-to-one
+    via: accounts_receivable_credit
+  - to: Account
+    kind: many-to-one
+    via: accounts_receivable_discounted
+  - to: Account
+    kind: many-to-one
+    via: accounts_receivable_unpaid
+  - to: InvoiceDiscounting
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabInvoice Discounting
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Invoice Discounting
+    note: declared by the program and served by its API

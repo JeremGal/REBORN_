@@ -1,0 +1,33 @@
+name: DeletedDocument
+description: Document type "Deleted Document" (module Core).
+fields:
+  - name: deleted_name
+    label: Deleted Name
+    type: string
+    observed_as: deleted_name
+  - name: deleted_doctype
+    label: Deleted DocType
+    type: string
+    observed_as: deleted_doctype
+  - name: restored
+    label: Restored
+    type: boolean
+    observed_as: restored
+    default: "0"
+  - name: new_name
+    label: New Name
+    type: string
+    observed_as: new_name
+  - name: data
+    label: Data
+    type: text
+    observed_as: data
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDeleted Document
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Deleted Document
+    note: declared by the program and served by its API

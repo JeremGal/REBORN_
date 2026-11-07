@@ -1,0 +1,107 @@
+name: ManufacturingSettings
+description: 'Document type "Manufacturing Settings" (module Manufacturing): single settings record.'
+fields:
+  - name: material_consumption
+    label: Allow Continuous Material Consumption
+    type: boolean
+    observed_as: material_consumption
+    default: "0"
+  - name: get_rm_cost_from_consumption_entry
+    label: Get Raw Materials Cost from Consumption Entry
+    type: boolean
+    observed_as: get_rm_cost_from_consumption_entry
+    default: "0"
+  - name: backflush_raw_materials_based_on
+    label: Backflush Raw Materials Based On
+    type: enum
+    observed_as: backflush_raw_materials_based_on
+    enum_values:
+      - BOM
+      - Material Transferred for Manufacture
+    default: BOM
+  - name: validate_components_quantities_per_bom
+    label: Validate Components and Quantities Per BOM
+    type: boolean
+    observed_as: validate_components_quantities_per_bom
+    default: "0"
+  - name: update_bom_costs_automatically
+    label: Update BOM Cost Automatically
+    type: boolean
+    observed_as: update_bom_costs_automatically
+    default: "0"
+  - name: allow_editing_of_items_and_quantities_in_work_order
+    label: Allow Editing of Items and Quantities in Work Order
+    type: boolean
+    observed_as: allow_editing_of_items_and_quantities_in_work_order
+    default: "0"
+  - name: overproduction_percentage_for_sales_order
+    label: Overproduction Percentage For Sales Order
+    type: percent
+    observed_as: overproduction_percentage_for_sales_order
+  - name: overproduction_percentage_for_work_order
+    label: Overproduction Percentage For Work Order
+    type: percent
+    observed_as: overproduction_percentage_for_work_order
+  - name: transfer_extra_materials_percentage
+    label: Transfer Extra Raw Materials to WIP (%)
+    type: percent
+    observed_as: transfer_extra_materials_percentage
+  - name: add_corrective_operation_cost_in_finished_good_valuation
+    label: Add Corrective Operation Cost in Finished Good Valuation
+    type: boolean
+    observed_as: add_corrective_operation_cost_in_finished_good_valuation
+    default: "0"
+  - name: enforce_time_logs
+    label: Enforce Time Logs
+    type: boolean
+    observed_as: enforce_time_logs
+    default: "0"
+  - name: job_card_excess_transfer
+    label: Allow Excess Material Transfer
+    type: boolean
+    observed_as: job_card_excess_transfer
+    default: "0"
+  - name: disable_capacity_planning
+    label: Disable Capacity Planning
+    type: boolean
+    observed_as: disable_capacity_planning
+    default: "0"
+  - name: allow_overtime
+    label: Allow Overtime
+    type: boolean
+    observed_as: allow_overtime
+    default: "0"
+  - name: allow_production_on_holidays
+    label: Allow Production on Holidays
+    type: boolean
+    observed_as: allow_production_on_holidays
+    default: "0"
+  - name: capacity_planning_for_days
+    label: Capacity Planning For (Days)
+    type: integer
+    observed_as: capacity_planning_for_days
+    default: "30"
+  - name: mins_between_operations
+    label: Time Between Operations (Mins)
+    type: integer
+    observed_as: mins_between_operations
+    default: "10"
+  - name: set_op_cost_and_secondary_items_from_sub_assemblies
+    label: Set Operating Cost / Secondary Items From Sub-assemblies
+    type: boolean
+    observed_as: set_op_cost_and_secondary_items_from_sub_assemblies
+    default: "0"
+  - name: make_serial_no_batch_from_work_order
+    label: Make Serial No / Batch from Work Order
+    type: boolean
+    observed_as: make_serial_no_batch_from_work_order
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabManufacturing Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Manufacturing Settings
+    note: declared by the program and served by its API

@@ -1,0 +1,48 @@
+name: PrintFormatSnippet
+description: Document type "Print Format Snippet" (module Printing).
+fields:
+  - name: snippet_type
+    label: Snippet Type
+    type: enum
+    observed_as: snippet_type
+    required: true
+    enum_values:
+      - Section
+      - Field
+    default: Section
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    ref: DocType
+  - name: standard
+    label: Standard
+    type: boolean
+    observed_as: standard
+    default: "0"
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: content
+    label: Content
+    type: text
+    observed_as: content
+    required: true
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPrint Format Snippet
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Print Format Snippet
+    note: declared by the program and served by its API

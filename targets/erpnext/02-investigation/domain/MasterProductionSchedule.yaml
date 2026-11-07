@@ -1,0 +1,85 @@
+name: MasterProductionSchedule
+description: How much of each item to make, and when. Document type "Master Production Schedule" (module Manufacturing).
+fields:
+  - name: naming_series
+    label: Naming Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MPS.YY.-.######
+    default: MPS.YY.-.######
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+    required: true
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+  - name: parent_warehouse
+    label: Parent Warehouse
+    type: ref
+    observed_as: parent_warehouse
+    ref: Warehouse
+  - name: sales_forecast
+    label: Sales Forecast
+    type: ref
+    observed_as: sales_forecast
+    ref: SalesForecast
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: MasterProductionSchedule
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: MasterProductionScheduleItem
+    kind: one-to-many
+    via: select_items
+    description: lines (Select Items)
+  - to: Warehouse
+    kind: many-to-one
+    via: parent_warehouse
+  - to: ProductionPlanSalesOrder
+    kind: one-to-many
+    via: sales_orders
+    description: lines (Sales Orders)
+  - to: ProductionPlanMaterialRequest
+    kind: one-to-many
+    via: material_requests
+    description: lines (Material Requests)
+  - to: MasterProductionScheduleItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: SalesForecast
+    kind: many-to-one
+    via: sales_forecast
+  - to: MasterProductionSchedule
+    kind: many-to-one
+    via: amended_from
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMaster Production Schedule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Master Production Schedule
+    note: declared by the program and served by its API

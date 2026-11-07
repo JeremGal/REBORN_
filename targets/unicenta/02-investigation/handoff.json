@@ -1,34 +1,51 @@
 {
-  "schema": "reborn/handoff@1",
+  "schema": "reborn/handoff@2",
   "target": {
     "id": "unicenta",
-    "name": "uniCenta oPOS",
+    "title": "Open-source point-of-sale desktop application",
     "domain": "point of sale (retail and restaurant till)",
     "kind": "exe",
-    "tech": "Java (Swing desktop), Openbravo POS lineage; ships HSQLDB and Derby create scripts; 1089 classes under com.openbravo.pos",
-    "legal": {
-      "basis": "GPL-3.0 licence (Openbravo POS / uniCenta lineage) explicitly allows studying and modifying the program.",
-      "clean_room": true,
-      "restrictions": [
-        "Do not reuse the uniCenta/Openbravo name, logo or theme in a rebuild."
-      ]
-    }
+    "tech": "Java (Swing desktop); ships HSQLDB and Derby create scripts; about 1089 classes",
+    "access": "open-source"
   },
-  "generated_at": "2026-11-07T15:13:17.429Z",
+  "inputs_sha256": "d92c97b5c8480a0ade0623b73bf3089d9df2e0387c2283b6600f70ecda5615b8",
   "clean_room": true,
   "readiness": {
     "features": {
       "partial": 1
     },
     "rules": {
-      "partial": 2
+      "confirmed": 3,
+      "partial": 1
     },
     "entities": {
-      "confirmed": 40
+      "confirmed": 39,
+      "partial": 1
+    },
+    "ready_features": 0,
+    "coverage": {
+      "screens": {
+        "carded": 1,
+        "inventoried": null,
+        "ratio": null,
+        "source": "window inventory (counts.windows)"
+      },
+      "entities": {
+        "carded": 40,
+        "inventoried": 40,
+        "ratio": 100,
+        "source": "table inventory (counts.tables)"
+      },
+      "features": {
+        "carded": 1,
+        "inventoried": null,
+        "ratio": null,
+        "note": "no independent feature inventory yet (run: reborn manual <target> <manual.chm|pdf>): coverage is unknown, not complete"
+      }
     },
     "has_observed_values": false,
     "open_questions": 2,
-    "note": "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values."
+    "note": "A feature is ready (see its `ready` flag) only when it is confirmed or partial, none of its rules is refuted, and a run on the original supplied expected values for at least one acceptance scenario."
   },
   "to_observe": [
     {
@@ -38,10 +55,15 @@
       "missing": [
         "no acceptance scenario has observed expected values (run the feature and read them back)",
         "rule R-001 has no worked example (capture one input/output pair)",
-        "rule R-001 is partial (confirm by observation)",
         "rule R-002 has no worked example (capture one input/output pair)",
-        "rule R-002 is partial (confirm by observation)",
+        "rule R-003 has no worked example (capture one input/output pair)",
+        "rule R-003 is partial (confirm by observation)",
+        "rule R-004 has no worked example (capture one input/output pair)",
         "screen S-001 has no screenshot (capture it)"
+      ],
+      "unknowns": [
+        "U-001",
+        "U-002"
       ],
       "missions": [
         "M-002",
@@ -49,178 +71,296 @@
       ]
     }
   ],
+  "expectations": [
+    {
+      "id": "X-R-001",
+      "kind": "rule",
+      "ref": "R-001",
+      "grade": "confirmed",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-R-002",
+      "kind": "rule",
+      "ref": "R-002",
+      "grade": "confirmed",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-R-003",
+      "kind": "rule",
+      "ref": "R-003",
+      "grade": "partial",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal",
+        "halfway value"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-R-004",
+      "kind": "rule",
+      "ref": "R-004",
+      "grade": "confirmed",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal",
+        "several taxes"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-AC-001",
+      "kind": "acceptance",
+      "ref": "AC-001",
+      "feature": "F-001",
+      "grade": "partial",
+      "proof_needed": "live-run",
+      "observed": false
+    },
+    {
+      "id": "X-S-001",
+      "kind": "screen",
+      "ref": "S-001",
+      "grade": "hypothesis",
+      "proof_needed": "built-app",
+      "controls": 7
+    }
+  ],
   "build_order": [
     {
       "kind": "entity",
-      "id": "Applications"
+      "id": "Applications",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Attribute"
+      "id": "Attribute",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Attributeset"
+      "id": "Attributeset",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Attributesetinstance"
+      "id": "Attributesetinstance",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Attributeinstance"
+      "id": "Attributeinstance",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Attributeuse"
+      "id": "Attributeuse",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Attributevalue"
+      "id": "Attributevalue",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Breaks"
+      "id": "Breaks",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Categories"
+      "id": "Categories",
+      "grade": "partial"
     },
     {
       "kind": "entity",
-      "id": "Closedcash"
+      "id": "Closedcash",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Csvimport"
+      "id": "Csvimport",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Taxcustcategories"
+      "id": "Taxcustcategories",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Customers"
+      "id": "Customers",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Floors"
+      "id": "Floors",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Roles"
+      "id": "Roles",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "People"
+      "id": "People",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Leaves"
+      "id": "Leaves",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Locations"
+      "id": "Locations",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Moorers"
+      "id": "Moorers",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Receipts"
+      "id": "Receipts",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Payments"
+      "id": "Payments",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Places"
+      "id": "Places",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Taxcategories"
+      "id": "Taxcategories",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Products"
+      "id": "Products",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "ProductsCat"
+      "id": "ProductsCat",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "ProductsCom"
+      "id": "ProductsCom",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Reservations"
+      "id": "Reservations",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "ReservationCustomers"
+      "id": "ReservationCustomers",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Resources"
+      "id": "Resources",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Sharedtickets"
+      "id": "Sharedtickets",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Shifts"
+      "id": "Shifts",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "ShiftBreaks"
+      "id": "ShiftBreaks",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Stockcurrent"
+      "id": "Stockcurrent",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Stockdiary"
+      "id": "Stockdiary",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Stocklevel"
+      "id": "Stocklevel",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Taxes"
+      "id": "Taxes",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Taxlines"
+      "id": "Taxlines",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Thirdparties"
+      "id": "Thirdparties",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Tickets"
+      "id": "Tickets",
+      "grade": "confirmed"
     },
     {
       "kind": "entity",
-      "id": "Ticketlines"
+      "id": "Ticketlines",
+      "grade": "confirmed"
     },
     {
       "kind": "rule",
-      "id": "R-001"
+      "id": "R-001",
+      "grade": "confirmed"
     },
     {
       "kind": "rule",
-      "id": "R-002"
+      "id": "R-002",
+      "grade": "confirmed"
+    },
+    {
+      "kind": "rule",
+      "id": "R-003",
+      "grade": "partial"
+    },
+    {
+      "kind": "rule",
+      "id": "R-004",
+      "grade": "confirmed"
     },
     {
       "kind": "feature",
       "id": "F-001",
+      "grade": "partial",
       "priority": "must"
     }
   ],
@@ -265,8 +405,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE APPLICATIONS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -302,8 +441,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE ATTRIBUTE",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -365,8 +503,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE ATTRIBUTEINSTANCE",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -402,8 +539,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE ATTRIBUTESET",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -452,8 +588,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE ATTRIBUTESETINSTANCE",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -514,8 +649,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE ATTRIBUTEUSE",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -564,8 +698,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE ATTRIBUTEVALUE",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -615,14 +748,13 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE BREAKS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
     {
       "name": "Categories",
-      "description": "Table CATEGORIES from the shipped database schema.",
+      "description": "Table CATEGORIES from the shipped database schema. 1 statement(s) on this table were not applied by the reader (column TEXTTIP declared twice (string, then boolean)): check them by hand.",
       "fields": [
         {
           "name": "id",
@@ -653,6 +785,13 @@
           "label": "",
           "type": "file",
           "observed_as": "IMAGE"
+        },
+        {
+          "name": "texttip",
+          "label": "",
+          "type": "string",
+          "observed_as": "TEXTTIP",
+          "max_length": 255
         }
       ],
       "relations": [
@@ -666,13 +805,12 @@
         "engine": "HSQLDB",
         "observed_table": "CATEGORIES"
       },
-      "status": "confirmed",
+      "status": "partial",
       "evidence": [
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE CATEGORIES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -728,8 +866,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE CLOSEDCASH",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -816,8 +953,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE csvimport",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1005,8 +1141,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE CUSTOMERS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1048,8 +1183,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE FLOORS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1120,8 +1254,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE LEAVES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1164,8 +1297,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE LOCATIONS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1210,8 +1342,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE moorers",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1288,8 +1419,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE PAYMENTS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1366,8 +1496,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE PEOPLE",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1431,8 +1560,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE PLACES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1589,6 +1717,27 @@
           "type": "string",
           "observed_as": "DISPLAY",
           "max_length": 255
+        },
+        {
+          "name": "isvprice",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "ISVPRICE",
+          "required": true
+        },
+        {
+          "name": "isverpatrib",
+          "label": "",
+          "type": "boolean",
+          "observed_as": "ISVERPATRIB",
+          "required": true
+        },
+        {
+          "name": "texttip",
+          "label": "",
+          "type": "string",
+          "observed_as": "TEXTTIP",
+          "max_length": 255
         }
       ],
       "relations": [
@@ -1617,8 +1766,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE PRODUCTS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1658,8 +1806,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE PRODUCTS_CAT",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1714,8 +1861,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE PRODUCTS_COM",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1777,8 +1923,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE RECEIPTS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1825,8 +1970,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE RESERVATION_CUSTOMERS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1897,8 +2041,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE RESERVATIONS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1947,8 +2090,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE RESOURCES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1990,8 +2132,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE ROLES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2033,8 +2174,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE SHAREDTICKETS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2102,8 +2242,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE SHIFT_BREAKS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2152,8 +2291,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE SHIFTS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2218,8 +2356,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE STOCKCURRENT",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2314,8 +2451,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE STOCKDIARY",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2382,8 +2518,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE STOCKLEVEL",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2419,8 +2554,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE TAXCATEGORIES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2456,8 +2590,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE TAXCUSTCATEGORIES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2551,8 +2684,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE TAXES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2621,8 +2753,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE TAXLINES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2736,8 +2867,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE THIRDPARTIES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2834,8 +2964,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE TICKETLINES",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -2915,8 +3044,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "CREATE TABLE TICKETS",
-          "note": "shipped SQL create script"
+          "basis": "shipped-data"
         }
       ]
     }
@@ -2926,8 +3054,8 @@
       "id": "R-001",
       "title": "Ticket line and ticket totals",
       "kind": "computation",
-      "statement": "A ticket line total is units times unit price. The ticket total is the sum of its line totals plus the tax computed per tax rate. Each line references one tax (TICKETLINES.TAXID -> TAXES.RATE).",
-      "formula": "line_base  = TICKETLINES.UNITS * TICKETLINES.PRICE\nline_tax   = line_base * TAXES.RATE                 # per line's tax\nticket_base = sum(line_base)\nticket_tax  = sum(line_tax)                          # stored per rate in TAXLINES (BASE, AMOUNT)\nticket_total = ticket_base + ticket_tax\n",
+      "statement": "A ticket line's base is units times unit price. Its tax is the base times the line's tax rate, and its total is the base times one plus the rate. The ticket subtotal is the sum of line bases, the ticket tax is the sum of the taxes grouped per rate, and the ticket total is subtotal plus tax. Each line references one tax.",
+      "formula": "line_base   = units * unit_price\nline_tax    = line_base * rate\nline_total  = line_base * (1 + rate)\nsubtotal    = sum(line_base)\nticket_tax  = sum(line_tax)                          # stored per rate in the tax lines (base, amount)\nticket_total = subtotal + ticket_tax\n",
       "applies_to": [
         "Ticketlines.units",
         "Ticketlines.price",
@@ -2939,18 +3067,32 @@
         "F-001"
       ],
       "examples": [],
-      "status": "partial",
+      "status": "confirmed",
       "confidence": "medium",
       "evidence": [
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "TICKETLINES(UNITS DOUBLE, PRICE DOUBLE, TAXID->TAXES); TAXES(RATE DOUBLE, RATECASCADE, RATEORDER); TAXLINES(BASE, AMOUNT)",
-          "note": "shipped schema shows the computation chain"
+          "basis": "shipped-data"
+        },
+        {
+          "ref": "ev_04c25272fcfeb9b2596e5844e6c671487c42a460a128cb0bf9e92ee55b6d6996",
+          "kind": "craft",
+          "basis": "static-code"
+        },
+        {
+          "ref": "ev_98ebdfa0652f1f77b86ab90b598e0d6ee19421b94ab4c6e21c7bd938f92b0631",
+          "kind": "craft",
+          "basis": "static-code"
+        },
+        {
+          "ref": "ev_95593f5e7a4bf39dab0f542286bece087b3c5b90cb8490a939e3a7662b0e9206",
+          "kind": "craft",
+          "basis": "static-code"
         }
       ],
       "contradictions": [],
-      "notes": "The schema proves the data path. Exact rounding (per line vs per ticket) and the RATECASCADE / RATEORDER compound-tax order are NOT yet observed: a run is needed. Amounts are DOUBLE in storage; a rebuild should still compute in integer minor units or a decimal type and confirm the rounding against an observed ticket."
+      "notes": "Confirmed by two different kinds of proof: the shipped schema (data path) and the program's code (the arithmetic). Neither is an observation of the running program, so the exact values of one real ticket are still missing as a worked example. Amounts are kept as floating-point numbers while the ticket is computed; a rebuild should still compute in integer minor units or a decimal type."
     },
     {
       "id": "R-002",
@@ -2965,17 +3107,90 @@
         "F-001"
       ],
       "examples": [],
-      "status": "partial",
+      "status": "confirmed",
       "confidence": "medium",
       "evidence": [
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "PAYMENTS(RECEIPT->RECEIPTS, PAYMENT type, TOTAL DOUBLE); RECEIPTS one per ticket",
-          "note": "shipped schema"
+          "basis": "shipped-data"
+        },
+        {
+          "ref": "ev_2249439ead26168ec9b63e5b2a7653f360bfdb4884fb656b1176070bf3c4e0c1",
+          "kind": "craft",
+          "basis": "static-code"
         }
       ],
-      "contradictions": []
+      "contradictions": [],
+      "notes": "Confirmed by two different kinds of proof (schema and code). Whether a payment covers the ticket is decided on amounts rounded to the currency's decimals (R-003), so a tender that is short by less than the currency's precision counts as exact. The change for a real ticket is still to be read in a run."
+    },
+    {
+      "id": "R-003",
+      "title": "Rounding of monetary amounts",
+      "kind": "rounding",
+      "statement": "Monetary amounts are rounded to the currency's number of decimal places using round-half-to-even (banker's rounding): a value exactly halfway goes to the nearest even digit. Two amounts are compared after both are rounded this way, so values that differ only below the currency's precision are treated as equal.",
+      "formula": "factor = 10 ^ currency_decimals\nround(x) = round_half_to_even(x * factor) / factor\ncompare(a, b) = compare(round(a), round(b))\n",
+      "applies_to": [
+        "Payments.total",
+        "Taxlines.amount"
+      ],
+      "features": [
+        "F-001"
+      ],
+      "examples": [],
+      "status": "partial",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "ref": "ev_9d8ce87124a8d62d8d87165c1325b7c65d2204d9e6bce7fc24a48c233e4a705a",
+          "kind": "craft",
+          "basis": "static-code"
+        },
+        {
+          "ref": "ev_59506a891c995c10fe1969eb59a569840f41fa645521492dc310e886ba2a425b",
+          "kind": "craft",
+          "basis": "static-code"
+        }
+      ],
+      "contradictions": [],
+      "notes": "Only the program's code shows this, which is a single kind of proof, so the rule stays partial. Round-half-to-even differs from the round-half-up most people expect: 2.345 with two decimals can give 2.34, not 2.35. A run with a halfway amount is the way to confirm it before a rebuild copies it."
+    },
+    {
+      "id": "R-004",
+      "title": "Order and compounding of several taxes",
+      "kind": "tax",
+      "statement": "When a line carries several taxes, they are applied in their configured application order. A tax marked as cascading is computed on the running base, which already includes the taxes applied before it; a tax that is not cascading is computed on the original base.",
+      "formula": "base = line_base\nfor tax in taxes ordered by application_order:\n  if tax.cascade: amount = base * tax.rate          # base already includes earlier taxes\n  else:           amount = line_base * tax.rate\n  base = base + amount\n",
+      "applies_to": [
+        "Taxes.rate",
+        "Taxes.ratecascade",
+        "Taxes.rateorder"
+      ],
+      "features": [
+        "F-001"
+      ],
+      "examples": [],
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "ref": "sql:6ae1364b7d43e617",
+          "kind": "rea",
+          "basis": "shipped-data"
+        },
+        {
+          "ref": "ev_04c25272fcfeb9b2596e5844e6c671487c42a460a128cb0bf9e92ee55b6d6996",
+          "kind": "craft",
+          "basis": "static-code"
+        },
+        {
+          "ref": "ev_f420b9650704386a678d09e48a68e36a14939bbd31aab4880f7a57a5fb4ec396",
+          "kind": "craft",
+          "basis": "static-code"
+        }
+      ],
+      "contradictions": [],
+      "notes": "Confirmed by two different kinds of proof: the schema stores the cascade flag and the order, and the code shows how they are used. The meaning of the edge cases (equal orders, a cascade with no earlier tax) is not observed; a run with two cascading taxes gives the worked example."
     }
   ],
   "screens": [
@@ -3028,8 +3243,7 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "TICKETS / TICKETLINES / PAYMENTS tables",
-          "note": "data model; the Swing screen itself not yet captured (U-001)"
+          "basis": "shipped-data"
         }
       ]
     }
@@ -3087,7 +3301,8 @@
           "actor": "system",
           "does": "computes line totals and the ticket total with tax",
           "rules": [
-            "R-001"
+            "R-001",
+            "R-004"
           ]
         },
         {
@@ -3100,13 +3315,16 @@
           "actor": "system",
           "does": "computes change, records receipt, payment and tax lines",
           "rules": [
-            "R-002"
+            "R-002",
+            "R-003"
           ]
         }
       ],
       "rules": [
         "R-001",
-        "R-002"
+        "R-002",
+        "R-003",
+        "R-004"
       ],
       "outputs": [
         {
@@ -3150,15 +3368,15 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "TICKETS, TICKETLINES, RECEIPTS, PAYMENTS, TAXLINES, TAXES.RATE",
-          "note": "shipped schema"
+          "basis": "shipped-data"
         }
       ],
       "unknowns": [
         "U-001",
         "U-002"
       ],
-      "rebuild_notes": "Data model is confirmed from the shipped schema. Build Ticket -> TicketLine (units, price, tax) -> Receipt -> Payment/TaxLine. Compute totals per R-001 but confirm the rounding and the RATECASCADE compound-tax order from an observed ticket before finalising. The sale screen (S-001) is a Swing panel built in code: capture it by a run.",
+      "rebuild_notes": "Data model is confirmed from the shipped schema. Build Ticket -> TicketLine (units, price, tax) -> Receipt -> Payment/TaxLine. Compute totals per R-001, several taxes per R-004, round with round-half-to-even at the currency's decimals (R-003, still partial: check it on a halfway amount). Compute in integer minor units or a decimal type. The sale screen (S-001) is a Swing panel built in code: capture it by a run.",
+      "ready": false,
       "discovery_trace": {
         "grade": "partial",
         "confidence": "medium",
@@ -3166,7 +3384,7 @@
           {
             "ref": "sql:6ae1364b7d43e617",
             "kind": "rea",
-            "locator": "TICKETS, TICKETLINES, RECEIPTS, PAYMENTS, TAXLINES, TAXES.RATE"
+            "basis": "shipped-data"
           }
         ],
         "steps": [
@@ -3206,13 +3424,25 @@
           {
             "layer": "rule",
             "ref": "R-001",
-            "grade": "partial",
+            "grade": "confirmed",
             "has_example": false
           },
           {
             "layer": "rule",
             "ref": "R-002",
+            "grade": "confirmed",
+            "has_example": false
+          },
+          {
+            "layer": "rule",
+            "ref": "R-003",
             "grade": "partial",
+            "has_example": false
+          },
+          {
+            "layer": "rule",
+            "ref": "R-004",
+            "grade": "confirmed",
             "has_example": false
           },
           {
@@ -3431,7 +3661,7 @@
       "from_table": "CATEGORIES",
       "from_column": "ID",
       "type": "string",
-      "grade": "confirmed"
+      "grade": "partial"
     },
     {
       "entity": "Categories",
@@ -3439,7 +3669,7 @@
       "from_table": "CATEGORIES",
       "from_column": "NAME",
       "type": "string",
-      "grade": "confirmed"
+      "grade": "partial"
     },
     {
       "entity": "Categories",
@@ -3447,7 +3677,7 @@
       "from_table": "CATEGORIES",
       "from_column": "PARENTID",
       "type": "ref",
-      "grade": "confirmed"
+      "grade": "partial"
     },
     {
       "entity": "Categories",
@@ -3455,7 +3685,15 @@
       "from_table": "CATEGORIES",
       "from_column": "IMAGE",
       "type": "file",
-      "grade": "confirmed"
+      "grade": "partial"
+    },
+    {
+      "entity": "Categories",
+      "new_field": "texttip",
+      "from_table": "CATEGORIES",
+      "from_column": "TEXTTIP",
+      "type": "string",
+      "grade": "partial"
     },
     {
       "entity": "Closedcash",
@@ -4206,6 +4444,30 @@
       "new_field": "display",
       "from_table": "PRODUCTS",
       "from_column": "DISPLAY",
+      "type": "string",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "isvprice",
+      "from_table": "PRODUCTS",
+      "from_column": "ISVPRICE",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "isverpatrib",
+      "from_table": "PRODUCTS",
+      "from_column": "ISVERPATRIB",
+      "type": "boolean",
+      "grade": "confirmed"
+    },
+    {
+      "entity": "Products",
+      "new_field": "texttip",
+      "from_table": "PRODUCTS",
+      "from_column": "TEXTTIP",
       "type": "string",
       "grade": "confirmed"
     },
@@ -5004,15 +5266,11 @@
   ],
   "test_vectors": {
     "from_rules": [],
-    "from_acceptance": [
+    "from_acceptance": [],
+    "unobserved_acceptance": [
       {
-        "kind": "acceptance",
         "id": "AC-001",
-        "feature": "F-001",
-        "given": "a product at 10.00 with a 20% tax, cash session open",
-        "when": "the cashier adds 3 units and tenders 40.00 cash",
-        "then": "ticket base 30.00, tax 6.00, total 36.00, change 4.00",
-        "expected": {}
+        "feature": "F-001"
       }
     ]
   },
@@ -5034,15 +5292,20 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "data model only; no runtime values",
-          "note": "shipped schema"
+          "basis": "shipped-data"
         }
-      ]
+      ],
+      "severity": "blocking",
+      "required_basis": [
+        "runtime"
+      ],
+      "prediction": "For 3 units at 10.00 with a 20% tax and 40.00 tendered: base 30.00, tax 6.00, total 36.00, change 4.00.",
+      "refuted_if": "Any of the four values differs, or the tax is computed on the rounded line."
     },
     {
       "id": "U-002",
-      "question": "What do the STATUS / TICKETTYPE integer codes mean, and the RATECASCADE compound-tax order?",
-      "why": "the schema stores them as integers/booleans without labels; a rebuild needs the meanings.",
+      "question": "What do the STATUS / TICKETTYPE integer codes mean? (The compound-tax order is now described by R-004 from the code; a run gives its worked example.)",
+      "why": "the schema stores the codes as integers without labels; a rebuild needs the meanings.",
       "probe": {
         "kind": "h-mission",
         "suggestion": "Create a normal sale, a refund and a layaway; note how TICKETTYPE/STATUS differ. Configure two cascading taxes and observe the order.",
@@ -5053,10 +5316,17 @@
         {
           "ref": "sql:6ae1364b7d43e617",
           "kind": "rea",
-          "locator": "TICKETS.TICKETTYPE, TICKETS.STATUS, TAXES.RATECASCADE/RATEORDER",
-          "note": "codes without labels"
+          "basis": "shipped-data"
         }
-      ]
+      ],
+      "severity": "major",
+      "required_basis": [
+        "runtime",
+        "static-code"
+      ],
+      "prediction": "The ticket type distinguishes a normal sale from a refund; the status distinguishes open, closed and voided tickets.",
+      "refuted_if": "The codes carry other meanings, for example a layaway type.",
+      "searched": "The shipped schema stores both as integers without labels."
     }
   ]
 }

@@ -1,0 +1,645 @@
+name: Company
+description: A legal entity with its own books, like your business or a subsidiary. Document type "Company" (module Setup).
+fields:
+  - name: company_name
+    label: Company
+    type: string
+    observed_as: company_name
+    required: true
+    unique: true
+  - name: abbr
+    label: Abbr
+    type: string
+    observed_as: abbr
+    required: true
+  - name: default_currency
+    label: Default Currency
+    type: ref
+    observed_as: default_currency
+    required: true
+    ref: Currency
+  - name: country
+    label: Country
+    type: ref
+    observed_as: country
+    required: true
+    ref: Country
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: default_holiday_list
+    label: Default Holiday List
+    type: ref
+    observed_as: default_holiday_list
+    ref: HolidayList
+  - name: default_letter_head
+    label: Default Letter Head
+    type: ref
+    observed_as: default_letter_head
+    ref: LetterHead
+  - name: tax_id
+    label: Tax ID
+    type: string
+    observed_as: tax_id
+  - name: domain
+    label: Domain
+    type: string
+    observed_as: domain
+  - name: date_of_establishment
+    label: Date of Establishment
+    type: date
+    observed_as: date_of_establishment
+  - name: parent_company
+    label: Parent Company
+    type: ref
+    observed_as: parent_company
+    ref: Company
+  - name: reporting_currency
+    label: Reporting Currency
+    type: ref
+    observed_as: reporting_currency
+    ref: Currency
+  - name: company_logo
+    label: Company Logo
+    type: file
+    observed_as: company_logo
+  - name: date_of_incorporation
+    label: Date of Incorporation
+    type: date
+    observed_as: date_of_incorporation
+  - name: phone_no
+    label: Phone No
+    type: string
+    observed_as: phone_no
+  - name: email
+    label: Email
+    type: string
+    observed_as: email
+  - name: company_description
+    label: Company Description
+    type: text
+    observed_as: company_description
+  - name: date_of_commencement
+    label: Date of Commencement
+    type: date
+    observed_as: date_of_commencement
+  - name: fax
+    label: Fax
+    type: string
+    observed_as: fax
+  - name: website
+    label: Website
+    type: string
+    observed_as: website
+  - name: registration_details
+    label: Registration Details
+    type: text
+    observed_as: registration_details
+  - name: lft
+    label: Lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: Rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: old_parent
+    type: string
+    observed_as: old_parent
+  - name: create_chart_of_accounts_based_on
+    label: Create Chart Of Accounts Based On
+    type: enum
+    observed_as: create_chart_of_accounts_based_on
+    enum_values:
+      - Standard Template
+      - Existing Company
+  - name: existing_company
+    label: "Existing Company "
+    type: ref
+    observed_as: existing_company
+    ref: Company
+  - name: chart_of_accounts
+    label: Chart Of Accounts Template
+    type: string
+    observed_as: chart_of_accounts
+  - name: default_bank_account
+    label: Default Bank Account
+    type: ref
+    observed_as: default_bank_account
+    ref: Account
+  - name: default_cash_account
+    label: Default Cash Account
+    type: ref
+    observed_as: default_cash_account
+    ref: Account
+  - name: default_receivable_account
+    label: Default Receivable Account
+    type: ref
+    observed_as: default_receivable_account
+    ref: Account
+  - name: default_payable_account
+    label: Default Payable Account
+    type: ref
+    observed_as: default_payable_account
+    ref: Account
+  - name: write_off_account
+    label: Write Off Account
+    type: ref
+    observed_as: write_off_account
+    ref: Account
+  - name: unrealized_profit_loss_account
+    label: Unrealized Profit / Loss Account
+    type: ref
+    observed_as: unrealized_profit_loss_account
+    ref: Account
+  - name: allow_account_creation_against_child_company
+    label: Allow Account Creation Against Child Company
+    type: boolean
+    observed_as: allow_account_creation_against_child_company
+    default: "0"
+  - name: default_expense_account
+    label: Default Cost of Goods Sold Account
+    type: ref
+    observed_as: default_expense_account
+    ref: Account
+  - name: default_income_account
+    label: Default Income Account
+    type: ref
+    observed_as: default_income_account
+    ref: Account
+  - name: default_discount_account
+    label: Default Payment Discount Account
+    type: ref
+    observed_as: default_discount_account
+    ref: Account
+  - name: payment_terms
+    label: Default Payment Terms Template
+    type: ref
+    observed_as: payment_terms
+    ref: PaymentTermsTemplate
+  - name: cost_center
+    label: Default Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: default_finance_book
+    label: Default Finance Book
+    type: ref
+    observed_as: default_finance_book
+    ref: FinanceBook
+  - name: exchange_gain_loss_account
+    label: Exchange Gain / Loss Account
+    type: ref
+    observed_as: exchange_gain_loss_account
+    ref: Account
+  - name: unrealized_exchange_gain_loss_account
+    label: Unrealized Exchange Gain/Loss Account
+    type: ref
+    observed_as: unrealized_exchange_gain_loss_account
+    ref: Account
+  - name: round_off_account
+    label: Round Off Account
+    type: ref
+    observed_as: round_off_account
+    ref: Account
+  - name: round_off_cost_center
+    label: Round Off Cost Center
+    type: ref
+    observed_as: round_off_cost_center
+    ref: CostCenter
+  - name: round_off_for_opening
+    label: Round Off for Opening
+    type: ref
+    observed_as: round_off_for_opening
+    ref: Account
+  - name: default_deferred_revenue_account
+    label: Default Deferred Revenue Account
+    type: ref
+    observed_as: default_deferred_revenue_account
+    ref: Account
+  - name: default_deferred_expense_account
+    label: Default Deferred Expense Account
+    type: ref
+    observed_as: default_deferred_expense_account
+    ref: Account
+  - name: book_advance_payments_in_separate_party_account
+    label: Book Advance Payments in Separate Party Account
+    type: boolean
+    observed_as: book_advance_payments_in_separate_party_account
+    default: "0"
+  - name: reconcile_on_advance_payment_date
+    label: Reconcile on Advance Payment Date
+    type: boolean
+    observed_as: reconcile_on_advance_payment_date
+    default: "0"
+  - name: reconciliation_takes_effect_on
+    label: Reconciliation Takes Effect On
+    type: enum
+    observed_as: reconciliation_takes_effect_on
+    enum_values:
+      - Advance Payment Date
+      - Oldest Of Invoice Or Advance
+      - Reconciliation Date
+    default: Oldest Of Invoice Or Advance
+  - name: default_advance_received_account
+    label: Default Advance Received Account
+    type: ref
+    observed_as: default_advance_received_account
+    ref: Account
+  - name: default_advance_paid_account
+    label: Default Advance Paid Account
+    type: ref
+    observed_as: default_advance_paid_account
+    ref: Account
+  - name: auto_exchange_rate_revaluation
+    label: Auto Create Exchange Rate Revaluation
+    type: boolean
+    observed_as: auto_exchange_rate_revaluation
+    default: "0"
+  - name: auto_err_frequency
+    label: Frequency
+    type: enum
+    observed_as: auto_err_frequency
+    enum_values:
+      - Daily
+      - Weekly
+      - Monthly
+  - name: submit_err_jv
+    label: Submit ERR Journals?
+    type: boolean
+    observed_as: submit_err_jv
+    default: "0"
+  - name: exception_budget_approver_role
+    label: Exception Budget Approver Role
+    type: ref
+    observed_as: exception_budget_approver_role
+    ref: Role
+  - name: accumulated_depreciation_account
+    label: Accumulated Depreciation Account
+    type: ref
+    observed_as: accumulated_depreciation_account
+    ref: Account
+  - name: depreciation_expense_account
+    label: Depreciation Expense Account
+    type: ref
+    observed_as: depreciation_expense_account
+    ref: Account
+  - name: series_for_depreciation_entry
+    label: Series for Asset Depreciation Entry (Journal Entry)
+    type: string
+    observed_as: series_for_depreciation_entry
+  - name: disposal_account
+    label: Gain/Loss Account on Asset Disposal
+    type: ref
+    observed_as: disposal_account
+    ref: Account
+  - name: depreciation_cost_center
+    label: Asset Depreciation Cost Center
+    type: ref
+    observed_as: depreciation_cost_center
+    ref: CostCenter
+  - name: capital_work_in_progress_account
+    label: Capital Work In Progress Account
+    type: ref
+    observed_as: capital_work_in_progress_account
+    ref: Account
+  - name: asset_received_but_not_billed
+    label: Asset Received But Not Billed
+    type: ref
+    observed_as: asset_received_but_not_billed
+    ref: Account
+  - name: accounts_frozen_till_date
+    label: Accounts Frozen Till Date
+    type: date
+    observed_as: accounts_frozen_till_date
+  - name: role_allowed_for_frozen_entries
+    label: Roles Allowed to Set and Edit Frozen Account Entries
+    type: ref
+    observed_as: role_allowed_for_frozen_entries
+    ref: Role
+  - name: default_buying_terms
+    label: Default Buying Terms
+    type: ref
+    observed_as: default_buying_terms
+    ref: TermsAndConditions
+  - name: sales_monthly_history
+    label: Sales Monthly History
+    type: text
+    observed_as: sales_monthly_history
+  - name: monthly_sales_target
+    label: Monthly Sales Target
+    type: money
+    observed_as: monthly_sales_target
+  - name: total_monthly_sales
+    label: Total Monthly Sales
+    type: money
+    observed_as: total_monthly_sales
+  - name: default_selling_terms
+    label: Default Selling Terms
+    type: ref
+    observed_as: default_selling_terms
+    ref: TermsAndConditions
+  - name: default_sales_contact
+    label: Default Sales Contact
+    type: ref
+    observed_as: default_sales_contact
+    ref: Contact
+  - name: credit_limit
+    label: Credit Limit
+    type: money
+    observed_as: credit_limit
+  - name: transactions_annual_history
+    label: Transactions Annual History
+    type: text
+    observed_as: transactions_annual_history
+  - name: purchase_expense_account
+    label: Purchase Expense Account
+    type: ref
+    observed_as: purchase_expense_account
+    ref: Account
+  - name: service_expense_account
+    label: Service Expense Account
+    type: ref
+    observed_as: service_expense_account
+    ref: Account
+  - name: purchase_expense_contra_account
+    label: Purchase Expense Contra Account
+    type: ref
+    observed_as: purchase_expense_contra_account
+    ref: Account
+  - name: expenses_added_to_stock_account
+    label: Expenses Added To Stock Account
+    type: ref
+    observed_as: expenses_added_to_stock_account
+    ref: Account
+  - name: expenses_added_to_stock_contra_account
+    label: Expenses Added To Stock Contra Account
+    type: ref
+    observed_as: expenses_added_to_stock_contra_account
+    ref: Account
+  - name: enable_perpetual_inventory
+    label: Enable Perpetual Inventory
+    type: boolean
+    observed_as: enable_perpetual_inventory
+    default: "1"
+  - name: enable_item_wise_inventory_account
+    label: Enable Item-wise Inventory Account
+    type: boolean
+    observed_as: enable_item_wise_inventory_account
+    default: "0"
+  - name: enable_provisional_accounting_for_non_stock_items
+    label: Enable Provisional Accounting For Non Stock Items
+    type: boolean
+    observed_as: enable_provisional_accounting_for_non_stock_items
+    default: "0"
+  - name: default_inventory_account
+    label: Default Inventory Account
+    type: ref
+    observed_as: default_inventory_account
+    ref: Account
+  - name: valuation_method
+    label: Default Stock Valuation Method
+    type: enum
+    observed_as: valuation_method
+    required: true
+    enum_values:
+      - FIFO
+      - Moving Average
+      - LIFO
+    default: FIFO
+  - name: stock_adjustment_account
+    label: Stock Adjustment Account
+    type: ref
+    observed_as: stock_adjustment_account
+    ref: Account
+  - name: stock_received_but_not_billed
+    label: Stock Received But Not Billed
+    type: ref
+    observed_as: stock_received_but_not_billed
+    ref: Account
+  - name: default_provisional_account
+    label: Default Provisional Account
+    type: ref
+    observed_as: default_provisional_account
+    ref: Account
+  - name: default_operating_cost_account
+    label: Default Operating Cost Account
+    type: ref
+    observed_as: default_operating_cost_account
+    ref: Account
+  - name: default_warehouse
+    label: Default Warehouse
+    type: ref
+    observed_as: default_warehouse
+    ref: Warehouse
+  - name: sample_retention_warehouse
+    label: Sample Retention Warehouse
+    type: ref
+    observed_as: sample_retention_warehouse
+    ref: Warehouse
+  - name: default_in_transit_warehouse
+    label: Default In-Transit Warehouse
+    type: ref
+    observed_as: default_in_transit_warehouse
+    ref: Warehouse
+  - name: default_warehouse_for_sales_return
+    label: Default Warehouse for Sales Return
+    type: ref
+    observed_as: default_warehouse_for_sales_return
+    ref: Warehouse
+  - name: default_wip_warehouse
+    label: " Default Work In Progress Warehouse "
+    type: ref
+    observed_as: default_wip_warehouse
+    ref: Warehouse
+  - name: default_fg_warehouse
+    label: Default Finished Goods Warehouse
+    type: ref
+    observed_as: default_fg_warehouse
+    ref: Warehouse
+  - name: default_scrap_warehouse
+    label: Default Scrap Warehouse
+    type: ref
+    observed_as: default_scrap_warehouse
+    ref: Warehouse
+relations:
+  - to: Currency
+    kind: many-to-one
+    via: default_currency
+  - to: Country
+    kind: many-to-one
+    via: country
+  - to: HolidayList
+    kind: many-to-one
+    via: default_holiday_list
+  - to: LetterHead
+    kind: many-to-one
+    via: default_letter_head
+  - to: Company
+    kind: many-to-one
+    via: parent_company
+  - to: Currency
+    kind: many-to-one
+    via: reporting_currency
+  - to: Company
+    kind: many-to-one
+    via: existing_company
+  - to: Account
+    kind: many-to-one
+    via: default_bank_account
+  - to: Account
+    kind: many-to-one
+    via: default_cash_account
+  - to: Account
+    kind: many-to-one
+    via: default_receivable_account
+  - to: Account
+    kind: many-to-one
+    via: default_payable_account
+  - to: Account
+    kind: many-to-one
+    via: write_off_account
+  - to: Account
+    kind: many-to-one
+    via: unrealized_profit_loss_account
+  - to: Account
+    kind: many-to-one
+    via: default_expense_account
+  - to: Account
+    kind: many-to-one
+    via: default_income_account
+  - to: Account
+    kind: many-to-one
+    via: default_discount_account
+  - to: PaymentTermsTemplate
+    kind: many-to-one
+    via: payment_terms
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: FinanceBook
+    kind: many-to-one
+    via: default_finance_book
+  - to: Account
+    kind: many-to-one
+    via: exchange_gain_loss_account
+  - to: Account
+    kind: many-to-one
+    via: unrealized_exchange_gain_loss_account
+  - to: Account
+    kind: many-to-one
+    via: round_off_account
+  - to: CostCenter
+    kind: many-to-one
+    via: round_off_cost_center
+  - to: Account
+    kind: many-to-one
+    via: round_off_for_opening
+  - to: Account
+    kind: many-to-one
+    via: default_deferred_revenue_account
+  - to: Account
+    kind: many-to-one
+    via: default_deferred_expense_account
+  - to: Account
+    kind: many-to-one
+    via: default_advance_received_account
+  - to: Account
+    kind: many-to-one
+    via: default_advance_paid_account
+  - to: Role
+    kind: many-to-one
+    via: exception_budget_approver_role
+  - to: Account
+    kind: many-to-one
+    via: accumulated_depreciation_account
+  - to: Account
+    kind: many-to-one
+    via: depreciation_expense_account
+  - to: Account
+    kind: many-to-one
+    via: disposal_account
+  - to: CostCenter
+    kind: many-to-one
+    via: depreciation_cost_center
+  - to: Account
+    kind: many-to-one
+    via: capital_work_in_progress_account
+  - to: Account
+    kind: many-to-one
+    via: asset_received_but_not_billed
+  - to: Role
+    kind: many-to-one
+    via: role_allowed_for_frozen_entries
+  - to: TermsAndConditions
+    kind: many-to-one
+    via: default_buying_terms
+  - to: TermsAndConditions
+    kind: many-to-one
+    via: default_selling_terms
+  - to: Contact
+    kind: many-to-one
+    via: default_sales_contact
+  - to: Account
+    kind: many-to-one
+    via: purchase_expense_account
+  - to: Account
+    kind: many-to-one
+    via: service_expense_account
+  - to: Account
+    kind: many-to-one
+    via: purchase_expense_contra_account
+  - to: Account
+    kind: many-to-one
+    via: expenses_added_to_stock_account
+  - to: Account
+    kind: many-to-one
+    via: expenses_added_to_stock_contra_account
+  - to: Account
+    kind: many-to-one
+    via: default_inventory_account
+  - to: Account
+    kind: many-to-one
+    via: stock_adjustment_account
+  - to: Account
+    kind: many-to-one
+    via: stock_received_but_not_billed
+  - to: Account
+    kind: many-to-one
+    via: default_provisional_account
+  - to: Account
+    kind: many-to-one
+    via: default_operating_cost_account
+  - to: Warehouse
+    kind: many-to-one
+    via: default_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: sample_retention_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: default_in_transit_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: default_warehouse_for_sales_return
+  - to: Warehouse
+    kind: many-to-one
+    via: default_wip_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: default_fg_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: default_scrap_warehouse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCompany
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Company
+    note: declared by the program and served by its API

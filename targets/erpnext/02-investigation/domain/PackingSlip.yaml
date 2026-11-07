@@ -1,0 +1,86 @@
+name: PackingSlip
+description: 'The contents and weight of each package in a delivery. Document type "Packing Slip" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: delivery_note
+    label: Delivery Note
+    type: ref
+    observed_as: delivery_note
+    required: true
+    ref: DeliveryNote
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MAT-PAC-.YYYY.-
+  - name: from_case_no
+    label: From Package No.
+    type: integer
+    observed_as: from_case_no
+    required: true
+  - name: to_case_no
+    label: To Package No.
+    type: integer
+    observed_as: to_case_no
+  - name: net_weight_pkg
+    label: Net Weight
+    type: decimal
+    observed_as: net_weight_pkg
+  - name: net_weight_uom
+    label: Net Weight UOM
+    type: ref
+    observed_as: net_weight_uom
+    ref: UOM
+  - name: gross_weight_pkg
+    label: Gross Weight
+    type: decimal
+    observed_as: gross_weight_pkg
+  - name: gross_weight_uom
+    label: Gross Weight UOM
+    type: ref
+    observed_as: gross_weight_uom
+    ref: UOM
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: PackingSlip
+relations:
+  - to: DeliveryNote
+    kind: many-to-one
+    via: delivery_note
+  - to: PackingSlipItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: UOM
+    kind: many-to-one
+    via: net_weight_uom
+  - to: UOM
+    kind: many-to-one
+    via: gross_weight_uom
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: PackingSlip
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPacking Slip
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Packing Slip
+    note: declared by the program and served by its API

@@ -2,23 +2,29 @@ id: R-001
 title: Ticket line and ticket totals
 kind: computation
 statement: >-
-  A ticket line total is units times unit price. The ticket total is the sum of its line totals plus the tax
-  computed per tax rate. Each line references one tax (TICKETLINES.TAXID -> TAXES.RATE).
+  A ticket line's base is units times unit price. Its tax is the base times the line's tax rate, and its total
+  is the base times one plus the rate. The ticket subtotal is the sum of line bases, the ticket tax is the sum of
+  the taxes grouped per rate, and the ticket total is subtotal plus tax. Each line references one tax.
 formula: |
-  line_base  = TICKETLINES.UNITS * TICKETLINES.PRICE
-  line_tax   = line_base * TAXES.RATE                 # per line's tax
-  ticket_base = sum(line_base)
-  ticket_tax  = sum(line_tax)                          # stored per rate in TAXLINES (BASE, AMOUNT)
-  ticket_total = ticket_base + ticket_tax
+  line_base   = units * unit_price
+  line_tax    = line_base * rate
+  line_total  = line_base * (1 + rate)
+  subtotal    = sum(line_base)
+  ticket_tax  = sum(line_tax)                          # stored per rate in the tax lines (base, amount)
+  ticket_total = subtotal + ticket_tax
 applies_to: [Ticketlines.units, Ticketlines.price, Taxes.rate, Taxlines.base, Taxlines.amount]
 features: [F-001]
-examples: []   # rounding and compound-tax (RATECASCADE) behaviour to confirm by a run (block 1)
-status: partial
+examples: []   # a run gives the worked example; rounding is R-003, compound taxes are R-004
+status: confirmed
 confidence: medium
 evidence:
-  - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "TICKETLINES(UNITS DOUBLE, PRICE DOUBLE, TAXID->TAXES); TAXES(RATE DOUBLE, RATECASCADE, RATEORDER); TAXLINES(BASE, AMOUNT)", note: "shipped schema shows the computation chain" }
+  - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "ticket line, tax and tax line tables", note: "shipped schema shows the data path" }
+  - { ref: ev_04c25272fcfeb9b2596e5844e6c671487c42a460a128cb0bf9e92ee55b6d6996, kind: craft, locator: "per-line tax computation", note: "code computes each line's taxes" }
+  - { ref: ev_98ebdfa0652f1f77b86ab90b598e0d6ee19421b94ab4c6e21c7bd938f92b0631, kind: craft, locator: "ticket total", note: "code: total is subtotal plus tax" }
+  - { ref: ev_95593f5e7a4bf39dab0f542286bece087b3c5b90cb8490a939e3a7662b0e9206, kind: craft, locator: "line total including tax", note: "code: base times one plus rate" }
 contradictions: []
 notes: >-
-  The schema proves the data path. Exact rounding (per line vs per ticket) and the RATECASCADE / RATEORDER
-  compound-tax order are NOT yet observed: a run is needed. Amounts are DOUBLE in storage; a rebuild should still
-  compute in integer minor units or a decimal type and confirm the rounding against an observed ticket.
+  Confirmed by two different kinds of proof: the shipped schema (data path) and the program's code (the
+  arithmetic). Neither is an observation of the running program, so the exact values of one real ticket are still
+  missing as a worked example. Amounts are kept as floating-point numbers while the ticket is computed; a rebuild
+  should still compute in integer minor units or a decimal type.

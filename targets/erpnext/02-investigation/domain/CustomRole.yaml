@@ -1,0 +1,37 @@
+name: CustomRole
+description: Document type "Custom Role" (module Core).
+fields:
+  - name: page
+    label: Page
+    type: ref
+    observed_as: page
+    ref: Page
+  - name: report
+    label: Report
+    type: ref
+    observed_as: report
+    ref: Report
+  - name: ref_doctype
+    label: Reference Document Type
+    type: string
+    observed_as: ref_doctype
+relations:
+  - to: Page
+    kind: many-to-one
+    via: page
+  - to: Report
+    kind: many-to-one
+    via: report
+  - to: HasRole
+    kind: one-to-many
+    via: roles
+    description: lines (Role)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCustom Role
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Custom Role
+    note: declared by the program and served by its API

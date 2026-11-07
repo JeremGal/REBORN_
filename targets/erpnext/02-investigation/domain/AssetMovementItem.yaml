@@ -1,0 +1,66 @@
+name: AssetMovementItem
+description: 'Document type "Asset Movement Item" (module Assets): lines of another document.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: asset
+    label: Asset
+    type: ref
+    observed_as: asset
+    required: true
+    ref: Asset
+  - name: source_location
+    label: Source Location
+    type: ref
+    observed_as: source_location
+    ref: Location
+  - name: from_employee
+    label: From Employee
+    type: ref
+    observed_as: from_employee
+    ref: Employee
+  - name: asset_name
+    label: Asset Name
+    type: string
+    observed_as: asset_name
+  - name: target_location
+    label: Target Location
+    type: ref
+    observed_as: target_location
+    ref: Location
+  - name: to_employee
+    label: To Employee
+    type: ref
+    observed_as: to_employee
+    ref: Employee
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Asset
+    kind: many-to-one
+    via: asset
+  - to: Location
+    kind: many-to-one
+    via: source_location
+  - to: Employee
+    kind: many-to-one
+    via: from_employee
+  - to: Location
+    kind: many-to-one
+    via: target_location
+  - to: Employee
+    kind: many-to-one
+    via: to_employee
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Movement Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Movement Item
+    note: declared by the program and served by its API

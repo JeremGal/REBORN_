@@ -1,0 +1,180 @@
+name: Timesheet
+description: 'Time spent on tasks and activities, to bill or cost. Document type "Timesheet" (module Projects): draft, submitted, cancelled life cycle.'
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - TS-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: exchange_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: exchange_rate
+    default: "1"
+  - name: sales_invoice
+    label: Sales Invoice
+    type: ref
+    observed_as: sales_invoice
+    ref: SalesInvoice
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Submitted
+      - Partially Billed
+      - Billed
+      - Payslip
+      - Completed
+      - Cancelled
+    default: Draft
+  - name: parent_project
+    label: Project
+    type: ref
+    observed_as: parent_project
+    ref: Project
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+  - name: employee
+    label: Employee
+    type: ref
+    observed_as: employee
+    ref: Employee
+  - name: department
+    label: Department
+    type: ref
+    observed_as: department
+    ref: Department
+  - name: employee_name
+    label: Employee Name
+    type: string
+    observed_as: employee_name
+  - name: total_hours
+    label: Total Working Hours
+    type: decimal
+    observed_as: total_hours
+    default: "0"
+  - name: total_billable_hours
+    label: Total Billable Hours
+    type: decimal
+    observed_as: total_billable_hours
+  - name: total_billable_amount
+    label: Total Billable Amount
+    type: money
+    observed_as: total_billable_amount
+    default: "0"
+  - name: total_costing_amount
+    label: Total Costing Amount
+    type: money
+    observed_as: total_costing_amount
+  - name: base_total_billable_amount
+    label: Base Total Billable Amount
+    type: money
+    observed_as: base_total_billable_amount
+  - name: base_total_costing_amount
+    label: Base Total Costing Amount
+    type: money
+    observed_as: base_total_costing_amount
+  - name: total_billed_hours
+    label: Total Billed Hours
+    type: decimal
+    observed_as: total_billed_hours
+  - name: total_billed_amount
+    label: Total Billed Amount
+    type: money
+    observed_as: total_billed_amount
+  - name: base_total_billed_amount
+    label: Base Total Billed Amount
+    type: money
+    observed_as: base_total_billed_amount
+  - name: per_billed
+    label: "% Amount Billed"
+    type: percent
+    observed_as: per_billed
+  - name: note
+    label: Note
+    type: text
+    observed_as: note
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: Timesheet
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: SalesInvoice
+    kind: many-to-one
+    via: sales_invoice
+  - to: Project
+    kind: many-to-one
+    via: parent_project
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: Employee
+    kind: many-to-one
+    via: employee
+  - to: Department
+    kind: many-to-one
+    via: department
+  - to: TimesheetDetail
+    kind: one-to-many
+    via: time_logs
+    description: lines (Time Sheets)
+  - to: Timesheet
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTimesheet
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Timesheet
+    note: declared by the program and served by its API

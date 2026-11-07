@@ -1,0 +1,63 @@
+name: OAuthSettings
+description: 'A Frappe Framework instance can function as an OAuth Client, Resource, or Authorization server. This DocType contains settings related to all three. Document type "OAuth Settings" (module Integrations): single settings record.'
+fields:
+  - name: show_auth_server_metadata
+    label: Show Auth Server Metadata
+    type: boolean
+    observed_as: show_auth_server_metadata
+    default: "1"
+  - name: skip_authorization
+    label: Skip Authorization
+    type: boolean
+    observed_as: skip_authorization
+    default: "0"
+  - name: enable_dynamic_client_registration
+    label: Enable Dynamic Client Registration
+    type: boolean
+    observed_as: enable_dynamic_client_registration
+    default: "1"
+  - name: allowed_public_client_origins
+    label: Allowed Public Client Origins
+    type: text
+    observed_as: allowed_public_client_origins
+  - name: show_protected_resource_metadata
+    label: Show Protected Resource Metadata
+    type: boolean
+    observed_as: show_protected_resource_metadata
+    default: "1"
+  - name: show_social_login_key_as_authorization_server
+    label: Show Social Login Key as Authorization Server
+    type: boolean
+    observed_as: show_social_login_key_as_authorization_server
+    default: "0"
+  - name: resource_name
+    label: Resource Name
+    type: string
+    observed_as: resource_name
+    default: Frappe Framework Application
+  - name: resource_policy_uri
+    label: Resource Policy URI
+    type: string
+    observed_as: resource_policy_uri
+  - name: resource_documentation
+    label: Resource Documentation
+    type: string
+    observed_as: resource_documentation
+    default: https://docs.frappe.io/framework
+  - name: resource_tos_uri
+    label: Resource TOS URI
+    type: string
+    observed_as: resource_tos_uri
+  - name: scopes_supported
+    label: Scopes Supported
+    type: text
+    observed_as: scopes_supported
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOAuth Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of OAuth Settings
+    note: declared by the program and served by its API

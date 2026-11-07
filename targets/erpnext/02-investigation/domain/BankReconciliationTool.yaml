@@ -1,0 +1,66 @@
+name: BankReconciliationTool
+description: 'Document type "Bank Reconciliation Tool" (module Accounts): single settings record.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    ref: BankAccount
+  - name: bank_statement_from_date
+    label: From Date
+    type: date
+    observed_as: bank_statement_from_date
+  - name: bank_statement_to_date
+    label: To Date
+    type: date
+    observed_as: bank_statement_to_date
+  - name: from_reference_date
+    label: From Reference Date
+    type: date
+    observed_as: from_reference_date
+  - name: to_reference_date
+    label: To Reference Date
+    type: date
+    observed_as: to_reference_date
+  - name: filter_by_reference_date
+    label: Filter by Reference Date
+    type: boolean
+    observed_as: filter_by_reference_date
+    default: "0"
+  - name: account_currency
+    label: Account Currency
+    type: ref
+    observed_as: account_currency
+    ref: Currency
+  - name: account_opening_balance
+    label: Account Opening Balance
+    type: money
+    observed_as: account_opening_balance
+  - name: bank_statement_closing_balance
+    label: Closing Balance
+    type: money
+    observed_as: bank_statement_closing_balance
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: Currency
+    kind: many-to-one
+    via: account_currency
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Reconciliation Tool
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Reconciliation Tool
+    note: declared by the program and served by its API

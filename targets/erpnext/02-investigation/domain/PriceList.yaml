@@ -1,0 +1,52 @@
+name: PriceList
+description: A set of item prices for buying, selling or both. Document type "Price List" (module Stock).
+fields:
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: price_list_name
+    label: Price List Name
+    type: string
+    observed_as: price_list_name
+    required: true
+    unique: true
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: buying
+    label: Buying
+    type: boolean
+    observed_as: buying
+    default: "0"
+  - name: selling
+    label: Selling
+    type: boolean
+    observed_as: selling
+    default: "0"
+  - name: price_not_uom_dependent
+    label: Price Not UOM Dependent
+    type: boolean
+    observed_as: price_not_uom_dependent
+    default: "0"
+relations:
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: PriceListCountry
+    kind: one-to-many
+    via: countries
+    description: lines (Applicable for Countries)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPrice List
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Price List
+    note: declared by the program and served by its API

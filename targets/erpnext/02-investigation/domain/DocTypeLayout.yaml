@@ -1,0 +1,35 @@
+name: DocTypeLayout
+description: Document type "DocType Layout" (module Custom).
+fields:
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: route
+    label: Route
+    type: string
+    observed_as: route
+    required: true
+  - name: client_script
+    label: Client Script
+    type: text
+    observed_as: client_script
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: DocTypeLayoutField
+    kind: one-to-many
+    via: fields
+    description: lines (Fields)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocType Layout
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DocType Layout
+    note: declared by the program and served by its API

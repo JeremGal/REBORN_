@@ -1,0 +1,117 @@
+name: TimesheetDetail
+description: 'Document type "Timesheet Detail" (module Projects): lines of another document.'
+fields:
+  - name: activity_type
+    label: Activity Type
+    type: ref
+    observed_as: activity_type
+    ref: ActivityType
+  - name: from_time
+    label: From Time
+    type: datetime
+    observed_as: from_time
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: expected_hours
+    label: Expected Hrs
+    type: decimal
+    observed_as: expected_hours
+  - name: to_time
+    label: To Time
+    type: datetime
+    observed_as: to_time
+  - name: hours
+    label: Hrs
+    type: decimal
+    observed_as: hours
+  - name: completed
+    label: Completed
+    type: boolean
+    observed_as: completed
+    default: "0"
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: project_name
+    label: Project Name
+    type: string
+    observed_as: project_name
+  - name: task
+    label: Task
+    type: ref
+    observed_as: task
+    ref: Task
+  - name: is_billable
+    label: Is Billable
+    type: boolean
+    observed_as: is_billable
+    default: "0"
+  - name: sales_invoice
+    label: Sales Invoice
+    type: ref
+    observed_as: sales_invoice
+    ref: SalesInvoice
+  - name: billing_hours
+    label: Billing Hours
+    type: decimal
+    observed_as: billing_hours
+  - name: base_billing_rate
+    label: Billing Rate
+    type: money
+    observed_as: base_billing_rate
+  - name: base_billing_amount
+    label: Billing Amount
+    type: money
+    observed_as: base_billing_amount
+  - name: base_costing_rate
+    label: Costing Rate
+    type: money
+    observed_as: base_costing_rate
+  - name: base_costing_amount
+    label: Costing Amount
+    type: money
+    observed_as: base_costing_amount
+  - name: billing_rate
+    label: Billing Rate
+    type: money
+    observed_as: billing_rate
+  - name: billing_amount
+    label: Billing Amount
+    type: money
+    observed_as: billing_amount
+    default: "0"
+  - name: costing_rate
+    label: Costing Rate
+    type: money
+    observed_as: costing_rate
+  - name: costing_amount
+    label: Costing Amount
+    type: money
+    observed_as: costing_amount
+    default: "0"
+relations:
+  - to: ActivityType
+    kind: many-to-one
+    via: activity_type
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Task
+    kind: many-to-one
+    via: task
+  - to: SalesInvoice
+    kind: many-to-one
+    via: sales_invoice
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTimesheet Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Timesheet Detail
+    note: declared by the program and served by its API

@@ -2,6 +2,7 @@
 target: unicenta
 entries:
   - id: sql:6ae1364b7d43e617
+    counts: { tables: 40 }
     kind: rea
     tool: reborn-schema
     operation: sql-schema
@@ -12,3 +13,405 @@ entries:
     bytes: 27708
     sha256: 6ae1364b7d43e617b986db7e57c209429b75c955dd74e221074b1abf3b5df777
     summary: shipped SQL create script
+  - id: ev_ed428ef13e273585f5363b0c7c113127521bb6fa3ef068f92cb1842f8b474fdb
+    kind: craft
+    tool: craft-anything
+    operation: java-classes-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --query
+      - tax
+      - --include-methods
+      - --limit
+      - "200"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:22:45.807Z
+    file: craft/20261107T182245Z-32748-c81821-java-classes-find.json
+    bytes: 16259
+    sha256: 9aa8febe4840fe00c868874a4365715c0f6076ee1b72f4261a509f3d136505f4
+  - id: ev_56093b85bcb28f953ea390235a20eadf9e6b50492a28ab4c8a85a4a6448a1fd1
+    kind: craft
+    tool: craft-anything
+    operation: java-classes-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --query
+      - round
+      - --include-methods
+      - --limit
+      - "100"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:23:26.522Z
+    file: craft/20261107T182325Z-30968-0eb06b-java-classes-find.json
+    bytes: 1917
+    sha256: 046bdbe917ec4817e0c75ebb418560482e4c75789206510ad1dc57e8b557a425
+  - id: ev_a450367c467e219e45ae281c45305a8dba1fb80c5d580b2ca38a7feffe5654c8
+    kind: craft
+    tool: craft-anything
+    operation: java-classes-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --query
+      - <symbol>
+      - --include-methods
+      - --limit
+      - "100"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:23:27.598Z
+    file: craft/20261107T182327Z-6700-19a7be-java-classes-find.json
+    bytes: 1699
+    sha256: a14acd6bd91cb52c8eb2e2af39a8078524ed570bc93388f0db7516f807201c2e
+  - id: ev_921aeb52eece08e76556eb6da2ac2b2ed39dbdbfcb82f8367d5032faf080fe4c
+    kind: craft
+    tool: craft-anything
+    operation: java-classes-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --query
+      - <symbol>
+      - --include-methods
+      - --limit
+      - "100"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:23:28.353Z
+    file: craft/20261107T182328Z-5380-a4a44a-java-classes-find.json
+    bytes: 1284
+    sha256: 0381cfaff0d00f6feb0f2f1b179053ac7e5e2f7ad04df0148c4ce65d7165d84f
+  - id: ev_e04b301d648b2fd014bf404bca6784c12220b0b069fbf74547ab2a4dd0d7109e
+    kind: craft
+    tool: craft-anything
+    operation: java-classes-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --query
+      - <symbol>
+      - --include-methods
+      - --limit
+      - "100"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:23:29.216Z
+    file: craft/20261107T182328Z-33540-ed7063-java-classes-find.json
+    bytes: 1164
+    sha256: 74ba5444186c14878ea638688928ef21670b5b663f569646c9609fe967381f78
+  - id: ev_9d8ce87124a8d62d8d87165c1325b7c65d2204d9e6bce7fc24a48c233e4a705a
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:23:51.788Z
+    file: craft/20261107T182351Z-33376-16e3d4-java-method-show.json
+    bytes: 3406
+    sha256: b74f4ae47257d33a1202d2099efc5d36e04f0f9563ab9d73fae4f548e74768f5
+  - id: ev_f12580850f23c1fd6d5512f89fded7a814e80a8e48f98af299c87468f1d91e3a
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:23:53.052Z
+    file: craft/20261107T182352Z-33356-911764-java-method-show.json
+    bytes: 3249
+    sha256: d294ca9daf9222ef0ab16bc4c5a37bfda08b571e935aefe3e2230da53578566a
+  - id: ev_95593f5e7a4bf39dab0f542286bece087b3c5b90cb8490a939e3a7662b0e9206
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:23:54.155Z
+    file: craft/20261107T182353Z-33064-15b20f-java-method-show.json
+    bytes: 3419
+    sha256: 8648cac472d605aaebf343ea8d60348256fc3ba97b70e41040b1e5469832e22e
+  - id: ev_fc24e4c9ec19c3f437cd4f03d0a78a136835b6d4b103163e4bb457678b44449a
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:23:55.362Z
+    file: craft/20261107T182355Z-11228-0d4943-java-method-show.json
+    bytes: 2926
+    sha256: 95adc873ffe6d076c73a107747dafef71b84e505220089be2e06b42a2845c7bf
+  - id: ev_41c6c023b9ea0c3d78b934f5166e3a5fc5066ca1b7730c3aa7c5336025fd70c7
+    kind: craft
+    tool: craft-anything
+    operation: java-class-users-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --limit
+      - "100"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:24:17.071Z
+    file: craft/20261107T182416Z-31240-1c1c21-java-class-users-find.json
+    bytes: 2106
+    sha256: 21d8ab0ffe2d416fb310c7877c0ac991c8be2ac61eaba4024e040e53726507d9
+  - id: ev_8789831d039f12c143ccd9a00c4c33e50a0c00d1885831feef9749588b999191
+    kind: craft
+    tool: craft-anything
+    operation: java-classes-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --query
+      - --include-methods
+      - --limit
+      - "5"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:24:20.092Z
+    file: craft/20261107T182419Z-32200-d29c96-java-classes-find.json
+    bytes: 907
+    sha256: fd49c186db13d2ddafb1f158cea0b00ca909dd4a5b2a06a7cd9a6330641c52c7
+  - id: ev_d6f575b4f2ba4d97d75a3bfb38c3fd6116ef1cce06f2b67dab35c46769657c03
+    kind: craft
+    tool: craft-anything
+    operation: java-classes-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --query
+      - calculate
+      - --include-methods
+      - --limit
+      - "200"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:24:48.937Z
+    file: craft/20261107T182448Z-32360-b0ec4a-java-classes-find.json
+    bytes: 6553
+    sha256: 9812aefa9c818f3e450c7a4168c13f3765cbdc8441ddc7ff44c0c1f8a3c8219e
+  - id: ev_cc446007e8136f5d32a333b824edcfb0e30a87dac6b790d70f46f255b61856b6
+    kind: craft
+    tool: craft-anything
+    operation: java-classes-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --query
+      - <symbol>
+      - --include-methods
+      - --limit
+      - "200"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:24:50.676Z
+    file: craft/20261107T182450Z-14160-73db70-java-classes-find.json
+    bytes: 4917
+    sha256: e7d2eb524bc7384d4f04108fae5308e89d132ad07e55fa7c27ce2483e86d0ed7
+  - id: ev_029efde08c683536f120c0a930372b90668d114e32e1ad350eefb6e0177c1a46
+    kind: craft
+    tool: craft-anything
+    operation: java-classes-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --query
+      - compare
+      - --include-methods
+      - --limit
+      - "200"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:24:52.771Z
+    file: craft/20261107T182452Z-17004-6a7756-java-classes-find.json
+    bytes: 11969
+    sha256: ef91cf2f8cc9a3a9b4bd3183b9e0e820e6f6d5cc419df7984b29f554d766c885
+  - id: ev_98ebdfa0652f1f77b86ab90b598e0d6ee19421b94ab4c6e21c7bd938f92b0631
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:25:04.902Z
+    file: craft/20261107T182504Z-13996-41a5d1-java-method-show.json
+    bytes: 2881
+    sha256: 717430070fc15b1b34f07e7d754f6dfc96f2e40999dbcdb90fb24abe778a9e3b
+  - id: ev_04c25272fcfeb9b2596e5844e6c671487c42a460a128cb0bf9e92ee55b6d6996
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:25:05.812Z
+    file: craft/20261107T182505Z-25472-b2425d-java-method-show.json
+    bytes: 10032
+    sha256: d3169277f6b12bf76881cc6ae8acabe204e08f315fa1585cd0f3262a38a8b302
+  - id: ev_d81cb1eea0334fdaddab0d88193e2ec4d060220a77099f66e3cee714dcb34b2f
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:25:07.434Z
+    file: craft/20261107T182507Z-29220-4f63fe-java-method-show.json
+    bytes: 2903
+    sha256: 567ae1e717eab6d2304b37cbf8e99249e291806c5375f150e96057ed3407062f
+  - id: ev_f420b9650704386a678d09e48a68e36a14939bbd31aab4880f7a57a5fb4ec396
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:25:27.126Z
+    file: craft/20261107T182526Z-33604-2cc4bb-java-method-show.json
+    bytes: 5229
+    sha256: 60083c5993234e31723936530ea424a142886d42a44477dab2dabda622ac3365
+  - id: ev_8ce19d959898ec07be4e5b50a5a6bb10eefd941dfb393c27dbc2ac0563cb1a97
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:25:28.587Z
+    file: craft/20261107T182528Z-32120-58d03c-java-method-show.json
+    bytes: 7224
+    sha256: fbb497f6c0100a1d6afa574a96270c01a6fcd39a560982cf73b9a63a13f6e393
+  - id: ev_59506a891c995c10fe1969eb59a569840f41fa645521492dc310e886ba2a425b
+    kind: craft
+    tool: craft-anything
+    operation: java-method-show
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:25:29.816Z
+    file: craft/20261107T182529Z-9876-443a42-java-method-show.json
+    bytes: 3009
+    sha256: 99cbc3da94c216d9da98b511f6bb5915a923904b1170b3b5df59842fcdee93de
+  - id: ev_2249439ead26168ec9b63e5b2a7653f360bfdb4884fb656b1176070bf3c4e0c1
+    kind: craft
+    tool: craft-anything
+    operation: java-class-users-find
+    args:
+      - --path
+      - <path>/unicentaopos.jar
+      - --class-name
+      - <symbol>
+      - --method-name
+      - <symbol>
+      - --limit
+      - "100"
+      - --deep
+    subject:
+      label: unicentaopos.jar
+    created_at: 2026-11-07T18:25:31.094Z
+    file: craft/20261107T182530Z-26600-b59a5b-java-class-users-find.json
+    bytes: 3717
+    sha256: adc65cec19a976a351a0097a2071ebca5b725d205b358cc3455c8f1f04920068
+  - id: rb_e2242b93472a2160e892331e85f229d4d21cb6d89c50d541874c945aaf458f75
+    kind: rea
+    tool: detect-it-easy
+    operation: identify
+    subject:
+      label: unicentaopos.jar
+      sha256: bb38c0e254d7fcc15a9dfd8932101749b045a33fa47ec01f1f29b65bfc8dea2f
+    created_at: 2026-11-07T18:42:46.948Z
+    file: identify/20261107T184246Z-11368-a9eec2-identify-unicentaopos.jar.json
+    bytes: 467
+    sha256: e2242b93472a2160e892331e85f229d4d21cb6d89c50d541874c945aaf458f75
+    summary: nothing recognised

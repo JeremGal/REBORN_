@@ -1,0 +1,68 @@
+name: OAuthAuthorizationCode
+description: Document type "OAuth Authorization Code" (module Integrations).
+fields:
+  - name: client
+    label: OAuth Client
+    type: ref
+    observed_as: client
+    ref: OAuthClient
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: scopes
+    label: Scopes
+    type: text
+    observed_as: scopes
+  - name: authorization_code
+    label: Authorization Code
+    type: string
+    observed_as: authorization_code
+    unique: true
+  - name: expiration_time
+    label: Expiration time
+    type: datetime
+    observed_as: expiration_time
+  - name: redirect_uri_bound_to_authorization_code
+    label: Redirect URI Bound To Auth Code
+    type: string
+    observed_as: redirect_uri_bound_to_authorization_code
+  - name: validity
+    label: Validity
+    type: enum
+    observed_as: validity
+    enum_values:
+      - Valid
+      - Invalid
+  - name: nonce
+    label: nonce
+    type: string
+    observed_as: nonce
+  - name: code_challenge
+    label: Code Challenge
+    type: string
+    observed_as: code_challenge
+  - name: code_challenge_method
+    label: Code challenge method
+    type: enum
+    observed_as: code_challenge_method
+    enum_values:
+      - s256
+      - plain
+relations:
+  - to: OAuthClient
+    kind: many-to-one
+    via: client
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOAuth Authorization Code
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of OAuth Authorization Code
+    note: declared by the program and served by its API

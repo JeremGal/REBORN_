@@ -1,0 +1,20 @@
+id: R-001
+title: Line amount, line discount and net total
+kind: computation
+statement: >-
+  A line's amount is its quantity times its rate. A line discount percentage lowers the rate from the list price
+  (rate = list price times one minus the discount). The net total is the sum of the line amounts.
+formula: |
+  rate       = price_list_rate * (1 - discount_percentage / 100)
+  amount     = qty * rate
+  net_total  = sum(amount)
+applies_to: [SalesInvoiceItem.qty, SalesInvoiceItem.rate, SalesInvoiceItem.amount, SalesInvoice.net_total]
+features: [F-001]
+examples:
+  - { given: { qty: 3, rate: 10 }, expect: { amount: 30, net_total: 30 }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 1 (SI-01)" } }
+  - { given: { qty: 3, price_list_rate: 10, discount_percentage: 10 }, expect: { rate: 9, amount: 27, net_total: 27 }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 2 (SI-02)" } }
+status: confirmed
+confidence: high
+evidence:
+  - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "steps 1-2", note: "drafts created and read back on the running site" }
+contradictions: []

@@ -1,0 +1,123 @@
+name: ServerScript
+description: Document type "Server Script" (module Core).
+fields:
+  - name: script_type
+    label: Script Type
+    type: enum
+    observed_as: script_type
+    required: true
+    enum_values:
+      - DocType Event
+      - Scheduler Event
+      - Permission Query
+      - API
+      - Workflow Task
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: event_frequency
+    label: Event Frequency
+    type: enum
+    observed_as: event_frequency
+    enum_values:
+      - All
+      - Hourly
+      - Daily
+      - Weekly
+      - Monthly
+      - Yearly
+      - Hourly Long
+      - Daily Long
+      - Weekly Long
+      - Monthly Long
+      - Cron
+  - name: cron_format
+    label: Cron Format
+    type: string
+    observed_as: cron_format
+  - name: doctype_event
+    label: DocType Event
+    type: enum
+    observed_as: doctype_event
+    enum_values:
+      - Before Insert
+      - Before Validate
+      - Before Save
+      - After Insert
+      - After Save
+      - Before Rename
+      - After Rename
+      - Before Submit
+      - After Submit
+      - Before Cancel
+      - After Cancel
+      - Before Discard
+      - After Discard
+      - Before Delete
+      - After Delete
+      - Before Save (Submitted Document)
+      - After Save (Submitted Document)
+      - Before Print
+      - On Payment Authorization
+      - On Payment Paid
+      - On Payment Failed
+      - On Payment Charge Processed
+      - On Payment Mandate Charge Processed
+      - On Payment Mandate Acquisition Processed
+  - name: api_method
+    label: API Method
+    type: string
+    observed_as: api_method
+  - name: allow_guest
+    label: Allow Guest
+    type: boolean
+    observed_as: allow_guest
+    default: "0"
+  - name: module
+    label: Module (for export)
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: script
+    label: Script
+    type: text
+    observed_as: script
+    required: true
+  - name: enable_rate_limit
+    label: Enable Rate Limit
+    type: boolean
+    observed_as: enable_rate_limit
+    default: "0"
+  - name: rate_limit_count
+    label: Request Limit
+    type: integer
+    observed_as: rate_limit_count
+    default: "5"
+  - name: rate_limit_seconds
+    label: Time Window (Seconds)
+    type: integer
+    observed_as: rate_limit_seconds
+    default: "86400"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabServer Script
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Server Script
+    note: declared by the program and served by its API

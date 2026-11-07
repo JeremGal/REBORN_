@@ -1,0 +1,31 @@
+name: MonthlyDistribution
+description: Spreads a yearly budget or target across months for seasonal businesses. Document type "Monthly Distribution" (module Accounts).
+fields:
+  - name: distribution_id
+    label: Distribution Name
+    type: string
+    observed_as: distribution_id
+    required: true
+    unique: true
+  - name: fiscal_year
+    label: Fiscal Year
+    type: ref
+    observed_as: fiscal_year
+    ref: FiscalYear
+relations:
+  - to: FiscalYear
+    kind: many-to-one
+    via: fiscal_year
+  - to: MonthlyDistributionPercentage
+    kind: one-to-many
+    via: percentages
+    description: lines (Monthly Distribution Percentages)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMonthly Distribution
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Monthly Distribution
+    note: declared by the program and served by its API

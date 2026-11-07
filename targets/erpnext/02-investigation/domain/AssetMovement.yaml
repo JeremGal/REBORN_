@@ -1,0 +1,66 @@
+name: AssetMovement
+description: 'Moves an asset to another location or person. Document type "Asset Movement" (module Assets): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: purpose
+    label: Purpose
+    type: enum
+    observed_as: purpose
+    required: true
+    enum_values:
+      - Issue
+      - Receipt
+      - Transfer
+      - Transfer and Issue
+  - name: transaction_date
+    label: Transaction Date
+    type: datetime
+    observed_as: transaction_date
+    required: true
+    default: Now
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Reference Document Name
+    type: string
+    observed_as: reference_name
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: AssetMovement
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: AssetMovementItem
+    kind: one-to-many
+    via: assets
+    description: lines (Assets)
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: AssetMovement
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Movement
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Movement
+    note: declared by the program and served by its API

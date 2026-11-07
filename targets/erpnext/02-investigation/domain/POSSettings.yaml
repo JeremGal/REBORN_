@@ -1,0 +1,34 @@
+name: POSSettings
+description: 'Document type "POS Settings" (module Accounts): single settings record.'
+fields:
+  - name: invoice_type
+    label: Invoice Type Created via POS Screen
+    type: enum
+    observed_as: invoice_type
+    enum_values:
+      - Sales Invoice
+      - POS Invoice
+    default: Sales Invoice
+  - name: post_change_gl_entries
+    label: Create Ledger Entries for Change Amount
+    type: boolean
+    observed_as: post_change_gl_entries
+    default: "0"
+relations:
+  - to: POSField
+    kind: one-to-many
+    via: invoice_fields
+    description: lines (POS Additional Fields)
+  - to: POSSearchFields
+    kind: one-to-many
+    via: pos_search_fields
+    description: lines (POS Search Fields)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPOS Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of POS Settings
+    note: declared by the program and served by its API

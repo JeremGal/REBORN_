@@ -1,0 +1,101 @@
+name: DataImport
+description: Document type "Data Import" (module Core).
+fields:
+  - name: reference_doctype
+    label: Document Type
+    type: ref
+    observed_as: reference_doctype
+    required: true
+    ref: DocType
+  - name: import_type
+    label: Import Type
+    type: enum
+    observed_as: import_type
+    required: true
+    enum_values:
+      - Insert New Records
+      - Update Existing Records
+      - Insert or Update Records
+    default: Insert New Records
+  - name: import_file
+    label: Import File
+    type: file
+    observed_as: import_file
+  - name: payload_count
+    label: Payload Count
+    type: integer
+    observed_as: payload_count
+  - name: google_sheets_url
+    label: Import from Google Sheets
+    type: string
+    observed_as: google_sheets_url
+  - name: use_csv_sniffer
+    label: Detect CSV type
+    type: boolean
+    observed_as: use_csv_sniffer
+    default: "0"
+  - name: custom_delimiters
+    label: Custom Delimiters
+    type: boolean
+    observed_as: custom_delimiters
+    default: "0"
+  - name: delimiter_options
+    label: Delimiter Options
+    type: string
+    observed_as: delimiter_options
+    default: ",;\\t|"
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Pending
+      - In Progress
+      - Success
+      - Partial Success
+      - Error
+      - Timed Out
+    default: Pending
+  - name: submit_after_import
+    label: Submit After Import
+    type: boolean
+    observed_as: submit_after_import
+    default: "0"
+  - name: mute_emails
+    label: Don't Send Emails
+    type: boolean
+    observed_as: mute_emails
+    default: "1"
+  - name: template_options
+    label: Template Options
+    type: text
+    observed_as: template_options
+  - name: tree_parent_overrides
+    label: Tree Parent Overrides
+    type: text
+    observed_as: tree_parent_overrides
+  - name: template_warnings
+    label: Template Warnings
+    type: text
+    observed_as: template_warnings
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: DataImportValueMapping
+    kind: one-to-many
+    via: value_mappings
+    description: lines (value_mappings)
+  - to: DataImportSkippedRow
+    kind: one-to-many
+    via: skipped_rows
+    description: lines (skipped_rows)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabData Import
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Data Import
+    note: declared by the program and served by its API

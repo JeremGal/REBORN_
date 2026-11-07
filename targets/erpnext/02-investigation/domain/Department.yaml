@@ -1,0 +1,57 @@
+name: Department
+description: A department of your company. Document type "Department" (module Setup).
+fields:
+  - name: department_name
+    label: Department
+    type: string
+    observed_as: department_name
+    required: true
+  - name: parent_department
+    label: Parent Department
+    type: ref
+    observed_as: parent_department
+    ref: Department
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: Old Parent
+    type: string
+    observed_as: old_parent
+relations:
+  - to: Department
+    kind: many-to-one
+    via: parent_department
+  - to: Company
+    kind: many-to-one
+    via: company
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDepartment
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Department
+    note: declared by the program and served by its API

@@ -1,0 +1,65 @@
+name: RQJob
+description: Document type "RQ Job" (module Core).
+fields:
+  - name: job_id
+    label: Job ID
+    type: string
+    observed_as: job_id
+    unique: true
+  - name: job_name
+    label: Job Name
+    type: string
+    observed_as: job_name
+  - name: queue
+    label: Queue
+    type: enum
+    observed_as: queue
+    enum_values:
+      - default
+      - short
+      - long
+  - name: timeout
+    label: Timeout
+    type: integer
+    observed_as: timeout
+  - name: arguments
+    label: Arguments
+    type: text
+    observed_as: arguments
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - queued
+      - started
+      - finished
+      - failed
+      - deferred
+      - scheduled
+      - canceled
+  - name: time_taken
+    label: Time Taken
+    type: integer
+    observed_as: time_taken
+  - name: started_at
+    label: Started At
+    type: datetime
+    observed_as: started_at
+  - name: ended_at
+    label: Ended At
+    type: datetime
+    observed_as: ended_at
+  - name: exc_info
+    label: Exception
+    type: text
+    observed_as: exc_info
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRQ Job
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of RQ Job
+    note: declared by the program and served by its API

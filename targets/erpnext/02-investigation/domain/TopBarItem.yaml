@@ -1,0 +1,35 @@
+name: TopBarItem
+description: 'Document type "Top Bar Item" (module Website): lines of another document.'
+fields:
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+    required: true
+  - name: url
+    label: URL
+    type: string
+    observed_as: url
+  - name: open_in_new_tab
+    label: Open URL in a New Tab
+    type: boolean
+    observed_as: open_in_new_tab
+    default: "0"
+  - name: right
+    label: Align Right
+    type: boolean
+    observed_as: right
+    default: "1"
+  - name: parent_label
+    label: Parent Label
+    type: string
+    observed_as: parent_label
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTop Bar Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Top Bar Item
+    note: declared by the program and served by its API

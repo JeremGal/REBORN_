@@ -1,0 +1,40 @@
+name: BankAccountBalance
+description: Document type "Bank Account Balance" (module Accounts).
+fields:
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    required: true
+    ref: BankAccount
+  - name: date
+    label: Date
+    type: date
+    observed_as: date
+    required: true
+  - name: balance
+    label: Balance
+    type: money
+    observed_as: balance
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+relations:
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: Company
+    kind: many-to-one
+    via: company
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Account Balance
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Account Balance
+    note: declared by the program and served by its API

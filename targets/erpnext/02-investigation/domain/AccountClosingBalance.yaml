@@ -1,0 +1,107 @@
+name: AccountClosingBalance
+description: Document type "Account Closing Balance" (module Accounts).
+fields:
+  - name: closing_date
+    label: Closing Date
+    type: date
+    observed_as: closing_date
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: debit
+    label: Debit Amount
+    type: money
+    observed_as: debit
+  - name: credit
+    label: Credit Amount
+    type: money
+    observed_as: credit
+  - name: reporting_currency_exchange_rate
+    label: Reporting Currency Exchange Rate
+    type: decimal
+    observed_as: reporting_currency_exchange_rate
+    precision: 9
+  - name: debit_in_reporting_currency
+    label: Debit Amount in Reporting Currency
+    type: money
+    observed_as: debit_in_reporting_currency
+  - name: credit_in_reporting_currency
+    label: Credit Amount in Reporting Currency
+    type: money
+    observed_as: credit_in_reporting_currency
+  - name: account_currency
+    label: Account Currency
+    type: ref
+    observed_as: account_currency
+    ref: Currency
+  - name: debit_in_account_currency
+    label: Debit Amount in Account Currency
+    type: money
+    observed_as: debit_in_account_currency
+  - name: credit_in_account_currency
+    label: Credit Amount in Account Currency
+    type: money
+    observed_as: credit_in_account_currency
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: finance_book
+    label: Finance Book
+    type: ref
+    observed_as: finance_book
+    ref: FinanceBook
+  - name: period_closing_voucher
+    label: Period Closing Voucher
+    type: ref
+    observed_as: period_closing_voucher
+    ref: PeriodClosingVoucher
+  - name: is_period_closing_voucher_entry
+    label: Is Period Closing Voucher Entry
+    type: boolean
+    observed_as: is_period_closing_voucher_entry
+    default: "0"
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Currency
+    kind: many-to-one
+    via: account_currency
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: FinanceBook
+    kind: many-to-one
+    via: finance_book
+  - to: PeriodClosingVoucher
+    kind: many-to-one
+    via: period_closing_voucher
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAccount Closing Balance
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Account Closing Balance
+    note: declared by the program and served by its API

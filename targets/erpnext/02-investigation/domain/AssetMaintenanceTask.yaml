@@ -1,0 +1,87 @@
+name: AssetMaintenanceTask
+description: 'Document type "Asset Maintenance Task" (module Assets): lines of another document.'
+fields:
+  - name: maintenance_task
+    label: Maintenance Task
+    type: string
+    observed_as: maintenance_task
+    required: true
+  - name: maintenance_type
+    label: Maintenance Type
+    type: enum
+    observed_as: maintenance_type
+    enum_values:
+      - Preventive Maintenance
+      - Calibration
+  - name: maintenance_status
+    label: Maintenance Status
+    type: enum
+    observed_as: maintenance_status
+    required: true
+    enum_values:
+      - Planned
+      - Overdue
+      - Cancelled
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+    required: true
+    default: Today
+  - name: periodicity
+    label: Periodicity
+    type: enum
+    observed_as: periodicity
+    required: true
+    enum_values:
+      - Daily
+      - Weekly
+      - Monthly
+      - Quarterly
+      - Half-yearly
+      - Yearly
+      - 2 Yearly
+      - 3 Yearly
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+  - name: certificate_required
+    label: Certificate Required
+    type: boolean
+    observed_as: certificate_required
+    default: "0"
+  - name: assign_to
+    label: Assign To
+    type: ref
+    observed_as: assign_to
+    ref: User
+  - name: assign_to_name
+    label: Assign to Name
+    type: string
+    observed_as: assign_to_name
+  - name: next_due_date
+    label: Next Due Date
+    type: date
+    observed_as: next_due_date
+  - name: last_completion_date
+    label: Last Completion Date
+    type: date
+    observed_as: last_completion_date
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+relations:
+  - to: User
+    kind: many-to-one
+    via: assign_to
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Maintenance Task
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Maintenance Task
+    note: declared by the program and served by its API

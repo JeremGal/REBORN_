@@ -1,0 +1,233 @@
+name: Communication
+description: Keeps track of all communications Document type "Communication" (module Core).
+fields:
+  - name: subject
+    label: Subject
+    type: text
+    observed_as: subject
+    required: true
+  - name: communication_medium
+    label: Type
+    type: enum
+    observed_as: communication_medium
+    enum_values:
+      - Email
+      - Chat
+      - Phone
+      - SMS
+      - Event
+      - Meeting
+      - Visit
+      - Other
+  - name: sender
+    label: From
+    type: string
+    observed_as: sender
+    max_length: 255
+  - name: recipients
+    label: To
+    type: text
+    observed_as: recipients
+  - name: cc
+    label: CC
+    type: text
+    observed_as: cc
+  - name: bcc
+    label: BCC
+    type: text
+    observed_as: bcc
+  - name: phone_no
+    label: Phone No.
+    type: string
+    observed_as: phone_no
+  - name: delivery_status
+    label: Delivery Status
+    type: enum
+    observed_as: delivery_status
+    enum_values:
+      - Sent
+      - Bounced
+      - Opened
+      - Marked As Spam
+      - Rejected
+      - Delayed
+      - Soft-Bounced
+      - Clicked
+      - Recipient Unsubscribed
+      - Error
+      - Expired
+      - Sending
+      - Read
+      - Scheduled
+  - name: content
+    label: Message
+    type: text
+    observed_as: content
+  - name: text_content
+    label: Text Content
+    type: text
+    observed_as: text_content
+  - name: communication_type
+    label: Communication Type
+    type: enum
+    observed_as: communication_type
+    required: true
+    enum_values:
+      - Communication
+      - Automated Message
+    default: Communication
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Open
+      - Replied
+      - Closed
+      - Linked
+  - name: sent_or_received
+    label: Sent or Received
+    type: enum
+    observed_as: sent_or_received
+    required: true
+    enum_values:
+      - Sent
+      - Received
+  - name: communication_date
+    label: Date
+    type: datetime
+    observed_as: communication_date
+    default: Now
+  - name: read_receipt
+    label: Sent Read Receipt
+    type: boolean
+    observed_as: read_receipt
+    default: "0"
+  - name: send_after
+    label: Send After
+    type: datetime
+    observed_as: send_after
+  - name: sender_full_name
+    label: From Full Name
+    type: string
+    observed_as: sender_full_name
+  - name: read_by_recipient
+    label: Read by Recipient
+    type: boolean
+    observed_as: read_by_recipient
+    default: "0"
+  - name: read_by_recipient_on
+    label: Read by Recipient On
+    type: datetime
+    observed_as: read_by_recipient_on
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: reference_owner
+    label: Reference Owner
+    type: string
+    observed_as: reference_owner
+  - name: email_account
+    label: Email Account
+    type: ref
+    observed_as: email_account
+    ref: EmailAccount
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: in_reply_to
+    label: In Reply To
+    type: ref
+    observed_as: in_reply_to
+    ref: Communication
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+    default: __user
+  - name: email_template
+    label: Email Template
+    type: ref
+    observed_as: email_template
+    ref: EmailTemplate
+  - name: unread_notification_sent
+    label: Unread Notification Sent
+    type: boolean
+    observed_as: unread_notification_sent
+    default: "0"
+  - name: seen
+    label: Seen
+    type: boolean
+    observed_as: seen
+    default: "0"
+  - name: _user_tags
+    label: User Tags
+    type: string
+    observed_as: _user_tags
+  - name: message_id
+    label: Message ID
+    type: text
+    observed_as: message_id
+  - name: uid
+    label: UID
+    type: integer
+    observed_as: uid
+  - name: imap_folder
+    label: IMAP Folder
+    type: string
+    observed_as: imap_folder
+  - name: email_status
+    label: Email Status
+    type: enum
+    observed_as: email_status
+    enum_values:
+      - Open
+      - Spam
+      - Trash
+  - name: has_attachment
+    label: Has  Attachment
+    type: boolean
+    observed_as: has_attachment
+    default: "0"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: EmailAccount
+    kind: many-to-one
+    via: email_account
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Communication
+    kind: many-to-one
+    via: in_reply_to
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: EmailTemplate
+    kind: many-to-one
+    via: email_template
+  - to: CommunicationLink
+    kind: one-to-many
+    via: timeline_links
+    description: lines (Timeline Links)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCommunication
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Communication
+    note: declared by the program and served by its API
