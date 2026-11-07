@@ -45,7 +45,7 @@ Tools on the investigator's machine: Node (REA needs ^22.23.4 or ^24.22.1), Chro
 
 ### Order of work
 
-1. `reborn triage <id> <install-folder>` then `reborn triage <id> <main-executable>`: technology, resources, data files.
+1. `reborn identify <id> <main-executable>` (what it is built with, and a stop if it is protected), then `reborn triage <id> <install-folder>` and `reborn triage <id> <main-executable>`: technology, resources, data files. `reborn manual <id> <help file>` gives the independent feature inventory early.
 2. Data model first, from the strongest source available:
    - shipped schema script: `reborn schema <id> <create.sql>` (graded `confirmed`);
    - local database: `reborn sqlite <id> <file>`;
@@ -105,6 +105,14 @@ node tools/reborn.mjs web <id> <url>
 node tools/reborn.mjs har <id> <file.har>
 node tools/reborn.mjs js <id> <dir|app.asar> [--max-kb 300]
 node tools/reborn.mjs find <id> <exe> "<label>"
+node tools/reborn.mjs identify <id> <file>             # compiler / framework / packer and the next tool (Detect It Easy)
+node tools/reborn.mjs symbols <id> <dll> [--contains RE] # exported names in seconds, no Ghidra
+node tools/reborn.mjs find <id> <exe> "<label>" [--engine craft|ghidra-mcp]
+node tools/reborn.mjs java <id> <jar> --query Q | --class C [--method M] [--users]
+node tools/reborn.mjs manual <id> <file.chm|folder|file.md>   # documented topics: the denominator of feature coverage
+node tools/reborn.mjs db <id> <file.dbf|.mdb|.accdb>    # legacy database -> SQLite + entity cards
+node tools/reborn.mjs relations <id>                    # links implied by column names, no foreign key (hypotheses)
+node tools/reborn.mjs parity <id>                       # share of the kit's expectations the rebuild has proven
 node tools/reborn.mjs native <id> <binary> [--engine ghidra-mcp|rea] [--find RE] [--decompile a,b] [--max 3]
 node tools/reborn.mjs rea <id> <command> [args]
 node tools/reborn.mjs craft <id> <command> [args]

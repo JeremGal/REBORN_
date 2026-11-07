@@ -6,15 +6,17 @@ import path from "node:path";
 import http from "node:http";
 import { spawn, spawnSync } from "node:child_process";
 import YAML from "yaml";
-import { ROOT, chromePath, craftCommand, evidenceDir, isOpName, isTargetId, localConfig, reaCommand, reaEnv, targetDir, nodeVersionOk } from "./lib/config.mjs";
-import { blockStyle, quarantine, readJson, register, redactPath, runRea, sha256File, timeoutMs, uniqueName, verifyEvidence } from "./lib/evidence.mjs";
+import { ROOT, chromePath, craftCommand, dieCommand, evidenceDir, isOpName, isTargetId, localConfig, reaCommand, reaEnv, targetDir, nodeVersionOk } from "./lib/config.mjs";
+import { blockStyle, quarantine, readJson, redactArgs, register, redactPath, runRea, sha256File, timeoutMs, uniqueName, verifyEvidence } from "./lib/evidence.mjs";
 import { craftModeArgs, reaNeedsDeep } from "./lib/guard.mjs";
 import { listTargets, loadTarget } from "./lib/load.mjs";
 import { validateTarget } from "./lib/validate.mjs";
 import { renderDossier } from "./lib/dossier.mjs";
 import { inventoryUi } from "./lib/ui-extract.mjs";
-import { buildHandoff, computeCoverage, inputsDigest } from "./lib/handoff.mjs";
+import { buildHandoff, computeCoverage, inputsDigest, parityScore } from "./lib/handoff.mjs";
 import { assertNoLeak } from "./lib/guard.mjs";
+import { inventory as manualInventory, parseHeadings, parseHhc } from "./lib/manual.mjs";
+import { implicitRelations } from "./lib/relations.mjs";
 import { schemaToEntities } from "./lib/sql-schema.mjs";
 import { ReaSession, collectStrings } from "./lib/rea-session.mjs";
 import { gm, ghidraMcpUrl, q } from "./lib/ghidra-http.mjs";
@@ -30,29 +32,50 @@ Project
   ask <target>                                         turn open unknowns (probe h-mission) into block 1 missions
   coverage <target>                                    how much of the original the cards cover (screens, entities; features unknown)
   verify [target]                                      re-hash every evidence file against the index (catches edited or swapped files)
+  parity <target>                                      share of the kit's expectations the rebuild has proven (proof must be strong enough)
   export-kit <target> <folder>                         copy ONLY what block 3 may read (kit, dossier, screenshots) after a leak check
   doctor                                               which tools are installed (Node, REA, Ghidra, ghidra-mcp, Craft, Chrome)
 
 Investigation (block 2): evidence goes to .evidence/<target>/ (gitignored) and is registered in evidence/index.yaml
   analyze <target> <file|folder|url>                   detect the kind and run the right command (routes like REA/Craft)
+  identify <target> <file>                             compiler / framework / installer / packer (Detect It Easy) and the tool to use next
   triage <target> <file|folder>                        first pass on a .exe/.dll, an install folder, an archive, an .asar or a database
   js <target> <dir|app.asar> [--max-kb 300]           static JavaScript / Electron analysis (optionally skip huge bundles)
   web <target> <url> [--cdp <endpoint>]                passive page inspection + script export + JS analysis
   har <target> <session.har>                           API surface from a recorded browser session
   sqlite <target> <file> [--table <name>]              schema (or one table) of a SQLite database
   schema <target> <create.sql> [--only T,T]            a shipped SQL create script -> entity cards (types, keys), graded confirmed
+  db <target> <file.dbf|.mdb|.accdb> [--force]         legacy database -> SQLite + CREATE script -> entity cards (dBase confirmed, Access partial)
+  relations <target>                                   links the data model implies but no foreign key declares (hypotheses)
   native <target> <binary> [--engine rea|ghidra-mcp] [--find RE] [--decompile a,b] [--max 3]
                                                        Ghidra: find functions by name, decompile them (gated by legal basis).
                                                        ghidra-mcp = fast, needs tools/ghidra-mcp.ps1 running; rea = self-contained, slower
   rea <target> <rea-command> [args...]                 any REA CLI command (rea --help lists 175)
   doc <target> <url>                                   public documentation page -> markdown evidence (Crawl4AI in Docker)
+  manual <target> <file.chm|folder|file.md>            user manual -> documented-topic inventory (the denominator of feature coverage)
   ui <target> <folder|file>                            shipped UI definition files (GtkBuilder .ui/.glade) -> screen candidates
-  find <target> <file.exe> "<label>"                   label seen on screen -> strings -> functions using them (Craft, Deep mode, gated by legal basis)
+  find <target> <file.exe> "<label>" [--engine craft|ghidra-mcp]   label seen on screen -> strings -> functions using them (gated by legal basis)
+  symbols <target> <file.dll> [--contains RE]          exported names from the export table, in seconds, no Ghidra (pick what to decompile)
+  java <target> <file.jar> --query Q | --class C [--method M] [--users]   Java classes/methods, callers, one method (Craft Deep, gated)
   craft <target> <command> [args...]                   any Craft Anything command (322); analysis output registered as evidence
 `;
 
 const argv = process.argv.slice(2);
 const cmd = argv.shift();
+// Options may come before or after the positional arguments: move them to the end so commands can read positionals by
+// index (`js gnucash --max-kb 300 dir` used to read "--max-kb" as the folder). rea/craft pass their arguments through.
+const VALUE_OPTS = new Set(["name", "kind", "max-kb", "only", "table", "cdp", "engine", "find", "decompile", "max", "timeout-min", "query", "contains", "class", "method", "top"]);
+if (!["rea", "craft"].includes(cmd)) {
+  const pos = [], opts = [];
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith("--")) { if (VALUE_OPTS.has(a.slice(2)) && i + 1 < argv.length) opts.push(a, argv[++i]); else opts.push(a); }
+    else pos.push(a);
+  }
+  argv.splice(0, argv.length, ...pos, ...opts);
+}
+const flag = (name) => { const i = argv.indexOf(`--${name}`); if (i === -1) return false; argv.splice(i, 1); return true; };
+const asJson = flag("json");
 const opt = (name, def = undefined) => {
   const i = argv.indexOf(`--${name}`);
   if (i === -1) return def;
@@ -89,6 +112,13 @@ function init(target) {
 function status(target) {
   const targets = target ? [needTarget(target)] : listTargets();
   if (!targets.length) return console.log("no target yet: node tools/reborn.mjs init <target> --name ... --kind exe");
+  if (asJson) {
+    const by = (arr, k) => arr.reduce((m, x) => ((m[x[k]] = (m[x[k]] || 0) + 1), m), {});
+    return console.log(JSON.stringify(targets.map((t) => {
+      const d = loadTarget(t), v = validateTarget(t);
+      return { target: t, kind: d.meta?.kind, missions: by(d.missions, "status"), runs: d.runs.length, features: by(d.features, "status"), rules: by(d.rules, "status"), screens: d.screens.length, entities: by(d.entities, "status"), evidence: d.evidence.length, open_unknowns: d.unknowns.filter((u) => u.status === "open").length, errors: v.errors.length, warnings: v.warnings.length };
+    }), null, 2));
+  }
   for (const t of targets) {
     const d = loadTarget(t);
     const v = validateTarget(t);
@@ -103,6 +133,11 @@ function status(target) {
 
 function validate(target) {
   const targets = target ? [needTarget(target)] : listTargets();
+  if (asJson) {
+    const all = targets.map((t) => validateTarget(t));
+    console.log(JSON.stringify(all, null, 2));
+    process.exit(all.some((r) => r.errors.length) ? 1 : 0);
+  }
   let failed = false;
   for (const t of targets) {
     const r = validateTarget(t);
@@ -482,10 +517,55 @@ async function web(target, url) {
 function coverage(target) {
   needTarget(target);
   const c = computeCoverage(loadTarget(target));
+  if (asJson) return console.log(JSON.stringify({ target, ...c }, null, 2));
   console.log(`coverage of ${target} (denominators are what the evidence found, a lower bound, not a guarantee of completeness)`);
   for (const [k, v] of Object.entries(c)) {
     console.log(`  ${k.padEnd(9)} ${String(v.carded).padStart(3)} carded / ${v.inventoried ?? "?"} found${v.ratio != null ? ` (${v.ratio}%)` : ""}${v.note ? `   ${v.note}` : ""}`);
   }
+}
+
+// Writes entity cards. A card someone enriched by hand (labels, rules, descriptions) is never replaced silently.
+function writeEntityCards(target, entities, force) {
+  const domainDir = path.join(targetDir(target), "02-investigation", "domain");
+  fs.mkdirSync(domainDir, { recursive: true });
+  let written = 0, kept = 0, partial = 0;
+  for (const e of entities) {
+    const file = path.join(domainDir, `${e.name}.yaml`);
+    const text = new YAML.Document(e).toString({ lineWidth: 0 });
+    if (fs.existsSync(file) && fs.readFileSync(file, "utf8") !== text && !force) { kept++; continue; }
+    fs.writeFileSync(file, text);
+    written++;
+    if (e.status === "partial") partial++;
+  }
+  return { written, kept, partial };
+}
+
+// A legacy database file (dBase/FoxPro .dbf, Access .mdb/.accdb) -> SQLite + CREATE TABLE script -> entity cards.
+// dBase declares its column types in the file header (exact); Access types are inferred from the values (partial).
+function db(target, input) {
+  needTarget(target);
+  if (!input) die("usage: db <target> <file.dbf|file.mdb|file.accdb> [--force]");
+  const p = absolute(input);
+  if (!fs.existsSync(p)) die(`not found: ${p}`);
+  const force = flag("force");
+  const py = process.env.REBORN_READERS_PYTHON || localConfig().readersPython || "python";
+  const dir = path.join(evidenceDir(target), "db");
+  fs.mkdirSync(dir, { recursive: true });
+  const base = path.join(dir, `${path.basename(p).replace(/\.[^.]+$/, "")}-${process.pid}`);
+  const r = spawnSync(py, ["-I", path.join(ROOT, "tools", "db2sqlite.py"), p, base], { encoding: "utf8", windowsHide: true, timeout: timeoutMs(), maxBuffer: 64 * 1024 * 1024 });
+  if (r.error) die(`${py} not runnable (${r.error.code}). Create the readers venv (docs/SETUP.md) and set readersPython in reborn.local.json`);
+  let summary;
+  try { summary = JSON.parse(r.stdout.trim().split(/\r?\n/).pop()); } catch { die(`conversion failed: ${(r.stderr || r.stdout).slice(-300)}`); }
+  if (summary.error || r.status !== 0) die(`conversion failed: ${summary.error ?? (r.stderr || "").slice(-300)}`);
+  const sqlFile = `${base}.sql`;
+  const sha = sha256File(sqlFile);
+  const inferred = summary.tables.some((t) => t.types === "inferred");
+  register(target, { id: `sql:${sha.slice(0, 16)}`, kind: "rea", tool: "reborn-db", operation: "legacy-db-to-sqlite", subject: { label: path.basename(p), sha256: sha256File(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), sqlFile).split(path.sep).join("/"), bytes: fs.statSync(sqlFile).size, sha256: sha, summary: `${summary.tables.length} table(s), column types ${inferred ? "inferred from values" : "declared in the file"}`, counts: { tables: summary.tables.length } });
+  const engine = /\.dbf$/i.test(p) ? "dBase" : "Access";
+  const entities = schemaToEntities(fs.readFileSync(sqlFile, "utf8"), { engine, sourceRef: `sql:${sha.slice(0, 16)}` }).map((e) => (inferred ? { ...e, status: "partial", description: `${e.description} Column types were inferred from the values read, not declared: confirm them.` } : e));
+  const { written, kept } = writeEntityCards(target, entities, force);
+  console.log(`OK  db  ${path.basename(p)}: ${summary.tables.map((t) => `${t.name} (${t.columns} columns, ${t.rows} rows, types ${t.types})`).join("; ")}`);
+  console.log(`    ${written} entity card(s) written${kept ? `, ${kept} existing card(s) kept (use --force)` : ""}. SQLite copy for 'reborn sqlite': ${path.relative(ROOT, `${base}.sqlite`)}  (sql:${sha.slice(0, 16)})`);
 }
 
 // A shipped SQL create script -> entity cards with real types/keys (graded confirmed). Reusable across targets.
@@ -505,19 +585,7 @@ function schema(target, input) {
   const sha = sha256File(copy);
   register(target, { id: `sql:${sha.slice(0, 16)}`, kind: "rea", tool: "reborn-schema", operation: "sql-schema", subject: { label: path.basename(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), copy).split(path.sep).join("/"), bytes: fs.statSync(copy).size, sha256: sha, summary: "shipped SQL create script", counts: { tables: (fs.readFileSync(p, "utf8").match(/CREATE\s+(?:CACHED\s+|MEMORY\s+)?TABLE/gi) || []).length } });
   const entities = schemaToEntities(fs.readFileSync(p, "utf8"), { engine: path.basename(p).split("-")[0], sourceRef: `sql:${sha.slice(0, 16)}` });
-  const domainDir = path.join(targetDir(target), "02-investigation", "domain");
-  fs.mkdirSync(domainDir, { recursive: true });
-  let written = 0, kept = 0, partial = 0;
-  for (const e of entities) {
-    if (only.length && !only.includes(e.name.toUpperCase()) && !only.includes((e.storage.observed_table || "").toUpperCase())) continue;
-    const file = path.join(domainDir, `${e.name}.yaml`);
-    const text = new YAML.Document(e).toString({ lineWidth: 0 });
-    // A card someone enriched by hand (labels, rules, descriptions) is never replaced silently.
-    if (fs.existsSync(file) && fs.readFileSync(file, "utf8") !== text && !force) { kept++; continue; }
-    fs.writeFileSync(file, text);
-    written++;
-    if (e.status === "partial") partial++;
-  }
+  const { written, kept, partial } = writeEntityCards(target, entities.filter((e) => !only.length || only.includes(e.name.toUpperCase()) || only.includes((e.storage.observed_table || "").toUpperCase())), force);
   console.log(`OK  schema  ${entities.length} tables parsed, ${written} entity card(s) written to domain/${partial ? `, ${partial} graded partial (statements the reader did not apply: see each description)` : ""}  (sql:${sha.slice(0, 16)})`);
   if (kept) console.log(`    ${kept} existing card(s) differ from the script and were kept. Review them, or rerun with --force to replace them.`);
   console.log(`  entities: ${entities.map((e) => e.name).join(", ")}`);
@@ -766,7 +834,7 @@ function runCraft(target, rawArgs, { label = "", quiet = false } = {}) {
   const ok = r.status === 0 && bytes > 0 && !timedOut;
   let kept = out;
   if (ok) {
-    register(target, { id: evId ?? `craft:${path.basename(out, ".json")}`, kind: "craft", tool: "craft-anything", operation: args[0], args: args.slice(1).map(redactPath), ...(label ? { subject: { label } } : {}), created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes, sha256: sha256File(out) });
+    register(target, { id: evId ?? `craft:${path.basename(out, ".json")}`, kind: "craft", tool: "craft-anything", operation: args[0], args: redactArgs(args.slice(1)), ...(label ? { subject: { label } } : {}), created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes, sha256: sha256File(out) });
   } else if (!bytes) { fs.rmSync(out, { force: true }); kept = null; }
   else kept = quarantine(target, out); // a failed run is not evidence
   if (!ok) process.exitCode = 1;
@@ -786,12 +854,15 @@ function craft(target, args) {
 }
 
 // Bridge between block 1 and the code: a label seen on screen -> strings -> functions that use them (Craft Anything, Deep mode).
-function find(target, file, query) {
+async function find(target, file, query) {
   needTarget(target);
-  if (!file || !query) die('usage: find <target> <file.exe> "<label seen on screen>"');
+  const engine = opt("engine", "craft");
+  if (!file || !query) die('usage: find <target> <file.exe> "<label seen on screen>" [--engine craft|ghidra-mcp]');
   const p = absolute(file);
   const d = deepAllowed(target);
   if (!d.ok) die(`find needs Deep mode (it reads the program's strings and code). access.method "${d.method}" does not allow it: use block 1 observations and REA resources instead.`);
+  if (engine === "ghidra-mcp") return findGhidra(target, p, query);
+  if (engine !== "craft") die(`unknown engine "${engine}" (craft | ghidra-mcp)`);
   const r = runCraft(target, ["core-feature-find", p, "--query", query, "--deep"], { label: `${path.basename(p)} :: "${query}"` });
   const j = readJson(r.file);
   const fns = j?.functions ?? j?.result?.functions ?? j?.normalized_result?.functions ?? [];
@@ -800,6 +871,207 @@ function find(target, file, query) {
     for (const f of fns.slice(0, 15)) console.log(`  - ${f.address ?? ""} ${f.name ?? ""}  ${(f.why ?? []).join("; ").slice(0, 100)}`);
     console.log("  next: reborn craft <target> native-function-study <file> --function <name or address> --deep to read what a function does, then describe the behaviour (never paste the pseudo-code into the dossier).");
   }
+}
+
+// Label seen on screen -> strings that contain it -> functions that use those strings, through the loaded Ghidra server.
+// About a second once the program is analysed, against minutes for a one-shot analysis.
+async function findGhidra(target, bin, query) {
+  const t0 = Date.now();
+  const lap = () => `${((Date.now() - t0) / 1000).toFixed(1)} s`;
+  if (!(await gm("/check_connection", { timeoutMs: 10000 }).catch(() => null))) die(`no ghidra-mcp server at ${ghidraMcpUrl()}. Start it: powershell -File tools\\ghidra-mcp.ps1 -Root <samples folder>`);
+  const name = path.basename(bin);
+  const open = await gm("/list_open_programs");
+  const loaded = (open.programs || []).find((p) => p.name === name);
+  if (!loaded) die(`${name} is not loaded in the Ghidra server. Load and analyse it once: node tools/reborn.mjs native ${target} "${bin}" --engine ghidra-mcp`);
+  const strings = [];
+  for (let offset = 0; offset < 2000; offset += 200) {
+    const r = await gm(`/search_strings?${q({ program: name, search_term: query, limit: 200, offset })}`, { timeoutMs: 600000 });
+    strings.push(...(r.matches || []));
+    if (!r.matches?.length || offset + 200 >= (r.total || 0)) break;
+  }
+  const byFn = new Map();
+  for (let i = 0; i < strings.length; i += 50) {
+    const batch = strings.slice(i, i + 50);
+    const r = await gm(`/get_xrefs_to?${q({ program: name, addresses: batch.map((s) => s.address).join(","), limit: 200 })}`, { timeoutMs: 600000 });
+    for (const s of batch) for (const x of r.references_by_address?.[s.address] || []) {
+      if (!x.from_function) continue;
+      const e = byFn.get(x.from_function) ?? { function: x.from_function, strings: new Set(), refs: 0 };
+      e.strings.add(s.value);
+      e.refs++;
+      byFn.set(x.from_function, e);
+    }
+  }
+  const ranked = [...byFn.values()].sort((a, b) => b.strings.size - a.strings.size || b.refs - a.refs);
+  console.log(`find "${query}" in ${name}: ${strings.length} string(s), ${ranked.length} function(s) use them (${lap()})`);
+  ranked.slice(0, 25).forEach((e) => console.log(`  - ${e.function}  (${e.strings.size} matching string(s), ${e.refs} reference(s))`));
+  const out = { binary: name, sha256: sha256File(bin), tool: "ghidra-mcp", query, strings: strings.length, functions: ranked.map((e) => ({ name: e.function, strings: [...e.strings], refs: e.refs })) };
+  const dir = path.join(evidenceDir(target), "rea");
+  fs.mkdirSync(dir, { recursive: true });
+  const file = path.join(dir, uniqueName(`native-find-${name}`));
+  fs.writeFileSync(file, JSON.stringify(out, null, 1), { flag: "wx" });
+  const sha = sha256File(file);
+  register(target, { id: `rb_${sha}`, kind: "rea", tool: "ghidra-mcp", tool_version: "7.0.0", operation: "native-find (ghidra-mcp)", subject: { label: `${name} :: "${query}"`, sha256: out.sha256 }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), file).split(path.sep).join("/"), bytes: fs.statSync(file).size, sha256: sha, summary: `label "${query}": ${strings.length} string(s), ${ranked.length} function(s) in ${lap()}`, counts: { strings: strings.length, functions: ranked.length } });
+  console.log(`  evidence rb_${sha.slice(0, 16)}…  next: native ${target} <binary> --engine ghidra-mcp --decompile <function> to read one of them`);
+}
+
+// Java programs (.jar): find classes and methods by name, list who calls a method, read one method. Craft Anything in Deep
+// mode, so the legal basis must allow reading the code. Bytecode stays in the evidence store, cards describe behaviour.
+function java(target, input) {
+  needTarget(target);
+  const cls = opt("class"), method = opt("method"), query = opt("query");
+  const users = flag("users");
+  if (!input) die('usage: java <target> <file.jar> --query <part of a name> | --class <C> --users [--method <m>] | --class <C> --method <m>');
+  const p = absolute(input);
+  if (!fs.existsSync(p)) die(`not found: ${p}`);
+  const d = deepAllowed(target);
+  if (!d.ok) die(`java reads the program's code. targets/${target}/target.yaml access.method is "${d.method}"; it needs one of: ${DEEP_OK.join(", ")} (docs/CLEAN-ROOM.md).`);
+  const label = path.basename(p);
+  if (cls && method && !users) {
+    const r = runCraft(target, ["java-method-show", "--path", p, "--class-name", cls, "--method-name", method, "--deep"], { label });
+    if (r.file) console.log(`  read it in ${path.relative(ROOT, r.file)}; describe the behaviour in a card, never paste the bytecode or pseudo-Java.`);
+    return;
+  }
+  if (cls && users) {
+    const r = runCraft(target, ["java-class-users-find", "--path", p, "--class-name", cls, ...(method ? ["--method-name", method] : []), "--limit", "500", "--deep"], { label });
+    const refs = readJson(r.file)?.result?.references ?? [];
+    console.log(`  ${refs.length} call site(s)`);
+    [...new Set(refs.map((x) => String(x.caller).split(":")[0]))].slice(0, 40).forEach((c) => console.log(`  - ${c}`));
+    return;
+  }
+  const r = runCraft(target, ["java-classes-find", "--path", p, "--query", query ?? "", "--include-methods", "--limit", "500", "--deep"], { label });
+  const res = readJson(r.file)?.result;
+  if (!res) return;
+  console.log(`  ${res.matches} of ${res.classes_total} classes match "${query ?? ""}"`);
+  for (const c of res.classes.slice(0, 40)) console.log(`  - ${c.name}${c.matched_methods?.length ? `: ${c.matched_methods.map((m) => (typeof m === "string" ? m : m.name)).join(", ")}` : ""}`);
+}
+
+// Exported names of a native library, read from its export table: seconds, no Ghidra import. Use it to pick what to
+// decompile. An export table is shipped metadata, open on any target.
+function symbols(target, input) {
+  needTarget(target);
+  if (!input) die("usage: symbols <target> <file.dll|exe> [--contains <regex>]");
+  const p = absolute(input);
+  if (!fs.existsSync(p)) die(`not found: ${p}`);
+  const re = new RegExp(opt("contains") ?? ".", "i");
+  const big = fs.statSync(p).size;
+  const t0 = Date.now();
+  const r = runRea(target, ["inspect-native-exports", p, ...(big > 60 * 1024 * 1024 ? ["--max-file-bytes", String(big + 1024)] : [])], { label: path.basename(p), quiet: true });
+  const j = readJson(r.file, 200 * 1024 * 1024);
+  const nr = j?.normalized_result ?? j?.summary?.normalized_result;
+  const names = (nr?.exports ?? []).map((e) => e.name).filter(Boolean);
+  const hits = names.filter((n) => re.test(n));
+  console.log(`${r.ok ? "OK " : "ERR"} symbols ${path.basename(p)}: ${names.length} exported name(s), ${hits.length} matching ${re} in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+  hits.slice(0, 60).forEach((n) => console.log(`  - ${n}`));
+  if (hits.length > 60) console.log(`  ... ${hits.length - 60} more (evidence: ${path.relative(ROOT, r.file)})`);
+}
+
+// What a program is built with (Detect It Easy reads headers only, so it is open on any target), and the tool to use next.
+// A packer or protector is a legal stop: ReBorn never unpacks or bypasses a protection.
+const ROUTES = [
+  [/packer|protector|cryptor|obfuscator/i, "PROTECTED: do not unpack or bypass it. Stay on documentation and block 1 observation (docs/CLEAN-ROOM.md)."],
+  [/\.net|clr|mono/i, ".NET: REA inspect-managed-artifact / inspect-managed-members; a .NET decompiler (ilspycmd) is not installed yet."],
+  [/delphi|borland|embarcadero|c\+\+ ?builder/i, "Delphi / C++Builder: forms live in the resources (REA inspect-pe-resources); a Delphi form reader is not installed yet."],
+  [/visual basic|vb6|msvbvm/i, "Visual Basic 6: forms and p-code; no open-source reader installed, rely on resources and block 1."],
+  [/windev|pc soft|webdev/i, "WinDev: no open-source reader exists; rely on block 1 observation and the vendor manuals."],
+  [/java|jar/i, "Java: reborn java <target> <file.jar> --query <name>."],
+  [/mingw|gcc|msvc|visual c|clang|microsoft linker/i, "Native C/C++: reborn symbols (export names in seconds), then reborn native --engine ghidra-mcp."],
+  [/inno setup|nsis|installshield|wise|msi|installer|sfx/i, "Installer: extract it first (innoextract for Inno Setup), then identify the programs inside."],
+];
+function identify(target, input) {
+  needTarget(target);
+  if (!input) die("usage: identify <target> <file>");
+  const p = absolute(input);
+  if (!fs.existsSync(p) || fs.statSync(p).isDirectory()) die(`not a file: ${p}`);
+  const exe = dieCommand();
+  const t0 = Date.now();
+  const r = spawnSync(exe, ["--json", "--deepscan", "--heuristicscan", "--recursivescan", p], { encoding: "utf8", windowsHide: true, timeout: 10 * 60000, maxBuffer: 64 * 1024 * 1024 });
+  if (r.error) die(`${exe} not runnable (${r.error.code}). Install Detect It Easy (docs/SETUP.md) and set dieCli in reborn.local.json`);
+  let j;
+  try { j = JSON.parse(r.stdout); } catch { die(`Detect It Easy returned no JSON: ${(r.stderr || r.stdout).slice(0, 200)}`); }
+  const found = [];
+  const walk = (o) => { if (Array.isArray(o)) o.forEach(walk); else if (o && typeof o === "object") { if (o.type && o.name && o.name !== "Unknown") found.push({ type: o.type, name: o.name, version: o.version || "", where: o.parentfilepart || "" }); Object.values(o).forEach(walk); } };
+  walk(j.detects ?? j);
+  const dir = path.join(evidenceDir(target), "identify");
+  fs.mkdirSync(dir, { recursive: true });
+  const out = path.join(dir, uniqueName(`identify-${path.basename(p)}`));
+  fs.writeFileSync(out, JSON.stringify({ file: path.basename(p), sha256: sha256File(p), tool: "detect-it-easy", found, raw: j }, null, 1), { flag: "wx" });
+  const sha = sha256File(out);
+  const text = found.map((f) => `${f.type} ${f.name} ${f.version}`).join("; ");
+  register(target, { id: `rb_${sha}`, kind: "rea", tool: "detect-it-easy", operation: "identify", subject: { label: path.basename(p), sha256: sha256File(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes: fs.statSync(out).size, sha256: sha, summary: (text || "nothing recognised").slice(0, 280) });
+  console.log(`identify ${path.basename(p)} (${((Date.now() - t0) / 1000).toFixed(1)} s): ${found.length ? "" : "nothing recognised"}`);
+  found.forEach((f) => console.log(`  ${f.type}: ${f.name}${f.version ? ` ${f.version}` : ""}${f.where ? `  [${f.where}]` : ""}`));
+  const all = `${text} ${path.extname(p)}`;
+  const routes = ROUTES.filter(([re]) => re.test(all)).map(([, advice]) => advice);
+  if (/debug data/i.test(text)) routes.push("Debug information present: decompiled code will carry real names and types.");
+  routes.forEach((a) => console.log(`  next: ${a}`));
+}
+
+// Links between tables that the data model implies but no foreign key declares: hypotheses to confirm, never facts.
+function relations(target) {
+  needTarget(target);
+  const t = loadTarget(target);
+  const found = implicitRelations(t.entities);
+  if (asJson) return console.log(JSON.stringify({ target, implicit: found }, null, 2));
+  const declared = t.entities.reduce((n, e) => n + (e.relations || []).length, 0);
+  console.log(`relations of ${target}: ${declared} declared, ${found.length} implicit candidate(s) (hypotheses: confirm each before adding it to a card)`);
+  found.forEach((r) => console.log(`  ${r.from}.${r.field} -> ${r.to}`));
+}
+
+// How much of the kit the rebuild has proven: the latest parity report against the kit's expectations.
+function parity(target) {
+  needTarget(target);
+  const t = loadTarget(target);
+  const kitFile = path.join(targetDir(target), "02-investigation", "handoff.json");
+  if (!fs.existsSync(kitFile)) die(`no kit yet: node tools/reborn.mjs handoff ${target}`);
+  const kit = JSON.parse(fs.readFileSync(kitFile, "utf8"));
+  const report = t.parity.at(-1) ?? null;
+  const s = parityScore(kit, report);
+  if (asJson) return console.log(JSON.stringify({ target, report: !!report, ...s }, null, 2));
+  console.log(`parity of ${target}: ${s.proven}/${s.total} expectations proven${s.ratio != null ? ` (${s.ratio}%)` : ""}  | failed ${s.failed} | passed with a weaker proof than needed ${s.weaker} | not checked or unknown ${s.unknown}`);
+  if (!report) console.log("  no parity report yet (03-reconstruction/parity/report.yaml): every expectation counts as not proven");
+  if (s.stale) console.log("  WARNING: the report was made from a different kit (kit_inputs_sha256 differs): rebuild or recheck");
+  const by = {};
+  for (const r of s.rows) { const k = `${r.kind} (needs ${r.proof_needed})`; by[k] = by[k] || { total: 0, proven: 0 }; by[k].total++; if (r.state === "proven") by[k].proven++; }
+  for (const [k, v] of Object.entries(by)) console.log(`  ${k.padEnd(32)} ${v.proven}/${v.total}`);
+}
+
+// The user manual as an independent inventory: .chm (Windows hh.exe decompiles it), a folder holding a .hhc table of
+// contents, or a markdown file (a PDF/Word manual converted with Docling: docling --to md <file>). Its topic count becomes
+// the denominator of feature coverage.
+function manual(target, input) {
+  needTarget(target);
+  if (!input) die("usage: manual <target> <manual.chm | folder with a .hhc | manual.md>");
+  const p = absolute(input);
+  if (!fs.existsSync(p)) die(`not found: ${p}`);
+  const base = path.basename(p).replace(/\.[^.]+$/, "");
+  let entries, source;
+  if (/\.chm$/i.test(p)) {
+    if (process.platform !== "win32") die("decompiling .chm needs Windows hh.exe here; elsewhere extract it first (7z x file.chm) and pass the folder");
+    const dir = path.join(evidenceDir(target), "docs", `chm-${base}-${process.pid}`);
+    fs.mkdirSync(dir, { recursive: true });
+    spawnSync(path.join(process.env.WINDIR || "C:\\Windows", "hh.exe"), ["-decompile", dir, p], { windowsHide: true, timeout: 5 * 60000 });
+    const hhc = fs.readdirSync(dir).find((f) => /\.hhc$/i.test(f));
+    if (!hhc) die(`no table of contents found after decompiling ${path.basename(p)}`);
+    entries = parseHhc(fs.readFileSync(path.join(dir, hhc), "latin1"));
+    source = "chm table of contents";
+  } else if (fs.statSync(p).isDirectory()) {
+    const hhc = fs.readdirSync(p).find((f) => /\.hhc$/i.test(f));
+    if (!hhc) die(`no .hhc table of contents in ${p}`);
+    entries = parseHhc(fs.readFileSync(path.join(p, hhc), "latin1"));
+    source = "hhc table of contents";
+  } else if (/\.(md|markdown)$/i.test(p)) {
+    entries = parseHeadings(fs.readFileSync(p, "utf8"));
+    source = "markdown headings";
+  } else die("unsupported manual format: convert a PDF or Word manual to markdown first (docling --to md <file>), then pass the .md");
+  const inv = manualInventory(entries);
+  const dir = path.join(evidenceDir(target), "docs");
+  fs.mkdirSync(dir, { recursive: true });
+  const out = path.join(dir, uniqueName(`manual-inventory-${base}`));
+  fs.writeFileSync(out, JSON.stringify({ source, file: path.basename(p), sha256: sha256File(p), ...inv }, null, 1), { flag: "wx" });
+  const sha = sha256File(out);
+  register(target, { id: `doc:${sha.slice(0, 16)}`, kind: "manual", tool: "reborn-manual", operation: "manual-inventory", subject: { label: path.basename(p), sha256: sha256File(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes: fs.statSync(out).size, sha256: sha, summary: `${inv.topics} documented topics in ${inv.chapters.length} chapters (${source})`, counts: { features: inv.topics, chapters: inv.chapters.length } });
+  console.log(`OK  manual  ${inv.topics} documented topics in ${inv.chapters.length} chapters, ${inv.excluded} front/back-matter entries left out  doc:${sha.slice(0, 16)}`);
+  inv.chapters.forEach((c) => console.log(`  ${String(c.topics).padStart(4)}  ${c.title}`));
 }
 
 // Re-hashes the local evidence files against the index. A file edited, truncated or swapped after registration is caught.
@@ -871,7 +1143,14 @@ switch (cmd) {
   case "native": await native(t); break;
   case "rea": rea(t, argv); break;
   case "craft": craft(t, argv); break;
-  case "find": find(t, argv[0], argv[1]); break;
+  case "find": await find(t, argv[0], argv[1]); break;
+  case "java": java(t, argv[0]); break;
+  case "symbols": symbols(t, argv[0]); break;
+  case "manual": manual(t, argv[0]); break;
+  case "parity": parity(t); break;
+  case "identify": identify(t, argv[0]); break;
+  case "db": db(t, argv[0]); break;
+  case "relations": relations(t); break;
   case "ui": ui(t, argv[0]); break;
   case "schema": schema(t, argv[0]); break;
   case "doc": doc(t, argv[0]); break;

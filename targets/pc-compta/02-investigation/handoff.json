@@ -8,7 +8,7 @@
     "tech": null,
     "access": "free-demo"
   },
-  "inputs_sha256": "ab77ab81452987297a0086be2818bd5630a4916d8eadc6aff5fe0c729fd7b855",
+  "inputs_sha256": "98c64bbcccd210db7c331f8c32ca15625913dad7ef1aa2915c4b91e9f4d4ef82",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -38,7 +38,7 @@
         "carded": 1,
         "inventoried": null,
         "ratio": null,
-        "note": "no independent feature inventory yet (user manual or menu tree needed): coverage is unknown, not complete"
+        "note": "no independent feature inventory yet (run: reborn manual <target> <manual.chm|pdf>): coverage is unknown, not complete"
       }
     },
     "has_observed_values": false,
@@ -66,6 +66,59 @@
         "M-002",
         "M-003"
       ]
+    }
+  ],
+  "expectations": [
+    {
+      "id": "X-R-001",
+      "kind": "rule",
+      "ref": "R-001",
+      "grade": "hypothesis",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-R-002",
+      "kind": "rule",
+      "ref": "R-002",
+      "grade": "hypothesis",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal",
+        "rejected input"
+      ],
+      "has_examples": true
+    },
+    {
+      "id": "X-R-003",
+      "kind": "rule",
+      "ref": "R-003",
+      "grade": "hypothesis",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-AC-001",
+      "kind": "acceptance",
+      "ref": "AC-001",
+      "feature": "F-001",
+      "grade": "hypothesis",
+      "proof_needed": "live-run",
+      "observed": false
+    },
+    {
+      "id": "X-S-001",
+      "kind": "screen",
+      "ref": "S-001",
+      "grade": "hypothesis",
+      "proof_needed": "built-app",
+      "controls": 8
     }
   ],
   "build_order": [
@@ -760,7 +813,12 @@
           "kind": "manual",
           "basis": "documentation"
         }
-      ]
+      ],
+      "severity": "blocking",
+      "required_basis": [
+        "runtime"
+      ],
+      "prediction": "Entries are keyed per journal and folio, one line per account movement, with a running balance check before validation."
     },
     {
       "id": "U-002",
@@ -778,7 +836,14 @@
           "kind": "manual",
           "basis": "documentation"
         }
-      ]
+      ],
+      "severity": "major",
+      "required_basis": [
+        "runtime",
+        "documentation"
+      ],
+      "prediction": "Data is kept in one proprietary file per accounting file (dossier).",
+      "searched": "Public documentation only; reading the program's code is not allowed on this target (trial licence)."
     },
     {
       "id": "U-003",
@@ -796,7 +861,14 @@
           "kind": "manual",
           "basis": "documentation"
         }
-      ]
+      ],
+      "severity": "major",
+      "required_basis": [
+        "runtime",
+        "documentation"
+      ],
+      "prediction": "Amounts are kept to 2 decimals with rounding half up, and a maximum amount per entry exists.",
+      "refuted_if": "A halfway amount rounds down or to even."
     }
   ]
 }

@@ -1,0 +1,24 @@
+id: R-003
+title: Rounding of monetary amounts
+kind: rounding
+statement: >-
+  Monetary amounts are rounded to the currency's number of decimal places using round-half-to-even (banker's
+  rounding): a value exactly halfway goes to the nearest even digit. Two amounts are compared after both are rounded
+  this way, so values that differ only below the currency's precision are treated as equal.
+formula: |
+  factor = 10 ^ currency_decimals
+  round(x) = round_half_to_even(x * factor) / factor
+  compare(a, b) = compare(round(a), round(b))
+applies_to: [Payments.total, Taxlines.amount]
+features: [F-001]
+examples: []   # a run with an amount exactly halfway (for example x.xx5) shows the rounding direction
+status: partial
+confidence: medium
+evidence:
+  - { ref: ev_9d8ce87124a8d62d8d87165c1325b7c65d2204d9e6bce7fc24a48c233e4a705a, kind: craft, locator: "currency rounding", note: "code: rounds to currency decimals, halfway to even" }
+  - { ref: ev_59506a891c995c10fe1969eb59a569840f41fa645521492dc310e886ba2a425b, kind: craft, locator: "rounded comparison", note: "code: compares the two rounded values" }
+contradictions: []
+notes: >-
+  Only the program's code shows this, which is a single kind of proof, so the rule stays partial. Round-half-to-even
+  differs from the round-half-up most people expect: 2.345 with two decimals can give 2.34, not 2.35. A run with a
+  halfway amount is the way to confirm it before a rebuild copies it.

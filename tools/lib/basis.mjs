@@ -17,8 +17,8 @@ export function basisOfEntry(entry) {
   if (BASES.includes(entry.basis)) return entry.basis;
   const tool = String(entry.tool ?? "");
   const op = String(entry.operation ?? "");
-  if (/^(reborn-schema|reborn-ui)$/.test(tool)) return "shipped-data";
-  if (/^(crawl4ai|linkup|reborn-doc)$/.test(tool)) return "documentation";
+  if (/^(reborn-schema|reborn-ui|detect-it-easy|reborn-db)$/.test(tool)) return "shipped-data";
+  if (/^(crawl4ai|linkup|reborn-doc|reborn-manual)$/.test(tool)) return "documentation";
   if (tool === "ghidra-mcp" || tool === "craft-anything") return "static-code";
   if (tool === "rea-agents") {
     if (/^(analyze|decompile|function|trace|search|xrefs|instructions|analyze-javascript-application|export-web-scripts|native-session)/.test(op)) return "static-code";

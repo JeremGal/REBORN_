@@ -149,7 +149,7 @@ export function runRea(target, reaArgs, { label = "", extraFiles = [], quiet = f
       tool: "rea-agents",
       tool_version: REA_VERSION,
       operation: op,
-      args: reaArgs.slice(1).map(redactPath),
+      args: redactArgs(reaArgs.slice(1)),
       ...(label ? { subject: { label } } : {}),
       created_at: new Date().toISOString(),
       file: base,
@@ -185,7 +185,7 @@ export function runRea(target, reaArgs, { label = "", extraFiles = [], quiet = f
       tool: "rea-agents",
       tool_version: REA_VERSION,
       operation: op,
-      args: reaArgs.slice(1).map(redactPath),
+      args: redactArgs(reaArgs.slice(1)),
       ...(label ? { subject: { label } } : {}),
       created_at: new Date().toISOString(),
       file: path.relative(evidenceDir(target), out).split(path.sep).join("/"),
@@ -214,6 +214,16 @@ export function runRea(target, reaArgs, { label = "", extraFiles = [], quiet = f
 // Keep the index free of personal absolute paths: only the file name is recorded.
 export function redactPath(arg) {
   return /^[A-Za-z]:[\\/]|^\//.test(arg) ? `<path>/${path.basename(arg)}` : arg;
+}
+
+// The index is tracked by git: arguments that name code of the original (a class, a method, a function, an address) are
+// masked; the evidence file itself keeps the exact query, locally.
+const SYMBOL_FLAGS = new Set(["--class-name", "--method-name", "--function", "--descriptor", "--procedure", "--address", "--namespace", "--name", "--symbol", "--start", "--goal"]);
+// A value shaped like a code identifier (mixedCase, snake_case_name, package.Class.method) is masked whatever its flag;
+// a plain label such as "Imbalance" or "tax" stays readable.
+const looksLikeCode = (v) => !/^--/.test(v) && !/^[A-Za-z]:[\\/]|^\//.test(v) && (/^[A-Za-z_$][\w$]*(\.[\w$]+){2,}/.test(v) || /^[A-Za-z_$][\w$]*$/.test(v) && (/[a-z][A-Z]/.test(v) || /^[a-z]+_[a-z_]+$/.test(v) && v.length > 7));
+export function redactArgs(args) {
+  return args.map((a, i) => (i > 0 && SYMBOL_FLAGS.has(args[i - 1])) || looksLikeCode(a) ? "<symbol>" : redactPath(a));
 }
 
 export function readJson(file, maxBytes = 50 * 1024 * 1024) {

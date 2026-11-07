@@ -5,7 +5,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { ROOT } from "./config.mjs";
 import { loadTarget } from "./load.mjs";
-import { confirmedBlocker } from "./basis.mjs";
+import { basisOfRef, confirmedBlocker } from "./basis.mjs";
 
 const SCHEMA_FILES = {
   target: "target.schema.json",
@@ -154,7 +154,24 @@ export function validateTarget(target) {
     seenEv.add(e.id);
     if (/^FAILED/.test(String(e.summary ?? ""))) errors.push(`evidence/index.yaml: ${String(e.id).slice(0, 30)} is a failed run, it must not be registered as evidence`);
   }
-  for (const u of t.unknowns) { const w = `unknown ${u.id}`; (u.blocks || []).forEach((f) => need(F, f, w, "feature")); if (u.probe?.mission) need(M, u.probe.mission, w, "mission"); }
+  // An open question is closed by evidence of the right kind, not by an opinion. Reading the code is not a way to close a
+  // question on a target whose legal basis forbids it.
+  const deepOk = ["open-source", "licence", "provided-by-organizers"].includes(t.meta?.access?.method);
+  for (const u of t.unknowns) {
+    const w = `unknown ${u.id}`;
+    (u.blocks || []).forEach((f) => need(F, f, w, "feature"));
+    if (u.probe?.mission) need(M, u.probe.mission, w, "mission");
+    evid(u.evidence, w);
+    evid(u.evidence_against, w);
+    if ((u.required_basis || []).includes("static-code") && !deepOk) err(w, `required_basis lists static-code, but target.yaml access.method "${t.meta?.access?.method}" does not allow reading the code`);
+    if (u.status === "answered") {
+      if (!u.answer) err(w, "answered without an answer");
+      const bases = (u.evidence || []).filter((e) => !["rea", "craft", "manual"].includes(e.kind) || EV.has(e.ref)).map((e) => basisOfRef(e, entryById));
+      if (!bases.length) err(w, "answered without evidence");
+      else if (u.required_basis?.length && !bases.some((b) => u.required_basis.includes(b))) err(w, `answered with ${[...new Set(bases)].join(", ")} evidence, but it needs ${u.required_basis.join(" or ")}`);
+    }
+    if (u.status === "open" && u.severity === "blocking" && !u.probe) warn(w, "blocking question without a probe: say how it will be answered");
+  }
   for (const m of t.missions) (m.features || []).forEach((f) => need(F, f, `mission ${m.id}`, "feature"));
   for (const r of t.runs) {
     need(M, r.mission, `run ${r.id}`, "mission");

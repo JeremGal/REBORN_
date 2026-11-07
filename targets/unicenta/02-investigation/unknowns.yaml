@@ -12,9 +12,14 @@ unknowns:
     status: open
     evidence:
       - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "data model only; no runtime values", note: "shipped schema" }
+    severity: blocking
+    required_basis:
+      - runtime
+    prediction: "For 3 units at 10.00 with a 20% tax and 40.00 tendered: base 30.00, tax 6.00, total 36.00, change 4.00."
+    refuted_if: Any of the four values differs, or the tax is computed on the rounded line.
   - id: U-002
-    question: What do the STATUS / TICKETTYPE integer codes mean, and the RATECASCADE compound-tax order?
-    why: the schema stores them as integers/booleans without labels; a rebuild needs the meanings.
+    question: What do the STATUS / TICKETTYPE integer codes mean? (The compound-tax order is now described by R-004 from the code; a run gives its worked example.)
+    why: the schema stores the codes as integers without labels; a rebuild needs the meanings.
     probe:
       kind: h-mission
       suggestion: "Create a normal sale, a refund and a layaway; note how TICKETTYPE/STATUS differ. Configure two cascading taxes and observe the order."
@@ -22,3 +27,10 @@ unknowns:
     status: open
     evidence:
       - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "TICKETS.TICKETTYPE, TICKETS.STATUS, TAXES.RATECASCADE/RATEORDER", note: "codes without labels" }
+    severity: major
+    required_basis:
+      - runtime
+      - static-code
+    prediction: The ticket type distinguishes a normal sale from a refund; the status distinguishes open, closed and voided tickets.
+    refuted_if: The codes carry other meanings, for example a layaway type.
+    searched: The shipped schema stores both as integers without labels.

@@ -17,8 +17,8 @@ examples: []   # MISSING: needs an observed run (e.g. a 100.00 debit vs 100.00 c
 status: partial
 confidence: medium
 evidence:
-  - { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "libgnc-engine.dll functions xaccTransGetImbalance, xaccTransGetImbalanceValue, xaccTransScrubImbalance, get_balance_split (uses string 'Imbalance')", note: "core-feature-find on 'Imbalance'" }
-  - { ref: rb_9d4d4cc0a72a2a6f848a1250d9d8d3cb4a4bf577dfd3232ca7d8e9f7070339e0, kind: rea, locator: "libgnc-engine.dll: xaccTransIsBalanced, xaccTransGetImbalanceValue, xaccTransScrubImbalance (Ghidra decompilation)", note: "balance test = exact zero sum of split values; separate checks with trading accounts; scrub adds a balance split" }
+  - { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "engine functions about imbalance (search on the text 'Imbalance')", note: "core-feature-find on 'Imbalance'" }
+  - { ref: rb_9d4d4cc0a72a2a6f848a1250d9d8d3cb4a4bf577dfd3232ca7d8e9f7070339e0, kind: rea, locator: "engine balance test, imbalance value and repair (decompiled)", note: "balance test = exact zero sum of split values; separate checks with trading accounts; scrub adds a balance split" }
 contradictions:
   - "Public sources describe a Rebalance Transaction dialog shown at entry time (choices include balancing by hand or letting the software create a balancing split). The engine code found for imbalance handles it at repair time and import time, so this statement may not match what the register does when the user saves an unbalanced entry. See U-004."
 notes: >-

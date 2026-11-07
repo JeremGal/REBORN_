@@ -19,6 +19,10 @@ unknowns:
       - ref: ev_e28b18949330c901d378e4ef60b4cdcccec3a1d47e36fd19d7d51206c7af15d7
         kind: rea
         note: inspect-desktop-application on the install folder
+    severity: major
+    required_basis:
+      - shipped-data
+    prediction: A single SQLite database holds accounts, transactions (with split lines), payees and categories.
   - id: U-002
     question: Which screens, dialogs and menus does the application have?
     why: >-
@@ -33,3 +37,8 @@ unknowns:
         kind: rea
         locator: normalized_result.resources (68 entries, type ids 1, 2, 3, 4, 12, 14, 16, 24)
         note: inspect-pe-resources on mmex.exe
+    severity: major
+    required_basis:
+      - runtime
+      - shipped-data
+    prediction: A main window with an account tree and a transaction list, plus dialogs for new transaction, account and payee.

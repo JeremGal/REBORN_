@@ -74,6 +74,11 @@ export function reaEnv() {
   return env;
 }
 
+// Detect It Easy command line (diec): identifies compiler, framework, installer and packer from a file's headers.
+export function dieCommand() {
+  return process.env.REBORN_DIE || localConfig().dieCli || "diec";
+}
+
 export function craftCommand() {
   return process.env.REBORN_CRAFT_CLI || localConfig().craftCli || "craft-anything-cli";
 }

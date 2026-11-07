@@ -52,6 +52,14 @@ Point d'entrée unique, environ 800 lignes, Node 20+ (REA, lui, demande Node 24 
 | `ask <cible>` | transforme chaque question ouverte en mission prête pour l'agent computer-use |
 | `coverage <cible>` | couverture mesurée (écrans vus / fenêtres trouvées, entités / tables) |
 | `verify [cible]` | re-calcule l'empreinte de chaque fichier de preuve et la compare à l'index |
+| `identify <cible> <fichier>` | avec quoi le programme est fabriqué (Detect It Easy) et l'outil suivant ; arrêt si le programme est protégé |
+| `symbols <cible> <dll> --contains RE` | noms exportés lus dans la table d'exports, en quelques secondes, sans Ghidra |
+| `find <cible> <exe> "<libellé>" --engine ghidra-mcp` | du texte vu à l'écran aux fonctions qui l'utilisent, sur le serveur Ghidra (même vitesse que Craft, mais classé et suivi d'une décompilation immédiate) |
+| `java <cible> <jar> --query Q` | classes et méthodes Java, appelants, lecture d'une méthode (Craft en mode profond, base légale exigée) |
+| `manual <cible> <fichier.chm>` | sujets documentés du manuel : le dénominateur de la couverture des fonctionnalités |
+| `db <cible> <fichier.dbf/.mdb/.accdb>` | vieille base vers SQLite et fiches d'entités (dBase testé, Access installé mais pas testé) |
+| `relations <cible>` | liens entre tables suggérés par les noms de colonnes, sans clé déclarée (hypothèses) |
+| `parity <cible>` | part des attentes du kit que la refonte a prouvées, avec une preuve assez forte |
 | `export-kit <cible> <dossier>` | le seul dossier que le bloc 3 peut lire : kit, dossier, captures, README, après contrôle anti-fuite |
 | `dossier <cible>` / `handoff <cible>` | le kit du bloc 3 : `dossier.md` lisible + `handoff.json` (ordre de construction, trace, carte de migration, vecteurs de test, `to_observe`, `readiness`, `coverage`) |
 
@@ -153,8 +161,8 @@ Remove-Item Env:GIT_CONFIG_COUNT, Env:GIT_CONFIG_KEY_0, Env:GIT_CONFIG_VALUE_0
 1. Bloc 1 : écrire dans `tools/` l'adaptateur qui convertit la sortie de l'agent H Company en `run.yaml` (`contracts/run.schema.json`), puis faire tourner les 5 missions GnuCash.
 2. GnuCash : extraire le manuel `.chm` pour une liste de fonctionnalités indépendante, générer les fiches des 111 écrans, enregistrer les compteurs pour que `coverage` donne une vraie couverture. Couverture mesurée au 07/11/2026 : écrans 3 %, entités 17 %, fonctionnalités inconnue.
 3. Faire passer R-001 en `confirmed` : soit un run (missions M-002 et M-005), soit le manuel `.chm` (nature `documentation`) en plus du code. Même méthode ensuite pour R-002 (arrondis).
-4. Améliorations identifiées par la relecture et pas encore faites : attentes vérifiables dans le kit (force de preuve minimale par règle, modèle du « ledger » de Craft), inconnues avec preuve contraire et autorité requise (modèle de REA), `decompile-all --namespace` et listes d'exports instantanées pour lire plus de règles, classes Java d'uniCenta (`java-classes-find` de Craft) pour ses règles de taxe et d'arrondi, `rea trace --query` pour relier un libellé d'écran au code, nouveaux lecteurs (Detect It Easy, Access et dBase, SchemaCrawler, Docling), `util.parseArgs` et sortie `--json`.
-5. Tests : `npm test` (41 tests, `tests/`). Ajouter un test à chaque défaut trouvé. Ils travaillent sur des copies jetables des cibles (`REBORN_TARGETS_DIR`).
+4. Ce qui reste : un décompilateur .NET (ilspycmd) pour les logiciels .NET/WinForms, Docling pour les manuels PDF, un essai d'Access sur un vrai fichier, un serveur REA permanent (piste non testée), les lecteurs Delphi et VB6 trouvés (très jeunes, à tester sur un logiciel libre avant usage), écrire les fiches des 111 écrans de GnuCash.
+5. Tests : `npm test` (51 tests, `tests/`). Ajouter un test à chaque défaut trouvé. Ils travaillent sur des copies jetables des cibles (`REBORN_TARGETS_DIR`).
 
 ## 13. Durcissement du bloc 2 (07/11/2026, après relecture de REA et de Craft)
 
@@ -173,3 +181,21 @@ Six lectures croisées (REA : méthode, code et Ghidra natif ; Craft ; notre cod
 Ce qui a changé pour toi : `.mcp.json` est vide, REA et Craft sont dans `.mcp.block2.json` (`claude --mcp-config .mcp.block2.json`) ; Craft tourne en `--clean-room` sauf `--deep` autorisé par `target.yaml` ; une commande REA inconnue exige la base légale ; un essai raté va dans `.evidence/<cible>/errors/` et jamais dans l'index ; les enregistrements créés par ReBorn s'appellent `rb_...` et non `ev_...` ; `schema` ne remplace plus une fiche modifiée à la main sans `--force` ; `REBORN_TIMEOUT_MIN` (90 par défaut) limite chaque appel REA ou Craft.
 
 Constat d'honnêteté : le script SQL livré d'uniCenta déclare `TEXTTIP` deux fois sur `CATEGORIES`, avec deux types contradictoires (texte puis booléen). Le lecteur garde le premier et note la table `partial`. À trancher par une observation, pas par une hypothèse.
+
+## 14. Deuxième vague (07/11/2026) : analyse enrichie, attentes, discipline, nouveaux lecteurs
+
+Choix d'Alan : schéma livré + lecture du code = deux natures de preuve, donc une règle peut être `confirmed` sans run. Ce que le code seul montre reste `partial`.
+
+| Mesure | Avant | Après |
+|---|---|---|
+| Règles uniCenta | 2 (partial) | 4 : 3 confirmed, 1 partial |
+| Règles nouvelles trouvées dans le code uniCenta | 0 | 2 (arrondi au pair le plus proche à la précision de la devise ; taxes en cascade dans l'ordre d'application) |
+| Couverture des fonctionnalités GnuCash | inconnue | 1 / 341 sujets du manuel (0 %) |
+| Attentes vérifiables dans les kits | 0 | 18 (GnuCash 7, uniCenta 6, PC Compta 5) |
+| Part prouvée par la refonte | non mesurable | mesurable : 0 % tant qu'aucun rapport de parité n'existe |
+| Questions ouvertes avec condition de fermeture | 0 / 12 | 12 / 12 |
+| Formats lisibles en plus | | dBase (testé), Access (installé, pas testé), manuel `.chm` et markdown (testés), identification du compilateur (testée) |
+| Noms Java surveillés par le contrôle anti-fuite | 0 | 173 |
+| Tests | 41 | 51 |
+
+Temps mesurés : `symbols` liste les 19 954 exports du moteur GnuCash en 8,5 s sans Ghidra ; une recherche Java dans uniCenta prend 1,3 s ; `find --engine ghidra-mcp` (11,3 s) n'est pas plus rapide que Craft (10,2 s), son intérêt est le classement et la décompilation immédiate qui suit. `relations` ne trouve aucun lien implicite sur nos trois cibles (toutes les clés sont déclarées) : il servira sur les vieilles bases sans clés étrangères.

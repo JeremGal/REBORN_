@@ -29,7 +29,7 @@ team:
   investigator: AlanECE
   rebuilder: ""
 tech:
-  stack: Java (Swing desktop), Openbravo POS lineage; ships HSQLDB and Derby create scripts; 1089 classes under com.openbravo.pos
+  stack: Java (Swing desktop); ships HSQLDB and Derby create scripts; about 1089 classes
   status: confirmed
   evidence:
     - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "scripts HSQLDB-create.sql / Derby-create.sql in the jar", note: "shipped schema" }

@@ -34,7 +34,12 @@ const looksLikeSymbol = (s) => IDENT.test(s) && (/_/.test(s) || /[a-z][A-Z]/.tes
 export function leakTerms(target, allowed = new Set()) {
   const terms = new Set();
   const dir = evidenceDir(target);
-  const take = (v) => { if (typeof v === "string" && looksLikeSymbol(v)) terms.add(v); };
+  // Qualified names (package.Class.method:(descriptor), path/Class.class) are split into their parts.
+  const take = (v) => {
+    if (typeof v !== "string" || v.length > 300) return;
+    if (looksLikeSymbol(v)) terms.add(v);
+    else if (/^[A-Za-z_$][\w$.:\/()<>;\[]*$/.test(v) && /[.\/:]/.test(v)) for (const part of v.split(/[.\/:$();<>\[]+/)) if (looksLikeSymbol(part)) terms.add(part);
+  };
   const walk = (o) => {
     if (Array.isArray(o)) o.forEach(walk);
     else if (o && typeof o === "object") for (const [k, v] of Object.entries(o)) { if (["name", "procedure", "symbol", "function", "callee", "caller"].includes(k)) take(v); walk(v); }
@@ -44,7 +49,7 @@ export function leakTerms(target, allowed = new Set()) {
     const d = path.join(dir, sub);
     if (!fs.existsSync(d)) continue;
     for (const f of fs.readdirSync(d)) {
-      const codeOutput = sub === "rea" ? /native/i.test(f) : /feature-find|function|decompile|xref|call-path|study/i.test(f);
+      const codeOutput = sub === "rea" ? /native/i.test(f) : /feature-find|function|decompile|xref|call-path|study|java/i.test(f);
       if (!codeOutput || !f.endsWith(".json")) continue;
       const file = path.join(d, f);
       if (fs.statSync(file).size > 80 * 1024 * 1024) continue;

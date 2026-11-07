@@ -85,6 +85,54 @@ function testVectors(t) {
   return { from_rules: fromRules, from_acceptance: fromFeatures, unobserved_acceptance: unobserved };
 }
 
+// Checkable expectations: what block 3 must prove, and the weakest proof that counts for each (Craft's rebuild ledger).
+// A unit test never proves what only the built app can show, and the built app never proves what only a live replay shows.
+export const PROOF_STRENGTH = { "unit-test": 1, "built-app": 2, "live-run": 3 };
+
+function casesFor(r) {
+  const c = ["nominal"];
+  if (r.kind === "rounding") c.push("halfway value");
+  if (r.kind === "tax") c.push("several taxes");
+  if (["validation", "integrity", "permission"].includes(r.kind)) c.push("rejected input");
+  if ((r.contradictions || []).length) c.push("the contradicted case");
+  return c;
+}
+
+export function expectations(t) {
+  const out = [];
+  for (const r of live(t.rules)) out.push({ id: `X-${r.id}`, kind: "rule", ref: r.id, grade: r.status, proof_needed: "unit-test", cases: casesFor(r), has_examples: (r.examples || []).length > 0 });
+  for (const f of live(t.features)) {
+    for (const a of f.acceptance || []) out.push({ id: `X-${a.id}`, kind: "acceptance", ref: a.id, feature: f.id, grade: f.status, proof_needed: "live-run", observed: isObserved(a) });
+    (f.errors || []).forEach((e, i) => out.push({ id: `X-${f.id}-E${i + 1}`, kind: "refusal", ref: f.id, grade: f.status, proof_needed: "built-app", when: e.when }));
+  }
+  for (const s of live(t.screens)) out.push({ id: `X-${s.id}`, kind: "screen", ref: s.id, grade: s.status, proof_needed: "built-app", controls: (s.fields || []).length + (s.actions || []).length });
+  return out;
+}
+
+// Proven share of a parity report against the kit's expectations. Unknown or missing counts as not proven.
+export function parityScore(kit, report) {
+  const byId = new Map((report?.expectations || []).map((r) => [r.id, r]));
+  const rows = (kit.expectations || []).map((x) => {
+    const r = byId.get(x.id);
+    if (!r) return { ...x, state: "not checked" };
+    if (r.result === "fail") return { ...x, state: "failed", verified_by: r.verified_by };
+    if (r.result !== "pass") return { ...x, state: "unknown", verified_by: r.verified_by };
+    const strong = (PROOF_STRENGTH[r.verified_by] || 0) >= PROOF_STRENGTH[x.proof_needed];
+    return { ...x, state: strong ? "proven" : "passed with a weaker proof", verified_by: r.verified_by };
+  });
+  const count = (s) => rows.filter((r) => r.state === s).length;
+  return {
+    total: rows.length,
+    proven: count("proven"),
+    ratio: rows.length ? Math.round((count("proven") / rows.length) * 100) : null,
+    failed: count("failed"),
+    weaker: count("passed with a weaker proof"),
+    unknown: count("unknown") + count("not checked"),
+    stale: !!report && report.kit_inputs_sha256 !== undefined && report.kit_inputs_sha256 !== kit.inputs_sha256,
+    rows,
+  };
+}
+
 // What still blocks each feature from being rebuild-ready, and the mission (for the computer-use agent) that fills it.
 // This is the actionable answer to "is this enough to rebuild?": it names the exact gaps, not a vague "needs more".
 function toObserve(t) {
@@ -119,10 +167,13 @@ function toObserve(t) {
 export function computeCoverage(t) {
   const found = (key) => t.evidence.reduce((m, e) => Math.max(m, Number(e.counts?.[key]) || 0), 0) || null;
   const row = (carded, inventoried, source) => ({ carded, inventoried, ratio: inventoried ? Math.round((carded / inventoried) * 100) : null, source });
+  const topics = found("features");
   return {
     screens: row(t.screens.length, found("windows"), "window inventory (counts.windows)"),
     entities: row(t.entities.length, found("tables"), "table inventory (counts.tables)"),
-    features: { carded: t.features.length, inventoried: null, ratio: null, note: "no independent feature inventory yet (user manual or menu tree needed): coverage is unknown, not complete" },
+    features: topics
+      ? { ...row(t.features.length, topics, "documented topics in the user manual (counts.features)"), note: "manual topics are not features one to one: a lower bound of what the program offers, not an exact list" }
+      : { carded: t.features.length, inventoried: null, ratio: null, note: "no independent feature inventory yet (run: reborn manual <target> <manual.chm|pdf>): coverage is unknown, not complete" },
   };
 }
 
@@ -152,6 +203,7 @@ export function buildHandoff(target) {
       note: "A feature is ready (see its `ready` flag) only when it is confirmed or partial, none of its rules is refuted, and a run on the original supplied expected values for at least one acceptance scenario.",
     },
     to_observe: toObserve(t),
+    expectations: expectations(t),
     build_order: buildOrder(t),
     entities: scrub(live(t.entities)),
     rules: scrub(live(t.rules)),

@@ -10,9 +10,14 @@ formula: |
   settled when paid >= ticket_total
 applies_to: [Payments.total]
 features: [F-001]
-examples: []   # confirm change rounding and split-payment behaviour by a run
-status: partial
+examples: []   # a run gives the worked example (change for a known ticket)
+status: confirmed
 confidence: medium
 evidence:
-  - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "PAYMENTS(RECEIPT->RECEIPTS, PAYMENT type, TOTAL DOUBLE); RECEIPTS one per ticket", note: "shipped schema" }
+  - { ref: "sql:6ae1364b7d43e617", kind: rea, locator: "payments and receipts tables", note: "shipped schema: one receipt per ticket, payments with a total" }
+  - { ref: ev_2249439ead26168ec9b63e5b2a7653f360bfdb4884fb656b1176070bf3c4e0c1, kind: craft, locator: "payment screens", note: "code: every payment screen compares tendered and due amounts after rounding (R-003)" }
 contradictions: []
+notes: >-
+  Confirmed by two different kinds of proof (schema and code). Whether a payment covers the ticket is decided on
+  amounts rounded to the currency's decimals (R-003), so a tender that is short by less than the currency's precision
+  counts as exact. The change for a real ticket is still to be read in a run.

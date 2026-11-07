@@ -33,7 +33,8 @@ node tools/reborn.mjs handoff <target>  # machine-readable kit for block 3 (buil
 node tools/reborn.mjs ask <target>      # turn open unknowns into computer-use-ready missions for block 1
 node tools/reborn.mjs verify [target]   # re-hash the evidence files against the index
 node tools/reborn.mjs export-kit <target> <folder>   # the only folder block 3 may read
-npm test                                # 41 tests: validation, SQL reader, kit, guards
+node tools/reborn.mjs parity <target>   # share of the kit's expectations the rebuild has proven
+npm test                                # 51 tests: validation, SQL and legacy readers, manual, kit, parity, guards
 ```
 
 Full command list: `docs/GUIDE.md` §5.

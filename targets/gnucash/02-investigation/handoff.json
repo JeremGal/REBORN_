@@ -8,7 +8,7 @@
     "tech": null,
     "access": "open-source"
   },
-  "inputs_sha256": "7a255cd2a43364be118d01a7b02993cdc05ac2fb33f1b70bdfa867e75f75c1e1",
+  "inputs_sha256": "05e5273eeca2776d0c845b6a2e9c7f6adce6e18f0544a60cc5b1fbe761f88135",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -37,9 +37,10 @@
       },
       "features": {
         "carded": 1,
-        "inventoried": null,
-        "ratio": null,
-        "note": "no independent feature inventory yet (user manual or menu tree needed): coverage is unknown, not complete"
+        "inventoried": 341,
+        "ratio": 0,
+        "source": "documented topics in the user manual (counts.features)",
+        "note": "manual topics are not features one to one: a lower bound of what the program offers, not an exact list"
       }
     },
     "has_observed_values": false,
@@ -69,6 +70,74 @@
         "M-003",
         "M-005"
       ]
+    }
+  ],
+  "expectations": [
+    {
+      "id": "X-R-001",
+      "kind": "rule",
+      "ref": "R-001",
+      "grade": "partial",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal",
+        "rejected input",
+        "the contradicted case"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-R-002",
+      "kind": "rule",
+      "ref": "R-002",
+      "grade": "partial",
+      "proof_needed": "unit-test",
+      "cases": [
+        "nominal",
+        "halfway value"
+      ],
+      "has_examples": false
+    },
+    {
+      "id": "X-AC-001",
+      "kind": "acceptance",
+      "ref": "AC-001",
+      "feature": "F-001",
+      "grade": "partial",
+      "proof_needed": "live-run",
+      "observed": false
+    },
+    {
+      "id": "X-F-001-E1",
+      "kind": "refusal",
+      "ref": "F-001",
+      "grade": "partial",
+      "proof_needed": "built-app",
+      "when": "the entry does not balance and no second account is given"
+    },
+    {
+      "id": "X-S-001",
+      "kind": "screen",
+      "ref": "S-001",
+      "grade": "partial",
+      "proof_needed": "built-app",
+      "controls": 10
+    },
+    {
+      "id": "X-S-002",
+      "kind": "screen",
+      "ref": "S-002",
+      "grade": "hypothesis",
+      "proof_needed": "built-app",
+      "controls": 11
+    },
+    {
+      "id": "X-S-003",
+      "kind": "screen",
+      "ref": "S-003",
+      "grade": "confirmed",
+      "proof_needed": "built-app",
+      "controls": 8
     }
   ],
   "build_order": [
@@ -1159,7 +1228,13 @@
           "kind": "craft",
           "basis": "static-code"
         }
-      ]
+      ],
+      "severity": "blocking",
+      "required_basis": [
+        "runtime"
+      ],
+      "prediction": "Recording 25.00 from Bank to Groceries changes both balances by exactly 25.00 with opposite signs, shown with 2 decimals.",
+      "refuted_if": "A balance changes by another amount, or the sign convention differs between the two accounts."
     },
     {
       "id": "U-002",
@@ -1180,7 +1255,15 @@
           "kind": "craft",
           "basis": "static-code"
         }
-      ]
+      ],
+      "severity": "blocking",
+      "required_basis": [
+        "shipped-data",
+        "runtime"
+      ],
+      "prediction": "Every amount is stored as an integer numerator and denominator pair; the denominator is 100 for a 2-decimal currency.",
+      "refuted_if": "An amount column holds a floating-point or text value.",
+      "searched": "Column names found as strings in the database layer; no types or keys without a saved book."
     },
     {
       "id": "U-003",
@@ -1198,7 +1281,15 @@
           "kind": "manual",
           "basis": "shipped-data"
         }
-      ]
+      ],
+      "severity": "major",
+      "required_basis": [
+        "runtime",
+        "documentation"
+      ],
+      "prediction": "Customers, vendors, invoices, bills and payments are separate windows reached from a Business menu.",
+      "refuted_if": "The business documents are edited inside the account register.",
+      "searched": "111 window definitions found in the UI files; the manual (341 topics) now lists the Business Features chapter."
     },
     {
       "id": "U-004",
@@ -1219,7 +1310,14 @@
           "kind": "craft",
           "basis": "static-code"
         }
-      ]
+      ],
+      "severity": "blocking",
+      "required_basis": [
+        "runtime"
+      ],
+      "prediction": "Saving an unbalanced entry opens a dialog offering to balance it by hand, to let the program add a balancing line to an imbalance account, or to change an amount.",
+      "refuted_if": "The entry is saved without any dialog, or saving is refused outright.",
+      "searched": "The engine repair code adds a balancing line, but it runs at repair and import time; nothing found yet for entry time."
     }
   ]
 }

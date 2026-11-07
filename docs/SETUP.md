@@ -52,6 +52,12 @@ Tested on 07/11/2026, no admin rights:
 - Use: `node tools/reborn.mjs native <target> <binary> --engine ghidra-mcp --find "<regex>"`. Raw output stays in `.evidence/`.
 - Optional MCP bridge for a block-2 Claude Code session: `pip install ghidra_mcp_bridge-7.0.0-py3-none-any.whl` in a venv, then run `bridge-mcp-ghidra` with `GHIDRA_MCP_URL=http://127.0.0.1:8089`. It is deliberately **not** in the repository's `.mcp.json`: block 3 works in this repository and must not have a decompiler.
 
+## 2c. Readers for legacy formats (block 2, optional)
+
+- **Detect It Easy** (compiler, framework, installer, packer): portable zip `die_win64_portable_3.21_x64.zip` from the horsicq/DIE-engine GitHub release, verify the SHA-256 GitHub shows, extract anywhere, set `dieCli` (path to `diec.exe`) in `reborn.local.json`. Used by `reborn identify`.
+- **dBase/FoxPro and Access**: a Python venv outside the repository, `python -m venv <tools>/py-readers`, then `<tools>/py-readers/Scripts/python -m pip install dbfread==2.0.7 access-parser==0.0.6`. Set `readersPython` in `reborn.local.json`. Used by `reborn db` (via `tools/db2sqlite.py`, run with `python -I`). Tested on dBase files; Access is installed but not yet tested on a real file.
+- **User manuals**: `.chm` needs nothing more on Windows (`hh.exe` is built in). A PDF or Word manual must first be converted to markdown, for example with Docling (`pip install docling`, then `docling --to md <file>`); Docling is not installed on our machine.
+
 ## 3. Craft Anything (block 2, and block 3 in clean room)
 
 - Install Rust (user-level, no admin): `rustup-init.exe -y --profile minimal` from rust-lang.org (verify the SHA-256).

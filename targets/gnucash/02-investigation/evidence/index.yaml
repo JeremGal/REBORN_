@@ -401,3 +401,59 @@ entries:
     counts:
       functions: 18637
       symbols: 169475
+  - id: ev_290379f11b5dc3dd9129f0412c32fd687b08d29c3cad71e8f9a5a1b8d965704f
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-native-exports
+    args:
+      - <path>/libgnc-engine.dll
+    subject:
+      label: libgnc-engine.dll
+    created_at: 2026-11-07T18:32:32.441Z
+    file: rea/20261107T183224Z-32204-c6ae10-inspect-native-exports.json
+    bytes: 5063311
+    sha256: 81f2ae8291bcfbfdfa150fcc9ecc758f7d5b4149c03a312c8ee7abd96bb04914
+  - id: rb_a3d2fa775884607aa4f5e42d410af3139b082bf9ee7748e29f513a0bdace9857
+    kind: rea
+    tool: ghidra-mcp
+    tool_version: 7.0.0
+    operation: native-find (ghidra-mcp)
+    subject:
+      label: 'libgnc-engine.dll :: "Imbalance"'
+      sha256: 3afb6419260b45e815642d17f1eb51c7d2b3d5af2b05f66903a916d46db701ad
+    created_at: 2026-11-07T18:32:43.851Z
+    file: rea/20261107T183243Z-31788-0c0e49-native-find-libgnc-engine.dll.json
+    bytes: 1046
+    sha256: a3d2fa775884607aa4f5e42d410af3139b082bf9ee7748e29f513a0bdace9857
+    summary: 'label "Imbalance": 26 string(s), 6 function(s) in 10.6 s'
+    counts:
+      strings: 26
+      functions: 6
+  - id: doc:f061548d4619b45d
+    kind: manual
+    tool: reborn-manual
+    operation: manual-inventory
+    subject:
+      label: gnucash-manual.chm
+      sha256: 7997f0d9f8c680fbc74dc49bf6b9b16a9970d2cff542d7441f3f18f173c39fae
+    created_at: 2026-11-07T18:35:43.343Z
+    file: docs/20261107T183543Z-30072-49f114-manual-inventory-gnucash-manual.json
+    bytes: 9873
+    sha256: f061548d4619b45d0defaab3f58124b7bd47201fce925d3bd5e4f1de948b246c
+    summary: 341 documented topics in 9 chapters (chm table of contents)
+    counts:
+      features: 341
+      chapters: 9
+  - id: rb_f37a2db908f90a0d6daff19ec2d3a1197d3d0dc94ef7e3401a5e8e8e6a6bfb6e
+    kind: rea
+    tool: detect-it-easy
+    operation: identify
+    subject:
+      label: gnucash.exe
+      sha256: 2d1760f77d57610ac61127f80057b567946dfc8dae80d15074291989e87e00bf
+    created_at: 2026-11-07T18:42:43.629Z
+    file: identify/20261107T184243Z-21908-bbdb28-identify-gnucash.exe.json
+    bytes: 1117
+    sha256: f37a2db908f90a0d6daff19ec2d3a1197d3d0dc94ef7e3401a5e8e8e6a6bfb6e
+    summary: "compiler MinGW ; ~debug data Contains "
