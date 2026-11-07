@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { StoreError } from "./store";
+import { PROJECT_ID, projectFromRequest, projectScope } from "./migration/context";
 
 /** Erreur d'API avec statut HTTP et détails lisibles. */
 export class ApiError extends Error {
@@ -53,6 +54,11 @@ export function handler(fn: (req: Request, ctx: { params: Promise<Record<string,
       if (opts.write) {
         const denied = checkOrigin(req) ?? checkWrite(req);
         if (denied) return denied;
+      }
+      const project = projectFromRequest(req);
+      if (project) {
+        if (!PROJECT_ID.test(project)) return json({ ok: false, error: "Identifiant de projet invalide" }, 400);
+        return await projectScope.run(project, () => fn(req, ctx));
       }
       return await fn(req, ctx);
     } catch (e) {

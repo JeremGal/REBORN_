@@ -142,13 +142,6 @@
         { "name": "total_ttc", "label": "Total TTC", "source": "TOTAL_TTC", "type": "money", "transforms": [{ "money": "comma" }] }
       ],
       "checks": [{ "id": "ttc", "description": "Total TTC = HT + TVA", "expr": "total_ttc == total_ht + total_tva", "severity": "warning" }],
-      "aggregates": [
-        { "id": "ht_lignes", "description": "HT = somme des lignes (nouveaux devis)", "field": "total_ht", "children": "devis_lignes", "via": "devis", "expr": "quantite * prix_unitaire * (100 - remise_pct) / 100", "verify": false }
-      ],
-      "computed": [
-        { "field": "total_tva", "expr": "round(total_ht * 20 / 100)" },
-        { "field": "total_ttc", "expr": "total_ht + total_tva" }
-      ],
       "ui": { "list_fields": ["numero", "date", "client", "statut", "total_ttc"], "search_fields": ["numero"], "breakdown": "statut", "indicators": [{ "label": "Devis", "kind": "count" }] }
     },
     {

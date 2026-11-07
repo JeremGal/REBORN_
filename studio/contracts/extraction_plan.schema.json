@@ -1,4 +1,8 @@
 {
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat extraction_plan 1.0.",
+  "title": "extraction_plan",
+  "description": "Plan d'extraction (Explorer / Mouss → Studio) : mécanismes autorisés de récupération des données.",
+  "x-contract-version": "1.0",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {

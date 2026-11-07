@@ -72,15 +72,19 @@ class RebornError(RuntimeError):
 
 
 class Reborn:
-    def __init__(self, base_url: Optional[str] = None, token: Optional[str] = None, timeout: float = 15.0, retries: int = 2):
+    def __init__(self, base_url: Optional[str] = None, token: Optional[str] = None, timeout: float = 15.0, retries: int = 2, project: Optional[str] = None):
         self.base = (base_url or os.environ.get("REBORN_URL", "http://127.0.0.1:3000")).rstrip("/")
         self.token = token or os.environ.get("REBORN_TOKEN") or None
         self.timeout = timeout
         self.retries = retries
+        # Projet de migration visé par les appels /api/migration/... (sinon : projet courant du Studio)
+        self.project = project or os.environ.get("REBORN_PROJECT") or None
         self._after_seq: Optional[int] = None
 
     # ------------------------------------------------------------------ HTTP
     def _req(self, method: str, path: str, body: Any = None) -> Any:
+        if self.project and path.startswith(("/api/migration", "/api/events", "/api/observations", "/api/schema")) and "project=" not in path:
+            path += ("&" if "?" in path else "?") + "project=" + urllib.parse.quote(self.project)
         data = json.dumps(body).encode() if body is not None else None
         headers = {"content-type": "application/json", "user-agent": f"reborn-client/{__version__}"} if data else {"user-agent": f"reborn-client/{__version__}"}
         if self.token:
@@ -129,11 +133,14 @@ class Reborn:
         objective: Optional[str] = None,
         mode: str = "live",
         kind: str = "initial",
+        project_id: Optional[str] = None,
     ) -> Json:
         """Crée une investigation (normalement lancée depuis le dashboard).
         mode : "live" (agents réels) · "replay" (données de référence / tests) · "simulation"
-        (explorateur de répétition intégré à REBORN)."""
+        (explorateur de répétition intégré à REBORN). project_id : rattache la découverte au projet."""
         body = {"application": application, "module": module, "mode": mode, "kind": kind}
+        if project_id or self.project:
+            body["project_id"] = project_id or self.project
         if target_url:
             body["target_url"] = target_url
         if objective:
@@ -337,6 +344,79 @@ class Reborn:
     def migration_report(self, run_id: str) -> Json:
         """Rapport de vérification d'une exécution (volumes, contrôles, écarts, rejets)."""
         return self._req("GET", f"/api/migration/runs/{urllib.parse.quote(run_id)}")
+
+    # ------------------------------------------------------------- Projets
+    def projects(self) -> List[Json]:
+        """Projets de migration (état, avancement réel, données, anomalies, logiciel livré)."""
+        return self._req("GET", "/api/projects")["projects"]
+
+    def project_details(self, project_id: Optional[str] = None) -> Json:
+        """Résumé + détails (connexion, autorisation, historique des états). Jamais de secret."""
+        return self._req("GET", f"/api/projects/{self._pid(project_id)}")
+
+    def create_project(self, company: str, authorized_by: str, software: Optional[str] = None, legacy_url: Optional[str] = None, software_type: Optional[str] = None, notes: Optional[str] = None, username: Optional[str] = None, password: Optional[str] = None) -> Json:
+        """Crée un projet (le propriétaire confirme son autorisation). Les identifiants éventuels
+        sont chiffrés côté Studio (24 h) et ne sont jamais renvoyés. Le client utilise ensuite ce projet."""
+        body: Json = {"company": company, "authorized": True, "authorized_by": authorized_by}
+        for k, v in (("software", software), ("legacy_url", legacy_url), ("software_type", software_type), ("notes", notes)):
+            if v:
+                body[k] = v
+        if username and password:
+            body["credentials"] = {"username": username, "password": password}
+        p = self._req("POST", "/api/projects", body)["project"]
+        self.project = p["id"]
+        return p
+
+    def use_project(self, project_id: str) -> None:
+        """Les appels suivants visent ce projet (équivaut à ?project=…)."""
+        self.project = project_id
+
+    def _pid(self, project_id: Optional[str]) -> str:
+        pid = project_id or self.project
+        if not pid:
+            raise RebornError("Aucun projet : passez project_id, appelez use_project() ou définissez REBORN_PROJECT")
+        return urllib.parse.quote(pid)
+
+    # ------------------------------------------------- Mouss : connexion et mission
+    def mission(self, project_id: Optional[str] = None) -> Json:
+        """Mission de connexion/exploration pour l'agent (sans jeton) : cible, objectifs, contraintes, points de rapport."""
+        return self._req("GET", f"/api/projects/{self._pid(project_id)}/mission")
+
+    def take_mission(self, project_id: Optional[str] = None) -> Json:
+        """Mission AVEC jeton de remise des identifiants (usage unique, 15 min).
+        Le jeton et les identifiants sont destinés au code technique de l'exécuteur : ne jamais
+        les transmettre à un modèle de langage ni les journaliser."""
+        return self._req("POST", f"/api/projects/{self._pid(project_id)}/mission")
+
+    def redeem_credentials(self, token: str, project_id: Optional[str] = None) -> Json:
+        """Échange le jeton de mission contre les identifiants (une seule fois). Ne pas journaliser le résultat."""
+        return self._req("POST", f"/api/projects/{self._pid(project_id)}/credentials/redeem", {"token": token})
+
+    def report_connection(self, status: str, detail: Optional[str] = None, project_id: Optional[str] = None, by: str = "Explorer") -> Json:
+        """État de connexion : pending · connected · failed · mfa_required · human_needed.
+        REBORN ne passe jamais un projet à « Connecté » sans ce rapport (ou un test réel du connecteur)."""
+        body: Json = {"status": status, "by": by}
+        if detail:
+            body["detail"] = detail
+        return self._req("POST", f"/api/projects/{self._pid(project_id)}/connection", body)
+
+    # ---------------------------------------------------- Alan : modèle métier
+    def publish_business_model(self, model: Json) -> Json:
+        """Alan → Jerem : modèle métier exécutable (contrat business_model : modules de règles
+        + liaisons aux entités). Crée une version « à valider » ; réponse : version, problèmes."""
+        return self._req("POST", "/api/migration/business-model", model)
+
+    def business_models(self) -> List[Json]:
+        """Versions reçues : statut (proposed / validated / rejected), problèmes, vérification sur l'historique."""
+        return self._req("GET", "/api/migration/business-model")["versions"]
+
+    def check_business_model(self, version: int) -> Json:
+        """Rejoue une version sur les documents historiques migrés (lecture seule) et compare aux montants enregistrés."""
+        return self._req("POST", "/api/migration/business-model/check", {"version": version})["check"]
+
+    def application_spec(self) -> Json:
+        """Aperçu de l'ApplicationSpec du projet (provenance, écrans, règles, éléments non reconstruits)."""
+        return self._req("GET", "/api/migration/spec")
 
     # ---------------------------------------------------------------- Divers
     def log(self, title: str, detail: Optional[str] = None, source: str = "explorer", investigation_id: Optional[str] = None) -> Json:

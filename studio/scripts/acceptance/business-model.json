@@ -1,0 +1,126 @@
+{
+  "contract_version": "1.0",
+  "source_system": "CRM synthétique (SQLite)",
+  "notes": "JEU DE TEST au format du contrat business_model (ce que produira l'Analyste). Écrit pour le CRM synthétique des tests d'acceptation : ligne = quantité × prix unitaire ; devis HT = somme des lignes. REBORN le rejoue sur l'historique avant validation.",
+  "modules": {
+    "quote.line": {
+      "module": "quote.line",
+      "settings": {
+        "rounding": {
+          "decimals": 2,
+          "mode": "half_up",
+          "at": "end"
+        },
+        "currency": "EUR",
+        "output_field": "total_price"
+      },
+      "inputs": [
+        {
+          "name": "quantity",
+          "label": "Quantité",
+          "type": "number",
+          "integer": true,
+          "min": 1,
+          "required": true
+        },
+        {
+          "name": "price",
+          "label": "Prix unitaire",
+          "type": "number",
+          "min": 0,
+          "required": true
+        }
+      ],
+      "rules": [
+        {
+          "id": "QL-01",
+          "type": "unit_price",
+          "description": "Prix unitaire de la ligne (fixé, sinon prix du produit)",
+          "action": {
+            "unit_price": "price"
+          },
+          "validation_status": "hypothesis"
+        }
+      ]
+    },
+    "quote.document": {
+      "module": "quote.document",
+      "settings": {
+        "rounding": {
+          "decimals": 2,
+          "mode": "half_up",
+          "at": "each_step"
+        },
+        "currency": "EUR",
+        "output_field": "total_price"
+      },
+      "inputs": [
+        {
+          "name": "lines_total",
+          "label": "Somme des lignes",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "segment",
+          "label": "Segment du client",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "rules": [
+        {
+          "id": "QD-01",
+          "type": "unit_price",
+          "description": "Total HT = somme des lignes",
+          "action": {
+            "unit_price": "lines_total"
+          },
+          "validation_status": "hypothesis"
+        }
+      ]
+    }
+  },
+  "bindings": [
+    {
+      "id": "quote-lines",
+      "module": "quote.line",
+      "scope": "line",
+      "entity": "quote_lines",
+      "document": {
+        "entity": "quotes",
+        "via": "quote_id"
+      },
+      "inputs": {
+        "quantity": "quantity",
+        "price": [
+          "unit_price",
+          "product_id.unit_price"
+        ]
+      },
+      "outputs": {
+        "unit_price": "unit_price",
+        "total_price": "line_total"
+      }
+    },
+    {
+      "id": "quotes",
+      "module": "quote.document",
+      "scope": "document",
+      "entity": "quotes",
+      "lines": {
+        "entity": "quote_lines",
+        "via": "quote_id"
+      },
+      "inputs": {
+        "lines_total": {
+          "sum": "quote_lines.line_total"
+        },
+        "segment": "customer_id.segment"
+      },
+      "outputs": {
+        "total_price": "total_excl_tax"
+      }
+    }
+  ]
+}

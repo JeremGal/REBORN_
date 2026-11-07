@@ -211,6 +211,7 @@ export function createInvestigation(p: {
   objective?: string;
   mode: Investigation["mode"];
   kind: Investigation["kind"];
+  project_id?: string;
 }): Investigation {
   const s = store().state;
   for (const i of s.investigations) if (i.status === "running") i.status = "completed";

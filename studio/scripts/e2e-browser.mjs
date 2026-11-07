@@ -170,7 +170,7 @@ try {
 
   // Dashboard
   for (const [url, needle, name] of [
-    ["/", "Équivalence comportementale", "E-dashboard"],
+    ["/atelier", "Équivalence comportementale", "E-dashboard"],
     ["/investigation", "Exploration du logiciel historique", "E-investigation"],
     ["/regles", "Modèle métier v2", "E-regles"],
     ["/reconstruction", "Chaîne de reconstruction", "E-reconstruction"],

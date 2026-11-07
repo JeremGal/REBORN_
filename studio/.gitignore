@@ -19,3 +19,4 @@ generated/*/files/
 generated/*/backups/
 generated/*/.secrets/
 generated/*/app.log
+generated/*/run/

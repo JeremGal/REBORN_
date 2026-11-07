@@ -161,6 +161,8 @@ export const InvestigationCreateSchema = z.object({
   objective: z.string().optional(),
   mode: z.enum(["live", "simulation", "replay"]).default("live"),
   kind: z.enum(["initial", "blind_challenge", "verification"]).default("initial"),
+  /** Projet de migration concerné (facultatif, contrat 1.2) : relie la découverte au projet. */
+  project_id: z.string().regex(/^MIG_[a-f0-9]{8}$/).optional(),
 });
 
 export const ComputeSchema = z.object({

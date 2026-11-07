@@ -279,6 +279,8 @@ export interface Investigation {
   completed_at?: string;
   /** Version du modèle de règles en vigueur au lancement. */
   model_version_at_start?: number;
+  /** Projet de migration concerné (découverte de l'ancien logiciel de ce projet). */
+  project_id?: string;
 }
 
 /* ------------------------------------------------------------------ */

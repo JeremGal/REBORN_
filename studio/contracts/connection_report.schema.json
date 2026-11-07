@@ -1,0 +1,32 @@
+{
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat connection_report 1.0.",
+  "title": "connection_report",
+  "description": "Rapport d'état de connexion de l'agent Computer Use (Mouss → Studio).",
+  "x-contract-version": "1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "connected",
+        "failed",
+        "mfa_required",
+        "human_needed"
+      ]
+    },
+    "detail": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "by": {
+      "type": "string",
+      "maxLength": 60
+    }
+  },
+  "required": [
+    "status"
+  ],
+  "additionalProperties": false
+}

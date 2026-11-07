@@ -2,6 +2,7 @@ import { z } from "zod";
 import { compile } from "../engine/expr";
 import type { SourceProfile, TableProfile } from "./profile";
 import type { FieldType, Transform } from "./transforms";
+import { humanLabel, singularLabel } from "./labels";
 
 /**
  * Contrat « correspondances de migration » (Alan → Jerem), version 1.0.
@@ -72,6 +73,22 @@ export const EntityMapSchema = z
     checks: z.array(CheckSchema).optional(),
     aggregates: z.array(AggregateSchema).optional(),
     computed: z.array(z.object({ field: Ident, expr: z.string().min(1).max(500) }).strict()).optional(),
+    /**
+     * Nature des données (protection de l'historique) : financial = document comptable (facture,
+     * règlement…), commercial = document commercial (devis, commande), line = lignes d'un document,
+     * master = référentiel. Les champs `accounting` des enregistrements migrés ne sont jamais modifiés.
+     */
+    classification: z
+      .object({
+        kind: z.enum(["financial", "commercial", "line", "master", "other"]),
+        confidence: Confidence,
+        parent: Ident.optional(),
+        note: z.string().optional(),
+      })
+      .strict()
+      .optional(),
+    /** Lignes d'un document : on ne peut pas en ajouter à un document historique protégé. */
+    line_of: z.object({ entity: Ident, via: Ident }).strict().optional(),
     /** Indications de présentation pour le logiciel généré (facultatives). */
     ui: z
       .object({
@@ -133,7 +150,8 @@ export interface MappingIssue {
 
 export interface ReviewItem {
   key: string;
-  kind: "entity" | "field" | "attachment";
+  /** accounting : protection de l'historique (accepted = protégé, excluded = modifiable, décision tracée). */
+  kind: "entity" | "field" | "attachment" | "accounting";
   label: string;
   confidence: number;
   detail: string;
@@ -146,6 +164,17 @@ export function reviewItems(m: MigrationMapping): ReviewItem[] {
   const th = m.review_threshold;
   for (const e of m.entities) {
     if ((e.confidence ?? 1) < th) out.push({ key: `entity:${e.name}`, kind: "entity", label: `${e.label ?? e.name} ← ${e.source.table}`, confidence: e.confidence ?? 1, detail: e.note ?? "Entité proposée avec une confiance limitée" });
+    const c = e.classification;
+    if (c && c.kind !== "master" && c.kind !== "line" && c.confidence < th && e.fields.some((f) => f.accounting)) {
+      const locked = e.fields.filter((f) => f.accounting).map((f) => f.label ?? f.name);
+      out.push({
+        key: `accounting:${e.name}`,
+        kind: "accounting",
+        label: `${e.label ?? e.name} : ${c.kind === "financial" ? "document comptable" : c.kind === "commercial" ? "document commercial" : "document historique"} à protéger ?`,
+        confidence: c.confidence,
+        detail: `Protégé par défaut : ${locked.join(", ")} des enregistrements migrés ne pourront pas être modifiés, ni leurs lignes complétées. Accepter = garder la protection · Exclure = autoriser les modifications (tracées). ${c.note ?? ""}`.trim(),
+      });
+    }
     for (const f of e.fields) {
       if ((f.confidence ?? 1) < th) {
         out.push({
@@ -172,9 +201,15 @@ export function describeField(f: FieldMap): string {
 /** Correspondances effectivement appliquées : éléments exclus retirés. */
 export function effectiveMapping(m: MigrationMapping, decisions: Record<string, Decision>): MigrationMapping {
   const excluded = (k: string) => decisions[k]?.decision === "excluded";
+  // Protection de l'historique retirée par une décision humaine : l'entité et ses lignes deviennent modifiables
+  const unprotected = new Set(m.entities.filter((e) => excluded(`accounting:${e.name}`)).map((e) => e.name));
   const entities = m.entities
     .filter((e) => !excluded(`entity:${e.name}`))
-    .map((e) => ({ ...e, fields: e.fields.filter((f) => !excluded(`field:${e.name}.${f.name}`)) }));
+    .map((e) => {
+      const fields = e.fields.filter((f) => !excluded(`field:${e.name}.${f.name}`));
+      const free = unprotected.has(e.name) || (e.classification?.kind === "line" && unprotected.has(e.classification.parent ?? ""));
+      return { ...e, fields: free ? fields.map((f) => ({ ...f, accounting: false })) : fields };
+    });
   const names = new Set(entities.map((e) => e.name));
   return {
     ...m,
@@ -307,10 +342,7 @@ const fieldName = (col: string) =>
     .replace(/^(\d)/, "c_$1")
     .replace(/^(id|rowid|oid)$/, "source_$1")
     .slice(0, 60) || "colonne";
-const label = (col: string) => {
-  const s = col.replace(/[_-]+/g, " ").trim().toLowerCase();
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
+const label = (col: string) => humanLabel(col);
 
 /**
  * Proposition déduite uniquement de la structure lue : une entité par table, un champ par
@@ -333,7 +365,7 @@ export function proposeMapping(profile: SourceProfile, opts: { target?: { id: st
       if (rel && entityOf.has(rel.references.table)) {
         fields.push({
           name,
-          label: label(c.name),
+          label: singularLabel(label(rel.references.table)),
           source: c.name,
           type: "reference",
           references: entityOf.get(rel.references.table)!,
@@ -354,6 +386,7 @@ export function proposeMapping(profile: SourceProfile, opts: { target?: { id: st
     entities.push({
       name: t.entity,
       label: label(t.entity),
+      label_singular: singularLabel(label(t.entity)),
       source: { table: t.name, key: t.primary_key },
       title_field: title?.name,
       fields,
@@ -361,8 +394,68 @@ export function proposeMapping(profile: SourceProfile, opts: { target?: { id: st
       note: `Proposition automatique : ${t.rows} lignes, clé ${t.primary_key}`,
     });
   }
+  classifyEntities(entities);
   const target = opts.target ?? { id: "nouveau-logiciel", name: "Nouveau logiciel" };
   return { contract_version: MAPPING_CONTRACT_VERSION, source_system: opts.source_system, target, review_threshold: 0.9, entities, attachments: [] };
+}
+
+/* ------------------------------------------------------------------ */
+/* Protection de l'historique (proposition automatique)                 */
+/* ------------------------------------------------------------------ */
+const plain = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
+const FINANCIAL = /(invoice|factur|bill|avoir|credit_?note|payment|paiement|reglement|encaissement|receipt|ecriture|ledger|compta)/;
+const COMMERCIAL = /(quote|devis|estimate|proposal|order|commande)/;
+const MASTER = /(product|produit|article|catalog|service|tarif|price_?list|customer|client|contact|lead|prospect|supplier|fournisseur|user|utilisateur|employee|salarie|company|societe|categor|famille|family|stock)/;
+const LINE = /(line|ligne|lig|item|detail|position)s?$/;
+const NUMBER_FIELD = /(^|_)(num|numero|number|no|ref|reference|code)(_|$)/;
+const STATUS_FIELD = /(statut|status|etat|state|paid|paye|payment|reglement)/;
+
+/**
+ * Classe chaque entité et protège l'historique par défaut : montants, dates, numéros et statuts
+ * des documents comptables ; montants et numéros des documents commerciaux ; lignes de ces
+ * documents. Un classement incertain (confiance < seuil) devient un point à valider ; tant qu'il
+ * n'est pas tranché, la protection reste active (aucune opération sensible n'est possible).
+ */
+export function classifyEntities(entities: EntityMap[]) {
+  const kind = new Map<string, NonNullable<EntityMap["classification"]>>();
+  const isLine = (e: EntityMap) => LINE.test(plain(e.name)) || LINE.test(plain(e.source.table));
+  for (const e of entities) {
+    if (isLine(e)) continue;
+    const n = plain(`${e.name} ${e.source.table}`);
+    const money = e.fields.some((f) => f.type === "money");
+    const dated = e.fields.some((f) => f.type === "date");
+    if (FINANCIAL.test(n) && money) kind.set(e.name, { kind: "financial", confidence: 0.95, note: "Nom évocateur d'un document comptable" });
+    else if (COMMERCIAL.test(n) && money) kind.set(e.name, { kind: "commercial", confidence: 0.8, note: "Nom évocateur d'un document commercial" });
+    else if (MASTER.test(n)) kind.set(e.name, { kind: "master", confidence: 0.9 });
+    else if (money && dated) kind.set(e.name, { kind: "other", confidence: 0.6, note: "Montants datés : peut-être un document historique" });
+  }
+  for (const e of entities) {
+    if (kind.has(e.name)) continue;
+    const parent = e.fields.find((f) => f.type === "reference" && ["financial", "commercial", "other"].includes(kind.get(f.references ?? "")?.kind ?? ""));
+    if (!parent || !(isLine(e) || e.fields.some((f) => f.type === "money"))) continue;
+    kind.set(e.name, { kind: "line", confidence: kind.get(parent.references!)!.confidence, parent: parent.references, note: `Lignes de ${parent.references}` });
+    e.line_of = { entity: parent.references!, via: parent.name };
+  }
+  for (const e of entities) {
+    const c = kind.get(e.name);
+    if (!c) continue;
+    e.classification = c;
+    for (const f of e.fields) {
+      const protect =
+        c.kind === "line"
+          ? f.type !== "reference"
+          : c.kind === "commercial"
+            ? f.type === "money" || (f.type === "text" && NUMBER_FIELD.test(f.name))
+            : c.kind === "financial" || c.kind === "other"
+              ? f.type === "money" || f.type === "date" || (f.type === "text" && NUMBER_FIELD.test(f.name)) || (f.type !== "reference" && STATUS_FIELD.test(f.name))
+              : false;
+      if (protect) f.accounting = true;
+    }
+  }
 }
 
 function proposeField(name: string, c: TableProfile["columns"][number]): FieldMap {

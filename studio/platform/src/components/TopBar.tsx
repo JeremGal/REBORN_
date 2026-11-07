@@ -6,8 +6,12 @@ import { useReborn } from "./RebornProvider";
 import { cx, pct } from "./ui";
 import { MODE_INFO } from "@/lib/modes";
 
+/** Routes de l'atelier découverte & règles (chaîne investigation → règles → comparaison). */
+const ATELIER = ["/atelier", "/investigation", "/regles", "/reconstruction", "/comparaison", "/migration"];
+
 export function TopBar() {
   const path = usePathname();
+  const atelier = ATELIER.some((p) => path.startsWith(p));
   const { state, model, active, report, connected } = useReborn();
 
   const obsCount = active ? state?.observations.filter((o) => o.investigation_id === active.id).length ?? 0 : state?.observations.length ?? 0;
@@ -61,12 +65,29 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-30 bg-ink text-white">
       <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-6 px-5">
-        <Link href="/" className="group flex shrink-0 items-baseline gap-2.5" aria-label="REBORN — accueil">
+        <Link href="/" className="group flex shrink-0 items-baseline gap-2.5" aria-label="REBORN Studio — projets">
           <span className="text-[19px] font-black tracking-[-0.03em]">REBORN</span>
-          <span className="hidden text-[11px] font-bold tracking-[0.08em] text-verdigris-bright uppercase xl:inline">Software Archaeologist</span>
+          <span className="hidden text-[11px] font-bold tracking-[0.08em] text-verdigris-bright uppercase xl:inline">Studio</span>
         </Link>
 
-        <nav className="-mx-1 flex min-w-0 flex-1 items-stretch overflow-x-auto" aria-label="Pipeline REBORN">
+        {!atelier && (
+          <nav className="flex min-w-0 flex-1 items-stretch" aria-label="Navigation REBORN Studio">
+            {[
+              { href: "/", label: "Projets", on: path === "/" || path.startsWith("/projets") },
+              { href: "/atelier", label: "Atelier découverte & règles", on: false },
+            ].map((l) => (
+              <Link key={l.href} href={l.href} aria-current={l.on ? "page" : undefined} className={cx("relative flex h-14 items-center px-3 text-[13px] font-bold transition-colors duration-150", l.on ? "bg-white/[0.07]" : "text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                {l.label}
+                {l.on && <span className="absolute inset-x-3 bottom-0 h-0.5 bg-verdigris-bright" />}
+              </Link>
+            ))}
+          </nav>
+        )}
+        {atelier && (
+        <nav className="-mx-1 flex min-w-0 flex-1 items-stretch overflow-x-auto" aria-label="Atelier : chaîne découverte → règles">
+          <Link href="/" className="flex h-14 items-center pr-3 text-[12px] font-bold whitespace-nowrap text-white/60 hover:text-white">
+            ← Projets
+          </Link>
           {steps.map((s, i) => {
             const on = path.startsWith(s.href);
             return (
@@ -100,8 +121,9 @@ export function TopBar() {
             );
           })}
         </nav>
+        )}
 
-        {active && !path.startsWith("/migration") && <ModeBadge mode={active.mode} />}
+        {atelier && active && <ModeBadge mode={active.mode} />}
 
         <div className="flex shrink-0 items-center gap-2 text-[11px] text-white/60" title={connected ? "Flux temps réel connecté" : "Reconnexion…"}>
           <span className={cx("size-2 rounded-full", connected ? "live-dot bg-verdigris-bright" : "bg-white/30")} />

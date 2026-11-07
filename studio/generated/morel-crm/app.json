@@ -1,16 +1,21 @@
 {
- "spec_version": "1.0",
+ "spec_version": "1.1",
  "app": {
   "id": "morel-crm",
   "name": "Morel CRM",
   "tagline": "Reconstruit depuis Relatio 2004",
   "currency": "EUR",
   "locale": "fr-FR",
-  "generated_at": "2026-11-07T16:04:11.086Z",
+  "generated_at": "2026-11-07T19:19:13.786Z",
   "generator": "REBORN Studio — Application Reconstruction Engine",
   "source_system": "Relatio 2004",
   "migration_run": "RUN_001",
-  "port": 5050
+  "port": 5050,
+  "branding": {
+   "name": "Morel CRM",
+   "primary_color": "#1f4e79",
+   "logo_text": "MC"
+  }
  },
  "entities": [
   {
@@ -25,7 +30,14 @@
      "type": "text",
      "required": true,
      "unique": true,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.CODE_CLI",
+      "confidence": 0.99,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "raison_sociale",
@@ -33,7 +45,14 @@
      "type": "text",
      "required": true,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.RAISON_SOC",
+      "confidence": 0.99,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "siret",
@@ -41,7 +60,14 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.SIRET",
+      "confidence": 0.97,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "adresse",
@@ -49,7 +75,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.ADR1",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "code_postal",
@@ -57,7 +89,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.CP",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "ville",
@@ -65,7 +103,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.VILLE",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "pays",
@@ -73,7 +117,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.PAYS",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "telephone",
@@ -81,7 +131,13 @@
      "type": "phone",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.TEL",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "email",
@@ -89,7 +145,14 @@
      "type": "email",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.EMAIL",
+      "confidence": 0.97,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "categorie",
@@ -111,7 +174,15 @@
        "label": "Partenaire"
       }
      ],
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "validated",
+      "observed": true,
+      "source": "clients.CAT_CLI",
+      "confidence": 0.8,
+      "by": "Jerem",
+      "at": "2026-11-07T16:21:46.352Z"
+     }
     },
     {
      "name": "etat",
@@ -133,7 +204,15 @@
        "label": "Radié"
       }
      ],
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "validated",
+      "observed": true,
+      "source": "clients.ETAT",
+      "confidence": 0.85,
+      "by": "Jerem",
+      "at": "2026-11-07T16:21:46.955Z"
+     }
     },
     {
      "name": "date_creation",
@@ -141,7 +220,13 @@
      "type": "date",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.DATE_CREA",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "commercial",
@@ -149,7 +234,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.COMMERCIAL",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "remarques",
@@ -157,7 +248,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "clients.REMARQUES",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     }
    ],
    "list_fields": [
@@ -196,7 +293,14 @@
     }
    ],
    "computed": [],
-   "aggregates": []
+   "aggregates": [],
+   "provenance": {
+    "status": "deduced",
+    "observed": true,
+    "source": "clients",
+    "confidence": 0.98,
+    "basis": "jeu de test au format de l'Analyste"
+   }
   },
   {
    "name": "prospects",
@@ -210,7 +314,13 @@
      "type": "text",
      "required": true,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "prospects.SOCIETE",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "nom",
@@ -218,7 +328,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "prospects.CONTACT_NOM",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "prenom",
@@ -226,7 +342,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "prospects.CONTACT_PRENOM",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "email",
@@ -234,7 +356,13 @@
      "type": "email",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "prospects.EMAIL",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "telephone",
@@ -242,7 +370,13 @@
      "type": "phone",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "prospects.TEL",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "origine",
@@ -272,7 +406,14 @@
        "label": "Mailing"
       }
      ],
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "prospects.ORIGINE",
+      "confidence": 0.92,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "stade",
@@ -302,7 +443,14 @@
        "label": "Perdu"
       }
      ],
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "prospects.STADE",
+      "confidence": 0.93,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "date_contact",
@@ -310,7 +458,13 @@
      "type": "date",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "prospects.DATE_CONTACT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "client",
@@ -319,7 +473,14 @@
      "required": false,
      "unique": false,
      "references": "clients",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "prospects.ID_CLI_CONVERTI",
+      "confidence": 0.95,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     }
    ],
    "list_fields": [
@@ -344,7 +505,14 @@
     }
    ],
    "computed": [],
-   "aggregates": []
+   "aggregates": [],
+   "provenance": {
+    "status": "deduced",
+    "observed": true,
+    "source": "prospects",
+    "confidence": 0.97,
+    "basis": "jeu de test au format de l'Analyste"
+   }
   },
   {
    "name": "articles",
@@ -358,7 +526,13 @@
      "type": "text",
      "required": true,
      "unique": true,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "articles.REF_ART",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "designation",
@@ -366,7 +540,13 @@
      "type": "text",
      "required": true,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "articles.LIBELLE",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "famille",
@@ -374,7 +554,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "articles.FAMILLE",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "prix_ht",
@@ -382,7 +568,13 @@
      "type": "money",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "articles.PRIX_HT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "tva",
@@ -396,7 +588,15 @@
        "label": "Taux normal"
       }
      ],
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "validated",
+      "observed": true,
+      "source": "articles.CODE_TVA",
+      "confidence": 0.75,
+      "by": "Jerem",
+      "at": "2026-11-07T16:21:47.559Z"
+     }
     },
     {
      "name": "actif",
@@ -404,7 +604,13 @@
      "type": "boolean",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "articles.ACTIF",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "stock",
@@ -412,7 +618,13 @@
      "type": "integer",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "articles.STOCK",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     }
    ],
    "list_fields": [
@@ -441,7 +653,14 @@
     }
    ],
    "computed": [],
-   "aggregates": []
+   "aggregates": [],
+   "provenance": {
+    "status": "deduced",
+    "observed": true,
+    "source": "articles",
+    "confidence": 0.98,
+    "basis": "jeu de test au format de l'Analyste"
+   }
   },
   {
    "name": "devis",
@@ -455,7 +674,13 @@
      "type": "text",
      "required": true,
      "unique": true,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis.NUM_DEV",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "client",
@@ -464,7 +689,13 @@
      "required": true,
      "unique": false,
      "references": "clients",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis.ID_CLI",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "date",
@@ -472,7 +703,13 @@
      "type": "date",
      "required": true,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis.DATE_DEV",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "statut",
@@ -502,7 +739,14 @@
        "label": "Expiré"
       }
      ],
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis.STATUT",
+      "confidence": 0.92,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "remise_pct",
@@ -510,7 +754,13 @@
      "type": "percent",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis.REMISE_PCT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "total_ht",
@@ -518,7 +768,14 @@
      "type": "money",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "computed_by_rules": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis.TOTAL_HT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "total_tva",
@@ -526,7 +783,14 @@
      "type": "money",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "computed_by_rules": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis.TOTAL_TVA",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "total_ttc",
@@ -534,7 +798,14 @@
      "type": "money",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "computed_by_rules": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis.TOTAL_TTC",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     }
    ],
    "list_fields": [
@@ -576,7 +847,14 @@
      "via": "devis",
      "expr": "quantite * prix_unitaire * (100 - remise_pct) / 100"
     }
-   ]
+   ],
+   "provenance": {
+    "status": "deduced",
+    "observed": true,
+    "source": "devis",
+    "confidence": 0.97,
+    "basis": "jeu de test au format de l'Analyste"
+   }
   },
   {
    "name": "devis_lignes",
@@ -591,7 +869,13 @@
      "required": true,
      "unique": false,
      "references": "devis",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis_lignes.ID_DEV",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "article",
@@ -600,7 +884,15 @@
      "required": false,
      "unique": false,
      "references": "articles",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "validated",
+      "observed": true,
+      "source": "devis_lignes.ID_ART",
+      "confidence": 0.88,
+      "by": "Jerem",
+      "at": "2026-11-07T16:21:48.162Z"
+     }
     },
     {
      "name": "quantite",
@@ -608,7 +900,13 @@
      "type": "integer",
      "required": true,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis_lignes.QTE",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "prix_unitaire",
@@ -616,7 +914,14 @@
      "type": "money",
      "required": true,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "computed_by_rules": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis_lignes.PU_HT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "remise_pct",
@@ -624,7 +929,27 @@
      "type": "percent",
      "required": true,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "devis_lignes.REMISE_PCT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
+    },
+    {
+     "name": "montant_ht",
+     "label": "Montant HT",
+     "type": "money",
+     "required": false,
+     "unique": false,
+     "accounting": false,
+     "computed_by_rules": true,
+     "provenance": {
+      "status": "validated",
+      "observed": false,
+      "basis": "sortie du modèle métier validé (v1) — vide pour l'historique"
+     }
     }
    ],
    "list_fields": [
@@ -637,7 +962,14 @@
    "search_fields": [],
    "children": [],
    "computed": [],
-   "aggregates": []
+   "aggregates": [],
+   "provenance": {
+    "status": "deduced",
+    "observed": true,
+    "source": "devis_lignes",
+    "confidence": 0.96,
+    "basis": "jeu de test au format de l'Analyste"
+   }
   },
   {
    "name": "factures",
@@ -651,7 +983,13 @@
      "type": "text",
      "required": true,
      "unique": true,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures.NUM_FAC",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "client",
@@ -660,7 +998,15 @@
      "required": false,
      "unique": false,
      "references": "clients",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "validated",
+      "observed": true,
+      "source": "factures.ID_CLI",
+      "confidence": 0.85,
+      "by": "Jerem",
+      "at": "2026-11-07T16:21:48.770Z"
+     }
     },
     {
      "name": "devis",
@@ -669,7 +1015,13 @@
      "required": false,
      "unique": false,
      "references": "devis",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures.ID_DEV",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "date",
@@ -677,7 +1029,13 @@
      "type": "date",
      "required": true,
      "unique": false,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures.DATE_FAC",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "echeance",
@@ -685,7 +1043,13 @@
      "type": "date",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures.DATE_ECH",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "taux_tva",
@@ -693,7 +1057,13 @@
      "type": "percent",
      "required": true,
      "unique": false,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures.TAUX_TVA",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "total_ht",
@@ -701,7 +1071,13 @@
      "type": "money",
      "required": true,
      "unique": false,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures.TOTAL_HT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "total_tva",
@@ -709,7 +1085,13 @@
      "type": "money",
      "required": true,
      "unique": false,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures.TOTAL_TVA",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "total_ttc",
@@ -717,7 +1099,13 @@
      "type": "money",
      "required": true,
      "unique": false,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures.TOTAL_TTC",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "statut_paiement",
@@ -739,7 +1127,14 @@
        "label": "Payée"
       }
      ],
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures.STATUT_PAI",
+      "confidence": 0.95,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     }
    ],
    "list_fields": [
@@ -781,7 +1176,14 @@
      "via": "facture",
      "expr": "quantite * prix_unitaire"
     }
-   ]
+   ],
+   "provenance": {
+    "status": "deduced",
+    "observed": true,
+    "source": "factures",
+    "confidence": 0.97,
+    "basis": "jeu de test au format de l'Analyste"
+   }
   },
   {
    "name": "factures_lignes",
@@ -796,7 +1198,13 @@
      "required": true,
      "unique": false,
      "references": "factures",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures_lignes.ID_FAC",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "article",
@@ -805,7 +1213,13 @@
      "required": false,
      "unique": false,
      "references": "articles",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures_lignes.ID_ART",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "quantite",
@@ -813,7 +1227,13 @@
      "type": "integer",
      "required": true,
      "unique": false,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures_lignes.QTE",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "prix_unitaire",
@@ -821,7 +1241,13 @@
      "type": "money",
      "required": true,
      "unique": false,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "factures_lignes.PU_HT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     }
    ],
    "list_fields": [
@@ -833,7 +1259,14 @@
    "search_fields": [],
    "children": [],
    "computed": [],
-   "aggregates": []
+   "aggregates": [],
+   "provenance": {
+    "status": "deduced",
+    "observed": true,
+    "source": "factures_lignes",
+    "confidence": 0.96,
+    "basis": "jeu de test au format de l'Analyste"
+   }
   },
   {
    "name": "paiements",
@@ -848,7 +1281,13 @@
      "required": true,
      "unique": false,
      "references": "factures",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "paiements.ID_FAC",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "date",
@@ -856,7 +1295,13 @@
      "type": "date",
      "required": true,
      "unique": false,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "paiements.DATE_PAI",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "montant",
@@ -864,7 +1309,13 @@
      "type": "money",
      "required": true,
      "unique": false,
-     "accounting": true
+     "accounting": true,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "paiements.MONTANT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "mode",
@@ -890,7 +1341,14 @@
        "label": "Carte bancaire"
       }
      ],
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "paiements.MODE_PAI",
+      "confidence": 0.93,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     }
    ],
    "list_fields": [
@@ -902,7 +1360,14 @@
    "search_fields": [],
    "children": [],
    "computed": [],
-   "aggregates": []
+   "aggregates": [],
+   "provenance": {
+    "status": "deduced",
+    "observed": true,
+    "source": "paiements",
+    "confidence": 0.95,
+    "basis": "jeu de test au format de l'Analyste"
+   }
   },
   {
    "name": "activites",
@@ -917,7 +1382,13 @@
      "required": false,
      "unique": false,
      "references": "clients",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "activites.ID_CLI",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "prospect",
@@ -926,7 +1397,13 @@
      "required": false,
      "unique": false,
      "references": "prospects",
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "activites.ID_PROS",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "date",
@@ -934,7 +1411,13 @@
      "type": "date",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "activites.DATE_ACT",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "type",
@@ -960,7 +1443,14 @@
        "label": "Visite"
       }
      ],
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "activites.TYPE_ACT",
+      "confidence": 0.94,
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "sujet",
@@ -968,7 +1458,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "activites.SUJET",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     },
     {
      "name": "note",
@@ -976,7 +1472,13 @@
      "type": "text",
      "required": false,
      "unique": false,
-     "accounting": false
+     "accounting": false,
+     "provenance": {
+      "status": "deduced",
+      "observed": true,
+      "source": "activites.NOTE",
+      "basis": "jeu de test au format de l'Analyste"
+     }
     }
    ],
    "list_fields": [
@@ -992,7 +1494,14 @@
    ],
    "children": [],
    "computed": [],
-   "aggregates": []
+   "aggregates": [],
+   "provenance": {
+    "status": "deduced",
+    "observed": true,
+    "source": "activites",
+    "confidence": 0.95,
+    "basis": "jeu de test au format de l'Analyste"
+   }
   }
  ],
  "navigation": [
@@ -1114,5 +1623,681 @@
   "CREATE INDEX IF NOT EXISTS \"_audit_record\" ON \"_audit\" (\"entity\", \"record_id\")",
   "CREATE TABLE IF NOT EXISTS \"_users\" (\"id\" INTEGER PRIMARY KEY, \"username\" TEXT NOT NULL UNIQUE, \"password_hash\" TEXT NOT NULL, \"role\" TEXT NOT NULL CHECK (\"role\" IN ('admin', 'editor', 'viewer')), \"created_at\" TEXT NOT NULL, \"disabled\" INTEGER NOT NULL DEFAULT 0)",
   "CREATE TABLE IF NOT EXISTS \"_meta\" (\"key\" TEXT PRIMARY KEY, \"value\" TEXT NOT NULL)"
- ]
+ ],
+ "screens": [
+  {
+   "id": "dashboard",
+   "kind": "dashboard",
+   "note": "Indicateurs et répartitions calculés sur la base du logiciel"
+  },
+  {
+   "id": "clients.list",
+   "kind": "list",
+   "entity": "clients",
+   "fields": [
+    "code",
+    "raison_sociale",
+    "ville",
+    "categorie",
+    "etat"
+   ]
+  },
+  {
+   "id": "clients.detail",
+   "kind": "detail",
+   "entity": "clients",
+   "fields": [
+    "code",
+    "raison_sociale",
+    "siret",
+    "adresse",
+    "code_postal",
+    "ville",
+    "pays",
+    "telephone",
+    "email",
+    "categorie",
+    "etat",
+    "date_creation",
+    "commercial",
+    "remarques"
+   ]
+  },
+  {
+   "id": "clients.form",
+   "kind": "form",
+   "entity": "clients",
+   "fields": [
+    "code",
+    "raison_sociale",
+    "siret",
+    "adresse",
+    "code_postal",
+    "ville",
+    "pays",
+    "telephone",
+    "email",
+    "categorie",
+    "etat",
+    "date_creation",
+    "commercial",
+    "remarques"
+   ]
+  },
+  {
+   "id": "prospects.list",
+   "kind": "list",
+   "entity": "prospects",
+   "fields": [
+    "societe",
+    "nom",
+    "prenom",
+    "stade",
+    "origine",
+    "date_contact"
+   ]
+  },
+  {
+   "id": "prospects.detail",
+   "kind": "detail",
+   "entity": "prospects",
+   "fields": [
+    "societe",
+    "nom",
+    "prenom",
+    "email",
+    "telephone",
+    "origine",
+    "stade",
+    "date_contact",
+    "client"
+   ]
+  },
+  {
+   "id": "prospects.form",
+   "kind": "form",
+   "entity": "prospects",
+   "fields": [
+    "societe",
+    "nom",
+    "prenom",
+    "email",
+    "telephone",
+    "origine",
+    "stade",
+    "date_contact",
+    "client"
+   ]
+  },
+  {
+   "id": "articles.list",
+   "kind": "list",
+   "entity": "articles",
+   "fields": [
+    "reference",
+    "designation",
+    "famille",
+    "prix_ht",
+    "stock",
+    "actif"
+   ]
+  },
+  {
+   "id": "articles.detail",
+   "kind": "detail",
+   "entity": "articles",
+   "fields": [
+    "reference",
+    "designation",
+    "famille",
+    "prix_ht",
+    "tva",
+    "actif",
+    "stock"
+   ]
+  },
+  {
+   "id": "articles.form",
+   "kind": "form",
+   "entity": "articles",
+   "fields": [
+    "reference",
+    "designation",
+    "famille",
+    "prix_ht",
+    "tva",
+    "actif",
+    "stock"
+   ]
+  },
+  {
+   "id": "devis.list",
+   "kind": "list",
+   "entity": "devis",
+   "fields": [
+    "numero",
+    "date",
+    "client",
+    "statut",
+    "total_ttc"
+   ]
+  },
+  {
+   "id": "devis.detail",
+   "kind": "detail",
+   "entity": "devis",
+   "fields": [
+    "numero",
+    "client",
+    "date",
+    "statut",
+    "remise_pct",
+    "total_ht",
+    "total_tva",
+    "total_ttc"
+   ]
+  },
+  {
+   "id": "devis.form",
+   "kind": "form",
+   "entity": "devis",
+   "fields": [
+    "numero",
+    "client",
+    "date",
+    "statut",
+    "remise_pct"
+   ]
+  },
+  {
+   "id": "devis_lignes.list",
+   "kind": "list",
+   "entity": "devis_lignes",
+   "fields": [
+    "devis",
+    "article",
+    "quantite",
+    "prix_unitaire",
+    "remise_pct"
+   ]
+  },
+  {
+   "id": "devis_lignes.detail",
+   "kind": "detail",
+   "entity": "devis_lignes",
+   "fields": [
+    "devis",
+    "article",
+    "quantite",
+    "prix_unitaire",
+    "remise_pct",
+    "montant_ht"
+   ]
+  },
+  {
+   "id": "devis_lignes.form",
+   "kind": "form",
+   "entity": "devis_lignes",
+   "fields": [
+    "devis",
+    "article",
+    "quantite",
+    "remise_pct"
+   ]
+  },
+  {
+   "id": "factures.list",
+   "kind": "list",
+   "entity": "factures",
+   "fields": [
+    "numero",
+    "date",
+    "client",
+    "total_ttc",
+    "statut_paiement"
+   ]
+  },
+  {
+   "id": "factures.detail",
+   "kind": "detail",
+   "entity": "factures",
+   "fields": [
+    "numero",
+    "client",
+    "devis",
+    "date",
+    "echeance",
+    "taux_tva",
+    "total_ht",
+    "total_tva",
+    "total_ttc",
+    "statut_paiement"
+   ]
+  },
+  {
+   "id": "factures.form",
+   "kind": "form",
+   "entity": "factures",
+   "fields": [
+    "numero",
+    "client",
+    "devis",
+    "date",
+    "echeance",
+    "taux_tva",
+    "total_ht",
+    "total_tva",
+    "total_ttc",
+    "statut_paiement"
+   ]
+  },
+  {
+   "id": "factures_lignes.list",
+   "kind": "list",
+   "entity": "factures_lignes",
+   "fields": [
+    "facture",
+    "article",
+    "quantite",
+    "prix_unitaire"
+   ]
+  },
+  {
+   "id": "factures_lignes.detail",
+   "kind": "detail",
+   "entity": "factures_lignes",
+   "fields": [
+    "facture",
+    "article",
+    "quantite",
+    "prix_unitaire"
+   ]
+  },
+  {
+   "id": "factures_lignes.form",
+   "kind": "form",
+   "entity": "factures_lignes",
+   "fields": [
+    "facture",
+    "article",
+    "quantite",
+    "prix_unitaire"
+   ]
+  },
+  {
+   "id": "paiements.list",
+   "kind": "list",
+   "entity": "paiements",
+   "fields": [
+    "date",
+    "facture",
+    "montant",
+    "mode"
+   ]
+  },
+  {
+   "id": "paiements.detail",
+   "kind": "detail",
+   "entity": "paiements",
+   "fields": [
+    "facture",
+    "date",
+    "montant",
+    "mode"
+   ]
+  },
+  {
+   "id": "paiements.form",
+   "kind": "form",
+   "entity": "paiements",
+   "fields": [
+    "facture",
+    "date",
+    "montant",
+    "mode"
+   ]
+  },
+  {
+   "id": "activites.list",
+   "kind": "list",
+   "entity": "activites",
+   "fields": [
+    "date",
+    "type",
+    "sujet",
+    "client",
+    "prospect"
+   ]
+  },
+  {
+   "id": "activites.detail",
+   "kind": "detail",
+   "entity": "activites",
+   "fields": [
+    "client",
+    "prospect",
+    "date",
+    "type",
+    "sujet",
+    "note"
+   ]
+  },
+  {
+   "id": "activites.form",
+   "kind": "form",
+   "entity": "activites",
+   "fields": [
+    "client",
+    "prospect",
+    "date",
+    "type",
+    "sujet",
+    "note"
+   ]
+  },
+  {
+   "id": "admin",
+   "kind": "admin",
+   "note": "Utilisateurs, sauvegardes, journal d'audit"
+  }
+ ],
+ "actions": [
+  {
+   "entity": "clients",
+   "action": "create",
+   "available": true
+  },
+  {
+   "entity": "clients",
+   "action": "update",
+   "available": true
+  },
+  {
+   "entity": "clients",
+   "action": "delete",
+   "available": true
+  },
+  {
+   "entity": "clients",
+   "action": "export",
+   "available": true
+  },
+  {
+   "entity": "clients",
+   "action": "attach",
+   "available": true
+  },
+  {
+   "entity": "prospects",
+   "action": "create",
+   "available": true
+  },
+  {
+   "entity": "prospects",
+   "action": "update",
+   "available": true
+  },
+  {
+   "entity": "prospects",
+   "action": "delete",
+   "available": true
+  },
+  {
+   "entity": "prospects",
+   "action": "export",
+   "available": true
+  },
+  {
+   "entity": "prospects",
+   "action": "attach",
+   "available": true
+  },
+  {
+   "entity": "articles",
+   "action": "create",
+   "available": true
+  },
+  {
+   "entity": "articles",
+   "action": "update",
+   "available": true
+  },
+  {
+   "entity": "articles",
+   "action": "delete",
+   "available": true
+  },
+  {
+   "entity": "articles",
+   "action": "export",
+   "available": true
+  },
+  {
+   "entity": "articles",
+   "action": "attach",
+   "available": true
+  },
+  {
+   "entity": "devis",
+   "action": "create",
+   "available": true
+  },
+  {
+   "entity": "devis",
+   "action": "update",
+   "available": true,
+   "note": "Enregistrements historiques : montants, dates et numéros protégés"
+  },
+  {
+   "entity": "devis",
+   "action": "delete",
+   "available": true,
+   "note": "Interdit pour l'historique protégé ; possible pour les enregistrements créés ici"
+  },
+  {
+   "entity": "devis",
+   "action": "export",
+   "available": true
+  },
+  {
+   "entity": "devis",
+   "action": "attach",
+   "available": true
+  },
+  {
+   "entity": "devis",
+   "action": "reprice",
+   "available": true,
+   "note": "Recalcul explicite avec la version active du modèle (documents créés ici seulement)"
+  },
+  {
+   "entity": "devis_lignes",
+   "action": "create",
+   "available": true
+  },
+  {
+   "entity": "devis_lignes",
+   "action": "update",
+   "available": true
+  },
+  {
+   "entity": "devis_lignes",
+   "action": "delete",
+   "available": true
+  },
+  {
+   "entity": "devis_lignes",
+   "action": "export",
+   "available": true
+  },
+  {
+   "entity": "devis_lignes",
+   "action": "attach",
+   "available": true
+  },
+  {
+   "entity": "factures",
+   "action": "create",
+   "available": true
+  },
+  {
+   "entity": "factures",
+   "action": "update",
+   "available": true,
+   "note": "Enregistrements historiques : montants, dates et numéros protégés"
+  },
+  {
+   "entity": "factures",
+   "action": "delete",
+   "available": true,
+   "note": "Interdit pour l'historique protégé ; possible pour les enregistrements créés ici"
+  },
+  {
+   "entity": "factures",
+   "action": "export",
+   "available": true
+  },
+  {
+   "entity": "factures",
+   "action": "attach",
+   "available": true
+  },
+  {
+   "entity": "factures_lignes",
+   "action": "create",
+   "available": true
+  },
+  {
+   "entity": "factures_lignes",
+   "action": "update",
+   "available": true,
+   "note": "Enregistrements historiques : montants, dates et numéros protégés"
+  },
+  {
+   "entity": "factures_lignes",
+   "action": "delete",
+   "available": true,
+   "note": "Interdit pour l'historique protégé ; possible pour les enregistrements créés ici"
+  },
+  {
+   "entity": "factures_lignes",
+   "action": "export",
+   "available": true
+  },
+  {
+   "entity": "factures_lignes",
+   "action": "attach",
+   "available": true
+  },
+  {
+   "entity": "paiements",
+   "action": "create",
+   "available": true
+  },
+  {
+   "entity": "paiements",
+   "action": "update",
+   "available": true,
+   "note": "Enregistrements historiques : montants, dates et numéros protégés"
+  },
+  {
+   "entity": "paiements",
+   "action": "delete",
+   "available": true,
+   "note": "Interdit pour l'historique protégé ; possible pour les enregistrements créés ici"
+  },
+  {
+   "entity": "paiements",
+   "action": "export",
+   "available": true
+  },
+  {
+   "entity": "paiements",
+   "action": "attach",
+   "available": true
+  },
+  {
+   "entity": "activites",
+   "action": "create",
+   "available": true
+  },
+  {
+   "entity": "activites",
+   "action": "update",
+   "available": true
+  },
+  {
+   "entity": "activites",
+   "action": "delete",
+   "available": true
+  },
+  {
+   "entity": "activites",
+   "action": "export",
+   "available": true
+  },
+  {
+   "entity": "activites",
+   "action": "attach",
+   "available": true
+  }
+ ],
+ "rules": {
+  "versions": [
+   {
+    "version": 1,
+    "source": "fixture",
+    "modules": [
+     "devis.ligne",
+     "devis.document"
+    ],
+    "history_check": "Modèle métier v1 rejoué sur 1796 enregistrement(s) historique(s) : 1772 identique(s) au centime aux montants enregistrés dans l'ancien logiciel, 24 avec un écart d'arrondi (≤ 2 centimes), 0 différent(s), 0 non calculable(s). Les montants historiques ne sont pas modifiés. Cette mesure porte sur les données migrées ; elle ne garantit pas le comportement dans des cas absents de l'historique."
+   }
+  ],
+  "bindings": [
+   {
+    "id": "devis-lignes",
+    "entity": "devis_lignes",
+    "scope": "line",
+    "module": "devis.ligne",
+    "outputs": [
+     "prix_unitaire",
+     "montant_ht"
+    ]
+   },
+   {
+    "id": "devis",
+    "entity": "devis",
+    "scope": "document",
+    "module": "devis.document",
+    "outputs": [
+     "total_ht",
+     "total_tva",
+     "total_ttc"
+    ]
+   }
+  ]
+ },
+ "workflows": [],
+ "not_rebuilt": [
+  {
+   "kind": "table",
+   "name": "Commissions commerciales (CSV)",
+   "reason": "Export refusé au compte fourni par le propriétaire : données non récupérées (aucune tentative de contournement)"
+  },
+  {
+   "kind": "table",
+   "name": "Sauvegarde complète (SQL)",
+   "reason": "Export refusé au compte fourni par le propriétaire : données non récupérées (aucune tentative de contournement)"
+  }
+ ],
+ "provenance": {
+  "mapping_version": 1,
+  "mapping_origin": "jeu de test au format de l'Analyste",
+  "migration_run": "RUN_001",
+  "business_model_versions": [
+   1
+  ],
+  "statement": "Spécification déduite des données réellement extraites, des correspondances et du modèle métier validés. Les éléments listés dans not_rebuilt ne sont pas reconstruits."
+ }
 }

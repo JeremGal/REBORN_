@@ -1,4 +1,8 @@
 {
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat migration_mapping 1.0.",
+  "title": "migration_mapping",
+  "description": "Correspondances ancien → nouveau (Analyste / Alan → Studio), avec confiance et protection de l'historique.",
+  "x-contract-version": "1.0",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
@@ -430,6 +434,56 @@
               ],
               "additionalProperties": false
             }
+          },
+          "classification": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "financial",
+                  "commercial",
+                  "line",
+                  "master",
+                  "other"
+                ]
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "parent": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,59}$"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "confidence"
+            ],
+            "additionalProperties": false
+          },
+          "line_of": {
+            "type": "object",
+            "properties": {
+              "entity": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,59}$"
+              },
+              "via": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,59}$"
+              }
+            },
+            "required": [
+              "entity",
+              "via"
+            ],
+            "additionalProperties": false
           },
           "ui": {
             "type": "object",

@@ -156,3 +156,24 @@ export async function runHttpExtraction(plan: ExtractionPlan, opts: { baseUrl?: 
     not_extractable: plan.not_extractable ?? [],
   };
 }
+
+/**
+ * Test de connexion seul (aucun export téléchargé) pour un logiciel dont le plan décrit une
+ * connexion par formulaire. Sans plan de connexion, REBORN ne peut pas tester lui-même : c'est
+ * l'agent Computer Use (Mouss) qui établit la connexion et en rapporte l'état.
+ */
+export async function testHttpLogin(plan: ExtractionPlan, opts: { baseUrl?: string; username?: string; password?: string; timeoutMs?: number }): Promise<{ ok: true; detail: string }> {
+  if (!plan.login) throw new Error("Ce plan ne décrit pas de connexion par formulaire : la connexion doit être établie par l'agent");
+  const base = new URL(opts.baseUrl ?? plan.base_url ?? "");
+  if (!/^https?:$/.test(base.protocol)) throw new Error("Adresse du logiciel source invalide (http ou https)");
+  if (!opts.username || !opts.password) throw new Error("Identifiants requis : confiez-les au projet");
+  const url = new URL(plan.login.url, base);
+  if (url.origin !== base.origin) throw new Error(`URL hors du logiciel source refusée : ${url.origin}`);
+  const body = new URLSearchParams({ [plan.login.username_field]: opts.username, [plan.login.password_field]: opts.password });
+  const res = await fetch(url, { method: "POST", body, redirect: "manual", signal: AbortSignal.timeout(opts.timeoutMs ?? 15000) });
+  const cookies = res.headers.getSetCookie().map((c) => c.split(";")[0]);
+  const wanted = plan.login.session_cookie;
+  const ok = res.status < 400 && (wanted ? cookies.some((c) => c.startsWith(`${wanted}=`)) : cookies.length > 0);
+  if (!ok) throw new Error(`Connexion refusée par le logiciel source (HTTP ${res.status})`);
+  return { ok: true, detail: `Session ouverte sur ${base.origin} avec le compte ${maskAccount(opts.username)}` };
+}

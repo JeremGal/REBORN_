@@ -23,7 +23,9 @@ let creds: { migration: { password: string }; admin: { password: string } };
 let project: typeof import("@/lib/migration/project");
 let generate: typeof import("@/lib/migration/generate");
 let fixtures: typeof import("@/lib/migration/fixtures");
+let history: typeof import("@/lib/migration/rules-history");
 let legacyDb: DatabaseSync;
+let quote1 = { id: 0, total_ht: 0, total_tva: 0, total_ttc: 0 };
 
 const freePort = () =>
   new Promise<number>((resolve) => {
@@ -67,6 +69,7 @@ beforeAll(async () => {
   project = await import("@/lib/migration/project");
   generate = await import("@/lib/migration/generate");
   fixtures = await import("@/lib/migration/fixtures");
+  history = await import("@/lib/migration/rules-history");
 }, 30000);
 
 afterAll(async () => {
@@ -192,16 +195,64 @@ describe("Migration Relatio 2004 → nouveau CRM", () => {
     expect(failed).toEqual(expect.arrayContaining(["volumes.clients", "enregistrements.clients", "enregistrements.factures", "montants.factures.total_ttc"]));
   });
 
+  it("vérifie le modèle métier sur les devis historiques et n'installe qu'une version validée", () => {
+    const meta = project.publishBusinessModel(fixtures.CRM_FIXTURES.business_model, "fixture", "jeu de test");
+    expect(meta.status).toBe("proposed");
+    expect(meta.issues.filter((i) => i.level === "error")).toEqual([]);
+    const { mapping } = project.runArtifacts(runId);
+    const check = history.checkRulesOnHistory(project.businessModelPackage(meta.version), mapping, path.join(project.runDir(runId), "target.db"), runId);
+    const devis = check.bindings.find((b) => b.id === "devis")!;
+    // Devis dont des lignes ont été rejetées à la migration (articles introuvables) : leurs totaux
+    // enregistrés ne peuvent pas être retrouvés à partir des seules lignes migrées
+    const incomplete = Number(
+      (legacyDb.prepare(`SELECT COUNT(DISTINCT ID_DEV) AS n FROM T_DEVIS_LIGNE WHERE ID_ART NOT IN (SELECT ID_ART FROM T_ARTICLE)`).get() as { n: number }).n,
+    );
+    expect(devis.checked).toBe((project.runArtifacts(runId).result.entities.find((e) => e.entity === "devis")?.imported ?? 0) as number);
+    expect(devis.not_computable).toBe(0);
+    expect(devis.different).toBeLessThanOrEqual(incomplete);
+    expect(devis.identical + devis.rounding + devis.different).toBe(devis.checked);
+    // Relatio arrondit en virgule flottante : quelques écarts d'un centime, signalés comme tels
+    expect(devis.identical / devis.checked).toBeGreaterThan(0.95);
+    expect(devis.samples.filter((s) => s.reason === "écart").length).toBe(0);
+    // Une version reçue n'est pas installée tant qu'un responsable ne l'a pas validée
+    expect(project.validatedBusinessModels()).toEqual([]);
+    project.decideBusinessModel(meta.version, "validated", "Jerem", "Rejoué sur l'historique migré");
+    expect(project.validatedBusinessModels().map((p) => p.version)).toEqual([meta.version]);
+  });
+
   it("refuse la mise en service tant que les écarts ne sont pas acceptés, puis génère un CRM autonome", async () => {
     await expect(generate.deploy(runId, "Jerem")).rejects.toThrow(/acceptés/);
     project.acknowledge(runId, "Jerem", "Écarts examinés : clients sans raison sociale à ressaisir, pièces perdues confirmées");
     const out = await generate.deploy(runId, "Jerem");
     expect(out.url).toBe(crmUrl);
     const dir = path.join(process.env.REBORN_APPS_DIR!, "morel-crm");
-    for (const f of ["server.mjs", "app.json", "package.json", "README.md", "data/app.db", "public/app.js", "lib/expr.mjs"]) expect(fs.existsSync(path.join(dir, f))).toBe(true);
+    for (const f of ["server.mjs", "app.json", "package.json", "README.md", "data/app.db", "public/app.js", "lib/expr.mjs", "lib/engine/engine.mjs", "rules/v1.json"]) expect(fs.existsSync(path.join(dir, f))).toBe(true);
     // Le logiciel livré ne dépend d'aucun fichier de REBORN
     const server = fs.readFileSync(path.join(dir, "server.mjs"), "utf8");
     expect(server).not.toMatch(/platform\/|legacy-crm|\.\.\/src/);
+  });
+
+  it("décrit le logiciel reconstruit dans le contrat ApplicationSpec (provenance, règles, éléments non reconstruits)", async () => {
+    const { ApplicationSpecSchema } = await import("@/lib/migration/application-spec");
+    const spec = JSON.parse(fs.readFileSync(path.join(process.env.REBORN_APPS_DIR!, "morel-crm", "app.json"), "utf8"));
+    const parsed = ApplicationSpecSchema.safeParse(spec);
+    expect(parsed.success, JSON.stringify(parsed.error?.issues?.slice(0, 3))).toBe(true);
+    expect(spec.spec_version).toBe("1.1");
+    const devis = spec.entities.find((e: { name: string }) => e.name === "devis");
+    expect(devis.provenance).toMatchObject({ status: "deduced", observed: true, source: "devis" });
+    // Champs observés dans l'export, validés par décision humaine quand ils étaient incertains
+    expect(spec.entities.flatMap((e: { fields: { provenance: { status: string } }[] }) => e.fields).some((f: { provenance: { status: string } }) => f.provenance.status === "validated")).toBe(true);
+    expect(devis.fields.find((f: { name: string }) => f.name === "total_ht")).toMatchObject({ computed_by_rules: true });
+    expect(spec.entities.find((e: { name: string }) => e.name === "devis_lignes").fields.find((f: { name: string }) => f.name === "montant_ht")).toMatchObject({ computed_by_rules: true, provenance: { status: "validated", observed: false } });
+    expect(spec.rules.versions.map((v: { version: number }) => v.version)).toEqual([1]);
+    expect(spec.rules.versions[0].history_check ?? "").toBe("");
+    expect(spec.rules.bindings.map((b: { id: string }) => b.id)).toEqual(["devis-lignes", "devis"]);
+    expect(spec.actions.find((a: { entity: string; action: string }) => a.entity === "devis" && a.action === "reprice")).toMatchObject({ available: true });
+    // Tables extraites sans correspondance : listées comme non reconstruites, jamais ignorées en silence
+    expect(spec.not_rebuilt.length).toBeGreaterThan(0);
+    expect(spec.not_rebuilt.some((x: { reason: string }) => /refusé au compte/.test(x.reason))).toBe(true);
+    expect(spec.not_rebuilt.every((x: { reason: string }) => x.reason.length > 10)).toBe(true);
+    expect(spec.screens.some((x: { kind: string }) => x.kind === "form")).toBe(true);
   });
 
   it("le nouveau CRM sert exactement les enregistrements migrés, avec leurs relations", async () => {
@@ -250,18 +301,71 @@ describe("Migration Relatio 2004 → nouveau CRM", () => {
     expect((await crm("PUT", `/api/e/factures/${f.id}`, { total_ttc: f.total_ttc + 100 })).status).toBe(409);
     expect((await crm("DELETE", `/api/e/factures/${f.id}`)).status).toBe(409);
     expect((await crm("POST", "/api/e/factures_lignes", { facture: f.id, quantite: 1, prix_unitaire: 100 })).status).toBe(409);
-    // Nouveau devis : règles reproduites (HT = somme des lignes, TVA 20 %, TTC = HT + TVA)
-    const q = await crm("POST", "/api/e/devis", { numero: "D2026-00001", client: created.body.id, date: "2026-11-07", statut: "brouillon" });
+    // Nouveau devis : calculé côté serveur par le modèle métier validé (v1) — prix du catalogue,
+    // remises de ligne et globale, TVA selon la date, TTC. Aucune formule dans l'interface.
+    const q = await crm("POST", "/api/e/devis", { numero: "D2026-00001", client: created.body.id, date: "2026-11-07", statut: "brouillon", remise_pct: 5 });
     expect(q.status).toBe(201);
-    await crm("POST", "/api/e/devis_lignes", { devis: q.body.id, article: 1, quantite: 3, prix_unitaire: 12550, remise_pct: 0 });
-    await crm("POST", "/api/e/devis_lignes", { devis: q.body.id, article: 2, quantite: 2, prix_unitaire: 1000, remise_pct: 10 });
+    expect(q.body._rules_version).toBe(1);
+    const a1 = (await crm("GET", "/api/e/articles/1")).body.record;
+    const a2 = (await crm("GET", "/api/e/articles/2")).body.record;
+    const l1 = await crm("POST", "/api/e/devis_lignes", { devis: q.body.id, article: 1, quantite: 3, remise_pct: 0 });
+    expect(l1.status).toBe(201);
+    expect(l1.body).toMatchObject({ prix_unitaire: a1.prix_ht, montant_ht: 3 * a1.prix_ht, _rules_version: 1 });
+    const l2 = await crm("POST", "/api/e/devis_lignes", { devis: q.body.id, article: 2, quantite: 2, remise_pct: 10 });
+    expect(l2.body).toMatchObject({ prix_unitaire: a2.prix_ht, montant_ht: Math.round((2 * a2.prix_ht * 90) / 100) });
+    const ht = Math.round(((l1.body.montant_ht + l2.body.montant_ht) * 95) / 100);
     const qd = (await crm("GET", `/api/e/devis/${q.body.id}`)).body.record;
-    expect(qd).toMatchObject({ total_ht: 37650 + 1800, total_tva: Math.round((39450 * 20) / 100), total_ttc: 39450 + 7890 });
+    expect(qd).toMatchObject({ total_ht: ht, total_tva: Math.round((ht * 20) / 100), total_ttc: ht + Math.round((ht * 20) / 100), _rules_version: 1 });
+    quote1 = { id: q.body.id, total_ht: qd.total_ht, total_tva: qd.total_tva, total_ttc: qd.total_ttc };
+    // Un montant calculé par le modèle ne se saisit pas à la main (contrôle côté serveur)
+    expect((await crm("PUT", `/api/e/devis/${q.body.id}`, { total_ht: 1 })).status).toBe(400);
+    // Devis historique : jamais recalculé, ni complété, ni modifié dans ses éléments de calcul
+    const hist = (await crm("GET", "/api/e/devis?_migrated=1&per=1")).body.rows[0];
+    expect((await crm("POST", "/api/e/devis_lignes", { devis: hist.id, article: 1, quantite: 1, remise_pct: 0 })).status).toBe(409);
+    expect((await crm("PUT", `/api/e/devis/${hist.id}`, { remise_pct: 50 })).status).toBe(409);
+    expect((await crm("GET", `/api/e/devis/${hist.id}`)).body.record).toMatchObject({ total_ht: hist.total_ht, remise_pct: hist.remise_pct });
     const audit = (await crm("GET", "/api/admin/audit")).body as { action: string; justification: string | null }[];
     expect(audit.some((a) => a.action === "update" && a.justification === "Déménagement")).toBe(true);
     // Écriture depuis une autre origine refusée
     const csrf = await fetch(`${crmUrl}/api/e/clients/1`, { method: "PUT", headers: { cookie, origin: "https://evil.example", "content-type": "application/json" }, body: "{}" });
     expect(csrf.status).toBe(403);
+  });
+
+  it("applique une nouvelle version du modèle métier aux nouveaux devis, sans toucher aux précédents", async () => {
+    // v2 (modification de test) : remise volume de 5 % dès 10 unités
+    const v2 = structuredClone(fixtures.CRM_FIXTURES.business_model) as typeof fixtures.CRM_FIXTURES.business_model;
+    (v2.modules["devis.ligne"].rules as unknown[]).push({ id: "DL-03", type: "quantity_discount", description: "Remise volume (modification de test) : 5 % dès 10 unités", condition: { quantity_gte: 10 }, action: { discount_percent: 5 } });
+    const meta = project.publishBusinessModel(v2, "fixture", "test");
+    expect(meta.version).toBe(2);
+    project.decideBusinessModel(meta.version, "validated", "Jerem", "Remise volume validée");
+    const out = await generate.publishRulesToApp("morel-crm", project.businessModelPackage(meta.version));
+    expect(out).toMatchObject({ running: true, active_version: 2 });
+    const a1 = (await crm("GET", "/api/e/articles/1")).body.record;
+    const q2 = await crm("POST", "/api/e/devis", { numero: "D2026-00002", client: 1, date: "2026-11-07", statut: "brouillon", remise_pct: 0 });
+    expect(q2.body._rules_version).toBe(2);
+    const l = await crm("POST", "/api/e/devis_lignes", { devis: q2.body.id, article: 1, quantite: 10, remise_pct: 0 });
+    expect(l.body).toMatchObject({ montant_ht: Math.round((10 * a1.prix_ht * 95) / 100), _rules_version: 2 });
+    // Le premier devis garde ses montants et sa version ; une ligne ajoutée y est calculée en v1
+    expect((await crm("GET", `/api/e/devis/${quote1.id}`)).body.record).toMatchObject({ ...quote1, _rules_version: 1 });
+    const l1 = await crm("POST", "/api/e/devis_lignes", { devis: quote1.id, article: 1, quantite: 10, remise_pct: 0 });
+    expect(l1.body).toMatchObject({ montant_ht: 10 * a1.prix_ht, _rules_version: 1 });
+    const rules = (await crm("GET", "/api/rules")).body;
+    expect(rules.active_version).toBe(2);
+    expect(rules.versions.map((v: { version: number }) => v.version)).toEqual([1, 2]);
+  });
+
+  it("met à jour le logiciel livré (moteur, spécification) sans toucher à ses données", async () => {
+    const before = (await crm("GET", "/api/e/clients?q=C09001")).body.total;
+    expect(before).toBe(1);
+    const q1Before = (await crm("GET", `/api/e/devis/${quote1.id}`)).body.record;
+    const out = await generate.upgradeApp("Jerem");
+    expect(out.backup).toMatch(/avant-mise-a-jour\.db$/);
+    expect(fs.existsSync(path.join(process.env.REBORN_APPS_DIR!, "morel-crm", "backups", out.backup))).toBe(true);
+    cookie = "";
+    expect((await crm("POST", "/api/auth/login", { username: "admin", password: JSON.parse(fs.readFileSync(path.join(process.env.REBORN_APPS_DIR!, "morel-crm/.secrets/admin.json"), "utf8")).password })).status).toBe(200);
+    expect((await crm("GET", "/api/e/clients?q=C09001")).body.total).toBe(1);
+    expect((await crm("GET", `/api/e/devis/${quote1.id}`)).body.record).toMatchObject({ total_ht: q1Before.total_ht, total_ttc: q1Before.total_ttc, _rules_version: 1 });
+    expect((await crm("GET", "/api/rules")).body.active_version).toBe(2);
   });
 
   it("réconcilie le logiciel en service avec la source, en isolant les modifications des utilisateurs", () => {

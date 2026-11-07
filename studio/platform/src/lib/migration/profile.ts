@@ -1,5 +1,6 @@
 import type { RawTable, RawValue } from "./formats";
 import { sourceKey } from "./transforms";
+import { FLAG_NAME } from "./labels";
 
 /**
  * Analyse de structure : types de colonnes, formats, clés, relations probables, entités.
@@ -106,6 +107,11 @@ export function profileColumn(name: string, values: RawValue[]): ColumnProfile {
 
   const bool = score((s, raw) => typeof raw === "boolean" || BOOL.has(s.toLowerCase()));
   if (bool.ratio === 1 && counts.size <= 2) return pick("boolean", bool);
+  // Indicateur 0/1 dont le nom l'annonce (paid, active, is_…) : oui/non plutôt qu'un entier
+  if (FLAG_NAME.test(name)) {
+    const flag = score((s) => s === "0" || s === "1");
+    if (flag.ratio === 1) return pick("boolean", flag);
+  }
 
   const int = score((s, raw) => (typeof raw === "number" ? Number.isInteger(raw) : RE.integer.test(s)));
   if (int.ratio >= 0.98) return pick("integer", int);

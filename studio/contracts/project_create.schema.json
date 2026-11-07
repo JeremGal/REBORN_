@@ -1,0 +1,79 @@
+{
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat project_create 1.0.",
+  "title": "project_create",
+  "description": "Création d'un projet de migration (propriétaire → Studio). Les identifiants sont chiffrés et jamais renvoyés.",
+  "x-contract-version": "1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "company": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "software": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "legacy_url": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "string",
+          "const": ""
+        }
+      ]
+    },
+    "software_type": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "authorized": {
+      "type": "boolean",
+      "const": true
+    },
+    "authorized_by": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "credentials": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "password": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "ttl_hours": {
+          "type": "number",
+          "minimum": 0.25,
+          "maximum": 168
+        }
+      },
+      "required": [
+        "username",
+        "password"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "company",
+    "authorized",
+    "authorized_by"
+  ],
+  "additionalProperties": false
+}

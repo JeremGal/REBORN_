@@ -115,6 +115,22 @@ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..")
 const CRM = process.env.CRM_URL ?? "http://127.0.0.1:5050";
 const clickText = (tag, txt) => evaluate(`(() => { const b = [...document.querySelectorAll(${JSON.stringify(tag)})].find(x => x.textContent.trim().includes(${JSON.stringify(txt)}) && !x.disabled); if (!b) return false; b.click(); return true; })()`);
 
+/** Le test crée une fiche dans le logiciel livré : il la retire à la fin pour ne laisser aucune donnée fictive. */
+const TEST_CODE = "C09500";
+async function removeTestRecords() {
+  try {
+    const { password } = JSON.parse(fs.readFileSync(path.join(ROOT, "generated/morel-crm/.secrets/admin.json"), "utf8"));
+    const h = { "content-type": "application/json", origin: CRM };
+    const login = await fetch(`${CRM}/api/auth/login`, { method: "POST", headers: h, body: JSON.stringify({ username: "admin", password }) });
+    if (!login.ok) return;
+    const cookie = login.headers.get("set-cookie").split(";")[0];
+    const list = await (await fetch(`${CRM}/api/e/clients?q=${TEST_CODE}`, { headers: { cookie } })).json();
+    for (const r of (list.rows ?? []).filter((x) => x.code === TEST_CODE && !x._migrated))
+      await fetch(`${CRM}/api/e/clients/${r.id}`, { method: "DELETE", headers: { ...h, cookie } });
+    await fetch(`${CRM}/api/auth/logout`, { method: "POST", headers: { ...h, cookie } });
+  } catch {}
+}
+
 try {
   await connect();
   await send("Page.enable");
@@ -186,7 +202,7 @@ try {
   check("CRM · facture historique verrouillée", await hasText("Document comptable historique"));
   await shot("crm-3-facture");
   await goto(`${CRM}/#/e/clients/new`);
-  await typeInto('input[name="code"]', "C09500");
+  await typeInto('input[name="code"]', TEST_CODE);
   await typeInto('input[name="raison_sociale"]', "Société créée en e2e");
   await clickText("button", "Créer");
   check("CRM · création d'un vrai enregistrement", await hasText("créé dans ce logiciel"));
@@ -198,6 +214,7 @@ try {
 } catch (e) {
   check("Exécution du parcours", false, e.message);
 } finally {
+  await removeTestRecords();
   ws?.close();
   chrome.kill();
   // Chrome écrit encore dans son profil pendant l'arrêt : on attend sa sortie avant de nettoyer

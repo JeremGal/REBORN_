@@ -1,0 +1,280 @@
+{
+  "contract_version": "1.0",
+  "source_system": "Relatio 2004",
+  "notes": "JEU DE TEST au format du contrat business_model, c'est-à-dire ce que produira l'Analyste (Alan). Écrit à la main pour le logiciel de test Relatio 2004 en attendant son module. REBORN ne l'invente pas et ne le croit pas sur parole : il le rejoue sur les devis historiques migrés (vérification sur l'historique) avant qu'un responsable le valide.",
+  "modules": {
+    "devis.ligne": {
+      "module": "devis.ligne",
+      "application": "Relatio 2004",
+      "settings": {
+        "rounding": {
+          "decimals": 2,
+          "mode": "half_up",
+          "at": "end"
+        },
+        "currency": "EUR",
+        "output_field": "total_price",
+        "discount_stacking": "compound"
+      },
+      "inputs": [
+        {
+          "name": "quantity",
+          "label": "Quantité",
+          "type": "number",
+          "integer": true,
+          "min": 1,
+          "max": 100000,
+          "required": true
+        },
+        {
+          "name": "prix_unitaire",
+          "label": "Prix unitaire HT",
+          "type": "number",
+          "min": 0,
+          "required": true
+        },
+        {
+          "name": "remise_ligne",
+          "label": "Remise de ligne (%)",
+          "type": "number",
+          "min": 0,
+          "max": 100,
+          "required": false,
+          "default": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "total_price",
+          "label": "Montant HT de la ligne",
+          "format": "currency",
+          "primary": true
+        }
+      ],
+      "rules": [
+        {
+          "id": "DL-01",
+          "type": "unit_price",
+          "description": "Prix unitaire de la ligne : prix déjà fixé sur la ligne, sinon prix du catalogue",
+          "action": {
+            "unit_price": "prix_unitaire"
+          },
+          "confidence": 0.95,
+          "validation_status": "hypothesis"
+        },
+        {
+          "id": "DL-02",
+          "type": "line_discount",
+          "description": "Remise de ligne en pourcentage",
+          "condition": {
+            "remise_ligne_gt": 0
+          },
+          "action": {
+            "discount_percent": "remise_ligne"
+          },
+          "confidence": 0.95,
+          "validation_status": "hypothesis"
+        }
+      ]
+    },
+    "devis.document": {
+      "module": "devis.document",
+      "application": "Relatio 2004",
+      "settings": {
+        "rounding": {
+          "decimals": 2,
+          "mode": "half_up",
+          "at": "each_step"
+        },
+        "currency": "EUR",
+        "output_field": "total_price",
+        "discount_stacking": "compound"
+      },
+      "inputs": [
+        {
+          "name": "lignes_ht",
+          "label": "Somme des lignes HT",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "remise_document",
+          "label": "Remise globale (%)",
+          "type": "number",
+          "min": 0,
+          "max": 100,
+          "required": false,
+          "default": 0
+        },
+        {
+          "name": "date_num",
+          "label": "Date du devis (AAAAMMJJ)",
+          "type": "number",
+          "integer": true,
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "total_price",
+          "label": "Total HT",
+          "format": "currency",
+          "primary": true
+        },
+        {
+          "name": "total_tva",
+          "label": "TVA",
+          "format": "currency"
+        },
+        {
+          "name": "total_ttc",
+          "label": "Total TTC",
+          "format": "currency"
+        }
+      ],
+      "rules": [
+        {
+          "id": "DD-01",
+          "type": "unit_price",
+          "description": "Base HT = somme des lignes",
+          "action": {
+            "unit_price": "lignes_ht"
+          },
+          "confidence": 0.95,
+          "validation_status": "hypothesis"
+        },
+        {
+          "id": "DD-02",
+          "type": "document_discount",
+          "stage": "discount",
+          "description": "Remise globale du devis",
+          "condition": {
+            "remise_document_gt": 0
+          },
+          "action": {
+            "discount_percent": "remise_document"
+          },
+          "confidence": 0.9,
+          "validation_status": "hypothesis"
+        },
+        {
+          "id": "DD-03",
+          "type": "tax_rate",
+          "stage": "adjust",
+          "group": "taux_tva",
+          "priority": 1,
+          "description": "TVA 19,6 % avant le 1er janvier 2014",
+          "condition": {
+            "date_num_lt": 20140101
+          },
+          "action": {
+            "set": {
+              "taux_tva": 19.6
+            }
+          },
+          "confidence": 0.9,
+          "validation_status": "hypothesis"
+        },
+        {
+          "id": "DD-04",
+          "type": "tax_rate",
+          "stage": "adjust",
+          "group": "taux_tva",
+          "priority": 2,
+          "description": "TVA 20 % à partir du 1er janvier 2014",
+          "action": {
+            "set": {
+              "taux_tva": 20
+            }
+          },
+          "confidence": 0.9,
+          "validation_status": "hypothesis"
+        },
+        {
+          "id": "DD-05",
+          "type": "tax",
+          "stage": "adjust",
+          "priority": 3,
+          "description": "TVA = total HT × taux",
+          "action": {
+            "set": {
+              "total_tva": "round(total_price * taux_tva / 100, 2)"
+            }
+          },
+          "confidence": 0.9,
+          "validation_status": "hypothesis"
+        },
+        {
+          "id": "DD-06",
+          "type": "total",
+          "stage": "adjust",
+          "priority": 4,
+          "description": "TTC = HT + TVA",
+          "action": {
+            "set": {
+              "total_ttc": "round(total_price + total_tva, 2)"
+            }
+          },
+          "confidence": 0.95,
+          "validation_status": "hypothesis"
+        }
+      ]
+    }
+  },
+  "bindings": [
+    {
+      "id": "devis-lignes",
+      "module": "devis.ligne",
+      "scope": "line",
+      "entity": "devis_lignes",
+      "document": {
+        "entity": "devis",
+        "via": "devis"
+      },
+      "inputs": {
+        "quantity": "quantite",
+        "prix_unitaire": [
+          "prix_unitaire",
+          "article.prix_ht"
+        ],
+        "remise_ligne": "remise_pct"
+      },
+      "outputs": {
+        "unit_price": "prix_unitaire",
+        "total_price": "montant_ht"
+      },
+      "fields": [
+        {
+          "name": "montant_ht",
+          "label": "Montant HT",
+          "type": "money"
+        }
+      ],
+      "note": "Une nouvelle ligne prend le prix du catalogue de l'article ; ce prix reste ensuite fixé sur la ligne."
+    },
+    {
+      "id": "devis",
+      "module": "devis.document",
+      "scope": "document",
+      "entity": "devis",
+      "lines": {
+        "entity": "devis_lignes",
+        "via": "devis"
+      },
+      "inputs": {
+        "lignes_ht": {
+          "sum": "devis_lignes.montant_ht"
+        },
+        "remise_document": "remise_pct",
+        "date_num": {
+          "date_number": "date"
+        }
+      },
+      "outputs": {
+        "total_price": "total_ht",
+        "total_tva": "total_tva",
+        "total_ttc": "total_ttc"
+      }
+    }
+  ]
+}

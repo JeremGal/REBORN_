@@ -10,6 +10,11 @@ import { runMigration, type RunResult, type SourceTableInput } from "./run";
 import { verifyMigration, type VerificationReport } from "./verify";
 import { ExtractionPlanSchema, runHttpExtraction, type ExtractionOutcome } from "./connectors";
 import { canonical, sha256 } from "./transforms";
+import { BusinessModelSchema, checkBusinessModel, type ModelIssue } from "./business-model";
+import type { RulePackage } from "../engine/bindings";
+import type { RuleModel } from "../types";
+import type { HistoryCheck } from "./rules-history";
+import { projectScope } from "./context";
 
 /**
  * Projet de migration : coffre des fichiers extraits (empreintes), structure analysée,
@@ -62,11 +67,67 @@ export interface Deployment {
   status: "active" | "replaced" | "rolled_back";
 }
 
+export interface BusinessModelMeta {
+  version: number;
+  received_at: string;
+  /** analyst (Alan) · fixture (jeu de test au format d'Alan) · investigation (règles du Studio) · user. */
+  source: "analyst" | "fixture" | "investigation" | "user";
+  by: string;
+  sha256: string;
+  /** proposed : reçu, à valider · validated : installable dans le logiciel livré · rejected. */
+  status: "proposed" | "validated" | "rejected";
+  decided_at?: string;
+  decided_by?: string;
+  comment?: string;
+  modules: string[];
+  bindings: { id: string; entity: string; scope: string; module: string }[];
+  issues: ModelIssue[];
+  /** Vérification du modèle sur les documents historiques migrés (dernière exécution). */
+  history_check?: HistoryCheck | null;
+  published?: { app_id: string; at: string; by: string }[];
+}
+
+/**
+ * États d'un projet. Ils ne changent qu'à la suite d'une opération réellement effectuée
+ * (connexion testée ou rapportée par l'agent, données reçues, migration exécutée et vérifiée…).
+ */
+export const PROJECT_STATUSES = [
+  "CREATED",
+  "CONNECTION_PENDING",
+  "CONNECTED",
+  "DISCOVERING",
+  "EXTRACTING",
+  "MAPPING",
+  "RECONSTRUCTING",
+  "MIGRATING",
+  "VALIDATING",
+  "READY_FOR_REVIEW",
+  "PUBLISHED",
+  "PAUSED",
+  "FAILED",
+  "NEEDS_HUMAN_REVIEW",
+] as const;
+export type ProjectStatus = (typeof PROJECT_STATUSES)[number];
+
 export interface MigrationProject {
   id: string;
   name: string;
   created_at: string;
+  updated_at?: string;
   source_system?: string;
+  /** Entreprise propriétaire, ancien logiciel (URL, type), informations complémentaires. */
+  company?: string;
+  legacy_url?: string;
+  software_type?: string;
+  notes?: string;
+  /** Confirmation du propriétaire : il est autorisé à faire analyser et migrer ces données. */
+  authorization?: { by: string; at: string; statement: string };
+  connection?: { status: "pending" | "connected" | "failed" | "mfa_required" | "human_needed"; detail?: string; at: string; by: string };
+  status?: ProjectStatus;
+  status_history?: { status: ProjectStatus; at: string; reason: string }[];
+  paused_from?: ProjectStatus | null;
+  /** Logiciel livré de ce projet : identifiant et port (attribués à la première mise en service). */
+  app?: { id: string; port: number };
   sources: SourceMeta[];
   extraction?: Omit<ExtractionOutcome, "files">;
   mappings: MappingVersion[];
@@ -74,49 +135,208 @@ export interface MigrationProject {
   runs: RunMeta[];
   acknowledgements: Record<string, { at: string; by: string; comment?: string }>;
   deployments: Deployment[];
+  business_models?: BusinessModelMeta[];
 }
 
 export const migrationRoot = () => path.join(process.env.REBORN_DATA_DIR ?? path.join(process.cwd(), ".data"), "migration");
-const projectFile = () => path.join(migrationRoot(), "project.json");
-export const runDir = (id: string) => path.join(migrationRoot(), "runs", id);
 
-const g = globalThis as unknown as { __rebornMigration?: { project: MigrationProject | null; parsed: Map<string, ParsedSource> } };
-const mem = () => (g.__rebornMigration ??= { project: null, parsed: new Map() });
+/**
+ * Plusieurs projets isolés : chacun a son dossier (project.json, sources/, runs/, business-model/).
+ * Index : <migration>/projects.json. Le projet unique des versions précédentes reste à sa place
+ * (dossier racine) et devient le premier projet de l'index : aucune donnée n'est déplacée.
+ */
+interface ProjectIndex {
+  current: string | null;
+  projects: { id: string; dir: string }[];
+}
+const g = globalThis as unknown as { __rebornMigration?: { index: ProjectIndex | null; root: string; projects: Map<string, MigrationProject>; draft: MigrationProject | null; parsed: Map<string, ParsedSource> } };
+const mem = () => {
+  const m = (g.__rebornMigration ??= { index: null, root: "", projects: new Map(), draft: null, parsed: new Map() });
+  if (m.root !== migrationRoot()) Object.assign(m, { index: null, root: migrationRoot(), projects: new Map(), draft: null });
+  return m;
+};
+const indexFile = () => path.join(migrationRoot(), "projects.json");
+function writeAtomic(file: string, data: unknown) {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const tmp = `${file}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 1));
+  fs.renameSync(tmp, file);
+}
+function readIndex(): ProjectIndex {
+  const m = mem();
+  if (m.index) return m.index;
+  try {
+    m.index = JSON.parse(fs.readFileSync(indexFile(), "utf8")) as ProjectIndex;
+  } catch {
+    try {
+      const legacy = JSON.parse(fs.readFileSync(path.join(migrationRoot(), "project.json"), "utf8")) as MigrationProject;
+      m.index = { current: legacy.id, projects: [{ id: legacy.id, dir: "" }] };
+      writeAtomic(indexFile(), m.index);
+    } catch {
+      m.index = { current: null, projects: [] };
+    }
+  }
+  return m.index!;
+}
+function writeIndex(idx: ProjectIndex) {
+  writeAtomic(indexFile(), idx);
+  mem().index = idx;
+}
+
+/** Projet de la requête (?project=…) ou projet courant. */
+export function currentProjectId(): string | null {
+  const scoped = projectScope.getStore();
+  if (scoped) {
+    if (!readIndex().projects.some((p) => p.id === scoped)) throw new ApiError(404, `Projet inconnu : ${scoped}`);
+    return scoped;
+  }
+  return readIndex().current;
+}
+export function projectRoot(id: string | null = currentProjectId()): string {
+  const entry = readIndex().projects.find((p) => p.id === id);
+  return entry ? path.join(migrationRoot(), entry.dir) : path.join(migrationRoot(), "projects", id ?? "_");
+}
+const projectFile = (id?: string | null) => path.join(projectRoot(id), "project.json");
+export const runDir = (id: string) => path.join(projectRoot(), "runs", id);
 
 function emptyProject(name = "Migration"): MigrationProject {
-  return { id: `MIG_${randomUUID().slice(0, 8)}`, name, created_at: new Date().toISOString(), sources: [], mappings: [], decisions: {}, runs: [], acknowledgements: {}, deployments: [] };
+  return { id: `MIG_${randomUUID().replace(/-/g, "").slice(0, 8)}`, name, created_at: new Date().toISOString(), sources: [], mappings: [], decisions: {}, runs: [], acknowledgements: {}, deployments: [], status: "CREATED", status_history: [] };
+}
+
+/** Projets enregistrés avant la gestion des états : état reconstitué à partir de ce qui a réellement été fait. */
+function inferStatus(p: MigrationProject): ProjectStatus {
+  const lastRun = p.runs.at(-1);
+  if (p.deployments.some((d) => d.status === "active")) return "PUBLISHED";
+  if (lastRun) {
+    if (lastRun.status === "failed" || lastRun.verification === "blocked") return "FAILED";
+    if (lastRun.verification === "review" && !p.acknowledgements[lastRun.id]) return "NEEDS_HUMAN_REVIEW";
+    return "READY_FOR_REVIEW";
+  }
+  if (p.mappings.length) return "MAPPING";
+  if (p.sources.length) return "EXTRACTING";
+  return p.legacy_url ? "CONNECTION_PENDING" : "CREATED";
+}
+function normalize(p: MigrationProject): MigrationProject {
+  p.business_models ??= [];
+  p.status_history ??= [];
+  if (!p.status) {
+    p.status = inferStatus(p);
+    p.status_history.push({ status: p.status, at: new Date().toISOString(), reason: "État reconstitué à partir des opérations déjà effectuées" });
+  }
+  return p;
+}
+
+export function loadProject(id: string): MigrationProject | null {
+  const m = mem();
+  const cached = m.projects.get(id);
+  if (cached) return cached;
+  try {
+    const p = normalize(JSON.parse(fs.readFileSync(projectFile(id), "utf8")) as MigrationProject);
+    m.projects.set(id, p);
+    return p;
+  } catch {
+    return null;
+  }
 }
 
 export function getProject(): MigrationProject {
+  const id = currentProjectId();
+  const p = id ? loadProject(id) : null;
+  if (p) return p;
+  // Aucun projet : projet vide en mémoire, enregistré à la première écriture
   const m = mem();
-  if (!m.project) {
-    try {
-      m.project = JSON.parse(fs.readFileSync(projectFile(), "utf8")) as MigrationProject;
-    } catch {
-      m.project = emptyProject();
-    }
-  }
-  return m.project;
+  m.draft ??= emptyProject();
+  return m.draft;
 }
 
 function save(p: MigrationProject) {
-  fs.mkdirSync(migrationRoot(), { recursive: true });
-  const tmp = `${projectFile()}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(p, null, 1));
-  fs.renameSync(tmp, projectFile());
-  mem().project = p;
+  const idx = readIndex();
+  if (!idx.projects.some((x) => x.id === p.id)) {
+    writeIndex({ current: projectScope.getStore() ? (idx.current ?? p.id) : p.id, projects: [...idx.projects, { id: p.id, dir: path.join("projects", p.id) }] });
+  }
+  p.updated_at = new Date().toISOString();
+  writeAtomic(projectFile(p.id), p);
+  mem().projects.set(p.id, p);
+  if (mem().draft?.id === p.id) mem().draft = null;
+}
+
+/** Aucune opération d'écriture sur un projet en pause (contrôle côté serveur). */
+export function assertActive(p: MigrationProject = getProject()) {
+  if (p.status === "PAUSED") throw new ApiError(409, "Projet en pause : reprenez-le avant toute opération");
+}
+
+/** Change l'état du projet (à enregistrer par l'appelant) ; l'historique garde la raison. */
+export function setStatus(p: MigrationProject, status: ProjectStatus, reason: string, opts: { resume?: boolean } = {}) {
+  if (p.status === "PAUSED" && status !== "PAUSED") {
+    if (!opts.resume) return;
+    p.paused_from = null;
+  }
+  if (p.status === status && p.status_history?.at(-1)?.reason === reason) return;
+  p.status = status;
+  p.status_history = [...(p.status_history ?? []), { status, at: new Date().toISOString(), reason }].slice(-200);
 }
 
 function log(title: string, detail?: string, source: "platform" | "user" | "analyst" | "explorer" = "platform", data?: unknown) {
-  addEvent({ source, type: "migration", title, detail, data });
+  let project_id: string | undefined;
+  try {
+    project_id = getProject().id;
+  } catch {}
+  addEvent({ source, type: "migration", title, detail, data: data && typeof data === "object" ? { ...(data as object), project_id } : data === undefined ? { project_id } : { value: data, project_id } });
 }
 
-/** Nouveau projet : les fichiers et exécutions précédents sont conservés sur disque, non référencés. */
-export function newProject(name: string, sourceSystem?: string): MigrationProject {
-  const p = { ...emptyProject(name || "Migration"), source_system: sourceSystem };
+export interface ProjectInput {
+  company: string;
+  software?: string;
+  legacy_url?: string;
+  software_type?: string;
+  notes?: string;
+  /** Nom de la personne qui confirme l'autorisation du propriétaire. */
+  authorized_by?: string;
+}
+export const AUTHORIZATION_STATEMENT =
+  "Je confirme être autorisé(e) par le propriétaire des données à faire analyser ce logiciel et à en migrer les données, dans la limite des accès fournis.";
+
+/** Nouveau projet isolé, qui devient le projet courant. Les autres projets ne sont pas touchés. */
+export function createProject(i: ProjectInput): MigrationProject {
+  const p = emptyProject(i.company);
+  Object.assign(p, {
+    company: i.company,
+    source_system: i.software,
+    legacy_url: i.legacy_url,
+    software_type: i.software_type,
+    notes: i.notes,
+    authorization: i.authorized_by ? { by: i.authorized_by, at: new Date().toISOString(), statement: AUTHORIZATION_STATEMENT } : undefined,
+    status_history: [],
+  });
+  setStatus(p, i.legacy_url ? "CONNECTION_PENDING" : "CREATED", i.legacy_url ? "Projet créé : connexion à l'ancien logiciel à établir" : "Projet créé");
+  const idx = readIndex();
+  writeIndex({ current: p.id, projects: [...idx.projects, { id: p.id, dir: path.join("projects", p.id) }] });
   save(p);
-  mem().parsed.clear();
-  log(`Projet de migration « ${p.name} » créé`, sourceSystem ? `Logiciel source : ${sourceSystem}` : undefined, "user");
+  log(`Projet de migration « ${p.name} » créé`, i.software ? `Logiciel source : ${i.software}` : undefined, "user");
+  return p;
+}
+
+/** Compatibilité (POST /api/migration/project) : crée un nouveau projet isolé. */
+export function newProject(name: string, sourceSystem?: string): MigrationProject {
+  return createProject({ company: name || "Migration", software: sourceSystem });
+}
+
+export function selectProject(id: string) {
+  const idx = readIndex();
+  if (!idx.projects.some((p) => p.id === id)) throw new ApiError(404, `Projet inconnu : ${id}`);
+  writeIndex({ ...idx, current: id });
+}
+
+export function projectIds(): string[] {
+  return readIndex().projects.map((p) => p.id);
+}
+
+/** Met à jour un projet désigné (sans changer le projet courant). */
+export function updateProject(id: string, fn: (p: MigrationProject) => void): MigrationProject {
+  const p = loadProject(id);
+  if (!p) throw new ApiError(404, `Projet inconnu : ${id}`);
+  fn(p);
+  save(p);
   return p;
 }
 
@@ -125,6 +345,7 @@ export function newProject(name: string, sourceSystem?: string): MigrationProjec
 /* ------------------------------------------------------------------ */
 
 export function addSource(name: string, data: Buffer, origin: SourceMeta["origin"]): SourceMeta {
+  assertActive();
   if (!/^[\w .()-]{1,120}$/.test(name)) throw new ApiError(400, `Nom de fichier refusé : ${name}`);
   const format = detectFormat(name, data);
   let parsed: ParsedSource;
@@ -135,7 +356,7 @@ export function addSource(name: string, data: Buffer, origin: SourceMeta["origin
     throw e;
   }
   const digest = sha256(data);
-  const vault = path.join(migrationRoot(), "sources", `${digest}.${format}`);
+  const vault = path.join(projectRoot(), "sources", `${digest}.${format}`);
   fs.mkdirSync(path.dirname(vault), { recursive: true });
   if (!fs.existsSync(vault)) fs.writeFileSync(vault, data, { mode: 0o600 });
   mem().parsed.set(digest, parsed);
@@ -145,7 +366,7 @@ export function addSource(name: string, data: Buffer, origin: SourceMeta["origin
     format,
     size: data.length,
     sha256: digest,
-    vault: path.relative(migrationRoot(), vault),
+    vault: path.relative(projectRoot(), vault),
     received_at: new Date().toISOString(),
     origin,
     tables: parsed.tables.map((t) => ({ name: parsed.tables.length === 1 ? name.replace(/\.[^.]+$/, "") : t.name, rows: t.rows.length, columns: t.columns.length })),
@@ -155,6 +376,7 @@ export function addSource(name: string, data: Buffer, origin: SourceMeta["origin
   };
   const p = getProject();
   p.sources = [...p.sources.filter((s) => s.name !== name), meta];
+  setStatus(p, "EXTRACTING", `Données reçues : ${name} (${meta.tables.reduce((n, t) => n + t.rows, 0)} ligne(s))`);
   save(p);
   return meta;
 }
@@ -168,7 +390,7 @@ export function removeSource(id: string) {
 function parsedOf(s: SourceMeta, fresh = false): ParsedSource {
   const cached = !fresh && mem().parsed.get(s.sha256);
   if (cached) return cached;
-  const data = fs.readFileSync(path.join(migrationRoot(), s.vault));
+  const data = fs.readFileSync(path.join(projectRoot(), s.vault));
   const parsed = parseSource(s.name, data, s.format);
   if (!fresh) mem().parsed.set(s.sha256, parsed);
   return parsed;
@@ -201,14 +423,21 @@ export function profile(): SourceProfile {
 /* ------------------------------------------------------------------ */
 
 export async function extract(rawPlan: unknown, creds: { base_url?: string; username?: string; password?: string }, by = "opérateur"): Promise<Omit<ExtractionOutcome, "files">> {
+  assertActive();
   const parsed = ExtractionPlanSchema.safeParse(rawPlan);
   if (!parsed.success) throw new ApiError(400, "Plan d'extraction non conforme au contrat", parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })));
   const plan = parsed.data;
   let outcome: ExtractionOutcome;
+  const before = getProject();
+  setStatus(before, "EXTRACTING", `Extraction depuis ${plan.system} en cours`);
+  save(before);
   try {
     outcome = await runHttpExtraction(plan, { baseUrl: creds.base_url, username: creds.username, password: creds.password });
   } catch (e) {
     log(`Extraction refusée par ${plan.system}`, (e as Error).message, "platform");
+    const p = getProject();
+    setStatus(p, "FAILED", `Extraction refusée par ${plan.system} : ${(e as Error).message}`);
+    save(p);
     throw new ApiError(502, (e as Error).message);
   }
   for (const f of outcome.files) {
@@ -223,8 +452,10 @@ export async function extract(rawPlan: unknown, creds: { base_url?: string; user
   const p = getProject();
   p.extraction = summary;
   p.source_system ??= plan.system;
-  save(p);
   const ok = outcome.results.filter((r) => r.status === "ok").length;
+  p.connection = { status: "connected", detail: `Connexion par le connecteur HTTP de REBORN (compte ${outcome.account})`, at: new Date().toISOString(), by: "REBORN" };
+  setStatus(p, "EXTRACTING", `Extraction terminée : ${ok}/${outcome.results.length} export(s) récupéré(s)`);
+  save(p);
   const refused = outcome.results.filter((r) => r.status === "forbidden" || r.status === "unauthorized");
   log(
     `Extraction depuis ${plan.system} : ${ok}/${outcome.results.length} export(s) récupéré(s)`,
@@ -243,6 +474,7 @@ export function currentMapping(): MappingVersion | null {
 }
 
 export function setMapping(raw: unknown, origin: MappingVersion["origin"]): MappingVersion {
+  assertActive();
   const parsed = MigrationMappingSchema.safeParse(raw);
   if (!parsed.success) throw new ApiError(400, "Correspondances non conformes au contrat", parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })));
   const mapping = parsed.data;
@@ -254,6 +486,8 @@ export function setMapping(raw: unknown, origin: MappingVersion["origin"]): Mapp
   const items = new Set(reviewItems(mapping).map((i) => i.key));
   p.decisions = Object.fromEntries(Object.entries(p.decisions).filter(([k]) => items.has(k)));
   p.mappings.push(v);
+  const pending = reviewItems(mapping).filter((i) => !p.decisions[i.key]).length;
+  setStatus(p, pending ? "NEEDS_HUMAN_REVIEW" : "MAPPING", pending ? `Correspondances v${v.version} : ${pending} point(s) à valider` : `Correspondances v${v.version} prêtes`);
   save(p);
   const errors = issues.filter((i) => i.level === "error").length;
   log(
@@ -268,18 +502,114 @@ export function proposeAutomatic(): MappingVersion {
   const prof = profile();
   if (!prof.tables.length) throw new ApiError(409, "Aucune source : extrayez ou importez des données d'abord");
   const p = getProject();
-  return setMapping(proposeMapping(prof, { source_system: p.source_system, target: { id: "nouveau-logiciel", name: `${p.source_system ?? "Logiciel"} — nouvelle version` } }), "auto");
+  const base = (p.company ?? p.source_system ?? "logiciel")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/^(\d)/, "app-$1")
+    .slice(0, 28) || "logiciel";
+  const id = `${/^[a-z]/.test(base) ? base : `app-${base}`}-${p.id.slice(-4)}`;
+  return setMapping(proposeMapping(prof, { source_system: p.source_system, target: { id, name: `${p.company ?? p.source_system ?? "Logiciel"} — nouveau logiciel` } }), "auto");
 }
 
 export function decide(key: string, decision: Decision["decision"], by: string, comment?: string) {
+  assertActive();
   const m = currentMapping();
   if (!m) throw new ApiError(409, "Aucune correspondance à valider");
   const item = reviewItems(m.mapping).find((i) => i.key === key);
   if (!item) throw new ApiError(404, `Point de validation inconnu : ${key}`);
   const p = getProject();
   p.decisions[key] = { decision, at: new Date().toISOString(), by, comment };
+  if (!reviewItems(m.mapping).some((i) => !p.decisions[i.key])) setStatus(p, "MAPPING", "Toutes les correspondances incertaines ont été tranchées : migration possible");
   save(p);
-  log(`${decision === "accepted" ? "Correspondance validée" : "Correspondance exclue"} : ${item.label}`, comment, "user");
+  const verb = item.kind === "accounting" ? (decision === "accepted" ? "Protection de l'historique confirmée" : "Protection de l'historique retirée") : decision === "accepted" ? "Correspondance validée" : "Correspondance exclue";
+  log(`${verb} : ${item.label}`, comment, "user");
+}
+
+/* ------------------------------------------------------------------ */
+/* Modèle métier (règles exécutables) — versions immuables              */
+/* ------------------------------------------------------------------ */
+
+const bmFile = (version: number) => path.join(projectRoot(), "business-model", `v${version}.json`);
+
+/** Reçoit une version du modèle métier (contrat business_model) : elle est « à valider ». */
+export function publishBusinessModel(raw: unknown, source: BusinessModelMeta["source"], by = "Analyste"): BusinessModelMeta {
+  assertActive();
+  const parsed = BusinessModelSchema.safeParse(raw);
+  if (!parsed.success) throw new ApiError(400, "Modèle métier non conforme au contrat", parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })));
+  const bm = parsed.data;
+  const p = getProject();
+  const m = currentMapping();
+  const issues = checkBusinessModel(bm, m ? effectiveMapping(m.mapping, p.decisions) : null);
+  const version = (p.business_models?.at(-1)?.version ?? 0) + 1;
+  const pkg: RulePackage = {
+    contract_version: bm.contract_version,
+    version,
+    modules: bm.modules as Record<string, RuleModel>,
+    bindings: bm.bindings,
+    source,
+    published_at: new Date().toISOString(),
+    published_by: by,
+    notes: bm.notes,
+  };
+  fs.mkdirSync(path.dirname(bmFile(version)), { recursive: true });
+  fs.writeFileSync(bmFile(version), JSON.stringify(pkg, null, 1));
+  const meta: BusinessModelMeta = {
+    version,
+    received_at: pkg.published_at!,
+    source,
+    by,
+    sha256: sha256(canonical(pkg)),
+    status: "proposed",
+    modules: Object.keys(bm.modules),
+    bindings: bm.bindings.map((b) => ({ id: b.id, entity: b.entity, scope: b.scope, module: b.module })),
+    issues,
+  };
+  p.business_models = [...(p.business_models ?? []), meta];
+  save(p);
+  const errors = issues.filter((i) => i.level === "error").length;
+  log(
+    `Modèle métier v${version} reçu (${source === "analyst" ? "Analyste" : source === "fixture" ? "jeu de test au format de l'Analyste" : source === "investigation" ? "règles de l'investigation" : "opérateur"})`,
+    `${meta.modules.length} module(s) de règles · ${meta.bindings.length} liaison(s) · à valider${errors ? ` · ${errors} erreur(s) bloquante(s)` : ""}`,
+    source === "analyst" ? "analyst" : "platform",
+  );
+  return meta;
+}
+
+export function businessModelPackage(version: number): RulePackage {
+  try {
+    return JSON.parse(fs.readFileSync(bmFile(version), "utf8")) as RulePackage;
+  } catch {
+    throw new ApiError(404, `Modèle métier v${version} introuvable`);
+  }
+}
+
+/** Décision humaine : seule une version validée (sans erreur bloquante) est installée dans le logiciel livré. */
+export function decideBusinessModel(version: number, decision: "validated" | "rejected", by: string, comment?: string): BusinessModelMeta {
+  assertActive();
+  const p = getProject();
+  const meta = p.business_models?.find((x) => x.version === version);
+  if (!meta) throw new ApiError(404, `Modèle métier v${version} inconnu`);
+  if (decision === "validated" && meta.issues.some((i) => i.level === "error")) throw new ApiError(409, `Le modèle métier v${version} contient des erreurs bloquantes : corrigez-le et publiez une nouvelle version`);
+  Object.assign(meta, { status: decision, decided_at: new Date().toISOString(), decided_by: by, comment });
+  save(p);
+  log(`Modèle métier v${version} ${decision === "validated" ? "validé" : "refusé"} par ${by}`, comment, "user");
+  return meta;
+}
+
+export function validatedBusinessModels(): RulePackage[] {
+  return (getProject().business_models ?? []).filter((m) => m.status === "validated").map((m) => businessModelPackage(m.version));
+}
+
+export function recordBusinessModel(version: number, patch: Partial<Pick<BusinessModelMeta, "history_check">> & { published?: { app_id: string; at: string; by: string } }) {
+  const p = getProject();
+  const meta = p.business_models?.find((x) => x.version === version);
+  if (!meta) return;
+  if (patch.history_check !== undefined) meta.history_check = patch.history_check;
+  if (patch.published) meta.published = [...(meta.published ?? []), patch.published];
+  save(p);
 }
 
 export function planStatus() {
@@ -304,6 +634,7 @@ export function unmappedTables(mapping: MigrationMapping): { name: string; rows:
 }
 
 export function startRun(by = "opérateur"): { run: RunMeta; report: VerificationReport | null } {
+  assertActive();
   const status = planStatus();
   if (!status.can_run || !status.mapping) throw new ApiError(409, `Migration impossible : ${status.blockers.join(" · ")}`, status.blockers);
   const p = getProject();
@@ -312,11 +643,17 @@ export function startRun(by = "opérateur"): { run: RunMeta; report: Verificatio
   const id = `RUN_${String(p.runs.length + 1).padStart(3, "0")}`;
   const dir = runDir(id);
   const t0 = Date.now();
+  setStatus(p, "MIGRATING", `Migration ${id} lancée par ${by}`);
+  save(p);
   const { tables, archives } = loadSources();
   const result = runMigration({ runId: id, mapping, tables, archives, outDir: dir, sourceSystem: p.source_system });
   fs.writeFileSync(path.join(dir, "run.json"), JSON.stringify(result, null, 1));
   let report: VerificationReport | null = null;
-  if (result.status === "completed") report = verify(id, result, mapping);
+  if (result.status === "completed") {
+    setStatus(p, "VALIDATING", `Migration ${id} terminée : vérification indépendante en cours`);
+    save(p);
+    report = verify(id, result, mapping);
+  }
   const meta: RunMeta = {
     id,
     at: result.started_at,
@@ -334,6 +671,10 @@ export function startRun(by = "opérateur"): { run: RunMeta; report: Verificatio
     },
   };
   p.runs.push(meta);
+  if (result.status !== "completed") setStatus(p, "FAILED", `Migration ${id} interrompue : ${result.error ?? "erreur"} (aucune donnée partielle conservée ; relancez après correction)`);
+  else if (report!.status === "blocked") setStatus(p, "FAILED", `Migration ${id} : contrôles bloquants en échec`);
+  else if (report!.status === "review") setStatus(p, "NEEDS_HUMAN_REVIEW", `Migration ${id} : écarts à examiner avant mise en service`);
+  else setStatus(p, "READY_FOR_REVIEW", `Migration ${id} vérifiée : prête pour la mise en service`);
   save(p);
   log(
     result.status === "completed" ? `Migration ${id} : ${meta.summary.imported} enregistrement(s) importé(s), ${meta.summary.rejected} rejeté(s)` : `Migration ${id} interrompue`,
@@ -361,7 +702,7 @@ function verify(id: string, result: RunResult, mapping: MigrationMapping, modifi
     run: result,
     dbPath: dbPath ?? result.db_path,
     filesDir: filesDir ?? result.files_dir,
-    sources: p.sources.map((s) => ({ name: s.name, sha256: s.sha256, vault_path: path.join(migrationRoot(), s.vault), tables: s.tables })),
+    sources: p.sources.map((s) => ({ name: s.name, sha256: s.sha256, vault_path: path.join(projectRoot(), s.vault), tables: s.tables })),
     manifest: p.extraction?.manifest ?? null,
     inaccessible: [...refused, ...notExtractable],
     excluded: excludedItems,
@@ -397,19 +738,22 @@ export function runArtifacts(id: string): { result: RunResult; report: Verificat
 }
 
 export function acknowledge(runId: string, by: string, comment?: string) {
+  assertActive();
   const { report } = runArtifacts(runId);
   if (!report) throw new ApiError(409, "Aucun rapport de vérification");
   if (report.status === "blocked") throw new ApiError(409, "Des contrôles bloquants ont échoué : une intervention est nécessaire avant toute mise en service");
   const p = getProject();
   p.acknowledgements[runId] = { at: new Date().toISOString(), by, comment };
+  if (p.runs.at(-1)?.id === runId) setStatus(p, "READY_FOR_REVIEW", `Écarts de ${runId} examinés et acceptés par ${by}`);
   save(p);
   log(`Écarts de ${runId} acceptés par ${by}`, comment ?? `${report.gaps.length} écart(s) documenté(s) dans le rapport`, "user");
 }
 
-export function recordDeployment(d: Deployment) {
+export function recordDeployment(d: Deployment, app?: { id: string; port: number }) {
   const p = getProject();
   for (const x of p.deployments) if (x.status === "active") x.status = "replaced";
   p.deployments.push(d);
+  if (app) p.app = app;
   save(p);
 }
 
@@ -453,4 +797,113 @@ export function migrationSummary(): MigrationSummary {
     last_run: r ? { id: r.id, status: r.status, verification: r.verification, imported: r.summary.imported, rejected: r.summary.rejected } : null,
     deployed: d ? { run_id: d.run_id, at: d.at } : null,
   };
+}
+
+/** Transition d'état du projet courant (opérations du générateur, rapports des agents). */
+export function transition(status: ProjectStatus, reason: string) {
+  const p = getProject();
+  setStatus(p, status, reason);
+  save(p);
+}
+
+/* ------------------------------------------------------------------ */
+/* Résumés des projets (tableau de bord)                                */
+/* ------------------------------------------------------------------ */
+
+export const STATUS_LABEL: Record<ProjectStatus, string> = {
+  CREATED: "Créé",
+  CONNECTION_PENDING: "Connexion en attente",
+  CONNECTED: "Connecté",
+  DISCOVERING: "Découverte en cours",
+  EXTRACTING: "Données en cours de récupération",
+  MAPPING: "Correspondances",
+  RECONSTRUCTING: "Reconstruction",
+  MIGRATING: "Migration en cours",
+  VALIDATING: "Vérification en cours",
+  READY_FOR_REVIEW: "Prêt pour la mise en service",
+  PUBLISHED: "Logiciel livré",
+  PAUSED: "En pause",
+  FAILED: "Échec — intervention requise",
+  NEEDS_HUMAN_REVIEW: "Validation humaine requise",
+};
+
+export interface ProjectSummary {
+  id: string;
+  name: string;
+  company: string | null;
+  software: string | null;
+  legacy_url: string | null;
+  status: ProjectStatus;
+  status_label: string;
+  status_reason: string | null;
+  created_at: string;
+  updated_at: string | null;
+  current: boolean;
+  /** Avancement mesuré sur les étapes réellement accomplies (pas un minuteur). */
+  progress: { done: number; total: number; steps: { id: string; label: string; done: boolean }[] };
+  data: { sources: number; source_rows: number; imported: number; rejected: number };
+  anomalies: { pending_decisions: number; gaps: number; failed_checks: number };
+  business_model: { version: number; status: string } | null;
+  app: { id: string; port: number; deployed_at: string; run_id: string } | null;
+}
+
+/** Résumé calculé à partir de ce qui a réellement été fait dans le projet. */
+export function projectSummary(id: string): ProjectSummary | null {
+  const p = loadProject(id);
+  if (!p) return null;
+  const lastRun = p.runs.at(-1);
+  const mv = p.mappings.at(-1);
+  const pending = mv ? reviewItems(mv.mapping).filter((i) => !p.decisions[i.key]).length : 0;
+  const mappingErrors = mv ? mv.issues.filter((i) => i.level === "error").length : 0;
+  const active = [...p.deployments].reverse().find((d) => d.status === "active") ?? null;
+  const bm = [...(p.business_models ?? [])].reverse().find((m) => m.status === "validated") ?? p.business_models?.at(-1) ?? null;
+  let gaps = 0;
+  let failed = 0;
+  if (lastRun?.status === "completed") {
+    try {
+      const report = JSON.parse(fs.readFileSync(path.join(projectRoot(id), "runs", lastRun.id, "report.json"), "utf8")) as VerificationReport;
+      gaps = report.gaps.length;
+      failed = report.checks.filter((c) => c.status === "fail").length;
+    } catch {}
+  }
+  const migrated = !!lastRun && lastRun.status === "completed" && (lastRun.verification === "validated" || (lastRun.verification === "review" && !!p.acknowledgements[lastRun.id]));
+  const steps = [
+    { id: "connection", label: "Connexion à l'ancien logiciel", done: p.connection?.status === "connected" || p.sources.length > 0 },
+    { id: "extraction", label: "Données récupérées", done: p.sources.length > 0 },
+    { id: "mapping", label: "Correspondances validées", done: !!mv && pending === 0 && mappingErrors === 0 },
+    { id: "migration", label: "Migration vérifiée", done: migrated },
+    { id: "rules", label: "Modèle métier validé", done: (p.business_models ?? []).some((m) => m.status === "validated") },
+    { id: "delivery", label: "Nouveau logiciel livré", done: !!active },
+  ];
+  const status = p.status ?? inferStatus(p);
+  return {
+    id: p.id,
+    name: p.name,
+    company: p.company ?? null,
+    software: p.source_system ?? null,
+    legacy_url: p.legacy_url ?? null,
+    status,
+    status_label: STATUS_LABEL[status],
+    status_reason: p.status_history?.at(-1)?.reason ?? null,
+    created_at: p.created_at,
+    updated_at: p.updated_at ?? null,
+    current: readIndex().current === p.id,
+    progress: { done: steps.filter((s) => s.done).length, total: steps.length, steps },
+    data: {
+      sources: p.sources.length,
+      source_rows: p.sources.reduce((n, s) => n + s.tables.reduce((m, t) => m + t.rows, 0), 0),
+      imported: lastRun?.summary.imported ?? 0,
+      rejected: lastRun?.summary.rejected ?? 0,
+    },
+    anomalies: { pending_decisions: pending, gaps, failed_checks: failed },
+    business_model: bm ? { version: bm.version, status: bm.status } : null,
+    app: active && p.app ? { id: p.app.id, port: p.app.port, deployed_at: active.at, run_id: active.run_id } : null,
+  };
+}
+
+export function listProjects(): ProjectSummary[] {
+  return projectIds()
+    .map((id) => projectSummary(id))
+    .filter((x): x is ProjectSummary => !!x)
+    .sort((a, b) => (b.updated_at ?? b.created_at).localeCompare(a.updated_at ?? a.created_at));
 }

@@ -18,7 +18,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { randomBytes, scryptSync, timingSafeEqual, createHash } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
-import { compile, evaluate } from "./lib/expr.mjs";
+import { compile, evaluate } from "./lib/engine/expr.mjs";
+import { evaluateBinding, outputFields } from "./lib/engine/bindings.mjs";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SPEC = JSON.parse(fs.readFileSync(path.join(ROOT, "app.json"), "utf8"));
@@ -28,6 +29,10 @@ const DB_PATH = path.join(ROOT, "data", "app.db");
 const FILES = path.join(ROOT, "files");
 const BACKUPS = path.join(ROOT, "backups");
 const PUBLIC = path.join(ROOT, "public");
+/** Modèles métier versionnés déposés par REBORN Studio (ou par l'administrateur) : rules/v<N>.json. */
+const RULES_DIR = path.join(ROOT, "rules");
+/** Fichier de processus : permet d'arrêter ce logiciel sans dépendre du processus qui l'a lancé. */
+const PID_FILE = path.join(ROOT, "run", "server.pid");
 const ENTITIES = new Map(SPEC.entities.map((e) => [e.name, e]));
 const ROLES = { admin: 3, editor: 2, viewer: 1 };
 const q = (id) => `"${String(id).replace(/"/g, '""')}"`;
@@ -45,7 +50,27 @@ function openDb() {
   db = new DatabaseSync(DB_PATH);
   db.exec("PRAGMA foreign_keys = ON");
   if (fresh) for (const s of SPEC.ddl) db.exec(s);
+  ensureSchema();
   bootstrapAdmin();
+  rulesStamp = null;
+  syncRules();
+}
+
+/**
+ * Évolution du schéma sans perte : colonnes système et champs ajoutés par la spécification ou
+ * par un modèle métier sont ajoutés (ALTER TABLE … ADD COLUMN, valeurs vides pour l'historique).
+ * Aucune colonne ni donnée existante n'est modifiée ou supprimée.
+ */
+const SQL_TYPE = { integer: "INTEGER", money: "INTEGER", reference: "INTEGER", boolean: "INTEGER", decimal: "REAL", percent: "REAL" };
+function ensureSchema() {
+  db.exec(`CREATE TABLE IF NOT EXISTS "_rules" ("version" INTEGER PRIMARY KEY, "sha256" TEXT NOT NULL, "source" TEXT, "published_at" TEXT, "published_by" TEXT, "imported_at" TEXT NOT NULL, "package" TEXT NOT NULL)`);
+  db.exec(`CREATE TABLE IF NOT EXISTS "_meta" ("key" TEXT PRIMARY KEY, "value" TEXT)`);
+  for (const e of SPEC.entities) {
+    const cols = new Set(db.prepare(`PRAGMA table_info(${q(e.name)})`).all().map((c) => c.name));
+    if (!cols.size) continue;
+    const wanted = [...fieldsOf(e).map((f) => [f.name, SQL_TYPE[f.type] ?? "TEXT"]), ["_rules_version", "INTEGER"], ["_updated_at", "TEXT"]];
+    for (const [name, type] of wanted) if (!cols.has(name)) db.exec(`ALTER TABLE ${q(e.name)} ADD COLUMN ${q(name)} ${type}`);
+  }
 }
 
 function bootstrapAdmin() {
@@ -75,6 +100,222 @@ function checkPassword(pw, stored) {
 }
 function audit(user, action, entity, id, before, after, justification = null) {
   db.prepare(`INSERT INTO "_audit" ("ts", "user", "action", "entity", "record_id", "before", "after", "justification") VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).run(now(), user, action, entity, id, before ? JSON.stringify(before) : null, after ? JSON.stringify(after) : null, justification);
+}
+
+/* ------------------------------------------------------------------ */
+/* Modèle métier versionné (règles exécutées par le moteur REBORN)      */
+/* ------------------------------------------------------------------ */
+// Un paquet = { version, modules: { nom: modèle de règles }, bindings: [liaisons] } (voir
+// lib/engine/bindings.mjs). Chaque version est immuable ; un document enregistre la version
+// avec laquelle il a été calculé et la garde (les documents historiques ne sont jamais recalculés).
+let rulesStamp = null;
+const packages = new Map();
+const derived = new Map();
+
+function readRuleFiles() {
+  try {
+    return fs.readdirSync(RULES_DIR).filter((f) => /^v\d+\.json$/.test(f) || f === "active.json");
+  } catch {
+    return [];
+  }
+}
+function checkPackage(pkg) {
+  if (!pkg || typeof pkg !== "object") throw new Error("paquet de règles invalide");
+  if (!Number.isInteger(pkg.version) || pkg.version < 1) throw new Error("version entière ≥ 1 attendue");
+  if (!pkg.modules || typeof pkg.modules !== "object") throw new Error("modules attendus");
+  if (!Array.isArray(pkg.bindings)) throw new Error("bindings attendu (liste)");
+  for (const b of pkg.bindings) {
+    const e = ENTITIES.get(b.entity);
+    if (!e) throw new Error(`liaison ${b.id} : entité inconnue ${b.entity}`);
+    if (!pkg.modules[b.module]) throw new Error(`liaison ${b.id} : module absent ${b.module}`);
+    if (!["line", "document"].includes(b.scope)) throw new Error(`liaison ${b.id} : portée line ou document attendue`);
+    const names = new Set([...e.fields.map((f) => f.name), ...(b.fields ?? []).map((f) => f.name)]);
+    for (const f of b.fields ?? []) if (!/^[a-z][a-z0-9_]{0,59}$/.test(f.name) || !["money", "decimal", "percent", "integer", "text"].includes(f.type)) throw new Error(`liaison ${b.id} : champ ajouté invalide ${f.name}`);
+    for (const f of Object.values(b.outputs ?? {})) if (!names.has(f)) throw new Error(`liaison ${b.id} : champ de sortie inconnu ${f}`);
+    for (const m of [b.document, b.lines].filter(Boolean)) if (!ENTITIES.get(m.entity)) throw new Error(`liaison ${b.id} : entité inconnue ${m.entity}`);
+  }
+}
+/** Enregistre une version (fichier rules/v<N>.json ou API). Une version publiée ne change plus. */
+function importPackage(pkg, by, opts = {}) {
+  checkPackage(pkg);
+  const text = JSON.stringify(pkg);
+  const sha = createHash("sha256").update(text).digest("hex");
+  const prev = db.prepare(`SELECT "sha256" FROM "_rules" WHERE "version" = ?`).get(pkg.version);
+  if (prev) {
+    if (prev.sha256 !== sha) throw new HttpError(409, `La version ${pkg.version} du modèle métier existe déjà avec un contenu différent : publiez une nouvelle version`);
+    return false;
+  }
+  db.prepare(`INSERT INTO "_rules" ("version", "sha256", "source", "published_at", "published_by", "imported_at", "package") VALUES (?, ?, ?, ?, ?, ?, ?)`).run(pkg.version, sha, pkg.source ?? null, pkg.published_at ?? now(), pkg.published_by ?? by, now(), text);
+  const cur = Number(db.prepare(`SELECT "value" FROM "_meta" WHERE "key" = 'rules_active_version'`).get()?.value ?? 0);
+  if (opts.activate !== false && pkg.version > cur) db.prepare(`INSERT INTO "_meta" ("key", "value") VALUES ('rules_active_version', ?) ON CONFLICT("key") DO UPDATE SET "value" = excluded."value"`).run(String(pkg.version));
+  audit(by, "rules_published", null, null, null, { version: pkg.version, sha256: sha, source: pkg.source ?? null });
+  return true;
+}
+/** Relit rules/ si le dossier a changé : les versions publiées par le Studio sont prises en compte à chaud. */
+function syncRules() {
+  const files = readRuleFiles();
+  const stamp = files.map((f) => `${f}:${fs.statSync(path.join(RULES_DIR, f)).mtimeMs}`).sort().join("|");
+  if (stamp === rulesStamp) return;
+  for (const f of files.filter((x) => x !== "active.json").sort((a, b) => Number(a.slice(1, -5)) - Number(b.slice(1, -5)))) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(path.join(RULES_DIR, f), "utf8"));
+      if (pkg.version !== Number(f.slice(1, -5))) throw new Error(`le fichier ${f} contient la version ${pkg.version}`);
+      importPackage(pkg, "publication");
+    } catch (x) {
+      console.error(`[app] modèle métier ${f} ignoré : ${x.message}`);
+    }
+  }
+  if (files.includes("active.json")) {
+    try {
+      const v = Number(JSON.parse(fs.readFileSync(path.join(RULES_DIR, "active.json"), "utf8")).version);
+      if (db.prepare(`SELECT 1 FROM "_rules" WHERE "version" = ?`).get(v)) db.prepare(`INSERT INTO "_meta" ("key", "value") VALUES ('rules_active_version', ?) ON CONFLICT("key") DO UPDATE SET "value" = excluded."value"`).run(String(v));
+    } catch (x) {
+      console.error(`[app] rules/active.json ignoré : ${x.message}`);
+    }
+  }
+  packages.clear();
+  derived.clear();
+  for (const r of db.prepare(`SELECT "version", "package" FROM "_rules" ORDER BY "version"`).all()) {
+    const pkg = JSON.parse(r.package);
+    packages.set(r.version, pkg);
+    for (const b of pkg.bindings ?? []) {
+      const list = derived.get(b.entity) ?? [];
+      for (const f of b.fields ?? []) if (!list.some((x) => x.name === f.name)) list.push({ name: f.name, label: f.label ?? f.name, type: f.type, required: false, unique: false, accounting: false, derived: true });
+      derived.set(b.entity, list);
+    }
+  }
+  rulesStamp = stamp;
+  ensureSchema();
+}
+function activeVersion() {
+  const v = db.prepare(`SELECT "value" FROM "_meta" WHERE "key" = 'rules_active_version'`).get()?.value;
+  return v ? Number(v) : null;
+}
+/** Champs d'une entité : ceux de la spécification + ceux ajoutés par le modèle métier (calculés). */
+function fieldsOf(e) {
+  const extra = (derived.get(e.name) ?? []).filter((d) => !e.fields.some((f) => f.name === d.name));
+  return extra.length ? [...e.fields, ...extra] : e.fields;
+}
+const bindingIn = (version, entity, scope) => (packages.get(version)?.bindings ?? []).find((b) => b.entity === entity && b.scope === scope && b.status !== "proposed") ?? null;
+const boundAnywhere = (entity, scope) => [...packages.values()].some((p) => (p.bindings ?? []).some((b) => b.entity === entity && (!scope || b.scope === scope) && b.status !== "proposed"));
+function outputsOf(e) {
+  const out = new Set();
+  for (const p of packages.values()) for (const n of outputFields(p, e.name)) out.add(n);
+  return out;
+}
+/** Accès aux valeurs d'un enregistrement et de ses références (pour les entrées du modèle). */
+function accessFor(e, row) {
+  return {
+    get(pathStr) {
+      let ent = e;
+      let cur = row;
+      const parts = String(pathStr).split(".");
+      for (let i = 0; i < parts.length; i++) {
+        const f = fieldsOf(ent).find((x) => x.name === parts[i]);
+        if (!f || !cur) return { value: undefined, type: null };
+        const v = cur[parts[i]];
+        if (i === parts.length - 1) return { value: v, type: f.type };
+        if (f.type !== "reference" || v === null || v === undefined) return { value: undefined, type: null };
+        ent = ENTITIES.get(f.references);
+        cur = ent ? db.prepare(`SELECT * FROM ${q(ent.name)} WHERE "id" = ?`).get(v) : null;
+      }
+      return { value: undefined, type: null };
+    },
+    sum(entity, via, field) {
+      const ce = ENTITIES.get(entity);
+      const f = ce && fieldsOf(ce).find((x) => x.name === field);
+      if (!f || row.id === undefined) return { value: 0, type: f?.type ?? null };
+      return { value: db.prepare(`SELECT COALESCE(SUM(${q(field)}), 0) AS v FROM ${q(entity)} WHERE ${q(via)} = ?`).get(row.id).v, type: f.type };
+    },
+  };
+}
+function priceWith(e, row, version, b) {
+  const r = evaluateBinding(packages.get(version) ?? null, b, accessFor(e, row), (field) => fieldsOf(e).find((f) => f.name === field)?.type ?? null);
+  if (r.status !== "ok") throw new HttpError(422, r.message, { version, module: b.module, status: r.status, errors: r.result?.errors ?? [] });
+  return { values: r.values, result: r.result };
+}
+/** Ligne d'un document soumis au modèle : version du document (épinglée) ou version active. */
+function lineContext(e, row) {
+  const any = [...packages.values()].flatMap((p) => p.bindings ?? []).find((b) => b.entity === e.name && b.scope === "line" && b.status !== "proposed");
+  if (!any) return null;
+  const parentEnt = any.document ? ENTITIES.get(any.document.entity) : null;
+  const parentId = any.document ? row[any.document.via] : null;
+  const parent = parentEnt && parentId !== null && parentId !== undefined ? db.prepare(`SELECT * FROM ${q(parentEnt.name)} WHERE "id" = ?`).get(parentId) : null;
+  const version = parent?._rules_version ?? activeVersion();
+  const lb = version ? bindingIn(version, e.name, "line") : null;
+  if (!lb) return null;
+  return { b: lb, version, parentEnt: lb.document ? ENTITIES.get(lb.document.entity) : null, parentId: lb.document ? row[lb.document.via] : null };
+}
+/** Champs lus directement sur l'enregistrement par une liaison (entrées de calcul). */
+function directInputs(e) {
+  const out = new Set();
+  for (const p of packages.values())
+    for (const b of p.bindings ?? [])
+      if (b.entity === e.name)
+        for (const src of Object.values(b.inputs ?? {})) for (const s of typeof src === "string" ? [src] : Array.isArray(src) ? src : src?.date_number ? [src.date_number] : []) if (!String(s).includes(".")) out.add(s);
+  return out;
+}
+function rulesInfo(full = false) {
+  const active = activeVersion();
+  const pkg = active ? packages.get(active) : null;
+  const versions = db.prepare(`SELECT "version", "sha256", "source", "published_at", "published_by", "imported_at" FROM "_rules" ORDER BY "version"`).all();
+  return {
+    active_version: active,
+    versions: versions.map((v) => ({ ...v, modules: Object.keys(packages.get(v.version)?.modules ?? {}), notes: packages.get(v.version)?.notes ?? null })),
+    bindings: (pkg?.bindings ?? []).map((b) => ({ id: b.id, entity: b.entity, scope: b.scope, module: b.module, outputs: b.outputs, document: b.document ?? null, lines: b.lines ?? null })),
+    ...(full && pkg
+      ? {
+          modules: Object.fromEntries(
+            Object.entries(pkg.modules).map(([k, mdl]) => [k, { inputs: mdl.inputs ?? [], rules: (mdl.rules ?? []).map((r) => ({ id: r.id, type: r.type, description: r.description ?? null, validation_status: r.validation_status ?? null, confidence: r.confidence ?? null })) }]),
+          ),
+        }
+      : {}),
+  };
+}
+/** Recalcul explicite d'un document créé ici avec la version active (tracé) ; jamais pour l'historique. */
+function reprice(e, id, sess) {
+  syncRules();
+  const doc = db.prepare(`SELECT * FROM ${q(e.name)} WHERE "id" = ?`).get(id);
+  if (!doc) throw new HttpError(404, "Enregistrement introuvable");
+  if (doc._migrated) throw new HttpError(409, "Document historique : ses montants d'origine ne sont jamais recalculés");
+  const v = activeVersion();
+  if (!v || !bindingIn(v, e.name, "document")) throw new HttpError(409, "Calcul non disponible : le modèle métier actif ne calcule pas ce document");
+  const lb = (packages.get(v).bindings ?? []).find((b) => b.scope === "line" && b.document?.entity === e.name && b.status !== "proposed");
+  db.exec("BEGIN");
+  try {
+    if (lb) {
+      const le = ENTITIES.get(lb.entity);
+      for (const lineRow of db.prepare(`SELECT * FROM ${q(le.name)} WHERE ${q(lb.document.via)} = ?`).all(id)) {
+        const { values } = priceWith(le, lineRow, v, lb);
+        const keys = Object.keys(values);
+        db.prepare(`UPDATE ${q(le.name)} SET ${[...keys.map((k) => `${q(k)} = ?`), `"_rules_version" = ?`, `"_updated_at" = ?`].join(", ")} WHERE "id" = ?`).run(...keys.map((k) => values[k]), v, now(), lineRow.id);
+      }
+    }
+    db.prepare(`UPDATE ${q(e.name)} SET "_rules_version" = ? WHERE "id" = ?`).run(v, id);
+    repriceDocument(e, id, v);
+    audit(sess.user, "reprice", e.name, id, { _rules_version: doc._rules_version ?? null }, { _rules_version: v });
+    db.exec("COMMIT");
+  } catch (x) {
+    try {
+      db.exec("ROLLBACK");
+    } catch {}
+    throw x;
+  }
+  return db.prepare(`SELECT * FROM ${q(e.name)} WHERE "id" = ?`).get(id);
+}
+/** Recalcule un document (non migré) à partir de ses lignes et de ses propres champs. */
+function repriceDocument(pe, pid, version = null) {
+  const p = db.prepare(`SELECT * FROM ${q(pe.name)} WHERE "id" = ?`).get(pid);
+  if (!p || p._migrated) return null;
+  const v = version ?? p._rules_version ?? activeVersion();
+  const b = bindingIn(v, pe.name, "document");
+  if (!b) return null;
+  const { values } = priceWith(pe, p, v, b);
+  const changed = Object.keys(values).filter((k) => values[k] !== p[k]);
+  if (changed.length || p._rules_version !== v) {
+    db.prepare(`UPDATE ${q(pe.name)} SET ${[...changed.map((k) => `${q(k)} = ?`), `"_rules_version" = ?`, `"_updated_at" = ?`].join(", ")} WHERE "id" = ?`).run(...changed.map((k) => values[k]), v, now(), pid);
+  }
+  return v;
 }
 
 /* ------------------------------------------------------------------ */
@@ -264,6 +505,8 @@ function coerce(f, v) {
 }
 
 function computeFields(e, row) {
+  // Une entité calculée par le modèle métier n'utilise plus les formules de la spécification
+  if (boundAnywhere(e.name)) return;
   for (const c of e.computed ?? []) {
     const ast = compile(c.expr);
     if (ast.vars.some((k) => row[k] === null || row[k] === undefined)) continue;
@@ -276,6 +519,7 @@ function computeFields(e, row) {
 /** Agrégats (ex. total = somme des lignes) : recalculés UNIQUEMENT pour les enregistrements créés dans ce logiciel. */
 function refreshAggregates(childEntity, parentRefs) {
   for (const parent of SPEC.entities) {
+    if (boundAnywhere(parent.name, "document")) continue;
     for (const a of parent.aggregates ?? []) {
       if (a.children !== childEntity.name) continue;
       const id = parentRefs[a.via];
@@ -294,51 +538,90 @@ function refreshAggregates(childEntity, parentRefs) {
   }
 }
 
-/** Un document comptable historique (champ comptable + migré) n'est jamais modifié ni complété. */
+/**
+ * Les lignes d'un document historique protégé (comptable, ou calculé par le modèle métier) ne
+ * peuvent être ni ajoutées, ni modifiées, ni supprimées : le document garde ses montants d'origine.
+ */
+function isLineOf(e, parent, via) {
+  if ((parent.aggregates ?? []).some((a) => a.children === e.name && a.via === via)) return true;
+  if (e.line_of?.entity === parent.name && e.line_of?.via === via) return true;
+  return [...packages.values()].some((p) => (p.bindings ?? []).some((b) => b.entity === e.name && b.scope === "line" && b.document?.entity === parent.name && b.document?.via === via));
+}
 function lockedParent(e, body) {
-  for (const f of e.fields.filter((x) => x.type === "reference")) {
+  for (const f of fieldsOf(e).filter((x) => x.type === "reference")) {
     const parent = ENTITIES.get(f.references);
     const id = body[f.name];
     if (!parent || id === null || id === undefined) continue;
-    if (!parent.fields.some((x) => x.accounting)) continue;
-    if (!(parent.aggregates ?? []).some((a) => a.children === e.name && a.via === f.name)) continue;
+    if (!isLineOf(e, parent, f.name)) continue;
+    if (!parent.fields.some((x) => x.accounting) && !boundAnywhere(parent.name, "document")) continue;
     const p = db.prepare(`SELECT "_migrated" FROM ${q(parent.name)} WHERE "id" = ?`).get(id);
-    if (p?._migrated) throw new HttpError(409, `${parent.label_singular ?? parent.name} historique migré : document comptable non modifiable (émettre un nouveau document pour toute correction)`);
+    if (p?._migrated) throw new HttpError(409, `${parent.label_singular ?? parent.name} historique migré : ses lignes ne sont pas modifiables (ses montants d'origine sont conservés ; émettez un nouveau document pour toute correction)`);
   }
 }
 
 function write(e, body, sess, id = null) {
-  const unknown = Object.keys(body).filter((k) => !e.fields.some((f) => f.name === k) && k !== "_justification");
+  syncRules();
+  const fields = fieldsOf(e);
+  const unknown = Object.keys(body).filter((k) => !fields.some((f) => f.name === k) && k !== "_justification");
   if (unknown.length) throw new HttpError(400, `Champs inconnus : ${unknown.join(", ")}`);
   const before = id ? db.prepare(`SELECT * FROM ${q(e.name)} WHERE "id" = ?`).get(id) : null;
   if (id && !before) throw new HttpError(404, "Enregistrement introuvable");
   const values = {};
-  for (const f of e.fields) {
+  for (const f of fields) {
     const v = coerce(f, body[f.name]);
     if (v !== undefined) values[f.name] = v;
   }
+  // Champs calculés par le modèle métier : jamais saisis à la main (contrôle côté serveur)
+  const byRules = outputsOf(e);
+  const manual = fields.filter((f) => byRules.has(f.name) && f.name in values && values[f.name] !== null && values[f.name] !== (before?.[f.name] ?? null));
+  if (manual.length) throw new HttpError(400, `${manual.map((f) => f.label).join(", ")} : calculé par le modèle métier, non modifiable à la main`);
+  for (const n of byRules) delete values[n];
   if (before?._migrated) {
-    const locked = e.fields.filter((f) => f.accounting && f.name in values && values[f.name] !== before[f.name]);
-    if (locked.length) throw new HttpError(409, `Donnée comptable historique non modifiable : ${locked.map((f) => f.label).join(", ")}`);
+    const locked = fields.filter((f) => f.accounting && f.name in values && values[f.name] !== before[f.name]);
+    const inputs = directInputs(e);
+    const frozen = fields.filter((f) => !f.accounting && inputs.has(f.name) && f.name in values && values[f.name] !== before[f.name]);
+    if (locked.length || frozen.length) {
+      audit(sess.user, "update_refused", e.name, id, null, { fields: [...locked, ...frozen].map((f) => f.name), attempted: pick(values, [...locked, ...frozen]) }, body._justification ?? "Donnée historique protégée");
+      if (locked.length) throw new HttpError(409, `Donnée comptable historique non modifiable : ${locked.map((f) => f.label).join(", ")}`);
+      throw new HttpError(409, `Document historique : ${frozen.map((f) => f.label).join(", ")} non modifiable (ses montants d'origine sont conservés ; créez un nouveau document)`);
+    }
   }
   const row = { ...(before ?? {}), ...values };
-  if (!before?._migrated) computeFields(e, row);
-  const missing = e.fields.filter((f) => f.required && (row[f.name] === null || row[f.name] === undefined || row[f.name] === ""));
-  if (missing.length) throw new HttpError(400, `Champs obligatoires : ${missing.map((f) => f.label).join(", ")}`);
+  // Protection de l'historique AVANT tout calcul : la réponse dit pourquoi l'opération est refusée
   lockedParent(e, row);
   if (before) lockedParent(e, before);
-  const cols = e.fields.filter((f) => row[f.name] !== undefined && (!before || row[f.name] !== before[f.name]));
+  let line = null;
+  let selfVersion = null;
+  if (!before?._migrated) {
+    line = lineContext(e, row);
+    if (line) {
+      Object.assign(row, priceWith(e, row, line.version, line.b).values);
+      row._rules_version = line.version;
+    } else if (boundAnywhere(e.name, "document")) selfVersion = before?._rules_version ?? activeVersion();
+    else computeFields(e, row);
+  }
+  const missing = fields.filter((f) => f.required && !byRules.has(f.name) && (row[f.name] === null || row[f.name] === undefined || row[f.name] === ""));
+  if (missing.length) throw new HttpError(400, `Champs obligatoires : ${missing.map((f) => f.label).join(", ")}`);
+  const cols = fields.filter((f) => row[f.name] !== undefined && (!before || row[f.name] !== before[f.name]));
+  const sys = row._rules_version !== undefined && row._rules_version !== (before?._rules_version ?? undefined) ? [["_rules_version", row._rules_version]] : [];
   try {
     db.exec("BEGIN");
     let newId = id;
     if (before) {
-      if (cols.length) db.prepare(`UPDATE ${q(e.name)} SET ${cols.map((f) => `${q(f.name)} = ?`).join(", ")}, "_updated_at" = ? WHERE "id" = ?`).run(...cols.map((f) => row[f.name]), now(), id);
+      const sets = [...cols.map((f) => `${q(f.name)} = ?`), ...sys.map(([k]) => `${q(k)} = ?`)];
+      if (sets.length) db.prepare(`UPDATE ${q(e.name)} SET ${sets.join(", ")}, "_updated_at" = ? WHERE "id" = ?`).run(...cols.map((f) => row[f.name]), ...sys.map(([, v]) => v), now(), id);
     } else {
-      const info = db.prepare(`INSERT INTO ${q(e.name)} (${cols.map((f) => q(f.name)).join(", ")}${cols.length ? ", " : ""}"_migrated") VALUES (${cols.map(() => "?").join(", ")}${cols.length ? ", " : ""}0)`).run(...cols.map((f) => row[f.name]));
+      const names = [...cols.map((f) => q(f.name)), ...sys.map(([k]) => q(k)), `"_migrated"`];
+      const info = db.prepare(`INSERT INTO ${q(e.name)} (${names.join(", ")}) VALUES (${names.map(() => "?").join(", ")})`).run(...cols.map((f) => row[f.name]), ...sys.map(([, v]) => v), 0);
       newId = Number(info.lastInsertRowid);
     }
+    if (selfVersion) repriceDocument(e, newId, selfVersion);
+    if (line?.parentEnt && line.parentId !== null && line.parentId !== undefined) repriceDocument(line.parentEnt, line.parentId, line.version);
+    const oldParent = line?.b.document && before ? before[line.b.document.via] : null;
+    if (oldParent !== null && oldParent !== undefined && oldParent !== row[line.b.document.via]) repriceDocument(line.parentEnt, oldParent);
     const after = db.prepare(`SELECT * FROM ${q(e.name)} WHERE "id" = ?`).get(newId);
-    if (!before || cols.length) audit(sess.user, before ? "update" : "create", e.name, newId, before ? pick(before, cols) : null, pick(after, before ? cols : e.fields), body._justification ?? null);
+    const changed = before ? fields.filter((f) => after[f.name] !== before[f.name]) : fields;
+    if (!before || changed.length) audit(sess.user, before ? "update" : "create", e.name, newId, before ? pick(before, changed) : null, { ...pick(after, before ? changed : fields), ...(after._rules_version ? { _rules_version: after._rules_version } : {}) }, body._justification ?? null);
     refreshAggregates(e, after);
     if (before) refreshAggregates(e, before);
     db.exec("COMMIT");
@@ -357,8 +640,13 @@ const pick = (row, fields) => Object.fromEntries(fields.map((f) => [f.name ?? f,
 function remove(e, id, sess) {
   const before = db.prepare(`SELECT * FROM ${q(e.name)} WHERE "id" = ?`).get(id);
   if (!before) throw new HttpError(404, "Enregistrement introuvable");
-  if (before._migrated && e.fields.some((f) => f.accounting)) throw new HttpError(409, "Document comptable historique : suppression interdite");
+  syncRules();
+  if (before._migrated && (e.fields.some((f) => f.accounting) || boundAnywhere(e.name, "document"))) {
+    audit(sess.user, "delete_refused", e.name, id, null, null, "Document historique protégé");
+    throw new HttpError(409, "Document historique : suppression interdite (ses données d'origine sont conservées)");
+  }
   lockedParent(e, before);
+  const line = before._migrated ? null : lineContext(e, before);
   for (const other of SPEC.entities) {
     for (const f of other.fields.filter((x) => x.type === "reference" && x.references === e.name)) {
       const n = db.prepare(`SELECT COUNT(*) AS n FROM ${q(other.name)} WHERE ${q(f.name)} = ?`).get(id).n;
@@ -369,7 +657,8 @@ function remove(e, id, sess) {
   try {
     db.prepare(`DELETE FROM "_files" WHERE "entity" = ? AND "record_id" = ?`).run(e.name, id);
     db.prepare(`DELETE FROM ${q(e.name)} WHERE "id" = ?`).run(id);
-    audit(sess.user, "delete", e.name, id, pick(before, e.fields), null);
+    audit(sess.user, "delete", e.name, id, pick(before, fieldsOf(e)), null);
+    if (line?.parentEnt && line.parentId !== null && line.parentId !== undefined) repriceDocument(line.parentEnt, line.parentId);
     refreshAggregates(e, before);
     db.exec("COMMIT");
   } catch (x) {
@@ -409,7 +698,7 @@ function restore(sess, name) {
 
 /* CSV (réversibilité : export des données) ------------------------------ */
 function csv(e) {
-  const cols = ["id", ...e.fields.map((f) => f.name), "_source_key", "_migrated"];
+  const cols = ["id", ...fieldsOf(e).map((f) => f.name), "_source_key", "_migrated", "_rules_version"];
   const cell = (v) => {
     if (v === null || v === undefined) return "";
     const s = String(v);
@@ -434,7 +723,10 @@ async function route(req, res) {
     return send(res, 200, fs.readFileSync(file), STATIC[path.extname(file)] ?? "application/octet-stream");
   }
   if (req.method !== "GET" && !sameOrigin(req)) throw new HttpError(403, "Origine refusée");
-  if (p === "/api/health") return send(res, 200, { ok: true, app: SPEC.app.id, name: SPEC.app.name, spec_version: SPEC.spec_version });
+  if (p === "/api/health") {
+    syncRules();
+    return send(res, 200, { ok: true, app: SPEC.app.id, name: SPEC.app.name, spec_version: SPEC.spec_version, rules_version: activeVersion(), pid: process.pid });
+  }
 
   if (p === "/api/auth/login" && req.method === "POST") {
     const f = failures.get(ip) ?? { n: 0, until: 0 };
@@ -470,15 +762,46 @@ async function route(req, res) {
     return send(res, 200, { ok: true });
   }
   if (p === "/api/meta") {
+    syncRules();
     const { ddl, ...spec } = SPEC;
-    return send(res, 200, { ...spec, user: { name: sess.user, role: sess.role } });
+    const entities = spec.entities.map((e) => {
+      const outs = outputsOf(e);
+      return { ...e, fields: fieldsOf(e).map((f) => (outs.has(f.name) ? { ...f, computed_by_rules: true } : f)), rules: { line: boundAnywhere(e.name, "line"), document: boundAnywhere(e.name, "document") } };
+    });
+    return send(res, 200, { ...spec, entities, rules: rulesInfo(), user: { name: sess.user, role: sess.role } });
+  }
+  if (p === "/api/rules" && req.method === "GET") {
+    syncRules();
+    return send(res, 200, rulesInfo(true));
+  }
+  if (p === "/api/rules/preview" && req.method === "POST") {
+    requireRole(sess, "editor");
+    syncRules();
+    const body = await readJson(req, 100000);
+    const e = entityOf(String(body.entity ?? ""));
+    const base = body.id ? db.prepare(`SELECT * FROM ${q(e.name)} WHERE "id" = ?`).get(Number(body.id)) : null;
+    const row = { ...(base ?? {}) };
+    for (const f of fieldsOf(e)) {
+      const v = coerce(f, body.values?.[f.name]);
+      if (v !== undefined && !outputsOf(e).has(f.name)) row[f.name] = v;
+    }
+    if (base?._migrated) return send(res, 200, { status: "historical", message: "Enregistrement historique : ses montants d'origine sont conservés" });
+    const ctx = lineContext(e, row);
+    if (!ctx) return send(res, 200, { status: "none", message: activeVersion() ? "Aucun calcul défini pour cette saisie" : "Calcul non disponible : aucun modèle métier publié" });
+    const r = evaluateBinding(packages.get(ctx.version) ?? null, ctx.b, accessFor(e, row), (field) => fieldsOf(e).find((f) => f.name === field)?.type ?? null);
+    return send(res, 200, { status: r.status, version: ctx.version, module: ctx.b.module, values: r.values, message: r.message, steps: (r.result?.trace ?? []).filter((t) => t.applied).map((t) => ({ label: t.label, rule_id: t.rule_id, delta: t.delta ?? null, after: t.after ?? null })) });
   }
   if (p === "/api/dashboard") return send(res, 200, dashboard());
 
-  let m = /^\/api\/e\/([a-z][a-z0-9_]*)(?:\/(\d+))?(?:\/(files))?$/.exec(p);
+  let m = /^\/api\/e\/([a-z][a-z0-9_]*)(?:\/(\d+))?(?:\/(files|reprice))?$/.exec(p);
   if (m) {
     const e = entityOf(m[1]);
     const id = m[2] ? Number(m[2]) : null;
+    if (m[3] === "reprice") {
+      requireRole(sess, "editor");
+      if (req.method !== "POST" || id === null) throw new HttpError(405, "Méthode non autorisée");
+      return send(res, 200, reprice(e, id, sess));
+    }
     if (m[3]) {
       requireRole(sess, "editor");
       const body = await readJson(req);
@@ -523,6 +846,33 @@ async function route(req, res) {
       restore(sess, m[1]);
       return send(res, 200, { ok: true });
     }
+    if (p === "/api/admin/rules" && req.method === "POST") {
+      const body = await readJson(req, 2 * 1024 * 1024);
+      const pkg = body.package ?? body;
+      try {
+        checkPackage(pkg);
+      } catch (x) {
+        throw new HttpError(400, `Modèle métier refusé : ${x.message}`);
+      }
+      const created = importPackage(pkg, sess.user);
+      fs.mkdirSync(RULES_DIR, { recursive: true });
+      const file = path.join(RULES_DIR, `v${pkg.version}.json`);
+      if (!fs.existsSync(file)) fs.writeFileSync(file, JSON.stringify(pkg, null, 1));
+      rulesStamp = null;
+      syncRules();
+      return send(res, created ? 201 : 200, { ok: true, version: pkg.version, created, active_version: activeVersion() });
+    }
+    if (p === "/api/admin/rules/active" && req.method === "POST") {
+      const { version } = await readJson(req, 1000);
+      if (!db.prepare(`SELECT 1 FROM "_rules" WHERE "version" = ?`).get(Number(version))) throw new HttpError(404, `Version ${version} du modèle métier inconnue`);
+      fs.mkdirSync(RULES_DIR, { recursive: true });
+      fs.writeFileSync(path.join(RULES_DIR, "active.json"), JSON.stringify({ version: Number(version), by: sess.user, at: now() }));
+      db.prepare(`INSERT INTO "_meta" ("key", "value") VALUES ('rules_active_version', ?) ON CONFLICT("key") DO UPDATE SET "value" = excluded."value"`).run(String(Number(version)));
+      audit(sess.user, "rules_activated", null, null, null, { version: Number(version) });
+      rulesStamp = null;
+      syncRules();
+      return send(res, 200, { ok: true, active_version: activeVersion() });
+    }
     if (p === "/api/admin/users" && req.method === "GET") return send(res, 200, db.prepare(`SELECT "id", "username", "role", "created_at", "disabled" FROM "_users" ORDER BY "id"`).all());
     if (p === "/api/admin/users" && req.method === "POST") {
       const { username, password, role } = await readJson(req, 10000);
@@ -549,11 +899,18 @@ const server = http.createServer((req, res) => {
     send(res, 500, { ok: false, error: "Erreur interne" });
   });
 });
-server.listen(PORT, HOST, () => console.log(`[app] ${SPEC.app.name} en service sur http://${HOST}:${PORT}`));
+server.listen(PORT, HOST, () => {
+  fs.mkdirSync(path.dirname(PID_FILE), { recursive: true });
+  fs.writeFileSync(PID_FILE, JSON.stringify({ pid: process.pid, port: PORT, host: HOST, app: SPEC.app.id, started_at: now() }));
+  console.log(`[app] ${SPEC.app.name} en service sur http://${HOST}:${PORT} (processus ${process.pid})`);
+});
 const shutdown = () => {
   server.close();
   try {
     db.close();
+  } catch {}
+  try {
+    if (JSON.parse(fs.readFileSync(PID_FILE, "utf8")).pid === process.pid) fs.rmSync(PID_FILE, { force: true });
   } catch {}
   process.exit(0);
 };
