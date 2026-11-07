@@ -198,6 +198,13 @@ Choix d'Alan : schéma livré + lecture du code = deux natures de preuve, donc u
 | Noms Java surveillés par le contrôle anti-fuite | 0 | 173 |
 | Tests | 41 | 51 |
 
+## 14 bis. Les trois blocs sont dans `main` (07/11/2026, fin de soirée)
+
+- `h-explorer/` : l'explorateur d'Elias (bloc 1, agents H Company), branche `Mouss_H_Company`, déjà fusionnée.
+- `studio/` : le Studio de Jérémie (bloc 3), branche `rebuild/studio` fusionnée : moteur de migration des données, modèle métier versionné, historique comptable protégé, CRM livré, contrats JSON pour le bloc 1 et le bloc 2 (`studio/contracts/`, `studio/INTEGRATION_ALAN.md`, `studio/INTEGRATION_MOUSS.md`), bilan dans `studio/RAPPORT_FINAL.md`. Ses 113 tests (TypeScript, `studio/platform`) demandent un `npm install` dans ce dossier ; ils n'ont pas été relancés lors de la fusion.
+- Le dépôt n'a pas de branche `master` : la branche principale est `main`.
+- CI corrigée : `npm test` passait un dossier à Node (1 faux test en échec) ; il lance maintenant `node --test "tests/*.test.mjs"` (66 tests), d'où `engines.node >= 22`.
+
 ## 15. ERPNext (site Frappe Cloud d'Alan) et fusion avec l'explorateur d'Elias (07/11/2026)
 
 - **Fusion** : la branche `Mouss_H_Company` d'Elias (dossier `h-explorer/`, explorateur Python qui pilote les agents H Company) est dans main. Lire `h-explorer/HANDOFF.md`. Ne pas modifier ses fichiers (sa règle §8 bis) : le pont est de notre côté, `reborn import-run` (EXP_xxx.json vers run.yaml). La branche `rebuild/studio` de Jérémie (bloc 3) n'est pas fusionnée.

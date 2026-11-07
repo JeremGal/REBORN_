@@ -5,12 +5,12 @@
   "type": "module",
   "description": "Computer-use agents + REA + Craft Anything: understand legacy business software, then rebuild it.",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "reborn": "node tools/reborn.mjs",
     "validate": "node tools/reborn.mjs validate",
-    "test": "node --test tests/",
+    "test": "node --test \"tests/*.test.mjs\"",
     "status": "node tools/reborn.mjs status"
   },
   "dependencies": {
