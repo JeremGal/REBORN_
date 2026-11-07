@@ -1,0 +1,85 @@
+name: Comment
+description: Document type "Comment" (module Core).
+fields:
+  - name: comment_type
+    label: Comment Type
+    type: enum
+    observed_as: comment_type
+    required: true
+    enum_values:
+      - Comment
+      - Like
+      - Info
+      - Label
+      - Workflow
+      - Created
+      - Submitted
+      - Cancelled
+      - Updated
+      - Deleted
+      - Assigned
+      - Assignment Completed
+      - Attachment
+      - Attachment Removed
+      - Shared
+      - Unshared
+      - Bot
+      - Relinked
+      - Edit
+    default: Comment
+  - name: comment_email
+    label: Comment Email
+    type: string
+    observed_as: comment_email
+  - name: subject
+    label: Subject
+    type: text
+    observed_as: subject
+  - name: comment_by
+    label: Comment By
+    type: string
+    observed_as: comment_by
+  - name: published
+    label: Published
+    type: boolean
+    observed_as: published
+    default: "0"
+  - name: seen
+    label: Seen
+    type: boolean
+    observed_as: seen
+    default: "0"
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: reference_owner
+    label: Reference Owner
+    type: string
+    observed_as: reference_owner
+  - name: content
+    label: Content
+    type: text
+    observed_as: content
+  - name: ip_address
+    label: IP Address
+    type: string
+    observed_as: ip_address
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabComment
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Comment
+    note: declared by the program and served by its API

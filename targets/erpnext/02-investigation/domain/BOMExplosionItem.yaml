@@ -1,0 +1,88 @@
+name: BOMExplosionItem
+description: 'Document type "BOM Explosion Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: source_warehouse
+    label: Source Warehouse
+    type: ref
+    observed_as: source_warehouse
+    ref: Warehouse
+  - name: operation
+    label: Operation
+    type: ref
+    observed_as: operation
+    ref: Operation
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: stock_qty
+    label: Stock Qty
+    type: decimal
+    observed_as: stock_qty
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: qty_consumed_per_unit
+    label: Qty Consumed Per Unit
+    type: decimal
+    observed_as: qty_consumed_per_unit
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: include_item_in_manufacturing
+    label: Include Item In Manufacturing
+    type: boolean
+    observed_as: include_item_in_manufacturing
+    default: "0"
+  - name: sourced_by_supplier
+    label: Sourced by Supplier
+    type: boolean
+    observed_as: sourced_by_supplier
+    default: "0"
+  - name: is_sub_assembly_item
+    label: Is Sub Assembly Item
+    type: boolean
+    observed_as: is_sub_assembly_item
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: source_warehouse
+  - to: Operation
+    kind: many-to-one
+    via: operation
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Explosion Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Explosion Item
+    note: declared by the program and served by its API

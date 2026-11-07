@@ -1,0 +1,146 @@
+name: Contact
+description: A person you deal with, at a customer, supplier or anywhere else. Document type "Contact" (module Contacts).
+fields:
+  - name: first_name
+    label: First Name
+    type: string
+    observed_as: first_name
+  - name: middle_name
+    label: Middle Name
+    type: string
+    observed_as: middle_name
+  - name: last_name
+    label: Last Name
+    type: string
+    observed_as: last_name
+  - name: full_name
+    label: Full Name
+    type: string
+    observed_as: full_name
+  - name: email_id
+    label: Email Address
+    type: string
+    observed_as: email_id
+  - name: user
+    label: User Id
+    type: ref
+    observed_as: user
+    ref: User
+  - name: address
+    label: Address
+    type: ref
+    observed_as: address
+    ref: Address
+  - name: sync_with_google_contacts
+    label: Sync with Google Contacts
+    type: boolean
+    observed_as: sync_with_google_contacts
+    default: "0"
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Passive
+      - Open
+      - Replied
+    default: Passive
+  - name: salutation
+    label: Salutation
+    type: ref
+    observed_as: salutation
+    ref: Salutation
+  - name: designation
+    label: Designation
+    type: string
+    observed_as: designation
+  - name: gender
+    label: Gender
+    type: ref
+    observed_as: gender
+    ref: Gender
+  - name: phone
+    label: Phone
+    type: string
+    observed_as: phone
+  - name: mobile_no
+    label: Mobile No
+    type: string
+    observed_as: mobile_no
+  - name: company_name
+    label: Company Name
+    type: string
+    observed_as: company_name
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: google_contacts
+    label: Google Contacts
+    type: ref
+    observed_as: google_contacts
+    ref: GoogleContacts
+  - name: google_contacts_id
+    label: Google Contacts Id
+    type: string
+    observed_as: google_contacts_id
+  - name: pulled_from_google_contacts
+    label: Pulled from Google Contacts
+    type: boolean
+    observed_as: pulled_from_google_contacts
+    default: "0"
+  - name: is_primary_contact
+    label: Is Primary Contact
+    type: boolean
+    observed_as: is_primary_contact
+    default: "0"
+  - name: is_billing_contact
+    label: Is Billing Contact
+    type: boolean
+    observed_as: is_billing_contact
+  - name: department
+    label: Department
+    type: string
+    observed_as: department
+  - name: unsubscribed
+    label: Unsubscribed
+    type: boolean
+    observed_as: unsubscribed
+    default: "0"
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: Address
+    kind: many-to-one
+    via: address
+  - to: Salutation
+    kind: many-to-one
+    via: salutation
+  - to: Gender
+    kind: many-to-one
+    via: gender
+  - to: GoogleContacts
+    kind: many-to-one
+    via: google_contacts
+  - to: ContactEmail
+    kind: one-to-many
+    via: email_ids
+    description: lines (Email IDs)
+  - to: ContactPhone
+    kind: one-to-many
+    via: phone_nos
+    description: lines (Contact Numbers)
+  - to: DynamicLink
+    kind: one-to-many
+    via: links
+    description: lines (Links)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabContact
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Contact
+    note: declared by the program and served by its API

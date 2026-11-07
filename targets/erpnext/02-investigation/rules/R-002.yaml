@@ -1,0 +1,29 @@
+id: R-002
+title: Taxes by charge type, with a running total
+kind: tax
+statement: >-
+  Each tax row has a charge type. "On Net Total" applies its rate to the net total. "On Previous Row Amount" applies
+  its rate to the tax amount of the row it points to. "On Previous Row Total" applies its rate to the running total of
+  that row (net total plus every tax up to it), which makes taxes compound. "Actual" adds a fixed amount and is not a
+  base for the "On Net Total" rows. Each row carries a running total; the grand total is the net total plus all taxes.
+formula: |
+  On Net Total:           tax = net_total * rate
+  On Previous Row Amount: tax = tax_of(row_id) * rate
+  On Previous Row Total:  tax = total_of(row_id) * rate
+  Actual:                 tax = fixed amount
+  total(row) = total(previous row, or net_total) + tax(row)
+  grand_total = net_total + sum(tax)
+applies_to: [SalesTaxesAndCharges.charge_type, SalesTaxesAndCharges.rate, SalesTaxesAndCharges.tax_amount, SalesTaxesAndCharges.total, SalesInvoice.grand_total]
+features: [F-001]
+examples:
+  - { given: { net_total: 30, taxes: "20% On Net Total" }, expect: { tax: 6, grand_total: 36 }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 1 (SI-01)" } }
+  - { given: { net_total: 100, taxes: "10% On Net Total, then 5% On Previous Row Total of row 1" }, expect: { tax_1: 10, total_1: 110, tax_2: 5.5, grand_total: 115.5 }, source: { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "step 1 (SI-05b)" } }
+  - { given: { net_total: 100, taxes: "10% On Net Total, then 50% On Previous Row Amount of row 1" }, expect: { tax_1: 10, tax_2: 5, grand_total: 115 }, source: { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "step 2 (SI-06b)" } }
+  - { given: { net_total: 20, taxes: "Actual 15.00, then 20% On Net Total" }, expect: { tax_1: 15, tax_2: 4, grand_total: 39 }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 7 (SI-07)" } }
+status: confirmed
+confidence: high
+evidence:
+  - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "steps 1, 7" }
+  - { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "steps 1-2" }
+contradictions:
+  - "When two tax rows use the same tax account, the earlier row was computed with the later row's rate (R-007): the cascade examples above use two different accounts."

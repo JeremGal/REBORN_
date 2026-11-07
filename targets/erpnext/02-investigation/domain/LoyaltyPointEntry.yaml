@@ -1,0 +1,88 @@
+name: LoyaltyPointEntry
+description: Points a customer earned or spent under a loyalty program. Document type "Loyalty Point Entry" (module Accounts).
+fields:
+  - name: loyalty_program
+    label: Loyalty Program
+    type: ref
+    observed_as: loyalty_program
+    required: true
+    ref: LoyaltyProgram
+  - name: loyalty_program_tier
+    label: Loyalty Program Tier
+    type: string
+    observed_as: loyalty_program_tier
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: invoice_type
+    label: Invoice Type
+    type: ref
+    observed_as: invoice_type
+    required: true
+    ref: DocType
+  - name: invoice
+    label: Invoice
+    type: string
+    observed_as: invoice
+  - name: redeem_against
+    label: Redeem Against
+    type: ref
+    observed_as: redeem_against
+    ref: LoyaltyPointEntry
+  - name: loyalty_points
+    label: Loyalty Points
+    type: integer
+    observed_as: loyalty_points
+    required: true
+  - name: purchase_amount
+    label: Purchase Amount
+    type: money
+    observed_as: purchase_amount
+  - name: expiry_date
+    label: Expiry Date
+    type: date
+    observed_as: expiry_date
+    required: true
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: discretionary_reason
+    label: Discretionary Reason
+    type: string
+    observed_as: discretionary_reason
+relations:
+  - to: LoyaltyProgram
+    kind: many-to-one
+    via: loyalty_program
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: DocType
+    kind: many-to-one
+    via: invoice_type
+  - to: LoyaltyPointEntry
+    kind: many-to-one
+    via: redeem_against
+  - to: Company
+    kind: many-to-one
+    via: company
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLoyalty Point Entry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Loyalty Point Entry
+    note: declared by the program and served by its API

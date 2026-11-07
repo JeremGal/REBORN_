@@ -1,0 +1,56 @@
+name: PreparedReport
+description: Document type "Prepared Report" (module Core).
+fields:
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Error
+      - Queued
+      - Completed
+      - Started
+      - Cancelled
+    default: Queued
+  - name: report_name
+    label: Report Name
+    type: string
+    observed_as: report_name
+    required: true
+  - name: queued_by
+    label: Queued By
+    type: string
+    observed_as: queued_by
+  - name: job_id
+    label: Job ID
+    type: string
+    observed_as: job_id
+  - name: queued_at
+    label: Queued At
+    type: datetime
+    observed_as: queued_at
+  - name: report_end_time
+    label: Finished At
+    type: datetime
+    observed_as: report_end_time
+  - name: peak_memory_usage
+    label: Peak Memory Usage
+    type: integer
+    observed_as: peak_memory_usage
+  - name: error_message
+    label: Error Message
+    type: text
+    observed_as: error_message
+  - name: filters
+    label: Filters
+    type: text
+    observed_as: filters
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPrepared Report
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Prepared Report
+    note: declared by the program and served by its API

@@ -1,0 +1,302 @@
+name: POSProfile
+description: Settings for a point of sale, like its warehouse, price list and payment methods. Document type "POS Profile" (module Accounts).
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: country
+    label: Country
+    type: string
+    observed_as: country
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: company_address
+    label: Company Address
+    type: ref
+    observed_as: company_address
+    ref: Address
+  - name: set_grand_total_to_default_mop
+    label: Set Grand Total to Default Payment Method
+    type: boolean
+    observed_as: set_grand_total_to_default_mop
+    default: "1"
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: selling_price_list
+    label: Price List
+    type: ref
+    observed_as: selling_price_list
+    ref: PriceList
+  - name: write_off_account
+    label: Write Off Account
+    type: ref
+    observed_as: write_off_account
+    required: true
+    ref: Account
+  - name: write_off_cost_center
+    label: Write Off Cost Center
+    type: ref
+    observed_as: write_off_cost_center
+    required: true
+    ref: CostCenter
+  - name: write_off_limit
+    label: Write Off Limit
+    type: money
+    observed_as: write_off_limit
+    required: true
+    default: "1"
+  - name: income_account
+    label: Income Account
+    type: ref
+    observed_as: income_account
+    ref: Account
+  - name: expense_account
+    label: Expense Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: taxes_and_charges
+    label: Taxes and Charges
+    type: ref
+    observed_as: taxes_and_charges
+    ref: SalesTaxesAndChargesTemplate
+  - name: tax_category
+    label: Tax Category
+    type: ref
+    observed_as: tax_category
+    ref: TaxCategory
+  - name: account_for_change_amount
+    label: Account for Change Amount
+    type: ref
+    observed_as: account_for_change_amount
+    ref: Account
+  - name: disable_rounded_total
+    label: Disable Rounded Total
+    type: boolean
+    observed_as: disable_rounded_total
+    default: "0"
+  - name: apply_discount_on
+    label: Apply Discount On
+    type: enum
+    observed_as: apply_discount_on
+    enum_values:
+      - Grand Total
+      - Net Total
+    default: Grand Total
+  - name: allow_partial_payment
+    label: Allow Partial Payment
+    type: boolean
+    observed_as: allow_partial_payment
+    default: "0"
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: action_on_new_invoice
+    label: Action on New Invoice
+    type: enum
+    observed_as: action_on_new_invoice
+    enum_values:
+      - Always Ask
+      - Save Changes and Load New Invoice
+      - Discard Changes and Load New Invoice
+    default: Always Ask
+  - name: validate_stock_on_save
+    label: Validate Stock on Save
+    type: boolean
+    observed_as: validate_stock_on_save
+    default: "0"
+  - name: update_stock
+    label: Update Stock
+    type: boolean
+    observed_as: update_stock
+    default: "1"
+  - name: ignore_pricing_rule
+    label: Ignore Pricing Rule
+    type: boolean
+    observed_as: ignore_pricing_rule
+    default: "0"
+  - name: print_receipt_on_order_complete
+    label: Print Receipt on Order Complete
+    type: boolean
+    observed_as: print_receipt_on_order_complete
+    default: "0"
+  - name: hide_images
+    label: Hide Images
+    type: boolean
+    observed_as: hide_images
+    default: "0"
+  - name: hide_unavailable_items
+    label: Hide Unavailable Items
+    type: boolean
+    observed_as: hide_unavailable_items
+    default: "0"
+  - name: auto_add_item_to_cart
+    label: Automatically Add Filtered Item To Cart
+    type: boolean
+    observed_as: auto_add_item_to_cart
+    default: "0"
+  - name: allow_rate_change
+    label: Allow User to Edit Rate
+    type: boolean
+    observed_as: allow_rate_change
+    default: "0"
+  - name: allow_discount_change
+    label: Allow User to Edit Discount
+    type: boolean
+    observed_as: allow_discount_change
+    default: "0"
+  - name: print_format
+    label: Print Format
+    type: ref
+    observed_as: print_format
+    ref: PrintFormat
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: tc_name
+    label: Terms and Conditions
+    type: ref
+    observed_as: tc_name
+    ref: TermsAndConditions
+  - name: select_print_heading
+    label: Print Heading
+    type: ref
+    observed_as: select_print_heading
+    ref: PrintHeading
+  - name: utm_source
+    label: Source
+    type: ref
+    observed_as: utm_source
+    ref: UTMSource
+  - name: utm_campaign
+    label: Campaign
+    type: ref
+    observed_as: utm_campaign
+    ref: UTMCampaign
+  - name: utm_medium
+    label: Medium
+    type: ref
+    observed_as: utm_medium
+    ref: UTMCampaign
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Address
+    kind: many-to-one
+    via: company_address
+  - to: POSPaymentMethod
+    kind: one-to-many
+    via: payments
+    description: lines (Payment Methods)
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: PriceList
+    kind: many-to-one
+    via: selling_price_list
+  - to: Account
+    kind: many-to-one
+    via: write_off_account
+  - to: CostCenter
+    kind: many-to-one
+    via: write_off_cost_center
+  - to: Account
+    kind: many-to-one
+    via: income_account
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: SalesTaxesAndChargesTemplate
+    kind: many-to-one
+    via: taxes_and_charges
+  - to: TaxCategory
+    kind: many-to-one
+    via: tax_category
+  - to: Account
+    kind: many-to-one
+    via: account_for_change_amount
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: POSProfileUser
+    kind: one-to-many
+    via: applicable_for_users
+    description: lines (Applicable for Users)
+  - to: POSItemGroup
+    kind: one-to-many
+    via: item_groups
+    description: lines (Item Groups)
+  - to: POSCustomerGroup
+    kind: one-to-many
+    via: customer_groups
+    description: lines (Customer Groups)
+  - to: PrintFormat
+    kind: many-to-one
+    via: print_format
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: TermsAndConditions
+    kind: many-to-one
+    via: tc_name
+  - to: PrintHeading
+    kind: many-to-one
+    via: select_print_heading
+  - to: UTMSource
+    kind: many-to-one
+    via: utm_source
+  - to: UTMCampaign
+    kind: many-to-one
+    via: utm_campaign
+  - to: UTMCampaign
+    kind: many-to-one
+    via: utm_medium
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPOS Profile
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of POS Profile
+    note: declared by the program and served by its API

@@ -35,6 +35,14 @@ test("running REA with a path-like operation name is refused", async () => {
   } finally { sb.cleanup(); }
 });
 
+test("every option the CLI reads with opt() is declared as taking a value", () => {
+  const src = fs.readFileSync(path.join(ROOT, "tools", "reborn.mjs"), "utf8");
+  const declared = new Set(JSON.parse(/const VALUE_OPTS = new Set\((\[[^\]]*\])\)/.exec(src)[1].replace(/'/g, '"')));
+  const used = [...new Set([...src.matchAll(/\bopt\("([a-z-]+)"/g)].map((m) => m[1]))];
+  const missing = used.filter((o) => !declared.has(o));
+  assert.deepEqual(missing, [], `options read with opt() but missing from VALUE_OPTS: ${missing.join(", ")}`);
+});
+
 test("an unknown command exits with status 2", () => {
   const r = spawnSync(process.execPath, [path.join(ROOT, "tools", "reborn.mjs"), "no-such-command"], { encoding: "utf8" });
   assert.equal(r.status, 2);

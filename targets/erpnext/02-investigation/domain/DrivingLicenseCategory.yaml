@@ -1,0 +1,28 @@
+name: DrivingLicenseCategory
+description: 'Document type "Driving License Category" (module Setup): lines of another document.'
+fields:
+  - name: class
+    label: Driver licence class
+    type: string
+    observed_as: class
+  - name: description
+    label: Description
+    type: string
+    observed_as: description
+  - name: issuing_date
+    label: Issuing Date
+    type: date
+    observed_as: issuing_date
+  - name: expiry_date
+    label: Expiry Date
+    type: date
+    observed_as: expiry_date
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDriving License Category
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Driving License Category
+    note: declared by the program and served by its API

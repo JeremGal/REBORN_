@@ -1,0 +1,98 @@
+name: AssetCapitalizationStockItem
+description: 'Document type "Asset Capitalization Stock Item" (module Assets): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: purchase_receipt_item
+    label: Purchase Receipt Item
+    type: string
+    observed_as: purchase_receipt_item
+  - name: stock_qty
+    label: Quantity
+    type: decimal
+    observed_as: stock_qty
+  - name: actual_qty
+    label: Actual Qty in Warehouse
+    type: decimal
+    observed_as: actual_qty
+  - name: valuation_rate
+    label: Valuation Rate
+    type: money
+    observed_as: valuation_rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    default: "0"
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: serial_and_batch_bundle
+    label: Serial and Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: use_serial_batch_fields
+    label: Use Serial No / Batch Fields
+    type: boolean
+    observed_as: use_serial_batch_fields
+    default: "0"
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Capitalization Stock Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Capitalization Stock Item
+    note: declared by the program and served by its API

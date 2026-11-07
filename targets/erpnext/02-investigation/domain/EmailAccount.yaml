@@ -1,0 +1,344 @@
+name: EmailAccount
+description: Document type "Email Account" (module Email).
+fields:
+  - name: email_id
+    label: Email Address
+    type: string
+    observed_as: email_id
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: email_account_name
+    label: Email Account Name
+    type: string
+    observed_as: email_account_name
+    unique: true
+  - name: enable_incoming
+    label: Enable Incoming
+    type: boolean
+    observed_as: enable_incoming
+    default: "0"
+  - name: enable_outgoing
+    label: Enable Outgoing
+    type: boolean
+    observed_as: enable_outgoing
+    default: "0"
+  - name: service
+    label: Service
+    type: enum
+    observed_as: service
+    enum_values:
+      - Frappe Mail
+      - GMail
+      - Sendgrid
+      - SparkPost
+      - Yahoo Mail
+      - Outlook.com
+      - Yandex.Mail
+  - name: domain
+    label: Domain
+    type: ref
+    observed_as: domain
+    ref: EmailDomain
+  - name: frappe_mail_site
+    label: Frappe Mail Site
+    type: string
+    observed_as: frappe_mail_site
+    default: https://frappemail.com
+  - name: auth_method
+    label: Method
+    type: enum
+    observed_as: auth_method
+    enum_values:
+      - Basic
+      - OAuth
+    default: Basic
+  - name: backend_app_flow
+    label: Authenticate as Service Principal
+    type: boolean
+    observed_as: backend_app_flow
+    default: "0"
+  - name: password
+    label: Password
+    type: string
+    observed_as: password
+  - name: awaiting_password
+    label: Awaiting password
+    type: boolean
+    observed_as: awaiting_password
+    default: "0"
+  - name: ascii_encode_password
+    label: Use ASCII encoding for password
+    type: boolean
+    observed_as: ascii_encode_password
+    default: "0"
+  - name: api_key
+    label: API Key
+    type: string
+    observed_as: api_key
+  - name: api_secret
+    label: API Secret
+    type: string
+    observed_as: api_secret
+  - name: connected_app
+    label: Connected App
+    type: ref
+    observed_as: connected_app
+    ref: ConnectedApp
+  - name: connected_user
+    label: Connected User
+    type: ref
+    observed_as: connected_user
+    ref: User
+  - name: login_id_is_different
+    label: Use different Email ID
+    type: boolean
+    observed_as: login_id_is_different
+    default: "0"
+  - name: login_id
+    label: Alternative Email ID
+    type: string
+    observed_as: login_id
+  - name: default_incoming
+    label: Default Incoming
+    type: boolean
+    observed_as: default_incoming
+    default: "0"
+  - name: attachment_limit
+    label: Attachment Limit (MB)
+    type: integer
+    observed_as: attachment_limit
+  - name: last_received_at
+    label: Last Received At
+    type: datetime
+    observed_as: last_received_at
+  - name: use_imap
+    label: Use IMAP
+    type: boolean
+    observed_as: use_imap
+    default: "0"
+  - name: use_ssl
+    label: Use SSL
+    type: boolean
+    observed_as: use_ssl
+    default: "0"
+  - name: validate_ssl_certificate
+    label: Validate SSL Certificate
+    type: boolean
+    observed_as: validate_ssl_certificate
+    default: "1"
+  - name: use_starttls
+    label: Use STARTTLS
+    type: boolean
+    observed_as: use_starttls
+    default: "0"
+  - name: email_server
+    label: Incoming Server
+    type: string
+    observed_as: email_server
+  - name: incoming_port
+    label: Port
+    type: string
+    observed_as: incoming_port
+  - name: email_sync_option
+    label: Email Sync Option
+    type: enum
+    observed_as: email_sync_option
+    enum_values:
+      - ALL
+      - UNSEEN
+    default: UNSEEN
+  - name: initial_sync_count
+    label: Initial Sync Count
+    type: enum
+    observed_as: initial_sync_count
+    enum_values:
+      - "100"
+      - "250"
+      - "500"
+    default: "250"
+  - name: append_emails_to_sent_folder
+    label: Append Emails to Sent Folder
+    type: boolean
+    observed_as: append_emails_to_sent_folder
+    default: "0"
+  - name: sent_folder_name
+    label: Sent Folder Name
+    type: string
+    observed_as: sent_folder_name
+  - name: append_to
+    label: Append To
+    type: ref
+    observed_as: append_to
+    ref: DocType
+  - name: create_contact
+    label: Create Contacts from Incoming Emails
+    type: boolean
+    observed_as: create_contact
+    default: "1"
+  - name: enable_automatic_linking
+    label: Enable Automatic Linking in Documents
+    type: boolean
+    observed_as: enable_automatic_linking
+    default: "0"
+  - name: notify_if_unreplied
+    label: Notify if unreplied
+    type: boolean
+    observed_as: notify_if_unreplied
+    default: "0"
+  - name: unreplied_for_mins
+    label: Notify if unreplied for (in mins)
+    type: integer
+    observed_as: unreplied_for_mins
+    default: "30"
+  - name: send_notification_to
+    label: Send Notification to
+    type: text
+    observed_as: send_notification_to
+  - name: default_outgoing
+    label: Default Outgoing
+    type: boolean
+    observed_as: default_outgoing
+    default: "0"
+  - name: always_use_account_email_id_as_sender
+    label: Always use this email address as sender address
+    type: boolean
+    observed_as: always_use_account_email_id_as_sender
+    default: "0"
+  - name: always_use_account_name_as_sender_name
+    label: Always use this name as sender name
+    type: boolean
+    observed_as: always_use_account_name_as_sender_name
+    default: "0"
+  - name: send_unsubscribe_message
+    label: Send unsubscribe message in email
+    type: boolean
+    observed_as: send_unsubscribe_message
+    default: "1"
+  - name: track_email_status
+    label: Track Email Status
+    type: boolean
+    observed_as: track_email_status
+    default: "1"
+  - name: add_x_original_from
+    label: Add X-Original-From header
+    type: boolean
+    observed_as: add_x_original_from
+    default: "1"
+  - name: add_reply_to_header
+    label: Add Reply-To header
+    type: boolean
+    observed_as: add_reply_to_header
+    default: "1"
+  - name: use_tls
+    label: Use TLS
+    type: boolean
+    observed_as: use_tls
+    default: "0"
+  - name: use_ssl_for_outgoing
+    label: Use SSL
+    type: boolean
+    observed_as: use_ssl_for_outgoing
+    default: "0"
+  - name: smtp_server
+    label: Outgoing Server
+    type: string
+    observed_as: smtp_server
+  - name: smtp_port
+    label: Port
+    type: string
+    observed_as: smtp_port
+  - name: no_smtp_authentication
+    label: Disable SMTP server authentication
+    type: boolean
+    observed_as: no_smtp_authentication
+    default: "0"
+  - name: dsn_notify_type
+    label: Delivery Status Notification Type
+    type: enum
+    observed_as: dsn_notify_type
+    enum_values:
+      - SUCCESS
+      - FAILURE
+      - DELAY
+      - SUCCESS,FAILURE
+      - SUCCESS,FAILURE,DELAY
+      - NEVER
+  - name: always_bcc
+    label: Always BCC Address
+    type: string
+    observed_as: always_bcc
+  - name: add_signature
+    label: Add Signature
+    type: boolean
+    observed_as: add_signature
+    default: "0"
+  - name: signature
+    label: Signature
+    type: text
+    observed_as: signature
+  - name: enable_auto_reply
+    label: Enable Auto Reply
+    type: boolean
+    observed_as: enable_auto_reply
+    default: "0"
+  - name: auto_reply_message
+    label: Auto Reply Message
+    type: text
+    observed_as: auto_reply_message
+  - name: footer
+    label: Footer Content
+    type: text
+    observed_as: footer
+  - name: brand_logo
+    label: Brand Logo
+    type: file
+    observed_as: brand_logo
+  - name: uidvalidity
+    label: UIDVALIDITY
+    type: string
+    observed_as: uidvalidity
+  - name: uidnext
+    label: UIDNEXT
+    type: integer
+    observed_as: uidnext
+  - name: no_failed
+    label: no failed attempts
+    type: integer
+    observed_as: no_failed
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: EmailDomain
+    kind: many-to-one
+    via: domain
+  - to: ConnectedApp
+    kind: many-to-one
+    via: connected_app
+  - to: User
+    kind: many-to-one
+    via: connected_user
+  - to: IMAPFolder
+    kind: one-to-many
+    via: imap_folder
+    description: lines (IMAP Folder)
+  - to: DocType
+    kind: many-to-one
+    via: append_to
+  - to: ReplyToAddress
+    kind: one-to-many
+    via: reply_to_addresses
+    description: lines (Reply-To Addresses)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Account
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Account
+    note: declared by the program and served by its API

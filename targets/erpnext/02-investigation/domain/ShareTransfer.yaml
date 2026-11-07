@@ -1,0 +1,126 @@
+name: ShareTransfer
+description: 'A record of shares issued, bought back or moved between shareholders. Document type "Share Transfer" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: transfer_type
+    label: Transfer Type
+    type: enum
+    observed_as: transfer_type
+    required: true
+    enum_values:
+      - Issue
+      - Purchase
+      - Transfer
+  - name: date
+    label: Date
+    type: date
+    observed_as: date
+    required: true
+  - name: from_shareholder
+    label: From Shareholder
+    type: ref
+    observed_as: from_shareholder
+    ref: Shareholder
+  - name: from_folio_no
+    label: From Folio No
+    type: string
+    observed_as: from_folio_no
+  - name: to_shareholder
+    label: To Shareholder
+    type: ref
+    observed_as: to_shareholder
+    ref: Shareholder
+  - name: to_folio_no
+    label: To Folio No
+    type: string
+    observed_as: to_folio_no
+  - name: equity_or_liability_account
+    label: Equity/Liability Account
+    type: ref
+    observed_as: equity_or_liability_account
+    required: true
+    ref: Account
+  - name: asset_account
+    label: Asset Account
+    type: ref
+    observed_as: asset_account
+    ref: Account
+  - name: share_type
+    label: Share Type
+    type: ref
+    observed_as: share_type
+    required: true
+    ref: ShareType
+  - name: from_no
+    label: From No
+    type: integer
+    observed_as: from_no
+    required: true
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    required: true
+  - name: no_of_shares
+    label: No of Shares
+    type: integer
+    observed_as: no_of_shares
+    required: true
+  - name: to_no
+    label: To No
+    type: integer
+    observed_as: to_no
+    required: true
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: ShareTransfer
+relations:
+  - to: Shareholder
+    kind: many-to-one
+    via: from_shareholder
+  - to: Shareholder
+    kind: many-to-one
+    via: to_shareholder
+  - to: Account
+    kind: many-to-one
+    via: equity_or_liability_account
+  - to: Account
+    kind: many-to-one
+    via: asset_account
+  - to: ShareType
+    kind: many-to-one
+    via: share_type
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: ShareTransfer
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabShare Transfer
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Share Transfer
+    note: declared by the program and served by its API

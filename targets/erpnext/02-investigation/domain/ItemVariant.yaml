@@ -1,0 +1,27 @@
+name: ItemVariant
+description: 'Document type "Item Variant" (module Stock): lines of another document.'
+fields:
+  - name: item_attribute
+    label: Item Attribute
+    type: ref
+    observed_as: item_attribute
+    required: true
+    ref: ItemAttribute
+  - name: item_attribute_value
+    label: Item Attribute Value
+    type: string
+    observed_as: item_attribute_value
+    required: true
+relations:
+  - to: ItemAttribute
+    kind: many-to-one
+    via: item_attribute
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Variant
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Variant
+    note: declared by the program and served by its API

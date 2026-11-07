@@ -1,0 +1,149 @@
+name: Contract
+description: 'An agreement with a customer, supplier or employee. Document type "Contract" (module CRM): draft, submitted, cancelled life cycle.'
+fields:
+  - name: party_type
+    label: Party Type
+    type: enum
+    observed_as: party_type
+    required: true
+    enum_values:
+      - Customer
+      - Supplier
+      - Employee
+    default: Customer
+  - name: is_signed
+    label: Signed
+    type: boolean
+    observed_as: is_signed
+    default: "0"
+  - name: party_name
+    label: Party Name
+    type: string
+    observed_as: party_name
+    required: true
+  - name: party_user
+    label: Party User
+    type: ref
+    observed_as: party_user
+    ref: User
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Unsigned
+      - Active
+      - Inactive
+      - Cancelled
+  - name: fulfilment_status
+    label: Fulfilment Status
+    type: enum
+    observed_as: fulfilment_status
+    enum_values:
+      - N/A
+      - Unfulfilled
+      - Partially Fulfilled
+      - Fulfilled
+      - Lapsed
+  - name: party_full_name
+    label: Party Full Name
+    type: string
+    observed_as: party_full_name
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+  - name: signee
+    label: Signee
+    type: string
+    observed_as: signee
+  - name: signed_on
+    label: Signed On
+    type: datetime
+    observed_as: signed_on
+  - name: ip_address
+    label: IP Address
+    type: string
+    observed_as: ip_address
+  - name: contract_template
+    label: Contract Template
+    type: ref
+    observed_as: contract_template
+    ref: ContractTemplate
+  - name: contract_terms
+    label: Contract Terms
+    type: text
+    observed_as: contract_terms
+    required: true
+  - name: requires_fulfilment
+    label: Requires Fulfilment
+    type: boolean
+    observed_as: requires_fulfilment
+    default: "0"
+  - name: fulfilment_deadline
+    label: Fulfilment Deadline
+    type: date
+    observed_as: fulfilment_deadline
+  - name: signee_company
+    label: Signee (Company)
+    type: file
+    observed_as: signee_company
+  - name: signed_by_company
+    label: Signed By (Company)
+    type: ref
+    observed_as: signed_by_company
+    ref: User
+  - name: document_type
+    label: Document Type
+    type: enum
+    observed_as: document_type
+    enum_values:
+      - Quotation
+      - Project
+      - Sales Order
+      - Purchase Order
+      - Sales Invoice
+      - Purchase Invoice
+  - name: document_name
+    label: Document Name
+    type: string
+    observed_as: document_name
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: Contract
+relations:
+  - to: User
+    kind: many-to-one
+    via: party_user
+  - to: ContractTemplate
+    kind: many-to-one
+    via: contract_template
+  - to: ContractFulfilmentChecklist
+    kind: one-to-many
+    via: fulfilment_terms
+    description: lines (Fulfilment Terms)
+  - to: User
+    kind: many-to-one
+    via: signed_by_company
+  - to: Contract
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabContract
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Contract
+    note: declared by the program and served by its API

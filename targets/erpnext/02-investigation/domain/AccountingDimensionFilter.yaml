@@ -1,0 +1,57 @@
+name: AccountingDimensionFilter
+description: Document type "Accounting Dimension Filter" (module Accounts).
+fields:
+  - name: accounting_dimension
+    label: Accounting Dimension
+    type: string
+    observed_as: accounting_dimension
+    required: true
+  - name: fieldname
+    label: Fieldname
+    type: string
+    observed_as: fieldname
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: apply_restriction_on_values
+    label: Apply restriction on dimension values
+    type: boolean
+    observed_as: apply_restriction_on_values
+    default: "1"
+  - name: allow_or_restrict
+    label: Allow Or Restrict Dimension
+    type: enum
+    observed_as: allow_or_restrict
+    required: true
+    enum_values:
+      - Allow
+      - Restrict
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: ApplicableOnAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Applicable On Account)
+  - to: AllowedDimension
+    kind: one-to-many
+    via: dimensions
+    description: lines (Applicable Dimension)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAccounting Dimension Filter
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Accounting Dimension Filter
+    note: declared by the program and served by its API

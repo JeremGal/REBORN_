@@ -1,0 +1,25 @@
+name: KanbanBoardField
+description: 'Document type "Kanban Board Field" (module Desk): lines of another document.'
+fields:
+  - name: fieldname
+    label: Field
+    type: string
+    observed_as: fieldname
+    required: true
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabKanban Board Field
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Kanban Board Field
+    note: declared by the program and served by its API

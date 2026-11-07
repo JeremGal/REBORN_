@@ -1,0 +1,102 @@
+name: PaymentReconciliationAllocation
+description: 'Document type "Payment Reconciliation Allocation" (module Accounts): lines of another document.'
+fields:
+  - name: reference_type
+    label: Reference Type
+    type: ref
+    observed_as: reference_type
+    required: true
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+    required: true
+  - name: reference_row
+    label: Reference Row
+    type: string
+    observed_as: reference_row
+  - name: invoice_type
+    label: Invoice Type
+    type: ref
+    observed_as: invoice_type
+    required: true
+    ref: DocType
+  - name: invoice_number
+    label: Invoice Number
+    type: string
+    observed_as: invoice_number
+    required: true
+  - name: allocated_amount
+    label: Allocated Amount
+    type: money
+    observed_as: allocated_amount
+    required: true
+  - name: unreconciled_amount
+    label: Unreconciled Amount
+    type: money
+    observed_as: unreconciled_amount
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: is_advance
+    label: Is Advance
+    type: string
+    observed_as: is_advance
+  - name: difference_amount
+    label: Difference Amount
+    type: money
+    observed_as: difference_amount
+  - name: gain_loss_posting_date
+    label: Difference Posting Date
+    type: date
+    observed_as: gain_loss_posting_date
+  - name: debit_or_credit_note_posting_date
+    label: Debit / Credit Note Posting Date
+    type: date
+    observed_as: debit_or_credit_note_posting_date
+  - name: difference_account
+    label: Difference Account
+    type: ref
+    observed_as: difference_account
+    ref: Account
+  - name: exchange_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: exchange_rate
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_type
+  - to: DocType
+    kind: many-to-one
+    via: invoice_type
+  - to: Account
+    kind: many-to-one
+    via: difference_account
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Reconciliation Allocation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Reconciliation Allocation
+    note: declared by the program and served by its API

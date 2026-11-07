@@ -1,0 +1,47 @@
+name: WebFormRequest
+description: Document type "Web Form Request" (module Website).
+fields:
+  - name: web_form
+    label: Web Form
+    type: ref
+    observed_as: web_form
+    required: true
+    ref: WebForm
+  - name: key
+    label: Key
+    type: string
+    observed_as: key
+    unique: true
+  - name: expires_on
+    label: Expires On
+    type: datetime
+    observed_as: expires_on
+  - name: first_used_on
+    label: First Used On
+    type: datetime
+    observed_as: first_used_on
+  - name: web_form_values
+    label: Web Form Values
+    type: text
+    observed_as: web_form_values
+  - name: doc_values
+    label: Doc Values
+    type: text
+    observed_as: doc_values
+relations:
+  - to: WebForm
+    kind: many-to-one
+    via: web_form
+  - to: DynamicLink
+    kind: one-to-many
+    via: references
+    description: lines (References)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWeb Form Request
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Web Form Request
+    note: declared by the program and served by its API

@@ -1,0 +1,176 @@
+name: SerialNo
+description: A single unit of an item, tracked by its own number. Document type "Serial No" (module Stock).
+fields:
+  - name: serial_no
+    label: Serial No
+    type: string
+    observed_as: serial_no
+    required: true
+    unique: true
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: purchase_rate
+    label: Incoming Rate
+    type: decimal
+    observed_as: purchase_rate
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Active
+      - Inactive
+      - Consumed
+      - Delivered
+      - Expired
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: brand
+    label: Brand
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: asset
+    label: Asset
+    type: ref
+    observed_as: asset
+    ref: Asset
+  - name: asset_status
+    label: Asset Status
+    type: enum
+    observed_as: asset_status
+    enum_values:
+      - Issue
+      - Receipt
+      - Transfer
+  - name: location
+    label: Location
+    type: ref
+    observed_as: location
+    ref: Location
+  - name: employee
+    label: Employee
+    type: ref
+    observed_as: employee
+    ref: Employee
+  - name: warranty_expiry_date
+    label: Warranty Expiry Date
+    type: date
+    observed_as: warranty_expiry_date
+  - name: amc_expiry_date
+    label: AMC Expiry Date
+    type: date
+    observed_as: amc_expiry_date
+  - name: maintenance_status
+    label: Maintenance Status
+    type: enum
+    observed_as: maintenance_status
+    enum_values:
+      - Under Warranty
+      - Out of Warranty
+      - Under AMC
+      - Out of AMC
+  - name: warranty_period
+    label: Warranty Period (Days)
+    type: integer
+    observed_as: warranty_period
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: work_order
+    label: Work Order
+    type: ref
+    observed_as: work_order
+    ref: WorkOrder
+  - name: reference_doctype
+    label: Source Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+  - name: reference_name
+    label: Source Document Name
+    type: string
+    observed_as: reference_name
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: Asset
+    kind: many-to-one
+    via: asset
+  - to: Location
+    kind: many-to-one
+    via: location
+  - to: Employee
+    kind: many-to-one
+    via: employee
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: WorkOrder
+    kind: many-to-one
+    via: work_order
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSerial No
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Serial No
+    note: declared by the program and served by its API

@@ -87,9 +87,16 @@ Run the tests with `npm test` (Node 20 or later; 41 tests).
 - default: **Crawl4AI** in Docker (`docker pull unclecode/crawl4ai`).
 - preferred when available: **Linkup** web agent. Set `WEB_PROVIDER=linkup` and `LINKUP_API_KEY=...` (env or `reborn.local.json.linkupApiKey`). The rest of the pipeline is unchanged; evidence is registered the same way.
 
+## 4c. Frappe / ERPNext sites (block 2)
+
+Put `FRAPPE_URL`, `FRAPPE_API_KEY` and `FRAPPE_API_SECRET` (a user's API key and secret, from the user's settings in the site) in a secrets file outside the repository, and point `secretsEnvFile` in `reborn.local.json` to it (or set them as environment variables). The CLI reads them at run time and never prints or writes them. Only use a site you own, with fictitious data.
+
 ## 5. Computer-use agent (block 1)
 
-H Company Agents API (browser and desktop computer use; API, SDK, MCP or CLI). Credentials go in environment variables, never in the repository. The adapter that converts its output into `run.yaml` is to be written in `tools/` (format: `contracts/run.schema.json`).
+Elias's explorer lives in `h-explorer/` (read its `HANDOFF.md` first). It drives H Company agents in a browser and writes experiments as `experiments/EXP_xxx.json`. `node tools/reborn.mjs import-run <target> <h-explorer>/experiments --mission M-xxx --root <h-explorer>` turns them into runs of the target, with screenshots copied, so block 2 can cite them as observations. The explorer reads the H Company key from `HAI_API_KEY` (or the first `hk-...` value in its own `.env`); never commit it.
+
+
+H Company Agents API (browser and desktop computer use; API, SDK, MCP or CLI). Credentials go in environment variables, never in the repository. The adapter that converts its output into `run.yaml` is `tools/lib/h-import.mjs` (`reborn import-run`).
 
 The agent's work is pre-planned for it: `node tools/reborn.mjs ask <target>` turns every open question into a **computer-use-ready mission** (ordered `ui_steps` and the exact `read_values`, tied via `fills` to the acceptance scenario it completes). The handoff's `to_observe` lists, per feature, the minimal runs that would move it to `confirmed`.
 

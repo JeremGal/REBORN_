@@ -1,0 +1,54 @@
+name: UserType
+description: Document type "User Type" (module Core).
+fields:
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: role
+    label: Role
+    type: ref
+    observed_as: role
+    ref: Role
+  - name: apply_user_permission_on
+    label: Apply User Permission On
+    type: ref
+    observed_as: apply_user_permission_on
+    ref: DocType
+  - name: user_id_field
+    label: User Id Field
+    type: string
+    observed_as: user_id_field
+relations:
+  - to: Role
+    kind: many-to-one
+    via: role
+  - to: DocType
+    kind: many-to-one
+    via: apply_user_permission_on
+  - to: UserDocumentType
+    kind: one-to-many
+    via: user_doctypes
+    description: lines (Document Types)
+  - to: UserSelectDocumentType
+    kind: one-to-many
+    via: custom_select_doctypes
+    description: lines (Custom Document Types (Select Permission))
+  - to: UserSelectDocumentType
+    kind: one-to-many
+    via: select_doctypes
+    description: lines (Document Types (Select Permissions Only))
+  - to: UserTypeModule
+    kind: one-to-many
+    via: user_type_modules
+    description: lines (User Type Module)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUser Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of User Type
+    note: declared by the program and served by its API

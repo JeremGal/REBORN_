@@ -1,0 +1,50 @@
+name: NavbarItem
+description: 'Document type "Navbar Item" (module Core): lines of another document.'
+fields:
+  - name: item_label
+    label: Item Label
+    type: string
+    observed_as: item_label
+  - name: item_type
+    label: Item Type
+    type: enum
+    observed_as: item_type
+    enum_values:
+      - Route
+      - Action
+      - Separator
+  - name: route
+    label: Route
+    type: string
+    observed_as: route
+  - name: action
+    label: Action
+    type: string
+    observed_as: action
+  - name: hidden
+    label: Hidden
+    type: boolean
+    observed_as: hidden
+    default: "0"
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: condition
+    label: Condition
+    type: text
+    observed_as: condition
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNavbar Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Navbar Item
+    note: declared by the program and served by its API

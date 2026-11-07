@@ -1,0 +1,45 @@
+name: EmployeeInternalWorkHistory
+description: 'Document type "Employee Internal Work History" (module Setup): lines of another document.'
+fields:
+  - name: branch
+    label: Branch
+    type: ref
+    observed_as: branch
+    ref: Branch
+  - name: department
+    label: Department
+    type: ref
+    observed_as: department
+    ref: Department
+  - name: designation
+    label: Designation
+    type: ref
+    observed_as: designation
+    ref: Designation
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+relations:
+  - to: Branch
+    kind: many-to-one
+    via: branch
+  - to: Department
+    kind: many-to-one
+    via: department
+  - to: Designation
+    kind: many-to-one
+    via: designation
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmployee Internal Work History
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Employee Internal Work History
+    note: declared by the program and served by its API

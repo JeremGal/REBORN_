@@ -1,0 +1,45 @@
+name: Milestone
+description: Document type "Milestone" (module Automation).
+fields:
+  - name: reference_type
+    label: Document Type
+    type: ref
+    observed_as: reference_type
+    required: true
+    ref: DocType
+  - name: reference_name
+    label: Document
+    type: string
+    observed_as: reference_name
+    required: true
+  - name: track_field
+    label: Track Field
+    type: string
+    observed_as: track_field
+    required: true
+  - name: value
+    label: Value
+    type: string
+    observed_as: value
+    required: true
+  - name: milestone_tracker
+    label: Milestone Tracker
+    type: ref
+    observed_as: milestone_tracker
+    ref: MilestoneTracker
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_type
+  - to: MilestoneTracker
+    kind: many-to-one
+    via: milestone_tracker
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMilestone
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Milestone
+    note: declared by the program and served by its API

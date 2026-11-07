@@ -1,0 +1,35 @@
+name: CommunicationLink
+description: 'Document type "Communication Link" (module Core): lines of another document.'
+fields:
+  - name: link_doctype
+    label: Link DocType
+    type: ref
+    observed_as: link_doctype
+    required: true
+    ref: DocType
+  - name: link_name
+    label: Link Name
+    type: string
+    observed_as: link_name
+    required: true
+  - name: link_title
+    label: Link Title
+    type: string
+    observed_as: link_title
+  - name: communication_date
+    label: Communication Date
+    type: datetime
+    observed_as: communication_date
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: link_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCommunication Link
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Communication Link
+    note: declared by the program and served by its API

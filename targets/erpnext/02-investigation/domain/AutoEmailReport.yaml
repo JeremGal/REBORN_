@@ -1,0 +1,141 @@
+name: AutoEmailReport
+description: Document type "Auto Email Report" (module Email).
+fields:
+  - name: report
+    label: Report
+    type: ref
+    observed_as: report
+    required: true
+    ref: Report
+  - name: user
+    label: Based on Permissions For User
+    type: ref
+    observed_as: user
+    required: true
+    ref: User
+    default: User
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: report_type
+    label: Report Type
+    type: string
+    observed_as: report_type
+  - name: reference_report
+    label: Reference Report
+    type: string
+    observed_as: reference_report
+  - name: send_if_data
+    label: Send only if there is any data
+    type: boolean
+    observed_as: send_if_data
+    default: "1"
+  - name: data_modified_till
+    label: Only Send Records Updated in Last X Hours
+    type: integer
+    observed_as: data_modified_till
+  - name: no_of_rows
+    label: No of Rows (Max 500)
+    type: integer
+    observed_as: no_of_rows
+    default: "100"
+  - name: filters
+    label: Filters
+    type: text
+    observed_as: filters
+  - name: filter_meta
+    label: Filter Meta
+    type: text
+    observed_as: filter_meta
+  - name: from_date_field
+    label: From Date Field
+    type: string
+    observed_as: from_date_field
+  - name: to_date_field
+    label: To Date Field
+    type: string
+    observed_as: to_date_field
+  - name: dynamic_date_period
+    label: Period
+    type: enum
+    observed_as: dynamic_date_period
+    enum_values:
+      - Daily
+      - Weekly
+      - Monthly
+      - Quarterly
+      - Half Yearly
+      - Yearly
+  - name: use_first_day_of_period
+    label: Use First Day of Period
+    type: boolean
+    observed_as: use_first_day_of_period
+    default: "0"
+  - name: email_to
+    label: Email To
+    type: text
+    observed_as: email_to
+    required: true
+  - name: day_of_week
+    label: Day of Week
+    type: enum
+    observed_as: day_of_week
+    enum_values:
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+    default: Monday
+  - name: sender
+    label: Sender
+    type: ref
+    observed_as: sender
+    ref: EmailAccount
+  - name: frequency
+    label: Frequency
+    type: enum
+    observed_as: frequency
+    required: true
+    enum_values:
+      - Daily
+      - Weekdays
+      - Weekly
+      - Monthly
+  - name: format
+    label: Format
+    type: enum
+    observed_as: format
+    required: true
+    enum_values:
+      - HTML
+      - XLSX
+      - CSV
+      - PDF
+  - name: description
+    label: Message
+    type: text
+    observed_as: description
+relations:
+  - to: Report
+    kind: many-to-one
+    via: report
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: EmailAccount
+    kind: many-to-one
+    via: sender
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAuto Email Report
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Auto Email Report
+    note: declared by the program and served by its API

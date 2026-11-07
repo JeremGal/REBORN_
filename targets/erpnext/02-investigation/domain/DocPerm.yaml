@@ -1,0 +1,111 @@
+name: DocPerm
+description: 'Document type "DocPerm" (module Core): lines of another document.'
+fields:
+  - name: role
+    label: Role
+    type: ref
+    observed_as: role
+    required: true
+    ref: Role
+  - name: if_owner
+    label: If user is the owner
+    type: boolean
+    observed_as: if_owner
+    default: "0"
+  - name: permlevel
+    label: Level
+    type: integer
+    observed_as: permlevel
+    default: "0"
+  - name: select
+    label: Select
+    type: boolean
+    observed_as: select
+    default: "0"
+  - name: read
+    label: Read
+    type: boolean
+    observed_as: read
+    default: "1"
+  - name: write
+    label: Write
+    type: boolean
+    observed_as: write
+    default: "1"
+  - name: create
+    label: Create
+    type: boolean
+    observed_as: create
+    default: "1"
+  - name: delete
+    label: Delete
+    type: boolean
+    observed_as: delete
+    default: "1"
+  - name: submit
+    label: Submit
+    type: boolean
+    observed_as: submit
+    default: "0"
+  - name: cancel
+    label: Cancel
+    type: boolean
+    observed_as: cancel
+    default: "0"
+  - name: amend
+    label: Amend
+    type: boolean
+    observed_as: amend
+    default: "0"
+  - name: mask
+    label: Mask
+    type: boolean
+    observed_as: mask
+    default: "0"
+  - name: report
+    label: Report
+    type: boolean
+    observed_as: report
+    default: "1"
+  - name: export
+    label: Export
+    type: boolean
+    observed_as: export
+    default: "1"
+  - name: import
+    label: Import
+    type: boolean
+    observed_as: import
+    default: "0"
+  - name: share
+    label: Share
+    type: boolean
+    observed_as: share
+    default: "1"
+  - name: print
+    label: Print
+    type: boolean
+    observed_as: print
+    default: "1"
+  - name: email
+    label: Email
+    type: boolean
+    observed_as: email
+    default: "1"
+  - name: impersonate
+    label: Impersonate
+    type: boolean
+    observed_as: impersonate
+relations:
+  - to: Role
+    kind: many-to-one
+    via: role
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocPerm
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DocPerm
+    note: declared by the program and served by its API

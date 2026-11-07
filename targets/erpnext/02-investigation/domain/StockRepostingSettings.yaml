@@ -1,0 +1,76 @@
+name: StockRepostingSettings
+description: 'Document type "Stock Reposting Settings" (module Stock): single settings record.'
+fields:
+  - name: limit_reposting_timeslot
+    label: Limit timeslot for Stock Reposting
+    type: boolean
+    observed_as: limit_reposting_timeslot
+    default: "0"
+  - name: start_time
+    label: Start Time
+    type: time
+    observed_as: start_time
+  - name: end_time
+    label: End Time
+    type: time
+    observed_as: end_time
+  - name: limits_dont_apply_on
+    label: Limits don't apply on
+    type: enum
+    observed_as: limits_dont_apply_on
+    enum_values:
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+  - name: item_based_reposting
+    label: Use Item based reposting
+    type: boolean
+    observed_as: item_based_reposting
+    default: "1"
+  - name: do_not_fetch_incoming_rate_from_serial_no
+    label: Do not fetch incoming rate from Serial No
+    type: boolean
+    observed_as: do_not_fetch_incoming_rate_from_serial_no
+    default: "0"
+  - name: enable_parallel_reposting
+    label: Enable Parallel Reposting
+    type: boolean
+    observed_as: enable_parallel_reposting
+    default: "0"
+  - name: no_of_parallel_reposting
+    label: No of Parallel Reposting (Per Item)
+    type: integer
+    observed_as: no_of_parallel_reposting
+    default: "4"
+  - name: enable_separate_reposting_for_gl
+    label: Enable Separate Reposting for GL
+    type: boolean
+    observed_as: enable_separate_reposting_for_gl
+    default: "0"
+  - name: notify_reposting_error_to_role
+    label: Notify Reposting Error to Role
+    type: ref
+    observed_as: notify_reposting_error_to_role
+    ref: Role
+  - name: repost_incorrect_valuation_entries
+    label: Auto Repost Incorrect Valuation Entries (Weekly)
+    type: boolean
+    observed_as: repost_incorrect_valuation_entries
+    default: "0"
+relations:
+  - to: Role
+    kind: many-to-one
+    via: notify_reposting_error_to_role
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Reposting Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Reposting Settings
+    note: declared by the program and served by its API

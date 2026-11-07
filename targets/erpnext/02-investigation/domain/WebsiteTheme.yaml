@@ -1,0 +1,126 @@
+name: WebsiteTheme
+description: Document type "Website Theme" (module Website).
+fields:
+  - name: theme
+    label: Theme
+    type: string
+    observed_as: theme
+    required: true
+    unique: true
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    required: true
+    ref: ModuleDef
+    default: Website
+  - name: custom
+    label: Custom?
+    type: boolean
+    observed_as: custom
+    default: "1"
+  - name: google_font
+    label: Google Font
+    type: string
+    observed_as: google_font
+  - name: font_size
+    label: Font Size
+    type: string
+    observed_as: font_size
+  - name: font_properties
+    label: Font Properties
+    type: string
+    observed_as: font_properties
+    default: wght@300;400;500;600;700;800
+  - name: button_rounded_corners
+    label: Button Rounded Corners
+    type: boolean
+    observed_as: button_rounded_corners
+    default: "1"
+  - name: button_shadows
+    label: Button Shadows
+    type: boolean
+    observed_as: button_shadows
+    default: "0"
+  - name: button_gradients
+    label: Button Gradients
+    type: boolean
+    observed_as: button_gradients
+    default: "0"
+  - name: primary_color
+    label: Primary Color
+    type: ref
+    observed_as: primary_color
+    ref: Color
+  - name: text_color
+    label: Text Color
+    type: ref
+    observed_as: text_color
+    ref: Color
+  - name: light_color
+    label: Light Color
+    type: ref
+    observed_as: light_color
+    ref: Color
+  - name: dark_color
+    label: Dark Color
+    type: ref
+    observed_as: dark_color
+    ref: Color
+  - name: background_color
+    label: Background Color
+    type: ref
+    observed_as: background_color
+    ref: Color
+  - name: custom_overrides
+    label: Custom Overrides
+    type: text
+    observed_as: custom_overrides
+  - name: custom_scss
+    label: Custom SCSS
+    type: text
+    observed_as: custom_scss
+  - name: theme_scss
+    label: Theme
+    type: text
+    observed_as: theme_scss
+  - name: theme_url
+    label: Theme URL
+    type: string
+    observed_as: theme_url
+  - name: js
+    label: JavaScript
+    type: text
+    observed_as: js
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: Color
+    kind: many-to-one
+    via: primary_color
+  - to: Color
+    kind: many-to-one
+    via: text_color
+  - to: Color
+    kind: many-to-one
+    via: light_color
+  - to: Color
+    kind: many-to-one
+    via: dark_color
+  - to: Color
+    kind: many-to-one
+    via: background_color
+  - to: WebsiteThemeIgnoreApp
+    kind: one-to-many
+    via: ignored_apps
+    description: lines (Ignored Apps)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWebsite Theme
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Website Theme
+    note: declared by the program and served by its API

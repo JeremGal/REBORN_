@@ -1,0 +1,37 @@
+name: BOMWebsiteItem
+description: 'Document type "BOM Website Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: description
+    label: Item Description
+    type: text
+    observed_as: description
+  - name: qty
+    label: Qty
+    type: decimal
+    observed_as: qty
+  - name: website_image
+    label: Image
+    type: file
+    observed_as: website_image
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Website Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Website Item
+    note: declared by the program and served by its API

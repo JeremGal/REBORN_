@@ -1,0 +1,32 @@
+name: LedgerMergeAccounts
+description: 'Document type "Ledger Merge Accounts" (module Accounts): lines of another document.'
+fields:
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: account_name
+    label: Account Name
+    type: string
+    observed_as: account_name
+    required: true
+  - name: merged
+    label: Merged
+    type: boolean
+    observed_as: merged
+    default: "0"
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLedger Merge Accounts
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Ledger Merge Accounts
+    note: declared by the program and served by its API

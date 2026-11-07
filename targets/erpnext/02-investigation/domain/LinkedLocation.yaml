@@ -1,0 +1,22 @@
+name: LinkedLocation
+description: 'Document type "Linked Location" (module Assets): lines of another document.'
+fields:
+  - name: location
+    label: Location
+    type: ref
+    observed_as: location
+    required: true
+    ref: Location
+relations:
+  - to: Location
+    kind: many-to-one
+    via: location
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLinked Location
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Linked Location
+    note: declared by the program and served by its API

@@ -1,0 +1,34 @@
+name: IMAPFolder
+description: 'Document type "IMAP Folder" (module Email): lines of another document.'
+fields:
+  - name: folder_name
+    label: Folder Name
+    type: string
+    observed_as: folder_name
+    required: true
+  - name: append_to
+    label: Append To
+    type: ref
+    observed_as: append_to
+    ref: DocType
+  - name: uidvalidity
+    label: UIDVALIDITY
+    type: string
+    observed_as: uidvalidity
+  - name: uidnext
+    label: UIDNEXT
+    type: string
+    observed_as: uidnext
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: append_to
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabIMAP Folder
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of IMAP Folder
+    note: declared by the program and served by its API

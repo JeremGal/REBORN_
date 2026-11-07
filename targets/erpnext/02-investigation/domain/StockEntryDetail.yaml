@@ -1,0 +1,339 @@
+name: StockEntryDetail
+description: 'Document type "Stock Entry Detail" (module Stock): lines of another document.'
+fields:
+  - name: barcode
+    label: Barcode
+    type: string
+    observed_as: barcode
+  - name: has_item_scanned
+    label: Has Item Scanned
+    type: boolean
+    observed_as: has_item_scanned
+    default: "0"
+  - name: s_warehouse
+    label: Source Warehouse
+    type: ref
+    observed_as: s_warehouse
+    ref: Warehouse
+  - name: t_warehouse
+    label: Target Warehouse
+    type: ref
+    observed_as: t_warehouse
+    ref: Warehouse
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: is_finished_item
+    label: Is Finished Item
+    type: boolean
+    observed_as: is_finished_item
+    default: "0"
+  - name: valuation_type
+    label: Valuation Type
+    type: enum
+    observed_as: valuation_type
+    enum_values:
+      - Valuation Rate
+      - "% of Component Cost"
+      - Manual
+  - name: secondary_item_type
+    label: Type
+    type: enum
+    observed_as: secondary_item_type
+    enum_values:
+      - Co-Product
+      - By-Product
+      - Scrap
+      - Additional Finished Good
+  - name: quality_inspection
+    label: Quality Inspection
+    type: ref
+    observed_as: quality_inspection
+    ref: QualityInspection
+  - name: subcontracted_item
+    label: Subcontracted Item
+    type: ref
+    observed_as: subcontracted_item
+    ref: Item
+  - name: against_fg
+    label: Against Finished Good
+    type: ref
+    observed_as: against_fg
+    ref: SubcontractingInwardOrderItem
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: item_group
+    label: Item Group
+    type: string
+    observed_as: item_group
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: qty
+    label: Qty
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: transfer_qty
+    label: Qty as per Stock UOM
+    type: decimal
+    observed_as: transfer_qty
+  - name: retain_sample
+    label: Retain Sample
+    type: boolean
+    observed_as: retain_sample
+    default: "0"
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    required: true
+    precision: 9
+  - name: sample_quantity
+    label: Sample Quantity
+    type: integer
+    observed_as: sample_quantity
+  - name: basic_rate
+    label: Basic Rate (as per Stock UOM)
+    type: money
+    observed_as: basic_rate
+  - name: customer_provided_item_cost
+    label: Customer Provided Item Cost
+    type: money
+    observed_as: customer_provided_item_cost
+  - name: additional_cost
+    label: Additional Cost
+    type: money
+    observed_as: additional_cost
+  - name: landed_cost_voucher_amount
+    label: Landed Cost Voucher Amount
+    type: money
+    observed_as: landed_cost_voucher_amount
+  - name: valuation_rate
+    label: Valuation Rate
+    type: money
+    observed_as: valuation_rate
+  - name: allow_zero_valuation_rate
+    label: Allow Zero Valuation Rate
+    type: boolean
+    observed_as: allow_zero_valuation_rate
+    default: "0"
+  - name: set_basic_rate_manually
+    label: Set Basic Rate Manually
+    type: boolean
+    observed_as: set_basic_rate_manually
+    default: "0"
+  - name: basic_amount
+    label: Basic Amount
+    type: money
+    observed_as: basic_amount
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: use_serial_batch_fields
+    label: Use Serial No / Batch Fields
+    type: boolean
+    observed_as: use_serial_batch_fields
+    default: "0"
+  - name: serial_and_batch_bundle
+    label: Serial and Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: expense_account
+    label: Difference Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: actual_qty
+    label: Actual Qty (at source/target)
+    type: decimal
+    observed_as: actual_qty
+  - name: transferred_qty
+    label: Transferred Qty
+    type: decimal
+    observed_as: transferred_qty
+  - name: bom_no
+    label: BOM No
+    type: ref
+    observed_as: bom_no
+    ref: BOM
+  - name: allow_alternative_item
+    label: Allow Alternative Item
+    type: boolean
+    observed_as: allow_alternative_item
+    default: "0"
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: material_request_item
+    label: Material Request Item
+    type: ref
+    observed_as: material_request_item
+    ref: MaterialRequestItem
+  - name: pick_list_item
+    label: Pick List Item
+    type: ref
+    observed_as: pick_list_item
+    ref: PickListItem
+  - name: original_item
+    label: Original Item
+    type: ref
+    observed_as: original_item
+    ref: Item
+  - name: against_stock_entry
+    label: Against Stock Entry
+    type: ref
+    observed_as: against_stock_entry
+    ref: StockEntry
+  - name: ste_detail
+    label: Stock Entry Child
+    type: string
+    observed_as: ste_detail
+  - name: po_detail
+    label: PO Supplied Item
+    type: string
+    observed_as: po_detail
+  - name: sco_rm_detail
+    label: SCO Supplied Item
+    type: string
+    observed_as: sco_rm_detail
+  - name: scio_detail
+    label: SCIO Detail
+    type: string
+    observed_as: scio_detail
+  - name: putaway_rule
+    label: Putaway Rule
+    type: ref
+    observed_as: putaway_rule
+    ref: PutawayRule
+  - name: reference_purchase_receipt
+    label: Reference Purchase Receipt
+    type: ref
+    observed_as: reference_purchase_receipt
+    ref: PurchaseReceipt
+  - name: job_card_item
+    label: Job Card Item
+    type: string
+    observed_as: job_card_item
+  - name: bom_secondary_item
+    label: BOM Secondary Item
+    type: string
+    observed_as: bom_secondary_item
+relations:
+  - to: Warehouse
+    kind: many-to-one
+    via: s_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: t_warehouse
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: QualityInspection
+    kind: many-to-one
+    via: quality_inspection
+  - to: Item
+    kind: many-to-one
+    via: subcontracted_item
+  - to: SubcontractingInwardOrderItem
+    kind: many-to-one
+    via: against_fg
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+  - to: MaterialRequestItem
+    kind: many-to-one
+    via: material_request_item
+  - to: PickListItem
+    kind: many-to-one
+    via: pick_list_item
+  - to: Item
+    kind: many-to-one
+    via: original_item
+  - to: StockEntry
+    kind: many-to-one
+    via: against_stock_entry
+  - to: PutawayRule
+    kind: many-to-one
+    via: putaway_rule
+  - to: PurchaseReceipt
+    kind: many-to-one
+    via: reference_purchase_receipt
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Entry Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Entry Detail
+    note: declared by the program and served by its API

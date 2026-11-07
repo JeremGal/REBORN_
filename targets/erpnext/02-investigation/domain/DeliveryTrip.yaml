@@ -1,0 +1,118 @@
+name: DeliveryTrip
+description: "A vehicle's route to deliver to several customers. Document type \"Delivery Trip\" (module Stock): draft, submitted, cancelled life cycle."
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - MAT-DT-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: email_notification_sent
+    label: Initial Email Notification Sent
+    type: boolean
+    observed_as: email_notification_sent
+    default: "0"
+  - name: driver
+    label: Driver
+    type: ref
+    observed_as: driver
+    ref: Driver
+  - name: driver_name
+    label: Driver Name
+    type: string
+    observed_as: driver_name
+  - name: driver_email
+    label: Driver Email
+    type: string
+    observed_as: driver_email
+  - name: driver_address
+    label: Driver Address
+    type: ref
+    observed_as: driver_address
+    ref: Address
+  - name: total_distance
+    label: Total Estimated Distance
+    type: decimal
+    observed_as: total_distance
+    precision: 2
+  - name: uom
+    label: Distance UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: vehicle
+    label: Vehicle
+    type: ref
+    observed_as: vehicle
+    required: true
+    ref: Vehicle
+  - name: departure_time
+    label: Departure Time
+    type: datetime
+    observed_as: departure_time
+    required: true
+  - name: employee
+    label: Employee
+    type: ref
+    observed_as: employee
+    ref: Employee
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Scheduled
+      - In Transit
+      - Completed
+      - Cancelled
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: DeliveryTrip
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Driver
+    kind: many-to-one
+    via: driver
+  - to: Address
+    kind: many-to-one
+    via: driver_address
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: Vehicle
+    kind: many-to-one
+    via: vehicle
+  - to: Employee
+    kind: many-to-one
+    via: employee
+  - to: DeliveryStop
+    kind: one-to-many
+    via: delivery_stops
+    description: lines (Delivery Stop)
+  - to: DeliveryTrip
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDelivery Trip
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Delivery Trip
+    note: declared by the program and served by its API

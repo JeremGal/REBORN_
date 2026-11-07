@@ -1,0 +1,42 @@
+name: QualityReviewObjective
+description: 'Document type "Quality Review Objective" (module Quality Management): lines of another document.'
+fields:
+  - name: objective
+    label: Objective
+    type: text
+    observed_as: objective
+  - name: target
+    label: Target
+    type: string
+    observed_as: target
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Open
+      - Passed
+      - Failed
+    default: Open
+  - name: review
+    label: Review
+    type: text
+    observed_as: review
+relations:
+  - to: UOM
+    kind: many-to-one
+    via: uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Review Objective
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Review Objective
+    note: declared by the program and served by its API

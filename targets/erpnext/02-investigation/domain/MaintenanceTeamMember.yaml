@@ -1,0 +1,35 @@
+name: MaintenanceTeamMember
+description: 'Document type "Maintenance Team Member" (module Assets): lines of another document.'
+fields:
+  - name: team_member
+    label: Team Member
+    type: ref
+    observed_as: team_member
+    required: true
+    ref: User
+  - name: full_name
+    label: Full Name
+    type: string
+    observed_as: full_name
+  - name: maintenance_role
+    label: Maintenance Role
+    type: ref
+    observed_as: maintenance_role
+    required: true
+    ref: Role
+relations:
+  - to: User
+    kind: many-to-one
+    via: team_member
+  - to: Role
+    kind: many-to-one
+    via: maintenance_role
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMaintenance Team Member
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Maintenance Team Member
+    note: declared by the program and served by its API

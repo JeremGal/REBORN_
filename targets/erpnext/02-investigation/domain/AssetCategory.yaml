@@ -1,0 +1,37 @@
+name: AssetCategory
+description: Groups assets that share accounts and depreciation rules. Document type "Asset Category" (module Assets).
+fields:
+  - name: asset_category_name
+    label: Asset Category Name
+    type: string
+    observed_as: asset_category_name
+    required: true
+    unique: true
+  - name: enable_cwip_accounting
+    label: Enable Capital Work in Progress Accounting
+    type: boolean
+    observed_as: enable_cwip_accounting
+    default: "0"
+  - name: non_depreciable_category
+    label: Non Depreciable Category
+    type: boolean
+    observed_as: non_depreciable_category
+    default: "0"
+relations:
+  - to: AssetFinanceBook
+    kind: one-to-many
+    via: finance_books
+    description: lines (Finance Books)
+  - to: AssetCategoryAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Accounts)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Category
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Category
+    note: declared by the program and served by its API

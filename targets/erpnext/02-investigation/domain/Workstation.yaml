@@ -1,0 +1,101 @@
+name: Workstation
+description: A machine or place where operations are done. Document type "Workstation" (module Manufacturing).
+fields:
+  - name: workstation_name
+    label: Workstation Name
+    type: string
+    observed_as: workstation_name
+    required: true
+    unique: true
+  - name: workstation_type
+    label: Workstation Type
+    type: ref
+    observed_as: workstation_type
+    ref: WorkstationType
+  - name: plant_floor
+    label: Plant Floor
+    type: ref
+    observed_as: plant_floor
+    ref: PlantFloor
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: production_capacity
+    label: Job Capacity
+    type: integer
+    observed_as: production_capacity
+    required: true
+    default: "1"
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Production
+      - Off
+      - Idle
+      - Problem
+      - Maintenance
+      - Setup
+  - name: on_status_image
+    label: Active Status
+    type: file
+    observed_as: on_status_image
+  - name: off_status_image
+    label: Inactive Status
+    type: file
+    observed_as: off_status_image
+  - name: hour_rate
+    label: Net Hour Rate
+    type: money
+    observed_as: hour_rate
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: holiday_list
+    label: Holiday List
+    type: ref
+    observed_as: holiday_list
+    ref: HolidayList
+  - name: total_working_hours
+    label: Total Working Hours
+    type: decimal
+    observed_as: total_working_hours
+relations:
+  - to: WorkstationType
+    kind: many-to-one
+    via: workstation_type
+  - to: PlantFloor
+    kind: many-to-one
+    via: plant_floor
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: WorkstationCost
+    kind: one-to-many
+    via: workstation_costs
+    description: lines (Operating Components Cost)
+  - to: HolidayList
+    kind: many-to-one
+    via: holiday_list
+  - to: WorkstationWorkingHour
+    kind: one-to-many
+    via: working_hours
+    description: lines (Working Hours)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkstation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workstation
+    note: declared by the program and served by its API

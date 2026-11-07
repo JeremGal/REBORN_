@@ -1,0 +1,382 @@
+name: Employee
+description: Document type "Employee" (module Setup).
+fields:
+  - name: employee
+    label: Employee
+    type: string
+    observed_as: employee
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - HR-EMP-
+  - name: first_name
+    label: First Name
+    type: string
+    observed_as: first_name
+    required: true
+  - name: middle_name
+    label: Middle Name
+    type: string
+    observed_as: middle_name
+  - name: last_name
+    label: Last Name
+    type: string
+    observed_as: last_name
+  - name: employee_name
+    label: Full Name
+    type: string
+    observed_as: employee_name
+  - name: gender
+    label: Gender
+    type: ref
+    observed_as: gender
+    required: true
+    ref: Gender
+  - name: date_of_birth
+    label: Date of Birth
+    type: date
+    observed_as: date_of_birth
+    required: true
+  - name: salutation
+    label: Salutation
+    type: ref
+    observed_as: salutation
+    ref: Salutation
+  - name: date_of_joining
+    label: Date of Joining
+    type: date
+    observed_as: date_of_joining
+    required: true
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Active
+      - Inactive
+      - Suspended
+      - Left
+    default: Active
+  - name: user_id
+    label: User ID
+    type: ref
+    observed_as: user_id
+    ref: User
+  - name: create_user_permission
+    label: Create User Permission
+    type: boolean
+    observed_as: create_user_permission
+    default: "1"
+  - name: create_user_automatically
+    label: Create User Automatically
+    type: boolean
+    observed_as: create_user_automatically
+    default: "0"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: department
+    label: Department
+    type: ref
+    observed_as: department
+    ref: Department
+  - name: employee_number
+    label: Employee Number
+    type: string
+    observed_as: employee_number
+  - name: designation
+    label: Designation
+    type: ref
+    observed_as: designation
+    ref: Designation
+  - name: reports_to
+    label: Reports to
+    type: ref
+    observed_as: reports_to
+    ref: Employee
+  - name: branch
+    label: Branch
+    type: ref
+    observed_as: branch
+    ref: Branch
+  - name: cell_number
+    label: Mobile
+    type: string
+    observed_as: cell_number
+  - name: company_email
+    label: Company Email
+    type: string
+    observed_as: company_email
+  - name: personal_email
+    label: Personal Email
+    type: string
+    observed_as: personal_email
+  - name: prefered_contact_email
+    label: Preferred Contact Email
+    type: enum
+    observed_as: prefered_contact_email
+    enum_values:
+      - Company Email
+      - Personal Email
+      - User ID
+  - name: prefered_email
+    label: Preferred Email
+    type: string
+    observed_as: prefered_email
+  - name: unsubscribed
+    label: Unsubscribed
+    type: boolean
+    observed_as: unsubscribed
+    default: "0"
+  - name: current_address
+    label: Current Address
+    type: text
+    observed_as: current_address
+  - name: current_accommodation_type
+    label: Current Address Is
+    type: enum
+    observed_as: current_accommodation_type
+    enum_values:
+      - Rented
+      - Owned
+  - name: permanent_address
+    label: Permanent Address
+    type: text
+    observed_as: permanent_address
+  - name: permanent_accommodation_type
+    label: Permanent Address Is
+    type: enum
+    observed_as: permanent_accommodation_type
+    enum_values:
+      - Rented
+      - Owned
+  - name: person_to_be_contacted
+    label: Emergency Contact Name
+    type: string
+    observed_as: person_to_be_contacted
+  - name: emergency_phone_number
+    label: Emergency Phone
+    type: string
+    observed_as: emergency_phone_number
+  - name: relation
+    label: Relation
+    type: string
+    observed_as: relation
+  - name: attendance_device_id
+    label: Attendance Device ID (Biometric/RF tag ID)
+    type: string
+    observed_as: attendance_device_id
+    unique: true
+  - name: holiday_list
+    label: Holiday List
+    type: ref
+    observed_as: holiday_list
+    ref: HolidayList
+  - name: ctc
+    label: Cost to Company (CTC)
+    type: money
+    observed_as: ctc
+  - name: salary_currency
+    label: Salary Currency
+    type: ref
+    observed_as: salary_currency
+    ref: Currency
+  - name: salary_mode
+    label: Salary Mode
+    type: enum
+    observed_as: salary_mode
+    enum_values:
+      - Bank
+      - Cash
+      - Cheque
+  - name: bank_name
+    label: Bank Name
+    type: string
+    observed_as: bank_name
+  - name: bank_ac_no
+    label: Bank A/C No.
+    type: string
+    observed_as: bank_ac_no
+  - name: iban
+    label: IBAN
+    type: string
+    observed_as: iban
+  - name: marital_status
+    label: Marital Status
+    type: enum
+    observed_as: marital_status
+    enum_values:
+      - Single
+      - Married
+      - Divorced
+      - Widowed
+  - name: family_background
+    label: Family Background
+    type: text
+    observed_as: family_background
+  - name: blood_group
+    label: Blood Group
+    type: enum
+    observed_as: blood_group
+    enum_values:
+      - A+
+      - A-
+      - B+
+      - B-
+      - AB+
+      - AB-
+      - O+
+      - O-
+  - name: health_details
+    label: Health Details
+    type: text
+    observed_as: health_details
+  - name: passport_number
+    label: Passport Number
+    type: string
+    observed_as: passport_number
+  - name: valid_upto
+    label: Valid Up To
+    type: date
+    observed_as: valid_upto
+  - name: date_of_issue
+    label: Date of Issue
+    type: date
+    observed_as: date_of_issue
+  - name: place_of_issue
+    label: Place of Issue
+    type: string
+    observed_as: place_of_issue
+  - name: bio
+    label: Bio / Cover Letter
+    type: text
+    observed_as: bio
+  - name: scheduled_confirmation_date
+    label: Offer Date
+    type: date
+    observed_as: scheduled_confirmation_date
+  - name: final_confirmation_date
+    label: Confirmation Date
+    type: date
+    observed_as: final_confirmation_date
+  - name: contract_end_date
+    label: Contract End Date
+    type: date
+    observed_as: contract_end_date
+  - name: notice_number_of_days
+    label: Notice (days)
+    type: integer
+    observed_as: notice_number_of_days
+  - name: date_of_retirement
+    label: Date Of Retirement
+    type: date
+    observed_as: date_of_retirement
+  - name: resignation_letter_date
+    label: Resignation Letter Date
+    type: date
+    observed_as: resignation_letter_date
+  - name: relieving_date
+    label: Relieving Date
+    type: date
+    observed_as: relieving_date
+  - name: held_on
+    label: Exit Interview Held On
+    type: date
+    observed_as: held_on
+  - name: new_workplace
+    label: New Workplace
+    type: string
+    observed_as: new_workplace
+  - name: leave_encashed
+    label: Leave Encashed?
+    type: enum
+    observed_as: leave_encashed
+    enum_values:
+      - Yes
+      - No
+  - name: encashment_date
+    label: Encashment Date
+    type: date
+    observed_as: encashment_date
+  - name: reason_for_leaving
+    label: Reason for Leaving
+    type: text
+    observed_as: reason_for_leaving
+  - name: feedback
+    label: Feedback
+    type: text
+    observed_as: feedback
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: Old Parent
+    type: string
+    observed_as: old_parent
+relations:
+  - to: Gender
+    kind: many-to-one
+    via: gender
+  - to: Salutation
+    kind: many-to-one
+    via: salutation
+  - to: User
+    kind: many-to-one
+    via: user_id
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Department
+    kind: many-to-one
+    via: department
+  - to: Designation
+    kind: many-to-one
+    via: designation
+  - to: Employee
+    kind: many-to-one
+    via: reports_to
+  - to: Branch
+    kind: many-to-one
+    via: branch
+  - to: HolidayList
+    kind: many-to-one
+    via: holiday_list
+  - to: Currency
+    kind: many-to-one
+    via: salary_currency
+  - to: EmployeeEducation
+    kind: one-to-many
+    via: education
+    description: lines (Education)
+  - to: EmployeeExternalWorkHistory
+    kind: one-to-many
+    via: external_work_history
+    description: lines (External Work History)
+  - to: EmployeeInternalWorkHistory
+    kind: one-to-many
+    via: internal_work_history
+    description: lines (Internal Work History)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmployee
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Employee
+    note: declared by the program and served by its API

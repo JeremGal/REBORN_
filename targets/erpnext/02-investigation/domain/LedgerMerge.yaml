@@ -1,0 +1,69 @@
+name: LedgerMerge
+description: Combine two or more accounts into one. Document type "Ledger Merge" (module Accounts).
+fields:
+  - name: root_type
+    label: Root Type
+    type: enum
+    observed_as: root_type
+    required: true
+    enum_values:
+      - Asset
+      - Liability
+      - Income
+      - Expense
+      - Equity
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: account_name
+    label: Account Name
+    type: string
+    observed_as: account_name
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Pending
+      - Success
+      - Partial Success
+      - Error
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: account_type
+    label: Account Type
+    type: string
+    observed_as: account_type
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: LedgerMergeAccounts
+    kind: one-to-many
+    via: merge_accounts
+    description: lines (Accounts to Merge)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLedger Merge
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Ledger Merge
+    note: declared by the program and served by its API

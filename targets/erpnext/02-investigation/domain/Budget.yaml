@@ -1,0 +1,225 @@
+name: Budget
+description: 'How much a cost center or project may spend over a fiscal year. Document type "Budget" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - BUDGET-.########
+    default: BUDGET-.########
+  - name: budget_against
+    label: Budget Against
+    type: enum
+    observed_as: budget_against
+    required: true
+    enum_values:
+      - Cost Center
+      - Project
+    default: Cost Center
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: Budget
+  - name: from_fiscal_year
+    label: From Fiscal Year
+    type: ref
+    observed_as: from_fiscal_year
+    required: true
+    ref: FiscalYear
+  - name: to_fiscal_year
+    label: To Fiscal Year
+    type: ref
+    observed_as: to_fiscal_year
+    required: true
+    ref: FiscalYear
+  - name: budget_start_date
+    label: Budget Start Date
+    type: date
+    observed_as: budget_start_date
+  - name: budget_end_date
+    label: Budget End Date
+    type: date
+    observed_as: budget_end_date
+  - name: distribution_frequency
+    label: Distribution Frequency
+    type: enum
+    observed_as: distribution_frequency
+    required: true
+    enum_values:
+      - Monthly
+      - Quarterly
+      - Half-Yearly
+      - Yearly
+    default: Monthly
+  - name: budget_amount
+    label: Budget Amount
+    type: money
+    observed_as: budget_amount
+    required: true
+  - name: distribute_equally
+    label: Distribute Equally
+    type: boolean
+    observed_as: distribute_equally
+    default: "1"
+  - name: budget_distribution_total
+    label: Budget Distribution Total
+    type: money
+    observed_as: budget_distribution_total
+  - name: applicable_on_material_request
+    label: Applicable on Material Request
+    type: boolean
+    observed_as: applicable_on_material_request
+    default: "0"
+  - name: action_if_annual_budget_exceeded_on_mr
+    label: Action if Annual Budget Exceeded on MR
+    type: enum
+    observed_as: action_if_annual_budget_exceeded_on_mr
+    enum_values:
+      - Stop
+      - Warn
+      - Ignore
+    default: Stop
+  - name: action_if_accumulated_monthly_budget_exceeded_on_mr
+    label: Action if Accumulated Monthly Budget Exceeded on MR
+    type: enum
+    observed_as: action_if_accumulated_monthly_budget_exceeded_on_mr
+    enum_values:
+      - Stop
+      - Warn
+      - Ignore
+    default: Warn
+  - name: applicable_on_purchase_order
+    label: Applicable on Purchase Order
+    type: boolean
+    observed_as: applicable_on_purchase_order
+    default: "0"
+  - name: action_if_annual_budget_exceeded_on_po
+    label: Action if Annual Budget Exceeded on PO
+    type: enum
+    observed_as: action_if_annual_budget_exceeded_on_po
+    enum_values:
+      - Stop
+      - Warn
+      - Ignore
+    default: Stop
+  - name: action_if_accumulated_monthly_budget_exceeded_on_po
+    label: Action if Accumulated Monthly Budget Exceeded on PO
+    type: enum
+    observed_as: action_if_accumulated_monthly_budget_exceeded_on_po
+    enum_values:
+      - Stop
+      - Warn
+      - Ignore
+    default: Warn
+  - name: applicable_on_booking_actual_expenses
+    label: Applicable on booking actual expenses
+    type: boolean
+    observed_as: applicable_on_booking_actual_expenses
+    default: "0"
+  - name: action_if_annual_budget_exceeded
+    label: Action if Annual Budget Exceeded on Actual
+    type: enum
+    observed_as: action_if_annual_budget_exceeded
+    enum_values:
+      - Stop
+      - Warn
+      - Ignore
+    default: Stop
+  - name: action_if_accumulated_monthly_budget_exceeded
+    label: Action if Accumulated Monthly Budget Exceeded on Actual
+    type: enum
+    observed_as: action_if_accumulated_monthly_budget_exceeded
+    enum_values:
+      - Stop
+      - Warn
+      - Ignore
+    default: Warn
+  - name: applicable_on_cumulative_expense
+    label: Applicable on Cumulative Expense
+    type: boolean
+    observed_as: applicable_on_cumulative_expense
+    default: "0"
+  - name: action_if_annual_exceeded_on_cumulative_expense
+    label: Action if Anual Budget Exceeded on Cumulative Expense
+    type: enum
+    observed_as: action_if_annual_exceeded_on_cumulative_expense
+    enum_values:
+      - Stop
+      - Warn
+      - Ignore
+  - name: action_if_accumulated_monthly_exceeded_on_cumulative_expense
+    label: Action if Accumulative Monthly Budget Exceeded on Cumulative Expense
+    type: enum
+    observed_as: action_if_accumulated_monthly_exceeded_on_cumulative_expense
+    enum_values:
+      - Stop
+      - Warn
+      - Ignore
+  - name: revision_of
+    label: Revision Of
+    type: string
+    observed_as: revision_of
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: Budget
+    kind: many-to-one
+    via: amended_from
+  - to: FiscalYear
+    kind: many-to-one
+    via: from_fiscal_year
+  - to: FiscalYear
+    kind: many-to-one
+    via: to_fiscal_year
+  - to: BudgetDistribution
+    kind: one-to-many
+    via: budget_distribution
+    description: lines (Budget Distribution)
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBudget
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Budget
+    note: declared by the program and served by its API

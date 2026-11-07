@@ -1,0 +1,92 @@
+name: AutomationRun
+description: Document type "Automation Run" (module Automation).
+fields:
+  - name: automation
+    label: Automation Flow
+    type: ref
+    observed_as: automation
+    ref: AutomationFlow
+  - name: automation_title
+    label: Automation Flow Title
+    type: string
+    observed_as: automation_title
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Running
+      - Waiting
+      - Success
+      - Partially Failed
+      - Failed
+      - Skipped
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: user
+    label: Run As
+    type: ref
+    observed_as: user
+    ref: User
+  - name: depth
+    label: Recursion Depth
+    type: integer
+    observed_as: depth
+  - name: queue_row
+    label: Trigger Queue Row
+    type: string
+    observed_as: queue_row
+  - name: started_at
+    label: Started At
+    type: datetime
+    observed_as: started_at
+  - name: ended_at
+    label: Ended At
+    type: datetime
+    observed_as: ended_at
+  - name: error_summary
+    label: Error Summary
+    type: text
+    observed_as: error_summary
+  - name: actions_snapshot
+    label: Actions Snapshot
+    type: json
+    observed_as: actions_snapshot
+  - name: relationships
+    label: Relationships Snapshot
+    type: json
+    observed_as: relationships
+  - name: run_state
+    label: Run State
+    type: json
+    observed_as: run_state
+relations:
+  - to: AutomationFlow
+    kind: many-to-one
+    via: automation
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: AutomationRunStep
+    kind: one-to-many
+    via: steps
+    description: lines (Steps)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAutomation Run
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Automation Run
+    note: declared by the program and served by its API

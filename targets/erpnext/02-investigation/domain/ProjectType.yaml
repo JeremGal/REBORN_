@@ -1,0 +1,22 @@
+name: ProjectType
+description: A grouping of projects, like internal or external. Document type "Project Type" (module Projects).
+fields:
+  - name: project_type
+    label: Project Type
+    type: string
+    observed_as: project_type
+    required: true
+    unique: true
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProject Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Project Type
+    note: declared by the program and served by its API

@@ -1,0 +1,50 @@
+name: PaymentReference
+description: 'Document type "Payment Reference" (module Accounts): lines of another document.'
+fields:
+  - name: payment_term
+    label: Payment Term
+    type: ref
+    observed_as: payment_term
+    ref: PaymentTerm
+  - name: payment_schedule
+    label: Payment Schedule
+    type: ref
+    observed_as: payment_schedule
+    ref: PaymentSchedule
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: due_date
+    label: Due Date
+    type: date
+    observed_as: due_date
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    precision: 2
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+relations:
+  - to: PaymentTerm
+    kind: many-to-one
+    via: payment_term
+  - to: PaymentSchedule
+    kind: many-to-one
+    via: payment_schedule
+  - to: Currency
+    kind: many-to-one
+    via: currency
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Reference
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Reference
+    note: declared by the program and served by its API

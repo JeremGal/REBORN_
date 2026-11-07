@@ -1,0 +1,46 @@
+name: PrintFormatFieldTemplate
+description: Document type "Print Format Field Template" (module Printing).
+fields:
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    ref: DocType
+  - name: field
+    label: Default Template For Field
+    type: string
+    observed_as: field
+  - name: standard
+    label: Standard
+    type: boolean
+    observed_as: standard
+    default: "0"
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: template_file
+    label: Template File
+    type: string
+    observed_as: template_file
+  - name: template
+    label: Template
+    type: text
+    observed_as: template
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPrint Format Field Template
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Print Format Field Template
+    note: declared by the program and served by its API

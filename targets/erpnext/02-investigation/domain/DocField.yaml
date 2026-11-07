@@ -1,0 +1,381 @@
+name: DocField
+description: 'Document type "DocField" (module Core): lines of another document.'
+fields:
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+    max_length: 255
+  - name: fieldtype
+    label: Type
+    type: enum
+    observed_as: fieldtype
+    required: true
+    enum_values:
+      - Autocomplete
+      - Attach
+      - Attach Image
+      - Attachment Gallery
+      - Barcode
+      - Button
+      - Check
+      - Code
+      - Color
+      - Column Break
+      - Currency
+      - Data
+      - Date
+      - Datetime
+      - Duration
+      - Dynamic Link
+      - Float
+      - Fold
+      - Geolocation
+      - Heading
+      - HTML
+      - HTML Editor
+      - Icon
+      - Image
+      - Int
+      - JSON
+      - Link
+      - Long Text
+      - Markdown Editor
+      - Password
+      - Percent
+      - Phone
+      - Read Only
+      - Rating
+      - Section Break
+      - Select
+      - Signature
+      - Small Text
+      - Tab Break
+      - Table
+      - Table MultiSelect
+      - Text
+      - Text Editor
+      - Time
+    default: Data
+  - name: fieldname
+    label: Name
+    type: string
+    observed_as: fieldname
+  - name: length
+    label: Length
+    type: integer
+    observed_as: length
+  - name: precision
+    label: Precision
+    type: enum
+    observed_as: precision
+    enum_values:
+      - "0"
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+  - name: non_negative
+    label: Non Negative
+    type: boolean
+    observed_as: non_negative
+    default: "0"
+  - name: hide_days
+    label: Hide Days
+    type: boolean
+    observed_as: hide_days
+    default: "0"
+  - name: hide_seconds
+    label: Hide Seconds
+    type: boolean
+    observed_as: hide_seconds
+    default: "0"
+  - name: reqd
+    label: Mandatory
+    type: boolean
+    observed_as: reqd
+    default: "0"
+  - name: is_virtual
+    label: Virtual
+    type: boolean
+    observed_as: is_virtual
+    default: "0"
+  - name: search_index
+    label: Index
+    type: boolean
+    observed_as: search_index
+    default: "0"
+  - name: not_nullable
+    label: Not Nullable
+    type: boolean
+    observed_as: not_nullable
+    default: "0"
+  - name: mask
+    label: Mask
+    type: boolean
+    observed_as: mask
+    default: "0"
+  - name: options
+    label: Options
+    type: text
+    observed_as: options
+  - name: sort_options
+    label: Sort Options
+    type: boolean
+    observed_as: sort_options
+    default: "0"
+  - name: show_dashboard
+    label: Show Dashboard
+    type: boolean
+    observed_as: show_dashboard
+    default: "0"
+  - name: link_filters
+    label: Filters
+    type: json
+    observed_as: link_filters
+  - name: default
+    label: Default
+    type: text
+    observed_as: default
+  - name: fetch_from
+    label: Fetch From
+    type: text
+    observed_as: fetch_from
+  - name: fetch_if_empty
+    label: Fetch on Save if Empty
+    type: boolean
+    observed_as: fetch_if_empty
+    default: "0"
+  - name: button_color
+    label: Button Color
+    type: enum
+    observed_as: button_color
+    enum_values:
+      - Default
+      - Primary
+      - Info
+      - Success
+      - Warning
+      - Danger
+  - name: hidden
+    label: Hidden
+    type: boolean
+    observed_as: hidden
+    default: "0"
+  - name: show_on_timeline
+    label: Show on Timeline
+    type: boolean
+    observed_as: show_on_timeline
+    default: "0"
+  - name: bold
+    label: Bold
+    type: boolean
+    observed_as: bold
+    default: "0"
+  - name: allow_in_quick_entry
+    label: Allow in Quick Entry
+    type: boolean
+    observed_as: allow_in_quick_entry
+    default: "0"
+  - name: translatable
+    label: Translatable
+    type: boolean
+    observed_as: translatable
+    default: "0"
+  - name: print_hide
+    label: Print Hide
+    type: boolean
+    observed_as: print_hide
+    default: "0"
+  - name: print_hide_if_no_value
+    label: Print Hide If No Value
+    type: boolean
+    observed_as: print_hide_if_no_value
+    default: "0"
+  - name: report_hide
+    label: Report Hide
+    type: boolean
+    observed_as: report_hide
+    default: "0"
+  - name: in_import_template
+    label: Include in Import Template
+    type: boolean
+    observed_as: in_import_template
+    default: "0"
+  - name: depends_on
+    label: Display Depends On (JS)
+    type: text
+    observed_as: depends_on
+  - name: collapsible
+    label: Collapsible
+    type: boolean
+    observed_as: collapsible
+    default: "0"
+  - name: collapsible_depends_on
+    label: Collapsible Depends On (JS)
+    type: text
+    observed_as: collapsible_depends_on
+  - name: hide_border
+    label: Hide Border
+    type: boolean
+    observed_as: hide_border
+    default: "0"
+  - name: in_list_view
+    label: In List View
+    type: boolean
+    observed_as: in_list_view
+    default: "0"
+  - name: in_standard_filter
+    label: In Standard Filter
+    type: boolean
+    observed_as: in_standard_filter
+    default: "0"
+  - name: in_preview
+    label: In Preview
+    type: boolean
+    observed_as: in_preview
+    default: "0"
+  - name: sticky
+    label: Sticky
+    type: boolean
+    observed_as: sticky
+    default: "0"
+  - name: in_filter
+    label: In Filter
+    type: boolean
+    observed_as: in_filter
+    default: "0"
+  - name: in_global_search
+    label: In Global Search
+    type: boolean
+    observed_as: in_global_search
+    default: "0"
+  - name: read_only
+    label: Read Only
+    type: boolean
+    observed_as: read_only
+    default: "0"
+  - name: allow_on_submit
+    label: Allow on Submit
+    type: boolean
+    observed_as: allow_on_submit
+    default: "0"
+  - name: ignore_user_permissions
+    label: Ignore User Permissions
+    type: boolean
+    observed_as: ignore_user_permissions
+    default: "0"
+  - name: allow_bulk_edit
+    label: Allow Bulk Edit
+    type: boolean
+    observed_as: allow_bulk_edit
+    default: "0"
+  - name: make_attachment_public
+    label: Make Attachment Public (by default)
+    type: boolean
+    observed_as: make_attachment_public
+    default: "0"
+  - name: permlevel
+    label: Perm Level
+    type: integer
+    observed_as: permlevel
+    default: "0"
+  - name: ignore_xss_filter
+    label: Ignore XSS Filter
+    type: boolean
+    observed_as: ignore_xss_filter
+    default: "0"
+  - name: unique
+    label: Unique
+    type: boolean
+    observed_as: unique
+    default: "0"
+  - name: no_copy
+    label: No Copy
+    type: boolean
+    observed_as: no_copy
+    default: "0"
+  - name: set_only_once
+    label: Set only once
+    type: boolean
+    observed_as: set_only_once
+    default: "0"
+  - name: remember_last_selected_value
+    label: Remember Last Selected Value
+    type: boolean
+    observed_as: remember_last_selected_value
+    default: "0"
+  - name: mandatory_depends_on
+    label: Mandatory Depends On (JS)
+    type: text
+    observed_as: mandatory_depends_on
+  - name: read_only_depends_on
+    label: Read Only Depends On (JS)
+    type: text
+    observed_as: read_only_depends_on
+  - name: alignment
+    label: Alignment
+    type: enum
+    observed_as: alignment
+    enum_values:
+      - Left
+      - Center
+      - Right
+  - name: print_width
+    label: Print Width
+    type: string
+    observed_as: print_width
+    max_length: 10
+  - name: width
+    label: Width
+    type: string
+    observed_as: width
+    max_length: 10
+  - name: max_height
+    label: Max Height
+    type: string
+    observed_as: max_height
+    max_length: 10
+  - name: columns
+    label: Columns
+    type: integer
+    observed_as: columns
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: documentation_url
+    label: Documentation URL
+    type: string
+    observed_as: documentation_url
+  - name: placeholder
+    label: Placeholder
+    type: string
+    observed_as: placeholder
+  - name: oldfieldname
+    label: ""
+    type: string
+    observed_as: oldfieldname
+  - name: oldfieldtype
+    label: ""
+    type: string
+    observed_as: oldfieldtype
+  - name: show_description_on_click
+    label: Show Description on Click
+    type: boolean
+    observed_as: show_description_on_click
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocField
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DocField
+    note: declared by the program and served by its API

@@ -1,0 +1,18 @@
+name: UOMCategory
+description: A grouping of units, like weight or length. Document type "UOM Category" (module Stock).
+fields:
+  - name: category_name
+    label: Category Name
+    type: string
+    observed_as: category_name
+    required: true
+    unique: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUOM Category
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of UOM Category
+    note: declared by the program and served by its API

@@ -1,0 +1,30 @@
+name: PackageImport
+description: Document type "Package Import" (module Core).
+fields:
+  - name: attach_package
+    label: Attach Package
+    type: file
+    observed_as: attach_package
+  - name: activate
+    label: Activate
+    type: boolean
+    observed_as: activate
+    default: "0"
+  - name: force
+    label: Force
+    type: boolean
+    observed_as: force
+    default: "0"
+  - name: log
+    label: Log
+    type: text
+    observed_as: log
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPackage Import
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Package Import
+    note: declared by the program and served by its API

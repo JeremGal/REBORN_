@@ -1,0 +1,41 @@
+name: UserEmail
+description: 'Document type "User Email" (module Core): lines of another document.'
+fields:
+  - name: email_account
+    label: Email Account
+    type: ref
+    observed_as: email_account
+    required: true
+    ref: EmailAccount
+  - name: email_id
+    label: Email ID
+    type: string
+    observed_as: email_id
+  - name: awaiting_password
+    label: Awaiting Password
+    type: boolean
+    observed_as: awaiting_password
+    default: "0"
+  - name: used_oauth
+    label: Used OAuth
+    type: boolean
+    observed_as: used_oauth
+    default: "0"
+  - name: enable_outgoing
+    label: Enable Outgoing
+    type: boolean
+    observed_as: enable_outgoing
+    default: "0"
+relations:
+  - to: EmailAccount
+    kind: many-to-one
+    via: email_account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUser Email
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of User Email
+    note: declared by the program and served by its API

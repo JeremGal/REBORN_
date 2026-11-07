@@ -1,0 +1,90 @@
+name: WorkspaceShortcut
+description: 'Document type "Workspace Shortcut" (module Desk): lines of another document.'
+fields:
+  - name: type
+    label: Type
+    type: enum
+    observed_as: type
+    required: true
+    enum_values:
+      - DocType
+      - Report
+      - Page
+      - Dashboard
+      - URL
+  - name: link_to
+    label: Link To
+    type: string
+    observed_as: link_to
+  - name: url
+    label: URL
+    type: string
+    observed_as: url
+  - name: doc_view
+    label: DocType View
+    type: enum
+    observed_as: doc_view
+    enum_values:
+      - List
+      - Report Builder
+      - Dashboard
+      - Tree
+      - New
+      - Calendar
+      - Kanban
+      - Image
+  - name: kanban_board
+    label: Kanban Board
+    type: ref
+    observed_as: kanban_board
+    ref: KanbanBoard
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+    required: true
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: restrict_to_domain
+    label: Restrict to Domain
+    type: ref
+    observed_as: restrict_to_domain
+    ref: Domain
+  - name: report_ref_doctype
+    label: Report Ref DocType
+    type: ref
+    observed_as: report_ref_doctype
+    ref: DocType
+  - name: stats_filter
+    label: Count Filter
+    type: text
+    observed_as: stats_filter
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+  - name: format
+    label: Format
+    type: string
+    observed_as: format
+relations:
+  - to: KanbanBoard
+    kind: many-to-one
+    via: kanban_board
+  - to: Domain
+    kind: many-to-one
+    via: restrict_to_domain
+  - to: DocType
+    kind: many-to-one
+    via: report_ref_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkspace Shortcut
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workspace Shortcut
+    note: declared by the program and served by its API

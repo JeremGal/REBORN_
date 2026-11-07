@@ -1,0 +1,32 @@
+name: EmailGroupMember
+description: Document type "Email Group Member" (module Email).
+fields:
+  - name: email_group
+    label: Email Group
+    type: ref
+    observed_as: email_group
+    required: true
+    ref: EmailGroup
+  - name: email
+    label: Email
+    type: string
+    observed_as: email
+    required: true
+  - name: unsubscribed
+    label: Unsubscribed
+    type: boolean
+    observed_as: unsubscribed
+    default: "0"
+relations:
+  - to: EmailGroup
+    kind: many-to-one
+    via: email_group
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Group Member
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Group Member
+    note: declared by the program and served by its API

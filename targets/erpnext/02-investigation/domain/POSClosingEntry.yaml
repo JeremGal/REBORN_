@@ -1,0 +1,133 @@
+name: POSClosingEntry
+description: 'Closes a POS shift and totals what was collected. Document type "POS Closing Entry" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: period_start_date
+    label: Period Start Date
+    type: datetime
+    observed_as: period_start_date
+    required: true
+  - name: period_end_date
+    label: Period End Date
+    type: datetime
+    observed_as: period_end_date
+    required: true
+    default: Today
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+    required: true
+    default: Now
+  - name: pos_opening_entry
+    label: POS Opening Entry
+    type: ref
+    observed_as: pos_opening_entry
+    required: true
+    ref: POSOpeningEntry
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Submitted
+      - Queued
+      - Failed
+      - Cancelled
+    default: Draft
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: pos_profile
+    label: POS Profile
+    type: ref
+    observed_as: pos_profile
+    required: true
+    ref: POSProfile
+  - name: user
+    label: Cashier
+    type: ref
+    observed_as: user
+    required: true
+    ref: User
+  - name: total_quantity
+    label: Total Quantity
+    type: decimal
+    observed_as: total_quantity
+  - name: net_total
+    label: Net Total
+    type: money
+    observed_as: net_total
+    default: "0"
+  - name: total_taxes_and_charges
+    label: Total Taxes and Charges
+    type: money
+    observed_as: total_taxes_and_charges
+  - name: grand_total
+    label: Grand Total
+    type: money
+    observed_as: grand_total
+    default: "0"
+  - name: error_message
+    label: Error
+    type: text
+    observed_as: error_message
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: POSClosingEntry
+relations:
+  - to: POSOpeningEntry
+    kind: many-to-one
+    via: pos_opening_entry
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: POSProfile
+    kind: many-to-one
+    via: pos_profile
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: POSInvoiceReference
+    kind: one-to-many
+    via: pos_invoices
+    description: lines (POS Transactions)
+  - to: SalesInvoiceReference
+    kind: one-to-many
+    via: sales_invoices
+    description: lines (Sales Invoice Transactions)
+  - to: POSClosingEntryTaxes
+    kind: one-to-many
+    via: taxes
+    description: lines (Taxes)
+  - to: POSClosingEntryDetail
+    kind: one-to-many
+    via: payment_reconciliation
+    description: lines (Payment Reconciliation)
+  - to: POSClosingEntry
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPOS Closing Entry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of POS Closing Entry
+    note: declared by the program and served by its API

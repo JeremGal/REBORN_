@@ -1,0 +1,65 @@
+name: MasterProductionScheduleItem
+description: 'Document type "Master Production Schedule Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: delivery_date
+    label: Delivery Date
+    type: date
+    observed_as: delivery_date
+  - name: cumulative_lead_time
+    label: Lead Time
+    type: integer
+    observed_as: cumulative_lead_time
+  - name: order_release_date
+    label: Start Date
+    type: date
+    observed_as: order_release_date
+  - name: planned_qty
+    label: Planned Qty
+    type: decimal
+    observed_as: planned_qty
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: bom_no
+    label: BOM No
+    type: ref
+    observed_as: bom_no
+    ref: BOM
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: UOM
+    kind: many-to-one
+    via: uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMaster Production Schedule Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Master Production Schedule Item
+    note: declared by the program and served by its API

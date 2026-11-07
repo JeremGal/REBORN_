@@ -1,0 +1,36 @@
+name: DataExport
+description: 'Document type "Data Export" (module Core): single settings record.'
+fields:
+  - name: reference_doctype
+    label: Select Doctype
+    type: ref
+    observed_as: reference_doctype
+    required: true
+    ref: DocType
+  - name: export_without_main_header
+    label: Export without main header
+    type: boolean
+    observed_as: export_without_main_header
+    default: "0"
+  - name: file_type
+    label: File Type
+    type: enum
+    observed_as: file_type
+    required: true
+    enum_values:
+      - Excel
+      - CSV
+    default: CSV
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabData Export
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Data Export
+    note: declared by the program and served by its API

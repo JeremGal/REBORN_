@@ -1,0 +1,36 @@
+name: ShipmentParcel
+description: 'Document type "Shipment Parcel" (module Stock): lines of another document.'
+fields:
+  - name: length
+    label: Length (cm)
+    type: decimal
+    observed_as: length
+  - name: width
+    label: Width (cm)
+    type: decimal
+    observed_as: width
+  - name: height
+    label: Height (cm)
+    type: decimal
+    observed_as: height
+  - name: weight
+    label: Weight (kg)
+    type: decimal
+    observed_as: weight
+    required: true
+    precision: 1
+  - name: count
+    label: Count
+    type: integer
+    observed_as: count
+    required: true
+    default: "1"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabShipment Parcel
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Shipment Parcel
+    note: declared by the program and served by its API

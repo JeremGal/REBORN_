@@ -20,6 +20,8 @@ export function basisOfEntry(entry) {
   if (/^(reborn-schema|reborn-ui|detect-it-easy|reborn-db)$/.test(tool)) return "shipped-data";
   if (/^(crawl4ai|linkup|reborn-doc|reborn-manual)$/.test(tool)) return "documentation";
   if (tool === "ghidra-mcp" || tool === "craft-anything") return "static-code";
+  // A running Frappe site: document definitions are declared data; documents created and read back are observations.
+  if (tool === "frappe-api") return /^observe/.test(op) ? "runtime" : "shipped-data";
   if (tool === "rea-agents") {
     if (/^(analyze|decompile|function|trace|search|xrefs|instructions|analyze-javascript-application|export-web-scripts|native-session)/.test(op)) return "static-code";
     return "shipped-data";

@@ -1,0 +1,22 @@
+name: ItemAttributeValue
+description: 'Document type "Item Attribute Value" (module Stock): lines of another document.'
+fields:
+  - name: attribute_value
+    label: Attribute Value
+    type: string
+    observed_as: attribute_value
+    required: true
+  - name: abbr
+    label: Abbreviation
+    type: string
+    observed_as: abbr
+    required: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Attribute Value
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Attribute Value
+    note: declared by the program and served by its API

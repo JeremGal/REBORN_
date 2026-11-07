@@ -1,0 +1,62 @@
+name: ExchangeRateRevaluation
+description: "Restates foreign currency balances at today's exchange rate. Document type \"Exchange Rate Revaluation\" (module Accounts): draft, submitted, cancelled life cycle."
+fields:
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: rounding_loss_allowance
+    label: Rounding Loss Allowance
+    type: decimal
+    observed_as: rounding_loss_allowance
+    precision: 9
+    default: "0.05"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: gain_loss_unbooked
+    label: Gain/Loss from Revaluation
+    type: money
+    observed_as: gain_loss_unbooked
+  - name: gain_loss_booked
+    label: Gain/Loss already booked
+    type: money
+    observed_as: gain_loss_booked
+  - name: total_gain_loss
+    label: Total Gain/Loss
+    type: money
+    observed_as: total_gain_loss
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: ExchangeRateRevaluation
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: ExchangeRateRevaluationAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Exchange Rate Revaluation Account)
+  - to: ExchangeRateRevaluation
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabExchange Rate Revaluation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Exchange Rate Revaluation
+    note: declared by the program and served by its API

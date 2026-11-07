@@ -1,0 +1,37 @@
+name: UserSessionDisplay
+description: 'Document type "User Session Display" (module Core): lines of another document.'
+fields:
+  - name: id
+    label: ID
+    type: string
+    observed_as: id
+  - name: is_current
+    label: Is Current
+    type: boolean
+    observed_as: is_current
+    default: "0"
+  - name: ip_address
+    label: IP Address
+    type: string
+    observed_as: ip_address
+  - name: user_agent
+    label: User Agent
+    type: text
+    observed_as: user_agent
+  - name: session_created
+    label: Session Created
+    type: datetime
+    observed_as: session_created
+  - name: last_updated
+    label: Last Updated
+    type: datetime
+    observed_as: last_updated
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUser Session Display
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of User Session Display
+    note: declared by the program and served by its API

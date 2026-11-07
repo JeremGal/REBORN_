@@ -1,0 +1,70 @@
+name: RQWorker
+description: Document type "RQ Worker" (module Core).
+fields:
+  - name: queue
+    label: Queue(s)
+    type: string
+    observed_as: queue
+  - name: queue_type
+    label: Queue Type(s)
+    type: enum
+    observed_as: queue_type
+    enum_values:
+      - default
+      - long
+      - short
+  - name: worker_name
+    label: Worker Name
+    type: string
+    observed_as: worker_name
+    unique: true
+  - name: status
+    label: Status
+    type: string
+    observed_as: status
+  - name: pid
+    label: PID
+    type: string
+    observed_as: pid
+  - name: current_job_id
+    label: Current Job ID
+    type: ref
+    observed_as: current_job_id
+    ref: RQJob
+  - name: successful_job_count
+    label: Successful Job Count
+    type: integer
+    observed_as: successful_job_count
+  - name: failed_job_count
+    label: Failed Job Count
+    type: integer
+    observed_as: failed_job_count
+  - name: birth_date
+    label: Start Time
+    type: datetime
+    observed_as: birth_date
+  - name: last_heartbeat
+    label: Last Heartbeat
+    type: datetime
+    observed_as: last_heartbeat
+  - name: total_working_time
+    label: Total Working Time
+    type: integer
+    observed_as: total_working_time
+  - name: utilization_percent
+    label: Utilization %
+    type: percent
+    observed_as: utilization_percent
+relations:
+  - to: RQJob
+    kind: many-to-one
+    via: current_job_id
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRQ Worker
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of RQ Worker
+    note: declared by the program and served by its API

@@ -1,0 +1,99 @@
+name: BankTransactionRule
+description: Document type "Bank Transaction Rule" (module Accounts).
+fields:
+  - name: rule_name
+    label: Rule Name
+    type: string
+    observed_as: rule_name
+    required: true
+    unique: true
+  - name: transaction_type
+    label: Transaction Type
+    type: enum
+    observed_as: transaction_type
+    required: true
+    enum_values:
+      - Any
+      - Withdrawal
+      - Deposit
+    default: Any
+  - name: priority
+    label: Priority
+    type: integer
+    observed_as: priority
+    required: true
+  - name: min_amount
+    label: Min Amount
+    type: money
+    observed_as: min_amount
+  - name: max_amount
+    label: Max Amount
+    type: money
+    observed_as: max_amount
+  - name: rule_description
+    label: Rule Description
+    type: text
+    observed_as: rule_description
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: classify_as
+    label: Classify As
+    type: enum
+    observed_as: classify_as
+    required: true
+    enum_values:
+      - Bank Entry
+      - Payment Entry
+      - Transfer
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: bank_entry_type
+    label: Bank Entry Type
+    type: enum
+    observed_as: bank_entry_type
+    enum_values:
+      - Single Account
+      - Multiple Accounts
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: BankTransactionRuleDescriptionConditions
+    kind: one-to-many
+    via: description_rules
+    description: lines (Description Rules)
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: BankTransactionRuleAccounts
+    kind: one-to-many
+    via: accounts
+    description: lines (Accounts)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Transaction Rule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Transaction Rule
+    note: declared by the program and served by its API

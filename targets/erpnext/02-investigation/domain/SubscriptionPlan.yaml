@@ -1,0 +1,95 @@
+name: SubscriptionPlan
+description: What a subscription bills for, and at what price. Document type "Subscription Plan" (module Accounts).
+fields:
+  - name: plan_name
+    label: Plan Name
+    type: string
+    observed_as: plan_name
+    required: true
+    unique: true
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: item
+    label: Item
+    type: ref
+    observed_as: item
+    required: true
+    ref: Item
+  - name: price_determination
+    label: Subscription Price Based On
+    type: enum
+    observed_as: price_determination
+    required: true
+    enum_values:
+      - Fixed Rate
+      - Based On Price List
+      - Monthly Rate
+  - name: cost
+    label: Cost
+    type: money
+    observed_as: cost
+  - name: price_list
+    label: Price List
+    type: ref
+    observed_as: price_list
+    ref: PriceList
+  - name: billing_interval
+    label: Billing Interval
+    type: enum
+    observed_as: billing_interval
+    required: true
+    enum_values:
+      - Day
+      - Week
+      - Month
+      - Year
+    default: Day
+  - name: billing_interval_count
+    label: Billing Interval Count
+    type: integer
+    observed_as: billing_interval_count
+    required: true
+    default: "1"
+  - name: product_price_id
+    label: Product Price ID
+    type: string
+    observed_as: product_price_id
+  - name: payment_gateway
+    label: Payment Gateway
+    type: ref
+    observed_as: payment_gateway
+    ref: PaymentGatewayAccount
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: Item
+    kind: many-to-one
+    via: item
+  - to: PriceList
+    kind: many-to-one
+    via: price_list
+  - to: PaymentGatewayAccount
+    kind: many-to-one
+    via: payment_gateway
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubscription Plan
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subscription Plan
+    note: declared by the program and served by its API

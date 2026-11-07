@@ -1,0 +1,81 @@
+name: SubcontractingOrderServiceItem
+description: 'Document type "Subcontracting Order Service Item" (module Subcontracting): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+    required: true
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    required: true
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+  - name: base_rate
+    label: Rate (Company Currency)
+    type: money
+    observed_as: base_rate
+  - name: base_amount
+    label: Amount (Company Currency)
+    type: money
+    observed_as: base_amount
+  - name: fg_item
+    label: Finished Good Item
+    type: ref
+    observed_as: fg_item
+    required: true
+    ref: Item
+  - name: fg_item_qty
+    label: Finished Good Item Quantity
+    type: decimal
+    observed_as: fg_item_qty
+    required: true
+    default: "1"
+  - name: purchase_order_item
+    label: Purchase Order Item
+    type: string
+    observed_as: purchase_order_item
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: material_request_item
+    label: Material Request Item
+    type: string
+    observed_as: material_request_item
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Item
+    kind: many-to-one
+    via: fg_item
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Order Service Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Order Service Item
+    note: declared by the program and served by its API

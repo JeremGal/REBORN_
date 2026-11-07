@@ -1,0 +1,223 @@
+name: BOMCreator
+description: 'Build a multi-level BOM by hand or from a CAD design, plan its operations, and create the BOMs. Document type "BOM Creator" (module Manufacturing): draft, submitted, cancelled life cycle.'
+fields:
+  - name: design_name
+    label: Design Name
+    type: string
+    observed_as: design_name
+  - name: item_code
+    label: Finished Good
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: design_file
+    label: Design File
+    type: file
+    observed_as: design_file
+  - name: track_semi_finished_goods
+    label: Produce Item per Operation
+    type: boolean
+    observed_as: track_semi_finished_goods
+    default: "0"
+  - name: qty
+    label: Finished Good Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+    default: "1"
+  - name: rm_cost_as_per
+    label: Rate Of Materials Based On
+    type: enum
+    observed_as: rm_cost_as_per
+    required: true
+    enum_values:
+      - Valuation Rate
+      - Last Purchase Rate
+      - Price List
+    default: Valuation Rate
+  - name: buying_price_list
+    label: Price List
+    type: ref
+    observed_as: buying_price_list
+    ref: PriceList
+  - name: price_list_currency
+    label: Price List Currency
+    type: ref
+    observed_as: price_list_currency
+    ref: Currency
+  - name: plc_conversion_rate
+    label: Price List Exchange Rate
+    type: decimal
+    observed_as: plc_conversion_rate
+  - name: set_rate_based_on_warehouse
+    label: Set Valuation Rate Based on Source Warehouse
+    type: boolean
+    observed_as: set_rate_based_on_warehouse
+    default: "0"
+  - name: default_warehouse
+    label: Default Source Warehouse
+    type: ref
+    observed_as: default_warehouse
+    ref: Warehouse
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: conversion_rate
+    label: Conversion Rate
+    type: decimal
+    observed_as: conversion_rate
+    precision: 9
+    default: "1"
+  - name: raw_material_cost
+    label: Total Cost
+    type: money
+    observed_as: raw_material_cost
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - BOM-CRE-.YYYY.-
+    default: BOM-CRE-.YYYY.-
+  - name: item_group
+    label: Item Group for New Items
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: routing
+    label: Routing
+    type: ref
+    observed_as: routing
+    ref: Routing
+  - name: part_number
+    label: Part Number
+    type: string
+    observed_as: part_number
+  - name: is_phantom
+    label: Is Phantom BOM
+    type: boolean
+    observed_as: is_phantom
+    default: "0"
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Submitted
+      - In Progress
+      - Completed
+      - Failed
+      - Superseded
+      - Cancelled
+    default: Draft
+  - name: previous_revision
+    label: Previous Revision
+    type: ref
+    observed_as: previous_revision
+    ref: BOMCreator
+  - name: error_log
+    label: Error Log
+    type: text
+    observed_as: error_log
+  - name: revision
+    label: Revision
+    type: integer
+    observed_as: revision
+    default: "1"
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: BOMCreator
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: BOMCreatorItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: BOMCreatorOperation
+    kind: one-to-many
+    via: operations
+    description: lines (Operations)
+  - to: BOMCreatorMaterial
+    kind: one-to-many
+    via: materials
+    description: lines (Materials)
+  - to: PriceList
+    kind: many-to-one
+    via: buying_price_list
+  - to: Currency
+    kind: many-to-one
+    via: price_list_currency
+  - to: Warehouse
+    kind: many-to-one
+    via: default_warehouse
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Routing
+    kind: many-to-one
+    via: routing
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: BOMCreator
+    kind: many-to-one
+    via: previous_revision
+  - to: BOMCreator
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Creator
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Creator
+    note: declared by the program and served by its API

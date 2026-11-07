@@ -198,4 +198,21 @@ Choix d'Alan : schéma livré + lecture du code = deux natures de preuve, donc u
 | Noms Java surveillés par le contrôle anti-fuite | 0 | 173 |
 | Tests | 41 | 51 |
 
+## 15. ERPNext (site Frappe Cloud d'Alan) et fusion avec l'explorateur d'Elias (07/11/2026)
+
+- **Fusion** : la branche `Mouss_H_Company` d'Elias (dossier `h-explorer/`, explorateur Python qui pilote les agents H Company) est dans main. Lire `h-explorer/HANDOFF.md`. Ne pas modifier ses fichiers (sa règle §8 bis) : le pont est de notre côté, `reborn import-run` (EXP_xxx.json vers run.yaml). La branche `rebuild/studio` de Jérémie (bloc 3) n'est pas fusionnée.
+- **Clé H Company** : dans le `.env` d'Alan sur une ligne libre `hk-…` ; le code d'Elias lit `HAI_API_KEY` ou le premier `hk-…` de son propre `.env`. Ne jamais la recopier dans le repo.
+- **Accès ERPNext** : `FRAPPE_URL`, `FRAPPE_API_KEY`, `FRAPPE_API_SECRET` dans le `.env` d'Alan, lu via `secretsEnvFile` de `reborn.local.json`. La clé est celle du compte administrateur d'Alan : à révoquer après le hackathon. Versions : Frappe 16.55.2, ERPNext 16.51.2 ; société « Digital Solution Service », France, devise USD, plan comptable français.
+- **Données fictives créées** (préfixe TEST-) : 1 client, 3 articles, 15 factures de vente en **brouillon** (jamais validées).
+
+| Mesure ERPNext | Résultat |
+|---|---|
+| Modèle de données | 835 entités sur 835 (100 %), extraites en 33 s |
+| Règles de calcul | 7, toutes `confirmed` par observation, 16 exemples chiffrés |
+| Fonctionnalités prêtes à reconstruire | 1 (facture de vente) |
+| Vecteurs de test | 18 |
+| Couverture des fonctionnalités | 1 sur 755 pages de la documentation actuelle |
+
+Découvertes : arrondi bancaire au centime (0,625 donne 0,62), réglable dans les paramètres système ; deux lignes de taxe sur le **même compte** partagent un taux (la première prend le taux de la dernière, cause non établie, U-001) ; quantité décimale refusée pour les unités « nombre entier ». Prochaines familles de calcul à observer avec `frappe observe` : achats, paiements et soldes restants, stock (valorisation), règles de prix, échéanciers.
+
 Temps mesurés : `symbols` liste les 19 954 exports du moteur GnuCash en 8,5 s sans Ghidra ; une recherche Java dans uniCenta prend 1,3 s ; `find --engine ghidra-mcp` (11,3 s) n'est pas plus rapide que Craft (10,2 s), son intérêt est le classement et la décompilation immédiate qui suit. `relations` ne trouve aucun lien implicite sur nos trois cibles (toutes les clés sont déclarées) : il servira sur les vieilles bases sans clés étrangères.

@@ -1,0 +1,28 @@
+name: SystemHealthReportWorkers
+description: 'Document type "System Health Report Workers" (module Desk): lines of another document.'
+fields:
+  - name: queues
+    label: Queues
+    type: string
+    observed_as: queues
+  - name: count
+    label: Count
+    type: integer
+    observed_as: count
+  - name: utilization
+    label: Utilization
+    type: percent
+    observed_as: utilization
+  - name: failed_jobs
+    label: Failed Jobs
+    type: integer
+    observed_as: failed_jobs
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSystem Health Report Workers
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of System Health Report Workers
+    note: declared by the program and served by its API

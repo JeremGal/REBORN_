@@ -1,0 +1,152 @@
+name: BankGuarantee
+description: "A guarantee a bank gives on your behalf, or on a customer's or supplier's. Document type \"Bank Guarantee\" (module Accounts): draft, submitted, cancelled life cycle."
+fields:
+  - name: bg_type
+    label: Bank Guarantee Type
+    type: enum
+    observed_as: bg_type
+    required: true
+    enum_values:
+      - Receiving
+      - Providing
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_docname
+    label: Reference Document Name
+    type: string
+    observed_as: reference_docname
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+    required: true
+  - name: validity
+    label: Validity in Days
+    type: integer
+    observed_as: validity
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+  - name: bank
+    label: Bank
+    type: ref
+    observed_as: bank
+    ref: Bank
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    ref: BankAccount
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: bank_account_no
+    label: Bank Account No
+    type: string
+    observed_as: bank_account_no
+  - name: iban
+    label: IBAN
+    type: string
+    observed_as: iban
+  - name: branch_code
+    label: Branch Code
+    type: string
+    observed_as: branch_code
+  - name: swift_number
+    label: SWIFT number
+    type: string
+    observed_as: swift_number
+  - name: more_information
+    label: Clauses and Conditions
+    type: text
+    observed_as: more_information
+  - name: bank_guarantee_number
+    label: Bank Guarantee Number
+    type: string
+    observed_as: bank_guarantee_number
+    unique: true
+  - name: name_of_beneficiary
+    label: Name of Beneficiary
+    type: string
+    observed_as: name_of_beneficiary
+  - name: margin_money
+    label: Margin Money
+    type: money
+    observed_as: margin_money
+  - name: charges
+    label: Charges Incurred
+    type: money
+    observed_as: charges
+  - name: fixed_deposit_number
+    label: Fixed Deposit Number
+    type: string
+    observed_as: fixed_deposit_number
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: BankGuarantee
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Bank
+    kind: many-to-one
+    via: bank
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: BankGuarantee
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Guarantee
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Guarantee
+    note: declared by the program and served by its API

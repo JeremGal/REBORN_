@@ -1,0 +1,39 @@
+name: EventParticipants
+description: 'Document type "Event Participants" (module Desk): lines of another document.'
+fields:
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    required: true
+    ref: DocType
+  - name: reference_docname
+    label: Reference Name
+    type: string
+    observed_as: reference_docname
+    required: true
+  - name: email
+    label: Email
+    type: string
+    observed_as: email
+  - name: attending
+    label: Attending
+    type: enum
+    observed_as: attending
+    enum_values:
+      - Yes
+      - No
+      - Maybe
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEvent Participants
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Event Participants
+    note: declared by the program and served by its API

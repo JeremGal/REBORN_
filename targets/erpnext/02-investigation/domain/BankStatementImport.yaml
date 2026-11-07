@@ -1,0 +1,119 @@
+name: BankStatementImport
+description: Bring in a bank statement to match its lines against your books. Document type "Bank Statement Import" (module Accounts).
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    required: true
+    ref: BankAccount
+  - name: bank
+    label: Bank
+    type: ref
+    observed_as: bank
+    ref: Bank
+  - name: import_mt940_fromat
+    label: Import MT940 Fromat
+    type: boolean
+    observed_as: import_mt940_fromat
+    default: "0"
+  - name: custom_delimiters
+    label: Custom delimiters
+    type: boolean
+    observed_as: custom_delimiters
+    default: "0"
+  - name: delimiter_options
+    label: Delimiter options
+    type: string
+    observed_as: delimiter_options
+    default: ",;\\t|"
+  - name: google_sheets_url
+    label: Import from Google Sheets
+    type: string
+    observed_as: google_sheets_url
+  - name: import_file
+    label: Import File
+    type: file
+    observed_as: import_file
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Pending
+      - Success
+      - Partial Success
+      - Error
+    default: Pending
+  - name: template_options
+    label: Template Options
+    type: text
+    observed_as: template_options
+  - name: use_csv_sniffer
+    label: Use CSV Sniffer
+    type: boolean
+    observed_as: use_csv_sniffer
+    default: "0"
+  - name: template_warnings
+    label: Template Warnings
+    type: text
+    observed_as: template_warnings
+  - name: show_failed_logs
+    label: Show Failed Logs
+    type: boolean
+    observed_as: show_failed_logs
+    default: "0"
+  - name: reference_doctype
+    label: Document Type
+    type: ref
+    observed_as: reference_doctype
+    required: true
+    ref: DocType
+    default: Bank Transaction
+  - name: import_type
+    label: Import Type
+    type: enum
+    observed_as: import_type
+    required: true
+    enum_values:
+      - Insert New Records
+      - Update Existing Records
+    default: Insert New Records
+  - name: submit_after_import
+    label: Submit After Import
+    type: boolean
+    observed_as: submit_after_import
+    default: "1"
+  - name: mute_emails
+    label: Don't Send Emails
+    type: boolean
+    observed_as: mute_emails
+    default: "1"
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: Bank
+    kind: many-to-one
+    via: bank
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Statement Import
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Statement Import
+    note: declared by the program and served by its API

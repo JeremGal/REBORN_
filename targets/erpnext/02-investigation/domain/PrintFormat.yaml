@@ -1,0 +1,220 @@
+name: PrintFormat
+description: Document type "Print Format" (module Printing).
+fields:
+  - name: print_format_for
+    label: Print Format For
+    type: enum
+    observed_as: print_format_for
+    enum_values:
+      - DocType
+      - Report
+    default: DocType
+  - name: doc_type
+    label: DocType
+    type: ref
+    observed_as: doc_type
+    ref: DocType
+  - name: report
+    label: Report
+    type: ref
+    observed_as: report
+    ref: Report
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: default_print_language
+    label: Default Print Language
+    type: ref
+    observed_as: default_print_language
+    ref: Language
+  - name: preview_image
+    label: Preview Image
+    type: file
+    observed_as: preview_image
+  - name: standard
+    label: Standard
+    type: enum
+    observed_as: standard
+    required: true
+    enum_values:
+      - No
+      - Yes
+    default: No
+  - name: custom_format
+    label: Custom Format
+    type: boolean
+    observed_as: custom_format
+    default: "0"
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: pdf_generator
+    label: PDF Generator
+    type: enum
+    observed_as: pdf_generator
+    enum_values:
+      - wkhtmltopdf
+      - chrome
+      - PlutoPrint
+      - Typst
+      - WeasyPrint
+  - name: paper_size
+    label: Paper Size
+    type: enum
+    observed_as: paper_size
+    enum_values:
+      - A4
+      - A5
+      - A3
+      - Letter
+      - Legal
+      - Receipt 80 mm
+      - Receipt 58 mm
+  - name: print_format_type
+    label: Print Format Type
+    type: enum
+    observed_as: print_format_type
+    enum_values:
+      - Jinja
+      - JS
+    default: Jinja
+  - name: raw_printing
+    label: Raw Printing
+    type: boolean
+    observed_as: raw_printing
+    default: "0"
+  - name: html
+    label: HTML
+    type: text
+    observed_as: html
+  - name: raw_commands
+    label: Raw Commands
+    type: text
+    observed_as: raw_commands
+  - name: margin_top
+    label: Margin Top
+    type: decimal
+    observed_as: margin_top
+    default: "15"
+  - name: margin_bottom
+    label: Margin Bottom
+    type: decimal
+    observed_as: margin_bottom
+    default: "15"
+  - name: margin_left
+    label: Margin Left
+    type: decimal
+    observed_as: margin_left
+    default: "15"
+  - name: margin_right
+    label: Margin Right
+    type: decimal
+    observed_as: margin_right
+    default: "15"
+  - name: align_labels_right
+    label: Align Labels to the Right
+    type: boolean
+    observed_as: align_labels_right
+    default: "0"
+  - name: show_section_headings
+    label: Show Section Headings
+    type: boolean
+    observed_as: show_section_headings
+    default: "0"
+  - name: line_breaks
+    label: Show Line Breaks after Sections
+    type: boolean
+    observed_as: line_breaks
+    default: "0"
+  - name: absolute_value
+    label: Show Absolute Values
+    type: boolean
+    observed_as: absolute_value
+    default: "0"
+  - name: font_size
+    label: Font Size
+    type: integer
+    observed_as: font_size
+    default: "14"
+  - name: font
+    label: Google Font
+    type: string
+    observed_as: font
+  - name: label_color
+    label: Label Color
+    type: string
+    observed_as: label_color
+  - name: value_color
+    label: Value Color
+    type: string
+    observed_as: value_color
+  - name: page_number
+    label: Page Number
+    type: enum
+    observed_as: page_number
+    enum_values:
+      - Hide
+      - Top Left
+      - Top Center
+      - Top Right
+      - Bottom Left
+      - Bottom Center
+      - Bottom Right
+    default: Hide
+  - name: show_label_colon
+    label: Show Colon After Field Labels
+    type: boolean
+    observed_as: show_label_colon
+    default: "0"
+  - name: css
+    label: Custom CSS
+    type: text
+    observed_as: css
+  - name: format_data
+    label: Format Data
+    type: text
+    observed_as: format_data
+  - name: draft_data
+    label: Draft Data
+    type: text
+    observed_as: draft_data
+  - name: classic_format_data
+    label: Classic Format Data
+    type: text
+    observed_as: classic_format_data
+  - name: print_format_builder
+    label: Print Format Builder
+    type: boolean
+    observed_as: print_format_builder
+    default: "0"
+  - name: print_format_builder_beta
+    label: Print Format Editor
+    type: boolean
+    observed_as: print_format_builder_beta
+    default: "0"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: doc_type
+  - to: Report
+    kind: many-to-one
+    via: report
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: Language
+    kind: many-to-one
+    via: default_print_language
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPrint Format
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Print Format
+    note: declared by the program and served by its API

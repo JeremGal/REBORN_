@@ -1,0 +1,81 @@
+name: LandedCostVoucher
+description: 'Adds freight, duty and other charges to the cost of received items. Document type "Landed Cost Voucher" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MAT-LCV-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: total_vendor_invoices_cost
+    label: Total Vendor Invoices Cost (Company Currency)
+    type: money
+    observed_as: total_vendor_invoices_cost
+  - name: total_taxes_and_charges
+    label: Total Landed Cost (Company Currency)
+    type: money
+    observed_as: total_taxes_and_charges
+    required: true
+  - name: distribute_charges_based_on
+    label: Distribute Charges Based On
+    type: enum
+    observed_as: distribute_charges_based_on
+    required: true
+    enum_values:
+      - Qty
+      - Amount
+      - Distribute Manually
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: LandedCostVoucher
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: LandedCostPurchaseReceipt
+    kind: one-to-many
+    via: purchase_receipts
+    description: lines (Vouchers)
+  - to: LandedCostItem
+    kind: one-to-many
+    via: items
+    description: lines (Receipt Items)
+  - to: LandedCostVendorInvoice
+    kind: one-to-many
+    via: vendor_invoices
+    description: lines (Vendor Invoices)
+  - to: LandedCostTaxesAndCharges
+    kind: one-to-many
+    via: taxes
+    description: lines (Landed Cost)
+  - to: LandedCostVoucher
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLanded Cost Voucher
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Landed Cost Voucher
+    note: declared by the program and served by its API

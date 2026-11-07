@@ -1,0 +1,184 @@
+name: BuyingSettings
+description: 'Document type "Buying Settings" (module Buying): single settings record.'
+fields:
+  - name: supp_master_name
+    label: Supplier Naming By
+    type: enum
+    observed_as: supp_master_name
+    enum_values:
+      - Supplier Name
+      - Naming Series
+      - Auto Name
+    default: Supplier Name
+  - name: naming_series_details
+    label: Naming Series options
+    type: text
+    observed_as: naming_series_details
+  - name: supplier_group
+    label: Default Supplier Group
+    type: ref
+    observed_as: supplier_group
+    ref: SupplierGroup
+  - name: buying_price_list
+    label: Default Buying Price List
+    type: ref
+    observed_as: buying_price_list
+    ref: PriceList
+  - name: maintain_same_rate
+    label: Maintain same rate throughout the purchase  cycle
+    type: boolean
+    observed_as: maintain_same_rate
+    default: "0"
+  - name: set_landed_cost_based_on_purchase_invoice_rate
+    label: Set Landed Cost Based on Purchase Invoice Rate
+    type: boolean
+    observed_as: set_landed_cost_based_on_purchase_invoice_rate
+    default: "0"
+  - name: maintain_same_rate_action
+    label: Action if same rate is not maintained
+    type: enum
+    observed_as: maintain_same_rate_action
+    enum_values:
+      - Stop
+      - Warn
+    default: Stop
+  - name: role_to_override_stop_action
+    label: Role allowed to override stop action
+    type: ref
+    observed_as: role_to_override_stop_action
+    ref: Role
+  - name: po_required
+    label: Is Purchase Order required for Purchase Invoice & Receipt creation?
+    type: enum
+    observed_as: po_required
+    enum_values:
+      - No
+      - Yes
+  - name: pr_required
+    label: Is Purchase Receipt required for Purchase Invoice creation?
+    type: enum
+    observed_as: pr_required
+    enum_values:
+      - No
+      - Yes
+  - name: project_update_frequency
+    label: How often should project be updated of Total Purchase Cost ?
+    type: enum
+    observed_as: project_update_frequency
+    enum_values:
+      - Each Transaction
+      - Manual
+    default: Each Transaction
+  - name: over_order_allowance
+    label: Over Order Allowance (%)
+    type: decimal
+    observed_as: over_order_allowance
+  - name: allow_multiple_items
+    label: Allow Item to be added multiple times in a transaction
+    type: boolean
+    observed_as: allow_multiple_items
+    default: "0"
+  - name: allow_negative_rates_for_items
+    label: Allow negative rates for Items
+    type: boolean
+    observed_as: allow_negative_rates_for_items
+    default: "0"
+  - name: set_valuation_rate_for_rejected_materials
+    label: Set valuation rate for rejected Materials
+    type: boolean
+    observed_as: set_valuation_rate_for_rejected_materials
+    default: "0"
+  - name: disable_last_purchase_rate
+    label: Disable last purchase rate
+    type: boolean
+    observed_as: disable_last_purchase_rate
+    default: "0"
+  - name: show_pay_button
+    label: Show pay button in Purchase Order portal
+    type: boolean
+    observed_as: show_pay_button
+    default: "1"
+  - name: bill_for_rejected_quantity_in_purchase_invoice
+    label: Bill for rejected quantity in Purchase Invoice
+    type: boolean
+    observed_as: bill_for_rejected_quantity_in_purchase_invoice
+    default: "1"
+  - name: use_transaction_date_exchange_rate
+    label: Use Transaction Date Exchange Rate
+    type: boolean
+    observed_as: use_transaction_date_exchange_rate
+    default: "0"
+  - name: allow_zero_qty_in_supplier_quotation
+    label: Allow Supplier Quotation with Zero Quantity
+    type: boolean
+    observed_as: allow_zero_qty_in_supplier_quotation
+    default: "0"
+  - name: allow_zero_qty_in_request_for_quotation
+    label: Allow Request for Quotation with Zero Quantity
+    type: boolean
+    observed_as: allow_zero_qty_in_request_for_quotation
+    default: "0"
+  - name: allow_zero_qty_in_purchase_order
+    label: Allow Purchase Order with Zero Quantity
+    type: boolean
+    observed_as: allow_zero_qty_in_purchase_order
+    default: "0"
+  - name: blanket_order_allowance
+    label: Blanket Order Allowance (%)
+    type: decimal
+    observed_as: blanket_order_allowance
+    default: "0"
+  - name: backflush_raw_materials_of_subcontract_based_on
+    label: Backflush raw materials of subcontract based on
+    type: enum
+    observed_as: backflush_raw_materials_of_subcontract_based_on
+    enum_values:
+      - BOM
+      - Material Transferred for Subcontract
+    default: BOM
+  - name: over_transfer_allowance
+    label: Over Transfer Allowance (%)
+    type: decimal
+    observed_as: over_transfer_allowance
+  - name: validate_consumed_qty
+    label: Validate consumed quantity (as per BOM)
+    type: boolean
+    observed_as: validate_consumed_qty
+    default: "0"
+  - name: auto_create_subcontracting_order
+    label: Auto create Subcontracting Order
+    type: boolean
+    observed_as: auto_create_subcontracting_order
+    default: "0"
+  - name: auto_create_purchase_receipt
+    label: Auto create Purchase Receipt
+    type: boolean
+    observed_as: auto_create_purchase_receipt
+    default: "0"
+  - name: fixed_email
+    label: Fixed Outgoing Email Account
+    type: ref
+    observed_as: fixed_email
+    ref: EmailAccount
+relations:
+  - to: SupplierGroup
+    kind: many-to-one
+    via: supplier_group
+  - to: PriceList
+    kind: many-to-one
+    via: buying_price_list
+  - to: Role
+    kind: many-to-one
+    via: role_to_override_stop_action
+  - to: EmailAccount
+    kind: many-to-one
+    via: fixed_email
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBuying Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Buying Settings
+    note: declared by the program and served by its API

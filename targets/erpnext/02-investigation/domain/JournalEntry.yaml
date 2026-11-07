@@ -1,0 +1,327 @@
+name: JournalEntry
+description: 'A direct entry in your books, for anything without its own form. Document type "Journal Entry" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: voucher_type
+    label: Entry Type
+    type: enum
+    observed_as: voucher_type
+    required: true
+    enum_values:
+      - Journal Entry
+      - Inter Company Journal Entry
+      - Bank Entry
+      - Cash Entry
+      - Credit Card Entry
+      - Debit Note
+      - Credit Note
+      - Contra Entry
+      - Excise Entry
+      - Write Off Entry
+      - Opening Entry
+      - Depreciation Entry
+      - Asset Disposal
+      - Periodic Accounting Entry
+      - Exchange Rate Revaluation
+      - Exchange Gain Or Loss
+      - Deferred Revenue
+      - Deferred Expense
+    default: Journal Entry
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - ACC-JV-.YYYY.-
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+  - name: multi_currency
+    label: Multi Currency
+    type: boolean
+    observed_as: multi_currency
+    default: "0"
+  - name: apply_tds
+    label: "Consider for Tax Withholding "
+    type: boolean
+    observed_as: apply_tds
+    default: "0"
+  - name: tax_withholding_category
+    label: Tax Withholding Category
+    type: ref
+    observed_as: tax_withholding_category
+    ref: TaxWithholdingCategory
+  - name: is_system_generated
+    label: Is System Generated
+    type: boolean
+    observed_as: is_system_generated
+    default: "0"
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: JournalEntry
+  - name: for_all_stock_asset_accounts
+    label: For All Stock Asset Accounts
+    type: boolean
+    observed_as: for_all_stock_asset_accounts
+    default: "1"
+  - name: stock_asset_account
+    label: Stock Asset Account
+    type: ref
+    observed_as: stock_asset_account
+    ref: Account
+  - name: periodic_entry_difference_account
+    label: Periodic Entry Difference Account
+    type: ref
+    observed_as: periodic_entry_difference_account
+    ref: Account
+  - name: total_debit
+    label: Total Debit
+    type: money
+    observed_as: total_debit
+  - name: total_credit
+    label: Total Credit
+    type: money
+    observed_as: total_credit
+  - name: difference
+    label: Difference (Dr - Cr)
+    type: money
+    observed_as: difference
+  - name: cheque_no
+    label: Reference Number
+    type: string
+    observed_as: cheque_no
+  - name: cheque_date
+    label: Reference Date
+    type: date
+    observed_as: cheque_date
+  - name: clearance_date
+    label: Clearance Date
+    type: date
+    observed_as: clearance_date
+  - name: user_remark
+    label: User Remark
+    type: text
+    observed_as: user_remark
+  - name: auto_repeat
+    label: Auto Repeat
+    type: ref
+    observed_as: auto_repeat
+    ref: AutoRepeat
+  - name: tax_withholding_group
+    label: Tax Withholding Group
+    type: ref
+    observed_as: tax_withholding_group
+    ref: TaxWithholdingGroup
+  - name: ignore_tax_withholding_threshold
+    label: Ignore Tax Withholding Threshold
+    type: boolean
+    observed_as: ignore_tax_withholding_threshold
+    default: "0"
+  - name: override_tax_withholding_entries
+    label: Edit Tax Withholding Entries
+    type: boolean
+    observed_as: override_tax_withholding_entries
+    default: "0"
+  - name: bill_no
+    label: Bill No
+    type: string
+    observed_as: bill_no
+  - name: bill_date
+    label: Bill Date
+    type: date
+    observed_as: bill_date
+  - name: due_date
+    label: Due Date
+    type: date
+    observed_as: due_date
+  - name: inter_company_journal_entry_reference
+    label: Inter Company Journal Entry Reference
+    type: ref
+    observed_as: inter_company_journal_entry_reference
+    ref: JournalEntry
+  - name: process_deferred_accounting
+    label: Process Deferred Accounting
+    type: ref
+    observed_as: process_deferred_accounting
+    ref: ProcessDeferredAccounting
+  - name: reversal_of
+    label: Reversal Of
+    type: ref
+    observed_as: reversal_of
+    ref: JournalEntry
+  - name: payment_order
+    label: Payment Order
+    type: ref
+    observed_as: payment_order
+    ref: PaymentOrder
+  - name: stock_entry
+    label: Stock Entry
+    type: ref
+    observed_as: stock_entry
+    ref: StockEntry
+  - name: pay_to_recd_from
+    label: Pay To / Recd From
+    type: string
+    observed_as: pay_to_recd_from
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: select_print_heading
+    label: Print Heading
+    type: ref
+    observed_as: select_print_heading
+    ref: PrintHeading
+  - name: total_amount_currency
+    label: Total Amount Currency
+    type: ref
+    observed_as: total_amount_currency
+    ref: Currency
+  - name: total_amount
+    label: Total Amount
+    type: money
+    observed_as: total_amount
+  - name: total_amount_in_words
+    label: Total Amount in Words
+    type: string
+    observed_as: total_amount_in_words
+  - name: write_off_based_on
+    label: Write Off Based On
+    type: enum
+    observed_as: write_off_based_on
+    enum_values:
+      - Accounts Receivable
+      - Accounts Payable
+    default: Accounts Receivable
+  - name: write_off_amount
+    label: Write Off Amount
+    type: money
+    observed_as: write_off_amount
+  - name: is_opening
+    label: Is Opening
+    type: enum
+    observed_as: is_opening
+    enum_values:
+      - No
+      - Yes
+    default: No
+  - name: finance_book
+    label: Finance Book
+    type: ref
+    observed_as: finance_book
+    ref: FinanceBook
+  - name: from_template
+    label: From Template
+    type: ref
+    observed_as: from_template
+    ref: JournalEntryTemplate
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: custom_remark
+    label: Custom Remark
+    type: boolean
+    observed_as: custom_remark
+    default: "0"
+  - name: remark
+    label: Remark
+    type: text
+    observed_as: remark
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    ref: ModeOfPayment
+  - name: party_not_required
+    label: Party Not Required
+    type: boolean
+    observed_as: party_not_required
+    default: "0"
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: TaxWithholdingCategory
+    kind: many-to-one
+    via: tax_withholding_category
+  - to: JournalEntry
+    kind: many-to-one
+    via: amended_from
+  - to: Account
+    kind: many-to-one
+    via: stock_asset_account
+  - to: Account
+    kind: many-to-one
+    via: periodic_entry_difference_account
+  - to: JournalEntryAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Accounting Entries)
+  - to: AutoRepeat
+    kind: many-to-one
+    via: auto_repeat
+  - to: TaxWithholdingGroup
+    kind: many-to-one
+    via: tax_withholding_group
+  - to: TaxWithholdingEntry
+    kind: one-to-many
+    via: tax_withholding_entries
+    description: lines (Tax Withholding Entries)
+  - to: JournalEntry
+    kind: many-to-one
+    via: inter_company_journal_entry_reference
+  - to: ProcessDeferredAccounting
+    kind: many-to-one
+    via: process_deferred_accounting
+  - to: JournalEntry
+    kind: many-to-one
+    via: reversal_of
+  - to: PaymentOrder
+    kind: many-to-one
+    via: payment_order
+  - to: StockEntry
+    kind: many-to-one
+    via: stock_entry
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: PrintHeading
+    kind: many-to-one
+    via: select_print_heading
+  - to: Currency
+    kind: many-to-one
+    via: total_amount_currency
+  - to: FinanceBook
+    kind: many-to-one
+    via: finance_book
+  - to: JournalEntryTemplate
+    kind: many-to-one
+    via: from_template
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabJournal Entry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Journal Entry
+    note: declared by the program and served by its API

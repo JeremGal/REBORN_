@@ -1,0 +1,44 @@
+name: DocTypeSettingsMap
+description: Settings from Single doctypes applied to a doctype, with one standard and one custom record shown in DocType Settings → General. Document type "DocType Settings Map" (module Core).
+fields:
+  - name: applies_to_doctype
+    label: Applies to DocType
+    type: ref
+    observed_as: applies_to_doctype
+    required: true
+    ref: DocType
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: is_active
+    label: Is Active
+    type: boolean
+    observed_as: is_active
+    default: "1"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: applies_to_doctype
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: DocTypeSettingsMapItem
+    kind: one-to-many
+    via: mappings
+    description: lines (Mappings)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDocType Settings Map
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DocType Settings Map
+    note: declared by the program and served by its API

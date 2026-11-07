@@ -1,0 +1,47 @@
+name: ItemBarcode
+description: 'Document type "Item Barcode" (module Stock): lines of another document.'
+fields:
+  - name: barcode
+    label: Barcode
+    type: string
+    observed_as: barcode
+    required: true
+    unique: true
+  - name: barcode_type
+    label: Barcode Type
+    type: enum
+    observed_as: barcode_type
+    enum_values:
+      - EAN
+      - UPC-A
+      - CODE-39
+      - EAN-13
+      - EAN-8
+      - GS1
+      - GTIN
+      - GTIN-14
+      - ISBN
+      - ISBN-10
+      - ISBN-13
+      - ISSN
+      - JAN
+      - PZN
+      - UPC
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+relations:
+  - to: UOM
+    kind: many-to-one
+    via: uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Barcode
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Barcode
+    note: declared by the program and served by its API

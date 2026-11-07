@@ -1,0 +1,76 @@
+name: PackingSlipItem
+description: 'Document type "Packing Slip Item" (module Stock): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: net_weight
+    label: Net Weight
+    type: decimal
+    observed_as: net_weight
+  - name: stock_uom
+    label: UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: weight_uom
+    label: Weight UOM
+    type: ref
+    observed_as: weight_uom
+    ref: UOM
+  - name: page_break
+    label: Page Break
+    type: boolean
+    observed_as: page_break
+    default: "0"
+  - name: dn_detail
+    label: Delivery Note Item
+    type: string
+    observed_as: dn_detail
+  - name: pi_detail
+    label: Delivery Note Packed Item
+    type: string
+    observed_as: pi_detail
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: UOM
+    kind: many-to-one
+    via: weight_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPacking Slip Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Packing Slip Item
+    note: declared by the program and served by its API

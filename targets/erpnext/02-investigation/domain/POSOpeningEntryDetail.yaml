@@ -1,0 +1,28 @@
+name: POSOpeningEntryDetail
+description: 'Document type "POS Opening Entry Detail" (module Accounts): lines of another document.'
+fields:
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    required: true
+    ref: ModeOfPayment
+  - name: opening_amount
+    label: Opening Amount
+    type: money
+    observed_as: opening_amount
+    required: true
+    default: "0"
+relations:
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPOS Opening Entry Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of POS Opening Entry Detail
+    note: declared by the program and served by its API

@@ -1,0 +1,33 @@
+name: MilestoneTracker
+description: Track milestones for any document Document type "Milestone Tracker" (module Automation).
+fields:
+  - name: document_type
+    label: Document Type to Track
+    type: ref
+    observed_as: document_type
+    required: true
+    unique: true
+    ref: DocType
+  - name: track_field
+    label: Field to Track
+    type: string
+    observed_as: track_field
+    required: true
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMilestone Tracker
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Milestone Tracker
+    note: declared by the program and served by its API

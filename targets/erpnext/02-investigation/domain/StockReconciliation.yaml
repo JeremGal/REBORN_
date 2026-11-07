@@ -1,0 +1,117 @@
+name: StockReconciliation
+description: 'Sets stock quantities and values to what is actually in your warehouses. Document type "Stock Reconciliation" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MAT-RECO-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: purpose
+    label: Purpose
+    type: enum
+    observed_as: purpose
+    required: true
+    enum_values:
+      - Opening Stock
+      - Stock Reconciliation
+      - Adjustment Entry
+  - name: is_made_from_valuation_comparison
+    label: Made from Stock Valuation Comparison
+    type: boolean
+    observed_as: is_made_from_valuation_comparison
+    default: "0"
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+    required: true
+    default: Now
+  - name: set_posting_time
+    label: Edit Posting Date and Time
+    type: boolean
+    observed_as: set_posting_time
+    default: "0"
+  - name: set_warehouse
+    label: Default Warehouse
+    type: ref
+    observed_as: set_warehouse
+    ref: Warehouse
+  - name: scan_barcode
+    label: Scan Barcode
+    type: string
+    observed_as: scan_barcode
+  - name: last_scanned_warehouse
+    label: Last Scanned Warehouse
+    type: string
+    observed_as: last_scanned_warehouse
+  - name: scan_mode
+    label: Scan Mode
+    type: boolean
+    observed_as: scan_mode
+    default: "0"
+  - name: expense_account
+    label: Difference Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: difference_amount
+    label: Difference Amount
+    type: money
+    observed_as: difference_amount
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: StockReconciliation
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Warehouse
+    kind: many-to-one
+    via: set_warehouse
+  - to: StockReconciliationItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: StockReconciliation
+    kind: many-to-one
+    via: amended_from
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Reconciliation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Reconciliation
+    note: declared by the program and served by its API

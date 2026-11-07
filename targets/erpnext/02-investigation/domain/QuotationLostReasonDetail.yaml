@@ -1,0 +1,21 @@
+name: QuotationLostReasonDetail
+description: 'Document type "Quotation Lost Reason Detail" (module Setup): lines of another document.'
+fields:
+  - name: lost_reason
+    label: Quotation Lost Reason
+    type: ref
+    observed_as: lost_reason
+    ref: QuotationLostReason
+relations:
+  - to: QuotationLostReason
+    kind: many-to-one
+    via: lost_reason
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuotation Lost Reason Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quotation Lost Reason Detail
+    note: declared by the program and served by its API

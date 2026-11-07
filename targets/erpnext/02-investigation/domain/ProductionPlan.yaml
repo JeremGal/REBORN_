@@ -1,0 +1,236 @@
+name: ProductionPlan
+description: 'Plans the work orders and materials needed for your demand. Document type "Production Plan" (module Manufacturing): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Naming Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MFG-PP-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: get_items_from
+    label: Get Items From
+    type: enum
+    observed_as: get_items_from
+    enum_values:
+      - Sales Order
+      - Material Request
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: reserve_stock
+    label: Reserve Stock
+    type: boolean
+    observed_as: reserve_stock
+    default: "0"
+  - name: consider_process_loss
+    label: Consider Process Loss
+    type: boolean
+    observed_as: consider_process_loss
+    default: "0"
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: sales_order_status
+    label: Sales Order Status
+    type: enum
+    observed_as: sales_order_status
+    enum_values:
+      - To Deliver and Bill
+      - To Bill
+      - To Deliver
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+  - name: from_delivery_date
+    label: From Delivery Date
+    type: date
+    observed_as: from_delivery_date
+  - name: to_delivery_date
+    label: To Delivery Date
+    type: date
+    observed_as: to_delivery_date
+  - name: combine_items
+    label: Consolidate Sales Order Items
+    type: boolean
+    observed_as: combine_items
+    default: "0"
+  - name: sub_assembly_warehouse
+    label: Sub Assembly Warehouse
+    type: ref
+    observed_as: sub_assembly_warehouse
+    ref: Warehouse
+  - name: skip_available_sub_assembly_item
+    label: Consider Projected Qty in Calculation
+    type: boolean
+    observed_as: skip_available_sub_assembly_item
+    default: "1"
+  - name: combine_sub_items
+    label: Consolidate Sub Assembly Items
+    type: boolean
+    observed_as: combine_sub_items
+    default: "0"
+  - name: include_non_stock_items
+    label: Include Non Stock Items
+    type: boolean
+    observed_as: include_non_stock_items
+    default: "1"
+  - name: include_subcontracted_items
+    label: Include Subcontracted Items
+    type: boolean
+    observed_as: include_subcontracted_items
+    default: "1"
+  - name: consider_minimum_order_qty
+    label: Consider Minimum Order Qty
+    type: boolean
+    observed_as: consider_minimum_order_qty
+    default: "0"
+  - name: include_safety_stock
+    label: Include Safety Stock in Required Qty Calculation
+    type: boolean
+    observed_as: include_safety_stock
+    default: "0"
+  - name: ignore_existing_ordered_qty
+    label: Consider Projected Qty in Calculation (RM)
+    type: boolean
+    observed_as: ignore_existing_ordered_qty
+    default: "1"
+  - name: raw_material_group_warehouse
+    label: Raw Material Group Warehouse
+    type: ref
+    observed_as: raw_material_group_warehouse
+    ref: Warehouse
+  - name: for_warehouse
+    label: For Warehouse
+    type: ref
+    observed_as: for_warehouse
+    ref: Warehouse
+  - name: total_planned_qty
+    label: Total Planned Qty
+    type: decimal
+    observed_as: total_planned_qty
+    default: "0"
+  - name: total_produced_qty
+    label: Total Produced Qty
+    type: decimal
+    observed_as: total_produced_qty
+    default: "0"
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Submitted
+      - Not Started
+      - In Process
+      - Completed
+      - Closed
+      - Cancelled
+      - Material Requested
+    default: Draft
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: ProductionPlan
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: ProductionPlanSalesOrder
+    kind: one-to-many
+    via: sales_orders
+    description: lines (Sales Orders)
+  - to: ProductionPlanMaterialRequest
+    kind: one-to-many
+    via: material_requests
+    description: lines (Material Requests)
+  - to: ProductionPlanItem
+    kind: one-to-many
+    via: po_items
+    description: lines (Assembly Items)
+  - to: ProductionPlanItemReference
+    kind: one-to-many
+    via: prod_plan_references
+    description: lines (Production Plan Item Reference)
+  - to: Warehouse
+    kind: many-to-one
+    via: sub_assembly_warehouse
+  - to: ProductionPlanSubAssemblyItem
+    kind: one-to-many
+    via: sub_assembly_items
+    description: lines (sub_assembly_items)
+  - to: Warehouse
+    kind: many-to-one
+    via: raw_material_group_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: for_warehouse
+  - to: MaterialRequestPlanItem
+    kind: one-to-many
+    via: mr_items
+    description: lines (Raw Materials)
+  - to: ProductionPlanMaterialRequestWarehouse
+    kind: one-to-many
+    via: warehouses
+    description: lines (Warehouses)
+  - to: ProductionPlan
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProduction Plan
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Production Plan
+    note: declared by the program and served by its API

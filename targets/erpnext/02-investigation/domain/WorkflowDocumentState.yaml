@@ -1,0 +1,84 @@
+name: WorkflowDocumentState
+description: 'Represents the states allowed in one document and role assigned to change the state. Document type "Workflow Document State" (module Workflow): lines of another document.'
+fields:
+  - name: state
+    label: State
+    type: ref
+    observed_as: state
+    required: true
+    ref: WorkflowState
+  - name: doc_status
+    label: Doc Status
+    type: enum
+    observed_as: doc_status
+    enum_values:
+      - "0"
+      - "1"
+      - "2"
+    default: "0"
+  - name: update_field
+    label: Update Field
+    type: string
+    observed_as: update_field
+  - name: update_value
+    label: Update Value
+    type: string
+    observed_as: update_value
+  - name: evaluate_as_expression
+    label: Evaluate as Expression
+    type: boolean
+    observed_as: evaluate_as_expression
+    default: "0"
+  - name: is_optional_state
+    label: Is Optional State
+    type: boolean
+    observed_as: is_optional_state
+    default: "0"
+  - name: avoid_status_override
+    label: Don't Override Status
+    type: boolean
+    observed_as: avoid_status_override
+    default: "0"
+  - name: next_action_email_template
+    label: Next Action Email Template
+    type: ref
+    observed_as: next_action_email_template
+    ref: EmailTemplate
+  - name: allow_edit
+    label: Only Allow Edit For
+    type: ref
+    observed_as: allow_edit
+    required: true
+    ref: Role
+  - name: send_email
+    label: Send Email On State
+    type: boolean
+    observed_as: send_email
+    default: "1"
+  - name: message
+    label: Message
+    type: text
+    observed_as: message
+  - name: workflow_builder_id
+    label: Workflow Builder ID
+    type: string
+    observed_as: workflow_builder_id
+relations:
+  - to: WorkflowState
+    kind: many-to-one
+    via: state
+  - to: EmailTemplate
+    kind: many-to-one
+    via: next_action_email_template
+  - to: Role
+    kind: many-to-one
+    via: allow_edit
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkflow Document State
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workflow Document State
+    note: declared by the program and served by its API

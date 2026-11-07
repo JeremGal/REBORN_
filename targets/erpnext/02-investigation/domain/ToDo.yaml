@@ -1,0 +1,97 @@
+name: ToDo
+description: Document type "ToDo" (module Desk).
+fields:
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Open
+      - Closed
+      - Cancelled
+    default: Open
+  - name: priority
+    label: Priority
+    type: enum
+    observed_as: priority
+    enum_values:
+      - High
+      - Medium
+      - Low
+    default: Medium
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+  - name: date
+    label: Due Date
+    type: date
+    observed_as: date
+    default: Today
+  - name: allocated_to
+    label: Allocated To
+    type: ref
+    observed_as: allocated_to
+    ref: User
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+    required: true
+  - name: reference_type
+    label: Reference Type
+    type: ref
+    observed_as: reference_type
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: role
+    label: Role
+    type: ref
+    observed_as: role
+    ref: Role
+  - name: assigned_by
+    label: Assigned By
+    type: ref
+    observed_as: assigned_by
+    ref: User
+  - name: assigned_by_full_name
+    label: Assigned By Full Name
+    type: string
+    observed_as: assigned_by_full_name
+  - name: sender
+    label: Sender
+    type: string
+    observed_as: sender
+  - name: assignment_rule
+    label: Assignment Rule
+    type: ref
+    observed_as: assignment_rule
+    ref: AssignmentRule
+relations:
+  - to: User
+    kind: many-to-one
+    via: allocated_to
+  - to: DocType
+    kind: many-to-one
+    via: reference_type
+  - to: Role
+    kind: many-to-one
+    via: role
+  - to: User
+    kind: many-to-one
+    via: assigned_by
+  - to: AssignmentRule
+    kind: many-to-one
+    via: assignment_rule
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabToDo
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of ToDo
+    note: declared by the program and served by its API

@@ -1,0 +1,245 @@
+name: MaterialRequestItem
+description: 'Document type "Material Request Item" (module Stock): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: schedule_date
+    label: Required By
+    type: date
+    observed_as: schedule_date
+    required: true
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: brand
+    label: Brand
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: from_warehouse
+    label: Source Warehouse
+    type: ref
+    observed_as: from_warehouse
+    ref: Warehouse
+  - name: warehouse
+    label: Target Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: conversion_factor
+    label: UOM Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    required: true
+    precision: 9
+  - name: stock_qty
+    label: Stock Qty
+    type: decimal
+    observed_as: stock_qty
+  - name: min_order_qty
+    label: Min Order Qty
+    type: decimal
+    observed_as: min_order_qty
+  - name: projected_qty
+    label: Projected Qty
+    type: decimal
+    observed_as: projected_qty
+  - name: picked_qty
+    label: Picked Qty
+    type: decimal
+    observed_as: picked_qty
+  - name: actual_qty
+    label: Actual Qty
+    type: decimal
+    observed_as: actual_qty
+  - name: ordered_qty
+    label: Completed Qty
+    type: decimal
+    observed_as: ordered_qty
+  - name: received_qty
+    label: Received Qty
+    type: decimal
+    observed_as: received_qty
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: price_list_rate
+    label: Price List Rate
+    type: money
+    observed_as: price_list_rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: expense_account
+    label: Expense Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: wip_composite_asset
+    label: WIP Composite Asset
+    type: ref
+    observed_as: wip_composite_asset
+    ref: Asset
+  - name: manufacturer
+    label: Manufacturer
+    type: ref
+    observed_as: manufacturer
+    ref: Manufacturer
+  - name: manufacturer_part_no
+    label: Manufacturer Part Number
+    type: string
+    observed_as: manufacturer_part_no
+  - name: bom_no
+    label: BOM No
+    type: ref
+    observed_as: bom_no
+    ref: BOM
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: lead_time_date
+    label: Lead Time Date
+    type: date
+    observed_as: lead_time_date
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    ref: SalesOrder
+  - name: sales_order_item
+    label: Sales Order Item
+    type: string
+    observed_as: sales_order_item
+  - name: packed_item
+    label: Packed Item
+    type: string
+    observed_as: packed_item
+  - name: production_plan
+    label: Production Plan
+    type: ref
+    observed_as: production_plan
+    ref: ProductionPlan
+  - name: material_request_plan_item
+    label: Material Request Plan Item
+    type: string
+    observed_as: material_request_plan_item
+  - name: job_card_item
+    label: Job Card Item
+    type: string
+    observed_as: job_card_item
+  - name: projected_on_hand
+    label: Projected On Hand
+    type: decimal
+    observed_as: projected_on_hand
+  - name: reorder_level
+    label: Reorder Level
+    type: decimal
+    observed_as: reorder_level
+  - name: reorder_qty
+    label: Reorder Qty
+    type: decimal
+    observed_as: reorder_qty
+  - name: page_break
+    label: Page Break
+    type: boolean
+    observed_as: page_break
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: from_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: Asset
+    kind: many-to-one
+    via: wip_composite_asset
+  - to: Manufacturer
+    kind: many-to-one
+    via: manufacturer
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: ProductionPlan
+    kind: many-to-one
+    via: production_plan
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMaterial Request Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Material Request Item
+    note: declared by the program and served by its API

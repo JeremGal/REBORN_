@@ -1,0 +1,76 @@
+name: ItemLeadTime
+description: How long it takes to get or make an item. Document type "Item Lead Time" (module Stock).
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    unique: true
+    ref: Item
+  - name: shift_time_in_hours
+    label: Shift Time (In Hours)
+    type: integer
+    observed_as: shift_time_in_hours
+  - name: no_of_workstations
+    label: No of Workstations
+    type: integer
+    observed_as: no_of_workstations
+  - name: no_of_shift
+    label: No of Shift
+    type: integer
+    observed_as: no_of_shift
+    default: "1"
+  - name: total_workstation_time
+    label: Total Workstation Time (In Hours)
+    type: integer
+    observed_as: total_workstation_time
+  - name: manufacturing_time_in_mins
+    label: Manufacturing Time
+    type: integer
+    observed_as: manufacturing_time_in_mins
+  - name: no_of_units_produced
+    label: No of Units Produced
+    type: integer
+    observed_as: no_of_units_produced
+  - name: daily_yield
+    label: Daily Yield (%)
+    type: percent
+    observed_as: daily_yield
+    default: "90"
+  - name: capacity_per_day
+    label: Capacity
+    type: integer
+    observed_as: capacity_per_day
+  - name: purchase_time
+    label: Purchase Time
+    type: integer
+    observed_as: purchase_time
+  - name: buffer_time
+    label: Buffer Time
+    type: integer
+    observed_as: buffer_time
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Lead Time
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Lead Time
+    note: declared by the program and served by its API

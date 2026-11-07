@@ -1,0 +1,167 @@
+name: PromotionalScheme
+description: A set of discounts and free items, like buy two get one free. Document type "Promotional Scheme" (module Accounts).
+fields:
+  - name: apply_on
+    label: Apply On
+    type: enum
+    observed_as: apply_on
+    required: true
+    enum_values:
+      - Item Code
+      - Item Group
+      - Brand
+      - Transaction
+    default: Item Code
+  - name: disable
+    label: Disable
+    type: boolean
+    observed_as: disable
+    default: "0"
+  - name: mixed_conditions
+    label: Mixed Conditions
+    type: boolean
+    observed_as: mixed_conditions
+    default: "0"
+  - name: is_cumulative
+    label: Is Cumulative
+    type: boolean
+    observed_as: is_cumulative
+    default: "0"
+  - name: apply_rule_on_other
+    label: Apply Rule On Other
+    type: enum
+    observed_as: apply_rule_on_other
+    enum_values:
+      - Item Code
+      - Item Group
+      - Brand
+  - name: other_item_code
+    label: Item Code
+    type: ref
+    observed_as: other_item_code
+    ref: Item
+  - name: other_item_group
+    label: Item Group
+    type: ref
+    observed_as: other_item_group
+    ref: ItemGroup
+  - name: other_brand
+    label: Brand
+    type: ref
+    observed_as: other_brand
+    ref: Brand
+  - name: selling
+    label: Selling
+    type: boolean
+    observed_as: selling
+    default: "0"
+  - name: buying
+    label: Buying
+    type: boolean
+    observed_as: buying
+    default: "0"
+  - name: applicable_for
+    label: Applicable For
+    type: enum
+    observed_as: applicable_for
+    enum_values:
+      - Customer
+      - Customer Group
+      - Territory
+      - Sales Partner
+      - Campaign
+      - Supplier
+      - Supplier Group
+  - name: valid_from
+    label: Valid From
+    type: date
+    observed_as: valid_from
+    default: Today
+  - name: valid_upto
+    label: Valid Up To
+    type: date
+    observed_as: valid_upto
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+relations:
+  - to: PricingRuleItemCode
+    kind: one-to-many
+    via: items
+    description: lines (Pricing Rule Item Code)
+  - to: PricingRuleItemGroup
+    kind: one-to-many
+    via: item_groups
+    description: lines (Pricing Rule Item Group)
+  - to: PricingRuleBrand
+    kind: one-to-many
+    via: brands
+    description: lines (Pricing Rule Brand)
+  - to: Item
+    kind: many-to-one
+    via: other_item_code
+  - to: ItemGroup
+    kind: many-to-one
+    via: other_item_group
+  - to: Brand
+    kind: many-to-one
+    via: other_brand
+  - to: CustomerItem
+    kind: one-to-many
+    via: customer
+    description: lines (Customer)
+  - to: CustomerGroupItem
+    kind: one-to-many
+    via: customer_group
+    description: lines (Customer Group)
+  - to: TerritoryItem
+    kind: one-to-many
+    via: territory
+    description: lines (Territory)
+  - to: SalesPartnerItem
+    kind: one-to-many
+    via: sales_partner
+    description: lines (Sales Partner)
+  - to: CampaignItem
+    kind: one-to-many
+    via: campaign
+    description: lines (Campaign)
+  - to: SupplierItem
+    kind: one-to-many
+    via: supplier
+    description: lines (Supplier)
+  - to: SupplierGroupItem
+    kind: one-to-many
+    via: supplier_group
+    description: lines (Supplier Group)
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: PromotionalSchemePriceDiscount
+    kind: one-to-many
+    via: price_discount_slabs
+    description: lines (Promotional Scheme Price Discount)
+  - to: PromotionalSchemeProductDiscount
+    kind: one-to-many
+    via: product_discount_slabs
+    description: lines (Promotional Scheme Product Discount)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPromotional Scheme
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Promotional Scheme
+    note: declared by the program and served by its API

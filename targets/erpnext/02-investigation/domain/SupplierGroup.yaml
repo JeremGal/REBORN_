@@ -1,0 +1,60 @@
+name: SupplierGroup
+description: Groups suppliers, for terms and reporting. Document type "Supplier Group" (module Setup).
+fields:
+  - name: supplier_group_name
+    label: Supplier Group Name
+    type: string
+    observed_as: supplier_group_name
+    required: true
+    unique: true
+  - name: parent_supplier_group
+    label: Parent Supplier Group
+    type: ref
+    observed_as: parent_supplier_group
+    ref: SupplierGroup
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: payment_terms
+    label: Default Payment Terms Template
+    type: ref
+    observed_as: payment_terms
+    ref: PaymentTermsTemplate
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: Old Parent
+    type: ref
+    observed_as: old_parent
+    ref: SupplierGroup
+relations:
+  - to: SupplierGroup
+    kind: many-to-one
+    via: parent_supplier_group
+  - to: PaymentTermsTemplate
+    kind: many-to-one
+    via: payment_terms
+  - to: PartyAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Accounts)
+  - to: SupplierGroup
+    kind: many-to-one
+    via: old_parent
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSupplier Group
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Supplier Group
+    note: declared by the program and served by its API

@@ -1,0 +1,119 @@
+name: TransactionDeletionRecord
+description: "Deletes a company's transactions, keeping its masters. Document type \"Transaction Deletion Record\" (module Setup): draft, submitted, cancelled life cycle."
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Queued
+      - Running
+      - Failed
+      - Completed
+      - Cancelled
+  - name: error_log
+    label: Error Log
+    type: text
+    observed_as: error_log
+  - name: delete_bin_data_status
+    label: Delete Bins
+    type: enum
+    observed_as: delete_bin_data_status
+    enum_values:
+      - Pending
+      - Completed
+      - Skipped
+    default: Pending
+  - name: delete_leads_and_addresses_status
+    label: Delete Leads and Addresses
+    type: enum
+    observed_as: delete_leads_and_addresses_status
+    enum_values:
+      - Pending
+      - Completed
+      - Skipped
+    default: Pending
+  - name: reset_company_default_values_status
+    label: Reset Company Default Values
+    type: enum
+    observed_as: reset_company_default_values_status
+    enum_values:
+      - Pending
+      - Completed
+      - Skipped
+    default: Pending
+  - name: clear_notifications_status
+    label: Clear Notifications
+    type: enum
+    observed_as: clear_notifications_status
+    enum_values:
+      - Pending
+      - Completed
+      - Skipped
+    default: Pending
+  - name: initialize_doctypes_table_status
+    label: Initialize Summary Table
+    type: enum
+    observed_as: initialize_doctypes_table_status
+    enum_values:
+      - Pending
+      - Completed
+      - Skipped
+    default: Pending
+  - name: delete_transactions_status
+    label: Delete Transactions
+    type: enum
+    observed_as: delete_transactions_status
+    enum_values:
+      - Pending
+      - Completed
+      - Skipped
+    default: Pending
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: TransactionDeletionRecord
+  - name: process_in_single_transaction
+    label: Process in Single Transaction
+    type: boolean
+    observed_as: process_in_single_transaction
+    default: "0"
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: TransactionDeletionRecordDetails
+    kind: one-to-many
+    via: doctypes
+    description: lines (Summary)
+  - to: TransactionDeletionRecordToDelete
+    kind: one-to-many
+    via: doctypes_to_delete
+    description: lines (DocTypes To Delete)
+  - to: TransactionDeletionRecordItem
+    kind: one-to-many
+    via: doctypes_to_be_ignored
+    description: lines (Excluded DocTypes)
+  - to: TransactionDeletionRecord
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTransaction Deletion Record
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Transaction Deletion Record
+    note: declared by the program and served by its API

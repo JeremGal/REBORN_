@@ -1,0 +1,69 @@
+name: RepostPaymentLedger
+description: 'Rebuilds the payment ledger so outstanding amounts are right again. Document type "Repost Payment Ledger" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+    default: Today
+  - name: voucher_type
+    label: Voucher Type
+    type: ref
+    observed_as: voucher_type
+    ref: DocType
+  - name: add_manually
+    label: Add Manually
+    type: boolean
+    observed_as: add_manually
+    default: "0"
+  - name: repost_status
+    label: Repost Status
+    type: enum
+    observed_as: repost_status
+    enum_values:
+      - Queued
+      - Failed
+      - Completed
+  - name: repost_error_log
+    label: Repost Error Log
+    type: text
+    observed_as: repost_error_log
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: RepostPaymentLedger
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DocType
+    kind: many-to-one
+    via: voucher_type
+  - to: RepostPaymentLedgerItems
+    kind: one-to-many
+    via: repost_vouchers
+    description: lines (Selected Vouchers)
+  - to: RepostPaymentLedger
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRepost Payment Ledger
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Repost Payment Ledger
+    note: declared by the program and served by its API

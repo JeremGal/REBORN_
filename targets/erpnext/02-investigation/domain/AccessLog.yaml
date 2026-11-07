@@ -1,0 +1,58 @@
+name: AccessLog
+description: Document type "Access Log" (module Core).
+fields:
+  - name: export_from
+    label: Export From
+    type: string
+    observed_as: export_from
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: reference_document
+    label: Reference Document
+    type: string
+    observed_as: reference_document
+  - name: timestamp
+    label: Timestamp
+    type: datetime
+    observed_as: timestamp
+    default: Now
+  - name: file_type
+    label: File Type
+    type: string
+    observed_as: file_type
+  - name: method
+    label: Method
+    type: string
+    observed_as: method
+  - name: report_name
+    label: Report Name
+    type: string
+    observed_as: report_name
+  - name: filters
+    label: Filters
+    type: text
+    observed_as: filters
+  - name: page
+    label: HTML Page
+    type: text
+    observed_as: page
+  - name: columns
+    label: Columns / Fields
+    type: text
+    observed_as: columns
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAccess Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Access Log
+    note: declared by the program and served by its API

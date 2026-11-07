@@ -1,0 +1,30 @@
+name: UTMCampaign
+description: Document type "UTM Campaign" (module Website).
+fields:
+  - name: slug
+    label: Slug
+    type: string
+    observed_as: slug
+    unique: true
+  - name: campaign_description
+    label: Campaign Description (Optional)
+    type: text
+    observed_as: campaign_description
+  - name: crm_campaign
+    label: Messaging CRM Campaign
+    type: ref
+    observed_as: crm_campaign
+    ref: Campaign
+relations:
+  - to: Campaign
+    kind: many-to-one
+    via: crm_campaign
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUTM Campaign
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of UTM Campaign
+    note: declared by the program and served by its API

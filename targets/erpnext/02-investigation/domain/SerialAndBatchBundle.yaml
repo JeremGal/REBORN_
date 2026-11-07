@@ -1,0 +1,146 @@
+name: SerialAndBatchBundle
+description: 'The serial numbers and batches moved in a transaction. Document type "Serial and Batch Bundle" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Naming Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - SABB-.########
+    default: SABB-.########
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: has_serial_no
+    label: Has Serial No
+    type: boolean
+    observed_as: has_serial_no
+    default: "0"
+  - name: has_batch_no
+    label: Has Batch No
+    type: boolean
+    observed_as: has_batch_no
+    default: "0"
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: type_of_transaction
+    label: Type of Transaction
+    type: enum
+    observed_as: type_of_transaction
+    required: true
+    enum_values:
+      - Inward
+      - Outward
+      - Maintenance
+      - Asset Repair
+  - name: total_qty
+    label: Total Qty
+    type: decimal
+    observed_as: total_qty
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: avg_rate
+    label: Avg Rate
+    type: decimal
+    observed_as: avg_rate
+  - name: total_amount
+    label: Total Amount
+    type: decimal
+    observed_as: total_amount
+  - name: voucher_type
+    label: Voucher Type
+    type: ref
+    observed_as: voucher_type
+    required: true
+    ref: DocType
+  - name: voucher_no
+    label: Voucher No
+    type: string
+    observed_as: voucher_no
+  - name: voucher_detail_no
+    label: Voucher Detail No
+    type: string
+    observed_as: voucher_detail_no
+  - name: posting_datetime
+    label: Posting Datetime
+    type: datetime
+    observed_as: posting_datetime
+  - name: returned_against
+    label: Returned Against
+    type: string
+    observed_as: returned_against
+  - name: is_cancelled
+    label: Is Cancelled
+    type: boolean
+    observed_as: is_cancelled
+    default: "0"
+  - name: is_packed
+    label: Is Packed
+    type: boolean
+    observed_as: is_packed
+    default: "0"
+  - name: is_rejected
+    label: Is Rejected
+    type: boolean
+    observed_as: is_rejected
+    default: "0"
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: SerialAndBatchBundle
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: SerialAndBatchEntry
+    kind: one-to-many
+    via: entries
+    description: lines (entries)
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: DocType
+    kind: many-to-one
+    via: voucher_type
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSerial and Batch Bundle
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Serial and Batch Bundle
+    note: declared by the program and served by its API

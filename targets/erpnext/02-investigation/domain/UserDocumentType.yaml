@@ -1,0 +1,77 @@
+name: UserDocumentType
+description: 'Document type "User Document Type" (module Core): lines of another document.'
+fields:
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: is_custom
+    label: Is Custom
+    type: boolean
+    observed_as: is_custom
+    default: "0"
+  - name: read
+    label: Read
+    type: boolean
+    observed_as: read
+    default: "1"
+  - name: write
+    label: Write
+    type: boolean
+    observed_as: write
+    default: "0"
+  - name: create
+    label: Create
+    type: boolean
+    observed_as: create
+    default: "0"
+  - name: submit
+    label: Submit
+    type: boolean
+    observed_as: submit
+    default: "0"
+  - name: cancel
+    label: Cancel
+    type: boolean
+    observed_as: cancel
+    default: "0"
+  - name: amend
+    label: Amend
+    type: boolean
+    observed_as: amend
+    default: "0"
+  - name: delete
+    label: Delete
+    type: boolean
+    observed_as: delete
+    default: "0"
+  - name: email
+    label: Email
+    type: boolean
+    observed_as: email
+    default: "1"
+  - name: share
+    label: Share
+    type: boolean
+    observed_as: share
+    default: "1"
+  - name: print
+    label: Print
+    type: boolean
+    observed_as: print
+    default: "1"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUser Document Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of User Document Type
+    note: declared by the program and served by its API

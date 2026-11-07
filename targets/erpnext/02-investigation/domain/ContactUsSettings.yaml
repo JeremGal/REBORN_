@@ -1,0 +1,78 @@
+name: ContactUsSettings
+description: 'Settings for Contact Us Page Document type "Contact Us Settings" (module Website): single settings record.'
+fields:
+  - name: is_disabled
+    label: Disabled
+    type: boolean
+    observed_as: is_disabled
+    default: "1"
+  - name: send_acknowledgement_email
+    label: Send Acknowledgement Email
+    type: boolean
+    observed_as: send_acknowledgement_email
+    default: "1"
+  - name: forward_to_email
+    label: Forward To Email Address
+    type: string
+    observed_as: forward_to_email
+  - name: heading
+    label: Heading
+    type: string
+    observed_as: heading
+  - name: introduction
+    label: Introduction
+    type: text
+    observed_as: introduction
+  - name: query_options
+    label: Query Options
+    type: text
+    observed_as: query_options
+  - name: address_title
+    label: Address Title
+    type: string
+    observed_as: address_title
+  - name: address_line1
+    label: Address Line 1
+    type: string
+    observed_as: address_line1
+  - name: address_line2
+    label: Address Line 2
+    type: string
+    observed_as: address_line2
+  - name: city
+    label: City
+    type: string
+    observed_as: city
+  - name: state
+    label: State/Province
+    type: string
+    observed_as: state
+  - name: pincode
+    label: Pincode
+    type: string
+    observed_as: pincode
+  - name: country
+    label: Country
+    type: string
+    observed_as: country
+  - name: phone
+    label: Phone
+    type: string
+    observed_as: phone
+  - name: email_id
+    label: Email Id
+    type: string
+    observed_as: email_id
+  - name: skype
+    label: Skype
+    type: string
+    observed_as: skype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabContact Us Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Contact Us Settings
+    note: declared by the program and served by its API

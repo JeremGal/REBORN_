@@ -1,0 +1,167 @@
+name: TaxRule
+description: Applies a tax template automatically when its conditions match. Document type "Tax Rule" (module Accounts).
+fields:
+  - name: tax_type
+    label: Tax Type
+    type: enum
+    observed_as: tax_type
+    enum_values:
+      - Sales
+      - Purchase
+    default: Sales
+  - name: use_for_shopping_cart
+    label: Use for Shopping Cart
+    type: boolean
+    observed_as: use_for_shopping_cart
+    default: "1"
+  - name: sales_tax_template
+    label: Sales Tax Template
+    type: ref
+    observed_as: sales_tax_template
+    ref: SalesTaxesAndChargesTemplate
+  - name: purchase_tax_template
+    label: Purchase Tax Template
+    type: ref
+    observed_as: purchase_tax_template
+    ref: PurchaseTaxesAndChargesTemplate
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: item
+    label: Item
+    type: ref
+    observed_as: item
+    ref: Item
+  - name: billing_city
+    label: Billing City
+    type: string
+    observed_as: billing_city
+  - name: billing_county
+    label: Billing County
+    type: string
+    observed_as: billing_county
+  - name: billing_state
+    label: Billing State
+    type: string
+    observed_as: billing_state
+  - name: billing_zipcode
+    label: Billing Zipcode
+    type: string
+    observed_as: billing_zipcode
+  - name: billing_country
+    label: Billing Country
+    type: ref
+    observed_as: billing_country
+    ref: Country
+  - name: tax_category
+    label: Tax Category
+    type: ref
+    observed_as: tax_category
+    ref: TaxCategory
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: supplier_group
+    label: Supplier Group
+    type: ref
+    observed_as: supplier_group
+    ref: SupplierGroup
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: shipping_city
+    label: Shipping City
+    type: string
+    observed_as: shipping_city
+  - name: shipping_county
+    label: Shipping County
+    type: string
+    observed_as: shipping_county
+  - name: shipping_state
+    label: Shipping State
+    type: string
+    observed_as: shipping_state
+  - name: shipping_zipcode
+    label: Shipping Zipcode
+    type: string
+    observed_as: shipping_zipcode
+  - name: shipping_country
+    label: Shipping Country
+    type: ref
+    observed_as: shipping_country
+    ref: Country
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+  - name: priority
+    label: Priority
+    type: integer
+    observed_as: priority
+    default: "1"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+relations:
+  - to: SalesTaxesAndChargesTemplate
+    kind: many-to-one
+    via: sales_tax_template
+  - to: PurchaseTaxesAndChargesTemplate
+    kind: many-to-one
+    via: purchase_tax_template
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: Item
+    kind: many-to-one
+    via: item
+  - to: Country
+    kind: many-to-one
+    via: billing_country
+  - to: TaxCategory
+    kind: many-to-one
+    via: tax_category
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: SupplierGroup
+    kind: many-to-one
+    via: supplier_group
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: Country
+    kind: many-to-one
+    via: shipping_country
+  - to: Company
+    kind: many-to-one
+    via: company
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTax Rule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Tax Rule
+    note: declared by the program and served by its API

@@ -1,0 +1,37 @@
+name: NotificationRecipient
+description: 'Document type "Notification Recipient" (module Email): lines of another document.'
+fields:
+  - name: receiver_by_document_field
+    label: Receiver By Document Field
+    type: string
+    observed_as: receiver_by_document_field
+  - name: receiver_by_role
+    label: Receiver By Role
+    type: ref
+    observed_as: receiver_by_role
+    ref: Role
+  - name: cc
+    label: CC
+    type: text
+    observed_as: cc
+  - name: bcc
+    label: BCC
+    type: text
+    observed_as: bcc
+  - name: condition
+    label: Condition
+    type: string
+    observed_as: condition
+relations:
+  - to: Role
+    kind: many-to-one
+    via: receiver_by_role
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNotification Recipient
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Notification Recipient
+    note: declared by the program and served by its API

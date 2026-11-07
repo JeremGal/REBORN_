@@ -1,0 +1,54 @@
+name: CurrencyExchangeSettings
+description: 'Document type "Currency Exchange Settings" (module Accounts): single settings record.'
+fields:
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: service_provider
+    label: Service Provider
+    type: enum
+    observed_as: service_provider
+    required: true
+    enum_values:
+      - frankfurter.dev
+      - exchangerate.host
+      - frankfurter.dev - v2
+      - Custom
+  - name: api_endpoint
+    label: API Endpoint
+    type: string
+    observed_as: api_endpoint
+    required: true
+  - name: use_http
+    label: Use HTTP Protocol
+    type: boolean
+    observed_as: use_http
+    default: "0"
+  - name: access_key
+    label: Access Key
+    type: string
+    observed_as: access_key
+  - name: url
+    label: Example URL
+    type: string
+    observed_as: url
+relations:
+  - to: CurrencyExchangeSettingsDetails
+    kind: one-to-many
+    via: req_params
+    description: lines (Parameters)
+  - to: CurrencyExchangeSettingsResult
+    kind: one-to-many
+    via: result_key
+    description: lines (Result Key)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCurrency Exchange Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Currency Exchange Settings
+    note: declared by the program and served by its API

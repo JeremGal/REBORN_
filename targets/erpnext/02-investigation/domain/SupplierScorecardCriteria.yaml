@@ -1,0 +1,33 @@
+name: SupplierScorecardCriteria
+description: Something a supplier is scored on, like on-time delivery. Document type "Supplier Scorecard Criteria" (module Buying).
+fields:
+  - name: criteria_name
+    label: Criteria Name
+    type: string
+    observed_as: criteria_name
+    required: true
+    unique: true
+  - name: max_score
+    label: Max Score
+    type: decimal
+    observed_as: max_score
+    required: true
+    default: "100"
+  - name: formula
+    label: Criteria Formula
+    type: text
+    observed_as: formula
+    required: true
+  - name: weight
+    label: Criteria Weight
+    type: percent
+    observed_as: weight
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSupplier Scorecard Criteria
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Supplier Scorecard Criteria
+    note: declared by the program and served by its API

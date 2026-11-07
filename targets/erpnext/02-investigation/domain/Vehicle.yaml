@@ -1,0 +1,125 @@
+name: Vehicle
+description: Document type "Vehicle" (module Setup).
+fields:
+  - name: license_plate
+    label: License Plate
+    type: string
+    observed_as: license_plate
+    required: true
+    unique: true
+  - name: make
+    label: Make
+    type: string
+    observed_as: make
+    required: true
+  - name: model
+    label: Model
+    type: string
+    observed_as: model
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: last_odometer
+    label: Odometer Value (Last)
+    type: integer
+    observed_as: last_odometer
+    required: true
+  - name: acquisition_date
+    label: Acquisition Date
+    type: date
+    observed_as: acquisition_date
+  - name: location
+    label: Location
+    type: string
+    observed_as: location
+  - name: chassis_no
+    label: Chassis No
+    type: string
+    observed_as: chassis_no
+  - name: vehicle_value
+    label: Vehicle Value
+    type: money
+    observed_as: vehicle_value
+  - name: employee
+    label: Employee
+    type: ref
+    observed_as: employee
+    ref: Employee
+  - name: insurance_company
+    label: Insurance Company
+    type: string
+    observed_as: insurance_company
+  - name: policy_no
+    label: Policy No
+    type: string
+    observed_as: policy_no
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+  - name: fuel_type
+    label: Fuel Type
+    type: enum
+    observed_as: fuel_type
+    required: true
+    enum_values:
+      - Petrol
+      - Diesel
+      - Natural Gas
+      - Electric
+  - name: uom
+    label: Fuel UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: carbon_check_date
+    label: Last Carbon Check
+    type: date
+    observed_as: carbon_check_date
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+  - name: wheels
+    label: Wheels
+    type: integer
+    observed_as: wheels
+  - name: doors
+    label: Doors
+    type: integer
+    observed_as: doors
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: Vehicle
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Employee
+    kind: many-to-one
+    via: employee
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: Vehicle
+    kind: many-to-one
+    via: amended_from
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabVehicle
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Vehicle
+    note: declared by the program and served by its API

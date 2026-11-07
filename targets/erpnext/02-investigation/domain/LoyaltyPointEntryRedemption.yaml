@@ -1,0 +1,24 @@
+name: LoyaltyPointEntryRedemption
+description: 'Document type "Loyalty Point Entry Redemption" (module Accounts): lines of another document.'
+fields:
+  - name: sales_invoice
+    label: Sales Invoice
+    type: string
+    observed_as: sales_invoice
+  - name: redemption_date
+    label: Redemption Date
+    type: date
+    observed_as: redemption_date
+  - name: redeemed_points
+    label: Redeemed Points
+    type: integer
+    observed_as: redeemed_points
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLoyalty Point Entry Redemption
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Loyalty Point Entry Redemption
+    note: declared by the program and served by its API

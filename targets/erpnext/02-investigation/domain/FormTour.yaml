@@ -1,0 +1,136 @@
+name: FormTour
+description: Document type "Form Tour" (module Desk).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+    unique: true
+  - name: view_name
+    label: View
+    type: enum
+    observed_as: view_name
+    enum_values:
+      - Workspaces
+      - List
+      - Form
+      - Tree
+      - Page
+  - name: workspace_name
+    label: Select Workspace
+    type: ref
+    observed_as: workspace_name
+    ref: Workspace
+  - name: list_name
+    label: Select List View
+    type: enum
+    observed_as: list_name
+    enum_values:
+      - List
+      - Report
+      - Dashboard
+      - Kanban
+      - Gantt
+      - Calendar
+      - File
+      - Image
+      - Inbox
+      - Map
+    default: List
+  - name: report_name
+    label: Select Report
+    type: ref
+    observed_as: report_name
+    ref: Report
+  - name: dashboard_name
+    label: Select Dashboard
+    type: ref
+    observed_as: dashboard_name
+    ref: Dashboard
+  - name: new_document_form
+    label: New Document Form
+    type: boolean
+    observed_as: new_document_form
+    default: "0"
+  - name: page_name
+    label: Select Page
+    type: ref
+    observed_as: page_name
+    ref: Page
+  - name: reference_doctype
+    label: Reference Document
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: ui_tour
+    label: UI Tour
+    type: boolean
+    observed_as: ui_tour
+    default: "0"
+  - name: track_steps
+    label: Track Steps
+    type: boolean
+    observed_as: track_steps
+    default: "0"
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: save_on_complete
+    label: Save on Completion
+    type: boolean
+    observed_as: save_on_complete
+    default: "0"
+  - name: first_document
+    label: Show First Document Tour
+    type: boolean
+    observed_as: first_document
+    default: "0"
+  - name: include_name_field
+    label: Include Name Field
+    type: boolean
+    observed_as: include_name_field
+    default: "0"
+  - name: page_route
+    label: Page Route
+    type: text
+    observed_as: page_route
+relations:
+  - to: Workspace
+    kind: many-to-one
+    via: workspace_name
+  - to: Report
+    kind: many-to-one
+    via: report_name
+  - to: Dashboard
+    kind: many-to-one
+    via: dashboard_name
+  - to: Page
+    kind: many-to-one
+    via: page_name
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: FormTourStep
+    kind: one-to-many
+    via: steps
+    description: lines (Steps)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabForm Tour
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Form Tour
+    note: declared by the program and served by its API

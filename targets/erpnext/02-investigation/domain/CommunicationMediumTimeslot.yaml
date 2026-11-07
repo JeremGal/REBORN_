@@ -1,0 +1,45 @@
+name: CommunicationMediumTimeslot
+description: 'Document type "Communication Medium Timeslot" (module Communication): lines of another document.'
+fields:
+  - name: day_of_week
+    label: Day of Week
+    type: enum
+    observed_as: day_of_week
+    required: true
+    enum_values:
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+  - name: from_time
+    label: From Time
+    type: time
+    observed_as: from_time
+    required: true
+  - name: to_time
+    label: To Time
+    type: time
+    observed_as: to_time
+    required: true
+  - name: employee_group
+    label: Employee Group
+    type: ref
+    observed_as: employee_group
+    required: true
+    ref: EmployeeGroup
+relations:
+  - to: EmployeeGroup
+    kind: many-to-one
+    via: employee_group
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCommunication Medium Timeslot
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Communication Medium Timeslot
+    note: declared by the program and served by its API

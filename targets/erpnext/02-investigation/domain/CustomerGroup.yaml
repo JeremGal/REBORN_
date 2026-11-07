@@ -1,0 +1,72 @@
+name: CustomerGroup
+description: Groups customers, for pricing and reporting. Document type "Customer Group" (module Setup).
+fields:
+  - name: customer_group_name
+    label: Customer Group Name
+    type: string
+    observed_as: customer_group_name
+    required: true
+    unique: true
+  - name: parent_customer_group
+    label: Parent Customer Group
+    type: ref
+    observed_as: parent_customer_group
+    ref: CustomerGroup
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: default_price_list
+    label: Default Price List
+    type: ref
+    observed_as: default_price_list
+    ref: PriceList
+  - name: payment_terms
+    label: Default Payment Terms Template
+    type: ref
+    observed_as: payment_terms
+    ref: PaymentTermsTemplate
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: old_parent
+    type: ref
+    observed_as: old_parent
+    ref: CustomerGroup
+relations:
+  - to: CustomerGroup
+    kind: many-to-one
+    via: parent_customer_group
+  - to: PriceList
+    kind: many-to-one
+    via: default_price_list
+  - to: PaymentTermsTemplate
+    kind: many-to-one
+    via: payment_terms
+  - to: CustomerGroup
+    kind: many-to-one
+    via: old_parent
+  - to: PartyAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Accounts)
+  - to: CustomerCreditLimit
+    kind: one-to-many
+    via: credit_limits
+    description: lines (Credit & Overdue Limits)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCustomer Group
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Customer Group
+    note: declared by the program and served by its API

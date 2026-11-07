@@ -1,0 +1,21 @@
+name: CustomerItem
+description: 'Document type "Customer Item" (module Accounts): lines of another document.'
+fields:
+  - name: customer
+    label: "Customer "
+    type: ref
+    observed_as: customer
+    ref: Customer
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCustomer Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Customer Item
+    note: declared by the program and served by its API

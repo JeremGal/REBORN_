@@ -1,0 +1,36 @@
+name: ServiceLevelPriority
+description: 'Document type "Service Level Priority" (module Support): lines of another document.'
+fields:
+  - name: default_priority
+    label: Default Priority
+    type: boolean
+    observed_as: default_priority
+    default: "0"
+  - name: priority
+    label: Priority
+    type: ref
+    observed_as: priority
+    required: true
+    ref: IssuePriority
+  - name: response_time
+    label: First Response Time
+    type: integer
+    observed_as: response_time
+    required: true
+  - name: resolution_time
+    label: Resolution Time
+    type: integer
+    observed_as: resolution_time
+relations:
+  - to: IssuePriority
+    kind: many-to-one
+    via: priority
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabService Level Priority
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Service Level Priority
+    note: declared by the program and served by its API

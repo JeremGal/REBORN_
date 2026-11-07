@@ -1,0 +1,46 @@
+name: BankTransactionRuleAccounts
+description: 'Document type "Bank Transaction Rule Accounts" (module Accounts): lines of another document.'
+fields:
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: PartyType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+  - name: debit
+    label: Debit
+    type: string
+    observed_as: debit
+  - name: credit
+    label: Credit
+    type: string
+    observed_as: credit
+  - name: user_remark
+    label: User Remark
+    type: text
+    observed_as: user_remark
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: PartyType
+    kind: many-to-one
+    via: party_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Transaction Rule Accounts
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Transaction Rule Accounts
+    note: declared by the program and served by its API

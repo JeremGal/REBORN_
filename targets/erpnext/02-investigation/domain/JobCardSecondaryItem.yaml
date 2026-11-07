@@ -1,0 +1,57 @@
+name: JobCardSecondaryItem
+description: 'Document type "Job Card Secondary Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: secondary_item_type
+    label: Type
+    type: enum
+    observed_as: secondary_item_type
+    required: true
+    enum_values:
+      - Co-Product
+      - By-Product
+      - Scrap
+      - Additional Finished Good
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: item_code
+    label: Secondary Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Secondary Item Name
+    type: string
+    observed_as: item_name
+  - name: bom_secondary_item
+    label: BOM Secondary Item Reference
+    type: string
+    observed_as: bom_secondary_item
+  - name: stock_qty
+    label: Qty
+    type: decimal
+    observed_as: stock_qty
+    required: true
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabJob Card Secondary Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Job Card Secondary Item
+    note: declared by the program and served by its API

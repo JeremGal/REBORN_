@@ -1,0 +1,76 @@
+name: ScheduledJobType
+description: Document type "Scheduled Job Type" (module Core).
+fields:
+  - name: stopped
+    label: Stopped
+    type: boolean
+    observed_as: stopped
+    default: "0"
+  - name: method
+    label: Method
+    type: string
+    observed_as: method
+    required: true
+  - name: server_script
+    label: Server Script
+    type: ref
+    observed_as: server_script
+    ref: ServerScript
+  - name: scheduler_event
+    label: Scheduler Event
+    type: ref
+    observed_as: scheduler_event
+    ref: SchedulerEvent
+  - name: frequency
+    label: Frequency
+    type: enum
+    observed_as: frequency
+    required: true
+    enum_values:
+      - All
+      - Hourly
+      - Hourly Long
+      - Hourly Maintenance
+      - Daily
+      - Daily Long
+      - Daily Maintenance
+      - Weekly
+      - Weekly Long
+      - Monthly
+      - Monthly Long
+      - Cron
+      - Yearly
+      - Annual
+  - name: cron_format
+    label: Cron Format
+    type: string
+    observed_as: cron_format
+  - name: create_log
+    label: Create Log
+    type: boolean
+    observed_as: create_log
+    default: "0"
+  - name: last_execution
+    label: Last Execution
+    type: datetime
+    observed_as: last_execution
+  - name: next_execution
+    label: Next Execution
+    type: datetime
+    observed_as: next_execution
+relations:
+  - to: ServerScript
+    kind: many-to-one
+    via: server_script
+  - to: SchedulerEvent
+    kind: many-to-one
+    via: scheduler_event
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabScheduled Job Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Scheduled Job Type
+    note: declared by the program and served by its API

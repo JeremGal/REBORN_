@@ -1,0 +1,85 @@
+name: Driver
+description: Document type "Driver" (module Setup).
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - HR-DRI-.YYYY.-
+  - name: full_name
+    label: Full Name
+    type: string
+    observed_as: full_name
+    required: true
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Active
+      - Suspended
+      - Left
+  - name: transporter
+    label: Transporter
+    type: ref
+    observed_as: transporter
+    ref: Supplier
+  - name: employee
+    label: Employee
+    type: ref
+    observed_as: employee
+    ref: Employee
+  - name: cell_number
+    label: Cellphone Number
+    type: string
+    observed_as: cell_number
+  - name: address
+    label: Address
+    type: ref
+    observed_as: address
+    ref: Address
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: license_number
+    label: License Number
+    type: string
+    observed_as: license_number
+  - name: issuing_date
+    label: Issuing Date
+    type: date
+    observed_as: issuing_date
+  - name: expiry_date
+    label: Expiry Date
+    type: date
+    observed_as: expiry_date
+relations:
+  - to: Supplier
+    kind: many-to-one
+    via: transporter
+  - to: Employee
+    kind: many-to-one
+    via: employee
+  - to: Address
+    kind: many-to-one
+    via: address
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: DrivingLicenseCategory
+    kind: one-to-many
+    via: driving_license_category
+    description: lines (Driving License Category)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDriver
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Driver
+    note: declared by the program and served by its API

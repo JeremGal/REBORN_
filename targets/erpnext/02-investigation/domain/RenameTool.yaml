@@ -1,0 +1,25 @@
+name: RenameTool
+description: 'Document type "Rename Tool" (module Utilities): single settings record.'
+fields:
+  - name: select_doctype
+    label: Select DocType
+    type: ref
+    observed_as: select_doctype
+    ref: DocType
+  - name: file_to_rename
+    label: File to Rename
+    type: file
+    observed_as: file_to_rename
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: select_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRename Tool
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Rename Tool
+    note: declared by the program and served by its API

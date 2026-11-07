@@ -1,0 +1,51 @@
+name: JobCardTimeLog
+description: 'Document type "Job Card Time Log" (module Manufacturing): lines of another document.'
+fields:
+  - name: employee
+    label: Employee
+    type: ref
+    observed_as: employee
+    ref: Employee
+  - name: from_time
+    label: From Time
+    type: datetime
+    observed_as: from_time
+  - name: to_time
+    label: To Time
+    type: datetime
+    observed_as: to_time
+  - name: time_in_mins
+    label: Time In Mins
+    type: decimal
+    observed_as: time_in_mins
+  - name: completed_qty
+    label: Completed Qty
+    type: decimal
+    observed_as: completed_qty
+    default: "0"
+  - name: process_loss_qty
+    label: Process Loss Qty
+    type: decimal
+    observed_as: process_loss_qty
+    default: "0"
+  - name: operation
+    label: Sub Operation
+    type: ref
+    observed_as: operation
+    ref: Operation
+relations:
+  - to: Employee
+    kind: many-to-one
+    via: employee
+  - to: Operation
+    kind: many-to-one
+    via: operation
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabJob Card Time Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Job Card Time Log
+    note: declared by the program and served by its API

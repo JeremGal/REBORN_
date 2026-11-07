@@ -1,0 +1,46 @@
+name: UOMConversionFactor
+description: How many of one unit make another, like 1000 g in a kg. Document type "UOM Conversion Factor" (module Setup).
+fields:
+  - name: category
+    label: Category
+    type: ref
+    observed_as: category
+    required: true
+    ref: UOMCategory
+  - name: from_uom
+    label: From
+    type: ref
+    observed_as: from_uom
+    required: true
+    ref: UOM
+  - name: to_uom
+    label: To
+    type: ref
+    observed_as: to_uom
+    required: true
+    ref: UOM
+  - name: value
+    label: Value
+    type: decimal
+    observed_as: value
+    required: true
+    precision: 9
+relations:
+  - to: UOMCategory
+    kind: many-to-one
+    via: category
+  - to: UOM
+    kind: many-to-one
+    via: from_uom
+  - to: UOM
+    kind: many-to-one
+    via: to_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUOM Conversion Factor
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of UOM Conversion Factor
+    note: declared by the program and served by its API

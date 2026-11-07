@@ -1,0 +1,55 @@
+name: AssetCategoryAccount
+description: 'Document type "Asset Category Account" (module Assets): lines of another document.'
+fields:
+  - name: company_name
+    label: Company
+    type: ref
+    observed_as: company_name
+    required: true
+    ref: Company
+  - name: fixed_asset_account
+    label: Fixed Asset Account
+    type: ref
+    observed_as: fixed_asset_account
+    required: true
+    ref: Account
+  - name: accumulated_depreciation_account
+    label: Accumulated Depreciation Account
+    type: ref
+    observed_as: accumulated_depreciation_account
+    ref: Account
+  - name: depreciation_expense_account
+    label: Depreciation Expense Account
+    type: ref
+    observed_as: depreciation_expense_account
+    ref: Account
+  - name: capital_work_in_progress_account
+    label: Capital Work In Progress Account
+    type: ref
+    observed_as: capital_work_in_progress_account
+    ref: Account
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company_name
+  - to: Account
+    kind: many-to-one
+    via: fixed_asset_account
+  - to: Account
+    kind: many-to-one
+    via: accumulated_depreciation_account
+  - to: Account
+    kind: many-to-one
+    via: depreciation_expense_account
+  - to: Account
+    kind: many-to-one
+    via: capital_work_in_progress_account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Category Account
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Category Account
+    note: declared by the program and served by its API

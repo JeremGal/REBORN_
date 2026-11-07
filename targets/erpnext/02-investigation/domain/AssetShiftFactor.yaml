@@ -1,0 +1,28 @@
+name: AssetShiftFactor
+description: How much faster an asset depreciates on a given shift. Document type "Asset Shift Factor" (module Assets).
+fields:
+  - name: shift_name
+    label: Shift Name
+    type: string
+    observed_as: shift_name
+    required: true
+    unique: true
+  - name: shift_factor
+    label: Shift Factor
+    type: decimal
+    observed_as: shift_factor
+    required: true
+  - name: default
+    label: Default
+    type: boolean
+    observed_as: default
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Shift Factor
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Shift Factor
+    note: declared by the program and served by its API

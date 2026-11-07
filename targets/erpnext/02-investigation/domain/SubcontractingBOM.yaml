@@ -1,0 +1,79 @@
+name: SubcontractingBOM
+description: The materials a subcontractor uses to make an item for you. Document type "Subcontracting BOM" (module Subcontracting).
+fields:
+  - name: is_active
+    label: Is Active
+    type: boolean
+    observed_as: is_active
+    default: "1"
+  - name: finished_good
+    label: Finished Good
+    type: ref
+    observed_as: finished_good
+    required: true
+    ref: Item
+  - name: finished_good_qty
+    label: Finished Good Qty
+    type: decimal
+    observed_as: finished_good_qty
+    required: true
+    default: "1"
+  - name: finished_good_uom
+    label: Finished Good UOM
+    type: ref
+    observed_as: finished_good_uom
+    ref: UOM
+  - name: finished_good_bom
+    label: Finished Good BOM
+    type: ref
+    observed_as: finished_good_bom
+    required: true
+    ref: BOM
+  - name: service_item
+    label: Service Item
+    type: ref
+    observed_as: service_item
+    required: true
+    ref: Item
+  - name: service_item_qty
+    label: Service Item Qty
+    type: decimal
+    observed_as: service_item_qty
+    required: true
+    default: "1"
+  - name: service_item_uom
+    label: Service Item UOM
+    type: ref
+    observed_as: service_item_uom
+    required: true
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+relations:
+  - to: Item
+    kind: many-to-one
+    via: finished_good
+  - to: UOM
+    kind: many-to-one
+    via: finished_good_uom
+  - to: BOM
+    kind: many-to-one
+    via: finished_good_bom
+  - to: Item
+    kind: many-to-one
+    via: service_item
+  - to: UOM
+    kind: many-to-one
+    via: service_item_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting BOM
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting BOM
+    note: declared by the program and served by its API

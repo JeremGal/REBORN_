@@ -1,0 +1,65 @@
+name: RepostAccountingLedger
+description: 'Rebuilds the ledger entries of transactions that were posted wrongly. Document type "Repost Accounting Ledger" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: delete_cancelled_entries
+    label: Delete Cancelled Ledger Entries
+    type: boolean
+    observed_as: delete_cancelled_entries
+    default: "0"
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Queued
+      - In Progress
+      - Partially Reposted
+      - Completed
+      - Failed
+      - Cancelled
+  - name: error_log
+    label: Error Log
+    type: text
+    observed_as: error_log
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: RepostAccountingLedger
+  - name: scheduled_job
+    label: Scheduled Job
+    type: ref
+    observed_as: scheduled_job
+    ref: RQJob
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: RepostAccountingLedgerItems
+    kind: one-to-many
+    via: vouchers
+    description: lines (Vouchers)
+  - to: RepostAccountingLedger
+    kind: many-to-one
+    via: amended_from
+  - to: RQJob
+    kind: many-to-one
+    via: scheduled_job
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRepost Accounting Ledger
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Repost Accounting Ledger
+    note: declared by the program and served by its API

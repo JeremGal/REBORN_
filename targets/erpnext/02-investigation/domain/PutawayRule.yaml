@@ -1,0 +1,86 @@
+name: PutawayRule
+description: Which warehouse received items go to. Document type "Putaway Rule" (module Stock).
+fields:
+  - name: disable
+    label: Disable
+    type: boolean
+    observed_as: disable
+    default: "0"
+  - name: item_code
+    label: Item
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: priority
+    label: Priority
+    type: integer
+    observed_as: priority
+    default: "1"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: capacity
+    label: Capacity
+    type: decimal
+    observed_as: capacity
+    required: true
+    default: "0"
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+    default: "1"
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: stock_capacity
+    label: Capacity in Stock UOM
+    type: decimal
+    observed_as: stock_capacity
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPutaway Rule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Putaway Rule
+    note: declared by the program and served by its API

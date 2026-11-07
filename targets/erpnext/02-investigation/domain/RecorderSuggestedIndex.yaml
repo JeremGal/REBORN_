@@ -1,0 +1,20 @@
+name: RecorderSuggestedIndex
+description: 'Document type "Recorder Suggested Index" (module Core): lines of another document.'
+fields:
+  - name: table
+    label: Table
+    type: string
+    observed_as: table
+  - name: column
+    label: Column
+    type: string
+    observed_as: column
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRecorder Suggested Index
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Recorder Suggested Index
+    note: declared by the program and served by its API

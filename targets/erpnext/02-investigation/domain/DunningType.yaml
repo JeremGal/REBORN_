@@ -1,0 +1,61 @@
+name: DunningType
+description: The wording and fee for a kind of payment reminder. Document type "Dunning Type" (module Accounts).
+fields:
+  - name: dunning_type
+    label: Dunning Type
+    type: string
+    observed_as: dunning_type
+    required: true
+    unique: true
+  - name: is_default
+    label: Is Default
+    type: boolean
+    observed_as: is_default
+    default: "0"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: dunning_fee
+    label: Dunning Fee
+    type: money
+    observed_as: dunning_fee
+  - name: rate_of_interest
+    label: Rate of Interest (%) Yearly
+    type: decimal
+    observed_as: rate_of_interest
+  - name: income_account
+    label: Income Account
+    type: ref
+    observed_as: income_account
+    ref: Account
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DunningLetterText
+    kind: one-to-many
+    via: dunning_letter_text
+    description: lines (dunning_letter_text)
+  - to: Account
+    kind: many-to-one
+    via: income_account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDunning Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Dunning Type
+    note: declared by the program and served by its API

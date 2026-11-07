@@ -1,0 +1,164 @@
+name: MaintenanceVisit
+description: 'A visit to service or repair what a customer bought. Document type "Maintenance Visit" (module Maintenance): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MAT-MVS-.YYYY.-
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: address_display
+    label: Address
+    type: text
+    observed_as: address_display
+  - name: contact_display
+    label: Contact
+    type: text
+    observed_as: contact_display
+  - name: contact_mobile
+    label: Mobile No
+    type: string
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: string
+    observed_as: contact_email
+  - name: maintenance_schedule
+    label: Maintenance Schedule
+    type: ref
+    observed_as: maintenance_schedule
+    ref: MaintenanceSchedule
+  - name: maintenance_schedule_detail
+    label: Maintenance Schedule Detail
+    type: ref
+    observed_as: maintenance_schedule_detail
+    ref: MaintenanceScheduleDetail
+  - name: mntc_date
+    label: Maintenance Date
+    type: date
+    observed_as: mntc_date
+    required: true
+    default: Today
+  - name: mntc_time
+    label: Maintenance Time
+    type: time
+    observed_as: mntc_time
+  - name: completion_status
+    label: Completion Status
+    type: enum
+    observed_as: completion_status
+    required: true
+    enum_values:
+      - Partially Completed
+      - Fully Completed
+  - name: maintenance_type
+    label: Maintenance Type
+    type: enum
+    observed_as: maintenance_type
+    required: true
+    enum_values:
+      - Scheduled
+      - Unscheduled
+      - Breakdown
+    default: Unscheduled
+  - name: customer_feedback
+    label: Customer Feedback
+    type: text
+    observed_as: customer_feedback
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - Cancelled
+      - Submitted
+    default: Draft
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: MaintenanceVisit
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: customer_address
+    label: Customer Address
+    type: ref
+    observed_as: customer_address
+    ref: Address
+  - name: contact_person
+    label: Contact Person
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: MaintenanceSchedule
+    kind: many-to-one
+    via: maintenance_schedule
+  - to: MaintenanceScheduleDetail
+    kind: many-to-one
+    via: maintenance_schedule_detail
+  - to: MaintenanceVisitPurpose
+    kind: one-to-many
+    via: purposes
+    description: lines (Purposes)
+  - to: MaintenanceVisit
+    kind: many-to-one
+    via: amended_from
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Address
+    kind: many-to-one
+    via: customer_address
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMaintenance Visit
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Maintenance Visit
+    note: declared by the program and served by its API

@@ -1,0 +1,49 @@
+name: PaymentReconciliationInvoice
+description: 'Document type "Payment Reconciliation Invoice" (module Accounts): lines of another document.'
+fields:
+  - name: invoice_type
+    label: Invoice Type
+    type: enum
+    observed_as: invoice_type
+    enum_values:
+      - Sales Invoice
+      - Purchase Invoice
+      - Journal Entry
+  - name: invoice_number
+    label: Invoice Number
+    type: string
+    observed_as: invoice_number
+  - name: invoice_date
+    label: Invoice Date
+    type: date
+    observed_as: invoice_date
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: outstanding_amount
+    label: Outstanding Amount
+    type: money
+    observed_as: outstanding_amount
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: exchange_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: exchange_rate
+relations:
+  - to: Currency
+    kind: many-to-one
+    via: currency
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Reconciliation Invoice
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Reconciliation Invoice
+    note: declared by the program and served by its API

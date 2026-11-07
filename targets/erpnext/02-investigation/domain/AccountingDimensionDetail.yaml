@@ -1,0 +1,56 @@
+name: AccountingDimensionDetail
+description: 'Document type "Accounting Dimension Detail" (module Accounts): lines of another document.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: reference_document
+    label: Reference Document
+    type: ref
+    observed_as: reference_document
+    ref: DocType
+  - name: default_dimension
+    label: Default Dimension
+    type: string
+    observed_as: default_dimension
+  - name: mandatory_for_bs
+    label: Mandatory For Balance Sheet
+    type: boolean
+    observed_as: mandatory_for_bs
+    default: "0"
+  - name: mandatory_for_pl
+    label: Mandatory For Profit and Loss Account
+    type: boolean
+    observed_as: mandatory_for_pl
+    default: "0"
+  - name: automatically_post_balancing_accounting_entry
+    label: Automatically post balancing accounting entry
+    type: boolean
+    observed_as: automatically_post_balancing_accounting_entry
+    default: "0"
+  - name: offsetting_account
+    label: Offsetting Account
+    type: ref
+    observed_as: offsetting_account
+    ref: Account
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DocType
+    kind: many-to-one
+    via: reference_document
+  - to: Account
+    kind: many-to-one
+    via: offsetting_account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAccounting Dimension Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Accounting Dimension Detail
+    note: declared by the program and served by its API

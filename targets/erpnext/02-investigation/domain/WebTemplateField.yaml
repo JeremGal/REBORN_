@@ -1,0 +1,53 @@
+name: WebTemplateField
+description: 'Document type "Web Template Field" (module Website): lines of another document.'
+fields:
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+    required: true
+  - name: fieldname
+    label: Fieldname
+    type: string
+    observed_as: fieldname
+  - name: fieldtype
+    label: Fieldtype
+    type: enum
+    observed_as: fieldtype
+    required: true
+    enum_values:
+      - Attach Image
+      - Check
+      - Data
+      - Int
+      - Link
+      - Select
+      - Small Text
+      - Text
+      - Markdown Editor
+      - Section Break
+      - Column Break
+      - Table Break
+    default: Data
+  - name: reqd
+    label: Mandatory
+    type: boolean
+    observed_as: reqd
+    default: "0"
+  - name: options
+    label: Options
+    type: text
+    observed_as: options
+  - name: default
+    label: Default
+    type: text
+    observed_as: default
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWeb Template Field
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Web Template Field
+    note: declared by the program and served by its API

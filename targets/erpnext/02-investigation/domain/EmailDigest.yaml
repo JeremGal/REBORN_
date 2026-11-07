@@ -1,0 +1,169 @@
+name: EmailDigest
+description: A regular email summing up how the business is doing. Document type "Email Digest" (module Setup).
+fields:
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "0"
+  - name: company
+    label: For Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: frequency
+    label: How frequently?
+    type: enum
+    observed_as: frequency
+    required: true
+    enum_values:
+      - Daily
+      - Weekly
+      - Monthly
+  - name: next_send
+    label: "Next email will be sent on:"
+    type: string
+    observed_as: next_send
+  - name: income
+    label: New Income
+    type: boolean
+    observed_as: income
+    default: "0"
+  - name: expenses_booked
+    label: New Expenses
+    type: boolean
+    observed_as: expenses_booked
+    default: "0"
+  - name: income_year_to_date
+    label: Annual Income
+    type: boolean
+    observed_as: income_year_to_date
+    default: "0"
+  - name: expense_year_to_date
+    label: Annual Expenses
+    type: boolean
+    observed_as: expense_year_to_date
+    default: "0"
+  - name: bank_balance
+    label: Bank Balance
+    type: boolean
+    observed_as: bank_balance
+    default: "0"
+  - name: credit_balance
+    label: Bank Credit Balance
+    type: boolean
+    observed_as: credit_balance
+    default: "0"
+  - name: invoiced_amount
+    label: Receivables
+    type: boolean
+    observed_as: invoiced_amount
+    default: "0"
+  - name: payables
+    label: Payables
+    type: boolean
+    observed_as: payables
+    default: "0"
+  - name: sales_orders_to_bill
+    label: Sales Orders to Bill
+    type: boolean
+    observed_as: sales_orders_to_bill
+    default: "0"
+  - name: purchase_orders_to_bill
+    label: Purchase Orders to Bill
+    type: boolean
+    observed_as: purchase_orders_to_bill
+    default: "0"
+  - name: sales_order
+    label: New Sales Orders
+    type: boolean
+    observed_as: sales_order
+    default: "0"
+  - name: purchase_order
+    label: New Purchase Orders
+    type: boolean
+    observed_as: purchase_order
+    default: "0"
+  - name: sales_orders_to_deliver
+    label: Sales Orders to Deliver
+    type: boolean
+    observed_as: sales_orders_to_deliver
+    default: "0"
+  - name: purchase_orders_to_receive
+    label: Purchase Orders to Receive
+    type: boolean
+    observed_as: purchase_orders_to_receive
+    default: "0"
+  - name: sales_invoice
+    label: New Sales Invoice
+    type: boolean
+    observed_as: sales_invoice
+    default: "0"
+  - name: purchase_invoice
+    label: New Purchase Invoice
+    type: boolean
+    observed_as: purchase_invoice
+    default: "0"
+  - name: new_quotations
+    label: New Quotations
+    type: boolean
+    observed_as: new_quotations
+    default: "0"
+  - name: pending_quotations
+    label: Open Quotations
+    type: boolean
+    observed_as: pending_quotations
+    default: "0"
+  - name: issue
+    label: Open Issues
+    type: boolean
+    observed_as: issue
+    default: "0"
+  - name: project
+    label: Open Projects
+    type: boolean
+    observed_as: project
+    default: "0"
+  - name: purchase_orders_items_overdue
+    label: Purchase Orders Items Overdue
+    type: boolean
+    observed_as: purchase_orders_items_overdue
+    default: "0"
+  - name: calendar_events
+    label: Upcoming Calendar Events
+    type: boolean
+    observed_as: calendar_events
+    default: "0"
+  - name: todo_list
+    label: Open To Do
+    type: boolean
+    observed_as: todo_list
+    default: "0"
+  - name: notifications
+    label: Open Notifications
+    type: boolean
+    observed_as: notifications
+    default: "0"
+  - name: add_quote
+    label: Add Quote
+    type: boolean
+    observed_as: add_quote
+    default: "0"
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: EmailDigestRecipient
+    kind: one-to-many
+    via: recipients
+    description: lines (Recipients)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Digest
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Digest
+    note: declared by the program and served by its API

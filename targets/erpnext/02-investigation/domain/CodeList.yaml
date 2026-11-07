@@ -1,0 +1,49 @@
+name: CodeList
+description: A published list of codes, like units or tax categories, used in e-invoicing. Document type "Code List" (module EDI).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: canonical_uri
+    label: Canonical URI
+    type: string
+    observed_as: canonical_uri
+  - name: url
+    label: URL
+    type: string
+    observed_as: url
+  - name: default_common_code
+    label: Default Common Code
+    type: ref
+    observed_as: default_common_code
+    ref: CommonCode
+  - name: version
+    label: Version
+    type: string
+    observed_as: version
+  - name: publisher
+    label: Publisher
+    type: string
+    observed_as: publisher
+  - name: publisher_id
+    label: Publisher ID
+    type: string
+    observed_as: publisher_id
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+relations:
+  - to: CommonCode
+    kind: many-to-one
+    via: default_common_code
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCode List
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Code List
+    note: declared by the program and served by its API

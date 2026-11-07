@@ -1,0 +1,54 @@
+name: POSInvoiceReference
+description: 'Document type "POS Invoice Reference" (module Accounts): lines of another document.'
+fields:
+  - name: pos_invoice
+    label: POS Invoice
+    type: ref
+    observed_as: pos_invoice
+    required: true
+    ref: POSInvoice
+  - name: posting_date
+    label: Date
+    type: date
+    observed_as: posting_date
+    required: true
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: grand_total
+    label: Amount
+    type: money
+    observed_as: grand_total
+    required: true
+  - name: is_return
+    label: Is Return
+    type: boolean
+    observed_as: is_return
+    default: "0"
+  - name: return_against
+    label: Return Against
+    type: ref
+    observed_as: return_against
+    ref: POSInvoice
+relations:
+  - to: POSInvoice
+    kind: many-to-one
+    via: pos_invoice
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: POSInvoice
+    kind: many-to-one
+    via: return_against
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPOS Invoice Reference
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of POS Invoice Reference
+    note: declared by the program and served by its API

@@ -1,0 +1,71 @@
+name: PropertySetter
+description: Property Setter overrides a standard DocType or Field property Document type "Property Setter" (module Custom).
+fields:
+  - name: is_system_generated
+    label: Is System Generated
+    type: boolean
+    observed_as: is_system_generated
+    default: "0"
+  - name: doctype_or_field
+    label: Applied On
+    type: enum
+    observed_as: doctype_or_field
+    required: true
+    enum_values:
+      - DocField
+      - DocType
+      - DocType Link
+      - DocType Action
+      - DocType State
+  - name: doc_type
+    label: DocType
+    type: ref
+    observed_as: doc_type
+    required: true
+    ref: DocType
+  - name: field_name
+    label: Field Name
+    type: string
+    observed_as: field_name
+  - name: row_name
+    label: Row Name
+    type: string
+    observed_as: row_name
+  - name: module
+    label: Module (for export)
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: property
+    label: Property
+    type: string
+    observed_as: property
+    required: true
+  - name: property_type
+    label: Property Type
+    type: string
+    observed_as: property_type
+  - name: value
+    label: Set Value
+    type: text
+    observed_as: value
+  - name: default_value
+    label: Default Value
+    type: string
+    observed_as: default_value
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: doc_type
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProperty Setter
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Property Setter
+    note: declared by the program and served by its API

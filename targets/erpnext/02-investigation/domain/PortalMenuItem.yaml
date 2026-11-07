@@ -1,0 +1,48 @@
+name: PortalMenuItem
+description: 'Document type "Portal Menu Item" (module Website): lines of another document.'
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "0"
+  - name: route
+    label: Route
+    type: string
+    observed_as: route
+    required: true
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: role
+    label: Role
+    type: ref
+    observed_as: role
+    ref: Role
+  - name: target
+    label: Target
+    type: string
+    observed_as: target
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: Role
+    kind: many-to-one
+    via: role
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPortal Menu Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Portal Menu Item
+    note: declared by the program and served by its API

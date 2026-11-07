@@ -1,0 +1,32 @@
+# Identity of the software under study. Never commit the binary: only its name and SHA-256 (reborn triage adds them).
+id: erpnext
+name: ERPNext on Alan's own Frappe Cloud site
+kit_title: Open-source web ERP (accounting, selling, buying, stock, manufacturing)
+vendor: ""
+domain: ERP for small and medium businesses (accounting, selling, buying, stock, manufacturing, projects, HR-adjacent)
+description: >-
+  Web ERP built on a metadata-driven framework: every business object is a declared document type (fields, links,
+  mandatory flags, form layout), served with a REST API. Studied on Alan's own hosted site, filled with fictitious data.
+kind: saas # exe | saas | both
+versions: [ERPNext 16.51.2, Frappe 16.55.2]
+platforms: [web]
+access:
+  method: open-source   # the code is public (GPL-3.0); the hosted site is Alan's own instance, used through its API
+  notes: >-
+    Alan's own Frappe Cloud site. API token in the .env outside the repository (FRAPPE_URL, FRAPPE_API_KEY,
+    FRAPPE_API_SECRET), read at run time, never written to a file. Only fictitious data, every record prefixed TEST-.
+legal:
+  basis: >-
+    ERPNext and Frappe are free software under the GNU GPL v3, which allows studying the code. The hosted site belongs
+    to Alan, who asked for it to be filled with fictitious data and studied (07/11/2026).
+  clean_room: true    # block 3 rebuilds from the dossier only
+  restrictions:
+    - Fictitious data only; never real customers, suppliers or amounts.
+    - Use the official REST API and the user interface; never bypass authentication or permissions.
+    - Do not reuse the product's name, logo or theme in a rebuild.
+artifacts: []
+urls: []
+team:
+  explorer: Elias (H Company agent, h-explorer/)
+  investigator: Alan
+  rebuilder: Jeremie

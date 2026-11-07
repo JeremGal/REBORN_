@@ -1,0 +1,113 @@
+name: QualityInspectionReading
+description: 'Document type "Quality Inspection Reading" (module Stock): lines of another document.'
+fields:
+  - name: specification
+    label: Parameter
+    type: ref
+    observed_as: specification
+    required: true
+    ref: QualityInspectionParameter
+  - name: parameter_group
+    label: Parameter Group
+    type: ref
+    observed_as: parameter_group
+    ref: QualityInspectionParameterGroup
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Accepted
+      - Rejected
+    default: Accepted
+  - name: value
+    label: Acceptance Criteria Value
+    type: string
+    observed_as: value
+  - name: numeric
+    label: Numeric
+    type: boolean
+    observed_as: numeric
+    default: "1"
+  - name: manual_inspection
+    label: Manual Inspection
+    type: boolean
+    observed_as: manual_inspection
+    default: "0"
+  - name: min_value
+    label: Minimum Value
+    type: decimal
+    observed_as: min_value
+  - name: max_value
+    label: Maximum Value
+    type: decimal
+    observed_as: max_value
+  - name: formula_based_criteria
+    label: Formula Based Criteria
+    type: boolean
+    observed_as: formula_based_criteria
+    default: "0"
+  - name: acceptance_formula
+    label: Acceptance Criteria Formula
+    type: text
+    observed_as: acceptance_formula
+  - name: reading_value
+    label: Reading Value
+    type: string
+    observed_as: reading_value
+  - name: reading_1
+    label: Reading 1
+    type: string
+    observed_as: reading_1
+  - name: reading_2
+    label: Reading 2
+    type: string
+    observed_as: reading_2
+  - name: reading_3
+    label: Reading 3
+    type: string
+    observed_as: reading_3
+  - name: reading_4
+    label: Reading 4
+    type: string
+    observed_as: reading_4
+  - name: reading_5
+    label: Reading 5
+    type: string
+    observed_as: reading_5
+  - name: reading_6
+    label: Reading 6
+    type: string
+    observed_as: reading_6
+  - name: reading_7
+    label: Reading 7
+    type: string
+    observed_as: reading_7
+  - name: reading_8
+    label: Reading 8
+    type: string
+    observed_as: reading_8
+  - name: reading_9
+    label: Reading 9
+    type: string
+    observed_as: reading_9
+  - name: reading_10
+    label: Reading 10
+    type: string
+    observed_as: reading_10
+relations:
+  - to: QualityInspectionParameter
+    kind: many-to-one
+    via: specification
+  - to: QualityInspectionParameterGroup
+    kind: many-to-one
+    via: parameter_group
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Inspection Reading
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Inspection Reading
+    note: declared by the program and served by its API

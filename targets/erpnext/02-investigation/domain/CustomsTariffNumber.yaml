@@ -1,0 +1,22 @@
+name: CustomsTariffNumber
+description: The tariff code an item is declared under at customs. Document type "Customs Tariff Number" (module Stock).
+fields:
+  - name: tariff_number
+    label: Tariff Number
+    type: string
+    observed_as: tariff_number
+    required: true
+    unique: true
+  - name: description
+    label: Description
+    type: string
+    observed_as: description
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCustoms Tariff Number
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Customs Tariff Number
+    note: declared by the program and served by its API

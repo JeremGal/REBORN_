@@ -1,0 +1,57 @@
+name: OAuthBearerToken
+description: Document type "OAuth Bearer Token" (module Integrations).
+fields:
+  - name: client
+    label: OAuth Client
+    type: ref
+    observed_as: client
+    ref: OAuthClient
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: scopes
+    label: Scopes
+    type: text
+    observed_as: scopes
+  - name: access_token
+    label: Access Token
+    type: string
+    observed_as: access_token
+    unique: true
+  - name: refresh_token
+    label: Refresh Token
+    type: string
+    observed_as: refresh_token
+  - name: expiration_time
+    label: Expiration time
+    type: datetime
+    observed_as: expiration_time
+  - name: expires_in
+    label: Expires In
+    type: integer
+    observed_as: expires_in
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Active
+      - Revoked
+relations:
+  - to: OAuthClient
+    kind: many-to-one
+    via: client
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOAuth Bearer Token
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of OAuth Bearer Token
+    note: declared by the program and served by its API

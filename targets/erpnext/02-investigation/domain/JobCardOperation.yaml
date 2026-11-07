@@ -1,0 +1,43 @@
+name: JobCardOperation
+description: 'Document type "Job Card Operation" (module Manufacturing): lines of another document.'
+fields:
+  - name: sub_operation
+    label: Operation
+    type: ref
+    observed_as: sub_operation
+    ref: Operation
+  - name: completed_qty
+    label: Completed Qty
+    type: decimal
+    observed_as: completed_qty
+  - name: process_loss_qty
+    label: Process Loss Qty
+    type: decimal
+    observed_as: process_loss_qty
+  - name: completed_time
+    label: Completed Time
+    type: string
+    observed_as: completed_time
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Complete
+      - Pause
+      - Pending
+      - Work In Progress
+    default: Pending
+relations:
+  - to: Operation
+    kind: many-to-one
+    via: sub_operation
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabJob Card Operation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Job Card Operation
+    note: declared by the program and served by its API

@@ -1,0 +1,42 @@
+name: PricingRuleDetail
+description: 'Document type "Pricing Rule Detail" (module Accounts): lines of another document.'
+fields:
+  - name: pricing_rule
+    label: Pricing Rule
+    type: ref
+    observed_as: pricing_rule
+    ref: PricingRule
+  - name: item_code
+    label: Item Code
+    type: string
+    observed_as: item_code
+  - name: margin_type
+    label: Margin Type
+    type: string
+    observed_as: margin_type
+  - name: rate_or_discount
+    label: Rate or Discount
+    type: string
+    observed_as: rate_or_discount
+  - name: child_docname
+    label: Child Docname
+    type: string
+    observed_as: child_docname
+  - name: rule_applied
+    label: Rule Applied
+    type: boolean
+    observed_as: rule_applied
+    default: "1"
+relations:
+  - to: PricingRule
+    kind: many-to-one
+    via: pricing_rule
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPricing Rule Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Pricing Rule Detail
+    note: declared by the program and served by its API

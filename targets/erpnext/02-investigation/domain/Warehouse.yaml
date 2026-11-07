@@ -1,0 +1,130 @@
+name: Warehouse
+description: A place where you keep stock. Document type "Warehouse" (module Stock).
+fields:
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: warehouse_name
+    label: Warehouse Name
+    type: string
+    observed_as: warehouse_name
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: is_rejected_warehouse
+    label: Is Rejected Warehouse
+    type: boolean
+    observed_as: is_rejected_warehouse
+    default: "0"
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: parent_warehouse
+    label: Parent Warehouse
+    type: ref
+    observed_as: parent_warehouse
+    ref: Warehouse
+  - name: is_group
+    label: Is Group Warehouse
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: email_id
+    label: Email Address
+    type: string
+    observed_as: email_id
+  - name: phone_no
+    label: Phone No
+    type: string
+    observed_as: phone_no
+  - name: mobile_no
+    label: Mobile No
+    type: string
+    observed_as: mobile_no
+  - name: address_line_1
+    label: Address Line 1
+    type: string
+    observed_as: address_line_1
+  - name: address_line_2
+    label: Address Line 2
+    type: string
+    observed_as: address_line_2
+  - name: city
+    label: City
+    type: string
+    observed_as: city
+  - name: state
+    label: State/Province
+    type: string
+    observed_as: state
+  - name: pin
+    label: PIN
+    type: string
+    observed_as: pin
+  - name: warehouse_type
+    label: Warehouse Type
+    type: ref
+    observed_as: warehouse_type
+    ref: WarehouseType
+  - name: default_in_transit_warehouse
+    label: Default In-Transit Warehouse
+    type: ref
+    observed_as: default_in_transit_warehouse
+    ref: Warehouse
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: Old Parent
+    type: ref
+    observed_as: old_parent
+    ref: Warehouse
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: Warehouse
+    kind: many-to-one
+    via: parent_warehouse
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: WarehouseType
+    kind: many-to-one
+    via: warehouse_type
+  - to: Warehouse
+    kind: many-to-one
+    via: default_in_transit_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: old_parent
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWarehouse
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Warehouse
+    note: declared by the program and served by its API

@@ -1,0 +1,29 @@
+# Open questions. A probe of kind h-mission becomes a block 1 mission with: node tools/reborn.mjs ask <target>
+target: erpnext
+unknowns:
+  - id: U-001
+    question: Why does a tax row take the rate of a later row that uses the same tax account (R-007)? Is it intended?
+    why: a rebuild must decide whether to reproduce this or to forbid duplicate tax accounts.
+    blocks: [F-001]
+    severity: major
+    required_basis: [static-code, runtime]
+    prediction: The program keeps one tax rate per account for each line, so the last row on an account overwrites the earlier one.
+    refuted_if: Two rows on the same account keep their own rates when the item has no tax template.
+    searched: Observed in two runs only; the code of the tax computation has not been read yet.
+    probe:
+      kind: manual
+      suggestion: "Read the open-source tax computation code (taxes and totals controller) and run one more case with three rows on one account."
+    status: open
+    evidence:
+      - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "steps 5-6" }
+  - id: U-002
+    question: Do a discount on the net total and a discount on the grand total differ when a fixed charge or a compound tax is present?
+    why: R-003 is observed with a single tax on the net total, where both modes give the same totals.
+    blocks: [F-001]
+    severity: minor
+    required_basis: [runtime]
+    prediction: With a fixed charge, a grand-total discount also reduces the share of the fixed charge, so the totals differ.
+    probe:
+      kind: manual
+      suggestion: "frappe observe with a 5% discount on each mode, plus an Actual charge of 15.00 and a 20% tax."
+    status: open

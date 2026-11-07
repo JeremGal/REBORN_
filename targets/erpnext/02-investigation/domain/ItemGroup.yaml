@@ -1,0 +1,60 @@
+name: ItemGroup
+description: Groups items, for pricing, defaults and reporting. Document type "Item Group" (module Setup).
+fields:
+  - name: item_group_name
+    label: Item Group Name
+    type: string
+    observed_as: item_group_name
+    required: true
+    unique: true
+  - name: parent_item_group
+    label: Parent Item Group
+    type: ref
+    observed_as: parent_item_group
+    ref: ItemGroup
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: lft
+    label: lft
+    type: integer
+    observed_as: lft
+  - name: old_parent
+    label: old_parent
+    type: ref
+    observed_as: old_parent
+    ref: ItemGroup
+  - name: rgt
+    label: rgt
+    type: integer
+    observed_as: rgt
+relations:
+  - to: ItemGroup
+    kind: many-to-one
+    via: parent_item_group
+  - to: ItemDefault
+    kind: one-to-many
+    via: item_group_defaults
+    description: lines (Item Group Defaults)
+  - to: ItemTax
+    kind: one-to-many
+    via: taxes
+    description: lines (Taxes)
+  - to: ItemGroup
+    kind: many-to-one
+    via: old_parent
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Group
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Group
+    note: declared by the program and served by its API

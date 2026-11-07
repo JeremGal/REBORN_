@@ -1,0 +1,82 @@
+name: SMSCenter
+description: 'Document type "SMS Center" (module Selling): single settings record.'
+fields:
+  - name: send_to
+    label: Send To
+    type: enum
+    observed_as: send_to
+    enum_values:
+      - All Contact
+      - All Customer Contact
+      - All Supplier Contact
+      - All Sales Partner Contact
+      - All Lead (Open)
+      - All Employee (Active)
+      - All Sales Person
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: sales_partner
+    label: Sales Partner
+    type: ref
+    observed_as: sales_partner
+    ref: SalesPartner
+  - name: department
+    label: Department
+    type: ref
+    observed_as: department
+    ref: Department
+  - name: branch
+    label: Branch
+    type: ref
+    observed_as: branch
+    ref: Branch
+  - name: receiver_list
+    label: Receiver List
+    type: text
+    observed_as: receiver_list
+  - name: message
+    label: Message
+    type: text
+    observed_as: message
+    required: true
+  - name: total_characters
+    label: Total Characters
+    type: integer
+    observed_as: total_characters
+  - name: total_messages
+    label: Total Message(s)
+    type: integer
+    observed_as: total_messages
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: SalesPartner
+    kind: many-to-one
+    via: sales_partner
+  - to: Department
+    kind: many-to-one
+    via: department
+  - to: Branch
+    kind: many-to-one
+    via: branch
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSMS Center
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of SMS Center
+    note: declared by the program and served by its API

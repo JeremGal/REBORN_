@@ -1,0 +1,128 @@
+name: AutoRepeat
+description: Document type "Auto Repeat" (module Automation).
+fields:
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    required: true
+    ref: DocType
+  - name: reference_document
+    label: Reference Document
+    type: string
+    observed_as: reference_document
+    required: true
+  - name: submit_on_creation
+    label: Submit on Creation
+    type: boolean
+    observed_as: submit_on_creation
+    default: "0"
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+    required: true
+    default: Today
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: frequency
+    label: Frequency
+    type: enum
+    observed_as: frequency
+    required: true
+    enum_values:
+      - Daily
+      - Weekly
+      - Fortnightly
+      - Monthly
+      - Quarterly
+      - Half-yearly
+      - Yearly
+  - name: repeat_on_day
+    label: Repeat on Day
+    type: integer
+    observed_as: repeat_on_day
+  - name: repeat_on_last_day
+    label: Repeat on Last Day of the Month
+    type: boolean
+    observed_as: repeat_on_last_day
+    default: "0"
+  - name: next_schedule_date
+    label: Next Schedule Date
+    type: date
+    observed_as: next_schedule_date
+  - name: generate_separate_documents_for_each_assignee
+    label: Generate Separate Documents For Each Assignee
+    type: boolean
+    observed_as: generate_separate_documents_for_each_assignee
+    default: "0"
+  - name: notify_by_email
+    label: Notify by Email
+    type: boolean
+    observed_as: notify_by_email
+    default: "0"
+  - name: recipients
+    label: Recipients
+    type: text
+    observed_as: recipients
+  - name: template
+    label: Template
+    type: ref
+    observed_as: template
+    ref: EmailTemplate
+  - name: subject
+    label: Subject
+    type: string
+    observed_as: subject
+  - name: message
+    label: Message
+    type: text
+    observed_as: message
+    default: "Please find attached {{ doc.doctype }} #{{ doc.name }}"
+  - name: print_format
+    label: Print Format
+    type: ref
+    observed_as: print_format
+    ref: PrintFormat
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Active
+      - Disabled
+      - Completed
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: AutoRepeatUser
+    kind: one-to-many
+    via: assignee
+    description: lines (Assignee)
+  - to: AutoRepeatDay
+    kind: one-to-many
+    via: repeat_on_days
+    description: lines (Repeat on Days)
+  - to: EmailTemplate
+    kind: many-to-one
+    via: template
+  - to: PrintFormat
+    kind: many-to-one
+    via: print_format
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAuto Repeat
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Auto Repeat
+    note: declared by the program and served by its API

@@ -1,0 +1,116 @@
+name: Address
+description: A postal address of a customer, supplier, company or contact. Document type "Address" (module Contacts).
+fields:
+  - name: address_title
+    label: Address Title
+    type: string
+    observed_as: address_title
+  - name: address_type
+    label: Address Type
+    type: enum
+    observed_as: address_type
+    required: true
+    enum_values:
+      - Billing
+      - Shipping
+      - Office
+      - Personal
+      - Plant
+      - Postal
+      - Shop
+      - Subsidiary
+      - Warehouse
+      - Current
+      - Permanent
+      - Other
+  - name: address_line1
+    label: Address Line 1
+    type: string
+    observed_as: address_line1
+    required: true
+    max_length: 240
+  - name: address_line2
+    label: Address Line 2
+    type: string
+    observed_as: address_line2
+    max_length: 240
+  - name: city
+    label: City/Town
+    type: string
+    observed_as: city
+    required: true
+  - name: county
+    label: County
+    type: string
+    observed_as: county
+  - name: state
+    label: State/Province
+    type: string
+    observed_as: state
+  - name: country
+    label: Country
+    type: ref
+    observed_as: country
+    required: true
+    ref: Country
+  - name: pincode
+    label: Postal Code
+    type: string
+    observed_as: pincode
+  - name: email_id
+    label: Email Address
+    type: string
+    observed_as: email_id
+  - name: phone
+    label: Phone
+    type: string
+    observed_as: phone
+  - name: fax
+    label: Fax
+    type: string
+    observed_as: fax
+  - name: tax_category
+    label: Tax Category
+    type: ref
+    observed_as: tax_category
+    ref: TaxCategory
+  - name: is_primary_address
+    label: Preferred Billing Address
+    type: boolean
+    observed_as: is_primary_address
+    default: "0"
+  - name: is_shipping_address
+    label: Preferred Shipping Address
+    type: boolean
+    observed_as: is_shipping_address
+    default: "0"
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: is_your_company_address
+    label: Is Your Company Address
+    type: boolean
+    observed_as: is_your_company_address
+    default: "0"
+relations:
+  - to: Country
+    kind: many-to-one
+    via: country
+  - to: TaxCategory
+    kind: many-to-one
+    via: tax_category
+  - to: DynamicLink
+    kind: one-to-many
+    via: links
+    description: lines (Links)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAddress
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Address
+    note: declared by the program and served by its API

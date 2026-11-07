@@ -1,0 +1,50 @@
+name: UOM
+description: A unit you measure items in, like kg or box. Document type "UOM" (module Setup).
+fields:
+  - name: uom_name
+    label: UOM Name
+    type: string
+    observed_as: uom_name
+    required: true
+    unique: true
+  - name: symbol
+    label: Symbol
+    type: string
+    observed_as: symbol
+  - name: common_code
+    label: Common Code
+    type: string
+    observed_as: common_code
+    max_length: 3
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: category
+    label: Category
+    type: ref
+    observed_as: category
+    ref: UOMCategory
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: must_be_whole_number
+    label: Must be Whole Number
+    type: boolean
+    observed_as: must_be_whole_number
+    default: "0"
+relations:
+  - to: UOMCategory
+    kind: many-to-one
+    via: category
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUOM
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of UOM
+    note: declared by the program and served by its API

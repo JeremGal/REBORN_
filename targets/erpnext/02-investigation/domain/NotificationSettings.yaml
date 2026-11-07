@@ -1,0 +1,61 @@
+name: NotificationSettings
+description: Document type "Notification Settings" (module Desk).
+fields:
+  - name: enabled
+    label: Enable System Notification
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: enable_email_notifications
+    label: Enable Email Notifications
+    type: boolean
+    observed_as: enable_email_notifications
+    default: "1"
+  - name: enable_email_threads_on_assigned_document
+    label: Email Threads on Assigned Document
+    type: boolean
+    observed_as: enable_email_threads_on_assigned_document
+    default: "1"
+  - name: enable_email_event_reminders
+    label: Event Reminders
+    type: boolean
+    observed_as: enable_email_event_reminders
+    default: "1"
+  - name: enable_email_mention
+    label: Mentions
+    type: boolean
+    observed_as: enable_email_mention
+    default: "1"
+  - name: enable_email_assignment
+    label: Assignments
+    type: boolean
+    observed_as: enable_email_assignment
+    default: "1"
+  - name: enable_email_share
+    label: Document Share
+    type: boolean
+    observed_as: enable_email_share
+    default: "1"
+  - name: seen
+    label: Seen
+    type: boolean
+    observed_as: seen
+    default: "0"
+relations:
+  - to: NotificationSubscribedDocument
+    kind: one-to-many
+    via: subscribed_documents
+    description: lines (Open Documents)
+  - to: NotificationTypePreference
+    kind: one-to-many
+    via: email_notification_types
+    description: lines (Email me for these notification types)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNotification Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Notification Settings
+    note: declared by the program and served by its API

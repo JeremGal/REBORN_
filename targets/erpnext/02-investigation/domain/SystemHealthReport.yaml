@@ -1,0 +1,160 @@
+name: SystemHealthReport
+description: 'Document type "System Health Report" (module Desk): single settings record.'
+fields:
+  - name: total_background_workers
+    label: Total Background Workers
+    type: integer
+    observed_as: total_background_workers
+  - name: background_jobs_check
+    label: Background Jobs Check
+    type: string
+    observed_as: background_jobs_check
+  - name: test_job_id
+    label: Test Job ID
+    type: string
+    observed_as: test_job_id
+  - name: scheduler_status
+    label: Scheduler Status
+    type: string
+    observed_as: scheduler_status
+  - name: oldest_unscheduled_job
+    label: Oldest Unscheduled Job
+    type: ref
+    observed_as: oldest_unscheduled_job
+    ref: ScheduledJobType
+  - name: database
+    label: Database
+    type: string
+    observed_as: database
+  - name: database_version
+    label: Database Version
+    type: string
+    observed_as: database_version
+  - name: db_storage_usage
+    label: Storage Usage (MB)
+    type: decimal
+    observed_as: db_storage_usage
+  - name: bufferpool_size
+    label: Bufferpool Size
+    type: string
+    observed_as: bufferpool_size
+  - name: binary_logging
+    label: Binary Logging
+    type: string
+    observed_as: binary_logging
+  - name: cache_keys
+    label: Number of keys
+    type: integer
+    observed_as: cache_keys
+  - name: cache_memory_usage
+    label: Memory Usage
+    type: string
+    observed_as: cache_memory_usage
+  - name: socketio_ping_check
+    label: SocketIO Ping Check
+    type: enum
+    observed_as: socketio_ping_check
+    enum_values:
+      - Fail
+      - Pass
+    default: Fail
+  - name: socketio_transport_mode
+    label: SocketIO Transport Mode
+    type: enum
+    observed_as: socketio_transport_mode
+    enum_values:
+      - Polling
+      - Websocket
+  - name: public_files_size
+    label: Public Files (MB)
+    type: decimal
+    observed_as: public_files_size
+  - name: private_files_size
+    label: Private Files (MB)
+    type: decimal
+    observed_as: private_files_size
+  - name: onsite_backups
+    label: Number of onsite backups
+    type: integer
+    observed_as: onsite_backups
+  - name: backups_size
+    label: Backups (MB)
+    type: decimal
+    observed_as: backups_size
+  - name: total_users
+    label: Total Users
+    type: integer
+    observed_as: total_users
+  - name: new_users
+    label: New Users (Last 30 days)
+    type: integer
+    observed_as: new_users
+  - name: failed_logins
+    label: Failed Logins (Last 30 days)
+    type: integer
+    observed_as: failed_logins
+  - name: active_sessions
+    label: Active Sessions
+    type: integer
+    observed_as: active_sessions
+  - name: last_10_active_users
+    label: Last 10 active users
+    type: text
+    observed_as: last_10_active_users
+  - name: total_outgoing_emails
+    label: Total Outgoing Emails
+    type: integer
+    observed_as: total_outgoing_emails
+  - name: pending_emails
+    label: Pending Emails
+    type: integer
+    observed_as: pending_emails
+  - name: failed_emails
+    label: Failed Emails
+    type: integer
+    observed_as: failed_emails
+  - name: handled_emails
+    label: Handled Emails
+    type: integer
+    observed_as: handled_emails
+  - name: unhandled_emails
+    label: Unhandled Emails
+    type: integer
+    observed_as: unhandled_emails
+  - name: total_errors
+    label: Total Errors (last 1 day)
+    type: integer
+    observed_as: total_errors
+relations:
+  - to: SystemHealthReportQueue
+    kind: one-to-many
+    via: queue_status
+    description: lines (Queue Status)
+  - to: SystemHealthReportWorkers
+    kind: one-to-many
+    via: background_workers
+    description: lines (Background Workers)
+  - to: ScheduledJobType
+    kind: many-to-one
+    via: oldest_unscheduled_job
+  - to: SystemHealthReportFailingJobs
+    kind: one-to-many
+    via: failing_scheduled_jobs
+    description: lines (Failing Scheduled Jobs (last 7 days))
+  - to: SystemHealthReportTables
+    kind: one-to-many
+    via: top_db_tables
+    description: lines (Storage Usage By Table)
+  - to: SystemHealthReportErrors
+    kind: one-to-many
+    via: top_errors
+    description: lines (Top Errors)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSystem Health Report
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of System Health Report
+    note: declared by the program and served by its API

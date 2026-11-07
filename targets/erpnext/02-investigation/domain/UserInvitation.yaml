@@ -1,0 +1,70 @@
+name: UserInvitation
+description: Document type "User Invitation" (module Core).
+fields:
+  - name: email
+    label: Email
+    type: string
+    observed_as: email
+    required: true
+  - name: app_name
+    label: App Name
+    type: string
+    observed_as: app_name
+    required: true
+  - name: redirect_to_path
+    label: Redirect To Path
+    type: string
+    observed_as: redirect_to_path
+    required: true
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Pending
+      - Accepted
+      - Expired
+      - Cancelled
+    default: Pending
+  - name: invited_by
+    label: Invited By
+    type: ref
+    observed_as: invited_by
+    ref: User
+  - name: key
+    label: Key
+    type: string
+    observed_as: key
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: email_sent_at
+    label: Email Sent At
+    type: datetime
+    observed_as: email_sent_at
+  - name: accepted_at
+    label: Accepted At
+    type: datetime
+    observed_as: accepted_at
+relations:
+  - to: UserRole
+    kind: one-to-many
+    via: roles
+    description: lines (Roles)
+  - to: User
+    kind: many-to-one
+    via: invited_by
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUser Invitation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of User Invitation
+    note: declared by the program and served by its API

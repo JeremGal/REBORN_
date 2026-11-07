@@ -1,0 +1,38 @@
+name: PartyAccount
+description: 'Document type "Party Account" (module Accounts): lines of another document.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: account
+    label: Default Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: advance_account
+    label: Advance Account
+    type: ref
+    observed_as: advance_account
+    ref: Account
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: Account
+    kind: many-to-one
+    via: advance_account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabParty Account
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Party Account
+    note: declared by the program and served by its API

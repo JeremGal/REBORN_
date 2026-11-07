@@ -1,0 +1,21 @@
+name: NumberCardLink
+description: 'Document type "Number Card Link" (module Desk): lines of another document.'
+fields:
+  - name: card
+    label: Card
+    type: ref
+    observed_as: card
+    ref: NumberCard
+relations:
+  - to: NumberCard
+    kind: many-to-one
+    via: card
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNumber Card Link
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Number Card Link
+    note: declared by the program and served by its API

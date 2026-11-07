@@ -1,0 +1,34 @@
+name: ProcessStatementOfAccountsCustomer
+description: 'Document type "Process Statement Of Accounts Customer" (module Accounts): lines of another document.'
+fields:
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: billing_email
+    label: Billing Email
+    type: string
+    observed_as: billing_email
+  - name: primary_email
+    label: Primary Contact Email
+    type: string
+    observed_as: primary_email
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProcess Statement Of Accounts Customer
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Process Statement Of Accounts Customer
+    note: declared by the program and served by its API

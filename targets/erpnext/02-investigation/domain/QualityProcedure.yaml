@@ -1,0 +1,60 @@
+name: QualityProcedure
+description: The steps of a process you follow to keep quality in check. Document type "Quality Procedure" (module Quality Management).
+fields:
+  - name: quality_procedure_name
+    label: Quality Procedure
+    type: string
+    observed_as: quality_procedure_name
+    required: true
+    unique: true
+  - name: process_owner
+    label: Process Owner
+    type: ref
+    observed_as: process_owner
+    ref: User
+  - name: process_owner_full_name
+    label: Process Owner Full Name
+    type: string
+    observed_as: process_owner_full_name
+  - name: parent_quality_procedure
+    label: Parent Procedure
+    type: ref
+    observed_as: parent_quality_procedure
+    ref: QualityProcedure
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: rgt
+    label: Right Index
+    type: integer
+    observed_as: rgt
+  - name: lft
+    label: Left Index
+    type: integer
+    observed_as: lft
+  - name: old_parent
+    label: old_parent
+    type: string
+    observed_as: old_parent
+relations:
+  - to: User
+    kind: many-to-one
+    via: process_owner
+  - to: QualityProcedureProcess
+    kind: one-to-many
+    via: processes
+    description: lines (Processes)
+  - to: QualityProcedure
+    kind: many-to-one
+    via: parent_quality_procedure
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Procedure
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Procedure
+    note: declared by the program and served by its API

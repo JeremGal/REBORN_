@@ -1,0 +1,88 @@
+name: PeriodClosingVoucher
+description: 'Closes a fiscal year by moving its profit or loss to equity. Document type "Period Closing Voucher" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: transaction_date
+    label: Transaction Date
+    type: date
+    observed_as: transaction_date
+    default: Today
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: fiscal_year
+    label: Fiscal Year
+    type: ref
+    observed_as: fiscal_year
+    required: true
+    ref: FiscalYear
+  - name: period_start_date
+    label: Period Start Date
+    type: date
+    observed_as: period_start_date
+    required: true
+  - name: period_end_date
+    label: Period End Date
+    type: date
+    observed_as: period_end_date
+    required: true
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: PeriodClosingVoucher
+  - name: closing_account_head
+    label: Closing Account Head
+    type: ref
+    observed_as: closing_account_head
+    required: true
+    ref: Account
+  - name: stock_value_difference
+    label: Accepted Stock Value Difference
+    type: money
+    observed_as: stock_value_difference
+  - name: gle_processing_status
+    label: GL Entry Processing Status
+    type: enum
+    observed_as: gle_processing_status
+    enum_values:
+      - In Progress
+      - Completed
+      - Failed
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+    required: true
+  - name: error_message
+    label: Error Message
+    type: text
+    observed_as: error_message
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: FiscalYear
+    kind: many-to-one
+    via: fiscal_year
+  - to: PeriodClosingVoucher
+    kind: many-to-one
+    via: amended_from
+  - to: Account
+    kind: many-to-one
+    via: closing_account_head
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPeriod Closing Voucher
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Period Closing Voucher
+    note: declared by the program and served by its API

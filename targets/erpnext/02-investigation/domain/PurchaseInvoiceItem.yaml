@@ -1,0 +1,486 @@
+name: PurchaseInvoiceItem
+description: 'Document type "Purchase Invoice Item" (module Accounts): lines of another document.'
+fields:
+  - name: item_code
+    label: Item
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: product_bundle
+    label: Product Bundle
+    type: ref
+    observed_as: product_bundle
+    ref: ProductBundle
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+    required: true
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: brand
+    label: Brand
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: received_qty
+    label: Received Qty
+    type: decimal
+    observed_as: received_qty
+  - name: qty
+    label: Accepted Qty
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: rejected_qty
+    label: Rejected Qty
+    type: decimal
+    observed_as: rejected_qty
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: conversion_factor
+    label: UOM Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    required: true
+    precision: 9
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: stock_qty
+    label: Accepted Qty in Stock UOM
+    type: decimal
+    observed_as: stock_qty
+    required: true
+  - name: price_list_rate
+    label: Price List Rate
+    type: money
+    observed_as: price_list_rate
+  - name: base_price_list_rate
+    label: Price List Rate (Company Currency)
+    type: money
+    observed_as: base_price_list_rate
+  - name: margin_type
+    label: Margin Type
+    type: enum
+    observed_as: margin_type
+    enum_values:
+      - Percentage
+      - Amount
+  - name: margin_rate_or_amount
+    label: Margin Rate or Amount
+    type: decimal
+    observed_as: margin_rate_or_amount
+  - name: rate_with_margin
+    label: Rate With Margin
+    type: money
+    observed_as: rate_with_margin
+  - name: discount_percentage
+    label: Discount on Price List Rate (%)
+    type: percent
+    observed_as: discount_percentage
+  - name: discount_amount
+    label: Discount Amount
+    type: money
+    observed_as: discount_amount
+  - name: distributed_discount_amount
+    label: Distributed Discount Amount
+    type: money
+    observed_as: distributed_discount_amount
+  - name: mapped_additional_discount_amount
+    label: Additional Discount per Stock Unit
+    type: money
+    observed_as: mapped_additional_discount_amount
+    precision: 9
+    default: "0"
+  - name: base_rate_with_margin
+    label: Rate With Margin (Company Currency)
+    type: money
+    observed_as: base_rate_with_margin
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    required: true
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+  - name: item_tax_template
+    label: Item Tax Template
+    type: ref
+    observed_as: item_tax_template
+    ref: ItemTaxTemplate
+  - name: tax_withholding_category
+    label: Tax Withholding Category
+    type: ref
+    observed_as: tax_withholding_category
+    ref: TaxWithholdingCategory
+  - name: base_rate
+    label: Rate (Company Currency)
+    type: money
+    observed_as: base_rate
+    required: true
+  - name: base_amount
+    label: Amount (Company Currency)
+    type: money
+    observed_as: base_amount
+    required: true
+  - name: pricing_rules
+    label: Pricing Rules
+    type: text
+    observed_as: pricing_rules
+  - name: stock_uom_rate
+    label: Rate of Stock UOM
+    type: money
+    observed_as: stock_uom_rate
+  - name: is_free_item
+    label: Is Free Item
+    type: boolean
+    observed_as: is_free_item
+    default: "0"
+  - name: apply_tds
+    label: Consider for Tax Withholding
+    type: boolean
+    observed_as: apply_tds
+    default: "1"
+  - name: allow_zero_valuation_rate
+    label: Allow Zero Valuation Rate
+    type: boolean
+    observed_as: allow_zero_valuation_rate
+    default: "0"
+  - name: net_rate
+    label: Net Rate
+    type: money
+    observed_as: net_rate
+  - name: net_amount
+    label: Net Amount
+    type: money
+    observed_as: net_amount
+  - name: base_net_rate
+    label: Net Rate (Company Currency)
+    type: money
+    observed_as: base_net_rate
+  - name: base_net_amount
+    label: Net Amount (Company Currency)
+    type: money
+    observed_as: base_net_amount
+  - name: valuation_rate
+    label: Valuation Rate
+    type: money
+    observed_as: valuation_rate
+  - name: sales_incoming_rate
+    label: Sales Incoming Rate
+    type: money
+    observed_as: sales_incoming_rate
+  - name: item_tax_amount
+    label: Item Tax Amount Included in Value
+    type: money
+    observed_as: item_tax_amount
+  - name: landed_cost_voucher_amount
+    label: Landed Cost Voucher Amount
+    type: money
+    observed_as: landed_cost_voucher_amount
+  - name: rm_supp_cost
+    label: Raw Materials Supplied Cost
+    type: money
+    observed_as: rm_supp_cost
+  - name: warehouse
+    label: Accepted Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: serial_and_batch_bundle
+    label: Serial and Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: use_serial_batch_fields
+    label: Use Serial No / Batch Fields
+    type: boolean
+    observed_as: use_serial_batch_fields
+    default: "0"
+  - name: from_warehouse
+    label: From Warehouse
+    type: ref
+    observed_as: from_warehouse
+    ref: Warehouse
+  - name: quality_inspection
+    label: Quality Inspection
+    type: ref
+    observed_as: quality_inspection
+    ref: QualityInspection
+  - name: rejected_warehouse
+    label: Rejected Warehouse
+    type: ref
+    observed_as: rejected_warehouse
+    ref: Warehouse
+  - name: rejected_serial_and_batch_bundle
+    label: Rejected Serial and Batch Bundle
+    type: ref
+    observed_as: rejected_serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: rejected_serial_no
+    label: Rejected Serial No
+    type: text
+    observed_as: rejected_serial_no
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: manufacturer
+    label: Manufacturer
+    type: ref
+    observed_as: manufacturer
+    ref: Manufacturer
+  - name: manufacturer_part_no
+    label: Manufacturer Part Number
+    type: string
+    observed_as: manufacturer_part_no
+  - name: expense_account
+    label: Expense Head
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: wip_composite_asset
+    label: WIP Composite Asset
+    type: ref
+    observed_as: wip_composite_asset
+    ref: Asset
+  - name: is_fixed_asset
+    label: Is Fixed Asset
+    type: boolean
+    observed_as: is_fixed_asset
+    default: "0"
+  - name: asset_location
+    label: Asset Location
+    type: ref
+    observed_as: asset_location
+    ref: Location
+  - name: asset_category
+    label: Asset Category
+    type: ref
+    observed_as: asset_category
+    ref: AssetCategory
+  - name: deferred_expense_account
+    label: Deferred Expense Account
+    type: ref
+    observed_as: deferred_expense_account
+    ref: Account
+  - name: service_stop_date
+    label: Service Stop Date
+    type: date
+    observed_as: service_stop_date
+  - name: enable_deferred_expense
+    label: Enable Deferred Expense
+    type: boolean
+    observed_as: enable_deferred_expense
+    default: "0"
+  - name: service_start_date
+    label: Service Start Date
+    type: date
+    observed_as: service_start_date
+  - name: service_end_date
+    label: Service End Date
+    type: date
+    observed_as: service_end_date
+  - name: item_tax_rate
+    label: Item Tax Rate
+    type: text
+    observed_as: item_tax_rate
+  - name: bom
+    label: BOM
+    type: ref
+    observed_as: bom
+    ref: BOM
+  - name: include_exploded_items
+    label: Include Exploded Items
+    type: boolean
+    observed_as: include_exploded_items
+    default: "0"
+  - name: purchase_invoice_item
+    label: Purchase Invoice Item
+    type: string
+    observed_as: purchase_invoice_item
+  - name: purchase_order
+    label: Purchase Order
+    type: ref
+    observed_as: purchase_order
+    ref: PurchaseOrder
+  - name: po_detail
+    label: Purchase Order Item
+    type: string
+    observed_as: po_detail
+  - name: purchase_receipt
+    label: Purchase Receipt
+    type: ref
+    observed_as: purchase_receipt
+    ref: PurchaseReceipt
+  - name: pr_detail
+    label: Purchase Receipt Detail
+    type: string
+    observed_as: pr_detail
+  - name: sales_invoice_item
+    label: Sales Invoice Item
+    type: string
+    observed_as: sales_invoice_item
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: material_request_item
+    label: Material Request Item
+    type: string
+    observed_as: material_request_item
+  - name: delivered_by_supplier
+    label: Delivered by Supplier
+    type: boolean
+    observed_as: delivered_by_supplier
+    default: "0"
+  - name: weight_per_unit
+    label: Weight Per Unit
+    type: decimal
+    observed_as: weight_per_unit
+  - name: total_weight
+    label: Total Weight
+    type: decimal
+    observed_as: total_weight
+  - name: weight_uom
+    label: Weight UOM
+    type: ref
+    observed_as: weight_uom
+    ref: UOM
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+    default: :Company
+  - name: page_break
+    label: Page Break
+    type: boolean
+    observed_as: page_break
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: ProductBundle
+    kind: many-to-one
+    via: product_bundle
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: ItemTaxTemplate
+    kind: many-to-one
+    via: item_tax_template
+  - to: TaxWithholdingCategory
+    kind: many-to-one
+    via: tax_withholding_category
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+  - to: Warehouse
+    kind: many-to-one
+    via: from_warehouse
+  - to: QualityInspection
+    kind: many-to-one
+    via: quality_inspection
+  - to: Warehouse
+    kind: many-to-one
+    via: rejected_warehouse
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: rejected_serial_and_batch_bundle
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: Manufacturer
+    kind: many-to-one
+    via: manufacturer
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: Asset
+    kind: many-to-one
+    via: wip_composite_asset
+  - to: Location
+    kind: many-to-one
+    via: asset_location
+  - to: AssetCategory
+    kind: many-to-one
+    via: asset_category
+  - to: Account
+    kind: many-to-one
+    via: deferred_expense_account
+  - to: BOM
+    kind: many-to-one
+    via: bom
+  - to: PurchaseOrder
+    kind: many-to-one
+    via: purchase_order
+  - to: PurchaseReceipt
+    kind: many-to-one
+    via: purchase_receipt
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+  - to: UOM
+    kind: many-to-one
+    via: weight_uom
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPurchase Invoice Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Purchase Invoice Item
+    note: declared by the program and served by its API

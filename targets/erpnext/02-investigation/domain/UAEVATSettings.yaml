@@ -1,0 +1,27 @@
+name: UAEVATSettings
+description: Document type "UAE VAT Settings" (module Regional).
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    unique: true
+    ref: Company
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: UAEVATAccount
+    kind: one-to-many
+    via: uae_vat_accounts
+    description: lines (UAE VAT Accounts)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUAE VAT Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of UAE VAT Settings
+    note: declared by the program and served by its API

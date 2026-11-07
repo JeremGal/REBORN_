@@ -1,0 +1,356 @@
+name: WorkOrder
+description: 'An order to make a quantity of an item. Document type "Work Order" (module Manufacturing): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MFG-WO-.YYYY.-
+  - name: production_item
+    label: Item To Manufacture
+    type: ref
+    observed_as: production_item
+    required: true
+    ref: Item
+  - name: bom_no
+    label: BOM No
+    type: ref
+    observed_as: bom_no
+    required: true
+    ref: BOM
+  - name: qty
+    label: Qty To Manufacture
+    type: decimal
+    observed_as: qty
+    required: true
+    default: "1.0"
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    ref: SalesOrder
+  - name: reserve_stock
+    label: Reserve Stock
+    type: boolean
+    observed_as: reserve_stock
+    default: "0"
+  - name: allow_alternative_item
+    label: Allow Alternative Item
+    type: boolean
+    observed_as: allow_alternative_item
+    default: "0"
+  - name: produced_qty
+    label: Manufactured Qty
+    type: decimal
+    observed_as: produced_qty
+    default: "0"
+  - name: process_loss_qty
+    label: Process Loss Qty
+    type: decimal
+    observed_as: process_loss_qty
+  - name: disassembled_qty
+    label: Disassembled Qty
+    type: decimal
+    observed_as: disassembled_qty
+  - name: material_transferred_for_manufacturing
+    label: Material Transferred for Manufacturing
+    type: decimal
+    observed_as: material_transferred_for_manufacturing
+    default: "0"
+  - name: additional_transferred_qty
+    label: Additional Transferred Qty
+    type: decimal
+    observed_as: additional_transferred_qty
+    default: "0"
+  - name: max_producible_qty
+    label: Max Producible Qty
+    type: decimal
+    observed_as: max_producible_qty
+  - name: wip_warehouse
+    label: Work-in-Progress Warehouse
+    type: ref
+    observed_as: wip_warehouse
+    ref: Warehouse
+  - name: fg_warehouse
+    label: Target Warehouse
+    type: ref
+    observed_as: fg_warehouse
+    ref: Warehouse
+  - name: scrap_warehouse
+    label: Scrap Warehouse
+    type: ref
+    observed_as: scrap_warehouse
+    ref: Warehouse
+  - name: skip_transfer
+    label: Skip Material Transfer to WIP Warehouse
+    type: boolean
+    observed_as: skip_transfer
+    default: "0"
+  - name: from_wip_warehouse
+    label: Backflush Raw Materials From Work-in-Progress Warehouse
+    type: boolean
+    observed_as: from_wip_warehouse
+    default: "0"
+  - name: transfer_material_against
+    label: Transfer Material Against
+    type: enum
+    observed_as: transfer_material_against
+    enum_values:
+      - Work Order
+      - Job Card
+  - name: use_multi_level_bom
+    label: Use Multi-Level BOM
+    type: boolean
+    observed_as: use_multi_level_bom
+    default: "1"
+  - name: source_warehouse
+    label: Default source Warehouse
+    type: ref
+    observed_as: source_warehouse
+    ref: Warehouse
+  - name: planned_start_date
+    label: Planned Start Date
+    type: datetime
+    observed_as: planned_start_date
+    required: true
+    default: now
+  - name: planned_end_date
+    label: Planned End Date
+    type: datetime
+    observed_as: planned_end_date
+  - name: expected_delivery_date
+    label: Expected Delivery Date
+    type: date
+    observed_as: expected_delivery_date
+  - name: actual_start_date
+    label: Actual Start Date
+    type: datetime
+    observed_as: actual_start_date
+  - name: actual_end_date
+    label: Actual End Date
+    type: datetime
+    observed_as: actual_end_date
+  - name: lead_time
+    label: Lead Time
+    type: decimal
+    observed_as: lead_time
+  - name: planned_operating_cost
+    label: Planned Operating Cost
+    type: money
+    observed_as: planned_operating_cost
+  - name: actual_operating_cost
+    label: Actual Operating Cost
+    type: money
+    observed_as: actual_operating_cost
+  - name: additional_operating_cost
+    label: Additional Operating Cost
+    type: money
+    observed_as: additional_operating_cost
+  - name: corrective_operation_cost
+    label: Corrective Operation Cost
+    type: money
+    observed_as: corrective_operation_cost
+  - name: total_operating_cost
+    label: Total Operating Cost
+    type: money
+    observed_as: total_operating_cost
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: description
+    label: Item Description
+    type: text
+    observed_as: description
+  - name: has_serial_no
+    label: Has Serial No
+    type: boolean
+    observed_as: has_serial_no
+    default: "0"
+  - name: has_batch_no
+    label: Has Batch No
+    type: boolean
+    observed_as: has_batch_no
+    default: "0"
+  - name: batch_size
+    label: Batch Size
+    type: decimal
+    observed_as: batch_size
+    default: "0"
+  - name: update_consumed_material_cost_in_project
+    label: Update Consumed Material Cost In Project
+    type: boolean
+    observed_as: update_consumed_material_cost_in_project
+    default: "1"
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: subcontracting_inward_order
+    label: Subcontracting Inward Order
+    type: ref
+    observed_as: subcontracting_inward_order
+    ref: SubcontractingInwardOrder
+  - name: production_plan
+    label: Production Plan
+    type: ref
+    observed_as: production_plan
+    ref: ProductionPlan
+  - name: mps
+    label: MPS
+    type: ref
+    observed_as: mps
+    ref: MasterProductionSchedule
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: material_request_item
+    label: Material Request Item
+    type: string
+    observed_as: material_request_item
+  - name: subcontracting_inward_order_item
+    label: Subcontracting Inward Order Item
+    type: string
+    observed_as: subcontracting_inward_order_item
+  - name: sales_order_item
+    label: Sales Order Item
+    type: string
+    observed_as: sales_order_item
+  - name: production_plan_sub_assembly_item
+    label: Production Plan Sub Assembly Item
+    type: string
+    observed_as: production_plan_sub_assembly_item
+  - name: production_plan_item
+    label: Production Plan Item
+    type: string
+    observed_as: production_plan_item
+  - name: product_bundle_item
+    label: Product Bundle Item
+    type: ref
+    observed_as: product_bundle_item
+    ref: Item
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - Submitted
+      - Not Started
+      - In Process
+      - Stock Reserved
+      - Stock Partially Reserved
+      - Completed
+      - Stopped
+      - Closed
+      - Cancelled
+    default: Draft
+  - name: track_semi_finished_goods
+    label: Produce Item per Operation
+    type: boolean
+    observed_as: track_semi_finished_goods
+    default: "0"
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: WorkOrder
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Item
+    kind: many-to-one
+    via: production_item
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: Warehouse
+    kind: many-to-one
+    via: wip_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: fg_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: scrap_warehouse
+  - to: WorkOrderOperation
+    kind: one-to-many
+    via: operations
+    description: lines (Operations)
+  - to: Warehouse
+    kind: many-to-one
+    via: source_warehouse
+  - to: WorkOrderItem
+    kind: one-to-many
+    via: required_items
+    description: lines (required_items)
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: WorkOrderAdditionalItem
+    kind: one-to-many
+    via: non_stock_items
+    description: lines (Additional Costs (as per BOM))
+  - to: WorkOrderAdditionalItem
+    kind: one-to-many
+    via: secondary_items
+    description: lines (Secondary Items (as per BOM))
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: SubcontractingInwardOrder
+    kind: many-to-one
+    via: subcontracting_inward_order
+  - to: ProductionPlan
+    kind: many-to-one
+    via: production_plan
+  - to: MasterProductionSchedule
+    kind: many-to-one
+    via: mps
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+  - to: Item
+    kind: many-to-one
+    via: product_bundle_item
+  - to: WorkOrder
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWork Order
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Work Order
+    note: declared by the program and served by its API

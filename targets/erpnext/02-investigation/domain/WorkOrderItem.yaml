@@ -1,0 +1,129 @@
+name: WorkOrderItem
+description: 'Document type "Work Order Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: operation
+    label: Operation
+    type: ref
+    observed_as: operation
+    ref: Operation
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: source_warehouse
+    label: Source Warehouse
+    type: ref
+    observed_as: source_warehouse
+    ref: Warehouse
+  - name: operation_row_id
+    label: Operation Row Id
+    type: integer
+    observed_as: operation_row_id
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: allow_alternative_item
+    label: Allow Alternative Item
+    type: boolean
+    observed_as: allow_alternative_item
+    default: "0"
+  - name: include_item_in_manufacturing
+    label: Include Item In Manufacturing
+    type: boolean
+    observed_as: include_item_in_manufacturing
+    default: "0"
+  - name: required_qty
+    label: Required Qty
+    type: decimal
+    observed_as: required_qty
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: transferred_qty
+    label: Transferred Qty
+    type: decimal
+    observed_as: transferred_qty
+  - name: requested_qty
+    label: Requested Qty
+    type: decimal
+    observed_as: requested_qty
+  - name: picked_qty
+    label: Picked Qty
+    type: decimal
+    observed_as: picked_qty
+  - name: consumed_qty
+    label: Consumed Qty
+    type: decimal
+    observed_as: consumed_qty
+  - name: returned_qty
+    label: "Returned Qty "
+    type: decimal
+    observed_as: returned_qty
+  - name: subcontracted_qty
+    label: Subcontracted Qty
+    type: decimal
+    observed_as: subcontracted_qty
+  - name: available_qty_at_source_warehouse
+    label: Available Qty at Source Warehouse
+    type: decimal
+    observed_as: available_qty_at_source_warehouse
+  - name: available_qty_at_wip_warehouse
+    label: Available Qty at WIP Warehouse
+    type: decimal
+    observed_as: available_qty_at_wip_warehouse
+  - name: stock_reserved_qty
+    label: Stock Reserved Qty
+    type: decimal
+    observed_as: stock_reserved_qty
+  - name: is_additional_item
+    label: Is Additional Item
+    type: boolean
+    observed_as: is_additional_item
+    default: "0"
+  - name: is_customer_provided_item
+    label: Is Customer Provided Item
+    type: boolean
+    observed_as: is_customer_provided_item
+    default: "0"
+  - name: voucher_detail_reference
+    label: Voucher Detail Reference
+    type: string
+    observed_as: voucher_detail_reference
+relations:
+  - to: Operation
+    kind: many-to-one
+    via: operation
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: source_warehouse
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWork Order Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Work Order Item
+    note: declared by the program and served by its API

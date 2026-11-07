@@ -1,0 +1,85 @@
+name: Recorder
+description: Document type "Recorder" (module Core).
+fields:
+  - name: path
+    label: Path
+    type: string
+    observed_as: path
+  - name: number_of_queries
+    label: Number of Queries
+    type: integer
+    observed_as: number_of_queries
+  - name: time_in_queries
+    label: Time in Queries
+    type: decimal
+    observed_as: time_in_queries
+  - name: number_of_events
+    label: Number of Events
+    type: integer
+    observed_as: number_of_events
+  - name: method
+    label: Method
+    type: enum
+    observed_as: method
+    enum_values:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - PATCH
+      - HEAD
+      - OPTIONS
+  - name: cmd
+    label: CMD
+    type: string
+    observed_as: cmd
+  - name: time
+    label: Time
+    type: datetime
+    observed_as: time
+  - name: duration
+    label: Duration
+    type: decimal
+    observed_as: duration
+  - name: event_type
+    label: Event Type
+    type: string
+    observed_as: event_type
+  - name: apps_involved
+    label: Apps Involved
+    type: string
+    observed_as: apps_involved
+  - name: request_headers
+    label: Request Headers
+    type: text
+    observed_as: request_headers
+  - name: form_dict
+    label: Form Dict
+    type: text
+    observed_as: form_dict
+  - name: profile
+    label: cProfile Output
+    type: text
+    observed_as: profile
+relations:
+  - to: RecorderEvent
+    kind: one-to-many
+    via: timeline
+    description: lines (Timeline)
+  - to: RecorderSuggestedIndex
+    kind: one-to-many
+    via: suggested_indexes
+    description: lines (Suggested Indexes)
+  - to: RecorderQuery
+    kind: one-to-many
+    via: sql_queries
+    description: lines (SQL Queries)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRecorder
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Recorder
+    note: declared by the program and served by its API

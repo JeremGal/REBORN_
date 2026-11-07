@@ -1,0 +1,27 @@
+name: BankTransactionRuleDescriptionConditions
+description: 'Document type "Bank Transaction Rule Description Conditions" (module Accounts): lines of another document.'
+fields:
+  - name: check
+    label: Check
+    type: enum
+    observed_as: check
+    required: true
+    enum_values:
+      - Contains
+      - Starts With
+      - Ends With
+      - Regex
+  - name: value
+    label: Value
+    type: text
+    observed_as: value
+    required: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Transaction Rule Description Conditions
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Transaction Rule Description Conditions
+    note: declared by the program and served by its API

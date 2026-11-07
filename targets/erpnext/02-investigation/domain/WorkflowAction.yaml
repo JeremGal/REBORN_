@@ -1,0 +1,64 @@
+name: WorkflowAction
+description: Document type "Workflow Action" (module Workflow).
+fields:
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Open
+      - Completed
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: workflow_state
+    label: Workflow State
+    type: string
+    observed_as: workflow_state
+  - name: completed_by_role
+    label: Completed By Role
+    type: ref
+    observed_as: completed_by_role
+    ref: Role
+  - name: completed_by
+    label: Completed By User
+    type: ref
+    observed_as: completed_by
+    ref: User
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: Role
+    kind: many-to-one
+    via: completed_by_role
+  - to: User
+    kind: many-to-one
+    via: completed_by
+  - to: WorkflowActionPermittedRole
+    kind: one-to-many
+    via: permitted_roles
+    description: lines (Permitted Roles)
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkflow Action
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workflow Action
+    note: declared by the program and served by its API

@@ -1,0 +1,126 @@
+name: RequestForQuotationItem
+description: 'Document type "Request for Quotation Item" (module Buying): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: supplier_part_no
+    label: Supplier Part No
+    type: string
+    observed_as: supplier_part_no
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: schedule_date
+    label: Required Date
+    type: date
+    observed_as: schedule_date
+    required: true
+    default: Today
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: brand
+    label: Brand
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: conversion_factor
+    label: UOM Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    required: true
+    precision: 9
+  - name: stock_qty
+    label: Qty as per Stock UOM
+    type: decimal
+    observed_as: stock_qty
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: material_request_item
+    label: Material Request Item
+    type: string
+    observed_as: material_request_item
+  - name: project_name
+    label: Project
+    type: ref
+    observed_as: project_name
+    ref: Project
+  - name: page_break
+    label: Page Break
+    type: boolean
+    observed_as: page_break
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+  - to: Project
+    kind: many-to-one
+    via: project_name
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRequest for Quotation Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Request for Quotation Item
+    note: declared by the program and served by its API

@@ -1,0 +1,62 @@
+name: StockClosingEntry
+description: 'Closes stock balances for a period so reports run faster. Document type "Stock Closing Entry" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Naming Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - CBAL-.#####
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Queued
+      - In Progress
+      - Completed
+      - Outdated
+      - Failed
+      - Cancelled
+    default: Draft
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+    required: true
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: StockClosingEntry
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: StockClosingEntry
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Closing Entry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Closing Entry
+    note: declared by the program and served by its API

@@ -1,0 +1,56 @@
+name: ListViewSettings
+description: Document type "List View Settings" (module Desk).
+fields:
+  - name: disable_count
+    label: Disable Count
+    type: boolean
+    observed_as: disable_count
+    default: "0"
+  - name: disable_auto_refresh
+    label: Disable Auto Refresh
+    type: boolean
+    observed_as: disable_auto_refresh
+    default: "0"
+  - name: disable_sidebar_stats
+    label: Disable Sidebar Stats
+    type: boolean
+    observed_as: disable_sidebar_stats
+    default: "0"
+  - name: disable_automatic_recency_filters
+    label: Disable Automatic Recency Filters
+    type: boolean
+    observed_as: disable_automatic_recency_filters
+    default: "0"
+  - name: show_tags
+    label: Show Tags
+    type: boolean
+    observed_as: show_tags
+    default: "0"
+  - name: disable_comment_count
+    label: Disable Comment Count
+    type: boolean
+    observed_as: disable_comment_count
+    default: "0"
+  - name: disable_scrolling
+    label: Disable Scrolling
+    type: boolean
+    observed_as: disable_scrolling
+    default: "0"
+  - name: allow_edit
+    label: Allow Bulk Editing
+    type: boolean
+    observed_as: allow_edit
+    default: "0"
+  - name: fields
+    label: Fields
+    type: text
+    observed_as: fields
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabList View Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of List View Settings
+    note: declared by the program and served by its API

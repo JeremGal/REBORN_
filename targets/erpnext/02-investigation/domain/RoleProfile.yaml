@@ -1,0 +1,23 @@
+name: RoleProfile
+description: Document type "Role Profile" (module Core).
+fields:
+  - name: role_profile
+    label: Role Name
+    type: string
+    observed_as: role_profile
+    required: true
+    unique: true
+relations:
+  - to: HasRole
+    kind: one-to-many
+    via: roles
+    description: lines (Roles Assigned)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRole Profile
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Role Profile
+    note: declared by the program and served by its API

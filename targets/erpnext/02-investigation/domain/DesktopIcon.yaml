@@ -1,0 +1,103 @@
+name: DesktopIcon
+description: Document type "Desktop Icon" (module Desk).
+fields:
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+    unique: true
+  - name: icon_type
+    label: Icon Type
+    type: enum
+    observed_as: icon_type
+    enum_values:
+      - Link
+      - Folder
+      - App
+  - name: link_type
+    label: Link Type
+    type: enum
+    observed_as: link_type
+    enum_values:
+      - Workspace Sidebar
+      - External
+  - name: link_to
+    label: Link To
+    type: string
+    observed_as: link_to
+  - name: parent_icon
+    label: Parent Icon
+    type: ref
+    observed_as: parent_icon
+    ref: DesktopIcon
+  - name: sidebar
+    label: Sidebar
+    type: ref
+    observed_as: sidebar
+    ref: WorkspaceSidebar
+  - name: icon_image
+    label: Icon Image
+    type: file
+    observed_as: icon_image
+  - name: standard
+    label: Standard
+    type: boolean
+    observed_as: standard
+    default: "0"
+  - name: app
+    label: App
+    type: string
+    observed_as: app
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: logo_url
+    label: Logo URL
+    type: string
+    observed_as: logo_url
+  - name: idx
+    label: Idx
+    type: integer
+    observed_as: idx
+  - name: link
+    label: Link
+    type: text
+    observed_as: link
+  - name: hidden
+    label: Hidden
+    type: boolean
+    observed_as: hidden
+    default: "0"
+  - name: restrict_removal
+    label: Restrict Removal
+    type: boolean
+    observed_as: restrict_removal
+    default: "0"
+  - name: bg_color
+    label: Background Color
+    type: enum
+    observed_as: bg_color
+    enum_values:
+      - gray
+      - blue
+relations:
+  - to: DesktopIcon
+    kind: many-to-one
+    via: parent_icon
+  - to: WorkspaceSidebar
+    kind: many-to-one
+    via: sidebar
+  - to: HasRole
+    kind: one-to-many
+    via: roles
+    description: lines (Roles)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDesktop Icon
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Desktop Icon
+    note: declared by the program and served by its API

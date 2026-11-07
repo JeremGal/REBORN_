@@ -1,0 +1,51 @@
+name: Shareholder
+description: A person or company that owns shares in your company. Document type "Shareholder" (module Accounts).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: naming_series
+    label: ""
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - ACC-SH-.YYYY.-
+  - name: folio_no
+    label: Folio no.
+    type: string
+    observed_as: folio_no
+    unique: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: is_company
+    label: Is Company
+    type: boolean
+    observed_as: is_company
+    default: "0"
+  - name: contact_list
+    label: Contact List
+    type: text
+    observed_as: contact_list
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: ShareBalance
+    kind: one-to-many
+    via: share_balance
+    description: lines (Share Balance)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabShareholder
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Shareholder
+    note: declared by the program and served by its API

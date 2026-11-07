@@ -1,0 +1,95 @@
+name: OpeningInvoiceCreationToolItem
+description: 'Document type "Opening Invoice Creation Tool Item" (module Accounts): lines of another document.'
+fields:
+  - name: invoice_number
+    label: Invoice Number
+    type: string
+    observed_as: invoice_number
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: DocType
+  - name: party
+    label: Party ID
+    type: string
+    observed_as: party
+  - name: party_name
+    label: Party Name
+    type: string
+    observed_as: party_name
+  - name: temporary_opening_account
+    label: Temporary Opening Account
+    type: ref
+    observed_as: temporary_opening_account
+    ref: Account
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    default: Today
+  - name: due_date
+    label: Due Date
+    type: date
+    observed_as: due_date
+    default: Today
+  - name: supplier_invoice_date
+    label: Supplier Invoice Date
+    type: date
+    observed_as: supplier_invoice_date
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+    default: Opening Invoice Item
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: outstanding_amount
+    label: Outstanding Amount
+    type: money
+    observed_as: outstanding_amount
+    required: true
+    default: "0"
+  - name: qty
+    label: Quantity
+    type: string
+    observed_as: qty
+    default: "1"
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: Account
+    kind: many-to-one
+    via: temporary_opening_account
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOpening Invoice Creation Tool Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Opening Invoice Creation Tool Item
+    note: declared by the program and served by its API

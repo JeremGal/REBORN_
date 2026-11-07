@@ -1,0 +1,34 @@
+name: ItemWiseTaxDetail
+description: 'Document type "Item Wise Tax Detail" (module Accounts): lines of another document.'
+fields:
+  - name: item_row
+    label: Item Row
+    type: string
+    observed_as: item_row
+    required: true
+  - name: tax_row
+    label: Tax Row
+    type: string
+    observed_as: tax_row
+    required: true
+  - name: rate
+    label: Tax Rate
+    type: decimal
+    observed_as: rate
+  - name: amount
+    label: Tax Amount
+    type: money
+    observed_as: amount
+  - name: taxable_amount
+    label: Taxable Amount
+    type: money
+    observed_as: taxable_amount
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Wise Tax Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Wise Tax Detail
+    note: declared by the program and served by its API

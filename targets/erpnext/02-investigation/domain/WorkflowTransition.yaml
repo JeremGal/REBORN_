@@ -1,0 +1,75 @@
+name: WorkflowTransition
+description: 'Defines actions on states and the next step and allowed roles. Document type "Workflow Transition" (module Workflow): lines of another document.'
+fields:
+  - name: state
+    label: State
+    type: ref
+    observed_as: state
+    required: true
+    ref: WorkflowState
+  - name: action
+    label: Action
+    type: ref
+    observed_as: action
+    required: true
+    ref: WorkflowActionMaster
+  - name: next_state
+    label: Next State
+    type: ref
+    observed_as: next_state
+    required: true
+    ref: WorkflowState
+  - name: allowed
+    label: Allowed
+    type: ref
+    observed_as: allowed
+    required: true
+    ref: Role
+  - name: allow_self_approval
+    label: Allow Self Approval
+    type: boolean
+    observed_as: allow_self_approval
+    default: "1"
+  - name: send_email_to_creator
+    label: Send Email To Creator
+    type: boolean
+    observed_as: send_email_to_creator
+    default: "0"
+  - name: transition_tasks
+    label: Transition Tasks
+    type: ref
+    observed_as: transition_tasks
+    ref: WorkflowTransitionTasks
+  - name: condition
+    label: Condition
+    type: text
+    observed_as: condition
+  - name: workflow_builder_id
+    label: Workflow Builder ID
+    type: string
+    observed_as: workflow_builder_id
+relations:
+  - to: WorkflowState
+    kind: many-to-one
+    via: state
+  - to: WorkflowActionMaster
+    kind: many-to-one
+    via: action
+  - to: WorkflowState
+    kind: many-to-one
+    via: next_state
+  - to: Role
+    kind: many-to-one
+    via: allowed
+  - to: WorkflowTransitionTasks
+    kind: many-to-one
+    via: transition_tasks
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkflow Transition
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workflow Transition
+    note: declared by the program and served by its API

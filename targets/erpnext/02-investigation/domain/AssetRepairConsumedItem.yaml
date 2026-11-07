@@ -1,0 +1,55 @@
+name: AssetRepairConsumedItem
+description: 'Document type "Asset Repair Consumed Item" (module Assets): lines of another document.'
+fields:
+  - name: item_code
+    label: Item
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: valuation_rate
+    label: Valuation Rate
+    type: money
+    observed_as: valuation_rate
+  - name: consumed_quantity
+    label: Consumed Quantity
+    type: string
+    observed_as: consumed_quantity
+  - name: total_value
+    label: Total Value
+    type: money
+    observed_as: total_value
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: serial_and_batch_bundle
+    label: Serial and Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Repair Consumed Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Repair Consumed Item
+    note: declared by the program and served by its API

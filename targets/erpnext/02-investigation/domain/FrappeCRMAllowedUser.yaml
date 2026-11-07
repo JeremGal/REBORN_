@@ -1,0 +1,22 @@
+name: FrappeCRMAllowedUser
+description: 'Document type "Frappe CRM Allowed User" (module CRM): lines of another document.'
+fields:
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    required: true
+    ref: User
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabFrappe CRM Allowed User
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Frappe CRM Allowed User
+    note: declared by the program and served by its API

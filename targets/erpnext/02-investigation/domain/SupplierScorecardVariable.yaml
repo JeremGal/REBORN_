@@ -1,0 +1,38 @@
+name: SupplierScorecardVariable
+description: A value a scorecard criterion is calculated from. Document type "Supplier Scorecard Variable" (module Buying).
+fields:
+  - name: variable_label
+    label: Variable Name
+    type: string
+    observed_as: variable_label
+    required: true
+    unique: true
+  - name: is_custom
+    label: Custom?
+    type: boolean
+    observed_as: is_custom
+    default: "0"
+  - name: param_name
+    label: Parameter Name
+    type: string
+    observed_as: param_name
+    required: true
+    unique: true
+  - name: path
+    label: Path
+    type: string
+    observed_as: path
+    required: true
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSupplier Scorecard Variable
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Supplier Scorecard Variable
+    note: declared by the program and served by its API

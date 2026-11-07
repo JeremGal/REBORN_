@@ -1,0 +1,53 @@
+name: PaymentEntryDeduction
+description: 'Document type "Payment Entry Deduction" (module Accounts): lines of another document.'
+fields:
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    required: true
+    ref: CostCenter
+  - name: amount
+    label: Amount (Company Currency)
+    type: money
+    observed_as: amount
+    required: true
+  - name: is_exchange_gain_loss
+    label: Is Exchange Gain / Loss?
+    type: boolean
+    observed_as: is_exchange_gain_loss
+    default: "0"
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: dunning
+    label: Dunning
+    type: ref
+    observed_as: dunning
+    ref: Dunning
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Dunning
+    kind: many-to-one
+    via: dunning
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Entry Deduction
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Entry Deduction
+    note: declared by the program and served by its API

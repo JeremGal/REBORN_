@@ -1,0 +1,42 @@
+name: SalesTeam
+description: 'Document type "Sales Team" (module Selling): lines of another document.'
+fields:
+  - name: sales_person
+    label: Sales Person
+    type: ref
+    observed_as: sales_person
+    required: true
+    ref: SalesPerson
+  - name: contact_no
+    label: Contact No.
+    type: string
+    observed_as: contact_no
+  - name: allocated_percentage
+    label: Contribution (%)
+    type: decimal
+    observed_as: allocated_percentage
+  - name: allocated_amount
+    label: Contribution to Net Total
+    type: money
+    observed_as: allocated_amount
+  - name: commission_rate
+    label: Commission Rate
+    type: string
+    observed_as: commission_rate
+  - name: incentives
+    label: Incentives
+    type: money
+    observed_as: incentives
+relations:
+  - to: SalesPerson
+    kind: many-to-one
+    via: sales_person
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSales Team
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sales Team
+    note: declared by the program and served by its API

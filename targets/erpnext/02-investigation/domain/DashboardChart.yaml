@@ -1,0 +1,213 @@
+name: DashboardChart
+description: Document type "Dashboard Chart" (module Desk).
+fields:
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: chart_name
+    label: Chart Name
+    type: string
+    observed_as: chart_name
+    required: true
+    unique: true
+  - name: chart_type
+    label: Chart Type
+    type: enum
+    observed_as: chart_type
+    enum_values:
+      - Count
+      - Sum
+      - Average
+      - Group By
+      - Custom
+      - Report
+  - name: report_name
+    label: Report Name
+    type: ref
+    observed_as: report_name
+    ref: Report
+  - name: use_report_chart
+    label: Use Report Chart
+    type: boolean
+    observed_as: use_report_chart
+    default: "0"
+  - name: x_field
+    label: X Field
+    type: string
+    observed_as: x_field
+  - name: source
+    label: Chart Source
+    type: ref
+    observed_as: source
+    ref: DashboardChartSource
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    ref: DocType
+  - name: parent_document_type
+    label: Parent Document Type
+    type: ref
+    observed_as: parent_document_type
+    ref: DocType
+  - name: based_on
+    label: Time Series Based On
+    type: string
+    observed_as: based_on
+  - name: value_based_on
+    label: Value Based On
+    type: string
+    observed_as: value_based_on
+  - name: group_by_type
+    label: Group By Type
+    type: enum
+    observed_as: group_by_type
+    enum_values:
+      - Count
+      - Sum
+      - Average
+    default: Count
+  - name: group_by_based_on
+    label: Group By Based On
+    type: string
+    observed_as: group_by_based_on
+  - name: aggregate_function_based_on
+    label: Aggregate Function Based On
+    type: string
+    observed_as: aggregate_function_based_on
+  - name: number_of_groups
+    label: Number of Groups
+    type: integer
+    observed_as: number_of_groups
+  - name: is_public
+    label: Is Public
+    type: boolean
+    observed_as: is_public
+    default: "0"
+  - name: heatmap_year
+    label: Year
+    type: string
+    observed_as: heatmap_year
+  - name: timespan
+    label: Timespan
+    type: enum
+    observed_as: timespan
+    enum_values:
+      - Last Year
+      - Last Quarter
+      - Last Month
+      - Last Week
+      - Select Date Range
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+  - name: time_interval
+    label: Time Interval
+    type: enum
+    observed_as: time_interval
+    enum_values:
+      - Yearly
+      - Quarterly
+      - Monthly
+      - Weekly
+      - Daily
+  - name: timeseries
+    label: Time Series
+    type: boolean
+    observed_as: timeseries
+    default: "0"
+  - name: type
+    label: Type
+    type: enum
+    observed_as: type
+    enum_values:
+      - Line
+      - Bar
+      - Percentage
+      - Pie
+      - Donut
+      - Heatmap
+    default: Line
+  - name: show_values_over_chart
+    label: Show Values over Chart
+    type: boolean
+    observed_as: show_values_over_chart
+    default: "0"
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: filters_json
+    label: Filters JSON
+    type: text
+    observed_as: filters_json
+    required: true
+  - name: dynamic_filters_json
+    label: Dynamic Filters JSON
+    type: text
+    observed_as: dynamic_filters_json
+  - name: custom_options
+    label: Custom Options
+    type: text
+    observed_as: custom_options
+  - name: color
+    label: Color
+    type: string
+    observed_as: color
+  - name: empty_state_message
+    label: Empty State Message
+    type: text
+    observed_as: empty_state_message
+  - name: last_synced_on
+    label: Last Synced On
+    type: datetime
+    observed_as: last_synced_on
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: Report
+    kind: many-to-one
+    via: report_name
+  - to: DashboardChartField
+    kind: one-to-many
+    via: y_axis
+    description: lines (Y Axis)
+  - to: DashboardChartSource
+    kind: many-to-one
+    via: source
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: DocType
+    kind: many-to-one
+    via: parent_document_type
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: HasRole
+    kind: one-to-many
+    via: roles
+    description: lines (Roles)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDashboard Chart
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Dashboard Chart
+    note: declared by the program and served by its API

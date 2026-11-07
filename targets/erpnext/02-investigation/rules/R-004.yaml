@@ -1,0 +1,18 @@
+id: R-004
+title: Price that already includes the tax
+kind: tax
+statement: >-
+  A tax row can be marked as included in the price. The rate typed on the line is then the price including tax, and the
+  program works the net amount back from it: net = price including tax divided by one plus the tax rate.
+formula: |
+  net_amount = qty * rate_incl_tax / (1 + tax_rate)
+  tax = qty * rate_incl_tax - net_amount
+applies_to: [SalesTaxesAndCharges.included_in_print_rate, SalesInvoiceItem.net_amount]
+features: [F-001]
+examples:
+  - { given: { qty: 3, rate_incl_tax: 12, tax: "20% included" }, expect: { net_total: 30, tax: 6, grand_total: 36 }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 8 (SI-08)" } }
+status: confirmed
+confidence: high
+evidence:
+  - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 8" }
+contradictions: []

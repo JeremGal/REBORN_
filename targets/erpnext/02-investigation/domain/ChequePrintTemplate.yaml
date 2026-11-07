@@ -1,0 +1,162 @@
+name: ChequePrintTemplate
+description: Where each detail goes when you print on your bank's cheque. Document type "Cheque Print Template" (module Accounts).
+fields:
+  - name: has_print_format
+    label: Has Print Format
+    type: boolean
+    observed_as: has_print_format
+    default: "0"
+  - name: print_format_creation
+    label: Print Format Creation
+    type: datetime
+    observed_as: print_format_creation
+  - name: bank_name
+    label: Bank Name
+    type: string
+    observed_as: bank_name
+    required: true
+    unique: true
+  - name: cheque_size
+    label: Cheque Size
+    type: enum
+    observed_as: cheque_size
+    enum_values:
+      - Regular
+      - A4
+    default: Regular
+  - name: starting_position_from_top_edge
+    label: Starting position from top edge
+    type: decimal
+    observed_as: starting_position_from_top_edge
+    precision: 2
+  - name: cheque_width
+    label: Cheque Width
+    type: decimal
+    observed_as: cheque_width
+    precision: 2
+    default: "20.00"
+  - name: cheque_height
+    label: Cheque Height
+    type: decimal
+    observed_as: cheque_height
+    precision: 2
+    default: "9.00"
+  - name: scanned_cheque
+    label: Scanned Cheque
+    type: file
+    observed_as: scanned_cheque
+  - name: is_account_payable
+    label: Is Account Payable
+    type: boolean
+    observed_as: is_account_payable
+    default: "1"
+  - name: acc_pay_dist_from_top_edge
+    label: Distance from top edge
+    type: decimal
+    observed_as: acc_pay_dist_from_top_edge
+    precision: 2
+    default: "1.00"
+  - name: acc_pay_dist_from_left_edge
+    label: Distance from left edge
+    type: decimal
+    observed_as: acc_pay_dist_from_left_edge
+    precision: 2
+    default: "9.00"
+  - name: message_to_show
+    label: Message to show
+    type: string
+    observed_as: message_to_show
+    default: Acc. Payee
+  - name: date_dist_from_top_edge
+    label: Distance from top edge
+    type: decimal
+    observed_as: date_dist_from_top_edge
+    precision: 2
+    default: "1.00"
+  - name: date_dist_from_left_edge
+    label: Starting location from left edge
+    type: decimal
+    observed_as: date_dist_from_left_edge
+    precision: 2
+    default: "15.00"
+  - name: payer_name_from_top_edge
+    label: Distance from top edge
+    type: decimal
+    observed_as: payer_name_from_top_edge
+    precision: 2
+    default: "2.00"
+  - name: payer_name_from_left_edge
+    label: Starting location from left edge
+    type: decimal
+    observed_as: payer_name_from_left_edge
+    precision: 2
+    default: "3.00"
+  - name: amt_in_words_from_top_edge
+    label: Distance from top edge
+    type: decimal
+    observed_as: amt_in_words_from_top_edge
+    precision: 2
+    default: "3.00"
+  - name: amt_in_words_from_left_edge
+    label: Starting location from left edge
+    type: decimal
+    observed_as: amt_in_words_from_left_edge
+    precision: 2
+    default: "4.00"
+  - name: amt_in_word_width
+    label: Width of amount in word
+    type: decimal
+    observed_as: amt_in_word_width
+    precision: 2
+    default: "15.00"
+  - name: amt_in_words_line_spacing
+    label: Line spacing for amount in words
+    type: decimal
+    observed_as: amt_in_words_line_spacing
+    precision: 2
+    default: "0.50"
+  - name: amt_in_figures_from_top_edge
+    label: Distance from top edge
+    type: decimal
+    observed_as: amt_in_figures_from_top_edge
+    precision: 2
+    default: "3.50"
+  - name: amt_in_figures_from_left_edge
+    label: Starting location from left edge
+    type: decimal
+    observed_as: amt_in_figures_from_left_edge
+    precision: 2
+    default: "16.00"
+  - name: acc_no_dist_from_top_edge
+    label: Distance from top edge
+    type: decimal
+    observed_as: acc_no_dist_from_top_edge
+    precision: 2
+    default: "5.00"
+  - name: acc_no_dist_from_left_edge
+    label: Starting location from left edge
+    type: decimal
+    observed_as: acc_no_dist_from_left_edge
+    precision: 2
+    default: "4.00"
+  - name: signatory_from_top_edge
+    label: Distance from top edge
+    type: decimal
+    observed_as: signatory_from_top_edge
+    precision: 2
+    default: "6.00"
+  - name: signatory_from_left_edge
+    label: Starting location from left edge
+    type: decimal
+    observed_as: signatory_from_left_edge
+    precision: 2
+    default: "15.00"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCheque Print Template
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Cheque Print Template
+    note: declared by the program and served by its API

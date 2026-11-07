@@ -1,0 +1,80 @@
+name: AutomationTriggerQueue
+description: Document type "Automation Trigger Queue" (module Automation).
+fields:
+  - name: automation
+    label: Automation Flow
+    type: ref
+    observed_as: automation
+    required: true
+    ref: AutomationFlow
+  - name: ref_doctype
+    label: Reference Document Type
+    type: string
+    observed_as: ref_doctype
+  - name: ref_name
+    label: Reference Name
+    type: string
+    observed_as: ref_name
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Pending
+      - Scheduled
+      - Running
+      - Done
+      - Failed
+      - Skipped
+    default: Pending
+  - name: triggered_at
+    label: Triggered At
+    type: datetime
+    observed_as: triggered_at
+  - name: run_after
+    label: Run After
+    type: datetime
+    observed_as: run_after
+  - name: attempt
+    label: Attempt
+    type: integer
+    observed_as: attempt
+    default: "0"
+  - name: depth
+    label: Recursion Depth
+    type: integer
+    observed_as: depth
+    default: "0"
+  - name: triggered_by
+    label: Triggered By
+    type: ref
+    observed_as: triggered_by
+    ref: User
+  - name: event_payload
+    label: Event Payload
+    type: json
+    observed_as: event_payload
+  - name: resume_run
+    label: Resume Run
+    type: string
+    observed_as: resume_run
+  - name: resume_from_idx
+    label: Resume From Step
+    type: integer
+    observed_as: resume_from_idx
+relations:
+  - to: AutomationFlow
+    kind: many-to-one
+    via: automation
+  - to: User
+    kind: many-to-one
+    via: triggered_by
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAutomation Trigger Queue
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Automation Trigger Queue
+    note: declared by the program and served by its API

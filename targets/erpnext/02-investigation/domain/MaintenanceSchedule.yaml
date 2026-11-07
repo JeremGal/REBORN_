@@ -1,0 +1,124 @@
+name: MaintenanceSchedule
+description: 'Planned visits to service what a customer bought. Document type "Maintenance Schedule" (module Maintenance): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MAT-MSH-.YYYY.-
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - Submitted
+      - Cancelled
+    default: Draft
+  - name: transaction_date
+    label: Transaction Date
+    type: date
+    observed_as: transaction_date
+    required: true
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: contact_person
+    label: Contact Person
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: contact_mobile
+    label: Mobile No
+    type: string
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: string
+    observed_as: contact_email
+  - name: contact_display
+    label: Contact
+    type: text
+    observed_as: contact_display
+  - name: customer_address
+    label: Customer Address
+    type: ref
+    observed_as: customer_address
+    ref: Address
+  - name: address_display
+    label: Address
+    type: text
+    observed_as: address_display
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: MaintenanceSchedule
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: MaintenanceScheduleItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: MaintenanceScheduleDetail
+    kind: one-to-many
+    via: schedules
+    description: lines (Schedules)
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Address
+    kind: many-to-one
+    via: customer_address
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: MaintenanceSchedule
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMaintenance Schedule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Maintenance Schedule
+    note: declared by the program and served by its API

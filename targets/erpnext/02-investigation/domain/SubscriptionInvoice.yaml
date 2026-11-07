@@ -1,0 +1,25 @@
+name: SubscriptionInvoice
+description: 'Document type "Subscription Invoice" (module Accounts): lines of another document.'
+fields:
+  - name: document_type
+    label: "Document Type "
+    type: ref
+    observed_as: document_type
+    ref: DocType
+  - name: invoice
+    label: Invoice
+    type: string
+    observed_as: invoice
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubscription Invoice
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subscription Invoice
+    note: declared by the program and served by its API

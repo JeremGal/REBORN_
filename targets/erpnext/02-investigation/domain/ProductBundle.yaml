@@ -1,0 +1,35 @@
+name: ProductBundle
+description: Sells several items together as one item. Document type "Product Bundle" (module Selling).
+fields:
+  - name: new_item_code
+    label: Parent Item
+    type: ref
+    observed_as: new_item_code
+    required: true
+    ref: Item
+  - name: description
+    label: Description
+    type: string
+    observed_as: description
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: new_item_code
+  - to: ProductBundleItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProduct Bundle
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Product Bundle
+    note: declared by the program and served by its API

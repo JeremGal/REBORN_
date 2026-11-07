@@ -19,5 +19,5 @@ jobs:
         run: npm test
       - name: Forbidden files are not tracked
         run: |
-          bad=$(git ls-files | grep -Ei '\.(exe|dll|msi|asar|har|saz|pcap|pcapng|db|sqlite|sqlite3|mdb|accdb|fic|ndx|gnucash|mmb|dbf|zip|7z|rar|pem|key)$|(^|/)\.evidence/|(^|/)\.env($|\.)|(^|/)reborn\.local\.json$' | grep -v '^\.env\.example$' || true)
+          bad=$(git ls-files | grep -Ei '\.(exe|dll|msi|asar|har|saz|pcap|pcapng|db|sqlite|sqlite3|mdb|accdb|fic|ndx|gnucash|mmb|dbf|zip|7z|rar|pem|key)$|(^|/)\.evidence/|(^|/)\.env($|\.)|(^|/)reborn\.local\.json$' | grep -Ev '(^|/)\.env\.example$' || true)
           if [ -n "$bad" ]; then echo "Forbidden files tracked:"; echo "$bad"; exit 1; fi

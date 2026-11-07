@@ -1,0 +1,110 @@
+name: SidebarItem
+description: 'Document type "Sidebar Item" (module Desk): lines of another document.'
+fields:
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+  - name: link_type
+    label: Link Type
+    type: enum
+    observed_as: link_type
+    enum_values:
+      - DocType
+      - Page
+      - Report
+      - Workspace
+      - Dashboard
+      - URL
+    default: DocType
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: is_default_module
+    label: Is Default Module
+    type: boolean
+    observed_as: is_default_module
+    default: "0"
+  - name: type
+    label: Type
+    type: enum
+    observed_as: type
+    enum_values:
+      - Link
+      - Section Break
+      - Spacer
+    default: Link
+  - name: link_to
+    label: Link To
+    type: string
+    observed_as: link_to
+  - name: child
+    label: Child Item
+    type: boolean
+    observed_as: child
+    default: "0"
+  - name: navigate_to_tab
+    label: Tab
+    type: string
+    observed_as: navigate_to_tab
+  - name: url
+    label: URL
+    type: string
+    observed_as: url
+  - name: open_in_new_tab
+    label: Open in New Tab
+    type: boolean
+    observed_as: open_in_new_tab
+    default: "1"
+  - name: collapsible
+    label: Collapsible
+    type: boolean
+    observed_as: collapsible
+    default: "1"
+  - name: indent
+    label: Indent
+    type: boolean
+    observed_as: indent
+    default: "0"
+  - name: keep_closed
+    label: Keep Closed
+    type: boolean
+    observed_as: keep_closed
+    default: "0"
+  - name: show_arrow
+    label: Show Arrow
+    type: boolean
+    observed_as: show_arrow
+    default: "0"
+  - name: filters
+    label: Filters
+    type: text
+    observed_as: filters
+  - name: route_options
+    label: Route Options
+    type: text
+    observed_as: route_options
+  - name: hidden
+    label: Hidden
+    type: boolean
+    observed_as: hidden
+    default: "0"
+  - name: added
+    label: Added
+    type: boolean
+    observed_as: added
+    default: "0"
+  - name: key
+    label: Key
+    type: string
+    observed_as: key
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSidebar Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sidebar Item
+    note: declared by the program and served by its API

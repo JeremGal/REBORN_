@@ -1,0 +1,21 @@
+name: DefaultValue
+description: 'Document type "DefaultValue" (module Core): lines of another document.'
+fields:
+  - name: defkey
+    label: Key
+    type: string
+    observed_as: defkey
+    required: true
+  - name: defvalue
+    label: Value
+    type: text
+    observed_as: defvalue
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDefaultValue
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of DefaultValue
+    note: declared by the program and served by its API

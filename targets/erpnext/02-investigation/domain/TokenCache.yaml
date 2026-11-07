@@ -1,0 +1,61 @@
+name: TokenCache
+description: Document type "Token Cache" (module Integrations).
+fields:
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: connected_app
+    label: Connected App
+    type: ref
+    observed_as: connected_app
+    ref: ConnectedApp
+  - name: provider_name
+    label: Provider Name
+    type: string
+    observed_as: provider_name
+  - name: access_token
+    label: Access Token
+    type: string
+    observed_as: access_token
+  - name: refresh_token
+    label: Refresh Token
+    type: string
+    observed_as: refresh_token
+  - name: expires_in
+    label: Expires In
+    type: integer
+    observed_as: expires_in
+  - name: state
+    label: State
+    type: string
+    observed_as: state
+  - name: success_uri
+    label: Success URI
+    type: string
+    observed_as: success_uri
+  - name: token_type
+    label: Token Type
+    type: string
+    observed_as: token_type
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: ConnectedApp
+    kind: many-to-one
+    via: connected_app
+  - to: OAuthScope
+    kind: one-to-many
+    via: scopes
+    description: lines (Scopes)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabToken Cache
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Token Cache
+    note: declared by the program and served by its API

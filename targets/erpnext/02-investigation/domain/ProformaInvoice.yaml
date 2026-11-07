@@ -1,0 +1,138 @@
+name: ProformaInvoice
+description: 'Document type "Proforma Invoice" (module Selling): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - PRO-.YYYY.-
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    required: true
+    ref: SalesOrder
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: proforma_date
+    label: Date
+    type: date
+    observed_as: proforma_date
+    required: true
+    default: Today
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: based_on
+    label: Based On
+    type: enum
+    observed_as: based_on
+    enum_values:
+      - Quantity
+      - Amount
+    default: Quantity
+  - name: hide_item_qty
+    label: Hide Item Quantity in Print
+    type: boolean
+    observed_as: hide_item_qty
+    default: "0"
+  - name: total_qty
+    label: Total Quantity
+    type: decimal
+    observed_as: total_qty
+  - name: grand_total
+    label: Grand Total
+    type: money
+    observed_as: grand_total
+  - name: print_format
+    label: Print Format
+    type: ref
+    observed_as: print_format
+    ref: PrintFormat
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+  - name: proforma_pdf
+    label: Proforma PDF
+    type: file
+    observed_as: proforma_pdf
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Draft
+      - Issued
+      - Cancelled
+    default: Draft
+  - name: sent_on
+    label: Sent On
+    type: datetime
+    observed_as: sent_on
+  - name: emailed_to
+    label: Emailed To
+    type: text
+    observed_as: emailed_to
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: ProformaInvoice
+relations:
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: ProformaInvoiceItem
+    kind: one-to-many
+    via: items
+    description: lines (Items)
+  - to: PrintFormat
+    kind: many-to-one
+    via: print_format
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+  - to: ProformaInvoice
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProforma Invoice
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Proforma Invoice
+    note: declared by the program and served by its API

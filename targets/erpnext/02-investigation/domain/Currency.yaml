@@ -1,0 +1,59 @@
+name: Currency
+description: Currency list stores the currency value, its symbol and fraction unit Document type "Currency" (module Geo).
+fields:
+  - name: currency_name
+    label: Currency Name
+    type: string
+    observed_as: currency_name
+    required: true
+    unique: true
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "0"
+  - name: fraction
+    label: Fraction
+    type: string
+    observed_as: fraction
+  - name: fraction_units
+    label: Fraction Units
+    type: integer
+    observed_as: fraction_units
+  - name: smallest_currency_fraction_value
+    label: Smallest Currency Fraction Value
+    type: money
+    observed_as: smallest_currency_fraction_value
+  - name: symbol
+    label: Symbol
+    type: string
+    observed_as: symbol
+  - name: symbol_on_right
+    label: Show Currency Symbol on Right Side
+    type: boolean
+    observed_as: symbol_on_right
+    default: "0"
+  - name: number_format
+    label: Number Format
+    type: enum
+    observed_as: number_format
+    enum_values:
+      - "#,###.##"
+      - "#.###,##"
+      - "# ###.##"
+      - "# ###,##"
+      - "#'###.##"
+      - "#, ###.##"
+      - "#,##,###.##"
+      - "#,###.###"
+      - "#.###"
+      - "#,###"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCurrency
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Currency
+    note: declared by the program and served by its API

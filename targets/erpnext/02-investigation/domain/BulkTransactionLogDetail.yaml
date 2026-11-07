@@ -1,0 +1,53 @@
+name: BulkTransactionLogDetail
+description: Document type "Bulk Transaction Log Detail" (module Bulk Transaction).
+fields:
+  - name: from_doctype
+    label: From Doctype
+    type: ref
+    observed_as: from_doctype
+    ref: DocType
+  - name: transaction_name
+    label: Name
+    type: string
+    observed_as: transaction_name
+  - name: date
+    label: "Date "
+    type: date
+    observed_as: date
+  - name: time
+    label: Time
+    type: time
+    observed_as: time
+  - name: transaction_status
+    label: Status
+    type: string
+    observed_as: transaction_status
+  - name: error_description
+    label: Error Description
+    type: text
+    observed_as: error_description
+  - name: to_doctype
+    label: To Doctype
+    type: ref
+    observed_as: to_doctype
+    ref: DocType
+  - name: retried
+    label: Retried
+    type: integer
+    observed_as: retried
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: from_doctype
+  - to: DocType
+    kind: many-to-one
+    via: to_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBulk Transaction Log Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bulk Transaction Log Detail
+    note: declared by the program and served by its API

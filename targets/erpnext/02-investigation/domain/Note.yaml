@@ -1,0 +1,45 @@
+name: Note
+description: Document type "Note" (module Desk).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: public
+    label: Public
+    type: boolean
+    observed_as: public
+    default: "0"
+  - name: notify_on_login
+    label: Notify users with a popup when they log in
+    type: boolean
+    observed_as: notify_on_login
+    default: "0"
+  - name: notify_on_every_login
+    label: Notify Users On Every Login
+    type: boolean
+    observed_as: notify_on_every_login
+    default: "0"
+  - name: expire_notification_on
+    label: Expire Notification On
+    type: datetime
+    observed_as: expire_notification_on
+  - name: content
+    label: Content
+    type: text
+    observed_as: content
+relations:
+  - to: NoteSeenBy
+    kind: one-to-many
+    via: seen_by
+    description: lines (Seen By Table)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabNote
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Note
+    note: declared by the program and served by its API

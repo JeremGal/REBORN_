@@ -1,0 +1,60 @@
+name: WebPageView
+description: Document type "Web Page View" (module Website).
+fields:
+  - name: path
+    label: Path
+    type: string
+    observed_as: path
+  - name: referrer
+    label: Referrer
+    type: string
+    observed_as: referrer
+  - name: browser
+    label: Browser
+    type: string
+    observed_as: browser
+  - name: browser_version
+    label: Browser Version
+    type: string
+    observed_as: browser_version
+  - name: is_unique
+    label: Is Unique
+    type: string
+    observed_as: is_unique
+  - name: time_zone
+    label: Time Zone
+    type: string
+    observed_as: time_zone
+  - name: user_agent
+    label: User Agent
+    type: string
+    observed_as: user_agent
+  - name: source
+    label: Source
+    type: string
+    observed_as: source
+  - name: campaign
+    label: Campaign
+    type: string
+    observed_as: campaign
+  - name: medium
+    label: Medium
+    type: string
+    observed_as: medium
+  - name: visitor_id
+    label: Visitor ID
+    type: string
+    observed_as: visitor_id
+  - name: content
+    label: Content
+    type: string
+    observed_as: content
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWeb Page View
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Web Page View
+    note: declared by the program and served by its API

@@ -1,0 +1,151 @@
+name: BlanketOrder
+description: 'An agreement to buy or sell an item at a fixed price over a period. Document type "Blanket Order" (module Manufacturing): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MFG-BLR-.YYYY.-
+  - name: blanket_order_type
+    label: Order Type
+    type: enum
+    observed_as: blanket_order_type
+    required: true
+    enum_values:
+      - Selling
+      - Purchasing
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: supplier_name
+    label: Supplier Name
+    type: string
+    observed_as: supplier_name
+  - name: order_no
+    label: Order No
+    type: string
+    observed_as: order_no
+  - name: order_date
+    label: Order Date
+    type: date
+    observed_as: order_date
+  - name: from_date
+    label: From Date
+    type: date
+    observed_as: from_date
+    required: true
+  - name: to_date
+    label: To Date
+    type: date
+    observed_as: to_date
+    required: true
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: conversion_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: conversion_rate
+    required: true
+    precision: 9
+  - name: selling_price_list
+    label: Price List
+    type: ref
+    observed_as: selling_price_list
+    ref: PriceList
+  - name: buying_price_list
+    label: Price List
+    type: ref
+    observed_as: buying_price_list
+    ref: PriceList
+  - name: price_list_currency
+    label: Price List Currency
+    type: ref
+    observed_as: price_list_currency
+    ref: Currency
+  - name: plc_conversion_rate
+    label: Price List Exchange Rate
+    type: decimal
+    observed_as: plc_conversion_rate
+    precision: 9
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: BlanketOrder
+  - name: tc_name
+    label: Terms
+    type: ref
+    observed_as: tc_name
+    ref: TermsAndConditions
+  - name: terms
+    label: Terms and Conditions Details
+    type: text
+    observed_as: terms
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: PriceList
+    kind: many-to-one
+    via: selling_price_list
+  - to: PriceList
+    kind: many-to-one
+    via: buying_price_list
+  - to: Currency
+    kind: many-to-one
+    via: price_list_currency
+  - to: BlanketOrderItem
+    kind: one-to-many
+    via: items
+    description: lines (Item)
+  - to: BlanketOrder
+    kind: many-to-one
+    via: amended_from
+  - to: TermsAndConditions
+    kind: many-to-one
+    via: tc_name
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBlanket Order
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Blanket Order
+    note: declared by the program and served by its API

@@ -1,0 +1,49 @@
+name: ItemManufacturer
+description: Document type "Item Manufacturer" (module Stock).
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: manufacturer
+    label: Manufacturer
+    type: ref
+    observed_as: manufacturer
+    required: true
+    ref: Manufacturer
+  - name: manufacturer_part_no
+    label: Manufacturer Part Number
+    type: string
+    observed_as: manufacturer_part_no
+    required: true
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: is_default
+    label: Is Default
+    type: boolean
+    observed_as: is_default
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Manufacturer
+    kind: many-to-one
+    via: manufacturer
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Manufacturer
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Manufacturer
+    note: declared by the program and served by its API

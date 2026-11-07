@@ -1,0 +1,88 @@
+name: PaymentOrder
+description: 'A batch of payments to send to your bank. Document type "Payment Order" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - PMO-
+    default: PMO-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: payment_order_type
+    label: Payment Order Type
+    type: enum
+    observed_as: payment_order_type
+    required: true
+    enum_values:
+      - Payment Request
+      - Payment Entry
+  - name: party
+    label: Supplier
+    type: ref
+    observed_as: party
+    ref: Supplier
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    default: Today
+  - name: company_bank
+    label: Bank
+    type: ref
+    observed_as: company_bank
+    ref: Bank
+  - name: company_bank_account
+    label: Company Bank Account
+    type: ref
+    observed_as: company_bank_account
+    required: true
+    ref: BankAccount
+  - name: account
+    label: Account
+    type: string
+    observed_as: account
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: PaymentOrder
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Supplier
+    kind: many-to-one
+    via: party
+  - to: Bank
+    kind: many-to-one
+    via: company_bank
+  - to: BankAccount
+    kind: many-to-one
+    via: company_bank_account
+  - to: PaymentOrderReference
+    kind: one-to-many
+    via: references
+    description: lines (Payment Order Reference)
+  - to: PaymentOrder
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Order
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Order
+    note: declared by the program and served by its API

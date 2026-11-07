@@ -1,0 +1,29 @@
+name: QualityMeetingMinutes
+description: 'Document type "Quality Meeting Minutes" (module Quality Management): lines of another document.'
+fields:
+  - name: document_type
+    label: Document Type
+    type: enum
+    observed_as: document_type
+    required: true
+    enum_values:
+      - Quality Review
+      - Quality Action
+      - Quality Feedback
+  - name: document_name
+    label: Document Name
+    type: string
+    observed_as: document_name
+  - name: minute
+    label: Minute
+    type: text
+    observed_as: minute
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Meeting Minutes
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Meeting Minutes
+    note: declared by the program and served by its API

@@ -1,0 +1,86 @@
+name: ShippingRule
+description: Works out the shipping charge on a sale or purchase. Document type "Shipping Rule" (module Accounts).
+fields:
+  - name: label
+    label: Shipping Rule Label
+    type: string
+    observed_as: label
+    required: true
+    unique: true
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: shipping_rule_type
+    label: Shipping Rule Type
+    type: enum
+    observed_as: shipping_rule_type
+    enum_values:
+      - Selling
+      - Buying
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: account
+    label: Shipping Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: calculate_based_on
+    label: Calculate Based On
+    type: enum
+    observed_as: calculate_based_on
+    enum_values:
+      - Fixed
+      - Net Total
+      - Net Weight
+    default: Fixed
+  - name: shipping_amount
+    label: Shipping Amount
+    type: money
+    observed_as: shipping_amount
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: ShippingRuleCondition
+    kind: one-to-many
+    via: conditions
+    description: lines (Shipping Rule Conditions)
+  - to: ShippingRuleCountry
+    kind: one-to-many
+    via: countries
+    description: lines (Valid for Countries)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabShipping Rule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Shipping Rule
+    note: declared by the program and served by its API

@@ -1,0 +1,44 @@
+name: SuccessAction
+description: Document type "Success Action" (module Core).
+fields:
+  - name: ref_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: ref_doctype
+    required: true
+    unique: true
+    ref: DocType
+  - name: first_success_message
+    label: First Success Message
+    type: string
+    observed_as: first_success_message
+    required: true
+    default: Congratulations on first creations
+  - name: message
+    label: Message
+    type: string
+    observed_as: message
+    required: true
+    default: Successfully created
+  - name: next_actions
+    label: ""
+    type: string
+    observed_as: next_actions
+  - name: action_timeout
+    label: Action Timeout (Seconds)
+    type: integer
+    observed_as: action_timeout
+    default: "7"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: ref_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSuccess Action
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Success Action
+    note: declared by the program and served by its API

@@ -1,0 +1,154 @@
+name: Account
+description: A ledger in your chart of accounts that entries are posted to. Document type "Account" (module Accounts).
+fields:
+  - name: disabled
+    label: Disable
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: account_name
+    label: Account Name
+    type: string
+    observed_as: account_name
+    required: true
+  - name: account_number
+    label: Account Number
+    type: string
+    observed_as: account_number
+  - name: is_group
+    label: Is Group
+    type: boolean
+    observed_as: is_group
+    default: "0"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: root_type
+    label: Root Type
+    type: enum
+    observed_as: root_type
+    enum_values:
+      - Asset
+      - Liability
+      - Income
+      - Expense
+      - Equity
+  - name: report_type
+    label: Report Type
+    type: enum
+    observed_as: report_type
+    enum_values:
+      - Balance Sheet
+      - Profit and Loss
+  - name: account_currency
+    label: Currency
+    type: ref
+    observed_as: account_currency
+    ref: Currency
+  - name: parent_account
+    label: Parent Account
+    type: ref
+    observed_as: parent_account
+    required: true
+    ref: Account
+  - name: account_category
+    label: Account Category
+    type: ref
+    observed_as: account_category
+    ref: AccountCategory
+  - name: account_type
+    label: Account Type
+    type: enum
+    observed_as: account_type
+    enum_values:
+      - Accumulated Depreciation
+      - Asset Received But Not Billed
+      - Bank
+      - Cash
+      - Chargeable
+      - Capital Work in Progress
+      - Cost of Goods Sold
+      - Current Asset
+      - Current Liability
+      - Depreciation
+      - Direct Expense
+      - Direct Income
+      - Equity
+      - Expense Account
+      - Expenses Included In Asset Valuation
+      - Expenses Included In Valuation
+      - Fixed Asset
+      - Income Account
+      - Indirect Expense
+      - Indirect Income
+      - Liability
+      - Payable
+      - Receivable
+      - Round Off
+      - Round Off for Opening
+      - Stock
+      - Stock Adjustment
+      - Stock Received But Not Billed
+      - Service Received But Not Billed
+      - Tax
+      - Temporary
+  - name: tax_rate
+    label: Tax Rate
+    type: decimal
+    observed_as: tax_rate
+  - name: freeze_account
+    label: Frozen
+    type: enum
+    observed_as: freeze_account
+    enum_values:
+      - No
+      - Yes
+  - name: balance_must_be
+    label: Balance must be
+    type: enum
+    observed_as: balance_must_be
+    enum_values:
+      - Debit
+      - Credit
+  - name: lft
+    label: Lft
+    type: integer
+    observed_as: lft
+  - name: rgt
+    label: Rgt
+    type: integer
+    observed_as: rgt
+  - name: old_parent
+    label: Old Parent
+    type: string
+    observed_as: old_parent
+  - name: include_in_gross
+    label: Include in gross
+    type: boolean
+    observed_as: include_in_gross
+    default: "0"
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Currency
+    kind: many-to-one
+    via: account_currency
+  - to: Account
+    kind: many-to-one
+    via: parent_account
+  - to: AccountCategory
+    kind: many-to-one
+    via: account_category
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAccount
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Account
+    note: declared by the program and served by its API

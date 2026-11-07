@@ -1,0 +1,331 @@
+name: BOM
+description: 'The materials and operations it takes to make an item. Document type "BOM" (module Manufacturing): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: item
+    label: Item to Manufacture
+    type: ref
+    observed_as: item
+    required: true
+    ref: Item
+  - name: quantity
+    label: Quantity (Output Qty)
+    type: decimal
+    observed_as: quantity
+    required: true
+    default: "1"
+  - name: uom
+    label: Unit Of Measure
+    type: ref
+    observed_as: uom
+    ref: UOM
+  - name: cost_allocation_per
+    label: "% Cost Allocation"
+    type: percent
+    observed_as: cost_allocation_per
+    default: "100"
+  - name: cost_allocation
+    label: Cost Allocation
+    type: money
+    observed_as: cost_allocation
+  - name: process_loss_percentage
+    label: "% Process Loss"
+    type: percent
+    observed_as: process_loss_percentage
+  - name: process_loss_qty
+    label: Process Loss Qty
+    type: decimal
+    observed_as: process_loss_qty
+  - name: with_operations
+    label: With Operations
+    type: boolean
+    observed_as: with_operations
+    default: "0"
+  - name: track_semi_finished_goods
+    label: Produce Item per Operation
+    type: boolean
+    observed_as: track_semi_finished_goods
+    default: "0"
+  - name: transfer_material_against
+    label: Transfer Material Against
+    type: enum
+    observed_as: transfer_material_against
+    enum_values:
+      - Work Order
+      - Job Card
+    default: Work Order
+  - name: routing
+    label: Routing
+    type: ref
+    observed_as: routing
+    ref: Routing
+  - name: fg_based_operating_cost
+    label: Finished Goods based Operating Cost
+    type: boolean
+    observed_as: fg_based_operating_cost
+    default: "0"
+  - name: operating_cost_per_bom_quantity
+    label: Operating Cost Per BOM Quantity
+    type: money
+    observed_as: operating_cost_per_bom_quantity
+  - name: is_active
+    label: Is Active
+    type: boolean
+    observed_as: is_active
+    default: "1"
+  - name: is_default
+    label: Is Default
+    type: boolean
+    observed_as: is_default
+    default: "1"
+  - name: set_rate_of_sub_assembly_item_based_on_bom
+    label: Set rate of sub-assembly item based on BOM
+    type: boolean
+    observed_as: set_rate_of_sub_assembly_item_based_on_bom
+    default: "1"
+  - name: is_phantom_bom
+    label: Is Phantom BOM
+    type: boolean
+    observed_as: is_phantom_bom
+    default: "0"
+  - name: allow_alternative_item
+    label: Allow Alternative Item
+    type: boolean
+    observed_as: allow_alternative_item
+    default: "0"
+  - name: inspection_required
+    label: Quality Inspection Required
+    type: boolean
+    observed_as: inspection_required
+    default: "0"
+  - name: quality_inspection_template
+    label: Quality Inspection Template
+    type: ref
+    observed_as: quality_inspection_template
+    ref: QualityInspectionTemplate
+  - name: default_source_warehouse
+    label: Default Source Warehouse
+    type: ref
+    observed_as: default_source_warehouse
+    ref: Warehouse
+  - name: default_target_warehouse
+    label: Default Target Warehouse
+    type: ref
+    observed_as: default_target_warehouse
+    ref: Warehouse
+  - name: backflush_based_on
+    label: Based On
+    type: enum
+    observed_as: backflush_based_on
+    enum_values:
+      - BOM
+      - Material Transferred for Manufacture
+  - name: operating_cost
+    label: Operating Cost
+    type: money
+    observed_as: operating_cost
+  - name: raw_material_cost
+    label: Raw Material Cost
+    type: money
+    observed_as: raw_material_cost
+  - name: secondary_items_cost
+    label: Secondary Items Cost
+    type: money
+    observed_as: secondary_items_cost
+  - name: base_operating_cost
+    label: Operating Cost (Company Currency)
+    type: money
+    observed_as: base_operating_cost
+  - name: base_raw_material_cost
+    label: Raw Material Cost (Company Currency)
+    type: money
+    observed_as: base_raw_material_cost
+  - name: base_secondary_items_cost
+    label: Secondary Items Cost (Company Currency)
+    type: money
+    observed_as: base_secondary_items_cost
+  - name: total_cost
+    label: Total Cost
+    type: money
+    observed_as: total_cost
+  - name: base_total_cost
+    label: Total Cost (Company Currency)
+    type: money
+    observed_as: base_total_cost
+  - name: rm_cost_as_per
+    label: Rate Of Materials Based On
+    type: enum
+    observed_as: rm_cost_as_per
+    enum_values:
+      - Valuation Rate
+      - Last Purchase Rate
+      - Price List
+    default: Valuation Rate
+  - name: buying_price_list
+    label: Price List
+    type: ref
+    observed_as: buying_price_list
+    ref: PriceList
+  - name: price_list_currency
+    label: Price List Currency
+    type: ref
+    observed_as: price_list_currency
+    ref: Currency
+  - name: plc_conversion_rate
+    label: Price List Exchange Rate
+    type: decimal
+    observed_as: plc_conversion_rate
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    required: true
+    ref: Currency
+  - name: conversion_rate
+    label: Conversion Rate
+    type: decimal
+    observed_as: conversion_rate
+    required: true
+    precision: 9
+    default: "1"
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: description
+    label: Item Description
+    type: text
+    observed_as: description
+  - name: has_variants
+    label: Has Variants
+    type: boolean
+    observed_as: has_variants
+    default: "0"
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: show_in_website
+    label: Show in Website
+    type: boolean
+    observed_as: show_in_website
+    default: "0"
+  - name: route
+    label: Route
+    type: text
+    observed_as: route
+  - name: website_image
+    label: Website Image
+    type: file
+    observed_as: website_image
+  - name: thumbnail
+    label: Thumbnail
+    type: string
+    observed_as: thumbnail
+  - name: show_items
+    label: Show Items
+    type: boolean
+    observed_as: show_items
+    default: "0"
+  - name: show_operations
+    label: Show Operations
+    type: boolean
+    observed_as: show_operations
+    default: "0"
+  - name: web_long_description
+    label: Website Description
+    type: text
+    observed_as: web_long_description
+  - name: bom_creator
+    label: BOM Creator
+    type: ref
+    observed_as: bom_creator
+    ref: BOMCreator
+  - name: bom_creator_item
+    label: BOM Creator Item
+    type: string
+    observed_as: bom_creator_item
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: BOM
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Item
+    kind: many-to-one
+    via: item
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: Routing
+    kind: many-to-one
+    via: routing
+  - to: BOMOperation
+    kind: one-to-many
+    via: operations
+    description: lines (Operations)
+  - to: BOMItem
+    kind: one-to-many
+    via: items
+    description: lines (Components)
+  - to: BOMSecondaryItem
+    kind: one-to-many
+    via: secondary_items
+    description: lines (Secondary Items)
+  - to: QualityInspectionTemplate
+    kind: many-to-one
+    via: quality_inspection_template
+  - to: Warehouse
+    kind: many-to-one
+    via: default_source_warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: default_target_warehouse
+  - to: PriceList
+    kind: many-to-one
+    via: buying_price_list
+  - to: Currency
+    kind: many-to-one
+    via: price_list_currency
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: BOMExplosionItem
+    kind: one-to-many
+    via: exploded_items
+    description: lines (Exploded Items)
+  - to: BOMCreator
+    kind: many-to-one
+    via: bom_creator
+  - to: BOM
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM
+    note: declared by the program and served by its API

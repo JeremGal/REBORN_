@@ -1,0 +1,31 @@
+name: Version
+description: Document type "Version" (module Core).
+fields:
+  - name: ref_doctype
+    label: DocType
+    type: ref
+    observed_as: ref_doctype
+    required: true
+    ref: DocType
+  - name: docname
+    label: Document Name
+    type: string
+    observed_as: docname
+    required: true
+  - name: data
+    label: Data
+    type: text
+    observed_as: data
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: ref_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabVersion
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Version
+    note: declared by the program and served by its API

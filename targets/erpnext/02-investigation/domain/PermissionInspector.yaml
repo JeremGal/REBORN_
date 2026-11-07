@@ -1,0 +1,58 @@
+name: PermissionInspector
+description: 'Document type "Permission Inspector" (module Core): single settings record.'
+fields:
+  - name: ref_doctype
+    label: DocType
+    type: ref
+    observed_as: ref_doctype
+    required: true
+    ref: DocType
+  - name: docname
+    label: Document
+    type: string
+    observed_as: docname
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    required: true
+    ref: User
+  - name: permission_type
+    label: Permission Type
+    type: enum
+    observed_as: permission_type
+    enum_values:
+      - read
+      - write
+      - create
+      - delete
+      - submit
+      - cancel
+      - select
+      - amend
+      - print
+      - email
+      - report
+      - import
+      - export
+      - share
+  - name: output
+    label: Output
+    type: text
+    observed_as: output
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: ref_doctype
+  - to: User
+    kind: many-to-one
+    via: user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPermission Inspector
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Permission Inspector
+    note: declared by the program and served by its API

@@ -1,0 +1,168 @@
+name: WebPage
+description: |-
+  Page to show on the website
+   Document type "Web Page" (module Website).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: route
+    label: Route
+    type: string
+    observed_as: route
+    unique: true
+  - name: dynamic_route
+    label: Dynamic Route
+    type: boolean
+    observed_as: dynamic_route
+    default: "0"
+  - name: published
+    label: Published
+    type: boolean
+    observed_as: published
+    default: "1"
+  - name: module
+    label: Module (for export)
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: content_type
+    label: Content Type
+    type: enum
+    observed_as: content_type
+    enum_values:
+      - Rich Text
+      - Markdown
+      - HTML
+      - Page Builder
+      - Slideshow
+    default: Page Builder
+  - name: slideshow
+    label: Slideshow
+    type: ref
+    observed_as: slideshow
+    ref: WebsiteSlideshow
+  - name: dynamic_template
+    label: Dynamic Template
+    type: boolean
+    observed_as: dynamic_template
+    default: "0"
+  - name: main_section
+    label: Main Section
+    type: text
+    observed_as: main_section
+  - name: main_section_md
+    label: Main Section (Markdown)
+    type: text
+    observed_as: main_section_md
+  - name: main_section_html
+    label: Main Section (HTML)
+    type: text
+    observed_as: main_section_html
+  - name: context_script
+    label: Context Script
+    type: text
+    observed_as: context_script
+  - name: javascript
+    label: Javascript
+    type: text
+    observed_as: javascript
+  - name: insert_style
+    label: Insert Style
+    type: boolean
+    observed_as: insert_style
+    default: "0"
+  - name: text_align
+    label: Text Align
+    type: enum
+    observed_as: text_align
+    enum_values:
+      - Left
+      - Center
+      - Right
+  - name: css
+    label: CSS
+    type: text
+    observed_as: css
+  - name: full_width
+    label: Full Width
+    type: boolean
+    observed_as: full_width
+    default: "1"
+  - name: show_title
+    label: Show Title
+    type: boolean
+    observed_as: show_title
+    default: "0"
+  - name: start_date
+    label: Start Date
+    type: datetime
+    observed_as: start_date
+  - name: end_date
+    label: End Date
+    type: datetime
+    observed_as: end_date
+  - name: meta_title
+    label: Title
+    type: string
+    observed_as: meta_title
+  - name: meta_description
+    label: Description
+    type: text
+    observed_as: meta_description
+  - name: meta_image
+    label: Image
+    type: file
+    observed_as: meta_image
+  - name: show_sidebar
+    label: Show Sidebar
+    type: boolean
+    observed_as: show_sidebar
+    default: "0"
+  - name: idx
+    label: Priority
+    type: integer
+    observed_as: idx
+  - name: website_sidebar
+    label: Website Sidebar
+    type: ref
+    observed_as: website_sidebar
+    ref: WebsiteSidebar
+  - name: enable_comments
+    label: Enable Comments
+    type: boolean
+    observed_as: enable_comments
+    default: "0"
+  - name: header
+    label: Header
+    type: text
+    observed_as: header
+  - name: breadcrumbs
+    label: Breadcrumbs
+    type: text
+    observed_as: breadcrumbs
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: WebsiteSlideshow
+    kind: many-to-one
+    via: slideshow
+  - to: WebPageBlock
+    kind: one-to-many
+    via: page_blocks
+    description: lines (Page Building Blocks)
+  - to: WebsiteSidebar
+    kind: many-to-one
+    via: website_sidebar
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWeb Page
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Web Page
+    note: declared by the program and served by its API

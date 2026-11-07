@@ -1,0 +1,50 @@
+name: AboutUsSettings
+description: 'Settings for the About Us Page Document type "About Us Settings" (module Website): single settings record.'
+fields:
+  - name: is_disabled
+    label: Disabled
+    type: boolean
+    observed_as: is_disabled
+    default: "1"
+  - name: page_title
+    label: Page Title
+    type: string
+    observed_as: page_title
+  - name: company_introduction
+    label: Company Introduction
+    type: text
+    observed_as: company_introduction
+  - name: company_history_heading
+    label: Org History Heading
+    type: string
+    observed_as: company_history_heading
+  - name: team_members_heading
+    label: Team Members Heading
+    type: string
+    observed_as: team_members_heading
+  - name: team_members_subtitle
+    label: Team Members Subtitle
+    type: text
+    observed_as: team_members_subtitle
+  - name: footer
+    label: Footer
+    type: text
+    observed_as: footer
+relations:
+  - to: CompanyHistory
+    kind: one-to-many
+    via: company_history
+    description: lines (Org History)
+  - to: AboutUsTeamMember
+    kind: one-to-many
+    via: team_members
+    description: lines (Team Members)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAbout Us Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of About Us Settings
+    note: declared by the program and served by its API

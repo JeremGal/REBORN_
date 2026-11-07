@@ -1,0 +1,431 @@
+name: SalesOrderItem
+description: 'Document type "Sales Order Item" (module Selling): lines of another document.'
+fields:
+  - name: fg_item
+    label: Finished Good
+    type: ref
+    observed_as: fg_item
+    ref: Item
+  - name: fg_item_qty
+    label: Finished Good Qty
+    type: decimal
+    observed_as: fg_item_qty
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: customer_item_code
+    label: Customer's Item Code
+    type: string
+    observed_as: customer_item_code
+  - name: ensure_delivery_based_on_produced_serial_no
+    label: Ensure Delivery Based on Produced Serial No
+    type: boolean
+    observed_as: ensure_delivery_based_on_produced_serial_no
+    default: "0"
+  - name: is_stock_item
+    label: Is Stock Item
+    type: boolean
+    observed_as: is_stock_item
+    default: "0"
+  - name: reserve_stock
+    label: Reserve Stock
+    type: boolean
+    observed_as: reserve_stock
+    default: "1"
+  - name: delivery_date
+    label: Delivery Date
+    type: date
+    observed_as: delivery_date
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+    required: true
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: brand
+    label: Brand Name
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: subcontracted_qty
+    label: Subcontracted Quantity
+    type: decimal
+    observed_as: subcontracted_qty
+    default: "0"
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: conversion_factor
+    label: UOM Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    required: true
+    precision: 9
+  - name: stock_qty
+    label: Qty as per Stock UOM
+    type: decimal
+    observed_as: stock_qty
+  - name: stock_reserved_qty
+    label: Stock Reserved Qty (in Stock UOM)
+    type: decimal
+    observed_as: stock_reserved_qty
+    default: "0"
+  - name: price_list_rate
+    label: Price List Rate
+    type: money
+    observed_as: price_list_rate
+  - name: base_price_list_rate
+    label: Price List Rate (Company Currency)
+    type: money
+    observed_as: base_price_list_rate
+  - name: margin_type
+    label: Margin Type
+    type: enum
+    observed_as: margin_type
+    enum_values:
+      - Percentage
+      - Amount
+  - name: margin_rate_or_amount
+    label: Margin Rate or Amount
+    type: decimal
+    observed_as: margin_rate_or_amount
+  - name: rate_with_margin
+    label: Rate With Margin
+    type: money
+    observed_as: rate_with_margin
+  - name: discount_percentage
+    label: Discount (%) on Price List Rate with Margin
+    type: percent
+    observed_as: discount_percentage
+  - name: discount_amount
+    label: Discount Amount
+    type: money
+    observed_as: discount_amount
+  - name: distributed_discount_amount
+    label: Distributed Discount Amount
+    type: money
+    observed_as: distributed_discount_amount
+  - name: mapped_additional_discount_amount
+    label: Additional Discount per Stock Unit
+    type: money
+    observed_as: mapped_additional_discount_amount
+    precision: 9
+    default: "0"
+  - name: base_rate_with_margin
+    label: Rate With Margin (Company Currency)
+    type: money
+    observed_as: base_rate_with_margin
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: item_tax_template
+    label: Item Tax Template
+    type: ref
+    observed_as: item_tax_template
+    ref: ItemTaxTemplate
+  - name: base_rate
+    label: Basic Rate (Company Currency)
+    type: money
+    observed_as: base_rate
+  - name: base_amount
+    label: Amount (Company Currency)
+    type: money
+    observed_as: base_amount
+  - name: pricing_rules
+    label: Pricing Rules
+    type: text
+    observed_as: pricing_rules
+  - name: stock_uom_rate
+    label: Rate of Stock UOM
+    type: money
+    observed_as: stock_uom_rate
+  - name: is_free_item
+    label: Is Free Item
+    type: boolean
+    observed_as: is_free_item
+    default: "0"
+  - name: grant_commission
+    label: Grant Commission
+    type: boolean
+    observed_as: grant_commission
+    default: "0"
+  - name: net_rate
+    label: Net Rate
+    type: money
+    observed_as: net_rate
+  - name: net_amount
+    label: Net Amount
+    type: money
+    observed_as: net_amount
+  - name: base_net_rate
+    label: Net Rate (Company Currency)
+    type: money
+    observed_as: base_net_rate
+  - name: base_net_amount
+    label: Net Amount (Company Currency)
+    type: money
+    observed_as: base_net_amount
+  - name: billed_amt
+    label: Billed Amt
+    type: money
+    observed_as: billed_amt
+  - name: valuation_rate
+    label: Valuation Rate
+    type: money
+    observed_as: valuation_rate
+  - name: gross_profit
+    label: Gross Profit
+    type: money
+    observed_as: gross_profit
+  - name: delivered_by_supplier
+    label: Supplier delivers to Customer
+    type: boolean
+    observed_as: delivered_by_supplier
+    default: "0"
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: weight_per_unit
+    label: Weight Per Unit
+    type: decimal
+    observed_as: weight_per_unit
+  - name: total_weight
+    label: Total Weight
+    type: decimal
+    observed_as: total_weight
+  - name: weight_uom
+    label: Weight UOM
+    type: ref
+    observed_as: weight_uom
+    ref: UOM
+  - name: warehouse
+    label: Source Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: target_warehouse
+    label: Customer Warehouse (Optional)
+    type: ref
+    observed_as: target_warehouse
+    ref: Warehouse
+  - name: prevdoc_docname
+    label: Quotation
+    type: ref
+    observed_as: prevdoc_docname
+    ref: Quotation
+  - name: quotation_item
+    label: quotation_item
+    type: string
+    observed_as: quotation_item
+  - name: against_blanket_order
+    label: Against Blanket Order
+    type: boolean
+    observed_as: against_blanket_order
+    default: "0"
+  - name: blanket_order
+    label: Blanket Order
+    type: ref
+    observed_as: blanket_order
+    ref: BlanketOrder
+  - name: blanket_order_rate
+    label: Blanket Order Rate
+    type: money
+    observed_as: blanket_order_rate
+  - name: actual_qty
+    label: Qty (Warehouse)
+    type: decimal
+    observed_as: actual_qty
+  - name: company_total_stock
+    label: Qty (Company)
+    type: decimal
+    observed_as: company_total_stock
+  - name: bom_no
+    label: BOM No
+    type: ref
+    observed_as: bom_no
+    ref: BOM
+  - name: projected_qty
+    label: Projected Qty
+    type: decimal
+    observed_as: projected_qty
+  - name: ordered_qty
+    label: Ordered Qty
+    type: decimal
+    observed_as: ordered_qty
+  - name: planned_qty
+    label: Planned Quantity
+    type: decimal
+    observed_as: planned_qty
+  - name: production_plan_qty
+    label: Production Plan Qty
+    type: decimal
+    observed_as: production_plan_qty
+  - name: requested_qty
+    label: Requested Qty
+    type: decimal
+    observed_as: requested_qty
+  - name: work_order_qty
+    label: Work Order Qty
+    type: decimal
+    observed_as: work_order_qty
+  - name: delivered_qty
+    label: Delivered Qty
+    type: decimal
+    observed_as: delivered_qty
+  - name: produced_qty
+    label: Produced Quantity
+    type: decimal
+    observed_as: produced_qty
+  - name: returned_qty
+    label: Returned Qty
+    type: decimal
+    observed_as: returned_qty
+  - name: picked_qty
+    label: Picked Qty (in Stock UOM)
+    type: decimal
+    observed_as: picked_qty
+  - name: additional_notes
+    label: Additional Notes
+    type: text
+    observed_as: additional_notes
+  - name: page_break
+    label: Page Break
+    type: boolean
+    observed_as: page_break
+    default: "0"
+  - name: item_tax_rate
+    label: Item Tax Rate
+    type: text
+    observed_as: item_tax_rate
+  - name: transaction_date
+    label: Sales Order Date
+    type: date
+    observed_as: transaction_date
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: purchase_order
+    label: Purchase Order
+    type: ref
+    observed_as: purchase_order
+    ref: PurchaseOrder
+  - name: material_request_item
+    label: Material Request Item
+    type: string
+    observed_as: material_request_item
+  - name: purchase_order_item
+    label: Purchase Order Item
+    type: string
+    observed_as: purchase_order_item
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+    default: :Company
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+relations:
+  - to: Item
+    kind: many-to-one
+    via: fg_item
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: ItemTaxTemplate
+    kind: many-to-one
+    via: item_tax_template
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: UOM
+    kind: many-to-one
+    via: weight_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: target_warehouse
+  - to: Quotation
+    kind: many-to-one
+    via: prevdoc_docname
+  - to: BlanketOrder
+    kind: many-to-one
+    via: blanket_order
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+  - to: PurchaseOrder
+    kind: many-to-one
+    via: purchase_order
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSales Order Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sales Order Item
+    note: declared by the program and served by its API

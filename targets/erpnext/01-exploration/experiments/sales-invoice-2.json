@@ -1,0 +1,32 @@
+{
+  "mission": "M-002",
+  "seed": [
+    { "doctype": "Item", "item_code": "TEST-ART-003", "item_name": "TEST Article 3 (by weight)", "item_group": "Products", "stock_uom": "Kg", "is_stock_item": 0, "standard_rate": 0.25 }
+  ],
+  "doctype": "Sales Invoice",
+  "defaults": {
+    "customer": "TEST-Client Alpha",
+    "company": "Digital Solution Service",
+    "currency": "USD",
+    "selling_price_list": "Standard Selling",
+    "debit_to": "4111 - Clients - Ventes de biens ou de prestations de services - DSS",
+    "update_stock": 0
+  },
+  "item_defaults": { "income_account": "7071 - Marchandises (ou groupe) A - DSS" },
+  "tax_account": "44587 - Taxes sur le chiffre d'affaires sur factures à établir - DSS",
+  "read": ["total", "net_total", "discount_amount", "total_taxes_and_charges", "grand_total", "rounding_adjustment", "rounded_total"],
+  "read_items": ["item_code", "qty", "uom", "rate", "amount", "net_amount"],
+  "read_taxes": ["charge_type", "account_head", "row_id", "rate", "tax_amount", "total"],
+  "cases": [
+    { "id": "SI-05b", "title": "cascade with two accounts: 10% on the net total, then 5% on the previous row total",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 10, "rate": 10 }], "taxes": [{ "charge_type": "On Net Total", "rate": 10, "description": "tax A 10%" }, { "charge_type": "On Previous Row Total", "row_id": "1", "rate": 5, "description": "tax B 5% on A's total", "account_head": "44578 - Taxes assimilées à la TVA - DSS" }] } },
+    { "id": "SI-06b", "title": "two accounts: 10% on the net total, then 50% of that tax (previous row amount)",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 10, "rate": 10 }], "taxes": [{ "charge_type": "On Net Total", "rate": 10, "description": "tax A 10%" }, { "charge_type": "On Previous Row Amount", "row_id": "1", "rate": 50, "description": "tax B 50% of A", "account_head": "44578 - Taxes assimilées à la TVA - DSS" }] } },
+    { "id": "SI-09b", "title": "decimal quantity in a unit that allows it: 2.5 kg at 0.25 (amount exactly halfway, 0.625)",
+      "doc": { "items": [{ "item_code": "TEST-ART-003", "qty": 2.5, "rate": 0.25 }] } },
+    { "id": "SI-11", "title": "unit price exactly halfway (0.125), quantity 1",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 1, "rate": 0.125 }] } },
+    { "id": "SI-12", "title": "grand total with 50 cents (33.75 + 20%): what the rounded total does",
+      "doc": { "items": [{ "item_code": "TEST-ART-001", "qty": 1, "rate": 33.75 }], "taxes": [{ "charge_type": "On Net Total", "rate": 20, "description": "VAT 20%" }] } }
+  ]
+}

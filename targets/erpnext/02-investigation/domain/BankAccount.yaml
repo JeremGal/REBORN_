@@ -1,0 +1,122 @@
+name: BankAccount
+description: A bank account of yours or of a customer or supplier. Document type "Bank Account" (module Accounts).
+fields:
+  - name: account_name
+    label: Account Name
+    type: string
+    observed_as: account_name
+    required: true
+  - name: account
+    label: Company Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: bank
+    label: Bank
+    type: ref
+    observed_as: bank
+    required: true
+    ref: Bank
+  - name: account_type
+    label: Account Type
+    type: ref
+    observed_as: account_type
+    ref: BankAccountType
+  - name: account_subtype
+    label: Account Subtype
+    type: ref
+    observed_as: account_subtype
+    ref: BankAccountSubtype
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: is_default
+    label: Is Default Account
+    type: boolean
+    observed_as: is_default
+    default: "0"
+  - name: is_company_account
+    label: Is Company Account
+    type: boolean
+    observed_as: is_company_account
+    default: "0"
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: is_credit_card
+    label: Is Credit Card
+    type: boolean
+    observed_as: is_credit_card
+    default: "0"
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+  - name: iban
+    label: IBAN
+    type: string
+    observed_as: iban
+    max_length: 34
+  - name: branch_code
+    label: Branch Code
+    type: string
+    observed_as: branch_code
+  - name: bank_account_no
+    label: Bank Account No
+    type: string
+    observed_as: bank_account_no
+    max_length: 30
+  - name: statement_password
+    label: Statement PDF Password
+    type: string
+    observed_as: statement_password
+  - name: integration_id
+    label: Integration ID
+    type: string
+    observed_as: integration_id
+    unique: true
+  - name: last_integration_date
+    label: Last Integration Date
+    type: date
+    observed_as: last_integration_date
+  - name: mask
+    label: Mask
+    type: string
+    observed_as: mask
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: Bank
+    kind: many-to-one
+    via: bank
+  - to: BankAccountType
+    kind: many-to-one
+    via: account_type
+  - to: BankAccountSubtype
+    kind: many-to-one
+    via: account_subtype
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Account
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Account
+    note: declared by the program and served by its API

@@ -1,0 +1,23 @@
+name: QualityFeedbackTemplate
+description: The questions to ask when collecting quality feedback. Document type "Quality Feedback Template" (module Quality Management).
+fields:
+  - name: template
+    label: Template Name
+    type: string
+    observed_as: template
+    required: true
+    unique: true
+relations:
+  - to: QualityFeedbackTemplateParameter
+    kind: one-to-many
+    via: parameters
+    description: lines (Parameters)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Feedback Template
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Feedback Template
+    note: declared by the program and served by its API

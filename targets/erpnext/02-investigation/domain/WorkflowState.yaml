@@ -1,0 +1,33 @@
+name: WorkflowState
+description: Workflow state represents the current state of a document. Document type "Workflow State" (module Workflow).
+fields:
+  - name: workflow_state_name
+    label: State
+    type: string
+    observed_as: workflow_state_name
+    required: true
+    unique: true
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: style
+    label: Style
+    type: enum
+    observed_as: style
+    enum_values:
+      - Primary
+      - Info
+      - Success
+      - Warning
+      - Danger
+      - Inverse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkflow State
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workflow State
+    note: declared by the program and served by its API

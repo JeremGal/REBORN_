@@ -1,0 +1,77 @@
+name: PaymentOrderReference
+description: 'Document type "Payment Order Reference" (module Accounts): lines of another document.'
+fields:
+  - name: reference_doctype
+    label: Type
+    type: ref
+    observed_as: reference_doctype
+    required: true
+    ref: DocType
+  - name: reference_name
+    label: Name
+    type: string
+    observed_as: reference_name
+    required: true
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    ref: Supplier
+  - name: payment_request
+    label: Payment Request
+    type: ref
+    observed_as: payment_request
+    ref: PaymentRequest
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    ref: ModeOfPayment
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    required: true
+    ref: BankAccount
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    ref: Account
+  - name: payment_reference
+    label: Payment Reference
+    type: string
+    observed_as: payment_reference
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+  - to: PaymentRequest
+    kind: many-to-one
+    via: payment_request
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: Account
+    kind: many-to-one
+    via: account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Order Reference
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Order Reference
+    note: declared by the program and served by its API

@@ -1,0 +1,20 @@
+id: R-006
+title: Whole quantities for units that require them
+kind: validation
+statement: >-
+  Each unit of measure says whether its quantities must be whole numbers. A line with a fractional quantity in such a
+  unit (for example 2.5 "Nos") is refused with an error naming the row; the same quantity in a unit that allows
+  fractions (for example kilograms) is accepted.
+formula: |
+  if uom.must_be_whole_number and qty is not an integer: refuse ("row N: quantity cannot be a fraction")
+applies_to: [UOM.must_be_whole_number, SalesInvoiceItem.qty]
+features: [F-001]
+examples:
+  - { given: { qty: 2.5, uom: "Nos (whole numbers only)" }, expect: { result: "refused" }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 9 (SI-09)" } }
+  - { given: { qty: 2.5, uom: "Kg" }, expect: { result: "accepted", amount: 0.62 }, source: { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "step 3 (SI-09b)" } }
+status: confirmed
+confidence: high
+evidence:
+  - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 9" }
+  - { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "step 3" }
+contradictions: []

@@ -1,0 +1,63 @@
+name: PermissionLog
+description: Document type "Permission Log" (module Core).
+fields:
+  - name: changed_by
+    label: Changed by
+    type: ref
+    observed_as: changed_by
+    ref: User
+  - name: changed_at
+    label: Changed at
+    type: datetime
+    observed_as: changed_at
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Updated
+      - Removed
+      - Added
+  - name: for_doctype
+    label: For DocType
+    type: ref
+    observed_as: for_doctype
+    required: true
+    ref: DocType
+  - name: for_document
+    label: For Document
+    type: string
+    observed_as: for_document
+    required: true
+  - name: reference_type
+    label: Reference Type
+    type: ref
+    observed_as: reference_type
+    ref: DocType
+  - name: reference
+    label: Reference
+    type: string
+    observed_as: reference
+  - name: changes
+    label: ""
+    type: text
+    observed_as: changes
+relations:
+  - to: User
+    kind: many-to-one
+    via: changed_by
+  - to: DocType
+    kind: many-to-one
+    via: for_doctype
+  - to: DocType
+    kind: many-to-one
+    via: reference_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPermission Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Permission Log
+    note: declared by the program and served by its API

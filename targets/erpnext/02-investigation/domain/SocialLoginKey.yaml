@@ -1,0 +1,98 @@
+name: SocialLoginKey
+description: Document type "Social Login Key" (module Integrations).
+fields:
+  - name: enable_social_login
+    label: Enable Social Login
+    type: boolean
+    observed_as: enable_social_login
+    default: "0"
+  - name: social_login_provider
+    label: Social Login Provider
+    type: enum
+    observed_as: social_login_provider
+    enum_values:
+      - Custom
+      - Facebook
+      - Frappe
+      - GitHub
+      - Google
+      - Office 365
+      - Salesforce
+      - fairlogin
+      - Keycloak
+    default: Custom
+  - name: client_id
+    label: Client ID
+    type: string
+    observed_as: client_id
+  - name: provider_name
+    label: Provider Name
+    type: string
+    observed_as: provider_name
+    required: true
+  - name: client_secret
+    label: Client Secret
+    type: string
+    observed_as: client_secret
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: base_url
+    label: Base URL
+    type: string
+    observed_as: base_url
+  - name: sign_ups
+    label: Sign ups
+    type: enum
+    observed_as: sign_ups
+    enum_values:
+      - Allow
+      - Deny
+  - name: show_in_resource_metadata
+    label: Show in Resource Metadata
+    type: boolean
+    observed_as: show_in_resource_metadata
+    default: "1"
+  - name: authorize_url
+    label: Authorize URL
+    type: string
+    observed_as: authorize_url
+  - name: access_token_url
+    label: Access Token URL
+    type: string
+    observed_as: access_token_url
+  - name: redirect_url
+    label: Redirect URL
+    type: string
+    observed_as: redirect_url
+  - name: api_endpoint
+    label: API Endpoint
+    type: string
+    observed_as: api_endpoint
+  - name: custom_base_url
+    label: Custom Base URL
+    type: boolean
+    observed_as: custom_base_url
+    default: "0"
+  - name: api_endpoint_args
+    label: API Endpoint Args
+    type: text
+    observed_as: api_endpoint_args
+  - name: auth_url_data
+    label: Auth URL Data
+    type: text
+    observed_as: auth_url_data
+  - name: user_id_property
+    label: User ID Property
+    type: string
+    observed_as: user_id_property
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSocial Login Key
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Social Login Key
+    note: declared by the program and served by its API

@@ -1,0 +1,53 @@
+name: PurchaseInvoiceAdvance
+description: 'Document type "Purchase Invoice Advance" (module Accounts): lines of another document.'
+fields:
+  - name: reference_type
+    label: Reference Type
+    type: ref
+    observed_as: reference_type
+    ref: DocType
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+  - name: reference_row
+    label: Reference Row
+    type: string
+    observed_as: reference_row
+  - name: advance_amount
+    label: Advance Amount
+    type: money
+    observed_as: advance_amount
+  - name: allocated_amount
+    label: Allocated Amount
+    type: money
+    observed_as: allocated_amount
+  - name: exchange_gain_loss
+    label: Exchange Gain/Loss
+    type: money
+    observed_as: exchange_gain_loss
+  - name: ref_exchange_rate
+    label: Reference Exchange Rate
+    type: decimal
+    observed_as: ref_exchange_rate
+  - name: difference_posting_date
+    label: Difference Posting Date
+    type: date
+    observed_as: difference_posting_date
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPurchase Invoice Advance
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Purchase Invoice Advance
+    note: declared by the program and served by its API

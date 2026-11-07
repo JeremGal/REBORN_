@@ -1,0 +1,145 @@
+name: OnboardingStep
+description: Document type "Onboarding Step" (module Desk).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: is_complete
+    label: Is Complete
+    type: boolean
+    observed_as: is_complete
+    default: "0"
+  - name: is_skipped
+    label: Is Skipped
+    type: boolean
+    observed_as: is_skipped
+    default: "0"
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: intro_video_url
+    label: Intro Video URL
+    type: string
+    observed_as: intro_video_url
+  - name: action
+    label: Action
+    type: enum
+    observed_as: action
+    required: true
+    enum_values:
+      - Create Entry
+      - Update Settings
+      - Show Form Tour
+      - View Report
+      - Go to Page
+      - View Docs
+      - Complete Onboarding
+  - name: action_label
+    label: Action Label
+    type: string
+    observed_as: action_label
+  - name: reference_document
+    label: Reference Document
+    type: ref
+    observed_as: reference_document
+    ref: DocType
+  - name: module_onboarding
+    label: Module Onboarding
+    type: ref
+    observed_as: module_onboarding
+    ref: ModuleOnboarding
+  - name: show_full_form
+    label: Show Full Form?
+    type: boolean
+    observed_as: show_full_form
+    default: "0"
+  - name: show_form_tour
+    label: Show Form Tour
+    type: boolean
+    observed_as: show_form_tour
+    default: "0"
+  - name: form_tour
+    label: Form Tour
+    type: ref
+    observed_as: form_tour
+    ref: FormTour
+  - name: is_single
+    label: Is Single
+    type: boolean
+    observed_as: is_single
+    default: "0"
+  - name: reference_report
+    label: Reference Report
+    type: ref
+    observed_as: reference_report
+    ref: Report
+  - name: report_reference_doctype
+    label: Report Reference Doctype
+    type: string
+    observed_as: report_reference_doctype
+  - name: report_type
+    label: Report Type
+    type: string
+    observed_as: report_type
+  - name: report_description
+    label: Report Description
+    type: string
+    observed_as: report_description
+  - name: path
+    label: Path
+    type: string
+    observed_as: path
+  - name: callback_title
+    label: Callback Title
+    type: string
+    observed_as: callback_title
+  - name: callback_message
+    label: Callback Message
+    type: text
+    observed_as: callback_message
+  - name: validate_action
+    label: Validate Field
+    type: boolean
+    observed_as: validate_action
+    default: "1"
+  - name: field
+    label: Field
+    type: string
+    observed_as: field
+  - name: value_to_validate
+    label: Value to Validate
+    type: string
+    observed_as: value_to_validate
+  - name: video_url
+    label: Video URL
+    type: string
+    observed_as: video_url
+  - name: route_options
+    label: Route Options
+    type: text
+    observed_as: route_options
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_document
+  - to: ModuleOnboarding
+    kind: many-to-one
+    via: module_onboarding
+  - to: FormTour
+    kind: many-to-one
+    via: form_tour
+  - to: Report
+    kind: many-to-one
+    via: reference_report
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOnboarding Step
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Onboarding Step
+    note: declared by the program and served by its API

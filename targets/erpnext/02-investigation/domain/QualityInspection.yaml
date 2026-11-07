@@ -1,0 +1,177 @@
+name: QualityInspection
+description: 'Checks an item against its quality parameters. Document type "Quality Inspection" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - MAT-QA-.YYYY.-
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: report_date
+    label: Report Date
+    type: date
+    observed_as: report_date
+    required: true
+    default: Today
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Accepted
+      - Rejected
+      - Cancelled
+    default: Accepted
+  - name: child_row_reference
+    label: Child Row Reference
+    type: string
+    observed_as: child_row_reference
+  - name: inspection_type
+    label: Inspection Type
+    type: enum
+    observed_as: inspection_type
+    required: true
+    enum_values:
+      - Incoming
+      - Outgoing
+      - In Process
+  - name: reference_type
+    label: Reference Type
+    type: enum
+    observed_as: reference_type
+    required: true
+    enum_values:
+      - Purchase Receipt
+      - Purchase Invoice
+      - Subcontracting Receipt
+      - Delivery Note
+      - Sales Invoice
+      - Stock Entry
+      - Job Card
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+    required: true
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_serial_no
+    label: Item Serial No
+    type: ref
+    observed_as: item_serial_no
+    ref: SerialNo
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: sample_size
+    label: Sample Size
+    type: decimal
+    observed_as: sample_size
+    required: true
+    default: "1"
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: bom_no
+    label: BOM No
+    type: ref
+    observed_as: bom_no
+    ref: BOM
+  - name: quality_inspection_template
+    label: Quality Inspection Template
+    type: ref
+    observed_as: quality_inspection_template
+    ref: QualityInspectionTemplate
+  - name: manual_inspection
+    label: Manual Inspection
+    type: boolean
+    observed_as: manual_inspection
+    default: "0"
+  - name: inspected_by
+    label: Inspected By
+    type: ref
+    observed_as: inspected_by
+    required: true
+    ref: User
+    default: user
+  - name: verified_by
+    label: Verified By
+    type: string
+    observed_as: verified_by
+  - name: remarks
+    label: Remarks
+    type: text
+    observed_as: remarks
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: QualityInspection
+  - name: letter_head
+    label: Letter Head
+    type: ref
+    observed_as: letter_head
+    ref: LetterHead
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: SerialNo
+    kind: many-to-one
+    via: item_serial_no
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: BOM
+    kind: many-to-one
+    via: bom_no
+  - to: QualityInspectionTemplate
+    kind: many-to-one
+    via: quality_inspection_template
+  - to: QualityInspectionReading
+    kind: one-to-many
+    via: readings
+    description: lines (Readings)
+  - to: User
+    kind: many-to-one
+    via: inspected_by
+  - to: QualityInspection
+    kind: many-to-one
+    via: amended_from
+  - to: LetterHead
+    kind: many-to-one
+    via: letter_head
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabQuality Inspection
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Quality Inspection
+    note: declared by the program and served by its API

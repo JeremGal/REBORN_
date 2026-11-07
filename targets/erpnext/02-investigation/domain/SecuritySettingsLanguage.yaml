@@ -1,0 +1,22 @@
+name: SecuritySettingsLanguage
+description: 'Document type "Security Settings Language" (module Core): lines of another document.'
+fields:
+  - name: language
+    label: Language
+    type: ref
+    observed_as: language
+    required: true
+    ref: Language
+relations:
+  - to: Language
+    kind: many-to-one
+    via: language
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSecurity Settings Language
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Security Settings Language
+    note: declared by the program and served by its API

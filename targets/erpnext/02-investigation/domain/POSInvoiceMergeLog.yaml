@@ -1,0 +1,97 @@
+name: POSInvoiceMergeLog
+description: 'Shows which POS invoices were merged into a sales invoice. Document type "POS Invoice Merge Log" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+    required: true
+  - name: merge_invoices_based_on
+    label: Merge Invoices Based On
+    type: enum
+    observed_as: merge_invoices_based_on
+    required: true
+    enum_values:
+      - Customer
+      - Customer Group
+  - name: pos_closing_entry
+    label: POS Closing Entry
+    type: ref
+    observed_as: pos_closing_entry
+    ref: POSClosingEntry
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: consolidated_invoice
+    label: Consolidated Sales Invoice
+    type: ref
+    observed_as: consolidated_invoice
+    ref: SalesInvoice
+  - name: consolidated_credit_note
+    label: Consolidated Credit Note
+    type: ref
+    observed_as: consolidated_credit_note
+    ref: SalesInvoice
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: POSInvoiceMergeLog
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: POSClosingEntry
+    kind: many-to-one
+    via: pos_closing_entry
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: POSInvoiceReference
+    kind: one-to-many
+    via: pos_invoices
+    description: lines (POS Invoices)
+  - to: SalesInvoice
+    kind: many-to-one
+    via: consolidated_invoice
+  - to: SalesInvoice
+    kind: many-to-one
+    via: consolidated_credit_note
+  - to: POSInvoiceMergeLog
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPOS Invoice Merge Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of POS Invoice Merge Log
+    note: declared by the program and served by its API

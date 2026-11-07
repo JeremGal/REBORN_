@@ -1,0 +1,159 @@
+name: LDAPSettings
+description: 'Document type "LDAP Settings" (module Integrations): single settings record.'
+fields:
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "0"
+  - name: ldap_directory_server
+    label: Directory Server
+    type: enum
+    observed_as: ldap_directory_server
+    required: true
+    enum_values:
+      - Active Directory
+      - OpenLDAP
+      - Custom
+  - name: ldap_server_url
+    label: LDAP Server Url
+    type: string
+    observed_as: ldap_server_url
+    required: true
+  - name: base_dn
+    label: Base Distinguished Name (DN)
+    type: string
+    observed_as: base_dn
+    required: true
+  - name: password
+    label: Password for Base DN
+    type: string
+    observed_as: password
+    required: true
+  - name: ldap_search_path_user
+    label: LDAP search path for Users
+    type: string
+    observed_as: ldap_search_path_user
+    required: true
+  - name: ldap_search_string
+    label: LDAP Search String
+    type: string
+    observed_as: ldap_search_string
+    required: true
+  - name: ldap_search_path_group
+    label: LDAP search path for Groups
+    type: string
+    observed_as: ldap_search_path_group
+    required: true
+  - name: ldap_email_field
+    label: LDAP Email Field
+    type: string
+    observed_as: ldap_email_field
+    required: true
+  - name: ldap_username_field
+    label: LDAP Username Field
+    type: string
+    observed_as: ldap_username_field
+    required: true
+  - name: ldap_first_name_field
+    label: LDAP First Name Field
+    type: string
+    observed_as: ldap_first_name_field
+    required: true
+  - name: do_not_create_new_user
+    label: Do Not Create New User
+    type: boolean
+    observed_as: do_not_create_new_user
+    default: "0"
+  - name: ldap_middle_name_field
+    label: LDAP Middle Name Field
+    type: string
+    observed_as: ldap_middle_name_field
+  - name: ldap_last_name_field
+    label: LDAP Last Name Field
+    type: string
+    observed_as: ldap_last_name_field
+  - name: ldap_phone_field
+    label: LDAP Phone Field
+    type: string
+    observed_as: ldap_phone_field
+  - name: ldap_mobile_field
+    label: LDAP Mobile Field
+    type: string
+    observed_as: ldap_mobile_field
+  - name: ssl_tls_mode
+    label: SSL/TLS Mode
+    type: enum
+    observed_as: ssl_tls_mode
+    enum_values:
+      - Off
+      - StartTLS
+    default: Off
+  - name: require_trusted_certificate
+    label: Require Trusted Certificate
+    type: enum
+    observed_as: require_trusted_certificate
+    required: true
+    enum_values:
+      - No
+      - Yes
+    default: No
+  - name: local_private_key_file
+    label: Path to private Key File
+    type: string
+    observed_as: local_private_key_file
+  - name: local_server_certificate_file
+    label: Path to Server Certificate
+    type: string
+    observed_as: local_server_certificate_file
+  - name: local_ca_certs_file
+    label: Path to CA Certs File
+    type: string
+    observed_as: local_ca_certs_file
+  - name: ldap_group_objectclass
+    label: Group Object Class
+    type: string
+    observed_as: ldap_group_objectclass
+  - name: ldap_custom_group_search
+    label: Custom Group Search
+    type: string
+    observed_as: ldap_custom_group_search
+  - name: ldap_group_member_attribute
+    label: LDAP Group Member attribute
+    type: string
+    observed_as: ldap_group_member_attribute
+  - name: default_user_type
+    label: Default User Type
+    type: ref
+    observed_as: default_user_type
+    required: true
+    ref: UserType
+  - name: default_role
+    label: Default User Role
+    type: ref
+    observed_as: default_role
+    ref: Role
+  - name: ldap_group_field
+    label: LDAP Group Field
+    type: string
+    observed_as: ldap_group_field
+relations:
+  - to: UserType
+    kind: many-to-one
+    via: default_user_type
+  - to: Role
+    kind: many-to-one
+    via: default_role
+  - to: LDAPGroupMapping
+    kind: one-to-many
+    via: ldap_groups
+    description: lines (LDAP Group Mappings)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLDAP Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of LDAP Settings
+    note: declared by the program and served by its API

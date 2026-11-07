@@ -1,0 +1,134 @@
+name: PromotionalSchemeProductDiscount
+description: 'Document type "Promotional Scheme Product Discount" (module Accounts): lines of another document.'
+fields:
+  - name: disable
+    label: Disable
+    type: boolean
+    observed_as: disable
+    default: "0"
+  - name: apply_multiple_pricing_rules
+    label: Apply Multiple Pricing Rules
+    type: boolean
+    observed_as: apply_multiple_pricing_rules
+    default: "0"
+  - name: rule_description
+    label: Rule Description
+    type: text
+    observed_as: rule_description
+    required: true
+  - name: min_qty
+    label: Min Qty
+    type: decimal
+    observed_as: min_qty
+    default: "0"
+  - name: max_qty
+    label: Max Qty
+    type: decimal
+    observed_as: max_qty
+    default: "0"
+  - name: min_amount
+    label: Min Amount
+    type: money
+    observed_as: min_amount
+    default: "0"
+  - name: max_amount
+    label: Max Amount
+    type: money
+    observed_as: max_amount
+    default: "0"
+  - name: same_item
+    label: Same Item
+    type: boolean
+    observed_as: same_item
+    default: "0"
+  - name: free_item
+    label: Item Code
+    type: ref
+    observed_as: free_item
+    ref: Item
+  - name: free_qty
+    label: Qty
+    type: decimal
+    observed_as: free_qty
+  - name: free_item_uom
+    label: UOM
+    type: ref
+    observed_as: free_item_uom
+    ref: UOM
+  - name: free_item_rate
+    label: Rate
+    type: money
+    observed_as: free_item_rate
+  - name: round_free_qty
+    label: Round Free Qty
+    type: boolean
+    observed_as: round_free_qty
+    default: "0"
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: threshold_percentage
+    label: Threshold for Suggestion
+    type: percent
+    observed_as: threshold_percentage
+  - name: priority
+    label: Priority
+    type: enum
+    observed_as: priority
+    enum_values:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+      - "10"
+      - "11"
+      - "12"
+      - "13"
+      - "14"
+      - "15"
+      - "16"
+      - "17"
+      - "18"
+      - "19"
+      - "20"
+  - name: is_recursive
+    label: Is Recursive
+    type: boolean
+    observed_as: is_recursive
+    default: "0"
+  - name: recurse_for
+    label: Recurse Every (As Per Transaction UOM)
+    type: decimal
+    observed_as: recurse_for
+    default: "0"
+  - name: apply_recursion_over
+    label: Apply Recursion Over (As Per Transaction UOM)
+    type: decimal
+    observed_as: apply_recursion_over
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: free_item
+  - to: UOM
+    kind: many-to-one
+    via: free_item_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPromotional Scheme Product Discount
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Promotional Scheme Product Discount
+    note: declared by the program and served by its API

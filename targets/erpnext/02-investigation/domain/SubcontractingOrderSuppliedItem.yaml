@@ -1,0 +1,92 @@
+name: SubcontractingOrderSuppliedItem
+description: 'Document type "Subcontracting Order Supplied Item" (module Subcontracting): lines of another document.'
+fields:
+  - name: main_item_code
+    label: Item Code
+    type: ref
+    observed_as: main_item_code
+    ref: Item
+  - name: rm_item_code
+    label: Raw Material Item Code
+    type: ref
+    observed_as: rm_item_code
+    ref: Item
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+    default: "1"
+  - name: reserve_warehouse
+    label: Reserve Warehouse
+    type: ref
+    observed_as: reserve_warehouse
+    ref: Warehouse
+  - name: bom_detail_no
+    label: BOM Detail No
+    type: string
+    observed_as: bom_detail_no
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: required_qty
+    label: Required Qty
+    type: decimal
+    observed_as: required_qty
+  - name: supplied_qty
+    label: Supplied Qty
+    type: decimal
+    observed_as: supplied_qty
+  - name: stock_reserved_qty
+    label: Reserved Qty
+    type: decimal
+    observed_as: stock_reserved_qty
+    default: "0"
+  - name: consumed_qty
+    label: Consumed Qty
+    type: decimal
+    observed_as: consumed_qty
+  - name: returned_qty
+    label: Returned Qty
+    type: decimal
+    observed_as: returned_qty
+  - name: total_supplied_qty
+    label: Total Supplied Qty
+    type: decimal
+    observed_as: total_supplied_qty
+relations:
+  - to: Item
+    kind: many-to-one
+    via: main_item_code
+  - to: Item
+    kind: many-to-one
+    via: rm_item_code
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: reserve_warehouse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Order Supplied Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Order Supplied Item
+    note: declared by the program and served by its API

@@ -1,0 +1,153 @@
+name: PickList
+description: 'The items and quantities to pick from the warehouse. Document type "Pick List" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - STO-PICK-.YYYY.-
+  - name: purpose
+    label: Purpose
+    type: enum
+    observed_as: purpose
+    enum_values:
+      - Material Transfer for Manufacture
+      - Material Transfer
+      - Delivery
+    default: Material Transfer for Manufacture
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: for_qty
+    label: Qty of Finished Goods Item
+    type: decimal
+    observed_as: for_qty
+  - name: parent_warehouse
+    label: Warehouse
+    type: ref
+    observed_as: parent_warehouse
+    ref: Warehouse
+  - name: consider_rejected_warehouses
+    label: Consider Rejected Warehouses
+    type: boolean
+    observed_as: consider_rejected_warehouses
+    default: "0"
+  - name: pick_manually
+    label: Pick Manually
+    type: boolean
+    observed_as: pick_manually
+    default: "0"
+  - name: ignore_pricing_rule
+    label: Ignore Pricing Rule
+    type: boolean
+    observed_as: ignore_pricing_rule
+    default: "0"
+  - name: scan_barcode
+    label: Scan Barcode
+    type: string
+    observed_as: scan_barcode
+  - name: scan_mode
+    label: Scan Mode
+    type: boolean
+    observed_as: scan_mode
+    default: "0"
+  - name: prompt_qty
+    label: Prompt Qty
+    type: boolean
+    observed_as: prompt_qty
+    default: "0"
+  - name: group_same_items
+    label: Group Same Items
+    type: boolean
+    observed_as: group_same_items
+    default: "0"
+  - name: per_delivered
+    label: "% Delivered"
+    type: percent
+    observed_as: per_delivered
+  - name: delivery_status
+    label: Delivery Status
+    type: enum
+    observed_as: delivery_status
+    enum_values:
+      - Not Delivered
+      - Fully Delivered
+      - Partly Delivered
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Draft
+      - Open
+      - Partly Delivered
+      - Partially Transferred
+      - Completed
+      - Cancelled
+    default: Draft
+  - name: work_order
+    label: Work Order
+    type: ref
+    observed_as: work_order
+    ref: WorkOrder
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: PickList
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: Warehouse
+    kind: many-to-one
+    via: parent_warehouse
+  - to: PickListItem
+    kind: one-to-many
+    via: locations
+    description: lines (Item Locations)
+  - to: WorkOrder
+    kind: many-to-one
+    via: work_order
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+  - to: PickList
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPick List
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Pick List
+    note: declared by the program and served by its API

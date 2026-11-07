@@ -1,0 +1,49 @@
+name: ReportColumn
+description: 'Document type "Report Column" (module Core): lines of another document.'
+fields:
+  - name: fieldname
+    label: Fieldname
+    type: string
+    observed_as: fieldname
+    required: true
+  - name: label
+    label: Label
+    type: string
+    observed_as: label
+    required: true
+  - name: fieldtype
+    label: Fieldtype
+    type: enum
+    observed_as: fieldtype
+    required: true
+    enum_values:
+      - Check
+      - Currency
+      - Data
+      - Date
+      - Datetime
+      - Duration
+      - Dynamic Link
+      - Float
+      - Fold
+      - Int
+      - Link
+      - Select
+      - Time
+  - name: options
+    label: Options
+    type: string
+    observed_as: options
+  - name: width
+    label: Width
+    type: integer
+    observed_as: width
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabReport Column
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Report Column
+    note: declared by the program and served by its API

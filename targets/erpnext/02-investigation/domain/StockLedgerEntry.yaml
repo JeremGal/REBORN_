@@ -1,0 +1,172 @@
+name: StockLedgerEntry
+description: Document type "Stock Ledger Entry" (module Stock).
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+  - name: posting_datetime
+    label: Posting Datetime
+    type: datetime
+    observed_as: posting_datetime
+  - name: is_adjustment_entry
+    label: Is Adjustment Entry
+    type: boolean
+    observed_as: is_adjustment_entry
+    default: "0"
+  - name: auto_created_serial_and_batch_bundle
+    label: Auto Created Serial and Batch Bundle
+    type: boolean
+    observed_as: auto_created_serial_and_batch_bundle
+    default: "0"
+  - name: voucher_type
+    label: Voucher Type
+    type: ref
+    observed_as: voucher_type
+    ref: DocType
+  - name: voucher_no
+    label: Voucher No
+    type: string
+    observed_as: voucher_no
+  - name: voucher_detail_no
+    label: Voucher Detail No
+    type: string
+    observed_as: voucher_detail_no
+  - name: serial_and_batch_bundle
+    label: Serial and Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: dependant_sle_voucher_detail_no
+    label: Dependant SLE Voucher Detail No
+    type: string
+    observed_as: dependant_sle_voucher_detail_no
+  - name: recalculate_rate
+    label: Recalculate Incoming/Outgoing Rate
+    type: boolean
+    observed_as: recalculate_rate
+    default: "0"
+  - name: actual_qty
+    label: Qty Change
+    type: decimal
+    observed_as: actual_qty
+  - name: qty_after_transaction
+    label: Qty After Transaction
+    type: decimal
+    observed_as: qty_after_transaction
+  - name: incoming_rate
+    label: Incoming Rate
+    type: money
+    observed_as: incoming_rate
+  - name: outgoing_rate
+    label: Outgoing Rate
+    type: money
+    observed_as: outgoing_rate
+  - name: valuation_rate
+    label: Average Rate
+    type: money
+    observed_as: valuation_rate
+  - name: stock_value
+    label: Balance Stock Value
+    type: money
+    observed_as: stock_value
+  - name: stock_value_difference
+    label: Change in Stock Value
+    type: money
+    observed_as: stock_value_difference
+  - name: stock_queue
+    label: FIFO Stock Queue (qty, rate)
+    type: text
+    observed_as: stock_queue
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: fiscal_year
+    label: Fiscal Year
+    type: string
+    observed_as: fiscal_year
+  - name: has_batch_no
+    label: Has Batch No
+    type: boolean
+    observed_as: has_batch_no
+    default: "0"
+  - name: has_serial_no
+    label: Has Serial No
+    type: boolean
+    observed_as: has_serial_no
+    default: "0"
+  - name: is_cancelled
+    label: Is Cancelled
+    type: boolean
+    observed_as: is_cancelled
+    default: "0"
+  - name: to_rename
+    label: To Rename
+    type: boolean
+    observed_as: to_rename
+    default: "1"
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: batch_no
+    label: Batch No
+    type: string
+    observed_as: batch_no
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: DocType
+    kind: many-to-one
+    via: voucher_type
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Project
+    kind: many-to-one
+    via: project
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabStock Ledger Entry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Stock Ledger Entry
+    note: declared by the program and served by its API

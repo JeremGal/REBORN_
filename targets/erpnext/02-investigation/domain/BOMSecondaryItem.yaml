@@ -1,0 +1,116 @@
+name: BOMSecondaryItem
+description: 'Document type "BOM Secondary Item" (module Manufacturing): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: secondary_item_type
+    label: Type
+    type: enum
+    observed_as: secondary_item_type
+    required: true
+    enum_values:
+      - Co-Product
+      - By-Product
+      - Scrap
+      - Additional Finished Good
+  - name: uom
+    label: UOM
+    type: ref
+    observed_as: uom
+    required: true
+    ref: UOM
+  - name: qty
+    label: Qty
+    type: decimal
+    observed_as: qty
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    required: true
+    precision: 9
+    default: "1"
+  - name: stock_qty
+    label: Stock Qty
+    type: decimal
+    observed_as: stock_qty
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: valuation_type
+    label: Valuation Type
+    type: enum
+    observed_as: valuation_type
+    required: true
+    enum_values:
+      - Valuation Rate
+      - "% of Component Cost"
+      - Manual
+    default: Valuation Rate
+  - name: cost_allocation_per
+    label: Cost Allocation %
+    type: percent
+    observed_as: cost_allocation_per
+    required: true
+    default: "0"
+  - name: process_loss_per
+    label: Process Loss %
+    type: percent
+    observed_as: process_loss_per
+    required: true
+    default: "0"
+  - name: cost
+    label: Cost
+    type: money
+    observed_as: cost
+    required: true
+    default: "0"
+  - name: base_cost
+    label: Base Cost (Company Currency)
+    type: money
+    observed_as: base_cost
+    required: true
+    default: "0"
+  - name: process_loss_qty
+    label: Process Loss Qty
+    type: decimal
+    observed_as: process_loss_qty
+    required: true
+    default: "0"
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: UOM
+    kind: many-to-one
+    via: uom
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Secondary Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Secondary Item
+    note: declared by the program and served by its API

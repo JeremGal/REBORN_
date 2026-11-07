@@ -1,0 +1,134 @@
+name: SubcontractingReceiptSuppliedItem
+description: 'Document type "Subcontracting Receipt Supplied Item" (module Subcontracting): lines of another document.'
+fields:
+  - name: main_item_code
+    label: Item Code
+    type: ref
+    observed_as: main_item_code
+    ref: Item
+  - name: rm_item_code
+    label: Raw Material Item Code
+    type: ref
+    observed_as: rm_item_code
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: bom_detail_no
+    label: BOM Detail No
+    type: string
+    observed_as: bom_detail_no
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+    default: "1"
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: available_qty_for_consumption
+    label: Available Qty For Consumption
+    type: decimal
+    observed_as: available_qty_for_consumption
+    default: "0"
+  - name: required_qty
+    label: Required Qty
+    type: decimal
+    observed_as: required_qty
+  - name: consumed_qty
+    label: Consumed Qty
+    type: decimal
+    observed_as: consumed_qty
+    required: true
+  - name: current_stock
+    label: Current Stock
+    type: decimal
+    observed_as: current_stock
+  - name: serial_and_batch_bundle
+    label: Serial / Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: use_serial_batch_fields
+    label: Use Serial No / Batch Fields
+    type: boolean
+    observed_as: use_serial_batch_fields
+    default: "0"
+  - name: subcontracting_order
+    label: Subcontracting Order
+    type: ref
+    observed_as: subcontracting_order
+    ref: SubcontractingOrder
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: expense_account
+    label: Expense Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: Item
+    kind: many-to-one
+    via: main_item_code
+  - to: Item
+    kind: many-to-one
+    via: rm_item_code
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+  - to: SubcontractingOrder
+    kind: many-to-one
+    via: subcontracting_order
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Receipt Supplied Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Receipt Supplied Item
+    note: declared by the program and served by its API

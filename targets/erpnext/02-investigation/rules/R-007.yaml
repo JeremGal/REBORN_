@@ -1,0 +1,21 @@
+id: R-007
+title: Two tax rows on the same tax account share one rate
+kind: tax
+statement: >-
+  When two tax rows of an invoice use the same tax account, the earlier "On Net Total" row was computed with the rate of
+  the later row, not with its own. Observed twice; the cause (one rate kept per account) is not established.
+formula: |
+  observed: rows on the same account -> the "On Net Total" row uses the last row's rate
+applies_to: [SalesTaxesAndCharges.account_head, SalesTaxesAndCharges.rate]
+features: [F-001]
+examples:
+  - { given: { net_total: 100, taxes: "10% On Net Total + 5% On Previous Row Total, same account" }, expect: { tax_1: 5, tax_2: 5.25, grand_total: 110.25 }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 5 (SI-05)" } }
+  - { given: { net_total: 100, taxes: "10% On Net Total + 50% On Previous Row Amount, same account" }, expect: { tax_1: 50, tax_2: 25, grand_total: 175 }, source: { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "step 6 (SI-06)" } }
+status: confirmed
+confidence: medium
+evidence:
+  - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "steps 5-6" }
+contradictions: []
+notes: >-
+  The behaviour is observed; why it happens is a hypothesis (U-001). A rebuild should keep one tax account per tax row
+  and flag duplicate accounts, rather than copy a behaviour whose intent is unknown.

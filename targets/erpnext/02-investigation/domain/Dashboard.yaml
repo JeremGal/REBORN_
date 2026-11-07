@@ -1,0 +1,49 @@
+name: Dashboard
+description: Document type "Dashboard" (module Desk).
+fields:
+  - name: dashboard_name
+    label: Dashboard Name
+    type: string
+    observed_as: dashboard_name
+    required: true
+    unique: true
+  - name: is_default
+    label: Is Default
+    type: boolean
+    observed_as: is_default
+    default: "0"
+  - name: is_standard
+    label: Is Standard
+    type: boolean
+    observed_as: is_standard
+    default: "0"
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: chart_options
+    label: Chart Options
+    type: text
+    observed_as: chart_options
+relations:
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: DashboardChartLink
+    kind: one-to-many
+    via: charts
+    description: lines (Charts)
+  - to: NumberCardLink
+    kind: one-to-many
+    via: cards
+    description: lines (Cards)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDashboard
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Dashboard
+    note: declared by the program and served by its API

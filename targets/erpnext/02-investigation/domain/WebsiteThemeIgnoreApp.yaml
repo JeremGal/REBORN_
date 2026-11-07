@@ -1,0 +1,17 @@
+name: WebsiteThemeIgnoreApp
+description: 'Document type "Website Theme Ignore App" (module Website): lines of another document.'
+fields:
+  - name: app
+    label: App
+    type: string
+    observed_as: app
+    required: true
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWebsite Theme Ignore App
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Website Theme Ignore App
+    note: declared by the program and served by its API

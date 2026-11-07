@@ -1,0 +1,53 @@
+# Filled automatically by tools/reborn.mjs. Raw files live in the local evidence store (.evidence/<target>/), never in git.
+target: erpnext
+entries:
+  - id: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    tool: frappe-api
+    operation: doctype-metadata
+    subject:
+      label: all document types
+    created_at: 2026-11-07T19:12:18.327Z
+    file: frappe/20261107T191217Z-17004-6a593d-doctype-metadata.json
+    bytes: 27486809
+    sha256: 8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    summary: 835 document type definitions (0 unreadable)
+    counts:
+      tables: 835
+  - id: rb_8cde85975d89f57f0b6b15d327377540343987849237af439737830016a22d4e
+    kind: rea
+    tool: frappe-api
+    operation: observe Sales Invoice
+    subject:
+      label: 10 fictitious Sales Invoice drafts
+    created_at: 2026-11-07T19:14:58.212Z
+    file: frappe/20261107T191458Z-32340-840391-observe-sales-invoice.json
+    bytes: 96242
+    sha256: 8cde85975d89f57f0b6b15d327377540343987849237af439737830016a22d4e
+    summary: 9/10 cases computed by the program and read back (run run-20261107T191450-api-sales-invoice)
+  - id: rb_a35e242c688671468ed7af4fa623c860831ed50d61cb8bf23b0a1327d8266435
+    kind: rea
+    tool: frappe-api
+    operation: observe Sales Invoice
+    subject:
+      label: 5 fictitious Sales Invoice drafts
+    created_at: 2026-11-07T19:16:22.379Z
+    file: frappe/20261107T191622Z-34724-f7cb91-observe-sales-invoice-2.json
+    bytes: 48167
+    sha256: a35e242c688671468ed7af4fa623c860831ed50d61cb8bf23b0a1327d8266435
+    summary: 5/5 cases computed by the program and read back (run run-20261107T191620-api-sales-invoice-2)
+  - id: doc:e7138a302f99736c
+    kind: manual
+    tool: reborn-manual
+    operation: manual-inventory
+    subject:
+      label: erpnext-sitemap.txt
+      sha256: beaa762bc90ae2ba3529e76e2434518318da8d8c8bd2705b1e29a249f9239ab0
+    created_at: 2026-11-07T19:20:32.504Z
+    file: docs/20261107T192032Z-33888-881459-manual-inventory-erpnext-sitemap.json
+    bytes: 21838
+    sha256: e7138a302f99736c1f7b585a1a796e6580c7cd65fc7721d25cce486997b6fc31
+    summary: 755 documented topics in 1 chapters (documentation page list (one page per topic, older versions left out))
+    counts:
+      features: 755
+      chapters: 1

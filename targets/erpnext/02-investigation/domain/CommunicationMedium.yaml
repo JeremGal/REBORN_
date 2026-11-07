@@ -1,0 +1,51 @@
+name: CommunicationMedium
+description: A channel customers reach you on, like a phone line. Document type "Communication Medium" (module Communication).
+fields:
+  - name: communication_channel
+    label: Communication Channel
+    type: string
+    observed_as: communication_channel
+  - name: communication_medium_type
+    label: Communication Medium Type
+    type: enum
+    observed_as: communication_medium_type
+    required: true
+    enum_values:
+      - Voice
+      - Email
+      - Chat
+  - name: catch_all
+    label: Catch All
+    type: ref
+    observed_as: catch_all
+    ref: EmployeeGroup
+  - name: provider
+    label: Provider
+    type: ref
+    observed_as: provider
+    ref: Supplier
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+relations:
+  - to: EmployeeGroup
+    kind: many-to-one
+    via: catch_all
+  - to: Supplier
+    kind: many-to-one
+    via: provider
+  - to: CommunicationMediumTimeslot
+    kind: one-to-many
+    via: timeslots
+    description: lines (Timeslots)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCommunication Medium
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Communication Medium
+    note: declared by the program and served by its API

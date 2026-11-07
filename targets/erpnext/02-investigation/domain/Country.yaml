@@ -1,0 +1,37 @@
+name: Country
+description: Document type "Country" (module Geo).
+fields:
+  - name: country_name
+    label: Country Name
+    type: string
+    observed_as: country_name
+    required: true
+    unique: true
+  - name: code
+    label: Code
+    type: string
+    observed_as: code
+    required: true
+    max_length: 2
+  - name: date_format
+    label: Date Format
+    type: string
+    observed_as: date_format
+  - name: time_format
+    label: Time format
+    type: string
+    observed_as: time_format
+    default: HH:mm:ss
+  - name: time_zones
+    label: Time Zones
+    type: text
+    observed_as: time_zones
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCountry
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Country
+    note: declared by the program and served by its API

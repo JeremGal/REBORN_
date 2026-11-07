@@ -1,0 +1,32 @@
+name: ItemVariantSettings
+description: 'Document type "Item Variant Settings" (module Stock): single settings record.'
+fields:
+  - name: do_not_update_variants
+    label: Do not update variants on save
+    type: boolean
+    observed_as: do_not_update_variants
+    default: "0"
+  - name: allow_rename_attribute_value
+    label: Allow Rename Attribute Value
+    type: boolean
+    observed_as: allow_rename_attribute_value
+    default: "0"
+  - name: allow_different_uom
+    label: Allow Variant UOM to be different from Template UOM
+    type: boolean
+    observed_as: allow_different_uom
+    default: "0"
+relations:
+  - to: VariantField
+    kind: one-to-many
+    via: fields
+    description: lines (Fields)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Variant Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Variant Settings
+    note: declared by the program and served by its API

@@ -1,0 +1,78 @@
+name: CustomWorkspace
+description: "A site's overrides on a standard (app-shipped) workspace. Site-owned and standard-only: there is no user layer, deliberately -- a private workspace is already yours to edit directly, and a public one is the site's. The merge is split on purpose. Roles, icon, visibility and sequence are a true diff,  Document type \"Custom Workspace\" (module Desk)."
+fields:
+  - name: workspace
+    label: Workspace
+    type: ref
+    observed_as: workspace
+    required: true
+    unique: true
+    ref: Workspace
+  - name: visibility
+    label: Visibility
+    type: enum
+    observed_as: visibility
+    enum_values:
+      - Inherit
+      - Visible
+      - Hidden
+    default: Inherit
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: indicator_color
+    label: Indicator Color
+    type: enum
+    observed_as: indicator_color
+    enum_values:
+      - green
+      - cyan
+      - blue
+      - orange
+      - yellow
+      - gray
+      - grey
+      - red
+      - pink
+      - darkgrey
+      - purple
+      - light-blue
+  - name: override_sequence
+    label: Override Sidebar Position
+    type: boolean
+    observed_as: override_sequence
+    default: "0"
+  - name: sequence_id
+    label: Sidebar Position
+    type: decimal
+    observed_as: sequence_id
+  - name: content
+    label: Content
+    type: text
+    observed_as: content
+  - name: widgets
+    label: Added Widgets
+    type: text
+    observed_as: widgets
+relations:
+  - to: Workspace
+    kind: many-to-one
+    via: workspace
+  - to: HasRole
+    kind: one-to-many
+    via: added_roles
+    description: lines (Added Roles)
+  - to: HasRole
+    kind: one-to-many
+    via: removed_roles
+    description: lines (Removed Roles)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCustom Workspace
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Custom Workspace
+    note: declared by the program and served by its API

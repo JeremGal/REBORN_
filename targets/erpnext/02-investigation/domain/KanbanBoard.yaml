@@ -1,0 +1,114 @@
+name: KanbanBoard
+description: Document type "Kanban Board" (module Desk).
+fields:
+  - name: kanban_board_name
+    label: Kanban Board Name
+    type: string
+    observed_as: kanban_board_name
+    required: true
+    unique: true
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    required: true
+    ref: DocType
+  - name: field_name
+    label: Field Name
+    type: string
+    observed_as: field_name
+    required: true
+  - name: is_standard
+    label: Is Standard
+    type: enum
+    observed_as: is_standard
+    enum_values:
+      - No
+      - Yes
+    default: No
+  - name: module
+    label: Module
+    type: ref
+    observed_as: module
+    ref: ModuleDef
+  - name: private
+    label: Private
+    type: boolean
+    observed_as: private
+    default: "0"
+  - name: show_labels
+    label: Show Labels
+    type: boolean
+    observed_as: show_labels
+    default: "0"
+  - name: use_kanban_v2
+    label: Use Kanban v2 (New Experience)
+    type: boolean
+    observed_as: use_kanban_v2
+    default: "0"
+  - name: filters
+    label: Filters
+    type: text
+    observed_as: filters
+  - name: fields
+    label: Fields
+    type: text
+    observed_as: fields
+  - name: title_field
+    label: Title Field
+    type: string
+    observed_as: title_field
+  - name: show_assigned_to
+    label: Show Assigned To
+    type: boolean
+    observed_as: show_assigned_to
+    default: "1"
+  - name: show_tags_on_card
+    label: Show Tags on Cards
+    type: boolean
+    observed_as: show_tags_on_card
+    default: "0"
+  - name: image_field
+    label: Image Field
+    type: string
+    observed_as: image_field
+  - name: footer_date_field
+    label: Footer Date
+    type: enum
+    observed_as: footer_date_field
+    enum_values:
+      - Modified
+      - Creation
+    default: Modified
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+  - to: ModuleDef
+    kind: many-to-one
+    via: module
+  - to: KanbanBoardColumn
+    kind: one-to-many
+    via: columns
+    description: lines (Columns)
+  - to: KanbanBoardField
+    kind: one-to-many
+    via: card_fields
+    description: lines (Card Fields)
+  - to: KanbanBoardField
+    kind: one-to-many
+    via: preview_fields
+    description: lines (Preview Fields)
+  - to: KanbanBoardGroupField
+    kind: one-to-many
+    via: group_by_fields
+    description: lines (Swimlanes)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabKanban Board
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Kanban Board
+    note: declared by the program and served by its API

@@ -1,0 +1,104 @@
+name: LetterHead
+description: Document type "Letter Head" (module Printing).
+fields:
+  - name: letter_head_name
+    label: Letter Head Name
+    type: string
+    observed_as: letter_head_name
+    required: true
+    unique: true
+  - name: source
+    label: Letter Head Based On
+    type: enum
+    observed_as: source
+    enum_values:
+      - Image
+      - HTML
+  - name: footer_source
+    label: Footer Based On
+    type: enum
+    observed_as: footer_source
+    enum_values:
+      - Image
+      - HTML
+    default: HTML
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: is_default
+    label: Default Letter Head
+    type: boolean
+    observed_as: is_default
+    default: "0"
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: image_height
+    label: Image Height (px)
+    type: decimal
+    observed_as: image_height
+  - name: image_width
+    label: Image Width (px)
+    type: decimal
+    observed_as: image_width
+  - name: align
+    label: Align
+    type: enum
+    observed_as: align
+    enum_values:
+      - Left
+      - Right
+      - Center
+    default: Left
+  - name: content
+    label: Header HTML
+    type: text
+    observed_as: content
+  - name: custom_css
+    label: Custom CSS
+    type: text
+    observed_as: custom_css
+  - name: footer
+    label: Footer HTML
+    type: text
+    observed_as: footer
+  - name: footer_image
+    label: Image
+    type: file
+    observed_as: footer_image
+  - name: footer_image_height
+    label: Image Height (px)
+    type: decimal
+    observed_as: footer_image_height
+  - name: footer_image_width
+    label: Image Width (px)
+    type: decimal
+    observed_as: footer_image_width
+  - name: footer_align
+    label: Align
+    type: enum
+    observed_as: footer_align
+    enum_values:
+      - Left
+      - Right
+      - Center
+  - name: header_script
+    label: Header Script
+    type: text
+    observed_as: header_script
+  - name: footer_script
+    label: Footer Script
+    type: text
+    observed_as: footer_script
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLetter Head
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Letter Head
+    note: declared by the program and served by its API

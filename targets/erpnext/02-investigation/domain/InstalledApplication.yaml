@@ -1,0 +1,35 @@
+name: InstalledApplication
+description: 'Document type "Installed Application" (module Core): lines of another document.'
+fields:
+  - name: app_name
+    label: Application Name
+    type: string
+    observed_as: app_name
+    required: true
+  - name: app_version
+    label: Application Version
+    type: string
+    observed_as: app_version
+  - name: git_branch
+    label: Git Branch
+    type: string
+    observed_as: git_branch
+  - name: has_setup_wizard
+    label: Has Setup Wizard
+    type: boolean
+    observed_as: has_setup_wizard
+    default: "0"
+  - name: is_setup_complete
+    label: Is Setup Complete?
+    type: boolean
+    observed_as: is_setup_complete
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabInstalled Application
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Installed Application
+    note: declared by the program and served by its API

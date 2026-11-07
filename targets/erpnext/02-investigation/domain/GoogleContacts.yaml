@@ -1,0 +1,48 @@
+name: GoogleContacts
+description: Document type "Google Contacts" (module Integrations).
+fields:
+  - name: enable
+    label: Enable
+    type: boolean
+    observed_as: enable
+    default: "0"
+  - name: email_id
+    label: Email Address
+    type: string
+    observed_as: email_id
+    required: true
+  - name: last_sync_on
+    label: Last Sync On
+    type: datetime
+    observed_as: last_sync_on
+  - name: authorization_code
+    label: Authorization Code
+    type: string
+    observed_as: authorization_code
+  - name: refresh_token
+    label: Refresh Token
+    type: string
+    observed_as: refresh_token
+  - name: next_sync_token
+    label: Next Sync Token
+    type: string
+    observed_as: next_sync_token
+  - name: pull_from_google_contacts
+    label: Pull from Google Contacts
+    type: boolean
+    observed_as: pull_from_google_contacts
+    default: "0"
+  - name: push_to_google_contacts
+    label: Push to Google Contacts
+    type: boolean
+    observed_as: push_to_google_contacts
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabGoogle Contacts
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Google Contacts
+    note: declared by the program and served by its API

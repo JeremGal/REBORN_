@@ -1,0 +1,63 @@
+name: CRMSettings
+description: 'How leads, opportunities and appointments work. Document type "CRM Settings" (module CRM): single settings record.'
+fields:
+  - name: campaign_naming_by
+    label: Campaign Naming By
+    type: enum
+    observed_as: campaign_naming_by
+    enum_values:
+      - Campaign Name
+      - Naming Series
+  - name: allow_lead_duplication_based_on_emails
+    label: Allow Lead Duplication based on Emails
+    type: boolean
+    observed_as: allow_lead_duplication_based_on_emails
+    default: "0"
+  - name: auto_creation_of_contact
+    label: Auto Creation of Contact
+    type: boolean
+    observed_as: auto_creation_of_contact
+    default: "1"
+  - name: close_opportunity_after_days
+    label: Close Replied Opportunity After Days
+    type: integer
+    observed_as: close_opportunity_after_days
+    default: "15"
+  - name: enable_opportunity_creation_from_contact_us
+    label: Enable Opportunity Creation from Contact Us
+    type: boolean
+    observed_as: enable_opportunity_creation_from_contact_us
+    default: "0"
+  - name: default_valid_till
+    label: Default Quotation Validity Days
+    type: string
+    observed_as: default_valid_till
+  - name: carry_forward_communication_and_comments
+    label: Carry Forward Communication and Comments
+    type: boolean
+    observed_as: carry_forward_communication_and_comments
+    default: "0"
+  - name: update_timestamp_on_new_communication
+    label: Update timestamp on new communication
+    type: boolean
+    observed_as: update_timestamp_on_new_communication
+    default: "0"
+  - name: enable_frappe_crm_data_synchronization
+    label: Enable Frappe CRM Data Synchronization
+    type: boolean
+    observed_as: enable_frappe_crm_data_synchronization
+    default: "0"
+relations:
+  - to: FrappeCRMAllowedUser
+    kind: one-to-many
+    via: allowed_users
+    description: lines (Allowed Users)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCRM Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of CRM Settings
+    note: declared by the program and served by its API

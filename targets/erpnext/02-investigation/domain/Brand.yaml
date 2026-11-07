@@ -1,0 +1,31 @@
+name: Brand
+description: A brand your items are sold under. Document type "Brand" (module Setup).
+fields:
+  - name: brand
+    label: Brand Name
+    type: string
+    observed_as: brand
+    required: true
+    unique: true
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+relations:
+  - to: ItemDefault
+    kind: one-to-many
+    via: brand_defaults
+    description: lines (Brand Defaults)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBrand
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Brand
+    note: declared by the program and served by its API

@@ -1,0 +1,34 @@
+name: CustomHTMLBlock
+description: Document type "Custom HTML Block" (module Desk).
+fields:
+  - name: private
+    label: Private
+    type: boolean
+    observed_as: private
+    default: "0"
+  - name: html
+    label: ""
+    type: text
+    observed_as: html
+  - name: script
+    label: ""
+    type: text
+    observed_as: script
+  - name: style
+    label: ""
+    type: text
+    observed_as: style
+relations:
+  - to: HasRole
+    kind: one-to-many
+    via: roles
+    description: lines (Roles)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCustom HTML Block
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Custom HTML Block
+    note: declared by the program and served by its API

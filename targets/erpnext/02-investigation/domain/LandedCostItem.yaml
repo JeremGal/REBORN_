@@ -1,0 +1,77 @@
+name: LandedCostItem
+description: 'Document type "Landed Cost Item" (module Stock): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: receipt_document_type
+    label: Receipt Document Type
+    type: enum
+    observed_as: receipt_document_type
+    enum_values:
+      - Purchase Invoice
+      - Purchase Receipt
+      - Stock Entry
+      - Subcontracting Receipt
+  - name: receipt_document
+    label: Receipt Document
+    type: string
+    observed_as: receipt_document
+  - name: qty
+    label: Qty
+    type: decimal
+    observed_as: qty
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+  - name: is_fixed_asset
+    label: Is Fixed Asset
+    type: boolean
+    observed_as: is_fixed_asset
+    default: "0"
+  - name: applicable_charges
+    label: Applicable Charges
+    type: money
+    observed_as: applicable_charges
+  - name: purchase_receipt_item
+    label: Purchase Receipt Item
+    type: string
+    observed_as: purchase_receipt_item
+  - name: stock_entry_item
+    label: Stock Entry Item
+    type: string
+    observed_as: stock_entry_item
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLanded Cost Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Landed Cost Item
+    note: declared by the program and served by its API

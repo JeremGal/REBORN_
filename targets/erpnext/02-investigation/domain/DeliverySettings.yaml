@@ -1,0 +1,38 @@
+name: DeliverySettings
+description: 'Document type "Delivery Settings" (module Stock): single settings record.'
+fields:
+  - name: dispatch_template
+    label: Dispatch Notification Template
+    type: ref
+    observed_as: dispatch_template
+    ref: EmailTemplate
+  - name: dispatch_attachment
+    label: Dispatch Notification Attachment
+    type: ref
+    observed_as: dispatch_attachment
+    ref: PrintFormat
+  - name: send_with_attachment
+    label: Send with Attachment
+    type: boolean
+    observed_as: send_with_attachment
+    default: "0"
+  - name: stop_delay
+    label: Delay between Delivery Stops
+    type: integer
+    observed_as: stop_delay
+relations:
+  - to: EmailTemplate
+    kind: many-to-one
+    via: dispatch_template
+  - to: PrintFormat
+    kind: many-to-one
+    via: dispatch_attachment
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDelivery Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Delivery Settings
+    note: declared by the program and served by its API

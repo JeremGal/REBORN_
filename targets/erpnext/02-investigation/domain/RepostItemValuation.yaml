@@ -1,0 +1,158 @@
+name: RepostItemValuation
+description: 'Recalculates stock values after a backdated change. Document type "Repost Item Valuation" (module Stock): draft, submitted, cancelled life cycle.'
+fields:
+  - name: based_on
+    label: Based On
+    type: enum
+    observed_as: based_on
+    required: true
+    enum_values:
+      - Transaction
+      - Item and Warehouse
+    default: Transaction
+  - name: voucher_type
+    label: Voucher Type
+    type: ref
+    observed_as: voucher_type
+    ref: DocType
+  - name: voucher_no
+    label: Voucher No
+    type: string
+    observed_as: voucher_no
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: posting_date
+    label: Posting Date
+    type: date
+    observed_as: posting_date
+    required: true
+  - name: posting_time
+    label: Posting Time
+    type: time
+    observed_as: posting_time
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Queued
+      - In Progress
+      - Completed
+      - Skipped
+      - Failed
+      - Cancelled
+    default: Queued
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: reposting_reference
+    label: Reposting Reference
+    type: string
+    observed_as: reposting_reference
+  - name: repost_only_accounting_ledgers
+    label: Repost Only Accounting Ledgers
+    type: boolean
+    observed_as: repost_only_accounting_ledgers
+    default: "0"
+  - name: allow_negative_stock
+    label: Allow Negative Stock
+    type: boolean
+    observed_as: allow_negative_stock
+    default: "1"
+  - name: via_landed_cost_voucher
+    label: Via Landed Cost Voucher
+    type: boolean
+    observed_as: via_landed_cost_voucher
+    default: "0"
+  - name: allow_zero_rate
+    label: Allow Zero Rate
+    type: boolean
+    observed_as: allow_zero_rate
+    default: "0"
+  - name: recreate_stock_ledgers
+    label: Recreate Stock Ledgers
+    type: boolean
+    observed_as: recreate_stock_ledgers
+    default: "0"
+  - name: recalculate_valuation_rate
+    label: Recalculate Valuation Rate
+    type: boolean
+    observed_as: recalculate_valuation_rate
+    default: "0"
+  - name: error_log
+    label: Error Log
+    type: text
+    observed_as: error_log
+  - name: items_to_be_repost
+    label: Items to Be Repost
+    type: text
+    observed_as: items_to_be_repost
+  - name: total_reposting_count
+    label: No of Items to Repost
+    type: integer
+    observed_as: total_reposting_count
+  - name: current_index
+    label: Current Index
+    type: integer
+    observed_as: current_index
+  - name: gl_reposting_index
+    label: GL reposting index
+    type: integer
+    observed_as: gl_reposting_index
+    default: "0"
+  - name: reposting_data_file
+    label: Reposting Data File
+    type: file
+    observed_as: reposting_data_file
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: RepostItemValuation
+  - name: total_vouchers
+    label: Total Ledgers
+    type: integer
+    observed_as: total_vouchers
+  - name: vouchers_posted
+    label: Ledgers Posted
+    type: integer
+    observed_as: vouchers_posted
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: voucher_type
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: RepostItemValuation
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabRepost Item Valuation
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Repost Item Valuation
+    note: declared by the program and served by its API

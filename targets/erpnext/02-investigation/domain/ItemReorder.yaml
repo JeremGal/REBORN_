@@ -1,0 +1,48 @@
+name: ItemReorder
+description: 'Document type "Item Reorder" (module Stock): lines of another document.'
+fields:
+  - name: warehouse
+    label: Request for
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: warehouse_group
+    label: Check Availability in Warehouse
+    type: ref
+    observed_as: warehouse_group
+    ref: Warehouse
+  - name: warehouse_reorder_level
+    label: Re-order Level
+    type: decimal
+    observed_as: warehouse_reorder_level
+  - name: warehouse_reorder_qty
+    label: Re-order Qty
+    type: decimal
+    observed_as: warehouse_reorder_qty
+  - name: material_request_type
+    label: Material Request Type
+    type: enum
+    observed_as: material_request_type
+    required: true
+    enum_values:
+      - Purchase
+      - Transfer
+      - Material Issue
+      - Manufacture
+relations:
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse_group
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Reorder
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Reorder
+    note: declared by the program and served by its API

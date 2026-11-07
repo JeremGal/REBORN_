@@ -1,0 +1,77 @@
+name: IntegrationRequest
+description: Document type "Integration Request" (module Integrations).
+fields:
+  - name: request_id
+    label: Request ID
+    type: string
+    observed_as: request_id
+  - name: integration_request_service
+    label: Service
+    type: string
+    observed_as: integration_request_service
+  - name: is_remote_request
+    label: Is Remote Request?
+    type: boolean
+    observed_as: is_remote_request
+    default: "0"
+  - name: request_description
+    label: Request Description
+    type: string
+    observed_as: request_description
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Queued
+      - Authorized
+      - Completed
+      - Cancelled
+      - Failed
+    default: Queued
+  - name: url
+    label: URL
+    type: text
+    observed_as: url
+  - name: request_headers
+    label: Request Headers
+    type: text
+    observed_as: request_headers
+  - name: data
+    label: Request Data
+    type: text
+    observed_as: data
+  - name: response_headers
+    label: Response Headers
+    type: text
+    observed_as: response_headers
+  - name: output
+    label: Output
+    type: text
+    observed_as: output
+  - name: error
+    label: Error
+    type: text
+    observed_as: error
+  - name: reference_doctype
+    label: Reference Document Type
+    type: ref
+    observed_as: reference_doctype
+    ref: DocType
+  - name: reference_docname
+    label: Reference Document Name
+    type: string
+    observed_as: reference_docname
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_doctype
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabIntegration Request
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Integration Request
+    note: declared by the program and served by its API

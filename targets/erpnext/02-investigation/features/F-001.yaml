@@ -1,0 +1,48 @@
+id: F-001
+title: Create a sales invoice with discounts and taxes
+module: Accounts
+priority: must
+status: confirmed
+confidence: high
+user_goal: As an accountant, I invoice a customer for items, with line or invoice discounts and one or several taxes, and the program computes every total.
+actors: [accountant]
+preconditions:
+  - a customer and items exist
+  - the tax accounts exist in the chart of accounts
+inputs:
+  - { label: Customer, field: SalesInvoice.customer, type: ref, required: true }
+  - { label: Quantity, field: SalesInvoiceItem.qty, type: decimal, required: true }
+  - { label: Rate, field: SalesInvoiceItem.rate, type: money }
+  - { label: Discount (%), field: SalesInvoiceItem.discount_percentage, type: percent }
+  - { label: Additional discount (%), field: SalesInvoice.additional_discount_percentage, type: percent }
+steps:
+  - { n: 1, actor: user, does: "chooses the customer and adds lines (item, quantity, rate or list price with a discount)" }
+  - { n: 2, actor: user, does: "adds tax rows (charge type, account, rate) and, if needed, a discount on the whole invoice" }
+  - { n: 3, actor: system, does: "computes line amounts, net total, each tax with its running total, grand total and rounded total", rules: [R-001, R-002, R-003, R-004, R-005] }
+  - { n: 4, actor: system, does: "refuses a fractional quantity in a whole-number unit", rules: [R-006] }
+rules: [R-001, R-002, R-003, R-004, R-005, R-006, R-007]
+outputs:
+  - { kind: document, description: "draft sales invoice with all totals computed", entities: [SalesInvoice, SalesInvoiceItem, SalesTaxesAndCharges] }
+errors:
+  - { when: "a fractional quantity is entered for a unit that requires whole numbers", behaviour: "the invoice is refused and the row is named", message: "row N: the quantity cannot be a fraction" }
+entities: [SalesInvoice, SalesInvoiceItem, SalesTaxesAndCharges, Customer, Item, UOM]
+acceptance:
+  - id: AC-001
+    given: "one line, 3 units at 10.00, one tax of 20% on the net total"
+    when: "the invoice is saved as a draft"
+    then: "net total 30.00, tax 6.00, grand total 36.00, rounded total 36.00"
+    expected_values: { net_total: 30, total_taxes_and_charges: 6, grand_total: 36, rounded_total: 36 }
+    source_run: run-20261107T191450-api-sales-invoice
+  - id: AC-002
+    given: "10 units at 10.00, a 10% tax on the net total, then a 5% tax on that row's total (two tax accounts)"
+    when: "the invoice is saved as a draft"
+    then: "taxes 10.00 and 5.50, grand total 115.50"
+    expected_values: { net_total: 100, tax_1: 10, tax_2: 5.5, grand_total: 115.5 }
+    source_run: run-20261107T191620-api-sales-invoice-2
+evidence:
+  - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "10 cases" }
+  - { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "5 cases" }
+unknowns: [U-001, U-002]
+rebuild_notes: >-
+  Compute in a decimal type with banker's rounding to the currency's precision, read from settings (R-005). Keep a
+  running total per tax row (R-002). Use one tax account per row and warn on duplicates (R-007).

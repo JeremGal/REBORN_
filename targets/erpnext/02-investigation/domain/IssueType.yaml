@@ -1,0 +1,16 @@
+name: IssueType
+description: A grouping of issues, like billing or technical. Document type "Issue Type" (module Support).
+fields:
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabIssue Type
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Issue Type
+    note: declared by the program and served by its API

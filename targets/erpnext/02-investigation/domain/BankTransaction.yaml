@@ -1,0 +1,154 @@
+name: BankTransaction
+description: 'A line from your bank statement, ready to be matched with a payment. Document type "Bank Transaction" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - ACC-BTN-.YYYY.-
+    default: ACC-BTN-.YYYY.-
+  - name: date
+    label: Date
+    type: date
+    observed_as: date
+  - name: is_rule_evaluated
+    label: Is Rule Evaluated
+    type: boolean
+    observed_as: is_rule_evaluated
+    default: "0"
+  - name: matched_transaction_rule
+    label: Matched Transaction Rule
+    type: ref
+    observed_as: matched_transaction_rule
+    ref: BankTransactionRule
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Pending
+      - Settled
+      - Unreconciled
+      - Reconciled
+      - Cancelled
+    default: Pending
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    ref: BankAccount
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: BankTransaction
+  - name: deposit
+    label: Deposit
+    type: money
+    observed_as: deposit
+  - name: withdrawal
+    label: Withdrawal
+    type: money
+    observed_as: withdrawal
+  - name: currency
+    label: Currency
+    type: ref
+    observed_as: currency
+    ref: Currency
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: reference_number
+    label: Reference Number
+    type: text
+    observed_as: reference_number
+  - name: transaction_id
+    label: Transaction ID
+    type: string
+    observed_as: transaction_id
+  - name: transaction_type
+    label: Transaction Type
+    type: string
+    observed_as: transaction_type
+    max_length: 50
+  - name: allocated_amount
+    label: Allocated Amount
+    type: money
+    observed_as: allocated_amount
+  - name: unallocated_amount
+    label: Unallocated Amount
+    type: money
+    observed_as: unallocated_amount
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+  - name: bank_party_name
+    label: Party Name/Account Holder (Bank Statement)
+    type: string
+    observed_as: bank_party_name
+  - name: bank_party_account_number
+    label: Party Account No. (Bank Statement)
+    type: string
+    observed_as: bank_party_account_number
+  - name: bank_party_iban
+    label: Party IBAN (Bank Statement)
+    type: string
+    observed_as: bank_party_iban
+  - name: included_fee
+    label: Included Fee
+    type: money
+    observed_as: included_fee
+  - name: excluded_fee
+    label: Excluded Fee
+    type: money
+    observed_as: excluded_fee
+relations:
+  - to: BankTransactionRule
+    kind: many-to-one
+    via: matched_transaction_rule
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: BankTransaction
+    kind: many-to-one
+    via: amended_from
+  - to: Currency
+    kind: many-to-one
+    via: currency
+  - to: BankTransactionPayments
+    kind: one-to-many
+    via: payment_entries
+    description: lines (Payment Entries)
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBank Transaction
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bank Transaction
+    note: declared by the program and served by its API

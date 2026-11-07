@@ -1,0 +1,55 @@
+name: InstallationNoteItem
+description: 'Document type "Installation Note Item" (module Selling): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: serial_and_batch_bundle
+    label: Serial and Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: qty
+    label: Installed Qty
+    type: decimal
+    observed_as: qty
+    required: true
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: prevdoc_detail_docname
+    label: Against Document Detail No
+    type: string
+    observed_as: prevdoc_detail_docname
+  - name: prevdoc_docname
+    label: Against Document No
+    type: string
+    observed_as: prevdoc_docname
+  - name: prevdoc_doctype
+    label: Document Type
+    type: string
+    observed_as: prevdoc_doctype
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabInstallation Note Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Installation Note Item
+    note: declared by the program and served by its API

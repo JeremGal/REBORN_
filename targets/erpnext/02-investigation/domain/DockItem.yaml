@@ -1,0 +1,46 @@
+name: DockItem
+description: 'One entry on the dock. `link_type` says what kind of thing it opens, and each kind answers the two questions a click asks -- which page comes up and which shell comes up beside it -- in its own way. A `Sidebar` row *is* the shell: it selects that sidebar and opens its landing route. A `Workspace` ro Document type "Dock Item" (module Desk): lines of another document.'
+fields:
+  - name: link_type
+    label: Link Type
+    type: enum
+    observed_as: link_type
+    enum_values:
+      - Sidebar
+      - Workspace
+      - URL
+  - name: link_to
+    label: Link To
+    type: string
+    observed_as: link_to
+  - name: url
+    label: URL
+    type: string
+    observed_as: url
+  - name: icon
+    label: Icon
+    type: string
+    observed_as: icon
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+  - name: added
+    label: Added
+    type: boolean
+    observed_as: added
+    default: "0"
+  - name: hidden
+    label: Hidden
+    type: boolean
+    observed_as: hidden
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDock Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Dock Item
+    note: declared by the program and served by its API

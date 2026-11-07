@@ -1,0 +1,86 @@
+name: Language
+description: Document type "Language" (module Core).
+fields:
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: language_code
+    label: Language Code
+    type: string
+    observed_as: language_code
+    required: true
+    unique: true
+  - name: language_name
+    label: Language Name
+    type: string
+    observed_as: language_name
+    required: true
+  - name: flag
+    label: Flag
+    type: string
+    observed_as: flag
+  - name: based_on
+    label: Based On
+    type: ref
+    observed_as: based_on
+    ref: Language
+  - name: date_format
+    label: Date Format
+    type: enum
+    observed_as: date_format
+    enum_values:
+      - yyyy-mm-dd
+      - dd-mm-yyyy
+      - dd/mm/yyyy
+      - dd.mm.yyyy
+      - mm/dd/yyyy
+      - mm-dd-yyyy
+  - name: time_format
+    label: Time Format
+    type: enum
+    observed_as: time_format
+    enum_values:
+      - HH:mm:ss
+      - HH:mm
+  - name: number_format
+    label: Number Format
+    type: enum
+    observed_as: number_format
+    enum_values:
+      - "#,###.##"
+      - "#.###,##"
+      - "# ###.##"
+      - "# ###,##"
+      - "#'###.##"
+      - "#, ###.##"
+      - "#,##,###.##"
+      - "#,###.###"
+      - "#.###"
+      - "#,###"
+  - name: first_day_of_the_week
+    label: First Day of the Week
+    type: enum
+    observed_as: first_day_of_the_week
+    enum_values:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+relations:
+  - to: Language
+    kind: many-to-one
+    via: based_on
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLanguage
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Language
+    note: declared by the program and served by its API

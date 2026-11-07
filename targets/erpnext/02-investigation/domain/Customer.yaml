@@ -1,0 +1,331 @@
+name: Customer
+description: A company or person you sell goods or services to. Document type "Customer" (module Selling).
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - CUST-.YYYY.-
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+    required: true
+  - name: customer_type
+    label: Customer Type
+    type: enum
+    observed_as: customer_type
+    required: true
+    enum_values:
+      - Company
+      - Individual
+      - Partnership
+    default: Company
+  - name: alias
+    label: Alias
+    type: string
+    observed_as: alias
+    unique: true
+  - name: gender
+    label: Gender
+    type: ref
+    observed_as: gender
+    ref: Gender
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: default_currency
+    label: Billing Currency
+    type: ref
+    observed_as: default_currency
+    ref: Currency
+  - name: default_bank_account
+    label: Company Bank Account
+    type: ref
+    observed_as: default_bank_account
+    ref: BankAccount
+  - name: default_price_list
+    label: Price List
+    type: ref
+    observed_as: default_price_list
+    ref: PriceList
+  - name: payment_terms
+    label: Payment Terms Template
+    type: ref
+    observed_as: payment_terms
+    ref: PaymentTermsTemplate
+  - name: loyalty_program
+    label: Loyalty Program
+    type: ref
+    observed_as: loyalty_program
+    ref: LoyaltyProgram
+  - name: loyalty_program_tier
+    label: Loyalty Program Tier
+    type: string
+    observed_as: loyalty_program_tier
+  - name: customer_primary_address
+    label: Customer Primary Address
+    type: ref
+    observed_as: customer_primary_address
+    ref: Address
+  - name: primary_address
+    label: Primary Address
+    type: text
+    observed_as: primary_address
+  - name: customer_primary_contact
+    label: Customer Primary Contact
+    type: ref
+    observed_as: customer_primary_contact
+    ref: Contact
+  - name: mobile_no
+    label: Mobile No
+    type: string
+    observed_as: mobile_no
+  - name: email_id
+    label: Email Id
+    type: string
+    observed_as: email_id
+  - name: first_name
+    label: First Name
+    type: string
+    observed_as: first_name
+  - name: last_name
+    label: Last Name
+    type: string
+    observed_as: last_name
+  - name: is_internal_customer
+    label: Is Internal Customer
+    type: boolean
+    observed_as: is_internal_customer
+    default: "0"
+  - name: represents_company
+    label: Represents Company
+    type: ref
+    observed_as: represents_company
+    unique: true
+    ref: Company
+  - name: tax_id
+    label: Tax ID
+    type: string
+    observed_as: tax_id
+  - name: tax_category
+    label: Tax Category
+    type: ref
+    observed_as: tax_category
+    ref: TaxCategory
+  - name: tax_withholding_group
+    label: Tax Withholding Group
+    type: ref
+    observed_as: tax_withholding_group
+    ref: TaxWithholdingGroup
+  - name: tax_withholding_category
+    label: Tax Withholding Category
+    type: ref
+    observed_as: tax_withholding_category
+    ref: TaxWithholdingCategory
+  - name: restrict_to_companies
+    label: Restrict to Companies
+    type: boolean
+    observed_as: restrict_to_companies
+    default: "0"
+  - name: so_required
+    label: Allow sales invoice creation without sales order
+    type: boolean
+    observed_as: so_required
+    default: "0"
+  - name: dn_required
+    label: Allow sales invoice creation without delivery note
+    type: boolean
+    observed_as: dn_required
+    default: "0"
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: is_frozen
+    label: Is Frozen
+    type: boolean
+    observed_as: is_frozen
+    default: "0"
+  - name: on_hold
+    label: Block Customer
+    type: boolean
+    observed_as: on_hold
+    default: "0"
+  - name: release_date
+    label: Release Date
+    type: date
+    observed_as: release_date
+  - name: account_manager
+    label: Account Manager
+    type: ref
+    observed_as: account_manager
+    ref: User
+  - name: default_sales_partner
+    label: Sales Partner
+    type: ref
+    observed_as: default_sales_partner
+    ref: SalesPartner
+  - name: default_commission_rate
+    label: Commission Rate
+    type: decimal
+    observed_as: default_commission_rate
+  - name: lead_name
+    label: Lead
+    type: ref
+    observed_as: lead_name
+    ref: Lead
+  - name: opportunity_name
+    label: Opportunity
+    type: ref
+    observed_as: opportunity_name
+    ref: Opportunity
+  - name: prospect_name
+    label: Prospect
+    type: ref
+    observed_as: prospect_name
+    ref: Prospect
+  - name: market_segment
+    label: Market Segment
+    type: ref
+    observed_as: market_segment
+    ref: MarketSegment
+  - name: industry
+    label: Industry
+    type: ref
+    observed_as: industry
+    ref: IndustryType
+  - name: website
+    label: Website
+    type: string
+    observed_as: website
+  - name: language
+    label: Print Language
+    type: ref
+    observed_as: language
+    ref: Language
+  - name: customer_pos_id
+    label: Customer POS ID
+    type: string
+    observed_as: customer_pos_id
+  - name: customer_details
+    label: Customer Details
+    type: text
+    observed_as: customer_details
+relations:
+  - to: Gender
+    kind: many-to-one
+    via: gender
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: Currency
+    kind: many-to-one
+    via: default_currency
+  - to: BankAccount
+    kind: many-to-one
+    via: default_bank_account
+  - to: PriceList
+    kind: many-to-one
+    via: default_price_list
+  - to: PaymentTermsTemplate
+    kind: many-to-one
+    via: payment_terms
+  - to: LoyaltyProgram
+    kind: many-to-one
+    via: loyalty_program
+  - to: Address
+    kind: many-to-one
+    via: customer_primary_address
+  - to: Contact
+    kind: many-to-one
+    via: customer_primary_contact
+  - to: PartyAccount
+    kind: one-to-many
+    via: accounts
+    description: lines (Default Accounts)
+  - to: CustomerCreditLimit
+    kind: one-to-many
+    via: credit_limits
+    description: lines (Credit & Overdue Limits)
+  - to: Company
+    kind: many-to-one
+    via: represents_company
+  - to: AllowedToTransactWith
+    kind: one-to-many
+    via: companies
+    description: lines (Allowed to transact with)
+  - to: TaxCategory
+    kind: many-to-one
+    via: tax_category
+  - to: TaxWithholdingGroup
+    kind: many-to-one
+    via: tax_withholding_group
+  - to: TaxWithholdingCategory
+    kind: many-to-one
+    via: tax_withholding_category
+  - to: CompanyRestriction
+    kind: one-to-many
+    via: allowed_companies
+    description: lines (Allowed Companies)
+  - to: User
+    kind: many-to-one
+    via: account_manager
+  - to: SalesTeam
+    kind: one-to-many
+    via: sales_team
+    description: lines (Sales Team)
+  - to: SalesPartner
+    kind: many-to-one
+    via: default_sales_partner
+  - to: PortalUser
+    kind: one-to-many
+    via: portal_users
+    description: lines (Customer Portal Users)
+  - to: Lead
+    kind: many-to-one
+    via: lead_name
+  - to: Opportunity
+    kind: many-to-one
+    via: opportunity_name
+  - to: Prospect
+    kind: many-to-one
+    via: prospect_name
+  - to: MarketSegment
+    kind: many-to-one
+    via: market_segment
+  - to: IndustryType
+    kind: many-to-one
+    via: industry
+  - to: Language
+    kind: many-to-one
+    via: language
+  - to: SupplierNumberAtCustomer
+    kind: one-to-many
+    via: supplier_numbers
+    description: lines (Supplier Numbers)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCustomer
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Customer
+    note: declared by the program and served by its API

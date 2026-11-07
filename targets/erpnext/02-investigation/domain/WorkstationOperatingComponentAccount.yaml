@@ -1,0 +1,30 @@
+name: WorkstationOperatingComponentAccount
+description: 'Document type "Workstation Operating Component Account" (module Manufacturing): lines of another document.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: expense_account
+    label: Expense Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkstation Operating Component Account
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workstation Operating Component Account
+    note: declared by the program and served by its API

@@ -1,0 +1,39 @@
+name: ScheduledJobLog
+description: Document type "Scheduled Job Log" (module Core).
+fields:
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Scheduled
+      - Complete
+      - Failed
+  - name: scheduled_job_type
+    label: Scheduled Job
+    type: ref
+    observed_as: scheduled_job_type
+    required: true
+    ref: ScheduledJobType
+  - name: details
+    label: Details
+    type: text
+    observed_as: details
+  - name: debug_log
+    label: Debug Log
+    type: text
+    observed_as: debug_log
+relations:
+  - to: ScheduledJobType
+    kind: many-to-one
+    via: scheduled_job_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabScheduled Job Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Scheduled Job Log
+    note: declared by the program and served by its API

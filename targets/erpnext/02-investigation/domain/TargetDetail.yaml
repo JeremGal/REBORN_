@@ -1,0 +1,47 @@
+name: TargetDetail
+description: 'Document type "Target Detail" (module Setup): lines of another document.'
+fields:
+  - name: item_group
+    label: Item Group
+    type: ref
+    observed_as: item_group
+    ref: ItemGroup
+  - name: fiscal_year
+    label: Fiscal Year
+    type: ref
+    observed_as: fiscal_year
+    required: true
+    ref: FiscalYear
+  - name: target_qty
+    label: Target Qty
+    type: decimal
+    observed_as: target_qty
+  - name: target_amount
+    label: Target  Amount
+    type: decimal
+    observed_as: target_amount
+  - name: distribution_id
+    label: Target Distribution
+    type: ref
+    observed_as: distribution_id
+    required: true
+    ref: MonthlyDistribution
+relations:
+  - to: ItemGroup
+    kind: many-to-one
+    via: item_group
+  - to: FiscalYear
+    kind: many-to-one
+    via: fiscal_year
+  - to: MonthlyDistribution
+    kind: many-to-one
+    via: distribution_id
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabTarget Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Target Detail
+    note: declared by the program and served by its API

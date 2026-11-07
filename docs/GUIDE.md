@@ -113,6 +113,9 @@ node tools/reborn.mjs manual <id> <file.chm|folder|file.md>   # documented topic
 node tools/reborn.mjs db <id> <file.dbf|.mdb|.accdb>    # legacy database -> SQLite + entity cards
 node tools/reborn.mjs relations <id>                    # links implied by column names, no foreign key (hypotheses)
 node tools/reborn.mjs parity <id>                       # share of the kit's expectations the rebuild has proven
+node tools/reborn.mjs frappe <id> model                 # Frappe/ERPNext site: every document type -> entity cards
+node tools/reborn.mjs frappe <id> observe <cases.json>  # fictitious drafts created, computed amounts read back -> a run
+node tools/reborn.mjs import-run <id> <EXP.json|dir> --mission M-xxx [--root h-explorer]   # H Company explorer -> runs
 node tools/reborn.mjs native <id> <binary> [--engine ghidra-mcp|rea] [--find RE] [--decompile a,b] [--max 3]
 node tools/reborn.mjs rea <id> <command> [args]
 node tools/reborn.mjs craft <id> <command> [args]

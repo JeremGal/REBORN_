@@ -1,0 +1,34 @@
+name: DunningLetterText
+description: 'Document type "Dunning Letter Text" (module Accounts): lines of another document.'
+fields:
+  - name: language
+    label: Language
+    type: ref
+    observed_as: language
+    ref: Language
+  - name: is_default_language
+    label: Is Default Language
+    type: boolean
+    observed_as: is_default_language
+    default: "0"
+  - name: body_text
+    label: Body Text
+    type: text
+    observed_as: body_text
+  - name: closing_text
+    label: Closing Text
+    type: text
+    observed_as: closing_text
+relations:
+  - to: Language
+    kind: many-to-one
+    via: language
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabDunning Letter Text
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Dunning Letter Text
+    note: declared by the program and served by its API

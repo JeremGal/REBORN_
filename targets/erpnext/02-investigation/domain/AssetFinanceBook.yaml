@@ -1,0 +1,90 @@
+name: AssetFinanceBook
+description: 'Document type "Asset Finance Book" (module Assets): lines of another document.'
+fields:
+  - name: finance_book
+    label: Finance Book
+    type: ref
+    observed_as: finance_book
+    ref: FinanceBook
+  - name: depreciation_method
+    label: Depreciation Method
+    type: enum
+    observed_as: depreciation_method
+    required: true
+    enum_values:
+      - Straight Line
+      - Double Declining Balance
+      - Written Down Value
+      - Manual
+  - name: frequency_of_depreciation
+    label: Frequency of Depreciation (Months)
+    type: integer
+    observed_as: frequency_of_depreciation
+    required: true
+  - name: total_number_of_depreciations
+    label: Total Number of Depreciations
+    type: integer
+    observed_as: total_number_of_depreciations
+    required: true
+  - name: increase_in_asset_life
+    label: Increase In Asset Life (Months)
+    type: integer
+    observed_as: increase_in_asset_life
+  - name: depreciation_start_date
+    label: Depreciation Posting Date
+    type: date
+    observed_as: depreciation_start_date
+  - name: salvage_value_percentage
+    label: Salvage Value Percentage
+    type: percent
+    observed_as: salvage_value_percentage
+  - name: expected_value_after_useful_life
+    label: Salvage Value
+    type: money
+    observed_as: expected_value_after_useful_life
+    default: "0"
+  - name: rate_of_depreciation
+    label: Rate of Depreciation (%)
+    type: percent
+    observed_as: rate_of_depreciation
+  - name: is_rate_of_depreciation_entered
+    label: Is Rate of Depreciation Entered
+    type: boolean
+    observed_as: is_rate_of_depreciation_entered
+    default: "0"
+  - name: daily_prorata_based
+    label: Depreciate based on daily pro-rata
+    type: boolean
+    observed_as: daily_prorata_based
+    default: "0"
+  - name: shift_based
+    label: Depreciate based on shifts
+    type: boolean
+    observed_as: shift_based
+    default: "0"
+  - name: value_after_depreciation
+    label: Value After Depreciation
+    type: money
+    observed_as: value_after_depreciation
+  - name: value_adjustment_amount
+    label: Value Adjustment Amount
+    type: money
+    observed_as: value_adjustment_amount
+  - name: total_number_of_booked_depreciations
+    label: "Total Number of Booked Depreciations "
+    type: integer
+    observed_as: total_number_of_booked_depreciations
+    default: "0"
+relations:
+  - to: FinanceBook
+    kind: many-to-one
+    via: finance_book
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Finance Book
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Finance Book
+    note: declared by the program and served by its API

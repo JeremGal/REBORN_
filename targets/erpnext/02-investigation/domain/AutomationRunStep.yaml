@@ -1,0 +1,65 @@
+name: AutomationRunStep
+description: 'Document type "Automation Run Step" (module Automation): lines of another document.'
+fields:
+  - name: step_idx
+    label: Step
+    type: integer
+    observed_as: step_idx
+  - name: step_key
+    label: Step Key
+    type: string
+    observed_as: step_key
+  - name: action_type
+    label: Action Type
+    type: string
+    observed_as: action_type
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Success
+      - Failed
+      - Skipped
+      - Waiting
+  - name: duration_ms
+    label: Duration (ms)
+    type: integer
+    observed_as: duration_ms
+  - name: detail
+    label: Detail
+    type: text
+    observed_as: detail
+  - name: message
+    label: Message
+    type: text
+    observed_as: message
+  - name: exception
+    label: Exception
+    type: string
+    observed_as: exception
+  - name: traceback
+    label: Traceback
+    type: text
+    observed_as: traceback
+  - name: condition
+    label: Condition
+    type: text
+    observed_as: condition
+  - name: condition_values
+    label: Condition Values
+    type: json
+    observed_as: condition_values
+  - name: output
+    label: Output
+    type: json
+    observed_as: output
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAutomation Run Step
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Automation Run Step
+    note: declared by the program and served by its API

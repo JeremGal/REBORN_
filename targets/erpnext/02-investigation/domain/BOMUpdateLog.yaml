@@ -1,0 +1,78 @@
+name: BOMUpdateLog
+description: 'The progress of a BOM replacement or cost update. Document type "BOM Update Log" (module Manufacturing): draft, submitted, cancelled life cycle.'
+fields:
+  - name: update_type
+    label: Update Type
+    type: enum
+    observed_as: update_type
+    enum_values:
+      - Replace BOM
+      - Update Cost
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Queued
+      - In Progress
+      - Completed
+      - Failed
+      - Cancelled
+  - name: current_bom
+    label: Current BOM
+    type: ref
+    observed_as: current_bom
+    ref: BOM
+  - name: new_bom
+    label: New BOM
+    type: ref
+    observed_as: new_bom
+    ref: BOM
+  - name: error_log
+    label: Error Log
+    type: ref
+    observed_as: error_log
+    ref: ErrorLog
+  - name: current_level
+    label: Current Level
+    type: integer
+    observed_as: current_level
+  - name: processed_boms
+    label: Processed BOMs
+    type: text
+    observed_as: processed_boms
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: BOMUpdateLog
+relations:
+  - to: BOM
+    kind: many-to-one
+    via: current_bom
+  - to: BOM
+    kind: many-to-one
+    via: new_bom
+  - to: ErrorLog
+    kind: many-to-one
+    via: error_log
+  - to: BOMUpdateBatch
+    kind: one-to-many
+    via: bom_batches
+    description: lines (bom_batches)
+  - to: BOMUpdateLog
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBOM Update Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of BOM Update Log
+    note: declared by the program and served by its API

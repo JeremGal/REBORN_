@@ -1,0 +1,66 @@
+name: Workflow
+description: Defines workflow states and rules for a document. Document type "Workflow" (module Workflow).
+fields:
+  - name: workflow_name
+    label: Workflow Name
+    type: string
+    observed_as: workflow_name
+    required: true
+    unique: true
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: is_active
+    label: Is Active
+    type: boolean
+    observed_as: is_active
+    default: "0"
+  - name: override_status
+    label: Don't Override Status
+    type: boolean
+    observed_as: override_status
+    default: "0"
+  - name: send_email_alert
+    label: Send Email Alert
+    type: boolean
+    observed_as: send_email_alert
+    default: "0"
+  - name: enable_action_confirmation
+    label: Enable Action Confirmation
+    type: boolean
+    observed_as: enable_action_confirmation
+    default: "0"
+  - name: workflow_state_field
+    label: Workflow State Field
+    type: string
+    observed_as: workflow_state_field
+    required: true
+    default: workflow_state
+  - name: workflow_data
+    label: Workflow Data
+    type: json
+    observed_as: workflow_data
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: WorkflowDocumentState
+    kind: one-to-many
+    via: states
+    description: lines (Document States)
+  - to: WorkflowTransition
+    kind: one-to-many
+    via: transitions
+    description: lines (Transitions)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkflow
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workflow
+    note: declared by the program and served by its API

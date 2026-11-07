@@ -1,0 +1,47 @@
+name: IncomingCallHandlingSchedule
+description: 'Document type "Incoming Call Handling Schedule" (module Telephony): lines of another document.'
+fields:
+  - name: day_of_week
+    label: Day Of Week
+    type: enum
+    observed_as: day_of_week
+    required: true
+    enum_values:
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+  - name: from_time
+    label: From Time
+    type: time
+    observed_as: from_time
+    required: true
+    default: 9:00:00
+  - name: to_time
+    label: To Time
+    type: time
+    observed_as: to_time
+    required: true
+    default: 17:00:00
+  - name: agent_group
+    label: Agent Group
+    type: ref
+    observed_as: agent_group
+    required: true
+    ref: EmployeeGroup
+relations:
+  - to: EmployeeGroup
+    kind: many-to-one
+    via: agent_group
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabIncoming Call Handling Schedule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Incoming Call Handling Schedule
+    note: declared by the program and served by its API

@@ -1,0 +1,31 @@
+name: WorkstationWorkingHour
+description: 'Document type "Workstation Working Hour" (module Manufacturing): lines of another document.'
+fields:
+  - name: start_time
+    label: Start Time
+    type: time
+    observed_as: start_time
+    required: true
+  - name: hours
+    label: Hours
+    type: decimal
+    observed_as: hours
+  - name: end_time
+    label: End Time
+    type: time
+    observed_as: end_time
+    required: true
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWorkstation Working Hour
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Workstation Working Hour
+    note: declared by the program and served by its API

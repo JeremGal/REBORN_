@@ -1,0 +1,53 @@
+name: DataImportLog
+description: Document type "Data Import Log" (module Core).
+fields:
+  - name: data_import
+    label: Data Import
+    type: ref
+    observed_as: data_import
+    ref: DataImport
+  - name: row_indexes
+    label: Row Indexes
+    type: text
+    observed_as: row_indexes
+  - name: success
+    label: Success
+    type: boolean
+    observed_as: success
+    default: "0"
+  - name: import_action
+    label: Import Action
+    type: enum
+    observed_as: import_action
+    enum_values:
+      - Insert
+      - Update
+  - name: docname
+    label: Reference Name
+    type: string
+    observed_as: docname
+  - name: messages
+    label: Messages
+    type: text
+    observed_as: messages
+  - name: exception
+    label: Exception
+    type: text
+    observed_as: exception
+  - name: log_index
+    label: Log Index
+    type: integer
+    observed_as: log_index
+relations:
+  - to: DataImport
+    kind: many-to-one
+    via: data_import
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabData Import Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Data Import Log
+    note: declared by the program and served by its API

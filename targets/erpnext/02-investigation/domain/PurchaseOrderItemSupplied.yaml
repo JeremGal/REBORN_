@@ -1,0 +1,85 @@
+name: PurchaseOrderItemSupplied
+description: 'Document type "Purchase Order Item Supplied" (module Buying): lines of another document.'
+fields:
+  - name: main_item_code
+    label: Item Code
+    type: ref
+    observed_as: main_item_code
+    ref: Item
+  - name: rm_item_code
+    label: Raw Material Item Code
+    type: ref
+    observed_as: rm_item_code
+    ref: Item
+  - name: stock_uom
+    label: Stock Uom
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: reserve_warehouse
+    label: Reserve Warehouse
+    type: ref
+    observed_as: reserve_warehouse
+    ref: Warehouse
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+  - name: bom_detail_no
+    label: BOM Detail No
+    type: string
+    observed_as: bom_detail_no
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: required_qty
+    label: Required Qty
+    type: decimal
+    observed_as: required_qty
+  - name: supplied_qty
+    label: Supplied Qty
+    type: decimal
+    observed_as: supplied_qty
+  - name: consumed_qty
+    label: Consumed Qty
+    type: decimal
+    observed_as: consumed_qty
+  - name: returned_qty
+    label: Returned Qty
+    type: decimal
+    observed_as: returned_qty
+  - name: total_supplied_qty
+    label: Total Supplied Qty
+    type: decimal
+    observed_as: total_supplied_qty
+relations:
+  - to: Item
+    kind: many-to-one
+    via: main_item_code
+  - to: Item
+    kind: many-to-one
+    via: rm_item_code
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: reserve_warehouse
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPurchase Order Item Supplied
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Purchase Order Item Supplied
+    note: declared by the program and served by its API

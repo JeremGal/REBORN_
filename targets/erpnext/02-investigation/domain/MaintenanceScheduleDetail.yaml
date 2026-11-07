@@ -1,0 +1,63 @@
+name: MaintenanceScheduleDetail
+description: 'Document type "Maintenance Schedule Detail" (module Maintenance): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: scheduled_date
+    label: Scheduled Date
+    type: date
+    observed_as: scheduled_date
+    required: true
+  - name: actual_date
+    label: Actual Date
+    type: date
+    observed_as: actual_date
+  - name: sales_person
+    label: Sales Person
+    type: ref
+    observed_as: sales_person
+    ref: SalesPerson
+  - name: completion_status
+    label: Completion Status
+    type: enum
+    observed_as: completion_status
+    enum_values:
+      - Pending
+      - Partially Completed
+      - Fully Completed
+    default: Pending
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: item_reference
+    label: Item Reference
+    type: ref
+    observed_as: item_reference
+    ref: MaintenanceScheduleItem
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: SalesPerson
+    kind: many-to-one
+    via: sales_person
+  - to: MaintenanceScheduleItem
+    kind: many-to-one
+    via: item_reference
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabMaintenance Schedule Detail
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Maintenance Schedule Detail
+    note: declared by the program and served by its API

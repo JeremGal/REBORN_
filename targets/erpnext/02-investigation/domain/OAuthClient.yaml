@@ -1,0 +1,110 @@
+name: OAuthClient
+description: Document type "OAuth Client" (module Integrations).
+fields:
+  - name: client_id
+    label: Client ID
+    type: string
+    observed_as: client_id
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    ref: User
+  - name: client_secret
+    label: Client Secret
+    type: string
+    observed_as: client_secret
+  - name: default_redirect_uri
+    label: Default Redirect URI
+    type: string
+    observed_as: default_redirect_uri
+    required: true
+  - name: skip_authorization
+    label: Skip Authorization
+    type: boolean
+    observed_as: skip_authorization
+    default: "0"
+  - name: app_name
+    label: App Name (Client Name)
+    type: string
+    observed_as: app_name
+    required: true
+  - name: scopes
+    label: Scopes
+    type: text
+    observed_as: scopes
+    required: true
+    default: all openid
+  - name: redirect_uris
+    label: Redirect URIs
+    type: text
+    observed_as: redirect_uris
+  - name: client_uri
+    label: Client URI
+    type: string
+    observed_as: client_uri
+  - name: software_id
+    label: Software ID
+    type: string
+    observed_as: software_id
+  - name: tos_uri
+    label: TOS URI
+    type: string
+    observed_as: tos_uri
+  - name: contacts
+    label: Contacts
+    type: text
+    observed_as: contacts
+  - name: logo_uri
+    label: Logo URI
+    type: string
+    observed_as: logo_uri
+  - name: software_version
+    label: Software Version
+    type: string
+    observed_as: software_version
+  - name: policy_uri
+    label: Policy URI
+    type: string
+    observed_as: policy_uri
+  - name: grant_type
+    label: Grant Type
+    type: enum
+    observed_as: grant_type
+    enum_values:
+      - Authorization Code
+      - Implicit
+  - name: token_endpoint_auth_method
+    label: Token Endpoint Auth Method
+    type: enum
+    observed_as: token_endpoint_auth_method
+    enum_values:
+      - Client Secret Basic
+      - Client Secret Post
+      - None
+    default: Client Secret Basic
+  - name: response_type
+    label: Response Type
+    type: enum
+    observed_as: response_type
+    enum_values:
+      - Code
+      - Token
+    default: Code
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: OAuthClientRole
+    kind: one-to-many
+    via: allowed_roles
+    description: lines (Allowed Roles)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabOAuth Client
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of OAuth Client
+    note: declared by the program and served by its API

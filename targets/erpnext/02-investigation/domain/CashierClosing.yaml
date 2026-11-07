@@ -1,0 +1,85 @@
+name: CashierClosing
+description: 'Document type "Cashier Closing" (module Accounts): draft, submitted, cancelled life cycle.'
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - POS-CLO-
+    default: POS-CLO-
+  - name: user
+    label: User
+    type: ref
+    observed_as: user
+    required: true
+    ref: User
+  - name: date
+    label: Date
+    type: date
+    observed_as: date
+    default: Today
+  - name: from_time
+    label: From Time
+    type: time
+    observed_as: from_time
+    required: true
+  - name: time
+    label: To Time
+    type: time
+    observed_as: time
+    required: true
+  - name: expense
+    label: Expense
+    type: decimal
+    observed_as: expense
+    default: "0.00"
+  - name: custody
+    label: Custody
+    type: decimal
+    observed_as: custody
+    default: "0.00"
+  - name: returns
+    label: Returns
+    type: decimal
+    observed_as: returns
+    precision: 2
+    default: "0.00"
+  - name: outstanding_amount
+    label: Outstanding Amount
+    type: decimal
+    observed_as: outstanding_amount
+    default: "0.00"
+  - name: net_amount
+    label: Net Amount
+    type: decimal
+    observed_as: net_amount
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: CashierClosing
+relations:
+  - to: User
+    kind: many-to-one
+    via: user
+  - to: CashierClosingPayments
+    kind: one-to-many
+    via: payments
+    description: lines (Payments)
+  - to: CashierClosing
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCashier Closing
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Cashier Closing
+    note: declared by the program and served by its API

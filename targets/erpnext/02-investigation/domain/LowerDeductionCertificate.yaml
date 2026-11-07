@@ -1,0 +1,80 @@
+name: LowerDeductionCertificate
+description: A certificate that lets you withhold less tax from a supplier. Document type "Lower Deduction Certificate" (module Regional).
+fields:
+  - name: tax_withholding_category
+    label: Tax Withholding Category
+    type: ref
+    observed_as: tax_withholding_category
+    required: true
+    ref: TaxWithholdingCategory
+  - name: fiscal_year
+    label: Fiscal Year
+    type: ref
+    observed_as: fiscal_year
+    required: true
+    ref: FiscalYear
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: certificate_no
+    label: Certificate No
+    type: string
+    observed_as: certificate_no
+    required: true
+    unique: true
+  - name: supplier
+    label: Supplier
+    type: ref
+    observed_as: supplier
+    required: true
+    ref: Supplier
+  - name: pan_no
+    label: PAN No
+    type: string
+    observed_as: pan_no
+    required: true
+  - name: valid_from
+    label: Valid From
+    type: date
+    observed_as: valid_from
+    required: true
+  - name: valid_upto
+    label: Valid Up To
+    type: date
+    observed_as: valid_upto
+    required: true
+  - name: rate
+    label: Rate Of TDS As Per Certificate
+    type: percent
+    observed_as: rate
+    required: true
+  - name: certificate_limit
+    label: Certificate Limit
+    type: money
+    observed_as: certificate_limit
+    required: true
+relations:
+  - to: TaxWithholdingCategory
+    kind: many-to-one
+    via: tax_withholding_category
+  - to: FiscalYear
+    kind: many-to-one
+    via: fiscal_year
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: Supplier
+    kind: many-to-one
+    via: supplier
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabLower Deduction Certificate
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Lower Deduction Certificate
+    note: declared by the program and served by its API

@@ -1,0 +1,27 @@
+name: ApplicableOnAccount
+description: 'Document type "Applicable On Account" (module Accounts): lines of another document.'
+fields:
+  - name: applicable_on_account
+    label: Accounts
+    type: ref
+    observed_as: applicable_on_account
+    required: true
+    ref: Account
+  - name: is_mandatory
+    label: Is Mandatory
+    type: boolean
+    observed_as: is_mandatory
+    default: "0"
+relations:
+  - to: Account
+    kind: many-to-one
+    via: applicable_on_account
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabApplicable On Account
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Applicable On Account
+    note: declared by the program and served by its API

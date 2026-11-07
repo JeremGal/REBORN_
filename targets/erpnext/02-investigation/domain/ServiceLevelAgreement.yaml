@@ -1,0 +1,99 @@
+name: ServiceLevelAgreement
+description: How fast issues must be answered and resolved. Document type "Service Level Agreement" (module Support).
+fields:
+  - name: document_type
+    label: Apply On
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: default_priority
+    label: Default Priority
+    type: ref
+    observed_as: default_priority
+    ref: IssuePriority
+  - name: service_level
+    label: Service Level Name
+    type: string
+    observed_as: service_level
+    required: true
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "1"
+  - name: default_service_level_agreement
+    label: Default Service Level Agreement
+    type: boolean
+    observed_as: default_service_level_agreement
+    default: "0"
+  - name: entity_type
+    label: Entity Type
+    type: enum
+    observed_as: entity_type
+    enum_values:
+      - Customer
+      - Customer Group
+      - Territory
+  - name: entity
+    label: Entity
+    type: string
+    observed_as: entity
+  - name: condition
+    label: Condition
+    type: text
+    observed_as: condition
+  - name: start_date
+    label: Start Date
+    type: date
+    observed_as: start_date
+  - name: end_date
+    label: End Date
+    type: date
+    observed_as: end_date
+  - name: apply_sla_for_resolution
+    label: Apply SLA for Resolution Time
+    type: boolean
+    observed_as: apply_sla_for_resolution
+    default: "1"
+  - name: holiday_list
+    label: Holiday List
+    type: ref
+    observed_as: holiday_list
+    required: true
+    ref: HolidayList
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: IssuePriority
+    kind: many-to-one
+    via: default_priority
+  - to: ServiceLevelPriority
+    kind: one-to-many
+    via: priorities
+    description: lines (Priorities)
+  - to: SLAFulfilledOnStatus
+    kind: one-to-many
+    via: sla_fulfilled_on
+    description: lines (SLA Fulfilled On)
+  - to: PauseSLAOnStatus
+    kind: one-to-many
+    via: pause_sla_on
+    description: lines (SLA Paused On)
+  - to: HolidayList
+    kind: many-to-one
+    via: holiday_list
+  - to: ServiceDay
+    kind: one-to-many
+    via: support_and_resolution
+    description: lines (Working Hours)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabService Level Agreement
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Service Level Agreement
+    note: declared by the program and served by its API

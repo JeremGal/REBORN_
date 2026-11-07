@@ -1,0 +1,40 @@
+name: AccountingDimension
+description: An extra way to tag entries, like branch or region, beyond cost centers. Document type "Accounting Dimension" (module Accounts).
+fields:
+  - name: document_type
+    label: Reference Document Type
+    type: ref
+    observed_as: document_type
+    required: true
+    ref: DocType
+  - name: label
+    label: Dimension Name
+    type: string
+    observed_as: label
+    unique: true
+  - name: fieldname
+    label: Fieldname
+    type: string
+    observed_as: fieldname
+  - name: disabled
+    label: Disable
+    type: boolean
+    observed_as: disabled
+    default: "0"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: AccountingDimensionDetail
+    kind: one-to-many
+    via: dimension_defaults
+    description: lines (Dimension Defaults)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAccounting Dimension
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Accounting Dimension
+    note: declared by the program and served by its API

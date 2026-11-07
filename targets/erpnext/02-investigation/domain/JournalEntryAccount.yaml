@@ -1,0 +1,157 @@
+name: JournalEntryAccount
+description: 'Document type "Journal Entry Account" (module Accounts): lines of another document.'
+fields:
+  - name: account
+    label: Account
+    type: ref
+    observed_as: account
+    required: true
+    ref: Account
+  - name: account_type
+    label: Account Type
+    type: string
+    observed_as: account_type
+  - name: bank_account
+    label: Bank Account
+    type: ref
+    observed_as: bank_account
+    ref: BankAccount
+  - name: party_type
+    label: Party Type
+    type: ref
+    observed_as: party_type
+    ref: DocType
+  - name: party
+    label: Party
+    type: string
+    observed_as: party
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+    default: :Company
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: account_currency
+    label: Account Currency
+    type: ref
+    observed_as: account_currency
+    ref: Currency
+  - name: exchange_rate
+    label: Exchange Rate
+    type: decimal
+    observed_as: exchange_rate
+    precision: 9
+  - name: debit_in_account_currency
+    label: Debit
+    type: money
+    observed_as: debit_in_account_currency
+  - name: debit
+    label: Debit in Company Currency
+    type: money
+    observed_as: debit
+  - name: credit_in_account_currency
+    label: Credit
+    type: money
+    observed_as: credit_in_account_currency
+  - name: credit
+    label: Credit in Company Currency
+    type: money
+    observed_as: credit
+  - name: reference_type
+    label: Reference Type
+    type: enum
+    observed_as: reference_type
+    enum_values:
+      - Sales Invoice
+      - Purchase Invoice
+      - Journal Entry
+      - Sales Order
+      - Purchase Order
+      - Expense Claim
+      - Asset
+      - Loan
+      - Payroll Entry
+      - Employee Advance
+      - Exchange Rate Revaluation
+      - Invoice Discounting
+      - Fees
+      - Full and Final Statement
+      - Payment Entry
+      - Bank Transaction
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: reference_due_date
+    label: Reference Due Date
+    type: date
+    observed_as: reference_due_date
+  - name: reference_detail_no
+    label: Reference Detail No
+    type: string
+    observed_as: reference_detail_no
+  - name: advance_voucher_type
+    label: Advance Voucher Type
+    type: ref
+    observed_as: advance_voucher_type
+    ref: DocType
+  - name: advance_voucher_no
+    label: Advance Voucher No
+    type: string
+    observed_as: advance_voucher_no
+  - name: is_tax_withholding_account
+    label: Is Tax Withholding Account
+    type: boolean
+    observed_as: is_tax_withholding_account
+    default: "0"
+  - name: is_advance
+    label: Is Advance
+    type: enum
+    observed_as: is_advance
+    enum_values:
+      - No
+      - Yes
+  - name: user_remark
+    label: User Remark
+    type: text
+    observed_as: user_remark
+  - name: against_account
+    label: Against Account
+    type: text
+    observed_as: against_account
+relations:
+  - to: Account
+    kind: many-to-one
+    via: account
+  - to: BankAccount
+    kind: many-to-one
+    via: bank_account
+  - to: DocType
+    kind: many-to-one
+    via: party_type
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Currency
+    kind: many-to-one
+    via: account_currency
+  - to: DocType
+    kind: many-to-one
+    via: advance_voucher_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabJournal Entry Account
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Journal Entry Account
+    note: declared by the program and served by its API

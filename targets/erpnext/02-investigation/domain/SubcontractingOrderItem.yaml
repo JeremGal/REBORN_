@@ -1,0 +1,192 @@
+name: SubcontractingOrderItem
+description: 'Document type "Subcontracting Order Item" (module Subcontracting): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+    required: true
+  - name: bom
+    label: BOM
+    type: ref
+    observed_as: bom
+    required: true
+    ref: BOM
+  - name: include_exploded_items
+    label: Include Exploded Items
+    type: boolean
+    observed_as: include_exploded_items
+    default: "0"
+  - name: schedule_date
+    label: Required By
+    type: date
+    observed_as: schedule_date
+  - name: expected_delivery_date
+    label: Expected Delivery Date
+    type: date
+    observed_as: expected_delivery_date
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: qty
+    label: Quantity
+    type: decimal
+    observed_as: qty
+    required: true
+    default: "1"
+  - name: received_qty
+    label: Received Qty
+    type: decimal
+    observed_as: received_qty
+  - name: returned_qty
+    label: Returned Qty
+    type: decimal
+    observed_as: returned_qty
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+    default: "1"
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+    required: true
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+    required: true
+  - name: rm_cost_per_qty
+    label: Raw Material Cost Per Qty
+    type: money
+    observed_as: rm_cost_per_qty
+  - name: service_cost_per_qty
+    label: Service Cost Per Qty
+    type: money
+    observed_as: service_cost_per_qty
+    required: true
+  - name: additional_cost_per_qty
+    label: Additional Cost Per Qty
+    type: money
+    observed_as: additional_cost_per_qty
+    default: "0"
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: expense_account
+    label: Expense Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: manufacturer
+    label: Manufacturer
+    type: ref
+    observed_as: manufacturer
+    ref: Manufacturer
+  - name: manufacturer_part_no
+    label: Manufacturer Part Number
+    type: string
+    observed_as: manufacturer_part_no
+  - name: material_request
+    label: Material Request
+    type: ref
+    observed_as: material_request
+    ref: MaterialRequest
+  - name: material_request_item
+    label: Material Request Item
+    type: string
+    observed_as: material_request_item
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: job_card
+    label: Job Card
+    type: ref
+    observed_as: job_card
+    ref: JobCard
+  - name: purchase_order_item
+    label: Purchase Order Item
+    type: string
+    observed_as: purchase_order_item
+  - name: page_break
+    label: Page Break
+    type: boolean
+    observed_as: page_break
+    default: "0"
+  - name: subcontracting_conversion_factor
+    label: Subcontracting Conversion Factor
+    type: decimal
+    observed_as: subcontracting_conversion_factor
+  - name: production_plan_sub_assembly_item
+    label: Production Plan Sub Assembly Item
+    type: string
+    observed_as: production_plan_sub_assembly_item
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: BOM
+    kind: many-to-one
+    via: bom
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: Manufacturer
+    kind: many-to-one
+    via: manufacturer
+  - to: MaterialRequest
+    kind: many-to-one
+    via: material_request
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: JobCard
+    kind: many-to-one
+    via: job_card
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Order Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Order Item
+    note: declared by the program and served by its API

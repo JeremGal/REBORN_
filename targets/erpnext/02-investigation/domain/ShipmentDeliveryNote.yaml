@@ -1,0 +1,26 @@
+name: ShipmentDeliveryNote
+description: 'Document type "Shipment Delivery Note" (module Stock): lines of another document.'
+fields:
+  - name: delivery_note
+    label: Delivery Note
+    type: ref
+    observed_as: delivery_note
+    required: true
+    ref: DeliveryNote
+  - name: grand_total
+    label: Value
+    type: money
+    observed_as: grand_total
+relations:
+  - to: DeliveryNote
+    kind: many-to-one
+    via: delivery_note
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabShipment Delivery Note
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Shipment Delivery Note
+    note: declared by the program and served by its API

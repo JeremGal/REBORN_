@@ -1,0 +1,84 @@
+name: InventoryDimension
+description: An extra way to tag stock, like a rack or bin. Document type "Inventory Dimension" (module Stock).
+fields:
+  - name: dimension_name
+    label: Dimension Name
+    type: string
+    observed_as: dimension_name
+    required: true
+    unique: true
+  - name: reference_document
+    label: Reference Document
+    type: ref
+    observed_as: reference_document
+    required: true
+    ref: DocType
+  - name: source_fieldname
+    label: Source Fieldname
+    type: string
+    observed_as: source_fieldname
+  - name: target_fieldname
+    label: Target Fieldname (Stock Ledger Entry)
+    type: string
+    observed_as: target_fieldname
+  - name: apply_to_all_doctypes
+    label: Apply to All Inventory Documents
+    type: boolean
+    observed_as: apply_to_all_doctypes
+    default: "1"
+  - name: validate_negative_stock
+    label: Validate Negative Stock
+    type: boolean
+    observed_as: validate_negative_stock
+    default: "0"
+  - name: document_type
+    label: Apply to Document
+    type: ref
+    observed_as: document_type
+    ref: DocType
+  - name: type_of_transaction
+    label: Type of Transaction
+    type: enum
+    observed_as: type_of_transaction
+    enum_values:
+      - Inward
+      - Outward
+      - Both
+  - name: fetch_from_parent
+    label: Fetch Value From
+    type: string
+    observed_as: fetch_from_parent
+  - name: istable
+    label: " Is Child Table"
+    type: boolean
+    observed_as: istable
+    default: "0"
+  - name: condition
+    label: Conditional Rule
+    type: text
+    observed_as: condition
+  - name: reqd
+    label: Mandatory
+    type: boolean
+    observed_as: reqd
+    default: "0"
+  - name: mandatory_depends_on_backend
+    label: Mandatory Depends On (Backend)
+    type: text
+    observed_as: mandatory_depends_on_backend
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: reference_document
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabInventory Dimension
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Inventory Dimension
+    note: declared by the program and served by its API

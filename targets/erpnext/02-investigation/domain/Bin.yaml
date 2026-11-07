@@ -1,0 +1,100 @@
+name: Bin
+description: Document type "Bin" (module Stock).
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: warehouse
+    label: Warehouse
+    type: ref
+    observed_as: warehouse
+    required: true
+    ref: Warehouse
+  - name: actual_qty
+    label: Actual Qty
+    type: decimal
+    observed_as: actual_qty
+    default: "0.00"
+  - name: planned_qty
+    label: Planned Qty
+    type: decimal
+    observed_as: planned_qty
+  - name: indented_qty
+    label: Requested Qty
+    type: decimal
+    observed_as: indented_qty
+    default: "0.00"
+  - name: ordered_qty
+    label: Ordered Qty
+    type: decimal
+    observed_as: ordered_qty
+    default: "0.00"
+  - name: reserved_qty
+    label: Reserved Qty
+    type: decimal
+    observed_as: reserved_qty
+    default: "0.00"
+  - name: reserved_qty_for_production
+    label: Reserved Qty for Production
+    type: decimal
+    observed_as: reserved_qty_for_production
+  - name: reserved_qty_for_sub_contract
+    label: Reserved Qty for Subcontract
+    type: decimal
+    observed_as: reserved_qty_for_sub_contract
+  - name: reserved_qty_for_production_plan
+    label: Reserved Qty for Production Plan
+    type: decimal
+    observed_as: reserved_qty_for_production_plan
+  - name: projected_qty
+    label: Projected Qty
+    type: decimal
+    observed_as: projected_qty
+  - name: reserved_stock
+    label: Reserved Stock
+    type: decimal
+    observed_as: reserved_stock
+    default: "0"
+  - name: stock_uom
+    label: UOM
+    type: ref
+    observed_as: stock_uom
+    ref: UOM
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: valuation_rate
+    label: Valuation Rate
+    type: decimal
+    observed_as: valuation_rate
+  - name: stock_value
+    label: Stock Value
+    type: decimal
+    observed_as: stock_value
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Company
+    kind: many-to-one
+    via: company
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBin
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bin
+    note: declared by the program and served by its API

@@ -1,0 +1,49 @@
+name: UnreconcilePayment
+description: "Undo a payment's match against invoices. Document type \"Unreconcile Payment\" (module Accounts): draft, submitted, cancelled life cycle."
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: voucher_type
+    label: Voucher Type
+    type: ref
+    observed_as: voucher_type
+    ref: DocType
+  - name: voucher_no
+    label: Voucher No
+    type: string
+    observed_as: voucher_no
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: UnreconcilePayment
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: DocType
+    kind: many-to-one
+    via: voucher_type
+  - to: UnreconcilePaymentEntries
+    kind: one-to-many
+    via: allocations
+    description: lines (Allocations)
+  - to: UnreconcilePayment
+    kind: many-to-one
+    via: amended_from
+lifecycle:
+  - draft
+  - submitted
+  - cancelled
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabUnreconcile Payment
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Unreconcile Payment
+    note: declared by the program and served by its API

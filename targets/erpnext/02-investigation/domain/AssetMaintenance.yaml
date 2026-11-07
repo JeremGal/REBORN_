@@ -1,0 +1,69 @@
+name: AssetMaintenance
+description: The upkeep tasks an asset needs, and who does them. Document type "Asset Maintenance" (module Assets).
+fields:
+  - name: asset_name
+    label: Asset Name
+    type: ref
+    observed_as: asset_name
+    required: true
+    unique: true
+    ref: Asset
+  - name: asset_category
+    label: Asset Category
+    type: ref
+    observed_as: asset_category
+    ref: AssetCategory
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: item_code
+    label: Item Code
+    type: string
+    observed_as: item_code
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: maintenance_team
+    label: Maintenance Team
+    type: ref
+    observed_as: maintenance_team
+    required: true
+    ref: AssetMaintenanceTeam
+  - name: maintenance_manager
+    label: Maintenance Manager
+    type: string
+    observed_as: maintenance_manager
+  - name: maintenance_manager_name
+    label: Maintenance Manager Name
+    type: string
+    observed_as: maintenance_manager_name
+relations:
+  - to: Asset
+    kind: many-to-one
+    via: asset_name
+  - to: AssetCategory
+    kind: many-to-one
+    via: asset_category
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: AssetMaintenanceTeam
+    kind: many-to-one
+    via: maintenance_team
+  - to: AssetMaintenanceTask
+    kind: one-to-many
+    via: asset_maintenance_tasks
+    description: lines (Maintenance Tasks)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAsset Maintenance
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Asset Maintenance
+    note: declared by the program and served by its API

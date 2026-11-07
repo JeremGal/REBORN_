@@ -1,0 +1,57 @@
+name: SalesInvoiceTimesheet
+description: 'Document type "Sales Invoice Timesheet" (module Accounts): lines of another document.'
+fields:
+  - name: activity_type
+    label: Activity Type
+    type: ref
+    observed_as: activity_type
+    ref: ActivityType
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: from_time
+    label: From Time
+    type: datetime
+    observed_as: from_time
+  - name: to_time
+    label: To Time
+    type: datetime
+    observed_as: to_time
+  - name: billing_hours
+    label: Billing Hours
+    type: decimal
+    observed_as: billing_hours
+  - name: billing_amount
+    label: Billing Amount
+    type: money
+    observed_as: billing_amount
+  - name: time_sheet
+    label: Time Sheet
+    type: ref
+    observed_as: time_sheet
+    ref: Timesheet
+  - name: timesheet_detail
+    label: Timesheet Detail
+    type: string
+    observed_as: timesheet_detail
+  - name: project_name
+    label: Project Name
+    type: string
+    observed_as: project_name
+relations:
+  - to: ActivityType
+    kind: many-to-one
+    via: activity_type
+  - to: Timesheet
+    kind: many-to-one
+    via: time_sheet
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSales Invoice Timesheet
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Sales Invoice Timesheet
+    note: declared by the program and served by its API

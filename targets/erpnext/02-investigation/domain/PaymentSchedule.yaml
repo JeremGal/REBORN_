@@ -1,0 +1,116 @@
+name: PaymentSchedule
+description: 'Document type "Payment Schedule" (module Accounts): lines of another document.'
+fields:
+  - name: payment_term
+    label: Payment Term
+    type: ref
+    observed_as: payment_term
+    ref: PaymentTerm
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: due_date
+    label: Due Date
+    type: date
+    observed_as: due_date
+    required: true
+  - name: invoice_portion
+    label: Invoice Portion
+    type: percent
+    observed_as: invoice_portion
+  - name: mode_of_payment
+    label: Mode of Payment
+    type: ref
+    observed_as: mode_of_payment
+    ref: ModeOfPayment
+  - name: due_date_based_on
+    label: Due Date Based On
+    type: enum
+    observed_as: due_date_based_on
+    enum_values:
+      - Day(s) after invoice date
+      - Day(s) after the end of the invoice month
+      - Month(s) after the end of the invoice month
+  - name: credit_days
+    label: Credit Days
+    type: integer
+    observed_as: credit_days
+  - name: credit_months
+    label: Credit Months
+    type: integer
+    observed_as: credit_months
+  - name: discount_date
+    label: Discount Date
+    type: date
+    observed_as: discount_date
+  - name: discount
+    label: Discount
+    type: decimal
+    observed_as: discount
+  - name: discount_type
+    label: Discount Type
+    type: enum
+    observed_as: discount_type
+    enum_values:
+      - Percentage
+      - Amount
+    default: Percentage
+  - name: discount_validity_based_on
+    label: Discount Validity Based On
+    type: enum
+    observed_as: discount_validity_based_on
+    enum_values:
+      - Day(s) after invoice date
+      - Day(s) after the end of the invoice month
+      - Month(s) after the end of the invoice month
+  - name: discount_validity
+    label: Discount Validity
+    type: integer
+    observed_as: discount_validity
+  - name: payment_amount
+    label: Payment Amount
+    type: money
+    observed_as: payment_amount
+    required: true
+  - name: outstanding
+    label: Outstanding
+    type: money
+    observed_as: outstanding
+  - name: paid_amount
+    label: Paid Amount
+    type: money
+    observed_as: paid_amount
+  - name: discounted_amount
+    label: Discounted Amount
+    type: money
+    observed_as: discounted_amount
+    default: "0"
+  - name: base_payment_amount
+    label: Payment Amount (Company Currency)
+    type: money
+    observed_as: base_payment_amount
+  - name: base_outstanding
+    label: Outstanding (Company Currency)
+    type: money
+    observed_as: base_outstanding
+  - name: base_paid_amount
+    label: Paid Amount (Company Currency)
+    type: money
+    observed_as: base_paid_amount
+relations:
+  - to: PaymentTerm
+    kind: many-to-one
+    via: payment_term
+  - to: ModeOfPayment
+    kind: many-to-one
+    via: mode_of_payment
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabPayment Schedule
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Payment Schedule
+    note: declared by the program and served by its API

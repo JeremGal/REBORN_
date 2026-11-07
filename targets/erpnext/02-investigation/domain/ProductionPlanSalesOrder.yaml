@@ -1,0 +1,42 @@
+name: ProductionPlanSalesOrder
+description: 'Document type "Production Plan Sales Order" (module Manufacturing): lines of another document.'
+fields:
+  - name: sales_order
+    label: Sales Order
+    type: ref
+    observed_as: sales_order
+    required: true
+    ref: SalesOrder
+  - name: sales_order_date
+    label: Sales Order Date
+    type: date
+    observed_as: sales_order_date
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: grand_total
+    label: Grand Total
+    type: money
+    observed_as: grand_total
+  - name: status
+    label: Status
+    type: string
+    observed_as: status
+relations:
+  - to: SalesOrder
+    kind: many-to-one
+    via: sales_order
+  - to: Customer
+    kind: many-to-one
+    via: customer
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProduction Plan Sales Order
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Production Plan Sales Order
+    note: declared by the program and served by its API

@@ -1,0 +1,307 @@
+name: SubcontractingReceiptItem
+description: 'Document type "Subcontracting Receipt Item" (module Subcontracting): lines of another document.'
+fields:
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    required: true
+    ref: Item
+  - name: valuation_type
+    label: Valuation Type
+    type: enum
+    observed_as: valuation_type
+    enum_values:
+      - Valuation Rate
+      - "% of Component Cost"
+      - Manual
+  - name: bom_secondary_item
+    label: BOM Secondary Item
+    type: string
+    observed_as: bom_secondary_item
+  - name: secondary_item_type
+    label: Type
+    type: enum
+    observed_as: secondary_item_type
+    enum_values:
+      - Co-Product
+      - By-Product
+      - Scrap
+      - Additional Finished Good
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: brand
+    label: Brand
+    type: ref
+    observed_as: brand
+    ref: Brand
+  - name: image
+    label: Image
+    type: file
+    observed_as: image
+  - name: received_qty
+    label: Qty (As per BOM)
+    type: decimal
+    observed_as: received_qty
+    required: true
+    default: "0"
+  - name: qty
+    label: Accepted Qty
+    type: decimal
+    observed_as: qty
+  - name: rejected_qty
+    label: Rejected Qty
+    type: decimal
+    observed_as: rejected_qty
+  - name: returned_qty
+    label: Returned Qty
+    type: decimal
+    observed_as: returned_qty
+    default: "0"
+  - name: process_loss_qty
+    label: Process Loss Qty
+    type: decimal
+    observed_as: process_loss_qty
+    default: "0"
+  - name: stock_uom
+    label: Stock UOM
+    type: ref
+    observed_as: stock_uom
+    required: true
+    ref: UOM
+  - name: conversion_factor
+    label: Conversion Factor
+    type: decimal
+    observed_as: conversion_factor
+    precision: 9
+    default: "1"
+  - name: rate
+    label: Rate
+    type: money
+    observed_as: rate
+  - name: amount
+    label: Amount
+    type: money
+    observed_as: amount
+  - name: landed_cost_voucher_amount
+    label: Landed Cost Voucher Amount
+    type: money
+    observed_as: landed_cost_voucher_amount
+  - name: rm_cost_per_qty
+    label: Raw Material Cost Per Qty
+    type: money
+    observed_as: rm_cost_per_qty
+    default: "0"
+  - name: service_cost_per_qty
+    label: Service Cost Per Qty
+    type: money
+    observed_as: service_cost_per_qty
+    required: true
+    default: "0"
+  - name: additional_cost_per_qty
+    label: Additional Cost Per Qty
+    type: money
+    observed_as: additional_cost_per_qty
+    default: "0"
+  - name: secondary_items_cost_per_qty
+    label: Secondary Items Cost Per Qty
+    type: money
+    observed_as: secondary_items_cost_per_qty
+    default: "0"
+  - name: rm_supp_cost
+    label: Raw Materials Supplied Cost
+    type: money
+    observed_as: rm_supp_cost
+  - name: warehouse
+    label: Accepted Warehouse
+    type: ref
+    observed_as: warehouse
+    ref: Warehouse
+  - name: subcontracting_order
+    label: Subcontracting Order
+    type: ref
+    observed_as: subcontracting_order
+    ref: SubcontractingOrder
+  - name: subcontracting_order_item
+    label: Subcontracting Order Item
+    type: string
+    observed_as: subcontracting_order_item
+  - name: subcontracting_receipt_item
+    label: Subcontracting Receipt Item
+    type: string
+    observed_as: subcontracting_receipt_item
+  - name: job_card
+    label: Job Card
+    type: ref
+    observed_as: job_card
+    ref: JobCard
+  - name: rejected_warehouse
+    label: Rejected Warehouse
+    type: ref
+    observed_as: rejected_warehouse
+    ref: Warehouse
+  - name: bom
+    label: BOM
+    type: ref
+    observed_as: bom
+    ref: BOM
+  - name: include_exploded_items
+    label: Include Exploded Items
+    type: boolean
+    observed_as: include_exploded_items
+    default: "0"
+  - name: quality_inspection
+    label: Quality Inspection
+    type: ref
+    observed_as: quality_inspection
+    ref: QualityInspection
+  - name: schedule_date
+    label: Required By
+    type: date
+    observed_as: schedule_date
+  - name: reference_name
+    label: Reference Name
+    type: string
+    observed_as: reference_name
+  - name: serial_and_batch_bundle
+    label: Serial and Batch Bundle
+    type: ref
+    observed_as: serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: use_serial_batch_fields
+    label: Use Serial No / Batch Fields
+    type: boolean
+    observed_as: use_serial_batch_fields
+    default: "0"
+  - name: rejected_serial_and_batch_bundle
+    label: Rejected Serial and Batch Bundle
+    type: ref
+    observed_as: rejected_serial_and_batch_bundle
+    ref: SerialAndBatchBundle
+  - name: serial_no
+    label: Serial No
+    type: text
+    observed_as: serial_no
+  - name: rejected_serial_no
+    label: Rejected Serial No
+    type: text
+    observed_as: rejected_serial_no
+  - name: batch_no
+    label: Batch No
+    type: ref
+    observed_as: batch_no
+    ref: Batch
+  - name: manufacturer
+    label: Manufacturer
+    type: ref
+    observed_as: manufacturer
+    ref: Manufacturer
+  - name: manufacturer_part_no
+    label: Manufacturer Part Number
+    type: string
+    observed_as: manufacturer_part_no
+  - name: expense_account
+    label: Expense Account
+    type: ref
+    observed_as: expense_account
+    ref: Account
+  - name: service_expense_account
+    label: Service Expense Account
+    type: ref
+    observed_as: service_expense_account
+    ref: Account
+  - name: cost_center
+    label: Cost Center
+    type: ref
+    observed_as: cost_center
+    ref: CostCenter
+    default: :Company
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: page_break
+    label: Page Break
+    type: boolean
+    observed_as: page_break
+    default: "0"
+  - name: purchase_order
+    label: Purchase Order
+    type: ref
+    observed_as: purchase_order
+    ref: PurchaseOrder
+  - name: purchase_order_item
+    label: Purchase Order Item
+    type: string
+    observed_as: purchase_order_item
+relations:
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: Brand
+    kind: many-to-one
+    via: brand
+  - to: UOM
+    kind: many-to-one
+    via: stock_uom
+  - to: Warehouse
+    kind: many-to-one
+    via: warehouse
+  - to: SubcontractingOrder
+    kind: many-to-one
+    via: subcontracting_order
+  - to: JobCard
+    kind: many-to-one
+    via: job_card
+  - to: Warehouse
+    kind: many-to-one
+    via: rejected_warehouse
+  - to: BOM
+    kind: many-to-one
+    via: bom
+  - to: QualityInspection
+    kind: many-to-one
+    via: quality_inspection
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: serial_and_batch_bundle
+  - to: SerialAndBatchBundle
+    kind: many-to-one
+    via: rejected_serial_and_batch_bundle
+  - to: Batch
+    kind: many-to-one
+    via: batch_no
+  - to: Manufacturer
+    kind: many-to-one
+    via: manufacturer
+  - to: Account
+    kind: many-to-one
+    via: expense_account
+  - to: Account
+    kind: many-to-one
+    via: service_expense_account
+  - to: CostCenter
+    kind: many-to-one
+    via: cost_center
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: PurchaseOrder
+    kind: many-to-one
+    via: purchase_order
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabSubcontracting Receipt Item
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Subcontracting Receipt Item
+    note: declared by the program and served by its API

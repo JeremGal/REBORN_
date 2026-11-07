@@ -6,7 +6,7 @@ ReBorn rebuilds legacy business software in three blocks.
 
 | Block | Skill | Writes to |
 |---|---|---|
-| 1. Explore with a computer-use agent (H Company) | `.claude/skills/reborn-explorer` | `targets/<id>/01-exploration/` |
+| 1. Explore with a computer-use agent (H Company) | `.claude/skills/reborn-explorer`, and Elias's explorer in `h-explorer/` (read `h-explorer/HANDOFF.md`; do not edit its files, see its §8 bis) | `targets/<id>/01-exploration/` |
 | 2. Investigate with REA + Craft Anything | `.claude/skills/reborn-investigator` (+ `reverse-engineer-anything`) | `targets/<id>/02-investigation/` |
 | 3. Rebuild from the dossier | `.claude/skills/reborn-rebuilder` | `apps/<id>/`, `targets/<id>/03-reconstruction/` |
 
@@ -34,7 +34,9 @@ node tools/reborn.mjs ask <target>      # turn open unknowns into computer-use-r
 node tools/reborn.mjs verify [target]   # re-hash the evidence files against the index
 node tools/reborn.mjs export-kit <target> <folder>   # the only folder block 3 may read
 node tools/reborn.mjs parity <target>   # share of the kit's expectations the rebuild has proven
-npm test                                # 51 tests: validation, SQL and legacy readers, manual, kit, parity, guards
+node tools/reborn.mjs frappe <target> model | observe <cases.json>   # Frappe/ERPNext site through its API
+node tools/reborn.mjs import-run <target> <EXP.json|dir> --mission M-xxx   # H Company explorer (h-explorer/) -> runs
+npm test                                # 55 tests: validation, readers, manual, kit, parity, explorer bridge, guards
 ```
 
 Full command list: `docs/GUIDE.md` §5.

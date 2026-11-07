@@ -1,0 +1,207 @@
+name: Issue
+description: A problem or question raised by a customer. Document type "Issue" (module Support).
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    enum_values:
+      - ISS-.YYYY.-
+  - name: subject
+    label: Subject
+    type: string
+    observed_as: subject
+    required: true
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: raised_by
+    label: Raised By (Email)
+    type: string
+    observed_as: raised_by
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Open
+      - Replied
+      - On Hold
+      - Resolved
+      - Closed
+    default: Open
+  - name: priority
+    label: Priority
+    type: ref
+    observed_as: priority
+    ref: IssuePriority
+  - name: issue_type
+    label: Issue Type
+    type: ref
+    observed_as: issue_type
+    ref: IssueType
+  - name: issue_split_from
+    label: Issue Split From
+    type: ref
+    observed_as: issue_split_from
+    ref: Issue
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: service_level_agreement
+    label: Service Level Agreement
+    type: ref
+    observed_as: service_level_agreement
+    ref: ServiceLevelAgreement
+  - name: response_by
+    label: Response By
+    type: datetime
+    observed_as: response_by
+  - name: agreement_status
+    label: Service Level Agreement Status
+    type: enum
+    observed_as: agreement_status
+    enum_values:
+      - First Response Due
+      - Resolution Due
+      - Fulfilled
+      - Failed
+    default: First Response Due
+  - name: sla_resolution_by
+    label: Resolution By
+    type: datetime
+    observed_as: sla_resolution_by
+  - name: service_level_agreement_creation
+    label: Service Level Agreement Creation
+    type: datetime
+    observed_as: service_level_agreement_creation
+  - name: on_hold_since
+    label: On Hold Since
+    type: datetime
+    observed_as: on_hold_since
+  - name: total_hold_time
+    label: Total Hold Time
+    type: integer
+    observed_as: total_hold_time
+  - name: first_response_time
+    label: First Response Time
+    type: integer
+    observed_as: first_response_time
+  - name: first_responded_on
+    label: First Responded On
+    type: datetime
+    observed_as: first_responded_on
+  - name: avg_response_time
+    label: Average Response Time
+    type: integer
+    observed_as: avg_response_time
+  - name: resolution_details
+    label: Resolution Details
+    type: text
+    observed_as: resolution_details
+  - name: opening_date
+    label: Opening Date
+    type: date
+    observed_as: opening_date
+    default: Today
+  - name: opening_time
+    label: Opening Time
+    type: time
+    observed_as: opening_time
+  - name: sla_resolution_date
+    label: Resolution Date
+    type: datetime
+    observed_as: sla_resolution_date
+  - name: resolution_time
+    label: Resolution Time
+    type: integer
+    observed_as: resolution_time
+  - name: user_resolution_time
+    label: User Resolution Time
+    type: integer
+    observed_as: user_resolution_time
+  - name: lead
+    label: Lead
+    type: ref
+    observed_as: lead
+    ref: Lead
+  - name: contact
+    label: Contact
+    type: ref
+    observed_as: contact
+    ref: Contact
+  - name: email_account
+    label: Email Account
+    type: ref
+    observed_as: email_account
+    ref: EmailAccount
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: project
+    label: Project
+    type: ref
+    observed_as: project
+    ref: Project
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: via_customer_portal
+    label: Via Customer Portal
+    type: boolean
+    observed_as: via_customer_portal
+    default: "0"
+  - name: attachment
+    label: Attachment
+    type: file
+    observed_as: attachment
+  - name: content_type
+    label: Content Type
+    type: string
+    observed_as: content_type
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: IssuePriority
+    kind: many-to-one
+    via: priority
+  - to: IssueType
+    kind: many-to-one
+    via: issue_type
+  - to: Issue
+    kind: many-to-one
+    via: issue_split_from
+  - to: ServiceLevelAgreement
+    kind: many-to-one
+    via: service_level_agreement
+  - to: Lead
+    kind: many-to-one
+    via: lead
+  - to: Contact
+    kind: many-to-one
+    via: contact
+  - to: EmailAccount
+    kind: many-to-one
+    via: email_account
+  - to: Project
+    kind: many-to-one
+    via: project
+  - to: Company
+    kind: many-to-one
+    via: company
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabIssue
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Issue
+    note: declared by the program and served by its API

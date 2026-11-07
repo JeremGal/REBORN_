@@ -1,0 +1,27 @@
+name: ProjectsSettings
+description: 'Document type "Projects Settings" (module Projects): single settings record.'
+fields:
+  - name: ignore_user_time_overlap
+    label: Ignore User Time Overlap
+    type: boolean
+    observed_as: ignore_user_time_overlap
+    default: "0"
+  - name: ignore_employee_time_overlap
+    label: Ignore Employee Time Overlap
+    type: boolean
+    observed_as: ignore_employee_time_overlap
+    default: "0"
+  - name: fetch_timesheet_in_sales_invoice
+    label: Fetch Timesheet in Sales Invoice
+    type: boolean
+    observed_as: fetch_timesheet_in_sales_invoice
+    default: "0"
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabProjects Settings
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Projects Settings
+    note: declared by the program and served by its API

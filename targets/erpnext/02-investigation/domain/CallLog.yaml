@@ -1,0 +1,106 @@
+name: CallLog
+description: A phone call made or received. Document type "Call Log" (module Telephony).
+fields:
+  - name: id
+    label: ID
+    type: string
+    observed_as: id
+    unique: true
+  - name: from
+    label: From
+    type: string
+    observed_as: from
+  - name: to
+    label: To
+    type: string
+    observed_as: to
+  - name: call_received_by
+    label: Call Received By
+    type: ref
+    observed_as: call_received_by
+    ref: Employee
+  - name: employee_user_id
+    label: Employee User Id
+    type: ref
+    observed_as: employee_user_id
+    ref: User
+  - name: medium
+    label: Medium
+    type: string
+    observed_as: medium
+  - name: start_time
+    label: Start Time
+    type: datetime
+    observed_as: start_time
+  - name: end_time
+    label: End Time
+    type: datetime
+    observed_as: end_time
+  - name: type
+    label: Type
+    type: enum
+    observed_as: type
+    enum_values:
+      - Incoming
+      - Outgoing
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    ref: Customer
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    enum_values:
+      - Ringing
+      - In Progress
+      - Completed
+      - Failed
+      - Busy
+      - No Answer
+      - Queued
+      - Cancelled
+  - name: duration
+    label: Duration
+    type: integer
+    observed_as: duration
+  - name: recording_url
+    label: Recording URL
+    type: string
+    observed_as: recording_url
+  - name: type_of_call
+    label: Type Of Call
+    type: ref
+    observed_as: type_of_call
+    ref: TelephonyCallType
+  - name: summary
+    label: Summary
+    type: text
+    observed_as: summary
+relations:
+  - to: Employee
+    kind: many-to-one
+    via: call_received_by
+  - to: User
+    kind: many-to-one
+    via: employee_user_id
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: TelephonyCallType
+    kind: many-to-one
+    via: type_of_call
+  - to: DynamicLink
+    kind: one-to-many
+    via: links
+    description: lines (Links)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCall Log
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Call Log
+    note: declared by the program and served by its API

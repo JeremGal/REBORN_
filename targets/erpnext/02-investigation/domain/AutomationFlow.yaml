@@ -1,0 +1,134 @@
+name: AutomationFlow
+description: Document type "Automation Flow" (module Automation).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+  - name: document_type
+    label: Document Type
+    type: ref
+    observed_as: document_type
+    ref: DocType
+  - name: enabled
+    label: Enabled
+    type: boolean
+    observed_as: enabled
+    default: "0"
+  - name: disabled_reason
+    label: Disabled Reason
+    type: text
+    observed_as: disabled_reason
+  - name: trigger_type
+    label: Trigger Type
+    type: enum
+    observed_as: trigger_type
+    required: true
+    enum_values:
+      - Doc Created
+      - Doc Updated
+      - Field Value Changed
+      - Doc Deleted
+      - Doc Submitted
+      - Doc Cancelled
+      - Date Based
+      - Scheduled
+      - Custom Event
+      - Manual
+  - name: trigger_field
+    label: Trigger Field
+    type: string
+    observed_as: trigger_field
+  - name: from_value
+    label: From Value
+    type: string
+    observed_as: from_value
+  - name: to_value
+    label: To Value
+    type: string
+    observed_as: to_value
+  - name: custom_event
+    label: Custom Event
+    type: string
+    observed_as: custom_event
+  - name: date_field
+    label: Date Field
+    type: string
+    observed_as: date_field
+  - name: date_offset
+    label: Date Offset (Days)
+    type: integer
+    observed_as: date_offset
+  - name: date_direction
+    label: Date Direction
+    type: enum
+    observed_as: date_direction
+    enum_values:
+      - Before
+      - After
+  - name: cron_expression
+    label: Cron Expression
+    type: string
+    observed_as: cron_expression
+  - name: next_run
+    label: Next Run
+    type: datetime
+    observed_as: next_run
+  - name: filters
+    label: Filters
+    type: text
+    observed_as: filters
+  - name: condition
+    label: Advanced Expression using Python
+    type: text
+    observed_as: condition
+  - name: relationships
+    label: Relationships
+    type: json
+    observed_as: relationships
+  - name: revalidate_on_run
+    label: Revalidate on Run
+    type: boolean
+    observed_as: revalidate_on_run
+    default: "0"
+  - name: run_as
+    label: Run As
+    type: enum
+    observed_as: run_as
+    enum_values:
+      - Triggering User
+      - Document Owner
+      - Automation User
+    default: Automation User
+  - name: automation_user
+    label: Automation User
+    type: ref
+    observed_as: automation_user
+    ref: User
+    default: Administrator
+  - name: stop_on_error
+    label: Stop on Error
+    type: boolean
+    observed_as: stop_on_error
+    default: "1"
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: document_type
+  - to: AutomationAction
+    kind: one-to-many
+    via: actions
+    description: lines (Actions)
+  - to: User
+    kind: many-to-one
+    via: automation_user
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabAutomation Flow
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Automation Flow
+    note: declared by the program and served by its API

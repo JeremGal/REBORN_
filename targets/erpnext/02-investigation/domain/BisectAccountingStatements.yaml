@@ -1,0 +1,65 @@
+name: BisectAccountingStatements
+description: 'Document type "Bisect Accounting Statements" (module Accounts): single settings record.'
+fields:
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    ref: Company
+  - name: from_date
+    label: From Date
+    type: datetime
+    observed_as: from_date
+  - name: to_date
+    label: To Date
+    type: datetime
+    observed_as: to_date
+  - name: algorithm
+    label: Algorithm
+    type: enum
+    observed_as: algorithm
+    enum_values:
+      - BFS
+      - DFS
+    default: BFS
+  - name: current_node
+    label: Current Node
+    type: ref
+    observed_as: current_node
+    ref: BisectNodes
+  - name: current_from_date
+    label: ""
+    type: datetime
+    observed_as: current_from_date
+  - name: current_to_date
+    label: ""
+    type: datetime
+    observed_as: current_to_date
+  - name: p_l_summary
+    label: ""
+    type: decimal
+    observed_as: p_l_summary
+  - name: b_s_summary
+    label: ""
+    type: decimal
+    observed_as: b_s_summary
+  - name: difference
+    label: ""
+    type: decimal
+    observed_as: difference
+relations:
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: BisectNodes
+    kind: many-to-one
+    via: current_node
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabBisect Accounting Statements
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Bisect Accounting Statements
+    note: declared by the program and served by its API

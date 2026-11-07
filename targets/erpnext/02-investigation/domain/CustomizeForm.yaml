@@ -1,0 +1,232 @@
+name: CustomizeForm
+description: 'Document type "Customize Form" (module Custom): single settings record.'
+fields:
+  - name: doc_type
+    label: Enter Form Type
+    type: ref
+    observed_as: doc_type
+    ref: DocType
+  - name: label
+    label: Change Label (via Custom Translation)
+    type: string
+    observed_as: label
+  - name: search_fields
+    label: Search Fields
+    type: string
+    observed_as: search_fields
+  - name: grid_page_length
+    label: Grid Page Length
+    type: integer
+    observed_as: grid_page_length
+  - name: rows_threshold_for_grid_search
+    label: Rows Threshold for Grid Search
+    type: integer
+    observed_as: rows_threshold_for_grid_search
+  - name: link_filters
+    label: Link Filters
+    type: json
+    observed_as: link_filters
+  - name: istable
+    label: Is Table
+    type: boolean
+    observed_as: istable
+    default: "0"
+  - name: is_calendar_and_gantt
+    label: Is Calendar and Gantt
+    type: boolean
+    observed_as: is_calendar_and_gantt
+    default: "0"
+  - name: editable_grid
+    label: Editable Grid
+    type: boolean
+    observed_as: editable_grid
+    default: "0"
+  - name: quick_entry
+    label: Quick Entry
+    type: boolean
+    observed_as: quick_entry
+    default: "1"
+  - name: track_changes
+    label: Track Changes
+    type: boolean
+    observed_as: track_changes
+    default: "0"
+  - name: track_views
+    label: Track Views
+    type: boolean
+    observed_as: track_views
+    default: "0"
+  - name: allow_auto_repeat
+    label: Allow Auto Repeat
+    type: boolean
+    observed_as: allow_auto_repeat
+    default: "0"
+  - name: allow_import
+    label: Allow Import (via Data Import Tool)
+    type: boolean
+    observed_as: allow_import
+    default: "0"
+  - name: allow_bulk_edit
+    label: Allow Bulk Edit
+    type: boolean
+    observed_as: allow_bulk_edit
+    default: "1"
+  - name: queue_in_background
+    label: Queue in Background (BETA)
+    type: boolean
+    observed_as: queue_in_background
+    default: "0"
+  - name: naming_rule
+    label: Naming Rule
+    type: enum
+    observed_as: naming_rule
+    enum_values:
+      - Set by user
+      - By fieldname
+      - By "Naming Series" field
+      - Expression
+      - Expression (old style)
+      - Random
+      - By script
+  - name: autoname
+    label: Auto Name
+    type: string
+    observed_as: autoname
+  - name: image_field
+    label: Image Field
+    type: string
+    observed_as: image_field
+  - name: max_attachments
+    label: Max Attachments
+    type: integer
+    observed_as: max_attachments
+  - name: hide_toolbar
+    label: Hide Sidebar, Menu, and Comments
+    type: boolean
+    observed_as: hide_toolbar
+    default: "0"
+  - name: allow_copy
+    label: Hide Copy
+    type: boolean
+    observed_as: allow_copy
+    default: "0"
+  - name: make_attachments_public
+    label: Make Attachments Public by Default
+    type: boolean
+    observed_as: make_attachments_public
+    default: "0"
+  - name: protect_attached_files
+    label: Protect Attached Files
+    type: boolean
+    observed_as: protect_attached_files
+    default: "0"
+  - name: title_field
+    label: Title Field
+    type: string
+    observed_as: title_field
+  - name: show_title_field_in_link
+    label: Show Title in Link Fields
+    type: boolean
+    observed_as: show_title_field_in_link
+    default: "0"
+  - name: translated_doctype
+    label: Translate Link Fields
+    type: boolean
+    observed_as: translated_doctype
+    default: "0"
+  - name: default_print_format
+    label: Default Print Format
+    type: ref
+    observed_as: default_print_format
+    ref: PrintFormat
+  - name: default_view
+    label: Default View
+    type: string
+    observed_as: default_view
+  - name: force_re_route_to_default_view
+    label: Force Re-route to Default View
+    type: boolean
+    observed_as: force_re_route_to_default_view
+    default: "0"
+  - name: show_preview_popup
+    label: Show Preview Popup
+    type: boolean
+    observed_as: show_preview_popup
+    default: "0"
+  - name: show_name_in_global_search
+    label: Make "name" searchable in Global Search
+    type: boolean
+    observed_as: show_name_in_global_search
+    default: "0"
+  - name: default_email_template
+    label: Default Email Template
+    type: ref
+    observed_as: default_email_template
+    ref: EmailTemplate
+  - name: email_append_to
+    label: Allow document creation via Email
+    type: boolean
+    observed_as: email_append_to
+    default: "0"
+  - name: sender_field
+    label: Sender Email Field
+    type: string
+    observed_as: sender_field
+  - name: sender_name_field
+    label: Sender Name Field
+    type: string
+    observed_as: sender_name_field
+  - name: recipient_account_field
+    label: Recipient Account Field
+    type: string
+    observed_as: recipient_account_field
+  - name: subject_field
+    label: Subject Field
+    type: string
+    observed_as: subject_field
+  - name: sort_field
+    label: Sort Field
+    type: string
+    observed_as: sort_field
+  - name: sort_order
+    label: Sort Order
+    type: enum
+    observed_as: sort_order
+    enum_values:
+      - ASC
+      - DESC
+relations:
+  - to: DocType
+    kind: many-to-one
+    via: doc_type
+  - to: PrintFormat
+    kind: many-to-one
+    via: default_print_format
+  - to: EmailTemplate
+    kind: many-to-one
+    via: default_email_template
+  - to: DocTypeAction
+    kind: one-to-many
+    via: actions
+    description: lines (Actions)
+  - to: DocTypeLink
+    kind: one-to-many
+    via: links
+    description: lines (Links)
+  - to: DocTypeState
+    kind: one-to-many
+    via: states
+    description: lines (States)
+  - to: CustomizeFormField
+    kind: one-to-many
+    via: fields
+    description: lines (Fields)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCustomize Form
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Customize Form
+    note: declared by the program and served by its API

@@ -1,0 +1,56 @@
+name: ItemVariantAttribute
+description: 'Document type "Item Variant Attribute" (module Stock): lines of another document.'
+fields:
+  - name: variant_of
+    label: Variant Of
+    type: ref
+    observed_as: variant_of
+    ref: Item
+  - name: attribute
+    label: Attribute
+    type: ref
+    observed_as: attribute
+    required: true
+    ref: ItemAttribute
+  - name: attribute_value
+    label: Attribute Value
+    type: string
+    observed_as: attribute_value
+  - name: numeric_values
+    label: Numeric Values
+    type: boolean
+    observed_as: numeric_values
+    default: "0"
+  - name: disabled
+    label: Disabled
+    type: boolean
+    observed_as: disabled
+    default: "0"
+  - name: from_range
+    label: From Range
+    type: decimal
+    observed_as: from_range
+  - name: increment
+    label: Increment
+    type: decimal
+    observed_as: increment
+  - name: to_range
+    label: To Range
+    type: decimal
+    observed_as: to_range
+relations:
+  - to: Item
+    kind: many-to-one
+    via: variant_of
+  - to: ItemAttribute
+    kind: many-to-one
+    via: attribute
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabItem Variant Attribute
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Item Variant Attribute
+    note: declared by the program and served by its API

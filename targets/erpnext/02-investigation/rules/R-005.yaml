@@ -1,0 +1,24 @@
+id: R-005
+title: Rounding of amounts (banker's rounding to the cent)
+kind: rounding
+statement: >-
+  Amounts are rounded to the currency's precision (two decimals here) with banker's rounding: a value exactly halfway
+  goes to the even digit. The method is a system setting. The rounded total is rounded to the smallest currency unit
+  (the cent), so 40.50 stays 40.50 on this site.
+formula: |
+  round(x) = round_half_to_even(x, 2)        # system setting "Banker's Rounding"
+  rounded_total = round to the smallest currency fraction
+applies_to: [SalesInvoiceItem.rate, SalesInvoiceItem.amount, SalesInvoice.rounded_total, SalesInvoice.rounding_adjustment]
+features: [F-001]
+examples:
+  - { given: { qty: 2.5, rate: 0.25 }, expect: { amount: 0.62 }, source: { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "step 3 (SI-09b): 0.625 -> 0.62" } }
+  - { given: { qty: 1, rate: 0.125 }, expect: { rate: 0.12, amount: 0.12 }, source: { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "step 4 (SI-11): 0.125 -> 0.12" } }
+  - { given: { net_total: 33.75, tax: "20% On Net Total" }, expect: { grand_total: 40.5, rounded_total: 40.5, rounding_adjustment: 0 }, source: { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "step 5 (SI-12)" } }
+status: confirmed
+confidence: high
+evidence:
+  - { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "steps 3-5" }
+contradictions: []
+notes: >-
+  Round-half-up would give 0.63 and 0.13 in the first two examples. The method can be changed in the system settings;
+  a rebuild must read it from its own settings, not hard-code it.

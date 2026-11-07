@@ -17,6 +17,9 @@ import { buildHandoff, computeCoverage, inputsDigest, parityScore } from "./lib/
 import { assertNoLeak } from "./lib/guard.mjs";
 import { inventory as manualInventory, parseHeadings, parseHhc } from "./lib/manual.mjs";
 import { implicitRelations } from "./lib/relations.mjs";
+import { docMeta, getDoc as frappeGet, insertDoc as frappeInsert, list as frappeList, frappe as frappeApi } from "./lib/frappe.mjs";
+import { metaToEntity } from "./lib/frappe-model.mjs";
+import { experimentToRun } from "./lib/h-import.mjs";
 import { schemaToEntities } from "./lib/sql-schema.mjs";
 import { ReaSession, collectStrings } from "./lib/rea-session.mjs";
 import { gm, ghidraMcpUrl, q } from "./lib/ghidra-http.mjs";
@@ -47,6 +50,8 @@ Investigation (block 2): evidence goes to .evidence/<target>/ (gitignored) and i
   schema <target> <create.sql> [--only T,T]            a shipped SQL create script -> entity cards (types, keys), graded confirmed
   db <target> <file.dbf|.mdb|.accdb> [--force]         legacy database -> SQLite + CREATE script -> entity cards (dBase confirmed, Access partial)
   relations <target>                                   links the data model implies but no foreign key declares (hypotheses)
+  frappe <target> model | observe <scenarios.json>     Frappe/ERPNext site via its API: every document type -> entities; fictitious drafts -> observed runs
+  import-run <target> <EXP.json|folder> --mission M-x  H Company explorer experiments (h-explorer/) -> runs (block 1 -> block 2)
   native <target> <binary> [--engine rea|ghidra-mcp] [--find RE] [--decompile a,b] [--max 3]
                                                        Ghidra: find functions by name, decompile them (gated by legal basis).
                                                        ghidra-mcp = fast, needs tools/ghidra-mcp.ps1 running; rea = self-contained, slower
@@ -64,7 +69,8 @@ const argv = process.argv.slice(2);
 const cmd = argv.shift();
 // Options may come before or after the positional arguments: move them to the end so commands can read positionals by
 // index (`js gnucash --max-kb 300 dir` used to read "--max-kb" as the folder). rea/craft pass their arguments through.
-const VALUE_OPTS = new Set(["name", "kind", "max-kb", "only", "table", "cdp", "engine", "find", "decompile", "max", "timeout-min", "query", "contains", "class", "method", "top"]);
+// Every option read with opt() takes a value; keep this list in step with them (a test checks it).
+const VALUE_OPTS = new Set(["name", "kind", "max-kb", "only", "table", "cdp", "engine", "find", "decompile", "max", "timeout-min", "query", "contains", "class", "method", "app", "module", "mission", "root"]);
 if (!["rea", "craft"].includes(cmd)) {
   const pos = [], opts = [];
   for (let i = 0; i < argv.length; i++) {
@@ -1006,6 +1012,152 @@ function identify(target, input) {
   routes.forEach((a) => console.log(`  next: ${a}`));
 }
 
+// A Frappe / ERPNext site, through its official API with a user token (FRAPPE_* in the secrets file).
+//   frappe <target> model [--app all|erpnext|frappe] [--module M,N] [--force]   every document type -> entity cards
+async function frappeCmd(target, sub) {
+  needTarget(target);
+  if (sub === "observe") return frappeObserve(target, argv[1]);
+  if (sub !== "model") die("usage: frappe <target> model [--app all|erpnext|frappe] [--module M,N] [--force] | frappe <target> observe <scenarios.json>");
+  const app = opt("app", "all");
+  const modules = (opt("module") || "").split(",").map((s) => s.trim()).filter(Boolean);
+  const force = flag("force");
+  const t0 = Date.now();
+  const mods = await frappeList("Module Def", { fields: ["name", "app_name"] });
+  const inApp = new Set(mods.filter((m) => app === "all" || m.app_name === app).map((m) => m.name));
+  const types = (await frappeList("DocType", { fields: ["name", "module", "istable", "issingle", "is_submittable"] })).filter((d) => inApp.has(d.module) && (!modules.length || modules.includes(d.module)));
+  console.log(`frappe model: ${types.length} document type(s) in scope (${app}${modules.length ? `, ${modules.join(", ")}` : ""}), reading their definitions...`);
+  const metas = [], failed = [];
+  let next = 0;
+  await Promise.all(Array.from({ length: 6 }, async () => {
+    while (next < types.length) {
+      const d = types[next++];
+      try { metas.push(await docMeta(d.name)); } catch (e) { failed.push(`${d.name}: ${String(e.message).slice(0, 80)}`); }
+    }
+  }));
+  metas.sort((a, b) => a.name.localeCompare(b.name));
+  const dir = path.join(evidenceDir(target), "frappe");
+  fs.mkdirSync(dir, { recursive: true });
+  const file = path.join(dir, uniqueName("doctype-metadata"));
+  fs.writeFileSync(file, JSON.stringify({ app, modules, count: metas.length, failed, doctypes: metas }, null, 1), { flag: "wx" });
+  const sha = sha256File(file);
+  const sourceRef = `rb_${sha}`;
+  register(target, { id: sourceRef, kind: "rea", tool: "frappe-api", operation: "doctype-metadata", subject: { label: `${app} document types` }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), file).split(path.sep).join("/"), bytes: fs.statSync(file).size, sha256: sha, summary: `${metas.length} document type definitions (${failed.length} unreadable)`, counts: { tables: types.length } });
+  let entities = metas.map((m) => metaToEntity(m, { sourceRef }));
+  // A link to a type outside the scope cannot be checked: keep the column, drop the link, say so.
+  const known = new Set([...entities.map((e) => e.name), ...loadTarget(target).entities.map((e) => e.name)]);
+  let unresolved = 0;
+  entities = entities.map((e) => {
+    const fields = e.fields.map((f) => (f.ref && !known.has(f.ref) ? (unresolved++, { ...f, type: "string", ref: undefined, label: `${f.label} (link to a type outside the scope)`.trim() }) : f)).map((f) => Object.fromEntries(Object.entries(f).filter(([, v]) => v !== undefined)));
+    const relations = (e.relations || []).filter((r) => known.has(r.to));
+    return { ...e, fields, ...(relations.length ? { relations } : { relations: undefined }) };
+  }).map((e) => Object.fromEntries(Object.entries(e).filter(([, v]) => v !== undefined)));
+  const { written, kept } = writeEntityCards(target, entities, force);
+  console.log(`OK  frappe model  ${metas.length} definitions read in ${((Date.now() - t0) / 1000).toFixed(0)} s, ${written} entity card(s) written${kept ? `, ${kept} kept (use --force)` : ""}, ${unresolved} link(s) outside the scope kept as text, ${failed.length} unreadable  (${sourceRef.slice(0, 19)}...)`);
+  failed.slice(0, 10).forEach((f) => console.log(`  unreadable: ${f}`));
+}
+
+// Block 1 -> block 2: experiments recorded by the H Company explorer (h-explorer/, EXP_xxx.json) become ReBorn runs.
+// Screenshots are copied next to run.yaml when found (under --root, the explorer's folder); the raw JSON goes to the
+// local evidence store.
+function importRun(target, input) {
+  needTarget(target);
+  const mission = opt("mission");
+  const root = opt("root");
+  if (!input || !mission) die("usage: import-run <target> <EXP_xxx.json | folder of them> --mission M-xxx [--root <h-explorer folder>]");
+  const p = absolute(input);
+  if (!fs.existsSync(p)) die(`not found: ${p}`);
+  const files = fs.statSync(p).isDirectory() ? fs.readdirSync(p).filter((f) => /^EXP_.*\.json$/i.test(f)).map((f) => path.join(p, f)) : [p];
+  if (!files.length) die(`no EXP_*.json in ${p}`);
+  const base = root ? absolute(root) : path.dirname(fs.statSync(p).isDirectory() ? p : path.dirname(p));
+  const rawDir = path.join(evidenceDir(target), "h-explorer");
+  fs.mkdirSync(rawDir, { recursive: true });
+  let ok = 0;
+  for (const f of files) {
+    const exp = JSON.parse(fs.readFileSync(f, "utf8"));
+    const run = experimentToRun(exp, { target, mission, rawName: path.basename(f) });
+    const runDir = path.join(targetDir(target), "01-exploration", "runs", run.id);
+    fs.mkdirSync(runDir, { recursive: true });
+    const wanted = [...(exp.evidence?.screenshots ?? []), exp.evidence?.final_screenshot].filter(Boolean);
+    let copied = 0;
+    for (const s of wanted) {
+      const src = [path.resolve(base, s), path.resolve(path.dirname(f), s)].find((x) => fs.existsSync(x));
+      if (src) { fs.copyFileSync(src, path.join(runDir, path.basename(s))); copied++; }
+    }
+    // A screenshot that could not be copied is not referenced: the run never points to a missing file.
+    for (const st of run.steps) if (st.screenshot && !fs.existsSync(path.join(runDir, st.screenshot))) delete st.screenshot;
+    fs.writeFileSync(path.join(runDir, "run.yaml"), new YAML.Document(run).toString({ lineWidth: 0 }));
+    fs.copyFileSync(f, path.join(rawDir, path.basename(f)));
+    ok++;
+    console.log(`  ${run.id}  ${run.outcome}  ${run.steps.length} step(s), ${copied}/${wanted.length} screenshot(s) copied`);
+  }
+  console.log(`OK  import-run  ${ok} experiment(s) converted into runs of ${target} (mission ${mission}). Next: node tools/reborn.mjs validate ${target}`);
+}
+
+// Observation through the API: create fictitious documents as drafts, read back what the program computed, and record it
+// as a run on the original (runtime evidence, like a run of the computer-use agent). Drafts are never submitted.
+const SEED_KEY = { Customer: "customer_name", Supplier: "supplier_name", Item: "item_code" };
+async function frappeObserve(target, file) {
+  if (!file) die("usage: frappe <target> observe <scenarios.json>");
+  const scen = JSON.parse(fs.readFileSync(absolute(file), "utf8"));
+  const started = new Date();
+  const versions = (await frappeApi("/api/method/frappe.utils.change_log.get_versions")).message ?? {};
+  for (const s of scen.seed || []) {
+    const key = SEED_KEY[s.doctype];
+    const exists = key && (await frappeList(s.doctype, { fields: ["name"], filters: [[key, "=", s[key]]], limit: 1 })).length;
+    if (exists) { console.log(`  seed: ${s.doctype} ${s[key]} already there`); continue; }
+    if (!String(s[key] ?? "").startsWith("TEST")) die(`seed records must be fictitious and prefixed TEST (${s.doctype} ${s[key]})`);
+    const d = await frappeInsert(s);
+    console.log(`  seed: created ${s.doctype} ${d.name}`);
+  }
+  const today = started.toISOString().slice(0, 10);
+  const steps = [], raw = [], created = [];
+  let failures = 0;
+  for (const c of scen.cases) {
+    const doc = {
+      doctype: scen.doctype, ...scen.defaults, posting_date: today, due_date: today, ...c.doc,
+      items: (c.doc.items || []).map((i) => ({ ...scen.item_defaults, ...i })),
+      taxes: (c.doc.taxes || []).map((x) => ({ account_head: scen.tax_account, ...x })),
+    };
+    const n = steps.length + 1;
+    try {
+      const saved = await frappeInsert(doc);
+      const back = await frappeGet(scen.doctype, saved.name);
+      created.push(back.name);
+      const pick = (o, keys) => Object.fromEntries(keys.filter((k) => o[k] !== undefined && o[k] !== null && o[k] !== "").map((k) => [k, o[k]]));
+      const extracted = { case: c.id, ...pick(back, scen.read || []), items: (back.items || []).map((i) => pick(i, scen.read_items || [])), taxes: (back.taxes || []).map((t) => pick(t, scen.read_taxes || [])) };
+      steps.push({ n, action: { type: "other", target_desc: `create draft ${scen.doctype} (${c.id}: ${c.title})`, value: JSON.stringify(c.doc) }, observation: `draft saved; amounts computed by the program read back (${back.name})`, extracted });
+      raw.push({ case: c.id, input: doc, read: back });
+      console.log(`  ${c.id}  net ${back.net_total}  taxes ${back.total_taxes_and_charges}  grand ${back.grand_total}  rounded ${back.rounded_total}  (${c.title})`);
+    } catch (e) {
+      failures++;
+      steps.push({ n, action: { type: "other", target_desc: `create draft ${scen.doctype} (${c.id}: ${c.title})`, value: JSON.stringify(c.doc) }, observation: `refused by the program: ${String(e.message).slice(0, 300)}` });
+      raw.push({ case: c.id, input: doc, error: String(e.message) });
+      console.log(`  ${c.id}  REFUSED: ${String(e.message).slice(0, 160)}`);
+    }
+  }
+  const stamp = started.toISOString().replace(/[-:]/g, "").replace(/\..+/, "");
+  const runId = `run-${stamp}-api-${path.basename(file).replace(/\.json$/, "").replace(/[^A-Za-z0-9._-]/g, "-")}`;
+  const runDir = path.join(targetDir(target), "01-exploration", "runs", runId);
+  fs.mkdirSync(runDir, { recursive: true });
+  const run = {
+    id: runId, mission: scen.mission, subject: "original",
+    agent: { provider: "api", product: "frappe-rest", version: `Frappe ${versions.frappe?.version ?? "?"} / ERPNext ${versions.erpnext?.version ?? "?"}` },
+    target: { id: target, version: versions.erpnext?.version ?? "", environment: "Alan's own Frappe Cloud site, fictitious data" },
+    started_at: started.toISOString(), ended_at: new Date().toISOString(),
+    outcome: failures === 0 ? "success" : failures < scen.cases.length ? "partial" : "failed",
+    steps,
+    notes: `Drafts created (never submitted): ${created.join(", ") || "none"}.`,
+  };
+  fs.writeFileSync(path.join(runDir, "run.yaml"), new YAML.Document(run).toString({ lineWidth: 0 }));
+  const dir = path.join(evidenceDir(target), "frappe");
+  fs.mkdirSync(dir, { recursive: true });
+  const ev = path.join(dir, uniqueName(`observe-${path.basename(file, ".json")}`));
+  fs.writeFileSync(ev, JSON.stringify({ run: runId, versions, cases: raw }, null, 1), { flag: "wx" });
+  const sha = sha256File(ev);
+  register(target, { id: `rb_${sha}`, kind: "rea", tool: "frappe-api", operation: `observe ${scen.doctype}`, subject: { label: `${scen.cases.length} fictitious ${scen.doctype} drafts` }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), ev).split(path.sep).join("/"), bytes: fs.statSync(ev).size, sha256: sha, summary: `${scen.cases.length - failures}/${scen.cases.length} cases computed by the program and read back (run ${runId})` });
+  console.log(`OK  frappe observe  ${scen.cases.length - failures}/${scen.cases.length} case(s) observed  run: ${path.relative(ROOT, runDir)}`);
+}
+
 // Links between tables that the data model implies but no foreign key declares: hypotheses to confirm, never facts.
 function relations(target) {
   needTarget(target);
@@ -1062,15 +1214,25 @@ function manual(target, input) {
   } else if (/\.(md|markdown)$/i.test(p)) {
     entries = parseHeadings(fs.readFileSync(p, "utf8"));
     source = "markdown headings";
-  } else die("unsupported manual format: convert a PDF or Word manual to markdown first (docling --to md <file>), then pass the .md");
-  const inv = manualInventory(entries);
+  } else if (/\.txt$/i.test(p)) {
+    entries = null;
+    source = "documentation page list (one page per topic, older versions left out)";
+  } else die("unsupported manual format: .chm, a folder with a .hhc, a .md file, or a .txt list of documentation page URLs");
+  let inv;
+  if (entries) inv = manualInventory(entries);
+  else {
+    // A list of documentation pages (a sitemap): each current page is one documented topic; versioned copies (/v12/...) are left out.
+    const urls = fs.readFileSync(p, "utf8").split(/\r?\n/).map((s) => s.trim()).filter((s) => /^https?:\/\//.test(s));
+    const current = [...new Set(urls.filter((u) => !/\/v\d+(\/|$)/.test(u)))];
+    inv = { chapters: [{ title: "documentation pages (current version)", topics: current.length }], topics: current.length, entries: urls.length, excluded: urls.length - current.length, titles: current.map((u) => decodeURIComponent(u.replace(/\/$/, "").split("/").pop()).replace(/-/g, " ")) };
+  }
   const dir = path.join(evidenceDir(target), "docs");
   fs.mkdirSync(dir, { recursive: true });
   const out = path.join(dir, uniqueName(`manual-inventory-${base}`));
   fs.writeFileSync(out, JSON.stringify({ source, file: path.basename(p), sha256: sha256File(p), ...inv }, null, 1), { flag: "wx" });
   const sha = sha256File(out);
   register(target, { id: `doc:${sha.slice(0, 16)}`, kind: "manual", tool: "reborn-manual", operation: "manual-inventory", subject: { label: path.basename(p), sha256: sha256File(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes: fs.statSync(out).size, sha256: sha, summary: `${inv.topics} documented topics in ${inv.chapters.length} chapters (${source})`, counts: { features: inv.topics, chapters: inv.chapters.length } });
-  console.log(`OK  manual  ${inv.topics} documented topics in ${inv.chapters.length} chapters, ${inv.excluded} front/back-matter entries left out  doc:${sha.slice(0, 16)}`);
+  console.log(`OK  manual  ${inv.topics} documented topics in ${inv.chapters.length} chapter(s), ${inv.excluded} entries left out (front or back matter, older versions)  doc:${sha.slice(0, 16)}`);
   inv.chapters.forEach((c) => console.log(`  ${String(c.topics).padStart(4)}  ${c.title}`));
 }
 
@@ -1151,6 +1313,8 @@ switch (cmd) {
   case "identify": identify(t, argv[0]); break;
   case "db": db(t, argv[0]); break;
   case "relations": relations(t); break;
+  case "frappe": await frappeCmd(t, argv[0]); break;
+  case "import-run": importRun(t, argv[0]); break;
   case "ui": ui(t, argv[0]); break;
   case "schema": schema(t, argv[0]); break;
   case "doc": doc(t, argv[0]); break;

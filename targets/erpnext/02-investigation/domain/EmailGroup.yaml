@@ -1,0 +1,49 @@
+name: EmailGroup
+description: Document type "Email Group" (module Email).
+fields:
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+    unique: true
+  - name: total_subscribers
+    label: Total Subscribers
+    type: integer
+    observed_as: total_subscribers
+    default: "0"
+  - name: confirmation_email_template
+    label: Confirmation Email Template
+    type: ref
+    observed_as: confirmation_email_template
+    ref: EmailTemplate
+  - name: welcome_email_template
+    label: Welcome Email Template
+    type: ref
+    observed_as: welcome_email_template
+    ref: EmailTemplate
+  - name: welcome_url
+    label: Welcome URL
+    type: string
+    observed_as: welcome_url
+  - name: add_query_parameters
+    label: Add Query Parameters
+    type: boolean
+    observed_as: add_query_parameters
+    default: "0"
+relations:
+  - to: EmailTemplate
+    kind: many-to-one
+    via: confirmation_email_template
+  - to: EmailTemplate
+    kind: many-to-one
+    via: welcome_email_template
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabEmail Group
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Email Group
+    note: declared by the program and served by its API

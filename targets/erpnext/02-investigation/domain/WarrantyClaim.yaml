@@ -1,0 +1,189 @@
+name: WarrantyClaim
+description: A customer's claim to repair or replace an item under warranty. Document type "Warranty Claim" (module Support).
+fields:
+  - name: naming_series
+    label: Series
+    type: enum
+    observed_as: naming_series
+    required: true
+    enum_values:
+      - SER-WRN-.YYYY.-
+  - name: status
+    label: Status
+    type: enum
+    observed_as: status
+    required: true
+    enum_values:
+      - Open
+      - Closed
+      - Work In Progress
+      - Cancelled
+    default: Open
+  - name: complaint_date
+    label: Issue Date
+    type: date
+    observed_as: complaint_date
+    required: true
+    default: Today
+  - name: customer
+    label: Customer
+    type: ref
+    observed_as: customer
+    required: true
+    ref: Customer
+  - name: serial_no
+    label: Serial No
+    type: ref
+    observed_as: serial_no
+    ref: SerialNo
+  - name: complaint
+    label: Issue
+    type: text
+    observed_as: complaint
+    required: true
+  - name: item_code
+    label: Item Code
+    type: ref
+    observed_as: item_code
+    ref: Item
+  - name: item_name
+    label: Item Name
+    type: string
+    observed_as: item_name
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: warranty_amc_status
+    label: Warranty / AMC Status
+    type: enum
+    observed_as: warranty_amc_status
+    enum_values:
+      - Under Warranty
+      - Out of Warranty
+      - Under AMC
+      - Out of AMC
+  - name: warranty_expiry_date
+    label: Warranty Expiry Date
+    type: date
+    observed_as: warranty_expiry_date
+  - name: amc_expiry_date
+    label: AMC Expiry Date
+    type: date
+    observed_as: amc_expiry_date
+  - name: resolution_date
+    label: Resolution Date
+    type: datetime
+    observed_as: resolution_date
+  - name: resolved_by
+    label: Resolved By
+    type: ref
+    observed_as: resolved_by
+    ref: User
+  - name: resolution_details
+    label: Resolution Details
+    type: text
+    observed_as: resolution_details
+  - name: customer_name
+    label: Customer Name
+    type: string
+    observed_as: customer_name
+  - name: contact_person
+    label: Contact Person
+    type: ref
+    observed_as: contact_person
+    ref: Contact
+  - name: contact_display
+    label: Contact
+    type: text
+    observed_as: contact_display
+  - name: contact_mobile
+    label: Mobile No
+    type: string
+    observed_as: contact_mobile
+  - name: contact_email
+    label: Contact Email
+    type: string
+    observed_as: contact_email
+  - name: territory
+    label: Territory
+    type: ref
+    observed_as: territory
+    ref: Territory
+  - name: customer_group
+    label: Customer Group
+    type: ref
+    observed_as: customer_group
+    ref: CustomerGroup
+  - name: customer_address
+    label: Customer Address
+    type: ref
+    observed_as: customer_address
+    ref: Address
+  - name: address_display
+    label: Address
+    type: text
+    observed_as: address_display
+  - name: service_address
+    label: Service Address
+    type: text
+    observed_as: service_address
+  - name: company
+    label: Company
+    type: ref
+    observed_as: company
+    required: true
+    ref: Company
+  - name: complaint_raised_by
+    label: Raised By
+    type: string
+    observed_as: complaint_raised_by
+  - name: from_company
+    label: From Company
+    type: string
+    observed_as: from_company
+  - name: amended_from
+    label: Amended From
+    type: ref
+    observed_as: amended_from
+    ref: WarrantyClaim
+relations:
+  - to: Customer
+    kind: many-to-one
+    via: customer
+  - to: SerialNo
+    kind: many-to-one
+    via: serial_no
+  - to: Item
+    kind: many-to-one
+    via: item_code
+  - to: User
+    kind: many-to-one
+    via: resolved_by
+  - to: Contact
+    kind: many-to-one
+    via: contact_person
+  - to: Territory
+    kind: many-to-one
+    via: territory
+  - to: CustomerGroup
+    kind: many-to-one
+    via: customer_group
+  - to: Address
+    kind: many-to-one
+    via: customer_address
+  - to: Company
+    kind: many-to-one
+    via: company
+  - to: WarrantyClaim
+    kind: many-to-one
+    via: amended_from
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabWarranty Claim
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Warranty Claim
+    note: declared by the program and served by its API

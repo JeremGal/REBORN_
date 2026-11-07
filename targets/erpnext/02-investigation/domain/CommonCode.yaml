@@ -1,0 +1,50 @@
+name: CommonCode
+description: A code from a code list and what it maps to. Document type "Common Code" (module EDI).
+fields:
+  - name: code_list
+    label: Code List
+    type: ref
+    observed_as: code_list
+    required: true
+    ref: CodeList
+  - name: canonical_uri
+    label: Canonical URI
+    type: string
+    observed_as: canonical_uri
+  - name: title
+    label: Title
+    type: string
+    observed_as: title
+    required: true
+    max_length: 300
+  - name: common_code
+    label: Common Code
+    type: string
+    observed_as: common_code
+    required: true
+    max_length: 300
+  - name: description
+    label: Description
+    type: text
+    observed_as: description
+  - name: additional_data
+    label: Additional Data
+    type: text
+    observed_as: additional_data
+relations:
+  - to: CodeList
+    kind: many-to-one
+    via: code_list
+  - to: DynamicLink
+    kind: one-to-many
+    via: applies_to
+    description: lines (Applies To)
+storage:
+  engine: Frappe (MariaDB)
+  observed_table: tabCommon Code
+status: confirmed
+evidence:
+  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+    kind: rea
+    locator: definition of Common Code
+    note: declared by the program and served by its API
