@@ -231,14 +231,14 @@ Commandes : `frappe features` (une fiche fonctionnalité et une fiche écran par
 | Mesure | Résultat |
 |---|---|
 | Règles déclarées par les formulaires métier (dénominateur) | 3 830 |
-| **Confirmées par observation** | **193 (5,0 %)** |
-| Compatibles sans preuve | 330 (8,6 %) |
+| **Confirmées par observation** | **239 (6,2 %)** après la phase 2 (193, soit 5,0 %, avant) |
+| Compatibles sans preuve | 310 (8,1 %) |
 | Contredites | 1 (série de numérotation : l'agent a lu 7 croix au lieu de 8, à vérifier) |
 | Formulaires lus par l'agent | 180 sur 263 (263 sessions réussies ; 47 lectures vides, dont 27 refus de droits du compte de test) |
 | Écrans dont les libellés concordent avec la définition | 96 sur 180 |
-| Phase 2 (actions sans enregistrer) | 115 / 200 au moment du bilan, toujours en cours ; rendement faible : environ 0,1 règle confirmée par expérience |
+| Phase 2 (actions sans enregistrer) | 199 / 200 terminées au bilan final (198 réussies, 1 échouée) ; +46 règles d'affichage confirmées (70 vers 116), soit environ 0,25 règle par expérience |
 
-Par type : valeurs par défaut 71 / 1 227, affichage conditionnel 70 / 1 120, champs calculés 52 / 876, remplissages automatiques 0 / 319, obligatoires ou verrouillés sous condition 0 / 172, filtres 0 / 31. En plus, hors déclarations : 7 règles de calcul confirmées, 66 refus observés avec leur message, 67 brouillons acceptés.
+Par type : valeurs par défaut 71 / 1 227, affichage conditionnel 116 / 1 120, champs calculés 52 / 876, remplissages automatiques 0 / 319, obligatoires ou verrouillés sous condition 0 / 172, filtres 0 / 31. En plus, hors déclarations : 7 règles de calcul confirmées, 66 refus observés avec leur message, 67 brouillons acceptés.
 
 Pourquoi si bas : une lecture de formulaire vide ne teste qu'un état de départ. Les 876 champs calculés valent 0 sans ligne, les remplissages automatiques demandent de choisir un client ou un article, les champs obligatoires sous condition demandent d'essayer d'enregistrer. Le rendement de la phase 2 est limité par les droits (12 refus), les champs introuvables et les listes de libellés tronquées. Le calculateur ne compte que les observations positives et connaît l'état d'un document neuf (brouillon, non enregistré, défauts littéraux) ; 23 « contradictions » initiales étaient des artefacts (séparateurs de numérotation, pages de réglages, masquage de l'utilisateur) et ont été corrigées par des tests.
 

@@ -1,0 +1,136 @@
+id: run-20261107T214236-h-EXP_338
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_338.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:38:24.700Z
+ended_at: 2026-11-07T21:42:36.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.414, \"y\": 0.28, \"element\": \"Appliquer Sur dropdown showing 'Code de l'Article'\"})"
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["Escape"]})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Empty area on the form to close dropdown"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.367, "y": 0.059, "element": "Condition dynamique tab"})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.262, "y": 0.059, "element": "Détails tab"})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.414, "y": 0.28, "element": "Appliquer Sur dropdown"})'
+  - n: 12
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["Escape"]})'
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.624, "element": "Page content area to close dropdown"})'
+  - n: 14
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 400, "scroll_element": null})'
+  - n: 15
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Could not find a field called 'Applicable pour' (Applicable For) with a 'Client' (Customer) option. The 'Appliquer Sur' field only has options: Code de l'Article, Groupe d'Article, Marque, Transaction. No changes were made to the form.\", \"prefilled\": [\"Naming Series: PRLE-####\", \"A"
+    screenshot: step_15.png
+  - n: 16
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_15.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Customer
+      page_title: Nouveau(elle) Règle de tarification - new-pricing-rule-jjwlvtzbxe
+      field_labels:
+        - Naming Series
+        - Titre
+        - Désactiver
+        - Appliquer Sur
+        - Prix ou remise de produit
+        - Entrepôt
+        - Conditions mixtes
+        - Est cumulatif
+        - Code de coupon lié
+        - Remise sur un autre article
+        - Vente
+        - Achat
+        - Qté min. (selon UdM de stock)
+        - Qté max. (selon l'UdM de stock)
+        - Montant Min
+        - Montant Max
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Type de Marge
+        - Taux de Marge ou Montant
+        - Appliquer la règle sur le code d'article
+        - Remise (%)
+        - Prix après remises
+      section_labels:
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+      prefilled:
+        - "Naming Series: PRLE-####"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Montant Min: 0,00"
+        - "Montant Max: 0,00"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0.000"
+      notes: "Could not find a field called 'Applicable pour' (Applicable For) with a 'Client' (Customer) option. The 'Appliquer Sur' field only has options: Code de l'Article, Groupe d'Article, Marque, Transaction. No changes were made to the form."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/403157a5-1d06-4d64-81e4-fb6a12b18e54 attempts: 1"

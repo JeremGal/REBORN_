@@ -1,0 +1,74 @@
+id: run-20261107T215328-h-EXP_359
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_359.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:52:44.700Z
+ended_at: 2026-11-07T21:53:28.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: "select_option({\"x\": 0.421, \"y\": 0.154, \"option\": \"Groupe d'Article\", \"element\": \"Appliquer Sur dropdown\"})"
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Field labels visible on the form (up to 120): Nom, Appliquer Sur, Désactiver, Groupe de postes de règle de tarification, Ajouter une ligne, Conditions mixtes, Est cumulatif, Remise sur un autre article, Informations sur le tier, Paramètres de période, Valide à partir de, Valable ju'
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Promotional Scheme
+        path: /app/promotional-scheme/new
+        kind: interact
+        mission: M-006
+        action:
+          field: apply_on
+          value: Item Group
+      page_title: Nouveau(elle) Schéma promotionnel
+      field_labels: []
+      section_labels:
+        - Paramètres de période
+        - Dalles à prix réduit
+        - Dalles à prix réduit
+      prefilled:
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: "Field labels visible on the form (up to 120): Nom, Appliquer Sur, Désactiver, Groupe de postes de règle de tarification, Ajouter une ligne, Conditions mixtes, Est cumulatif, Remise sur un autre article, Informations sur le tier, Paramètres de période, Valide à partir de, Valable jusqu'au, Société, Devise, Dalles à prix réduit, Promotion Tarif Promotion Prix, No., Qté Min, Qté Max, Montant minimum, Montant maximum, Type de remise, Ajouter une ligne, Télécharger, Charger, Dalles à prix réduit, Schéma promotionnel Réduction de produit, No., Qté Min, Qté Max, Montant mini..., Montant maxi..., Code de l'Article, Qté, Ajouter une ligne, Télécharger, Charger"
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/afce9c36-831a-455a-b74a-a44b53b358b2 attempts: 1"

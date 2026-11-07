@@ -1,0 +1,114 @@
+id: run-20261107T220530-h-EXP_394
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_394.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T22:04:41.800Z
+ended_at: 2026-11-07T22:05:30.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.72, "y": 0.041, "element": "Close error dialog X button"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.422, "y": 0.112, "option": "Client", "element": "Enlèvement de dropdown"})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/shipment/new-shipment-ylaljkhaqu"})'
+  - n: 10
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form has 'Enlèvement de' set to 'Client'. Prefilled values are: Enlèvement de: Client, Livraison à: Client, Type d'expédition: Marchandises, Type d'enlèvement: Enlèvement, Enlèvement de: 09:00:00, Enlèvement à: 17:00:00. Some fields below 'Informations sur l'expédition' may not be "
+  - n: 12
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Shipment
+        path: /app/shipment/new
+        kind: interact
+        mission: M-006
+        action:
+          field: pickup_from_type
+          value: Customer
+      page_title: Nouveau(elle) Expédition
+      field_labels:
+        - Enlèvement de
+        - Livraison à
+        - Client
+        - Client
+        - Contact
+        - Expédition Colis
+        - Longueur
+        - Largeur (cm)
+        - Hauteur (cm)
+        - Poids
+        - Bon de livraison
+        - Valeur
+        - Modèle de colis
+        - Palettes
+        - Type d'expédition
+        - Type d'enlèvement
+        - Date d'enlèvement
+        - Enlèvement de
+        - Enlèvement à
+        - Incoterm
+        - Description du contenu
+        - Fournisseur de services
+        - Transporteur
+      section_labels:
+        - Enlèvement de
+        - Livraison à
+        - Colis
+        - Détails de l'expédition
+        - Informations sur l'expédition
+      prefilled:
+        - "Enlèvement de: Client"
+        - "Livraison à: Client"
+        - "Type d'expédition: Marchandises"
+        - "Type d'enlèvement: Enlèvement"
+        - "Enlèvement de: 09:00:00"
+        - "Enlèvement à: 17:00:00"
+      notes: "Form has 'Enlèvement de' set to 'Client'. Prefilled values are: Enlèvement de: Client, Livraison à: Client, Type d'expédition: Marchandises, Type d'enlèvement: Enlèvement, Enlèvement de: 09:00:00, Enlèvement à: 17:00:00. Some fields below 'Informations sur l'expédition' may not be fully visible."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/fbaf10bd-2c6b-487a-a623-fa1e14519991 attempts: 1"

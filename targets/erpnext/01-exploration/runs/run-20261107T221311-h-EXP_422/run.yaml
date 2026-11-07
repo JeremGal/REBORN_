@@ -1,0 +1,92 @@
+id: run-20261107T221311-h-EXP_422
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_422.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T22:12:35.000Z
+ended_at: 2026-11-07T22:13:11.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form is on the Tax Rule (Règle de Taxation) new form page. Type de Taxe was already set to 'Ventes'. No changes were made to the form.\", \"prefilled\": [\"Type de Taxe: Ventes\", \"Utiliser pour le Panier: checked\", \"Pays de Facturation: France\", \"Pays de Livraison: France\", \"Priori"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Tax Rule
+        path: /app/tax-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: tax_type
+          value: Sales
+      page_title: Nouveau(elle) Règle de Taxation
+      field_labels:
+        - Type de Taxe
+        - Modèle de la Taxe de Vente
+        - Utiliser pour le Panier
+        - Filtres
+        - Client
+        - Groupe de clients
+        - Item
+        - Groupe d'Article
+        - Ville de Facturation
+        - Ville de Livraison
+        - Département de Facturation
+        - Comté de Livraison
+        - État de la Facturation
+        - État de livraison
+        - Code postal de facturation
+        - Code postal d'expédition
+        - Pays de Facturation
+        - Pays de Livraison
+        - Catégorie de taxe
+        - Validité
+        - Date de début
+        - Date de fin
+        - Priorité
+        - Société
+      section_labels:
+        - Filtres
+        - Validité
+      prefilled:
+        - "Type de Taxe: Ventes"
+        - "Utiliser pour le Panier: checked"
+        - "Pays de Facturation: France"
+        - "Pays de Livraison: France"
+        - "Priorité: 1"
+        - "Société: Digital Solution Service"
+      notes: The form is on the Tax Rule (Règle de Taxation) new form page. Type de Taxe was already set to 'Ventes'. No changes were made to the form.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/0bf7754d-8712-4fef-b19c-20e40b972465 attempts: 1"

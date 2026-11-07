@@ -1,0 +1,85 @@
+id: run-20261107T215931-h-EXP_381
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_381.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:58:45.000Z
+ended_at: 2026-11-07T21:59:31.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.632, \"y\": 0.179, \"element\": \"Checkbox 'Recomptabiliser uniquement les grands livres'\"})"
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.631, \"y\": 0.179, \"element\": \"Checkbox 'Recomptabiliser uniquement les grands livres' - clicking the checkbox itself\"})"
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.63, \"y\": 0.178, \"element\": \"Checkbox 'Recomptabiliser uniquement les grands livres' - clicking directly on the small checkbox square\"})"
+  - n: 8
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.629, \"y\": 0.177, \"element\": \"Checkbox 'Recomptabiliser uniquement les grands livres' - precise click on checkbox\"})"
+  - n: 9
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The checkbox 'Recomptabiliser uniquement les grands livres' could not be ticked - it remained unchecked after multiple click attempts. The form is fully visible (no scrolling needed).\", \"prefilled\": [\"Basé sur: Transaction\", \"Société: Digital Solution Service\", \"Autoriser un Stock "
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_09.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Repost Item Valuation
+        path: /app/repost-item-valuation/new
+        kind: interact
+        mission: M-006
+        action:
+          field: repost_only_accounting_ledgers
+          value: "1"
+      page_title: Nouveau(elle) Recomptabilisation de la valorisation des articles
+      field_labels:
+        - Basé sur
+        - Type de Référence
+        - N° de Référence
+        - Statut
+        - Société
+        - Recomptabiliser uniquement les grands livres
+        - Autoriser un Stock Négatif
+        - Via Pièce de frais d'approche
+        - Autoriser le montant à zéro
+        - Recréer les grands livres des stocks
+      section_labels: []
+      prefilled:
+        - "Basé sur: Transaction"
+        - "Société: Digital Solution Service"
+        - "Autoriser un Stock Négatif: checked"
+      notes: The checkbox 'Recomptabiliser uniquement les grands livres' could not be ticked - it remained unchecked after multiple click attempts. The form is fully visible (no scrolling needed).
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/ae642ad2-a027-4ab0-a83b-0634815a3d6e attempts: 1"

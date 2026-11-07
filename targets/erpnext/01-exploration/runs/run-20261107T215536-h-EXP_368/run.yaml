@@ -1,0 +1,84 @@
+id: run-20261107T215536-h-EXP_368
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_368.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:54:55.000Z
+ended_at: 2026-11-07T21:55:36.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.419, "y": 0.155, "option": "Campagne", "element": "Appliquer Sur dropdown"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.419, \"y\": 0.155, \"element\": \"Appliquer Sur dropdown showing 'Code de l'Article'\"})"
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["Escape"]})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.624, "element": "Empty area on the page to close dropdown"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Appliquer Sur' field only had options: Code de l'Article, Groupe d'Article, Marque, Transaction. 'Campagne' was not available as an option. The 'Nom' field was empty (not prefilled). The page was fully visible with no scrolling needed.\", \"prefilled\": [\"Nom: \", \"Appliquer Sur: "
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_09.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Promotional Scheme
+        path: /app/promotional-scheme/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Campaign
+      page_title: Nouveau(elle) Schéma promotionnel
+      field_labels: []
+      section_labels:
+        - Schéma promotionnel
+        - Règle de tarification Article Code
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Paramètres de période
+        - Dalles à prix réduit
+      prefilled:
+        - "Nom: "
+        - "Appliquer Sur: Code de l'Article"
+        - "Règle de tarification Article Code: Code de l'Article, UdM"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: "The 'Appliquer Sur' field only had options: Code de l'Article, Groupe d'Article, Marque, Transaction. 'Campagne' was not available as an option. The 'Nom' field was empty (not prefilled). The page was fully visible with no scrolling needed."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/2eaef63f-ec1f-4ca2-8aab-cbad536dcf97 attempts: 1"

@@ -1,0 +1,121 @@
+id: run-20261107T215057-h-EXP_353
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_353.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:50:01.500Z
+ended_at: 2026-11-07T21:50:57.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.251, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 9
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.628, \"y\": 0.48, \"element\": \"Checkbox 'Afficher les remarques'\"})"
+  - n: 10
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Inclure le résumé du vieillissement"})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/process-statement-of-accounts/new-process-statement-of-accounts-pztmojacpk", "render_js": true})'
+    screenshot: step_12.png
+  - n: 13
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Rapport: Grand Livre\", \"Date de début: 07/10/2026\", \"Date de fin: 07/11/2026\", \"Société: Digital Solution Service\", \"Devise: USD\", \"Categoriser par: Catégorie par Pièce (Consolidé)\", \"Envoyer au contact principal: checked\"], \"page_title\": \"Nouveau(elle) Traiter l'état des comp"
+  - n: 14
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_12.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Process Statement Of Accounts
+        path: /app/process-statement-of-accounts/new
+        kind: interact
+        mission: M-006
+        action:
+          field: include_ageing
+          value: "1"
+      page_title: Nouveau(elle) Traiter l'état des comptes
+      field_labels:
+        - Nom
+        - Rapport
+        - Date de début
+        - Date de fin
+        - Société
+        - Compte
+        - Categoriser par
+        - Centre de coûts
+        - Afficher les entrées d'ouverture
+        - Ignorer les journaux de réévaluation du taux de change et de gain / perte
+        - Ignorer les notes de crédit / débit générées par le système
+        - Envoyer au contact principal
+        - Afficher les valeurs nettes dans le compte de tiers
+        - Format d'impression
+        - En-Tête
+        - Livre comptable
+        - Devise
+        - Projet
+        - Afficher les remarques
+        - Sélectionner les clients par
+        - Client
+        - E-mail de facturation
+        - Adresse e-mail du contact principal
+      section_labels:
+        - Filtres du rapport
+        - Les clients
+        - Préférences d'impression
+      prefilled:
+        - "Rapport: Grand Livre"
+        - "Date de début: 07/10/2026"
+        - "Date de fin: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Categoriser par: Catégorie par Pièce (Consolidé)"
+        - "Envoyer au contact principal: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/5c01f0ac-01b0-4e24-9794-a2e94d745968 attempts: 1"

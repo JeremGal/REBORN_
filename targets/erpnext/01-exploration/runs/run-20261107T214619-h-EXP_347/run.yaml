@@ -1,0 +1,91 @@
+id: run-20261107T214619-h-EXP_347
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_347.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:41:47.700Z
+ended_at: 2026-11-07T21:46:19.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1200, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 10
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form fields and section labels as displayed on the Pricing Rule form\", \"prefilled\": [\"Titre: \", \"Désactiver: unchecked\", \"Appliquer Sur: Code de l'Article\", \"Prix ou remise de produit: Prix\", \"Entrepôt: \", \"Remise sur un autre article: \", \"Informations sur le tier: Vente unchecked,"
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: price_or_product_discount
+          value: Price
+      page_title: Nouveau(elle) Règle de tarification
+      field_labels: []
+      section_labels:
+        - Détails
+        - Condition dynamique
+        - Paramètres avancés
+        - Article d'Aide
+      prefilled:
+        - "Titre: "
+        - "Désactiver: unchecked"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Entrepôt: "
+        - "Remise sur un autre article: "
+        - "Informations sur le tier: Vente unchecked, Achat unchecked"
+        - "Quantité et montant: Qté min. (selon UdM de stock): , Qté max. (selon l'UdM de stock): , Montant Min: 0,00, Montant Max: 0,00"
+        - "Paramètres de période: Valide à partir de: 07/11/2026, Valable jusqu'au: , Société: Digital Solution Service, Devise: USD"
+        - "Marge: Type de Marge: Pourcentage, Taux de Marge ou Montant: 0,000"
+        - "Schéma de remise de prix: Prix unitaire ou réduction: Remise en Pourcentage, Remise en Pourcentage: , Pour la Liste de Prix: "
+      notes: Form fields and section labels as displayed on the Pricing Rule form
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/33bc51a7-6a66-4e62-b039-77e46f8cc5a0 attempts: 1"

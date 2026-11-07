@@ -1,0 +1,101 @@
+id: run-20261107T214253-h-EXP_340
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_340.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:41:56.900Z
+ended_at: 2026-11-07T21:42:53.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Applicable"})'
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form does not contain an 'Applicable pour' (Applicable For) field. The field requested in the task ('Région' / Territory option) is not present on this form. The form only has 'Appliquer Sur' (Apply On) which is already set to 'Code de l'Article'. All fields listed are as visib"
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Territory
+      page_title: Nouveau(elle) Règle de tarification
+      field_labels:
+        - Naming Series
+        - Titre
+        - Désactiver
+        - Appliquer Sur
+        - Prix ou remise de produit
+        - Entrepôt
+        - Conditions mixtes
+        - Est cumulatif
+        - Code de coupon basé
+        - Vente
+        - Achat
+        - Qté min. (selon UdM de stock)
+        - Montant Min
+        - Qté max. (selon l'UdM de stock)
+        - Montant Max
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Type de Marge
+        - Taux de Marge ou Montant
+      section_labels:
+        - Appliquer la règle sur le code d'article
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+      prefilled:
+        - "Naming Series: PRLE-####"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Montant Min: 0,00"
+        - "Montant Max: 0,00"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0.000"
+      notes: The form does not contain an 'Applicable pour' (Applicable For) field. The field requested in the task ('Région' / Territory option) is not present on this form. The form only has 'Appliquer Sur' (Apply On) which is already set to 'Code de l'Article'. All fields listed are as visible on the form. No changes were made to the form.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d55e68a1-31ce-4ce3-9d28-1e33229c90e7 attempts: 1"

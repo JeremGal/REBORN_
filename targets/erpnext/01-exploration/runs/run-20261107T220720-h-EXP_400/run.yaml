@@ -1,0 +1,73 @@
+id: run-20261107T220720-h-EXP_400
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_400.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T22:06:40.100Z
+ended_at: 2026-11-07T22:07:20.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/app/sms-center"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/app/sms-center", "render_js": true})'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/sms-center"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Login was successful with the provided credentials, but the user does not have access to the SMS Center page. The error message states: \\\"L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page\\\" (The user"
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: SMS Center
+        path: /app/sms-center
+        kind: interact
+        mission: M-006
+        action:
+          field: send_to
+          value: All Customer Contact
+      page_title: Blocked - SMS Center
+      field_labels:
+        - Page Title
+        - Field Labels
+        - Section Labels
+        - Prefilled
+      section_labels:
+        - Error
+      prefilled: []
+      notes: "Login was successful with the provided credentials, but the user does not have access to the SMS Center page. The error message states: \"L'utilisateur *** n'a pas d'accès au type de document via l'autorisation de rôle pour le document Page. Pas d'autorisation pour Page\" (The user *** does not have access to the document type via role permission for the document Page. No authorization for Page)."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/5419a95c-28b5-4b43-bcf0-edb89a51a531 attempts: 1"

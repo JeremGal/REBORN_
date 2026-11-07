@@ -1,0 +1,145 @@
+id: run-20261107T214512-h-EXP_344
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_344.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:44:01.300Z
+ended_at: 2026-11-07T21:45:12.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.425, "y": 0.28, "option": "Groupe de fournisseurs", "element": "Appliquer Sur dropdown field"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.425, "y": 0.28, "element": "Appliquer Sur dropdown"})'
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["Escape"]})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/pricing-rule/new"})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 12
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 13
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Main content area of the form"})'
+  - n: 15
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 16
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"IMPORTANT: The user asked to select 'Groupe de fournisseurs' (Supplier Group) in the 'Appliquer Sur' (Applicable For) dropdown, but this option is NOT available in the form. The available options in the 'Appliquer Sur' dropdown are: 'Code de l'Article', 'Groupe d'Article', 'Marque'"
+    screenshot: step_16.png
+  - n: 17
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_16.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Supplier Group
+      page_title: Nouveau(elle) Règle de tarification
+      field_labels:
+        - Nom
+        - Description
+        - Appliquer Sur
+        - Code de l'Article
+        - Priorité
+        - Priorité de l'Article
+        - Article
+        - Appliquer sur le prix de vente
+        - Appliquer sur le prix d'achat
+        - Appliquer sur la marge
+        - Remise ou taux de marge
+        - Marge brute min
+        - Marge brute max
+        - Prix ou remise de produit
+        - Entrepôt
+        - Est cumulatif
+        - Code de coupon basé
+        - Vente
+        - Achat
+        - Qté min. (selon UdM de stock)
+        - Montant Min
+        - Qté max. (selon l'UdM de stock)
+        - Montant Max
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Type de Marge
+        - Taux de Marge ou Montant
+        - Prix unitaire ou réduction
+        - Remise en Pourcentage
+        - Pour la Liste de Prix
+      section_labels:
+        - Détails
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+        - Schéma de remise de prix
+      prefilled:
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0,000"
+        - "Prix unitaire ou réduction: Remise en Pourcentage"
+      notes: "IMPORTANT: The user asked to select 'Groupe de fournisseurs' (Supplier Group) in the 'Appliquer Sur' (Applicable For) dropdown, but this option is NOT available in the form. The available options in the 'Appliquer Sur' dropdown are: 'Code de l'Article', 'Groupe d'Article', 'Marque', 'Transaction'. The form at the URL /app/pricing-rule/new only provides a selling-side pricing rule form. A 'Groupe de fournisseurs' option would only appear in a buying/purchase pricing rule form, which is not accessible from this URL."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/8810aa0e-fd55-4bbb-ab19-41a9dd05cb67 attempts: 1"

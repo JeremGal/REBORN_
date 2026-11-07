@@ -1,0 +1,300 @@
+id: run-20261107T220122-h-EXP_387
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_387.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:57:01.900Z
+ended_at: 2026-11-07T22:01:22.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.253, "element": "Password input field"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/sales-invoice/new-sales-invoice-wusnpfusmc", "render_js": true})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.5, "element": "Scroll area on the right side of the page"})'
+  - n: 10
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 12
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 13
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 14
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Allouer automatiquement les avances"})'
+  - n: 15
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Allouer"})'
+  - n: 16
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.618, \"y\": 0.055, \"element\": \"Plus d'info tab\"})"
+  - n: 17
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.26, "y": 0.055, "element": "Détails tab"})'
+  - n: 18
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 19
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/sales-invoice/new-sales-invoice-wusnpfusmc", "render_js": true})'
+  - n: 20
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["tab"]})'
+  - n: 21
+    action:
+      type: other
+      target_desc: 'switch_tab_web({"url": "https://***/desk/accounts/sales-invoice/new-sales-invoice-wusnpfusmc"})'
+  - n: 22
+    action:
+      type: other
+      target_desc: 'switch_tab_web({"tab_id": "0"})'
+  - n: 23
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.752, \"y\": 0.293, \"element\": \"Checkbox next to \\\"Envisager pour la retenue à la source\\\" to see if there's a checkbox below it\"})"
+  - n: 24
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.618, \"y\": 0.055, \"element\": \"Plus d'info tab\"})"
+  - n: 25
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.315, "y": 0.148, "element": "Détails Comptable dropdown"})'
+  - n: 26
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.315, "y": 0.148, "element": "Détails Comptable expandable section"})'
+  - n: 27
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.26, "y": 0.055, "element": "Détails tab"})'
+  - n: 28
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 29
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "f"]})'
+  - n: 30
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.555, "text": "Allouer", "enter": true, "element": "Browser find bar input", "overwrite": true})'
+  - n: 31
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 32
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/desk", "render_js": true})'
+  - n: 33
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["f12"]})'
+  - n: 34
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "l"]})'
+  - n: 35
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk"})'
+  - n: 36
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 37
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/accounts/sales-invoice/new-sales-invoice-wusnpfusmc"})'
+  - n: 38
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "u"]})'
+  - n: 39
+    action:
+      type: other
+      target_desc: 'switch_tab_web({"tab_id": "1"})'
+  - n: 40
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "u"]})'
+  - n: 41
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Page content area to right-click"})'
+  - n: 42
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 43
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "view-source:https://***/desk/accounts/sales-invoice/new-sales-invoice-xlafcnxqku"})'
+  - n: 44
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/api/method/frappe.desk.form.load.getdoc?doctype=Sales%20Invoice&name=new-sales-invoice-xlafcnxqku"})'
+  - n: 45
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/accounts/sales-invoice/new-sales-invoice-xlafcnxqku"})'
+  - n: 46
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 47
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.537, "y": 0.055, "element": "Termes tab"})'
+  - n: 48
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.335, "y": 0.055, "element": "Paiements tab"})'
+  - n: 49
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.264, "y": 0.154, "element": "Allouer automatiquement les avances (FIFO) checkbox"})'
+  - n: 50
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.26, "y": 0.055, "element": "Détails tab"})'
+    screenshot: step_50.png
+  - n: 51
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 52
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 53
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 54
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Successfully logged in, navigated to the new Sales Invoice form, and ticked the 'Allouer automatiquement les avances (FIFO)' checkbox (found in the Paiements tab under 'Paiements Anticipés'). Note: Could not scroll to the very bottom of the form due to browser viewport issues, but "
+  - n: 55
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_50.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Invoice
+        path: /app/sales-invoice/new
+        kind: interact
+        mission: M-006
+        action:
+          field: allocate_advances_automatically
+          value: "1"
+      page_title: Nouveau(elle) Facture de vente
+      field_labels:
+        - Séries
+        - Date de Comptabilisation
+        - Client
+        - Heure de Publication
+        - Modifier la Date et l'Heure de la Publication
+        - Date d'Échéance de Paiement
+        - Inclure Paiement (PDV)
+        - Est un avoir (note de crédit)
+        - Est un justification du prix de la note de débit
+        - Envisager pour la retenue à la source
+        - Scan Code Barre
+        - Mettre à Jour le Stock
+        - Articles
+        - Quantité totale
+        - Total (USD)
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxes et Frais de Vente
+        - Taxes et Frais de Vente
+        - Total des Taxes et Frais (Devise Société) (USD)
+        - Total des Taxes et Frais (USD)
+        - Utiliser le centre de coûts par défaut de la société pour l'arrondi
+        - Arrondi (USD)
+        - Total TTC (USD)
+        - Total arrondi (USD)
+        - Total Avance
+        - Liste de Feuille de Temps
+        - Paiements Anticipés
+        - Allouer automatiquement les avances (FIFO)
+        - Inclure uniquement les paiements alloués
+      section_labels:
+        - Articles
+        - Taxes et Frais
+        - Taxes et Frais de Vente
+        - Totaux (USD)
+        - Paiements Anticipés
+      prefilled:
+        - "Séries: ACC-SINV-.YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Heure de Publication: 23:03:41"
+        - "Quantité totale: 0"
+        - "Total (USD): $ 0,00"
+        - "Total des Taxes et Frais (Devise Société) (USD): $ 0,00"
+        - "Total des Taxes et Frais (USD): $ 0,00"
+        - "Arrondi (USD): $ 0,00"
+        - "Total TTC (USD): $ 0,00"
+        - "Total arrondi (USD): $ 0,00"
+        - "Total Avance: $ 0,00"
+        - "Allouer automatiquement les avances (FIFO): checked"
+      notes: "Successfully logged in, navigated to the new Sales Invoice form, and ticked the 'Allouer automatiquement les avances (FIFO)' checkbox (found in the Paiements tab under 'Paiements Anticipés'). Note: Could not scroll to the very bottom of the form due to browser viewport issues, but reported all visible fields from the main form and other tabs."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/13a4c3d2-8cb8-48f4-8f5c-f9861f10112f attempts: 1"

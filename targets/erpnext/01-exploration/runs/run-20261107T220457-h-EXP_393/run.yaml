@@ -1,0 +1,89 @@
+id: run-20261107T220457-h-EXP_393
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_393.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T22:03:49.800Z
+ended_at: 2026-11-07T22:04:57.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.72, "y": 0.042, "element": "Close button on error dialog"})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/shipment/new"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.72, "y": 0.042, "element": "Close button on error dialog"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form fields visible: Enlèvement de, Livraison à, Société, Client, Adresse, Personne à contacter pour l'enlèvement, TEST Agent ReBorn ***, Expédition Colis, Longueu..., Largeur (cm), Hauteur (cm), Poids, Aucune ligne, Ajouter une ligne, Expédition Bon de livraison, Bon de livraison,"
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Shipment
+        path: /app/shipment/new
+        kind: interact
+        mission: M-006
+        action:
+          field: pickup_from_type
+          value: Company
+      page_title: Nouveau(elle) Expédition
+      field_labels: []
+      section_labels:
+        - Enlèvement de
+        - Livraison à
+        - Colis
+        - Détails de l'expédition
+      prefilled:
+        - "Enlèvement de: Société"
+        - "Livraison à: Client"
+        - "Personne à contacter pour l'enlèvement: ***"
+        - TEST Agent ReBorn ***
+        - "Palettes: Non"
+        - "Type d'expédition: Marchandises"
+        - "Type d'enlèvement: Enlèvement"
+        - "Enlèvement de: 09:00:00"
+        - "Enlèvement à: 17:00:00"
+      notes: "Form fields visible: Enlèvement de, Livraison à, Société, Client, Adresse, Personne à contacter pour l'enlèvement, TEST Agent ReBorn ***, Expédition Colis, Longueu..., Largeur (cm), Hauteur (cm), Poids, Aucune ligne, Ajouter une ligne, Expédition Bon de livraison, Bon de livraison, Valeur, Aucune ligne, Ajouter une ligne, Modèle de colis, Ajouter un modèle, Palettes, Type d'expédition, Valeur des marchandises, Type d'enlèvement, Date d'enlèvement, Incoterm, Enlèvement de, Description du contenu, Enlèvement à"
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/22b62579-b841-4084-aa85-08f454cdc1e5 attempts: 1"

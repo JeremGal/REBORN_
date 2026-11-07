@@ -1,0 +1,123 @@
+id: run-20261107T214326-h-EXP_341
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_341.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:42:34.200Z
+ended_at: 2026-11-07T21:43:26.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.197, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.421, "y": 0.281, "option": "Partenaire commercial", "element": "Appliquer Sur dropdown"})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.421, \"y\": 0.281, \"element\": \"Appliquer Sur dropdown - Code de l'Article\"})"
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.421, "y": 0.197, "element": "Close the dropdown by clicking elsewhere on the page"})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/pricing-rule/new-pricing-rule-feybrlchkz", "render_js": true})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Partenaire commercial"})'
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: other
+      target_desc: 'web_search({"query": "erpnext pricing rule \"Partenaire commercial\" OR \"Sales Partner\" options"})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://docs.frappe.io/erpnext/pricing-rule"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Note: The user asked to select 'Partenaire commercial' in the 'Applicable pour' field, but this option was not found in the 'Appliquer Sur' dropdown. The dropdown only contained: Code de l'Article, Groupe d'Article, Marque, Transaction. There was no 'Applicable pour'/'Applicable Fo"
+  - n: 13
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_09.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Sales Partner
+      page_title: Pricing Rule Form - Field Labels and Values
+      field_labels:
+        - Naming Series
+        - Titre
+        - Désactiver
+        - Appliquer Sur
+        - Prix ou remise de produit
+        - Entrepôt
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Qte min. (selon UdM de stock)
+        - Montant Min
+        - Qte max. (selon l'UdM de stock)
+        - Montant Max
+        - Paramètres de période
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Marge
+        - Type de Marge
+        - Taux de Marge ou Montant
+        - Conditions mixtes
+        - Est cumulatif
+        - Code de coupon basé
+      section_labels:
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+      prefilled:
+        - "Naming Series: PRLE-####"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0.000"
+        - "Montant Min: 0,00"
+        - "Montant Max: 0,00"
+      notes: "Note: The user asked to select 'Partenaire commercial' in the 'Applicable pour' field, but this option was not found in the 'Appliquer Sur' dropdown. The dropdown only contained: Code de l'Article, Groupe d'Article, Marque, Transaction. There was no 'Applicable pour'/'Applicable For' field visible on the form with 'Partenaire commercial' as an option. The form was not saved, submitted, or modified in any way."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/3f61a478-fa0b-433b-9db9-38da37929ca9 attempts: 1"

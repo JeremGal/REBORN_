@@ -1,0 +1,166 @@
+id: run-20261107T214250-h-EXP_339
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_339.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:40:28.400Z
+ended_at: 2026-11-07T21:42:50.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.421, \"y\": 0.28, \"element\": \"Appliquer Sur dropdown showing 'Code de l'Article'\"})"
+  - n: 6
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.702, "y": 0.624, "element": "Empty area on the page to close dropdown"})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 11
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 12
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 13
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.777, "element": "The form content area, clicking on empty space below the fields"})'
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "end"]})'
+  - n: 16
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/pricing-rule/new-pricing-rule-iqlcuzbodo", "render_js": true})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'drag_and_drop_web({"x1": 0.5, "x2": 0.5, "y1": 0.5, "y2": 0.9, "description": "Scroll down within the form by dragging from middle to lower area"})'
+  - n: 18
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "shift", "j"]})'
+  - n: 19
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "minus"]})'
+  - n: 20
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "l"]})'
+  - n: 21
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.5, \"y\": 0.0, \"text\": \"javascript:document.querySelector('.layout-main-section').scrollBy(0, 500)\", \"enter\": true, \"element\": \"Browser address bar\", \"overwrite\": true})"
+  - n: 22
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Groupe de clients"})'
+  - n: 23
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.5, \"y\": 0.0, \"text\": \"javascript:void(document.querySelector('.layout-main-section').scrollIntoView({block:'end'}))\", \"enter\": true, \"element\": \"Browser address bar at the top of the window\", \"overwrite\": true})"
+    screenshot: step_23.png
+  - n: 24
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Note: The task requested selecting 'Groupe de clients' (Customer Group) from the 'Applicable pour' (Applicable For) field, but this option is not available in the form. The 'Appliquer Sur' (Apply On) dropdown only contains: Code de l'Article, Groupe d'Article, Marque, Transaction. "
+  - n: 25
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_23.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Customer Group
+      page_title: Nouveau(elle) Règle de tarification - new-pricing-rule-iqlcuzbodo
+      field_labels:
+        - Appliquer Sur
+        - Prix ou remise de produit
+        - Entrepôt
+        - Remise sur un autre article
+        - Vente
+        - Achat
+        - Qté min. (selon UdM de stock)
+        - Qté max. (selon l'UdM de stock)
+        - Montant Min
+        - Montant Max
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Type de Marge
+        - Taux de Marge ou Montant
+        - Prix unitaire ou réduction
+        - Remise en Pourcentage
+        - Pour la Liste de Prix
+      section_labels:
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+        - Schéma de remise de prix
+      prefilled:
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Montant Min: 0,00"
+        - "Montant Max: 0,00"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0,000"
+        - "Prix unitaire ou réduction: Remise en Pourcentage"
+      notes: "Note: The task requested selecting 'Groupe de clients' (Customer Group) from the 'Applicable pour' (Applicable For) field, but this option is not available in the form. The 'Appliquer Sur' (Apply On) dropdown only contains: Code de l'Article, Groupe d'Article, Marque, Transaction. No field labeled 'Applicable pour' was found on the form. The form could not be scrolled beyond what is visible - the page reports 'Entire page visible (do not scroll down)'."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/1979b0ac-7b69-461c-8166-2ac4256125a7 attempts: 1"

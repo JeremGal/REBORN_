@@ -1,0 +1,129 @@
+id: run-20261107T215052-h-EXP_352
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_352.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:49:50.600Z
+ended_at: 2026-11-07T21:50:52.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 8
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "A la priorité"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Valide à partir de: 07/11/2026", "Société: Digital Solution Service", "Devise: USD", "Type de Marge: Pourcentage", "Taux de Marge ou Montant: 0,000", "Prix unitaire ou réduction: Remise en Pourcentage"], "page_title": "Nouveau(elle) Règle de tarification - new-pricing-rule-mke'
+    screenshot: step_12.png
+  - n: 13
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_12.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: has_priority
+          value: "1"
+      page_title: Nouveau(elle) Règle de tarification - new-pricing-rule-mkepzfbjaq
+      field_labels:
+        - Règle de tarification
+        - Nom du prix ou de la remise
+        - Description
+        - Type de prix
+        - Priorité
+        - Date de début
+        - Date de fin
+        - Compte d'écriture
+        - Échelle de prix
+        - Code de l'Article
+        - Est cumulatif
+        - Code de coupon basé
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Vente
+        - Achat
+        - Quantité et montant
+        - Qté min. (selon UdM de stock)
+        - Montant Min
+        - Qté max. (selon l'UdM de stock)
+        - Montant Max
+        - Paramètres de période
+        - Valide à partir de
+        - Société
+        - Valable jusqu'au
+        - Devise
+        - Marge
+        - Type de Marge
+        - Taux de Marge ou Montant
+        - Schéma de remise de prix
+        - Prix unitaire ou réduction
+        - Remise en Pourcentage
+        - Pour la Liste de Prix
+      section_labels:
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+        - Schéma de remise de prix
+      prefilled:
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0,000"
+        - "Prix unitaire ou réduction: Remise en Pourcentage"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/812602db-904d-4e12-b740-3cae0353b0cf attempts: 1"

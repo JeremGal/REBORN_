@@ -1,0 +1,130 @@
+id: run-20261107T215422-h-EXP_364
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_364.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:53:06.700Z
+ended_at: 2026-11-07T21:54:22.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Applicable pour"})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/promotional-scheme/new-promotional-scheme-hcnicbdrhe", "render_js": true, "extract_images": false})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/accounts/promotional-scheme/new-promotional-scheme-hcnicbdrhe"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/promotional-scheme/new"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'web_search({"query": "erpnext promotional scheme \"Applicable pour\" field customer"})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.323, "y": 0.383, "element": "Informations sur le tier expandable section"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/promotional-scheme/new"})'
+  - n: 13
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "u"]})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.5, "element": "Page content area to right-click"})'
+  - n: 15
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/promotional-scheme/new-promotional-scheme-hoivicpvde", "render_js": true, "extract_images": false})'
+    screenshot: step_15.png
+  - n: 16
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 1000, "scroll_element": null})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Applicable"})'
+  - n: 18
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form does not contain an 'Applicable pour' (Applicable For) field. The field 'Applicable pour' was not found on this form. The form is in French and is a customized ERPNext Promotional Scheme form. The 'Appliquer Sur' field is set to 'Code de l'Article'. No fields were modified"
+  - n: 19
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_15.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Promotional Scheme
+        path: /app/promotional-scheme/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Customer
+      page_title: Nouveau(elle) Schéma promotionnel
+      field_labels:
+        - Nom
+        - Appliquer Sur
+        - Désactiver
+        - Code de l'Article
+        - UdM
+        - Conditions mixtes
+        - Est cumulatif
+        - Valide à partir de
+        - Société
+        - Valable jusqu'au
+        - Devise
+        - Promotion Tarif Promotion Prix
+        - Schéma promotionnel Réduction de produit
+      section_labels:
+        - Règle de tarification Article Code
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Paramètres de période
+        - Dalles à prix réduit
+        - Dalles à prix réduit
+      prefilled:
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: The form does not contain an 'Applicable pour' (Applicable For) field. The field 'Applicable pour' was not found on this form. The form is in French and is a customized ERPNext Promotional Scheme form. The 'Appliquer Sur' field is set to 'Code de l'Article'. No fields were modified.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/e6dc4ad7-fc3a-4134-b33e-69f2f8afa7a4 attempts: 1"

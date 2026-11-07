@@ -1,0 +1,113 @@
+id: run-20261107T220241-h-EXP_389
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_389.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T22:01:55.300Z
+ended_at: 2026-11-07T22:02:41.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.604, \"y\": 0.127, \"element\": \"Type de Commande dropdown showing 'Ventes'\"})"
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.539, "y": 0.21, "element": "Entretien option in the dropdown"})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Séries: SAL-ORD-.YYYY.-", "Type de Commande: Entretien", "Date: 07/11/2026", "Quantité: 0", "Quantité totale: 0", "Total (USD): $ 0,00", "Total des Taxes et Frais (Devise Société) (USD): $ 0,00", "Total des Taxes et Frais (USD): $ 0,00"], "page_title": "Nouveau(elle) Commande '
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Order
+        path: /app/sales-order/new
+        kind: interact
+        mission: M-006
+        action:
+          field: order_type
+          value: Maintenance
+      page_title: Nouveau(elle) Commande client
+      field_labels:
+        - Séries
+        - Type de Commande
+        - Ignorer le bon de livraison
+        - Est sous-traité
+        - Client
+        - Date
+        - Date de livraison
+        - Scan Code Barre
+        - Entrepôt d'origine
+        - No.
+        - Code de l'Article
+        - Date de livraison
+        - Quantité
+        - Prix (USD)
+        - Montant (USD)
+        - Quantité totale
+        - Total (USD)
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxes et Frais de Vente
+        - No.
+        - Type
+        - Compte compt.
+        - Taux d'Impositi.
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+        - Total des Taxes et Frais (Devise Société) (USD)
+        - Total des Taxes et Frais (USD)
+      section_labels:
+        - Détails
+        - Termes
+        - Plus d'info
+        - Devise et liste de prix
+        - Articles
+        - Taxes
+        - Taxes et Frais de Vente
+      prefilled:
+        - "Séries: SAL-ORD-.YYYY.-"
+        - "Type de Commande: Entretien"
+        - "Date: 07/11/2026"
+        - "Quantité: 0"
+        - "Quantité totale: 0"
+        - "Total (USD): $ 0,00"
+        - "Total des Taxes et Frais (Devise Société) (USD): $ 0,00"
+        - "Total des Taxes et Frais (USD): $ 0,00"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/2ec1ce89-847b-42c5-b783-6aa860c597bc attempts: 1"

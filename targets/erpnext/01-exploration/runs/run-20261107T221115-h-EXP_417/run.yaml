@@ -1,0 +1,137 @@
+id: run-20261107T221115-h-EXP_417
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_417.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Buying
+started_at: 2026-11-07T22:10:05.100Z
+ended_at: 2026-11-07T22:11:15.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.485, "y": 0.056, "element": "Paramètres tab"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.263, "y": 0.353, "element": "Bloquer le fournisseur checkbox"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.262, "y": 0.056, "element": "Détails tab"})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.341, "y": 0.056, "element": "Comptabilité tab"})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.413, "y": 0.056, "element": "Taxe tab"})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.599, "y": 0.056, "element": "Utilisateurs du portail tab"})'
+  - n: 12
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.712, \"y\": 0.056, \"element\": \"Plus d'info tab\"})"
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.262, "y": 0.056, "element": "Détails tab"})'
+  - n: 14
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form has 6 tabs: Détails, Comptabilité, Taxe, Paramètres, Utilisateurs du portail, and Plus d'info. The 'Bloquer le fournisseur' checkbox was ticked in the Paramètres tab. The 'Partenaire de facturation' and 'Partenaire de livraison' fields appeared in the Paramètres tab as wel"
+    screenshot: step_14.png
+  - n: 15
+    action:
+      type: read
+      target_desc: values shown by the application (Buying)
+    screenshot: step_14.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Supplier
+        path: /app/supplier/new
+        kind: interact
+        mission: M-006
+        action:
+          field: on_hold
+          value: "1"
+      page_title: Nouveau(elle) Fournisseur - new-supplier-qfldkrixdu
+      field_labels:
+        - Nom du fournisseur *
+        - Groupe de fournisseurs
+        - Type de Fournisseur *
+        - Pays
+        - Alias
+        - Devise de Facturation
+        - Liste de prix
+        - Compte bancaire de l'entreprise
+        - Modèle de termes de paiement
+        - Adresse de facturation *
+        - Adresse de livraison *
+        - Téléphone
+        - Téléphone cellulaire
+        - Fax
+        - Email
+        - Site Web
+        - Langue d'Impression
+        - Détails du Fournisseur
+        - Numéros client
+        - N° de fournisseur *
+        - N° de client *
+        - N° de client (entreprise) *
+        - N° de compte fournisseur
+        - Groupe de paiement
+        - Délai de paiement
+        - Partenaire de livraison
+        - Délai de livraison
+        - Remise fournisseur (%)
+        - Remise fournisseur
+        - Taux de précompte fournisseur (%)
+        - Taux de précompte fournisseur
+        - Délai de précompte fournisseur (jours)
+        - Partenaire de facturation
+        - Délai de facturation
+        - Remise client (%)
+        - Remise client
+        - Taux de précompte client (%)
+        - Taux de précompte client
+        - Délai de précompte client (jours)
+        - Bloquer le fournisseur
+      section_labels:
+        - Valeurs par défaut
+      prefilled:
+        - "Pays: France"
+        - "Type de Fournisseur: Société"
+        - "Langue d'Impression: Français"
+        - "Bloquer le fournisseur: checked"
+      notes: "The form has 6 tabs: Détails, Comptabilité, Taxe, Paramètres, Utilisateurs du portail, and Plus d'info. The 'Bloquer le fournisseur' checkbox was ticked in the Paramètres tab. The 'Partenaire de facturation' and 'Partenaire de livraison' fields appeared in the Paramètres tab as well."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/106cdbf8-3902-4d39-99fd-76d29f449439 attempts: 1"

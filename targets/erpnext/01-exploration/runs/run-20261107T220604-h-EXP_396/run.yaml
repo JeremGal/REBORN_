@@ -1,0 +1,110 @@
+id: run-20261107T220604-h-EXP_396
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_396.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T22:05:06.900Z
+ended_at: 2026-11-07T22:06:04.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.042, "element": "Close button on error dialog"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.795, "y": 0.114, "option": "Société", "element": "Livraison à dropdown"})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1200, "scroll_element": null})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1500, "scroll_element": null})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/shipment/new-shipment-pdqcarpbza", "render_js": true, "extract_images": false})'
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Livraison à: Société\", \"Société: Digital Solution Service\", \"Personne à contacter pour l'enlèvement: ***\", \"Enlèvement de: TEST Agent ReBorn ***\", \"Palettes: Non\", \"Type d'expédition: Marchandises\", \"Type d'enlèvement: Enlèvement\", \"Enlèvement de: 09:00:00\", \"Enlèvement à: 17:"
+  - n: 12
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Shipment
+        path: /app/shipment/new
+        kind: interact
+        mission: M-006
+        action:
+          field: delivery_to_type
+          value: Company
+      page_title: Nouveau(elle) Expédition
+      field_labels:
+        - Enlèvement de
+        - Société
+        - Adresse
+        - Personne à contacter pour l'enlèvement
+        - Contact
+        - Expédition Colis
+        - Modèle de colis
+        - Bon de livraison
+        - Palettes
+        - Valeur des marchandises
+        - Date d'enlèvement
+        - Enlèvement de
+        - Enlèvement à
+        - Type d'expédition
+        - Type d'enlèvement
+        - Incoterm
+        - Description du contenu
+      section_labels:
+        - Enlèvement de
+        - Livraison à
+        - Colis
+        - Détails de l'expédition
+      prefilled:
+        - "Livraison à: Société"
+        - "Société: Digital Solution Service"
+        - "Personne à contacter pour l'enlèvement: ***"
+        - "Enlèvement de: TEST Agent ReBorn ***"
+        - "Palettes: Non"
+        - "Type d'expédition: Marchandises"
+        - "Type d'enlèvement: Enlèvement"
+        - "Enlèvement de: 09:00:00"
+        - "Enlèvement à: 17:00:00"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/ac263051-0757-485d-8b42-3090b67fe842 attempts: 1"

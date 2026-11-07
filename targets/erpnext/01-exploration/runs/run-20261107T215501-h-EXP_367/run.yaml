@@ -1,0 +1,95 @@
+id: run-20261107T215501-h-EXP_367
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_367.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:53:59.300Z
+ended_at: 2026-11-07T21:55:01.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.327, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 400, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/app/promotional-scheme/new"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"No field labeled 'Applicable pour' (Applicable For) was found on this form. The closest matching field is 'Appliquer Sur' (Apply On) which is set to 'Code de l'Article'. No 'Partenaire commercial' (Sales Partner) option was available on this form.\", \"prefilled\": [\"Appliquer Sur: Co"
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Promotional Scheme
+        path: /app/promotional-scheme/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Sales Partner
+      page_title: Nouveau(elle) Schéma promotionnel
+      field_labels:
+        - Nom
+        - Appliquer Sur
+        - Règle de tarification Article Code
+        - Désactiver
+        - Conditions mixtes
+        - Est cumulatif
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Paramètres de période
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Dalles à prix réduit
+        - Promotion Tarif Promotion Prix
+        - Schéma promotionnel Réduction de produit
+      section_labels:
+        - Règle de tarification Article Code
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Paramètres de période
+        - Dalles à prix réduit
+        - Promotion Tarif Promotion Prix
+        - Schéma promotionnel Réduction de produit
+      prefilled:
+        - "Appliquer Sur: Code de l'Article"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: No field labeled 'Applicable pour' (Applicable For) was found on this form. The closest matching field is 'Appliquer Sur' (Apply On) which is set to 'Code de l'Article'. No 'Partenaire commercial' (Sales Partner) option was available on this form.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/dd113341-e705-45a0-a521-ba9c986663aa attempts: 1"

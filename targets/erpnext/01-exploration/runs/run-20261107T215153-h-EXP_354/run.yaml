@@ -1,0 +1,148 @@
+id: run-20261107T215153-h-EXP_354
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_354.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:50:17.800Z
+ended_at: 2026-11-07T21:51:53.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 2})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/process-statement-of-accounts/new-process-statement-of-accounts-etdupmhzvd", "render_js": true})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'move_mouse_web({"x": 0.5, "y": 0.5, "element": "Form content area"})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "messagerie"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "auto"})'
+  - n: 13
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "u"]})'
+  - n: 14
+    action:
+      type: other
+      target_desc: 'switch_tab_web({"url": "view-source:https://***/desk/accounts/process-statement-of-accounts/new-process-statement-of-accounts-etdupmhzvd"})'
+  - n: 15
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "messagerie"})'
+  - n: 16
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "automatique"})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Enable Auto Email"})'
+  - n: 18
+    action:
+      type: other
+      target_desc: 'switch_tab_web({"tab_id": "0"})'
+    screenshot: step_18.png
+  - n: 19
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The checkbox 'Activer la messagerie automatique' (Enable Auto Email) was not found on this form. The form does not contain this checkbox. No fields were modified.\", \"prefilled\": [\"Rapport: Grand Livre\", \"Date de début: 07/10/2026\", \"Date de fin: 07/11/2026\", \"Société: Digital Solut"
+  - n: 20
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_18.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Process Statement Of Accounts
+        path: /app/process-statement-of-accounts/new
+        kind: interact
+        mission: M-006
+        action:
+          field: enable_auto_email
+          value: "1"
+      page_title: Nouveau(elle) Traiter l'état des comptes
+      field_labels:
+        - Nom
+        - Rapport
+        - Date de début
+        - Date de fin
+        - Société
+        - Livre comptable
+        - Compte
+        - Devise
+        - Catégories par
+        - Projet
+        - Centre de coûts
+        - Afficher les remarques
+        - Afficher les entrées d'ouverture
+        - Ignorer les journaux de réévaluation du taux de change et de gain / perte
+        - Ignorer les notes de crédit / débit générées par le système
+        - Sélectionner les clients par
+        - Envoyer au contact principal
+        - Afficher les valeurs nettes dans le compte de tiers
+        - No.
+        - Client
+        - E-mail de facturation
+        - Adresse e-mail du contact principal
+        - Ajouter une ligne
+        - Format d'impression
+        - En-Tête
+      section_labels:
+        - Filtres du rapport
+        - Les clients
+        - Préférences d'impression
+      prefilled:
+        - "Rapport: Grand Livre"
+        - "Date de début: 07/10/2026"
+        - "Date de fin: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Catégories par: Catégories par Pièce (Consolidé)"
+        - "Envoyer au contact principal: checked"
+        - "En-Tête: Company Letterhead - Grey"
+      notes: The checkbox 'Activer la messagerie automatique' (Enable Auto Email) was not found on this form. The form does not contain this checkbox. No fields were modified.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/aa0dc8cd-2552-4af0-b256-b3a0c40c907b attempts: 1"

@@ -1,0 +1,113 @@
+id: run-20261107T220634-h-EXP_398
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_398.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T22:05:29.900Z
+ended_at: 2026-11-07T22:06:34.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.719, "y": 0.042, "element": "Close error dialog X button"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.793, "y": 0.111, "option": "Fournisseur", "element": "Livraison à dropdown"})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Main content area of the form"})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/stock/shipment/new-shipment-bdacfyrpmy", "render_js": true})'
+    screenshot: step_12.png
+  - n: 13
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Personne à contacter pour l'enlèvement: ***\", \"TEST Agent ReBorn: ***\", \"Enlèvement de: 09:00:00\", \"Enlèvement à: 17:00:00\"], \"page_title\": \"Nouveau(elle) Expédition\", \"field_labels\": [\"Enlèvement de\", \"Livraison à\", \"Société\", \"Adresse\", \"Personne à contacter pour l'enlèvemen"
+  - n: 14
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_12.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Shipment
+        path: /app/shipment/new
+        kind: interact
+        mission: M-006
+        action:
+          field: delivery_to_type
+          value: Supplier
+      page_title: Nouveau(elle) Expédition
+      field_labels:
+        - Enlèvement de
+        - Livraison à
+        - Société
+        - Adresse
+        - Personne à contacter pour l'enlèvement
+        - TEST Agent ReBorn
+        - Expédition Colis
+        - Modèle de colis
+        - Palettes
+        - Valeur des marchandises
+        - Date d'enlèvement
+        - Enlèvement de
+        - Enlèvement à
+        - Type d'expédition
+        - Type d'enlèvement
+        - Incoterm
+        - Description du contenu
+      section_labels:
+        - Enlèvement de
+        - Livraison à
+        - Colis
+        - Détails de l'expédition
+      prefilled:
+        - "Personne à contacter pour l'enlèvement: ***"
+        - "TEST Agent ReBorn: ***"
+        - "Enlèvement de: 09:00:00"
+        - "Enlèvement à: 17:00:00"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d7377e32-5248-4790-bfde-d1673b619072 attempts: 1"

@@ -1,0 +1,92 @@
+id: run-20261107T215211-h-EXP_356
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_356.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T21:51:14.200Z
+ended_at: 2026-11-07T21:52:11.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.419, "y": 0.204, "element": "Obtenir les articles de dropdown field"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.323, "y": 0.285, "element": "Demande de matériel option in dropdown"})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 600, "scroll_element": null})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 400, "scroll_element": null})'
+  - n: 10
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 11
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Field labels visible on the form: Naming Series, Date de Comptabilisation, Société, Consider Process Loss, Obtenir les articles de, Code de l'Article, Date de début, Entrepôt, Date de fin, Obtenir la Demande de Matériel, Les Demandes de Matériel, Demande de matériel, Date de la Dem"
+    screenshot: step_11.png
+  - n: 12
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_11.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Production Plan
+        path: /app/production-plan/new
+        kind: interact
+        mission: M-006
+        action:
+          field: get_items_from
+          value: Material Request
+      page_title: Nouveau(elle) Plan de production
+      field_labels: []
+      section_labels:
+        - Filtres
+        - Détail de la demande de matériel
+        - Sélectionner les articles à produire
+        - Articles d'assemblage
+        - Articles de sous-assemblage
+      prefilled:
+        - "Naming Series: MFG-PP-.YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Obtenir les articles de: Demande de matériel"
+        - "Qté Planifiée: 0,000"
+        - "Date de Début Pré...: 07/11/2026 00:00:00"
+        - "Prendre en compte la quantité projetée dans le calcul: checked"
+      notes: "Field labels visible on the form: Naming Series, Date de Comptabilisation, Société, Consider Process Loss, Obtenir les articles de, Code de l'Article, Date de début, Entrepôt, Date de fin, Obtenir la Demande de Matériel, Les Demandes de Matériel, Demande de matériel, Date de la Demande de Matériel, Ajouter une ligne, Obtenir les produits finis, Récupérer les produits finis pour la fabrication, Articles d'assemblage, Code de l'Article, N° Nomenclat..., Qté Planifiée, UdM, Entrepôt de p..., Date de Début Pré..., Articles de sous-assemblage, Entrepôt de sous-ensemble, Prendre en compte la quantité projetée dans le calcul, Consolider les articles de sous-ensemble"
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/70743e70-ef00-44d2-b433-5382ad2b20c0 attempts: 1"

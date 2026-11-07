@@ -1,0 +1,225 @@
+id: run-20261107T215626-h-EXP_372
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_372.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:55:33.000Z
+ended_at: 2026-11-07T21:56:26.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.628, "y": 0.53, "element": "Mettre à Jour le Stock checkbox"})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 8
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 11
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Checkbox 'Mettre à Jour le Stock' (Update Stock) has been checked. The form is a Purchase Invoice (Facture d'Achat) in French. All fields visible on the form have been listed. The form appears to be at its scrollable end with sections: Détails, Paiements, Adresse & Contact, Termes,"
+    screenshot: step_11.png
+  - n: 12
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_11.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Purchase Invoice
+        path: /app/purchase-invoice/new
+        kind: interact
+        mission: M-006
+        action:
+          field: update_stock
+          value: "1"
+      page_title: Nouveau(elle) Facture d’Achat - new-purchase-invoice-tsrxjxkzoh
+      field_labels:
+        - Supplier (Supplier)
+        - Supplier Invoice No (Supplier Invoice No.)
+        - Supplier Invoice Date (Supplier Invoice Date)
+        - Posting Date (Posting Date)
+        - Due Date (Due Date)
+        - Is Subcontract
+        - Project (Project)
+        - Is Return
+        - Is Internal Transfer
+        - Warehouse (Warehouse)
+        - Is Open
+        - Supplier (Supplier)
+        - Company (Company)
+        - Currency (Currency)
+        - Supplier Address (Supplier Address)
+        - Shipping Address (Shipping Address)
+        - Bill From Address (Bill From Address)
+        - Bill To Address (Bill To Address)
+        - Billing Address (Billing Address)
+        - Shipping Address (Shipping Address)
+        - Address Display (Address Display)
+        - Set Post Quantity as Stock Qty
+        - Set Update Stock
+        - Update Stock
+        - Use Cost Center
+        - Use Material Request Line Item Cost
+        - Is Return
+        - Is Internal Transfer
+        - Return Against Purchase Invoice (Return Against Purchase Invoice)
+        - Is Open
+        - Write Off Difference Costs
+        - Select Warehouse
+        - Supplier (Supplier)
+        - Company (Company)
+        - Currency (Currency)
+        - Conversion Rate (Conversion Rate)
+        - Is Return
+        - Is Internal Transfer
+        - Set Update Stock
+        - Use Cost Center
+        - Use Material Request Line Item Cost
+        - Bill From Address (Bill From Address)
+        - Bill To Address (Bill To Address)
+        - Billing Address (Billing Address)
+        - Shipping Address (Shipping Address)
+        - Address Display (Address Display)
+        - Select Warehouse
+        - Select
+        - Quantity (Quantity)
+        - Item Code (Item Code)
+        - Item Name (Item Name)
+        - Description (Description)
+        - Item Group (Item Group)
+        - Brand (Brand)
+        - Quantity (Quantity)
+        - UOM (UOM)
+        - Rate (Rate)
+        - Discount Margin (Discount Margin)
+        - Discount (Discount)
+        - Price List (Price List)
+        - Price List Currency (Price List Currency)
+        - Stock UOM (Stock UOM)
+        - Stock Qty (Stock Qty)
+        - Stock UOM Ratio (Stock UOM Ratio)
+        - Total (Total)
+        - Total (USD) (Total (USD))
+        - Total Taxes and Charges (Total Taxes and Charges)
+        - Total Taxes and Charges (USD) (Total Taxes and Charges (USD))
+        - Grand Total (Grand Total)
+        - Grand Total (USD) (Grand Total (USD))
+        - Round Total
+        - In Words (In Words)
+        - More Details (More Details)
+        - Note (Note)
+        - Notes (Notes)
+        - Letter Head (Letter Head)
+        - TC Name (TC Name)
+        - Edit Shipping Address
+        - Edit Billing Address
+        - Select
+        - Quantity (Quantity)
+        - Item Code (Item Code)
+        - Item Name (Item Name)
+        - Description (Description)
+        - Item Group (Item Group)
+        - Brand (Brand)
+        - Quantity (Quantity)
+        - UOM (UOM)
+        - Rate (Rate)
+        - Discount Margin (Discount Margin)
+        - Discount (Discount)
+        - Price List (Price List)
+        - Price List Currency (Price List Currency)
+        - Stock UOM (Stock UOM)
+        - Stock Qty (Stock Qty)
+        - Stock UOM Ratio (Stock UOM Ratio)
+        - Total (Total)
+        - Total (USD) (Total (USD))
+        - Total Taxes and Charges (Total Taxes and Charges)
+        - Total Taxes and Charges (USD) (Total Taxes and Charges (USD))
+        - Grand Total (Grand Total)
+        - Grand Total (USD) (Grand Total (USD))
+        - Round Total
+        - In Words (In Words)
+        - More Details (More Details)
+        - Note (Note)
+        - Notes (Notes)
+        - Letter Head (Letter Head)
+        - TC Name (TC Name)
+        - Edit Shipping Address
+        - Edit Billing Address
+        - Quantité totale (Quantity Total)
+        - Total (USD) (Total (USD))
+        - Catégorie de taxe (Tax Category)
+        - Règle de Livraison (Delivery Rule)
+        - Incoterm (Incoterm)
+        - Modèle de Taxe et Frais d'Achat (Tax and Charges Template)
+        - Taxes et Frais Additionnels (Devise Société) (USD) (Additional Taxes and Charges (Company Currency) (USD))
+        - Taxes et Frais Additionnels (USD) (Additional Taxes and Charges (USD))
+        - Taxes et Frais Déductibles (Devise Société) (USD) (Deductible Taxes and Charges (Company Currency) (USD))
+        - Taxes et Frais Déductibles (USD) (Deductible Taxes and Charges (USD))
+        - Total des Taxes et Frais (Devise Société) (USD) (Total Taxes and Charges (Company Currency) (USD))
+        - Total des Taxes et Frais (USD) (Total Taxes and Charges (USD))
+        - Utiliser le centre de coûts par défaut de la société pour l'arrondi (Use Company Default Cost Center for Rounding)
+        - Arrondi (USD) (Rounding (USD))
+        - Total TTC (USD) (Total (USD))
+        - Total arrondi (USD) (Total Rounded (USD))
+        - Total Avance (USD) (Advance Payment (USD))
+        - Montant dû (USD) (Outstanding Amount (USD))
+      section_labels:
+        - Détails
+        - Taxes et Frais
+        - Totaux (USD)
+      prefilled:
+        - "Quantité totale: 0"
+        - "Total (USD): $ 0,00"
+        - "Taxes et Frais Additionnels (Devise Société) (USD): $ 0,00"
+        - "Taxes et Frais Additionnels (USD): $ 0,00"
+        - "Taxes et Frais Déductibles (Devise Société) (USD): $ 0,00"
+        - "Taxes et Frais Déductibles (USD): $ 0,00"
+        - "Total des Taxes et Frais (Devise Société) (USD): $ 0,00"
+        - "Total des Taxes et Frais (USD): $ 0,00"
+        - "Arrondi (USD): $ 0,00"
+        - "Total TTC (USD): $ 0,00"
+        - "Total arrondi (USD): $ 0,00"
+        - "Total Avance (USD): $ 0,00"
+        - "Montant dû (USD): $ 0,00"
+      notes: "Checkbox 'Mettre à Jour le Stock' (Update Stock) has been checked. The form is a Purchase Invoice (Facture d'Achat) in French. All fields visible on the form have been listed. The form appears to be at its scrollable end with sections: Détails, Paiements, Adresse & Contact, Termes, Plus d'info tabs, and within Détails: section with supplier info, items table, Taxes et Frais section, and Totaux (USD) section."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/f2853a0c-9d5a-48c5-b74d-8f55d4166f31 attempts: 1"

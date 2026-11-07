@@ -1,0 +1,82 @@
+id: run-20261107T220410-h-EXP_391
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_391.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T22:03:22.800Z
+ended_at: 2026-11-07T22:04:10.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.46, "y": 0.059, "element": "Tarification tab"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.262, \"y\": 0.356, \"element\": \"Checkbox 'Maintenir le même prix tout au long du cycle de vente'\"})"
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.545, "y": 0.059, "element": "Transaction tab"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.672, "y": 0.059, "element": "Fonctionnalités avancées tab"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The checkbox 'Maintenir le même prix tout au long du cycle de vente' has been checked. The form was not saved, submitted, deleted or changed.\", \"prefilled\": [\"Liste des Prix par Défaut: Vente standard\", \"Quotidien\", \"Fonctionnalités avancées: Activité - Administrator a créé ceci\", "
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_09.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Selling Settings
+        path: /app/selling-settings
+        kind: interact
+        mission: M-006
+        action:
+          field: maintain_same_sales_rate
+          value: "1"
+      page_title: Paramètres de Vente
+      field_labels: []
+      section_labels:
+        - Valeurs par défaut des clients
+        - Tarification
+        - Transaction
+        - Fonctionnalités avancées
+      prefilled:
+        - "Liste des Prix par Défaut: Vente standard"
+        - Quotidien
+        - "Fonctionnalités avancées: Activité - Administrator a créé ceci"
+        - 'Fonctionnalités avancées: Administrator a modifié la valeur de Liste des Prix par Défaut de "" à Standard Selling'
+        - "Fonctionnalités avancées: Administrator a édité ceci pour la dernière fois"
+        - "Fonctionnalités avancées: Administrator a modifié la valeur de La commande client est-elle obligatoire pour créer une facture de vente/un bon de livraison ? de null à Non, Un Bon de livraison est-il obligatoire pour créer une Facture de vente ? de null à Non, Autoriser l'ajout de plusieurs fois le même article dans une transaction de 0 à 1"
+      notes: The checkbox 'Maintenir le même prix tout au long du cycle de vente' has been checked. The form was not saved, submitted, deleted or changed.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/01273b7a-4236-48fd-bbab-613810d0689e attempts: 1"

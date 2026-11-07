@@ -1,0 +1,146 @@
+id: run-20261107T215459-h-EXP_366
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_366.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:53:32.000Z
+ended_at: 2026-11-07T21:54:59.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.419, "y": 0.154, "option": "Région", "element": "Appliquer Sur dropdown"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.419, \"y\": 0.154, \"element\": \"Appliquer Sur dropdown showing 'Code de l'Article'\"})"
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["escape"]})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.375, "element": "Empty area to close dropdown"})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 12
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 13
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 14
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 15
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.419, \"y\": 0.154, \"element\": \"Appliquer Sur dropdown - Code de l'Article\"})"
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["escape"]})'
+  - n: 17
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.625, "y": 0.388, "element": "Empty space in the form area"})'
+  - n: 18
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Appliquer Sur' field does NOT have a 'Région' (Territory) option. Available options are: Code de l'Article, Groupe d'Article, Marque, Transaction. The field 'Applicable pour' mentioned in the task does not exist on this form.\", \"prefilled\": [\"Valide à partir de: 07/11/2026\", \""
+    screenshot: step_18.png
+  - n: 19
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_18.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Promotional Scheme
+        path: /app/promotional-scheme/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Territory
+      page_title: Nouveau(elle) Schéma promotionnel
+      field_labels:
+        - Nom
+        - Appliquer Sur
+        - Désactiver
+        - Règle de tarification Article Code
+        - Code de l'Article
+        - UdM
+        - Conditions mixtes
+        - Est cumulatif
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Vente
+        - Achat
+        - Paramètres de période
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Dalles à prix réduit
+        - Promotion Tarif Promotion Prix
+        - No.
+        - Qté Min
+        - Qté Max
+        - Montant minimum
+        - Montant maximum
+        - Type de remise
+        - Schéma promotionnel Réduction de produit
+        - Ajouter une ligne
+        - Télécharger
+        - Charger
+      section_labels:
+        - Règle de tarification Article Code
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Paramètres de période
+        - Dalles à prix réduit
+        - Dalles à prix réduit
+      prefilled:
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: "The 'Appliquer Sur' field does NOT have a 'Région' (Territory) option. Available options are: Code de l'Article, Groupe d'Article, Marque, Transaction. The field 'Applicable pour' mentioned in the task does not exist on this form."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b91d3449-3774-484f-832d-40935c0286d6 attempts: 1"

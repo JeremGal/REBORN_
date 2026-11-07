@@ -1,0 +1,101 @@
+id: run-20261107T221229-h-EXP_421
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_421.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Projects
+started_at: 2026-11-07T22:11:42.400Z
+ended_at: 2026-11-07T22:12:29.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.25, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.263, \"y\": 0.437, \"element\": \"Checkbox 'Est un modèle'\"})"
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 9
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.432, \"y\": 0.059, \"element\": \"Plus d'info tab\"})"
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.264, "y": 0.059, "element": "Détails tab"})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Statut: Ouvrir", "Priorité: Faible", "Société: Digital Solution Service", "Est un modèle: checked"], "page_title": "Nouveau(elle) Tâche - new-task-rgtufzaafe", "field_labels": ["Objet *", "Statut", "Projet", "Priorité", "Ticket", "Poids", "Type", "Tâche Parente", "Couleur", "E'
+    screenshot: step_11.png
+  - n: 12
+    action:
+      type: read
+      target_desc: values shown by the application (Projects)
+    screenshot: step_11.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Task
+        path: /app/task/new
+        kind: interact
+        mission: M-006
+        action:
+          field: is_template
+          value: "1"
+      page_title: Nouveau(elle) Tâche - new-task-rgtufzaafe
+      field_labels:
+        - Objet *
+        - Statut
+        - Projet
+        - Priorité
+        - Ticket
+        - Poids
+        - Type
+        - Tâche Parente
+        - Couleur
+        - Est un groupe
+        - Est un modèle
+        - Commencer le (jours)
+        - Durée (jours)
+        - Description de la tâche
+      section_labels:
+        - Chronologie
+        - Détails
+        - Infos supplémentaires
+      prefilled:
+        - "Statut: Ouvrir"
+        - "Priorité: Faible"
+        - "Société: Digital Solution Service"
+        - "Est un modèle: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/0888cd7f-dd1b-4583-bb89-d169e57f418e attempts: 1"

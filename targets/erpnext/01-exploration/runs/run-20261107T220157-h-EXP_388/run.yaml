@@ -1,0 +1,216 @@
+id: run-20261107T220157-h-EXP_388
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_388.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:59:44.600Z
+ended_at: 2026-11-07T22:01:57.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/sales-invoice/new-sales-invoice-yyzdgskgvf", "render_js": true})'
+  - n: 8
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.755, \"y\": 0.102, \"element\": \"The checkbox next to 'Inclure Paiement (PDV)'\"})"
+  - n: 9
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.755, \"y\": 0.102, \"element\": \"The checkbox next to 'Inclure Paiement (PDV)'\"})"
+  - n: 10
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/sales-invoice/new-sales-invoice-yyzdgskgvf", "render_js": true})'
+  - n: 11
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "f"]})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Échanger des points de fidélité"})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "points de fidélité"})'
+  - n: 14
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "loyalty"})'
+  - n: 15
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.609, \"y\": 0.059, \"element\": \"The 'Plus d'info' tab at the top of the form\"})"
+  - n: 16
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.259, \"y\": 0.059, \"element\": \"The 'Détails' tab at the top of the form\"})"
+  - n: 17
+    action:
+      type: other
+      target_desc: 'web_search({"query": "ERPNext sales invoice \"Redeem Loyalty Points\" checkbox French"})'
+  - n: 18
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.332, \"y\": 0.059, \"element\": \"The 'Paiements' tab at the top of the form\"})"
+  - n: 19
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.259, \"y\": 0.059, \"element\": \"The 'Détails' tab at the top of the form\"})"
+  - n: 20
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 21
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 22
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 23
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "u"]})'
+  - n: 24
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["home"]})'
+  - n: 25
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "f"]})'
+  - n: 26
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.609, \"y\": 0.059, \"element\": \"The 'Plus d'info' tab at the top of the form\"})"
+  - n: 27
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.259, \"y\": 0.059, \"element\": \"The 'Détails' tab at the top of the form\"})"
+    screenshot: step_27.png
+  - n: 28
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 29
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 30
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Note: The checkbox 'Échanger des points de fidélité' (Redeem Loyalty Points) was not found on this form. I checked all tabs (Détails, Paiements, Adresse & Contact, Termes, Plus d'info) and all sections. The loyalty points section does not appear to be visible on this new Sales Invo"
+  - n: 31
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_27.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Invoice
+        path: /app/sales-invoice/new
+        kind: interact
+        mission: M-006
+        action:
+          field: redeem_loyalty_points
+          value: "1"
+      page_title: Nouveau(elle) Facture de vente
+      field_labels:
+        - Séries
+        - Date de Comptabilisation
+        - Client
+        - Heure de Publication
+        - Date d'Échéance de Paiement
+        - Inclure Paiement (PDV)
+        - Est un avoir (note de crédit)
+        - Est un justement du prix de la note de débit
+        - Envisager pour la retenue à la source
+        - Modifier la Date et l'Heure de la Publication
+        - Scan Code Barre
+        - Mettre à Jour le Stock
+        - No.
+        - Item
+        - Quantité
+        - Prix (USD)
+        - Montant (USD)
+        - Entrepôt
+        - Ajouter une ligne
+        - Ajouter plusieurs
+        - Télécharger
+        - Charger
+        - Quantité totale
+        - Total (USD)
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxes et Frais de Vente
+        - Type
+        - Compte compt...
+        - Taux d'Impositi...
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+        - Aucune ligne
+        - Total des Taxes et Frais (Devise Société) (USD)
+        - Total des Taxes et Frais (USD)
+        - Utiliser le centre de coûts par défaut de la société pour l'arrondi
+        - Arrondi (USD)
+        - Total TTC (USD)
+        - Total arrondi (USD)
+        - Total Avance (USD)
+        - Montant dû (USD)
+        - Liste de Feuille de Temps
+      section_labels:
+        - Articles
+        - Taxes et Frais
+        - Totaux (USD)
+        - Liste de Feuille de Temps
+      prefilled:
+        - "Séries: ACC-SINV-.YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Heure de Publication: 23:02:13"
+        - "Quantité totale: 0"
+        - "Total (USD): $0,00"
+        - "Total des Taxes et Frais (Devise Société) (USD): $0,00"
+        - "Total des Taxes et Frais (USD): $0,00"
+        - "Arrondi (USD): $0,00"
+        - "Total TTC (USD): $0,00"
+        - "Total arrondi (USD): $0,00"
+        - "Total Avance (USD): $0,00"
+        - "Montant dû (USD): $0,00"
+      notes: "Note: The checkbox 'Échanger des points de fidélité' (Redeem Loyalty Points) was not found on this form. I checked all tabs (Détails, Paiements, Adresse & Contact, Termes, Plus d'info) and all sections. The loyalty points section does not appear to be visible on this new Sales Invoice form. No customer with a loyalty program has been selected, which may be why the loyalty points section is not showing."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/4a46f472-afd9-4f24-886e-1b67b016e0f4 attempts: 1"

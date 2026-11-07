@@ -1,0 +1,85 @@
+id: run-20261107T220858-h-EXP_408
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_408.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T22:08:06.300Z
+ended_at: 2026-11-07T22:08:58.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1200, "scroll_element": null})'
+  - n: 6
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Nomenclature d'Article Par: Code de l'Article\", \"Méthode de Valorisation par Défaut: FIFO (Premier entré, Premier so...\", \"Insérer automatiquement le prix de l'article s'il est manquant: checked\", \"Mettre à jour la liste de prix basée sur: Prix\", \"UdM par Défaut des Articles: "
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Stock Settings
+        path: /app/stock-settings
+        kind: interact
+        mission: M-006
+        action:
+          field: auto_insert_price_list_rate_if_missing
+          value: "1"
+      page_title: Paramètres du Stock
+      field_labels:
+        - Nomenclature d'Article Par
+        - Groupe d'Éléments par Défaut
+        - Méthode de Valorisation par Défaut
+        - Insérer automatiquement le prix de l'article s'il est manquant
+        - Mettre à jour le prix de liste existant
+        - Mettre à jour la liste de prix basée sur
+        - UdM par Défaut des Articles
+        - Autoriser la modification de la quantité en UdM de stock pour les documents de vente
+        - Autoriser la modification de la quantité en UdM de stock pour les documents d'achat
+        - Autoriser la modification de la quantité en UdM de stock pour une Écriture de stock
+        - Autoriser l'UdM avec un taux de conversion défini dans l'article
+      section_labels:
+        - Paramètres par défaut de l'article
+        - Valeurs par défaut de la liste de prix
+        - Valeurs par défaut UdM
+        - Commentaires
+        - Activité
+      prefilled:
+        - "Nomenclature d'Article Par: Code de l'Article"
+        - "Méthode de Valorisation par Défaut: FIFO (Premier entré, Premier so..."
+        - "Insérer automatiquement le prix de l'article s'il est manquant: checked"
+        - "Mettre à jour la liste de prix basée sur: Prix"
+        - "UdM par Défaut des Articles: N°"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/ae1db542-743c-468a-bd25-1d834c1b6dc7 attempts: 1"

@@ -1,0 +1,72 @@
+id: run-20261107T221038-h-EXP_414
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_414.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Buying
+started_at: 2026-11-07T22:10:01.200Z
+ended_at: 2026-11-07T22:10:38.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.419, "y": 0.186, "option": "Individuel", "element": "Type de Fournisseur dropdown"})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form fields visible: Nom du fournisseur, Groupe de fournisseurs, Type de Fournisseur (set to Individuel), Pays, Alias, Sexe, Devise de Facturation, Liste de prix, Compte bancaire de l'entreprise, Modèle de termes de paiement. Section labels: Détails, Valeurs par défaut. Only 'Pays:"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Buying)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Supplier
+        path: /app/supplier/new
+        kind: interact
+        mission: M-006
+        action:
+          field: supplier_type
+          value: Individual
+      page_title: Nouveau(elle) Fournisseur - new-supplier-fslxflewzc
+      field_labels:
+        - Nom du fournisseur
+        - Groupe de fournisseurs
+        - Type de Fournisseur
+        - Pays
+        - Alias
+        - Sexe
+        - Devise de Facturation
+        - Liste de prix
+        - Compte bancaire de l'entreprise
+        - Modèle de termes de paiement
+      section_labels:
+        - Détails
+      prefilled:
+        - "Pays: France"
+      notes: "Form fields visible: Nom du fournisseur, Groupe de fournisseurs, Type de Fournisseur (set to Individuel), Pays, Alias, Sexe, Devise de Facturation, Liste de prix, Compte bancaire de l'entreprise, Modèle de termes de paiement. Section labels: Détails, Valeurs par défaut. Only 'Pays: France' has a prefilled value."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/cf352d72-dbf3-490c-8d1a-58908dfc9d40 attempts: 1"

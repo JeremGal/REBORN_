@@ -1,0 +1,69 @@
+id: run-20261107T215901-h-EXP_379
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_379.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:58:30.700Z
+ended_at: 2026-11-07T21:59:01.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Field labels visible on the form: Basé sur, Statut, Type de Référence, Société, N° de Référence. Checkboxes: Recomptabiliser uniquement les grands livres (unchecked), Autoriser un Stock Négatif (checked), Via Pièce de frais d'approche (unchecked), Autoriser le montant à zéro (unche"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Repost Item Valuation
+        path: /app/repost-item-valuation/new
+        kind: interact
+        mission: M-006
+        action:
+          field: based_on
+          value: Transaction
+      page_title: Recomptabilisation de la valorisation des articles
+      field_labels: []
+      section_labels:
+        - Basé sur
+        - Statut
+        - Type de Référence
+        - Société
+        - N° de Référence
+      prefilled:
+        - "Basé sur: Transaction"
+        - "Statut: Dans la file d'attente"
+        - "Société: Digital Solution Service"
+        - "Autoriser un Stock Négatif: checked"
+      notes: "Field labels visible on the form: Basé sur, Statut, Type de Référence, Société, N° de Référence. Checkboxes: Recomptabiliser uniquement les grands livres (unchecked), Autoriser un Stock Négatif (checked), Via Pièce de frais d'approche (unchecked), Autoriser le montant à zéro (unchecked), Recréer les grands livres des stocks (unchecked)."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/81458511-413e-4216-ba49-c18b5eb06fd6 attempts: 1"

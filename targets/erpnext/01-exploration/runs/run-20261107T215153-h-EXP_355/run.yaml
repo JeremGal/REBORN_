@@ -1,0 +1,110 @@
+id: run-20261107T215153-h-EXP_355
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_355.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Manufacturing
+started_at: 2026-11-07T21:50:56.200Z
+ended_at: 2026-11-07T21:51:53.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.42, "y": 0.203, "option": "Commande client", "element": "Obtenir les articles de dropdown"})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 5000, "scroll_element": null})'
+  - n: 6
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Empty area in the form to focus the page"})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 5000, "scroll_element": null})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'answer({"prefilled": ["Naming Series: MFG-PP-.YYYY.-", "Date de Comptabilisation: 07/11/2026", "Société: Digital Solution Service", "Obtenir les articles de: Commande client", "Qté Planifiée: 0,000", "Date de Début Prév...: 07/11/2026 00:00:00", "Prendre en compte la quantité projetée dans le calcul'
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: read
+      target_desc: values shown by the application (Manufacturing)
+    screenshot: step_09.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Production Plan
+        path: /app/production-plan/new
+        kind: interact
+        mission: M-006
+        action:
+          field: get_items_from
+          value: Sales Order
+      page_title: Production Plan Form Report
+      field_labels:
+        - Naming Series
+        - Date de Comptabilisation
+        - Société
+        - Obtenir les articles de
+        - Code de l'Article
+        - Date de début
+        - Client
+        - Date de fin
+        - Projet
+        - Depuis la date de livraison
+        - Statut de la commande client
+        - Jusqu'à la date de livraison
+        - Consolider les articles de la commande client
+        - Obtenir les Commandes Client
+        - Obtenir les produits finis
+        - No.
+        - Code de l'Article
+        - N° Nomenclat...
+        - Qté Planifiée
+        - UdM
+        - Entrepôt de p...
+        - Date de Début Prév...
+        - Ajouter une ligne
+        - Prendre en compte la quantité projetée dans le calcul
+        - Consolider les articles de sous-ensemble
+        - Obtenir les articles de sous-ensemble
+      section_labels:
+        - Filtres
+        - Commandes Clients
+        - Sélectionner les articles à produire
+        - Articles d'assemblage
+        - Articles de sous-assemblage
+      prefilled:
+        - "Naming Series: MFG-PP-.YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Obtenir les articles de: Commande client"
+        - "Qté Planifiée: 0,000"
+        - "Date de Début Prév...: 07/11/2026 00:00:00"
+        - "Prendre en compte la quantité projetée dans le calcul: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/a4402412-fd25-425a-b778-b575b37f107b attempts: 1"

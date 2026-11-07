@@ -1,0 +1,77 @@
+id: run-20261107T215459-h-EXP_365
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_365.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:54:21.000Z
+ended_at: 2026-11-07T21:54:59.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.421, "y": 0.154, "option": "Groupe de clients", "element": "Appliquer Sur dropdown"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.421, "y": 0.154, "element": "Appliquer Sur dropdown to open it"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.312, \"y\": 0.236, \"element\": \"Groupe d'Article option in dropdown\"})"
+  - n: 8
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Appliquer Sur' field only has options: Code de l'Article, Groupe d'Article, Marque, Transaction. 'Groupe de clients' (Customer Group) was not available. Selected 'Groupe d'Article' instead.\", \"prefilled\": [\"Valide à partir de: 07/11/2026\", \"Société: Digital Solution Service\", "
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_08.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Promotional Scheme
+        path: /app/promotional-scheme/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Customer Group
+      page_title: Nouveau(elle) Schéma promotionnel
+      field_labels: []
+      section_labels:
+        - Régle de tarification Article Code
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Paramètres de période
+        - Dalles à prix réduit
+        - Dalles à prix réduit
+      prefilled:
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: "The 'Appliquer Sur' field only has options: Code de l'Article, Groupe d'Article, Marque, Transaction. 'Groupe de clients' (Customer Group) was not available. Selected 'Groupe d'Article' instead."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/3b1ab6b0-48da-454b-a6ec-014902d1abf1 attempts: 1"

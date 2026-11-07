@@ -1,0 +1,128 @@
+id: run-20261107T214418-h-EXP_343
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_343.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:42:58.200Z
+ended_at: 2026-11-07T21:44:18.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.197, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.323, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Applicable pour"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Applicable"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/pricing-rule/new-pricing-rule-cezuelsefu", "render_js": true})'
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.503, "y": 0.057, "element": "Paramètres avancés tab"})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.26, "y": 0.057, "element": "Détails tab"})'
+  - n: 12
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "u"]})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "view-source:https://***/desk/selling/pricing-rule/new-pricing-rule-cezuelsefu"})'
+    screenshot: step_13.png
+  - n: 14
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form does not have an 'Applicable pour' (Applicable For) field with 'Fournisseur' (Supplier) option. The form is for selling pricing rules and the closest related field is 'Appliquer Sur' (Apply On) which is set to 'Code de l'Article'. The form has been opened but no changes we"
+  - n: 15
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_13.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Supplier
+      page_title: New Form Reading
+      field_labels:
+        - Naming Series
+        - Titre
+        - Désactiver
+        - Appliquer Sur
+        - Prix ou remise de produit
+        - Entrepôt
+        - Remise sur un autre article
+        - Conditions mixtes
+        - Est cumulatif
+        - Code de coupon basé
+        - Quantité et montant
+        - Qté min. (selon UdM de stock)
+        - Qté max. (selon l'UdM de stock)
+        - Montant Min
+        - Montant Max
+        - Paramètres de période
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Marge
+        - Type de Marge
+        - Taux de Marge ou Montant
+      section_labels:
+        - Appliquer la règle sur le code d'article
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+      prefilled:
+        - "Naming Series: PRLE-####"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0.000"
+      notes: The form does not have an 'Applicable pour' (Applicable For) field with 'Fournisseur' (Supplier) option. The form is for selling pricing rules and the closest related field is 'Appliquer Sur' (Apply On) which is set to 'Code de l'Article'. The form has been opened but no changes were made as per instructions.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/9a1d2f79-5c67-49db-aaf4-2b3c6e0a8341 attempts: 1"

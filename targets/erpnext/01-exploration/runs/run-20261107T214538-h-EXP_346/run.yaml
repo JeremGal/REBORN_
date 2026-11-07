@@ -1,0 +1,246 @@
+id: run-20261107T214538-h-EXP_346
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_346.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:40:18.600Z
+ended_at: 2026-11-07T21:45:38.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 400, "scroll_element": null})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "récursif"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "récurs"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "récursif"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/pricing-rule/new-pricing-rule-qxrjprsyqi", "render_js": true})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Is Recursive"})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/pricing-rule/new-pricing-rule-qxrjprsyqi", "render_js": true, "extract_images": true})'
+  - n: 13
+    action:
+      type: other
+      target_desc: 'web_search({"query": "ERPNext \"Est récursif\" pricing rule"})'
+  - n: 14
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://github.com/frappe/erpnext/blob/develop/erpnext/accounts/doctype/pricing_rule/pricing_rule.json", "render_js": false})'
+  - n: 15
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 16
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/pricing-rule/new-pricing-rule-qxrjprsyqi", "render_js": true})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'web_search({"query": "ERPNext pricing rule \"Est récursif\" French translation"})'
+  - n: 18
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://raw.githubusercontent.com/frappe/erpnext/develop/erpnext/accounts/doctype/pricing_rule/pricing_rule.json", "render_js": false})'
+  - n: 19
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "shift", "i"]})'
+  - n: 20
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 21
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/pricing-rule/new-pricing-rule-qxrjprsyqi", "render_js": true})'
+  - n: 22
+    action:
+      type: other
+      target_desc: 'web_search({"query": "frappe \"Est récursif\" ERPNext French translation is_recursive"})'
+  - n: 23
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://raw.githubusercontent.com/frappe/erpnext/develop/erpnext/locale/fr_FR/LC_MESSAGES/messages.po", "render_js": false})'
+  - n: 24
+    action:
+      type: other
+      target_desc: 'web_search({"query": "site:github.com frappe/erpnext \"Is Recursive\" \"Est récursif\""})'
+  - n: 25
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://raw.githubusercontent.com/frappe/frappe/develop/frappe/translations/fr_FR.csv", "render_js": false})'
+    screenshot: step_25.png
+  - n: 26
+    action:
+      type: other
+      target_desc: 'web_search({"query": "frappe frappe/translations fr_FR.csv \"Is Recursive\""})'
+  - n: 27
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "u"]})'
+  - n: 28
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 29
+    action:
+      type: other
+      target_desc: refresh_web({})
+  - n: 30
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://raw.githubusercontent.com/frappe/erpnext/develop/erpnext/translations/fr_FR.csv", "render_js": false})'
+  - n: 31
+    action:
+      type: other
+      target_desc: 'web_search({"query": "erpnext translations fr_FR.csv \"Is Recursive\" github"})'
+  - n: 32
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://github.com/frappe/erpnext/blob/develop/erpnext/translations/fr_FR.csv", "render_js": false})'
+  - n: 33
+    action:
+      type: other
+      target_desc: 'web_search({"query": "\"Is Recursive\" \"Est récursif\" \"Recurse Every\" \"Apply Recursion Over\" ERPNext pricing rule French"})'
+  - n: 34
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 35
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1500, "scroll_element": null})'
+  - n: 36
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 37
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 38
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 2000, "scroll_element": null})'
+  - n: 39
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 3000, "scroll_element": null})'
+  - n: 40
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.5, "element": "Form content area"})'
+  - n: 41
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["home"]})'
+  - n: 42
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Est récursif' (Is Recursive) checkbox is NOT visible on this form. It only appears when 'Prix ou remise de produit' is set to 'Produit' (Product) instead of the current 'Prix' (Price) setting. The checkbox is in the 'Product Discount Scheme' section which is hidden when 'Price"
+  - n: 43
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_25.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: is_recursive
+          value: "1"
+      page_title: Nouveau(elle) Règle de tarification
+      field_labels:
+        - Naming Series
+        - Titre
+        - Désactiver
+        - Appliquer Sur
+        - Prix ou remise de produit
+        - Entrepôt
+        - Conditions mixtes
+        - Est cumulatif
+        - Code de coupon basé
+        - Vente
+        - Achat
+        - Qté min. (selon UdM de stock)
+        - Qté max. (selon l'UdM de stock)
+        - Montant Min
+        - Montant Max
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Type de Marge
+        - Taux de Marge ou Montant
+        - Prix unitaire ou réduction
+        - Remise en Pourcentage
+        - Pour la Liste de Prix
+      section_labels:
+        - Détails
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+        - Schéma de remise de prix
+      prefilled:
+        - "Naming Series: PRLE-.####"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Montant Min: 0,00"
+        - "Montant Max: 0,00"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0,000"
+        - "Prix unitaire ou réduction: Remise en Pourcentage"
+      notes: The 'Est récursif' (Is Recursive) checkbox is NOT visible on this form. It only appears when 'Prix ou remise de produit' is set to 'Produit' (Product) instead of the current 'Prix' (Price) setting. The checkbox is in the 'Product Discount Scheme' section which is hidden when 'Price' is selected. I did not change any form fields as instructed.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/6d6d7634-e1ae-48b6-99dd-d9a56a7af71c attempts: 1"

@@ -1,0 +1,146 @@
+id: run-20261107T214349-h-EXP_342
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_342.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:42:22.100Z
+ended_at: 2026-11-07T21:43:49.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.428, "y": 0.28, "option": "Campagne", "element": "Appliquer Sur dropdown"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.428, \"y\": 0.28, \"element\": \"Appliquer Sur dropdown - Code de l'Article\"})"
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Close dropdown by clicking elsewhere"})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 10
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 12
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Main content area of the form"})'
+  - n: 13
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 14
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "minus"]})'
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 16
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/selling/pricing-rule/new-pricing-rule-ntynfajqep", "render_js": false, "extract_images": false})'
+    screenshot: step_16.png
+  - n: 17
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"NOTE: The field 'Applicable pour' (Applicable For) was not found on the form. The closest field is 'Appliquer Sur' (Apply On) which has options: Code de l'Article, Groupe d'Article, Marque, Transaction. None of these is 'Campagne' (Campaign). The option 'Campagne' is not available "
+  - n: 18
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_16.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Campaign
+      page_title: Nouveau(elle) Règle de tarification
+      field_labels:
+        - Titre
+        - Désactiver
+        - Appliquer Sur
+        - Article
+        - Remise (% de la liste)
+        - Est cumulatif
+        - Code de coupon basé
+        - Prix ou remise de produit
+        - Entrepôt
+        - Remise sur un autre article
+        - Vente
+        - Achat
+        - Qté min. (selon UdM de stock)
+        - Qté max. (selon l'UdM de stock)
+        - Montant Min
+        - Montant Max
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+        - Type de Marge
+        - Taux de Marge ou Montant
+        - Prix unitaire ou réduction
+        - Remise en Pourcentage
+        - Pour la Liste de Prix
+      section_labels:
+        - Prix ou remise de produit
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+        - Marge
+        - Schéma de remise de prix
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+        - "Valide à partir de: 07/11/2026"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0,000"
+        - "Prix unitaire ou réduction: Remise en Pourcentage"
+        - "Montant Min: 0,00"
+        - "Montant Max: 0,00"
+      notes: "NOTE: The field 'Applicable pour' (Applicable For) was not found on the form. The closest field is 'Appliquer Sur' (Apply On) which has options: Code de l'Article, Groupe d'Article, Marque, Transaction. None of these is 'Campagne' (Campaign). The option 'Campagne' is not available in any dropdown on this form. The form could not be scrolled past the 'Schéma de remise de prix' section - the page indicated 'Entire page visible'."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/621abaa2-add5-467c-9ffa-d3aa582cac8a attempts: 1"

@@ -1,0 +1,216 @@
+id: run-20261107T215629-h-EXP_373
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_373.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:53:57.100Z
+ended_at: 2026-11-07T21:56:29.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.327, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.751, \"y\": 0.171, \"element\": \"Checkbox 'Envisager pour la retenue à la source'\"})"
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.751, \"y\": 0.17, \"element\": \"Checkbox before 'Envisager pour la retenue à la source' text\"})"
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.752, \"y\": 0.17, \"element\": \"Checkbox square for 'Envisager pour la retenue à la source'\"})"
+  - n: 8
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.85, \"y\": 0.17, \"element\": \"Text label 'Envisager pour la retenue à la source'\"})"
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["tab"]})'
+  - n: 10
+    action:
+      type: other
+      target_desc: "move_mouse_web({\"x\": 0.751, \"y\": 0.171, \"element\": \"Checkbox 'Envisager pour la retenue à la source'\"})"
+  - n: 11
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.751, \"y\": 0.171, \"element\": \"Checkbox 'Envisager pour la retenue à la source' - the small square checkbox\"})"
+  - n: 12
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.748, \"y\": 0.171, \"element\": \"Small checkbox square for 'Envisager pour la retenue à la source'\"})"
+  - n: 13
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "shift", "i"]})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.359, "y": 0.127, "element": "Séries dropdown field"})'
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 16
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.45, "element": "Empty area in the form to close dropdown"})'
+  - n: 17
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.751, \"y\": 0.171, \"element\": \"Checkbox for 'Envisager pour la retenue à la source'\"})"
+  - n: 18
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "="]})'
+  - n: 19
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.75, \"y\": 0.17, \"element\": \"Checkbox for 'Envisager pour la retenue à la source' - leftmost part\"})"
+  - n: 20
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "shift", "j"]})'
+  - n: 21
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 22
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 23
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 24
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 25
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.751, \"y\": 0.171, \"text\": \"\", \"enter\": false, \"element\": \"Checkbox for 'Envisager pour la retenue à la source'\", \"overwrite\": false})"
+  - n: 26
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["home"]})'
+  - n: 27
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.505, \"y\": 0.224, \"element\": \"Checkbox for 'Modifier la Date et l'Heure de la Publication'\"})"
+  - n: 28
+    action:
+      type: other
+      target_desc: "drag_and_drop_web({\"x1\": 0.751, \"x2\": 0.752, \"y1\": 0.171, \"y2\": 0.172, \"description\": \"Click on the checkbox for 'Envisager pour la retenue à la source' by doing a tiny drag\"})"
+  - n: 29
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Form: Nouveau(elle) Facture d'Achat (Purchase Invoice) at https://***/desk/accounts/purchase-invoice/new-purchase-invoice-jbkdvvuocm. The checkbox 'Envisager pour la retenue à la source' was clicked/ticked. No fields were saved, submitted, deleted or changed.\", \"prefilled\": [\"Série"
+    screenshot: step_29.png
+  - n: 30
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_29.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Purchase Invoice
+        path: /app/purchase-invoice/new
+        kind: interact
+        mission: M-006
+        action:
+          field: apply_tds
+          value: "1"
+      page_title: Nouveau(elle) Facture d'Achat
+      field_labels:
+        - Séries
+        - Date de Comptabilisation
+        - Est Payé
+        - Est une note de débit
+        - Envisager pour la retenue à la source
+        - Fournisseur
+        - Heure de Publication
+        - Modifier la Date et l'Heure de la Publication
+        - Date d'échéance
+        - N° de Facture du Fournisseur
+        - Date de la Facture du Fournisseur
+        - Devise
+        - Liste de prix
+        - Utiliser le taux de change de la date de transaction
+        - Ignorez Règle de Prix
+        - Scan Code Barre
+        - Mettre à Jour le Stock
+        - Est sous-traité
+        - No.
+        - Item
+        - Quantité acceptée
+        - Prix (USD)
+        - Montant (USD)
+        - Quantité totale
+        - Total (USD)
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxe et Frais d'Achat
+        - Type
+        - Taux d'Imposition
+        - Montant Net (USD)
+        - Ajouter une ligne
+        - Taxes et Frais Additionnels (Devise Société)
+        - Taxes et Frais Additionnels
+        - Taxes et Frais Déductibles (Devise Société)
+        - Taxes et Frais Déductibles
+        - Total des Taxes et Frais (Devise Société)
+        - Total des Taxes et Frais
+        - Utiliser le centre de coûts par défaut de la société pour l'arrondi
+        - Arrondi (USD)
+        - Total TTC (USD)
+        - Total arrondi (USD)
+        - Total Avance (USD)
+        - Montant dû (USD)
+        - Remise Supplémentaire
+      section_labels:
+        - Détails
+        - Paiements
+        - Adresse & Contact
+        - Termes
+        - Plus d'infos
+        - Facture fournisseur
+        - Devise et liste de prix
+        - Articles
+        - Taxes et Frais
+        - Remise Supplémentaire
+      prefilled:
+        - "Séries: ACC-PINV-YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Heure de Publication: 22:56:44"
+        - "Devise: USD"
+        - "Liste de prix: Achat standard"
+        - "Quantité totale: 0"
+        - "Total (USD): $0,00"
+        - "Envisager pour la retenue à la source: checked"
+      notes: "Form: Nouveau(elle) Facture d'Achat (Purchase Invoice) at https://***/desk/accounts/purchase-invoice/new-purchase-invoice-jbkdvvuocm. The checkbox 'Envisager pour la retenue à la source' was clicked/ticked. No fields were saved, submitted, deleted or changed."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/55f0dd4b-97e6-46e7-8642-4879791d43de attempts: 1"

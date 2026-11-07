@@ -1,0 +1,84 @@
+id: run-20261107T221225-h-EXP_420
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_420.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Projects
+started_at: 2026-11-07T22:11:38.600Z
+ended_at: 2026-11-07T22:12:25.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.254, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.791, \"y\": 0.129, \"element\": \"Statut dropdown showing 'Ouvrir'\"})"
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.657, "y": 0.332, "element": "Terminé option in the Statut dropdown"})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The form is at https://***/desk/projects/task/new-task-opueodonjm. Status was changed from 'Ouvrir' to 'Terminé'. No fields were saved, submitted, or modified other than the Statut dropdown selection.\", \"prefilled\": [\"Statut: Terminé\"], \"page_title\": \"Nouveau(elle) Tâche\", \"field_l"
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Projects)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Task
+        path: /app/task/new
+        kind: interact
+        mission: M-006
+        action:
+          field: status
+          value: Completed
+      page_title: Nouveau(elle) Tâche
+      field_labels:
+        - Objet *
+        - Statut
+        - Projet
+        - Priorité
+        - Ticket
+        - Poids
+        - Type
+        - Tâche Parente
+        - Couleur
+        - Effectué par
+        - Est un groupe
+        - Terminé le *
+        - Est un modèle
+        - Chronologie
+        - Détails
+        - Description de la tâche
+      section_labels:
+        - Détails
+        - Chronologie
+        - Détails
+      prefilled:
+        - "Statut: Terminé"
+      notes: The form is at https://***/desk/projects/task/new-task-opueodonjm. Status was changed from 'Ouvrir' to 'Terminé'. No fields were saved, submitted, or modified other than the Statut dropdown selection.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/dc915d18-9d4f-4ad0-8d64-9949e507cdc1 attempts: 1"

@@ -1,0 +1,80 @@
+id: run-20261107T215925-h-EXP_380
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_380.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T21:58:44.300Z
+ended_at: 2026-11-07T21:59:25.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.42, \"y\": 0.083, \"element\": \"Basé sur dropdown field showing 'Transaction'\"})"
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.32, \"y\": 0.148, \"element\": \"'Article et entrepôt' option in the dropdown\"})"
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"prefilled\": [\"Basé sur: Article et entrepôt\", \"Statut: Dans la file d'attente\", \"Société: Digital Solution Service\", \"Autoriser un Stock Négatif: checked\"], \"page_title\": \"Recomptabilisation de la valorisation des articles\", \"field_labels\": [\"Basé sur\", \"Code de l'Article\", \"Entrepôt\", \"Dat"
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Repost Item Valuation
+        path: /app/repost-item-valuation/new
+        kind: interact
+        mission: M-006
+        action:
+          field: based_on
+          value: Item and Warehouse
+      page_title: Recomptabilisation de la valorisation des articles
+      field_labels:
+        - Basé sur
+        - Code de l'Article
+        - Entrepôt
+        - Date de Comptabilisation
+        - Heure de Publication
+        - Statut
+        - Société
+        - Recomptabiliser uniquement les grands livres
+        - Autoriser un Stock Négatif
+        - Via Pièce de frais d'approche
+        - Autoriser le montant à zéro
+        - Recréer les grands livres des stocks
+      section_labels: []
+      prefilled:
+        - "Basé sur: Article et entrepôt"
+        - "Statut: Dans la file d'attente"
+        - "Société: Digital Solution Service"
+        - "Autoriser un Stock Négatif: checked"
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/5175eccc-0ca1-45b3-9a13-7c12bfcdaf48 attempts: 1"

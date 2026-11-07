@@ -1,0 +1,87 @@
+id: run-20261107T220900-h-EXP_409
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_409.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T22:08:13.700Z
+ended_at: 2026-11-07T22:09:00.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: "ctrl_f_web({\"query\": \"Activer N° de série / lot pour l'article\"})"
+  - n: 7
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Activer N° de série"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.55, "y": 0.057, "element": "Article série et lot tab"})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 10
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The checkbox 'Activer N° de série / lot pour l'article' is already checked (ticked). The form has been scrolled to the end. No changes were made to the form.\", \"prefilled\": [\"Prélever N° de série / Lot basé sur: FIFO (Premier entré, Premier so...\"], \"page_title\": \"Paramètres du Sto"
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_10.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Stock Settings
+        path: /app/stock-settings
+        kind: interact
+        mission: M-006
+        action:
+          field: enable_serial_and_batch_no_for_item
+          value: "1"
+      page_title: Paramètres du Stock
+      field_labels:
+        - Activer N° de série / lot pour l'article
+        - Prélever N° de série / Lot basé sur
+        - Autoriser le N° de série existant à être de nouveau fabriqué/reçu
+        - Utiliser les champs N° de série / Lot
+        - Désactiver le sélecteur de N° de série et lot
+        - Autoriser le stock négatif pour le lot
+        - Ne pas utiliser la valorisation par lot
+        - Définir un masque de numérotation par défaut pour l'ID de lot ?
+      section_labels:
+        - Paramètres des articles sérialisés
+        - Paramètres des articles gérés par lot
+      prefilled:
+        - "Prélever N° de série / Lot basé sur: FIFO (Premier entré, Premier so..."
+      notes: The checkbox 'Activer N° de série / lot pour l'article' is already checked (ticked). The form has been scrolled to the end. No changes were made to the form.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/e6a26c75-4f84-4278-9286-9e55af975285 attempts: 1"

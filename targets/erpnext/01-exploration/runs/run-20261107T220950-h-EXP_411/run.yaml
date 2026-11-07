@@ -1,0 +1,73 @@
+id: run-20261107T220950-h-EXP_411
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_411.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T22:09:14.200Z
+ended_at: 2026-11-07T22:09:50.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.685, "y": 0.058, "element": "Réserve de stock tab"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.263, \"y\": 0.112, \"element\": \"Checkbox 'Activer la réservation de stock'\"})"
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Checked 'Activer la réservation de stock' checkbox. The form is on the 'Réserve de stock' tab of Stock Settings (Paramètres du Stock). No save/submit was performed.\", \"prefilled\": [\"Réserver automatiquement les N° de série et de lot: checked\"], \"page_title\": \"Paramètres du Stock - "
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Stock Settings
+        path: /app/stock-settings
+        kind: interact
+        mission: M-006
+        action:
+          field: enable_stock_reservation
+          value: "1"
+      page_title: Paramètres du Stock - Stock Reservation tab
+      field_labels:
+        - Activer la réservation de stock
+        - Autoriser la réservation partielle
+        - Réserver automatiquement le stock
+        - Réserver automatiquement le stock pour la commande client lors de l'achat
+        - Réserver automatiquement les N° de série et de lot
+        - Réserver automatiquement les N° de série et de lot basé sur
+      section_labels:
+        - Réserve de stock
+        - Réservation N° de série et lot
+      prefilled:
+        - "Réserver automatiquement les N° de série et de lot: checked"
+      notes: Checked 'Activer la réservation de stock' checkbox. The form is on the 'Réserve de stock' tab of Stock Settings (Paramètres du Stock). No save/submit was performed.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/27b6d616-0c49-4d66-8467-3feb36b2bd40 attempts: 1"

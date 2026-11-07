@@ -1,0 +1,69 @@
+id: run-20261107T215603-h-EXP_370
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_370.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:55:23.200Z
+ended_at: 2026-11-07T21:56:03.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.326, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.424, "y": 0.154, "option": "Groupe de fournisseurs", "element": "Appliquer Sur dropdown"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.424, "y": 0.154, "element": "Appliquer Sur dropdown field"})'
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Appliquer Sur' dropdown does not contain 'Groupe de fournisseurs' option. Available options are: Code de l'Article, Groupe d'Article, Marque, Transaction.\", \"prefilled\": [\"Valide à partir de: 07/11/2026\", \"Société: Digital Solution Service\", \"Devise: USD\"], \"page_title\": \"Nouv"
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Promotional Scheme
+        path: /app/promotional-scheme/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Supplier Group
+      page_title: Nouveau(elle) Schéma promotionnel
+      field_labels: []
+      section_labels:
+        - Form Fields
+        - Sections
+      prefilled:
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: "The 'Appliquer Sur' dropdown does not contain 'Groupe de fournisseurs' option. Available options are: Code de l'Article, Groupe d'Article, Marque, Transaction."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/82c991b3-2693-4eea-b1d9-a94fb1ff5de6 attempts: 1"

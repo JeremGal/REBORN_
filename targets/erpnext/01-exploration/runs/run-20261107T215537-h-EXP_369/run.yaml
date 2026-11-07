@@ -1,0 +1,127 @@
+id: run-20261107T215537-h-EXP_369
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_369.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:54:45.100Z
+ended_at: 2026-11-07T21:55:37.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 3
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 4
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.326, "element": "Continue button"})'
+  - n: 5
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 7
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.421, \"y\": 0.154, \"element\": \"Appliquer Sur dropdown showing 'Code de l'Article'\"})"
+  - n: 8
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["escape"]})'
+  - n: 9
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.446, "element": "Empty area of the form to close dropdown"})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 11
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Note: The form does not contain a field labeled 'Applicable pour' (Applicable For) with a 'Fournisseur' (Supplier) option. The only dropdown field is 'Appliquer Sur' (Apply On) with options: Code de l'Article, Groupe d'Article, Marque, Transaction. I was unable to select 'Fournisse"
+    screenshot: step_11.png
+  - n: 12
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_11.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Promotional Scheme
+        path: /app/promotional-scheme/new
+        kind: interact
+        mission: M-006
+        action:
+          field: applicable_for
+          value: Supplier
+      page_title: Nouveau(elle) Schéma promotionnel
+      field_labels:
+        - Nom
+        - Appliquer Sur
+        - Désactiver
+        - Règle de tarification Article Code
+        - Code de l'Article
+        - UdM
+        - Ajouter une ligne
+        - Conditions mixtes
+        - Est cumulatif
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Paramètres de période
+        - Valide à partir de
+        - Société
+        - Valable jusqu'au
+        - Devise
+        - Dalles à prix réduit
+        - Promotion Tarif Promotion Prix
+        - No.
+        - Qté Min
+        - Qté Max
+        - Montant minimum
+        - Montant maximum
+        - Type de remise
+        - Ajouter une ligne
+        - Télécharger
+        - Charger
+        - Dalles à prix réduit
+        - Schéma promotionnel Réduction de produit
+        - No.
+        - Qté Min
+        - Qté Max
+        - Montant mini...
+        - Montant maxi...
+        - Code de l'Article
+        - Qté
+        - Ajouter une ligne
+        - Télécharger
+        - Charger
+      section_labels:
+        - Règle de tarification Article Code
+        - Paramètres de période
+        - Dalles à prix réduit
+        - Dalles à prix réduit
+      prefilled:
+        - "Société: Digital Solution Service"
+        - "Valide à partir de: 07/11/2026"
+        - "Devise: USD"
+        - "Appliquer Sur: Code de l'Article"
+      notes: "Note: The form does not contain a field labeled 'Applicable pour' (Applicable For) with a 'Fournisseur' (Supplier) option. The only dropdown field is 'Appliquer Sur' (Apply On) with options: Code de l'Article, Groupe d'Article, Marque, Transaction. I was unable to select 'Fournisseur' as requested. The form was not saved, submitted, or modified in any way."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/c9f6345d-0e82-4532-b58e-f3147ccde103 attempts: 1"

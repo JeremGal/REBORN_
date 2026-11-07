@@ -1,0 +1,128 @@
+id: run-20261107T221101-h-EXP_416
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_416.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Buying
+started_at: 2026-11-07T22:09:47.700Z
+ended_at: 2026-11-07T22:11:01.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.254, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 3000, "scroll_element": null})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/buying/supplier/new-supplier-yojjhnrikg", "render_js": true, "extract_images": false})'
+  - n: 6
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.499, \"y\": 0.183, \"element\": \"Checkbox area near 'Restrict to Companies' / 'Restreindre aux sociétés' - I need to find it in the form\"})"
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.8, "y": 0.625, "element": "Empty area on the right side of the form to close the dropdown"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/buying/supplier/new-supplier-yojjhnrikg", "render_js": true, "extract_images": false})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 3000, "scroll_element": null})'
+  - n: 11
+    action:
+      type: other
+      target_desc: 'web_search({"query": "ERPNext supplier form \"Restreindre aux sociétés\" checkbox \"Restrict to Companies\""})'
+  - n: 12
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://docs.frappe.io/erpnext/company-restrictions-for-item-customer-and-supplier", "render_js": true, "extract_images": false})'
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.339, "y": 0.057, "element": "Comptabilité tab"})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.485, "y": 0.057, "element": "Paramètres tab"})'
+  - n: 15
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.26, "y": 0.057, "element": "Détails tab"})'
+    screenshot: step_15.png
+  - n: 16
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Restreindre"})'
+  - n: 18
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Restrict to Companies"})'
+  - n: 19
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/buying/supplier/new-supplier-yojjhnrikg", "render_js": true, "extract_images": false})'
+  - n: 20
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Restreindre aux sociétés' (Restrict to Companies) checkbox was not found on the form. It is not visible in any tab (Détails, Comptabilité, Taxe, Paramètres, Utilisateurs du portail, Plus d'info). This section likely requires the 'Purchase Master Manager' role to be visible, wh"
+  - n: 21
+    action:
+      type: read
+      target_desc: values shown by the application (Buying)
+    screenshot: step_15.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Supplier
+        path: /app/supplier/new
+        kind: interact
+        mission: M-006
+        action:
+          field: restrict_to_companies
+          value: "1"
+      page_title: Supplier Form - Report
+      field_labels:
+        - Nom du fournisseur
+        - Type de Fournisseur
+        - Alias
+        - Groupe de fournisseurs
+        - Pays
+        - Devise de Facturation
+        - Liste de prix
+        - Compte bancaire de l'entreprise
+        - Modèle de termes de paiement
+      section_labels:
+        - Valeurs par défaut
+      prefilled:
+        - "Type de Fournisseur: Société"
+        - "Pays: France"
+      notes: The 'Restreindre aux sociétés' (Restrict to Companies) checkbox was not found on the form. It is not visible in any tab (Détails, Comptabilité, Taxe, Paramètres, Utilisateurs du portail, Plus d'info). This section likely requires the 'Purchase Master Manager' role to be visible, which the current user may not have. The form only shows 9 fields in total.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/ada3856b-7b46-41f3-b34c-4eb3acc39bf3 attempts: 1"

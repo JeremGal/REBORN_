@@ -1,0 +1,128 @@
+id: run-20261107T215050-h-EXP_350
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_350.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:49:29.500Z
+ended_at: 2026-11-07T21:50:50.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.253, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: other
+      target_desc: 'select_option({"x": 0.42, "y": 0.338, "option": "Remise en Pourcentage", "element": "Prix ou remise de produit dropdown"})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.42, "y": 0.338, "element": "Prix ou remise de produit dropdown"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.285, "y": 0.405, "element": "Produit option in dropdown"})'
+  - n: 8
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1500, "scroll_element": null})'
+  - n: 10
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 11
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.555, "element": "Page content area to focus it for scrolling"})'
+  - n: 12
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 13
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 14
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Note: The field 'Prix unitaire ou réduction' (Rate or Discount) with option 'Remise en Pourcentage' (Discount Percentage) was not found on the form. The closest field is 'Prix ou remise de produit' (Product price or discount) which only had options 'Prix' (Price) and 'Produit' (Pro"
+    screenshot: step_14.png
+  - n: 15
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_14.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: rate_or_discount
+          value: Discount Percentage
+      page_title: Nouveau(elle) Règle de tarification - new-pricing-rule-gyovmeoztr
+      field_labels: []
+      section_labels:
+        - "Section: (top)"
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Schéma de remise de produit
+        - Paramètres de période
+        - Marge
+      prefilled:
+        - "Naming Series: PRLE-####"
+        - "Titre: "
+        - "Désactiver: unchecked"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Produit"
+        - "Entrepôt: "
+        - "Conditions mixtes: unchecked"
+        - "Est cumulatif: unchecked"
+        - "Code de coupon basé: unchecked"
+        - "Vente: unchecked"
+        - "Achat: unchecked"
+        - "Qté min. (selon UdM de stock): "
+        - "Montant Min: 0,00"
+        - "Qté max. (selon l'UdM de stock): "
+        - "Montant Max: 0,00"
+        - "Même article: unchecked"
+        - "UdM: "
+        - "Article gratuit: "
+        - "Arrondir la qté gratuite: unchecked"
+        - "Qté: 0,000"
+        - "Ne pas imposer la quantité d'article gratuit: unchecked"
+        - "Est récursif: unchecked"
+        - "Prix de l'article gratuit: "
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Valable jusqu'au: "
+        - "Devise: USD"
+        - "Type de Marge: Pourcentage"
+        - "Taux de Marge ou Montant: 0,000"
+      notes: "Note: The field 'Prix unitaire ou réduction' (Rate or Discount) with option 'Remise en Pourcentage' (Discount Percentage) was not found on the form. The closest field is 'Prix ou remise de produit' (Product price or discount) which only had options 'Prix' (Price) and 'Produit' (Product). I selected 'Produit'. The form was accessed after logging in with the provided credentials."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/0af08828-f0df-463f-8e73-5f49c06ea014 attempts: 1"

@@ -1,0 +1,154 @@
+id: run-20261107T214147-h-EXP_336
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_336.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:40:07.900Z
+ended_at: 2026-11-07T21:41:47.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.498, "y": 0.324, "element": "Continue button"})'
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 6
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.333, "y": 0.445, "element": "Remise sur un autre article section header"})'
+  - n: 7
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.429, "y": 0.507, "element": "Appliquer la règle sur autre dropdown field"})'
+  - n: 8
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.312, \"y\": 0.59, \"element\": \"Groupe d'Article option in dropdown\"})"
+  - n: 9
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 11
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 12
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+  - n: 13
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 14
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.88, "element": "Empty area in the form to focus it"})'
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "f"]})'
+  - n: 16
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Marge"})'
+  - n: 17
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 18
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "minus"]})'
+  - n: 19
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "-"]})'
+  - n: 20
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"The 'Appliquer la règle sur autre' field was changed from 'Code de l'Article' to 'Groupe d'Article' as requested. The 'Marge' section header is visible at the very bottom of the form but appears to have no additional visible fields. The page indicator confirms the entire page is vi"
+    screenshot: step_20.png
+  - n: 21
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_20.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Pricing Rule
+        path: /app/pricing-rule/new
+        kind: interact
+        mission: M-006
+        action:
+          field: apply_rule_on_other
+          value: Item Group
+      page_title: Nouveau(elle) Règle de tarification
+      field_labels:
+        - Naming Series
+        - Titre
+        - Désactiver
+        - Appliquer Sur
+        - Prix ou remise de produit
+        - Entrepôt
+        - Appliquer la règle sur le code d'article
+        - Ajouter une ligne
+        - Conditions mixtes
+        - Est cumulatif
+        - Code de coupon basé
+        - Appliquer la règle sur autre
+        - Groupe d'Article
+        - Vente
+        - Achat
+        - Qté min. (selon UdM de stock)
+        - Qté max. (selon l'UdM de stock)
+        - Montant Min
+        - Montant Max
+        - Valide à partir de
+        - Valable jusqu'au
+        - Société
+        - Devise
+      section_labels:
+        - Détails
+        - Appliquer la règle sur le code d'article
+        - Remise sur un autre article
+        - Informations sur le tier
+        - Quantité et montant
+        - Paramètres de période
+      prefilled:
+        - "Naming Series: PRLE-#####"
+        - "Appliquer Sur: Code de l'Article"
+        - "Prix ou remise de produit: Prix"
+        - "Appliquer la règle sur autre: Groupe d'Article"
+        - "Montant Min: 0,00"
+        - "Montant Max: 0,00"
+        - "Valide à partir de: 07/11/2026"
+        - "Société: Digital Solution Service"
+        - "Devise: USD"
+      notes: The 'Appliquer la règle sur autre' field was changed from 'Code de l'Article' to 'Groupe d'Article' as requested. The 'Marge' section header is visible at the very bottom of the form but appears to have no additional visible fields. The page indicator confirms the entire page is visible.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/b80e295b-cb3f-4c2f-b238-5a9550ac1710 attempts: 1"

@@ -1,0 +1,231 @@
+id: run-20261107T215719-h-EXP_376
+mission: M-006
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_376.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T21:53:26.500Z
+ended_at: 2026-11-07T21:57:19.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.199, "text": "***", "enter": true, "element": "Email input field", "overwrite": true})'
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.498, "y": 0.253, "text": "***", "enter": true, "element": "Password input field", "overwrite": true})'
+  - n: 3
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+  - n: 4
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+  - n: 6
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Facture en attente"})'
+  - n: 7
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "en attente"})'
+  - n: 8
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Hold"})'
+  - n: 9
+    action:
+      type: other
+      target_desc: 'web_search({"query": "erpnext purchase invoice \"Facture en attente\" checkbox hold invoice"})'
+  - n: 10
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://docs.frappe.io/erpnext/purchase-invoice"})'
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "up", "num_pixels": 2000, "scroll_element": null})'
+  - n: 12
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.611, \"y\": 0.057, \"element\": \"Plus d'info tab\"})"
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.265, "y": 0.057, "element": "Détails tab"})'
+  - n: 14
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/purchase-invoice/new-purchase-invoice-yjnlllqnre", "render_js": true})'
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["f12"]})'
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "u"]})'
+  - n: 17
+    action:
+      type: other
+      target_desc: 'web_search({"query": "erpnext \"Facture en attente\" purchase invoice hold"})'
+  - n: 18
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://raw.githubusercontent.com/frappe/erpnext/develop/erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json"})'
+  - n: 19
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.611, \"y\": 0.057, \"element\": \"Plus d'info tab\"})"
+  - n: 20
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.324, "y": 0.278, "element": "Infos supplémentaires section"})'
+  - n: 21
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.324, \"y\": 0.234, \"element\": \"Paramètres d'impression section\"})"
+  - n: 22
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "shift", "i"]})'
+  - n: 23
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.265, "y": 0.057, "element": "Détails tab"})'
+  - n: 24
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 300, "scroll_element": null})'
+  - n: 25
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+  - n: 26
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 27
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+  - n: 28
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Facture"})'
+  - n: 29
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["home"]})'
+  - n: 30
+    action:
+      type: other
+      target_desc: 'web_search({"query": "erpnext \"Facture en attente\" site:github.com frappe"})'
+  - n: 31
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.0, "element": "Browser address bar"})'
+    screenshot: step_31.png
+  - n: 32
+    action:
+      type: other
+      target_desc: "write({\"x\": 0.5, \"y\": 0.0, \"text\": \"javascript:document.querySelectorAll('*').forEach(el => { if(el.children.length === 0 && el.textContent.trim() === 'Facture en attente') { console.log('Found:', el); el.click(); } });\", \"enter\": true, \"element\": \"Browser address bar\", \"overwrite\": true})"
+  - n: 33
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.324, "y": 0.975, "element": "Remise Supplémentaire section header"})'
+  - n: 34
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.399, "y": 0.975, "element": "Remise Supplémentaire dropdown arrow"})'
+  - n: 35
+    action:
+      type: click
+      target_desc: "click_web({\"x\": 0.611, \"y\": 0.057, \"element\": \"Plus d'info tab\"})"
+  - n: 36
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.265, "y": 0.057, "element": "Détails tab"})'
+  - n: 37
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/purchase-invoice/new-purchase-invoice-yjnlllqnre", "render_js": true})'
+  - n: 38
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"I logged in successfully and navigated to the Purchase Invoice form. I was unable to locate the 'Facture en attente' (Hold Invoice) checkbox on the form - it is not visible in any of the tabs (Détails, Paiements, Adresse & Contact, Termes, or Plus d'info). The checkbox appears to b"
+  - n: 39
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_31.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Purchase Invoice
+        path: /app/purchase-invoice/new
+        kind: interact
+        mission: M-006
+        action:
+          field: on_hold
+          value: "1"
+      page_title: Nouveau(elle) Facture d'Achat
+      field_labels:
+        - Séries
+        - Date de Comptabilisation
+        - Fournisseur
+        - Heure de Publication
+        - Est Payé
+        - Est une note de débit
+        - Envisager pour la retenue à la source
+        - Modifier la Date et l'Heure de la Publication
+        - Date d'échéance
+        - N° de Facture du Fournisseur
+        - Date de la Facture du Fournisseur
+        - Scan Code Barre
+        - Mettre à Jour le Stock
+        - Est sous-traité
+        - No.
+        - Item
+        - Quantité acceptée
+        - Prix (USD)
+        - Montant (USD)
+        - Groupe les éléments identiques
+        - En-tête d'impression
+        - En-Tête
+        - Groupe de fournisseurs
+        - Expéditeur
+        - Titre
+        - Remarques
+        - Groupe les éléments identiques
+      section_labels:
+        - Facture fournisseur
+        - Devise et liste de prix
+        - Articles
+        - Taxes et Frais
+        - Taxes et Frais d'Achats
+        - Totaux (USD)
+        - Remise Supplémentaire
+        - Statut
+        - Détails Comptable
+        - Abonnement
+        - Paramètres d'impression
+        - Infos supplémentaires
+      prefilled:
+        - "Séries: ACC-PINV-YYYY.-"
+        - "Date de Comptabilisation: 07/11/2026"
+        - "Heure de Publication: 22:57:34"
+        - "Groupe les éléments identiques: checked"
+      notes: I logged in successfully and navigated to the Purchase Invoice form. I was unable to locate the 'Facture en attente' (Hold Invoice) checkbox on the form - it is not visible in any of the tabs (Détails, Paiements, Adresse & Contact, Termes, or Plus d'info). The checkbox appears to be in a collapsible section that only becomes visible after the form is saved, which I did not do per the instructions. I did not tick any checkboxes or change any form values. The form shows 'Groupe les éléments identiques' as checked in the Paramètres d'impression section.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/44f18de8-f455-4b4b-867e-e49dc973734f attempts: 1"
