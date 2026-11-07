@@ -13,8 +13,19 @@ export function localConfig() {
   return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : {};
 }
 
+// Target ids and REA/Craft operation names become path segments: only plain slugs are accepted, so nothing can climb out of
+// targets/ or the evidence store (a target "..", an operation "../../x").
+export const isTargetId = (s) => typeof s === "string" && /^[a-z0-9][a-z0-9-]*$/.test(s);
+export const isOpName = (s) => typeof s === "string" && /^[a-z][a-z0-9-]*$/.test(s);
+
+// REBORN_TARGETS_DIR points the tools at another folder of targets (used by the tests to work on throwaway copies).
+export function targetsRoot() {
+  return process.env.REBORN_TARGETS_DIR ? path.resolve(process.env.REBORN_TARGETS_DIR) : path.join(ROOT, "targets");
+}
+
 export function targetDir(target) {
-  return path.join(ROOT, "targets", target);
+  if (!isTargetId(target)) throw new Error(`invalid target id "${target}" (lowercase letters, digits and dashes)`);
+  return path.join(targetsRoot(), target);
 }
 
 export function evidenceDir(target) {

@@ -21,7 +21,7 @@
     },
     "status": {
       "enum": ["confirmed", "partial", "hypothesis", "refuted"],
-      "description": "confirmed = backed by at least two independent kinds of evidence or one exact observation; partial = some aspects proven; hypothesis = plausible, not proven; refuted = contradicted by evidence."
+      "description": "confirmed = an observation of the running program, or two different kinds of proof (runtime, shipped-data, static-code, documentation; two static readings of one binary count once), or an entity built from a shipped SQL script. Enforced by validate. partial = some aspects proven; hypothesis = plausible, not proven; refuted = contradicted by evidence."
     },
     "confidence": { "enum": ["high", "medium", "low"] },
     "priority": {
@@ -36,7 +36,7 @@
         "ref": {
           "type": "string",
           "minLength": 3,
-          "description": "REA evidence id (ev_<64 hex>), run id (run-...), observation id (O-...), Craft Anything item (cany:...), screenshot path, or manual:<short label>."
+          "description": "An id that exists: an evidence id from evidence/index.yaml (ev_<64 hex>, rb_..., sql:..., ui:..., doc:...) for kinds rea, craft and manual; a run id (run-...) for h-run; an observation id (O-...); or a screenshot path. A reference that does not resolve is a validation error."
         },
         "kind": { "enum": ["rea", "craft", "h-run", "observation", "screenshot", "manual"] },
         "locator": { "type": "string", "description": "Where inside the evidence: run step, file:lines, address, module node_id, table name." },

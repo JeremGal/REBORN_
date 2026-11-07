@@ -1,20 +1,14 @@
 {
-  "schema": "reborn/handoff@1",
+  "schema": "reborn/handoff@2",
   "target": {
     "id": "gnucash",
-    "name": "GnuCash",
+    "title": "Open-source double-entry accounting desktop application",
     "domain": "double-entry accounting (small business and personal)",
     "kind": "exe",
     "tech": null,
-    "legal": {
-      "basis": "GPL licence (GnuCash is free software under the GNU GPL) explicitly allows studying the program.",
-      "clean_room": true,
-      "restrictions": [
-        "Do not reuse the name, logo or icons in the rebuild."
-      ]
-    }
+    "access": "open-source"
   },
-  "generated_at": "2026-11-07T17:07:20.006Z",
+  "inputs_sha256": "7a255cd2a43364be118d01a7b02993cdc05ac2fb33f1b70bdfa867e75f75c1e1",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -27,6 +21,7 @@
       "partial": 3,
       "hypothesis": 1
     },
+    "ready_features": 0,
     "coverage": {
       "screens": {
         "carded": 3,
@@ -49,7 +44,7 @@
     },
     "has_observed_values": false,
     "open_questions": 4,
-    "note": "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values."
+    "note": "A feature is ready (see its `ready` flag) only when it is confirmed or partial, none of its rules is refuted, and a run on the original supplied expected values for at least one acceptance scenario."
   },
   "to_observe": [
     {
@@ -64,40 +59,53 @@
         "rule R-002 is partial (confirm by observation)",
         "screen S-002 has no screenshot (capture it)"
       ],
+      "unknowns": [
+        "U-001",
+        "U-002",
+        "U-004"
+      ],
       "missions": [
         "M-002",
-        "M-003"
+        "M-003",
+        "M-005"
       ]
     }
   ],
   "build_order": [
     {
       "kind": "entity",
-      "id": "Commodity"
+      "id": "Commodity",
+      "grade": "hypothesis"
     },
     {
       "kind": "entity",
-      "id": "Account"
+      "id": "Account",
+      "grade": "partial"
     },
     {
       "kind": "entity",
-      "id": "Transaction"
+      "id": "Transaction",
+      "grade": "partial"
     },
     {
       "kind": "entity",
-      "id": "Split"
+      "id": "Split",
+      "grade": "partial"
     },
     {
       "kind": "rule",
-      "id": "R-001"
+      "id": "R-001",
+      "grade": "partial"
     },
     {
       "kind": "rule",
-      "id": "R-002"
+      "id": "R-002",
+      "grade": "partial"
     },
     {
       "kind": "feature",
       "id": "F-001",
+      "grade": "partial",
       "priority": "must"
     }
   ],
@@ -199,14 +207,12 @@
         {
           "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
           "kind": "craft",
-          "locator": "libgnc-backend-sql.dll: columns guid,name,account_type,code,description,commodity_guid,commodity_scu,non_std_scu,parent_guid,hidden,placeholder",
-          "note": "native-strings-find on the SQL backend DLL"
+          "basis": "static-code"
         },
         {
           "ref": "ev_9dbde950c155b3a18a3025101337cf0d369506e9e056fb095af3378286abd75f",
           "kind": "craft",
-          "locator": "table name 'accounts'",
-          "note": "SQL table inventory"
+          "basis": "static-code"
         }
       ]
     },
@@ -243,8 +249,7 @@
         {
           "ref": "ev_9dbde950c155b3a18a3025101337cf0d369506e9e056fb095af3378286abd75f",
           "kind": "craft",
-          "locator": "table name 'commodities'",
-          "note": "columns not searched yet (namespace, mnemonic, fraction expected): see U-002"
+          "basis": "static-code"
         }
       ]
     },
@@ -350,14 +355,12 @@
         {
           "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
           "kind": "craft",
-          "locator": "libgnc-backend-sql.dll: literal columns tx_guid, account_guid, memo, action, reconcile_state, reconcile_date, lot_guid",
-          "note": "native-strings-find"
+          "basis": "static-code"
         },
         {
           "ref": "ev_cbf4056701a84d18acffbdb4d89393e12eaa59fa7ca5fd6c609a892d290cce3e",
           "kind": "craft",
-          "locator": "format strings '%s_num' and '%s_denom'; symbols gnc_numeric_num / gnc_numeric_denom",
-          "note": "amount columns are built as <prefix>_num / <prefix>_denom: fraction storage"
+          "basis": "static-code"
         }
       ]
     },
@@ -426,8 +429,7 @@
         {
           "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
           "kind": "craft",
-          "locator": "libgnc-backend-sql.dll: columns guid,currency_guid,num,post_date,enter_date,description",
-          "note": "native-strings-find"
+          "basis": "static-code"
         }
       ]
     }
@@ -454,18 +456,16 @@
         {
           "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
           "kind": "craft",
-          "locator": "libgnc-engine.dll functions xaccTransGetImbalance, xaccTransGetImbalanceValue, xaccTransScrubImbalance, get_balance_split (uses string 'Imbalance')",
-          "note": "core-feature-find on 'Imbalance'"
+          "basis": "static-code"
         },
         {
-          "ref": "ev_9d4d4cc0a72a2a6f848a1250d9d8d3cb4a4bf577dfd3232ca7d8e9f7070339e0",
+          "ref": "rb_9d4d4cc0a72a2a6f848a1250d9d8d3cb4a4bf577dfd3232ca7d8e9f7070339e0",
           "kind": "rea",
-          "locator": "libgnc-engine.dll: xaccTransIsBalanced, xaccTransGetImbalanceValue, xaccTransScrubImbalance (Ghidra decompilation)",
-          "note": "balance test = exact zero sum of split values; separate checks with trading accounts; scrub adds a balance split"
+          "basis": "static-code"
         }
       ],
       "contradictions": [
-        "Public sources describe a Rebalance Transaction dialog shown at entry time (choices include balancing by hand or letting the software create a balancing split). The functions found (xaccTransScrubImbalance and related) show repair-time and import-time handling, so this statement may not match what the register does when the user saves an unbalanced entry. See U-004."
+        "Public sources describe a Rebalance Transaction dialog shown at entry time (choices include balancing by hand or letting the software create a balancing split). The engine code found for imbalance handles it at repair time and import time, so this statement may not match what the register does when the user saves an unbalanced entry. See U-004."
       ],
       "notes": "Static evidence only: both sources read the same binary, so they do not count as two independent kinds of evidence and the rule stays partial. The decompilation raised confidence on the balance test itself (exact zero, trading-accounts variant). It needs a run (U-001, U-004) or the user manual to reach confirmed. The rebuild handles one currency without trading accounts."
     },
@@ -491,8 +491,7 @@
         {
           "ref": "ev_cbf4056701a84d18acffbdb4d89393e12eaa59fa7ca5fd6c609a892d290cce3e",
           "kind": "craft",
-          "locator": "libgnc-backend-sql.dll format strings '%s_num' / '%s_denom'; symbols gnc_numeric_num / gnc_numeric_denom",
-          "note": "fraction storage observed as a pattern; exact column prefixes inferred"
+          "basis": "static-code"
         }
       ],
       "contradictions": []
@@ -566,8 +565,7 @@
         {
           "ref": "ui:02c4602aa307314d",
           "kind": "manual",
-          "locator": "gtkbuilder/dialog-account.glade window 'New Account': 6 inputs, 8 check boxes, 4 buttons",
-          "note": "reborn ui inventory of shipped GtkBuilder files"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -639,8 +637,7 @@
         {
           "ref": "ev_754bada57b24191e3a266067f73b8641b44a97e09cc6c176639fe7dc7df1724a",
           "kind": "rea",
-          "locator": "gnucash.exe imports libgnc-register-gnome.dll / libgnc-ledger-core (register UI)",
-          "note": "the register is a code-built UI; columns inferred from the data model, to confirm by a run"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -695,14 +692,12 @@
         {
           "ref": "run-20261107-1600-m001",
           "kind": "h-run",
-          "locator": "step 1, s01.png",
-          "note": "observed at first launch"
+          "basis": "runtime"
         },
         {
           "ref": "ui:02c4602aa307314d",
           "kind": "manual",
-          "locator": "gtkbuilder/assistant-hierarchy.glade 'Finish Account Setup'",
-          "note": "shipped UI file"
+          "basis": "shipped-data"
         }
       ]
     }
@@ -806,7 +801,7 @@
             {
               "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
               "kind": "craft",
-              "locator": "get_balance_split uses string 'Imbalance'"
+              "basis": "static-code"
             }
           ]
         }
@@ -832,14 +827,12 @@
         {
           "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
           "kind": "craft",
-          "locator": "engine balance/imbalance functions",
-          "note": "core-feature-find 'Imbalance'"
+          "basis": "static-code"
         },
         {
           "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
           "kind": "craft",
-          "locator": "transactions/splits tables and num/denom columns",
-          "note": "native-strings-find"
+          "basis": "static-code"
         }
       ],
       "unknowns": [
@@ -847,6 +840,7 @@
         "U-002"
       ],
       "rebuild_notes": "Model Transaction with 2+ Split children; store amounts as integer minor units (or a decimal/rational type), never a float (R-002). Enforce sum(splits)=0 on save; offer an Imbalance account as the fallback (R-001). The register screen (S-002) is a code-built grid: confirm its exact columns and the debit/credit convention from a run before finalising.",
+      "ready": false,
       "discovery_trace": {
         "grade": "partial",
         "confidence": "medium",
@@ -854,12 +848,12 @@
           {
             "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
             "kind": "craft",
-            "locator": "engine balance/imbalance functions"
+            "basis": "static-code"
           },
           {
             "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
             "kind": "craft",
-            "locator": "transactions/splits tables and num/denom columns"
+            "basis": "static-code"
           }
         ],
         "steps": [
@@ -1137,15 +1131,11 @@
   ],
   "test_vectors": {
     "from_rules": [],
-    "from_acceptance": [
+    "from_acceptance": [],
+    "unobserved_acceptance": [
       {
-        "kind": "acceptance",
         "id": "AC-001",
-        "feature": "F-001",
-        "given": "two accounts 'Bank' and 'Groceries' in EUR",
-        "when": "the user records 25.00 from Bank to Groceries on a given date",
-        "then": "Bank decreases by 25.00, Groceries increases by 25.00, the transaction balances to zero",
-        "expected": {}
+        "feature": "F-001"
       }
     ]
   },
@@ -1167,8 +1157,7 @@
         {
           "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
           "kind": "craft",
-          "locator": "balance functions only (static)",
-          "note": "no runtime value yet"
+          "basis": "static-code"
         }
       ]
     },
@@ -1189,8 +1178,7 @@
         {
           "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
           "kind": "craft",
-          "locator": "column names only, no types",
-          "note": "native-strings-find"
+          "basis": "static-code"
         }
       ]
     },
@@ -1208,8 +1196,7 @@
         {
           "ref": "ui:02c4602aa307314d",
           "kind": "manual",
-          "locator": "111 windows inventoried (dialog-invoice, dialog-customer, dialog-tax-info ...)",
-          "note": "reborn ui"
+          "basis": "shipped-data"
         }
       ]
     },
@@ -1230,8 +1217,7 @@
         {
           "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
           "kind": "craft",
-          "locator": "engine functions xaccTransScrubImbalance and get_balance_split (repair-time behaviour)",
-          "note": "does not show the entry-time dialog"
+          "basis": "static-code"
         }
       ]
     }

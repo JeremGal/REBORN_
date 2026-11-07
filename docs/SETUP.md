@@ -63,12 +63,16 @@ Tested on 07/11/2026, no admin rights:
 
 ## 4. MCP servers for Claude Code
 
-`.mcp.json` at the repository root registers:
+`.mcp.json` at the repository root is **empty on purpose**: every Claude Code session in this folder reads it, block 3 included, and REA can decompile. The block 2 servers are in `.mcp.block2.json`:
 
-- `rea` through `node tools/mcp-rea.mjs` (picks the right Node and package from `reborn.local.json`, turns off output schemas: catalog 295 KB instead of 3.4 MB);
-- `craft-anything` through `craft-anything-cli mcp`.
+- `rea` through `node tools/mcp-rea.mjs` (picks the right Node and package from `reborn.local.json`, turns off output schemas: catalog 295 KB instead of 3.4 MB). It sets `REBORN_BLOCK=2` and refuses to start without it;
+- `craft-anything` through `craft-anything-cli mcp --clean-room` (Deep mode goes through `reborn craft ... --deep`, which checks the legal basis in `target.yaml`).
 
-Claude Code asks you to approve project servers on first launch. Restart Claude Code after changing `.mcp.json`.
+Start a block 2 session with `claude --mcp-config .mcp.block2.json`. Claude Code asks you to approve project servers on first launch.
+
+Block 3 works from the folder made by `node tools/reborn.mjs export-kit <target> <folder>`, never from this repository's `.evidence/` or `context.md`.
+
+Run the tests with `npm test` (Node 20 or later; 41 tests).
 
 ## 4b. Web capture provider (block 2)
 

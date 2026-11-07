@@ -10,6 +10,7 @@
   "scripts": {
     "reborn": "node tools/reborn.mjs",
     "validate": "node tools/reborn.mjs validate",
+    "test": "node --test tests/",
     "status": "node tools/reborn.mjs status"
   },
   "dependencies": {

@@ -1,6 +1,7 @@
 # Identity of the software under study. Never commit the binary: only its name and SHA-256 (reborn triage adds them).
 id: dolibarr
 name: Dolibarr ERP/CRM (public demo)
+kit_title: Open-source ERP and CRM web application
 vendor: Dolibarr community
 domain: small-business ERP / CRM (invoicing, orders, stock, accounting)
 description: >-

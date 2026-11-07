@@ -18,7 +18,8 @@ Principes qui tiennent tout le reste :
 
 - **Chaque affirmation cite une preuve.** Statuts : `confirmed` (observé exactement, ou deux preuves de nature différente), `partial`, `hypothesis`, `refuted`. Ce qu'on ne sait pas va dans `unknowns.yaml`, on ne devine pas.
 - **Statique n'est pas exécution.** Une décompilation dit « le code déclare », jamais « le logiciel fait ».
-- **Salle blanche.** Le bloc 3 ne lit que `targets/<id>/02-investigation/` et les captures de `01-exploration/`. Jamais de code décompilé ou original, d'asset ou de marque dans le kit ni dans l'appli.
+- **Salle blanche.** Le bloc 3 ne lit que le dossier produit par `export-kit` (kit, dossier, captures). Jamais de code décompilé ou original, d'asset ou de marque dans le kit ni dans l'appli. Le code le fait respecter : `dossier` et `handoff` refusent d'écrire si un nom lu dans la sortie du décompilateur s'y trouve, et le kit porte un `kit_title` neutre.
+- **Natures de preuve.** Chaque preuve est de l'une de quatre natures : `runtime` (observation du programme qui tourne), `shipped-data` (données livrées : script SQL, fichiers d'interface, ressources), `static-code` (lecture ou décompilation du code), `documentation`. `confirmed` exige une observation, ou deux natures différentes, ou pour une entité un script SQL livré. Deux outils qui lisent le même binaire comptent pour une seule preuve. `validate` le vérifie (`tools/lib/basis.mjs`).
 - **12 contrats JSON Schema** dans `contracts/` (feature, rule, screen, entity, run, mission, evidence-index, parity-report…). `node tools/reborn.mjs validate <cible>` avant chaque commit.
 
 ## 3. Où sont les choses
@@ -50,6 +51,8 @@ Point d'entrée unique, environ 800 lignes, Node 20+ (REA, lui, demande Node 24 
 | `rea <cible> <commande REA>` | n'importe laquelle des 175 commandes REA, avec garde légale sur les commandes natives |
 | `ask <cible>` | transforme chaque question ouverte en mission prête pour l'agent computer-use |
 | `coverage <cible>` | couverture mesurée (écrans vus / fenêtres trouvées, entités / tables) |
+| `verify [cible]` | re-calcule l'empreinte de chaque fichier de preuve et la compare à l'index |
+| `export-kit <cible> <dossier>` | le seul dossier que le bloc 3 peut lire : kit, dossier, captures, README, après contrôle anti-fuite |
 | `dossier <cible>` / `handoff <cible>` | le kit du bloc 3 : `dossier.md` lisible + `handoff.json` (ordre de construction, trace, carte de migration, vecteurs de test, `to_observe`, `readiness`, `coverage`) |
 
 Bibliothèques dans `tools/lib/` : `config.mjs` (chemins, `reaEnv()`), `evidence.mjs` (registre des preuves, `runRea`), `handoff.mjs`, `sql-schema.mjs`, `rea-session.mjs` (client MCP REA à session longue), `ghidra-http.mjs` (client du serveur ghidra-mcp). `tools/mcp-rea.mjs` expose REA comme serveur MCP à Claude Code (`.mcp.json`).
@@ -105,10 +108,10 @@ node tools\reborn.mjs native gnucash <chemin>\libgnc-core-utils.dll --engine ghi
 
 Mesuré sur `libgnc-core-utils.dll` : import + analyse automatique 129 s (2 596 fonctions), puis 3 fonctions décompilées en 2 s, avec types, noms de variables, appelants et appelés. Sans `--engine`, c'est REA qui travaille (autonome mais il rouvre le binaire à chaque appel, donc plusieurs minutes par appel).
 
-Mesuré sur `libgnc-engine.dll` (47 Mo, le moteur comptable) : import d'environ 6 min (18 637 fonctions), puis 7 fonctions de règles décompilées en 10 s (`xaccTransIsBalanced`, `xaccTransGetImbalanceValue`, `xaccTransScrubImbalance`, `xaccSplitSetValue`, `gnc_numeric_add`…). Résultat porté dans R-001 : le code déclare « équilibrée = somme exacte des valeurs égale à zéro, sans tolérance », avec une variante quand le livre utilise des comptes de négoce. R-001 passe en confiance `medium` mais reste `partial` : la décompilation et la recherche Craft lisent le même binaire, ce n'est pas une deuxième preuve indépendante. Les appelants et appelés sortent vides sur cette DLL : l'analyse automatique n'a pas été relancée après l'import (`POST /run_analysis` pour les avoir).
+Mesuré sur `libgnc-engine.dll` (47 Mo, le moteur comptable) : import d'environ 6 min (18 637 fonctions), puis 7 fonctions de règles (équilibre d'une transaction, valeur de déséquilibre, réparation, arrondis) décompilées en 10 s. Résultat porté dans R-001 : le code déclare « équilibrée = somme exacte des valeurs égale à zéro, sans tolérance », avec une variante quand le livre utilise des comptes de négoce. R-001 passe en confiance `medium` mais reste `partial` : la décompilation et la recherche Craft lisent le même binaire, ce n'est pas une deuxième preuve indépendante. Sur cet essai, les appelants et appelés sont sortis vides : l'analyse automatique n'avait pas tourné après l'import. C'est corrigé : la CLI analyse maintenant après chaque import, et `--analyze` force une nouvelle analyse (non retesté sur cette DLL, l'analyse de 47 Mo est longue).
 
 Pièges :
-- `--file` au démarrage importe sans analyser ; la CLI lance `run_analysis` toute seule si elle trouve moins de 10 fonctions nommées.
+- `--file` au démarrage importe sans analyser ; la CLI lance `run_analysis` après tout import qu'elle déclenche elle-même, ou avec `--analyze`. Le serveur identifie les programmes par nom de fichier : la CLI refuse si un autre fichier du même nom est déjà chargé.
 - Le client HTTP utilise `node:http` et pas `fetch` : `fetch` coupe toute réponse qui met plus de 5 min à arriver, et l'import d'une grosse DLL dure plus longtemps. Si un import est coupé quand même, le serveur continue : relance la même commande, elle retrouvera le programme déjà ouvert.
 - La sortie décompilée est une **preuve brute** : elle reste dans `.evidence/`, jamais dans une fiche, jamais dans git, jamais donnée au bloc 3.
 - La CLI refuse l'analyse native si `target.yaml` n'a pas `access.method` à `open-source`, `licence` ou `provided-by-organizers`.
@@ -148,6 +151,25 @@ Remove-Item Env:GIT_CONFIG_COUNT, Env:GIT_CONFIG_KEY_0, Env:GIT_CONFIG_VALUE_0
 ## 12. Prochaines étapes
 
 1. Bloc 1 : écrire dans `tools/` l'adaptateur qui convertit la sortie de l'agent H Company en `run.yaml` (`contracts/run.schema.json`), puis faire tourner les 5 missions GnuCash.
-2. GnuCash : extraire le manuel `.chm` pour une liste de fonctionnalités indépendante, générer les fiches des 111 écrans, enregistrer les compteurs pour que `coverage` donne une vraie couverture.
-3. Faire passer R-001 en `confirmed` : soit un run (missions M-002 et M-005), soit le manuel `.chm` comme deuxième preuve indépendante du code. Même méthode ensuite pour R-002 (arrondis, `gnc_numeric_convert` déjà décompilée).
-4. Mettre à jour `docs/SETUP.md` et `docs/GUIDE.md` au fil des changements, et rejouer les tests de l'appli avant chaque démo.
+2. GnuCash : extraire le manuel `.chm` pour une liste de fonctionnalités indépendante, générer les fiches des 111 écrans, enregistrer les compteurs pour que `coverage` donne une vraie couverture. Couverture mesurée au 07/11/2026 : écrans 3 %, entités 17 %, fonctionnalités inconnue.
+3. Faire passer R-001 en `confirmed` : soit un run (missions M-002 et M-005), soit le manuel `.chm` (nature `documentation`) en plus du code. Même méthode ensuite pour R-002 (arrondis).
+4. Améliorations identifiées par la relecture et pas encore faites : attentes vérifiables dans le kit (force de preuve minimale par règle, modèle du « ledger » de Craft), inconnues avec preuve contraire et autorité requise (modèle de REA), `decompile-all --namespace` et listes d'exports instantanées pour lire plus de règles, classes Java d'uniCenta (`java-classes-find` de Craft) pour ses règles de taxe et d'arrondi, `rea trace --query` pour relier un libellé d'écran au code, nouveaux lecteurs (Detect It Easy, Access et dBase, SchemaCrawler, Docling), `util.parseArgs` et sortie `--json`.
+5. Tests : `npm test` (41 tests, `tests/`). Ajouter un test à chaque défaut trouvé. Ils travaillent sur des copies jetables des cibles (`REBORN_TARGETS_DIR`).
+
+## 13. Durcissement du bloc 2 (07/11/2026, après relecture de REA et de Craft)
+
+Six lectures croisées (REA : méthode, code et Ghidra natif ; Craft ; notre code ; recherche de repos) ont donné 9 améliorations. Faites : validation stricte, kit contrôlé, salle blanche appliquée par le code, lecteur SQL corrigé, tests, robustesse de la CLI. Mesures, tests écrits avant les corrections :
+
+| Mesure | Avant | Après |
+|---|---|---|
+| Défauts simulés détectés (37 scénarios) | 0 | 37 |
+| Noms de fonctions du code original dans le kit GnuCash | 16 | 0 |
+| Mentions du nom du logiciel dans le kit | 5 | 0 |
+| Colonnes uniCenta retrouvées | 222 | 226 (+4) |
+| Fiches uniCenta `confirmed` | 40 | 39 (Categories passe `partial`) |
+| Essais ratés dans l'index des preuves | 1 | 0 |
+| Deux générations du kit identiques | non (horodatage) | oui |
+
+Ce qui a changé pour toi : `.mcp.json` est vide, REA et Craft sont dans `.mcp.block2.json` (`claude --mcp-config .mcp.block2.json`) ; Craft tourne en `--clean-room` sauf `--deep` autorisé par `target.yaml` ; une commande REA inconnue exige la base légale ; un essai raté va dans `.evidence/<cible>/errors/` et jamais dans l'index ; les enregistrements créés par ReBorn s'appellent `rb_...` et non `ev_...` ; `schema` ne remplace plus une fiche modifiée à la main sans `--force` ; `REBORN_TIMEOUT_MIN` (90 par défaut) limite chaque appel REA ou Craft.
+
+Constat d'honnêteté : le script SQL livré d'uniCenta déclare `TEXTTIP` deux fois sur `CATEGORIES`, avec deux types contradictoires (texte puis booléen). Le lecteur garde le premier et note la table `partial`. À trancher par une observation, pas par une hypothèse.

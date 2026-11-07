@@ -369,7 +369,7 @@ entries:
     file: rea/20261107T163456Z-analyze.json
     bytes: 7975
     sha256: ff7c545f887f638942cee8028805b3ffb20bcf5cccb8caf5871f0862e6f4e318
-  - id: ev_1f7692612052dc75225cabfd89ac5fa6fd373bd8ddf518cfb250ddf16442d11c
+  - id: rb_1f7692612052dc75225cabfd89ac5fa6fd373bd8ddf518cfb250ddf16442d11c
     kind: rea
     tool: ghidra-mcp
     tool_version: 7.0.0
@@ -385,20 +385,7 @@ entries:
     counts:
       functions: 2596
       symbols: 41674
-  - id: ev_996c6540c3f2c8d145c342da360a2cff65ceb7a75a149a165690752bb7e22085
-    kind: rea
-    tool: ghidra-mcp
-    tool_version: 7.0.0
-    operation: native-session (ghidra-mcp, ghidra)
-    subject:
-      label: libgnc-engine.dll
-      sha256: 3afb6419260b45e815642d17f1eb51c7d2b3d5af2b05f66903a916d46db701ad
-    created_at: 2026-11-07T17:05:09.296Z
-    file: rea/20261107T170509Z-native-ghidra-mcp-libgnc-engine.dll.json
-    bytes: 333
-    sha256: 996c6540c3f2c8d145c342da360a2cff65ceb7a75a149a165690752bb7e22085
-    summary: "FAILED: fetch failed"
-  - id: ev_9d4d4cc0a72a2a6f848a1250d9d8d3cb4a4bf577dfd3232ca7d8e9f7070339e0
+  - id: rb_9d4d4cc0a72a2a6f848a1250d9d8d3cb4a4bf577dfd3232ca7d8e9f7070339e0
     kind: rea
     tool: ghidra-mcp
     tool_version: 7.0.0

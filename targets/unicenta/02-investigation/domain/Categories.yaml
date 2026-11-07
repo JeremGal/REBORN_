@@ -1,5 +1,5 @@
 name: Categories
-description: Table CATEGORIES from the shipped database schema.
+description: "Table CATEGORIES from the shipped database schema. 1 statement(s) on this table were not applied by the reader (column TEXTTIP declared twice (string, then boolean)): check them by hand."
 fields:
   - name: id
     label: ""
@@ -23,6 +23,11 @@ fields:
     label: ""
     type: file
     observed_as: IMAGE
+  - name: texttip
+    label: ""
+    type: string
+    observed_as: TEXTTIP
+    max_length: 255
 relations:
   - to: Categories
     kind: many-to-one
@@ -30,7 +35,7 @@ relations:
 storage:
   engine: HSQLDB
   observed_table: CATEGORIES
-status: confirmed
+status: partial
 evidence:
   - ref: sql:6ae1364b7d43e617
     kind: rea

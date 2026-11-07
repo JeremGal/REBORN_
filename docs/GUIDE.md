@@ -62,7 +62,7 @@ For each run that `fills` an acceptance scenario: copy the values read into `exp
 
 ## 3. Block 3: rebuild
 
-**Receive only** `02-investigation/handoff.json`, `dossier.md`, and the screenshots referenced there.
+**Receive only** `02-investigation/handoff.json`, `dossier.md`, and the screenshots referenced there: block 2 hands them over with `node tools/reborn.mjs export-kit <id> <folder>`, which refuses an out-of-date kit and checks that no name read out of the original's code is inside. The kit carries `inputs_sha256`: quote it in the parity report, so a rebuild made from an outdated kit is detectable. Each build-order item shows its grade, refuted items are left out, and a feature is `ready` only when a run on the original supplied expected values.
 
 `handoff.json` contains:
 - `build_order`: entities, then rules, then features by priority;
@@ -109,6 +109,8 @@ node tools/reborn.mjs native <id> <binary> [--engine ghidra-mcp|rea] [--find RE]
 node tools/reborn.mjs rea <id> <command> [args]
 node tools/reborn.mjs craft <id> <command> [args]
 node tools/reborn.mjs coverage <id>
+node tools/reborn.mjs verify [id]              # re-hash evidence files against the index
+node tools/reborn.mjs export-kit <id> <folder> # kit + dossier + screenshots for block 3, leak-checked
 powershell -File tools/ghidra-mcp.ps1 -Root <samples>   # headless Ghidra server for --engine ghidra-mcp
 node tools/reborn.mjs ask <id>
 node tools/reborn.mjs validate [id]

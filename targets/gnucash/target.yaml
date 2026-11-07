@@ -1,6 +1,7 @@
 # Identity of the software under study. Never commit the binary: only its name and SHA-256 (reborn triage adds them).
 id: gnucash
 name: GnuCash
+kit_title: Open-source double-entry accounting desktop application
 vendor: GnuCash community
 domain: double-entry accounting (small business and personal)
 description: >-

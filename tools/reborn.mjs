@@ -6,13 +6,15 @@ import path from "node:path";
 import http from "node:http";
 import { spawn, spawnSync } from "node:child_process";
 import YAML from "yaml";
-import { ROOT, chromePath, craftCommand, evidenceDir, localConfig, reaCommand, reaEnv, targetDir, nodeVersionOk } from "./lib/config.mjs";
-import { blockStyle, readJson, register, runRea, sha256File } from "./lib/evidence.mjs";
+import { ROOT, chromePath, craftCommand, evidenceDir, isOpName, isTargetId, localConfig, reaCommand, reaEnv, targetDir, nodeVersionOk } from "./lib/config.mjs";
+import { blockStyle, quarantine, readJson, register, redactPath, runRea, sha256File, timeoutMs, uniqueName, verifyEvidence } from "./lib/evidence.mjs";
+import { craftModeArgs, reaNeedsDeep } from "./lib/guard.mjs";
 import { listTargets, loadTarget } from "./lib/load.mjs";
 import { validateTarget } from "./lib/validate.mjs";
 import { renderDossier } from "./lib/dossier.mjs";
 import { inventoryUi } from "./lib/ui-extract.mjs";
-import { buildHandoff, computeCoverage } from "./lib/handoff.mjs";
+import { buildHandoff, computeCoverage, inputsDigest } from "./lib/handoff.mjs";
+import { assertNoLeak } from "./lib/guard.mjs";
 import { schemaToEntities } from "./lib/sql-schema.mjs";
 import { ReaSession, collectStrings } from "./lib/rea-session.mjs";
 import { gm, ghidraMcpUrl, q } from "./lib/ghidra-http.mjs";
@@ -27,6 +29,9 @@ Project
   handoff <target>                                      build 02-investigation/handoff.json (machine kit for the rebuild block)
   ask <target>                                         turn open unknowns (probe h-mission) into block 1 missions
   coverage <target>                                    how much of the original the cards cover (screens, entities; features unknown)
+  verify [target]                                      re-hash every evidence file against the index (catches edited or swapped files)
+  export-kit <target> <folder>                         copy ONLY what block 3 may read (kit, dossier, screenshots) after a leak check
+  doctor                                               which tools are installed (Node, REA, Ghidra, ghidra-mcp, Craft, Chrome)
 
 Investigation (block 2): evidence goes to .evidence/<target>/ (gitignored) and is registered in evidence/index.yaml
   analyze <target> <file|folder|url>                   detect the kind and run the right command (routes like REA/Craft)
@@ -56,7 +61,7 @@ const opt = (name, def = undefined) => {
   return v;
 };
 const die = (msg) => { console.error(`error: ${msg}`); process.exit(1); };
-const needTarget = (t) => { if (!t) die("missing <target>"); if (!fs.existsSync(targetDir(t))) die(`unknown target "${t}". Create it with: node tools/reborn.mjs init ${t} --name "..." --kind exe`); return t; };
+const needTarget = (t) => { if (!t) die("missing <target>"); if (!isTargetId(t)) die(`invalid target id "${t}" (lowercase letters, digits and dashes)`); if (!fs.existsSync(targetDir(t))) die(`unknown target "${t}". Create it with: node tools/reborn.mjs init ${t} --name "..." --kind exe`); return t; };
 const absolute = (p) => path.resolve(process.cwd(), p);
 
 // ---------- project commands ----------
@@ -453,7 +458,8 @@ async function web(target, url) {
     const origin = new URL(url).origin;
     const pages = await getJson(`${endpoint}/json`);
     const page = pages.find((p) => p.type === "page" && p.url.startsWith(origin));
-    if (!page) die(`no open tab on ${origin} at ${endpoint}`);
+    // return, not die(): die exits at once and would skip the cleanup below (Chrome left running, temp profile kept).
+    if (!page) { console.error(`error: no open tab on ${origin} at ${endpoint}`); process.exitCode = 1; return; }
     runRea(target, ["list-browser-targets", endpoint], { label: origin });
     const insp = runRea(target, ["inspect-web-page", endpoint, page.id, "--observation-ms", "3000", "--include-script-sources", "--include-accessibility-text", "--include-json-body-shapes"], { label: page.url });
     if (insp.ok) {
@@ -489,6 +495,8 @@ function schema(target, input) {
   const p = absolute(input);
   if (!fs.existsSync(p)) die(`not found: ${p}`);
   const only = (opt("only") || "").split(",").map((s) => s.trim().toUpperCase()).filter(Boolean);
+  const force = argv.includes("--force");
+  if (force) argv.splice(argv.indexOf("--force"), 1);
   // register the script itself as evidence
   const evDir = path.join(evidenceDir(target), "schema");
   fs.mkdirSync(evDir, { recursive: true });
@@ -499,14 +507,19 @@ function schema(target, input) {
   const entities = schemaToEntities(fs.readFileSync(p, "utf8"), { engine: path.basename(p).split("-")[0], sourceRef: `sql:${sha.slice(0, 16)}` });
   const domainDir = path.join(targetDir(target), "02-investigation", "domain");
   fs.mkdirSync(domainDir, { recursive: true });
-  let written = 0;
+  let written = 0, kept = 0, partial = 0;
   for (const e of entities) {
     if (only.length && !only.includes(e.name.toUpperCase()) && !only.includes((e.storage.observed_table || "").toUpperCase())) continue;
-    const doc = new YAML.Document(e);
-    fs.writeFileSync(path.join(domainDir, `${e.name}.yaml`), doc.toString({ lineWidth: 0 }));
+    const file = path.join(domainDir, `${e.name}.yaml`);
+    const text = new YAML.Document(e).toString({ lineWidth: 0 });
+    // A card someone enriched by hand (labels, rules, descriptions) is never replaced silently.
+    if (fs.existsSync(file) && fs.readFileSync(file, "utf8") !== text && !force) { kept++; continue; }
+    fs.writeFileSync(file, text);
     written++;
+    if (e.status === "partial") partial++;
   }
-  console.log(`OK  schema  ${entities.length} tables parsed, ${written} entity card(s) written to domain/  (sql:${sha.slice(0, 16)})`);
+  console.log(`OK  schema  ${entities.length} tables parsed, ${written} entity card(s) written to domain/${partial ? `, ${partial} graded partial (statements the reader did not apply: see each description)` : ""}  (sql:${sha.slice(0, 16)})`);
+  if (kept) console.log(`    ${kept} existing card(s) differ from the script and were kept. Review them, or rerun with --force to replace them.`);
   console.log(`  entities: ${entities.map((e) => e.name).join(", ")}`);
 }
 
@@ -526,7 +539,7 @@ function fetchPageMarkdown(url, outFile) {
     return "linkup";
   }
   const dir = path.dirname(outFile);
-  const r = spawnSync("docker", ["run", "--rm", "-e", "CRAWL4AI_NO_CLOUD_NOTICE=1", "-v", `${dir}:/out`, "--entrypoint", "crwl", "unclecode/crawl4ai:latest", "crawl", url, "-o", "markdown", "-O", `/out/${path.basename(outFile)}`], { stdio: ["ignore", "ignore", "pipe"], windowsHide: true });
+  const r = spawnSync("docker", ["run", "--rm", "-e", "CRAWL4AI_NO_CLOUD_NOTICE=1", "-v", `${dir}:/out`, "--entrypoint", "crwl", "unclecode/crawl4ai:latest", "crawl", url, "-o", "markdown", "-O", `/out/${path.basename(outFile)}`], { stdio: ["ignore", "ignore", "pipe"], windowsHide: true, timeout: 10 * 60000 });
   if (r.status !== 0 || !fs.existsSync(outFile)) die(`crawl4ai failed (exit ${r.status}): is Docker running and unclecode/crawl4ai pulled? (or set WEB_PROVIDER=linkup + LINKUP_API_KEY)`);
   return "crawl4ai";
 }
@@ -570,46 +583,64 @@ async function native(target) {
   const wanted = (opt("decompile") || "").split(",").map((s) => s.trim()).filter(Boolean);
   const max = Number(opt("max", 3));
   const tmin = Number(opt("timeout-min", 40));
+  const reanalyze = argv.includes("--analyze");
+  if (reanalyze) argv.splice(argv.indexOf("--analyze"), 1);
   const input = argv[0];
-  if (!input) die('usage: native <target> <binary> [--engine rea|ghidra-mcp] [--find <regex>] [--decompile a,b] [--max 3] [--timeout-min 40]');
+  if (!input) die('usage: native <target> <binary> [--engine rea|ghidra-mcp] [--find <regex>] [--decompile a,b] [--max 3] [--timeout-min 40] [--analyze]');
   const bin = absolute(input);
   if (!fs.existsSync(bin)) die(`not found: ${bin}`);
   const d = deepAllowed(target);
   if (!d.ok) die(`native analysis reads the program's code. targets/${target}/target.yaml access.method is "${d.method}"; it needs one of: ${DEEP_OK.join(", ")} (docs/CLEAN-ROOM.md).`);
   const t0 = Date.now();
   const lap = () => `${Math.round((Date.now() - t0) / 1000)} s`;
-  const out = { binary: path.basename(bin), sha256: sha256File(bin), tool: engine === "ghidra-mcp" ? "ghidra-mcp" : "rea-agents", provider: "ghidra", started_at: new Date().toISOString(), steps: [], procedures: [] };
-  if (engine === "ghidra-mcp") await nativeGhidraMcp(bin, { find, wanted, max, tmin, out, lap });
+  const out = { binary: path.basename(bin), sha256: sha256File(bin), tool: engine === "ghidra-mcp" ? "ghidra-mcp" : "rea-agents", provider: "ghidra", started_at: new Date().toISOString(), query: { find: find ?? null, decompile: wanted, max }, steps: [], procedures: [] };
+  if (engine === "ghidra-mcp") await nativeGhidraMcp(bin, { find, wanted, max, tmin, reanalyze, out, lap });
   else if (engine === "rea") await nativeRea(bin, { find, wanted, max, tmin, out, lap, t0 });
   else die(`unknown engine "${engine}" (rea | ghidra-mcp)`);
   out.finished_at = new Date().toISOString();
   const dir = path.join(evidenceDir(target), "rea");
   fs.mkdirSync(dir, { recursive: true });
-  const file = path.join(dir, `${new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z")}-native-${engine}-${path.basename(bin)}.json`);
-  fs.writeFileSync(file, JSON.stringify(out, null, 1));
+  const file = path.join(dir, uniqueName(`native-${engine}-${path.basename(bin)}`));
+  fs.writeFileSync(file, JSON.stringify(out, null, 1), { flag: "wx" });
+  // A failed session is not evidence: its output is kept for diagnosis, away from the index.
+  if (out.error) {
+    const kept = quarantine(target, file);
+    process.exitCode = 1;
+    console.log(`\nFAILED, not registered as evidence. Output kept at ${path.relative(ROOT, kept)}`);
+    return;
+  }
   const sha = sha256File(file);
   const okCount = out.procedures.filter((p) => p.ok).length;
-  register(target, { id: `ev_${sha}`, kind: "rea", tool: out.tool, tool_version: engine === "ghidra-mcp" ? out.server_version || "7.0.0" : "6.8.0", operation: `native-session (${engine}, ghidra)`, subject: { label: path.basename(bin), sha256: out.sha256 }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), file).split(path.sep).join("/"), bytes: fs.statSync(file).size, sha256: sha, summary: out.error ? `FAILED: ${out.error}`.slice(0, 280) : `ghidra session: ${okCount} procedure(s) decompiled, ${out.matches?.length ?? 0} name match(es), in ${lap()}`, ...(out.counts && Object.keys(out.counts).length ? { counts: out.counts } : {}) });
-  console.log(`\nevidence: ${path.relative(ROOT, file)}  ev_${sha.slice(0, 16)}…  (raw decompiled output: local only, never paste it into cards)`);
+  // rb_ marks a record ReBorn created itself: it is not an ev_ id REA issued and could verify.
+  register(target, { id: `rb_${sha}`, kind: "rea", tool: out.tool, tool_version: engine === "ghidra-mcp" ? out.server_version || "7.0.0" : "6.8.0", operation: `native-session (${engine}, ghidra)`, subject: { label: path.basename(bin), sha256: out.sha256 }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), file).split(path.sep).join("/"), bytes: fs.statSync(file).size, sha256: sha, summary: `ghidra session: ${okCount} procedure(s) decompiled, ${out.matches?.length ?? 0} name match(es), in ${lap()}`, ...(out.counts && Object.keys(out.counts).length ? { counts: out.counts } : {}) });
+  console.log(`\nevidence: ${path.relative(ROOT, file)}  rb_${sha.slice(0, 16)}…  (raw decompiled output: local only, never paste it into cards)`);
 }
 
 // Engine "ghidra-mcp": talks to the headless server started by tools/ghidra-mcp.ps1 (it keeps the program loaded between calls).
-async function nativeGhidraMcp(bin, { find, wanted, max, tmin, out, lap }) {
+async function nativeGhidraMcp(bin, { find, wanted, max, tmin, reanalyze, out, lap }) {
   try {
     const hello = await gm("/check_connection", { timeoutMs: 10000 }).catch(() => null);
     if (!hello) throw new Error(`no ghidra-mcp server at ${ghidraMcpUrl()}. Start it: powershell -File tools\\ghidra-mcp.ps1 -Root <samples folder>`);
     out.server_version = hello.version;
     const name = path.basename(bin);
     const open = await gm("/list_open_programs").catch(() => ({ programs: [] }));
-    if (!(open.programs || []).some((p) => p.name === name)) {
+    const loaded = (open.programs || []).find((p) => p.name === name);
+    // The server identifies programs by file name. A second file with the same name (another version) would silently
+    // answer with the first one's code while the evidence records the second one's hash.
+    const samePath = (p) => String(p ?? "").replace(/^\//, "").replace(/\\/g, "/").toLowerCase() === bin.replace(/\\/g, "/").toLowerCase();
+    if (loaded && !samePath(loaded.executable_path)) throw new Error(`a different file named ${name} is already loaded in the Ghidra server (${loaded.executable_path}). Restart the server, or rename your copy.`);
+    let imported = false;
+    if (!loaded) {
       const imp = await gm("/import_file", { method: "POST", body: { file_path: bin }, timeoutMs: tmin * 60000 });
+      imported = !imp.reused_existing;
       console.log(`import_file (${lap()}): ${imp.reused_existing ? "reused" : "imported"}`);
       out.steps.push({ step: "import_file", at: lap() });
     }
     const program = name;
     let meta = await gm(`/get_metadata?${q({ program })}`);
     const named = await gm(`/find_functions?${q({ program, has_custom_name: true, limit: 1 })}`);
-    if (!named.total || named.total < 10) {
+    // A program imported by this call has not been analysed: names from the export table are not enough, callers and callees are empty.
+    if (imported || reanalyze || !named.total || named.total < 10) {
       const a = await gm(`/run_analysis?${q({ program })}`, { method: "POST", timeoutMs: tmin * 60000 });
       console.log(`run_analysis (${lap()}): ${a.total_functions} functions (${a.new_functions} new)`);
       out.steps.push({ step: "run_analysis", at: lap(), total_functions: a.total_functions });
@@ -681,10 +712,11 @@ async function nativeRea(bin, { find, wanted, max, tmin, out, lap, t0 }) {
 function rea(target, args) {
   needTarget(target);
   if (!args.length) die("missing REA command, e.g. inspect-pe-resources <path>");
+  if (!isOpName(args[0])) die(`"${args[0]}" is not a REA command name`);
   // Reading a program's code (decompile, xrefs, native providers) follows the same legal gate as Craft's Deep mode:
-  // only for open-source, licensed or organizer-provided targets. Resource, import and web inspection stay open.
-  const NATIVE = new Set(["decompile", "decompile-all", "instructions", "xrefs", "function", "trace", "search", "annotate-native-function", "address-to-file-offset", "debug-with-gdb", "debug-with-rizin", "execute-rizin-command", "capture-process", "capture-native-ui-scenario"]);
-  const readsCode = NATIVE.has(args[0]) || args.includes("--provider") || (["analyze", "inspect"].includes(args[0]) && ["pe", "elf"].includes(detectKind(args[1] ? absolute(args[1]) : "")));
+  // only for open-source, licensed or organizer-provided targets. Deny by default: only commands known to read what a
+  // program ships (resources, imports, exports, data files, web pages) stay open (tools/lib/guard.mjs).
+  const readsCode = reaNeedsDeep(args[0]) || args.includes("--provider") || (["analyze", "inspect"].includes(args[0]) && ["pe", "elf"].includes(detectKind(args[1] ? absolute(args[1]) : "")));
   if (readsCode) {
     const d = deepAllowed(target);
     if (!d.ok) die(`"${args[0]}" reads the program's code. targets/${target}/target.yaml access.method is "${d.method}"; it needs one of: ${DEEP_OK.join(", ")}. Stay on resources, documentation and observation (docs/CLEAN-ROOM.md).`);
@@ -704,12 +736,16 @@ function deepAllowed(target) {
 const CRAFT_INTERACTIVE = new Set(["rebuild", "setup", "mcp", "doctor", "commands", "help"]);
 
 // Runs one Craft Anything command. Analysis commands are captured as evidence; interactive ones stream to the console.
-function runCraft(target, args, { label = "", quiet = false } = {}) {
+function runCraft(target, rawArgs, { label = "", quiet = false } = {}) {
   const exe = craftCommand();
-  if (args.includes("--deep")) {
+  if (!isOpName(rawArgs[0])) die(`"${rawArgs[0]}" is not a Craft Anything command name`);
+  if (rawArgs.includes("--deep")) {
     const d = deepAllowed(target);
     if (!d.ok) die(`--deep reads the inside of the original. targets/${target}/target.yaml access.method is "${d.method}"; Deep mode needs one of: ${DEEP_OK.join(", ")}. Stay in clean room (docs/CLEAN-ROOM.md).`);
   }
+  // Clean room unless Deep mode was asked for and allowed above. Without --clean-room, Craft follows its own global
+  // Settings, which an old "Ghidra enabled" switch can turn into Deep mode: a closed target would be read by accident.
+  const args = ["rebuild", "setup", "doctor", "commands", "help"].includes(rawArgs[0]) ? rawArgs : craftModeArgs(rawArgs);
   if (CRAFT_INTERACTIVE.has(args[0])) {
     const r = spawnSync(exe, args, { stdio: "inherit" });
     if (r.error) die(`${exe} not runnable (${r.error.code}). Install it: docs/SETUP.md`);
@@ -717,24 +753,28 @@ function runCraft(target, args, { label = "", quiet = false } = {}) {
   }
   const dir = path.join(evidenceDir(target), "craft");
   fs.mkdirSync(dir, { recursive: true });
-  const out = path.join(dir, `${new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z")}-${args[0]}.json`);
-  const fd = fs.openSync(out, "w");
+  const out = path.join(dir, uniqueName(args[0]));
+  const fd = fs.openSync(out, "wx");
   const full = args.includes("--output-format") || args.includes("--format") ? args : [...args, "--output-format", "json"];
-  const r = spawnSync(exe, full, { stdio: ["ignore", fd, "pipe"], windowsHide: true });
+  const r = spawnSync(exe, full, { stdio: ["ignore", fd, "pipe"], windowsHide: true, timeout: timeoutMs(), maxBuffer: 64 * 1024 * 1024 });
   fs.closeSync(fd);
-  if (r.error) die(`${exe} not runnable (${r.error.code}). Install it: docs/SETUP.md`);
+  if (r.error && r.error.code !== "ETIMEDOUT") die(`${exe} not runnable (${r.error.code}). Install it: docs/SETUP.md`);
+  const timedOut = r.error?.code === "ETIMEDOUT";
   const bytes = fs.statSync(out).size;
   const head = bytes ? fs.readFileSync(out, "utf8").slice(0, 65536) : "";
   const evId = /"evidence_id"\s*:\s*"(ev_[0-9a-f]{64})"/.exec(head)?.[1] ?? /\b(ev_[0-9a-f]{64})\b/.exec(head)?.[1];
-  const ok = r.status === 0 && bytes > 0;
+  const ok = r.status === 0 && bytes > 0 && !timedOut;
+  let kept = out;
   if (ok) {
-    register(target, { id: evId ?? `craft:${path.basename(out, ".json")}`, kind: "craft", tool: "craft-anything", operation: args[0], args: args.slice(1).map((a) => (/^[A-Za-z]:\\|^\//.test(a) ? `<path>/${path.basename(a)}` : a)), ...(label ? { subject: { label } } : {}), created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes, sha256: sha256File(out) });
-  } else if (!bytes) fs.rmSync(out, { force: true });
+    register(target, { id: evId ?? `craft:${path.basename(out, ".json")}`, kind: "craft", tool: "craft-anything", operation: args[0], args: args.slice(1).map(redactPath), ...(label ? { subject: { label } } : {}), created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes, sha256: sha256File(out) });
+  } else if (!bytes) { fs.rmSync(out, { force: true }); kept = null; }
+  else kept = quarantine(target, out); // a failed run is not evidence
+  if (!ok) process.exitCode = 1;
   if (!quiet) {
-    const err = (r.stderr || Buffer.alloc(0)).toString("utf8").trim().split(/\r?\n/).slice(-2).join(" ");
-    console.log(`${ok ? "OK " : "ERR"} craft ${args[0]}  exit=${r.status}  ${bytes ? `${(bytes / 1024).toFixed(0)} KB` : "no output"}${evId ? `  ${evId.slice(0, 19)}...` : ""}${!ok && err ? `\n    ${err}` : ""}`);
+    const err = [timedOut ? `timed out after ${Math.round(timeoutMs() / 60000)} min (REBORN_TIMEOUT_MIN)` : "", (r.stderr || Buffer.alloc(0)).toString("utf8").trim().split(/\r?\n/).slice(-2).join(" ")].filter(Boolean).join(" ");
+    console.log(`${ok ? "OK " : "ERR"} craft ${args[0]}  exit=${r.status ?? r.error?.code}  ${bytes ? `${(bytes / 1024).toFixed(0)} KB` : "no output"}${evId ? `  ${evId.slice(0, 19)}...` : ""}${!ok && err ? `\n    ${err}` : ""}`);
   }
-  return { ok, file: ok ? out : null, evidenceId: evId };
+  return { ok, file: ok ? out : null, kept, evidenceId: evId };
 }
 
 function craft(target, args) {
@@ -758,19 +798,68 @@ function find(target, file, query) {
   if (Array.isArray(fns) && fns.length) {
     console.log(`  ${fns.length} function(s) use matching text:`);
     for (const f of fns.slice(0, 15)) console.log(`  - ${f.address ?? ""} ${f.name ?? ""}  ${(f.why ?? []).join("; ").slice(0, 100)}`);
-    console.log("  next: craft-anything-cli native-function-study <file> --address <addr> --deep (via `reborn craft`) to read what a function does, then describe the behaviour (never paste the pseudo-code into the dossier).");
+    console.log("  next: reborn craft <target> native-function-study <file> --function <name or address> --deep to read what a function does, then describe the behaviour (never paste the pseudo-code into the dossier).");
   }
+}
+
+// Re-hashes the local evidence files against the index. A file edited, truncated or swapped after registration is caught.
+function verify(target) {
+  const targets = target ? [needTarget(target)] : listTargets();
+  let bad = false;
+  for (const t of targets) {
+    const v = verifyEvidence(t);
+    console.log(`${t}: ${v.checked} file(s) checked, ${v.mismatched.length} changed since registration, ${v.missing.length} not in the local evidence store${v.missing.length ? " (normal on a fresh clone: the store is local)" : ""}`);
+    v.mismatched.forEach((id) => console.log(`  CHANGED ${id.slice(0, 40)}`));
+    if (v.mismatched.length) bad = true;
+  }
+  process.exit(bad ? 1 : 0);
+}
+
+// The folder block 3 is allowed to read: the kit, the dossier and the screenshots they reference. Nothing else leaves block 2.
+function exportKit(target, outDir) {
+  needTarget(target);
+  if (!outDir) die("usage: export-kit <target> <empty-folder>");
+  const root = targetDir(target);
+  const dst = absolute(outDir);
+  const handoffFile = path.join(root, "02-investigation", "handoff.json");
+  const dossierFile = path.join(root, "02-investigation", "dossier.md");
+  if (!fs.existsSync(handoffFile) || !fs.existsSync(dossierFile)) die(`run first: node tools/reborn.mjs dossier ${target} ; node tools/reborn.mjs handoff ${target}`);
+  const t = loadTarget(target);
+  const kit = JSON.parse(fs.readFileSync(handoffFile, "utf8"));
+  if (kit.inputs_sha256 !== inputsDigest(t)) die(`the kit is out of date: the cards changed since it was built. Run dossier and handoff again, then export-kit.`);
+  if (fs.existsSync(dst) && fs.readdirSync(dst).length) die(`${dst} is not empty`);
+  const files = ["02-investigation/handoff.json", "02-investigation/dossier.md"];
+  for (const s of t.screens) for (const p of s.screenshots || []) if (fs.existsSync(path.join(root, p))) files.push(p.split("\\").join("/"));
+  for (const f of files) {
+    const to = path.join(dst, f);
+    fs.mkdirSync(path.dirname(to), { recursive: true });
+    fs.copyFileSync(path.join(root, f), to);
+  }
+  for (const f of files.filter((x) => /\.(json|md)$/.test(x))) assertNoLeak(target, fs.readFileSync(path.join(dst, f), "utf8"), f, t.entities);
+  fs.writeFileSync(path.join(dst, "README.md"), [
+    `# Rebuild kit: ${kit.target.title}`, "",
+    "This folder is everything block 3 may read. Rebuild from `02-investigation/handoff.json` (machine-readable) and `02-investigation/dossier.md` (same content for humans).", "",
+    "- Do not ask for the original program, its code, its installer or its brand assets: a clean-room rebuild uses this kit only.",
+    "- Respect the grades. `confirmed` is observed or proven by different kinds of evidence; `partial` and `hypothesis` go behind a clear TODO.",
+    "- Features with `ready: false` are not ready to rebuild; `to_observe` lists what is missing and which block 1 mission fills it.",
+    "- Turn every entry of `test_vectors` into an automated test.", "",
+    `Built from inputs \`${kit.inputs_sha256}\`. Quote this digest in the parity report: a different digest means the rebuild started from an outdated kit.`, "",
+  ].join("\n"));
+  console.log(`OK  export-kit  ${files.length} file(s) + README in ${dst}  (inputs ${kit.inputs_sha256.slice(0, 12)})`);
 }
 
 // ---------- dispatch ----------
 
 const t = argv.shift();
+try {
 switch (cmd) {
   case "init": init(t); break;
   case "status": status(t); break;
   case "validate": validate(t); break;
+  case "verify": verify(t); break;
+  case "export-kit": exportKit(t, argv[0]); break;
   case "dossier": { needTarget(t); console.log(`written ${path.relative(ROOT, renderDossier(t))}`); break; }
-  case "handoff": { needTarget(t); const { out, kit } = buildHandoff(t); console.log(`written ${path.relative(ROOT, out)}`); console.log(`  build order: ${kit.build_order.length} steps | migration rows: ${kit.migration_map.length} | test vectors: ${kit.test_vectors.from_rules.length + kit.test_vectors.from_acceptance.length} | observed values: ${kit.readiness.has_observed_values ? "yes" : "NO (block 1 pending)"}`); break; }
+  case "handoff": { needTarget(t); const { out, kit } = buildHandoff(t); console.log(`written ${path.relative(ROOT, out)}`); console.log(`  build order: ${kit.build_order.length} steps | ready features: ${kit.readiness.ready_features}/${kit.features.length} | migration rows: ${kit.migration_map.length} | test vectors: ${kit.test_vectors.from_rules.length + kit.test_vectors.from_acceptance.length} (${kit.test_vectors.unobserved_acceptance.length} scenario(s) still without values) | observed values: ${kit.readiness.has_observed_values ? "yes" : "NO (block 1 pending)"}`); break; }
   case "ask": ask(t); break;
   case "coverage": coverage(t); break;
   case "analyze": analyze(t, argv[0]); break;
@@ -803,5 +892,9 @@ switch (cmd) {
     console.log(`Evidence store: ${path.join(evidenceDir("<target>"), "..")}`);
     break;
   }
-  default: console.log(HELP);
+  case undefined: case "help": case "--help": case "-h": console.log(HELP); break;
+  default: console.error(`unknown command "${cmd}"\n`); console.error(HELP); process.exit(2);
+}
+} catch (e) {
+  die(String(e?.message ?? e));
 }

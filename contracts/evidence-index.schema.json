@@ -12,10 +12,11 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "kind", "tool", "operation", "created_at", "file"],
+        "required": ["id", "kind", "tool", "operation", "created_at", "file", "bytes", "sha256"],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string", "description": "ev_<64 hex> for REA, otherwise a stable id." },
+          "id": { "type": "string", "description": "ev_<64 hex> for evidence REA or Craft Anything issued themselves; rb_<hash> for records ReBorn creates (so they cannot be mistaken for a verifiable REA id); otherwise a stable id such as sql:<hash>." },
+          "basis": { "enum": ["runtime", "shipped-data", "static-code", "documentation"], "description": "Kind of proof. Normally derived from tool and operation (tools/lib/basis.mjs); set it only to override a wrong derivation." },
           "kind": { "enum": ["rea", "craft", "h-run", "manual"] },
           "tool": { "type": "string" },
           "tool_version": { "type": "string" },

@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import YAML from "yaml";
-import { ROOT, targetDir } from "./config.mjs";
+import { targetDir, targetsRoot } from "./config.mjs";
 
 const RULES = [
   [/^target\.yaml$/, "target"],
@@ -19,7 +19,7 @@ const RULES = [
 ];
 
 export function listTargets() {
-  const dir = path.join(ROOT, "targets");
+  const dir = targetsRoot();
   if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir, { withFileTypes: true })

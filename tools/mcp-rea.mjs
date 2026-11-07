@@ -4,6 +4,13 @@
 import { spawn } from "node:child_process";
 import { nodeVersionOk, reaCommand, reaEnv } from "./lib/config.mjs";
 
+// REA can decompile (Ghidra). It belongs to block 2 sessions only: block 3 rebuilds from the kit and must not have a
+// decompiler. Start a block 2 session with: claude --mcp-config .mcp.block2.json   (that file sets REBORN_BLOCK=2).
+if (process.env.REBORN_BLOCK !== "2") {
+  process.stderr.write("[reborn] refusing to start the REA server outside a block 2 session (clean room). Use: claude --mcp-config .mcp.block2.json\n");
+  process.exit(1);
+}
+
 const rea = reaCommand();
 if (!rea.shell) {
   const v = nodeVersionOk(rea.cmd);

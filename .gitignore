@@ -47,6 +47,12 @@ reborn.local.json
 *.fic
 *.ndx
 *.mmo
+*.gnucash
+*.mmb
+*.dbf
+
+# Evidence index lock (left behind only if a run is killed)
+*.yaml.lock
 
 # OS noise
 .DS_Store

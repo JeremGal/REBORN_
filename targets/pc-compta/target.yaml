@@ -1,6 +1,7 @@
 # Identity of the software under study. Proprietary: public documentation only, no binary analysis.
 id: pc-compta
 name: PC Compta Windows (DLG)
+kit_title: Windows desktop accounting software for small businesses
 vendor: DLG (dlg-net.com), Algeria
 domain: general / auxiliary / analytical accounting (Algerian SCF)
 description: >-

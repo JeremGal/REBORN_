@@ -5,6 +5,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { ROOT } from "./config.mjs";
 import { loadTarget } from "./load.mjs";
+import { confirmedBlocker } from "./basis.mjs";
 
 const SCHEMA_FILES = {
   target: "target.schema.json",
@@ -28,6 +29,13 @@ function makeAjv() {
     ajv.addSchema(JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")));
   }
   return ajv;
+}
+
+// The kit and the dossier are only written from a target that validates: a broken card must not vanish silently from them.
+export function assertValidTarget(target) {
+  const v = validateTarget(target);
+  if (v.errors.length) throw new Error(`${target} does not validate (${v.errors.length} error(s)), so nothing was written. First errors:\n  ${v.errors.slice(0, 5).join("\n  ")}\nRun: node tools/reborn.mjs validate ${target}`);
+  return v;
 }
 
 export function validateTarget(target) {
@@ -57,6 +65,8 @@ export function validateTarget(target) {
   const F = ids(t.features), R = ids(t.rules), S = ids(t.screens), E = ids(t.entities, "name");
   const U = ids(t.unknowns), M = ids(t.missions), RUN = ids(t.runs), O = ids(t.observations);
   const EV = new Set(t.evidence.map((e) => e.id));
+  const entryById = new Map(t.evidence.map((e) => [e.id, e]));
+  const runById = new Map(t.runs.map((r) => [r.id, r]));
   const fieldsOf = new Map(t.entities.map((e) => [e.name, new Set((e.fields || []).map((f) => f.name))]));
 
   const dup = (arr, key, label) => {
@@ -73,13 +83,33 @@ export function validateTarget(target) {
     if (!fieldsOf.has(ent)) warn(where, `field ${ref}: entity ${ent} not described yet`);
     else if (!fieldsOf.get(ent).has(f)) warn(where, `field ${ref}: ${ent} has no field ${f}`);
   };
+  // A card may only cite evidence that exists. A dead reference is an error: it would let a claim look backed when it is not.
   const evid = (list, where) => {
     for (const e of list || []) {
-      if (e.kind === "rea" && !EV.has(e.ref)) warn(where, `REA evidence ${e.ref.slice(0, 22)}... not in evidence/index.yaml`);
-      if (e.kind === "h-run" && !RUN.has(e.ref)) warn(where, `run ${e.ref} not found in 01-exploration/runs`);
-      if (e.kind === "observation" && !O.has(e.ref)) warn(where, `observation ${e.ref} not found`);
-      if (e.kind === "screenshot" && !fs.existsSync(path.join(t.root, e.ref))) warn(where, `screenshot ${e.ref} not found`);
+      if (["rea", "craft", "manual"].includes(e.kind)) {
+        if (!EV.has(e.ref)) { err(where, `${e.kind} evidence ${e.ref.slice(0, 40)} does not exist in evidence/index.yaml`); continue; }
+        const s = String(entryById.get(e.ref)?.summary ?? "");
+        if (/^FAILED/.test(s)) err(where, `cites ${e.ref.slice(0, 30)}, a failed run`);
+        else if (/^PARTIAL/.test(s)) warn(where, `cites ${e.ref.slice(0, 30)}, a partial result (${s.slice(0, 60)})`);
+      }
+      if (e.kind === "h-run" && !RUN.has(e.ref)) err(where, `run ${e.ref} not found in 01-exploration/runs`);
+      if (e.kind === "observation" && !O.has(e.ref)) err(where, `observation ${e.ref} not found`);
+      if (e.kind === "screenshot" && !fs.existsSync(path.join(t.root, e.ref))) err(where, `screenshot ${e.ref} not found`);
     }
+  };
+  // "confirmed" is the strongest grade: it needs an observation of the program running, or different kinds of proof.
+  const grade = (card, where, { isEntity = false, extraRuntime = false } = {}) => {
+    if (card.status !== "confirmed") return;
+    const why = confirmedBlocker({ refs: card.evidence || [], entryById, isEntity, extraRuntime });
+    if (why) err(where, why);
+  };
+  // Expected values must come from a run that really happened, on the original program.
+  const sourceRun = (id, where) => {
+    const r = runById.get(id);
+    if (!r) return false;
+    if ((r.subject ?? "original") !== "original") { err(where, `source_run ${id} is a replay of the rebuild: only a run on the original can supply expected values`); return false; }
+    if (["failed", "aborted"].includes(r.outcome)) { err(where, `source_run ${id} outcome is ${r.outcome}: it cannot supply expected values`); return false; }
+    return true;
   };
 
   for (const f of t.features) {
@@ -91,26 +121,38 @@ export function validateTarget(target) {
     (f.entry_points || []).forEach((p) => need(S, p.screen, w, "screen"));
     (f.steps || []).forEach((s) => { need(S, s.screen, w, "screen"); (s.rules || []).forEach((r) => need(R, r, w, "rule")); });
     (f.inputs || []).forEach((i) => { field(i.field, w); evid(i.evidence, w); });
-    (f.acceptance || []).forEach((a) => { if (a.source_run) need(RUN, a.source_run, w, "run"); if (a.mission) need(M, a.mission, w, "mission"); });
+    let observed = false;
+    (f.acceptance || []).forEach((a) => {
+      if (a.source_run) { need(RUN, a.source_run, w, "run"); if (sourceRun(a.source_run, `${w} ${a.id}`)) observed = true; }
+      if (a.mission) need(M, a.mission, w, "mission");
+    });
     (f.errors || []).forEach((e) => evid(e.evidence, w));
     evid(f.evidence, w);
-    if (f.status === "confirmed" && new Set((f.evidence || []).map((e) => e.kind)).size < 2 && (f.evidence || []).length < 2) {
-      warn(w, "status confirmed with a single piece of evidence: consider partial");
-    }
+    grade(f, w, { extraRuntime: observed });
   }
-  for (const r of t.rules) { const w = `rule ${r.id}`; (r.features || []).forEach((f) => need(F, f, w, "feature")); evid(r.evidence, w); (r.examples || []).forEach((x) => x.source && evid([x.source], w)); }
+  for (const r of t.rules) { const w = `rule ${r.id}`; (r.features || []).forEach((f) => need(F, f, w, "feature")); evid(r.evidence, w); (r.examples || []).forEach((x) => x.source && evid([x.source], w)); grade(r, w); }
   for (const s of t.screens) {
     const w = `screen ${s.id}`;
     (s.actions || []).forEach((a) => { need(F, a.triggers, w, "feature"); need(S, a.navigates_to, w, "screen"); });
     (s.fields || []).forEach((f) => field(f.binds, w));
     (s.screenshots || []).forEach((p) => { if (!fs.existsSync(path.join(t.root, p))) warn(w, `screenshot ${p} not found`); });
     evid(s.evidence, w);
+    grade(s, w);
   }
   for (const e of t.entities) {
     const w = `entity ${e.name}`;
     (e.relations || []).forEach((r) => need(E, r.to, w, "entity"));
     (e.fields || []).forEach((f) => { need(E, f.ref, w, "entity"); need(R, f.computed_by, w, "rule"); evid(f.evidence, w); });
     evid(e.evidence, w);
+    grade(e, w, { isEntity: true });
+  }
+
+  // The index itself: one entry per id, no failed run, a hash on every entry.
+  const seenEv = new Set();
+  for (const e of t.evidence) {
+    if (seenEv.has(e.id)) errors.push(`duplicate evidence id ${String(e.id).slice(0, 30)} in evidence/index.yaml`);
+    seenEv.add(e.id);
+    if (/^FAILED/.test(String(e.summary ?? ""))) errors.push(`evidence/index.yaml: ${String(e.id).slice(0, 30)} is a failed run, it must not be registered as evidence`);
   }
   for (const u of t.unknowns) { const w = `unknown ${u.id}`; (u.blocks || []).forEach((f) => need(F, f, w, "feature")); if (u.probe?.mission) need(M, u.probe.mission, w, "mission"); }
   for (const m of t.missions) (m.features || []).forEach((f) => need(F, f, `mission ${m.id}`, "feature"));

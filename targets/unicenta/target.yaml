@@ -1,6 +1,7 @@
 # Identity of the software under study. Never commit the binary: only its name and SHA-256.
 id: unicenta
 name: uniCenta oPOS
+kit_title: Open-source point-of-sale desktop application
 vendor: uniCenta
 domain: point of sale (retail and restaurant till)
 description: >-
