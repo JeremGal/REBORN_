@@ -1,0 +1,65 @@
+id: F-069
+title: Create, submit and cancel a Process Deferred Accounting
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: Books deferred revenue or expense for a period.
+entry_points:
+  - screen: S-068
+    action: open the form
+inputs:
+  - label: Company
+    field: ProcessDeferredAccounting.company
+    type: ref
+    required: true
+  - label: Type
+    field: ProcessDeferredAccounting.type
+    type: enum
+    required: true
+  - label: Posting Date
+    field: ProcessDeferredAccounting.posting_date
+    type: date
+    required: true
+  - label: Service Start Date
+    field: ProcessDeferredAccounting.start_date
+    type: date
+    required: true
+  - label: Service End Date
+    field: ProcessDeferredAccounting.end_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Process Deferred Accounting form
+    screen: S-068
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Type, Posting Date, Service Start Date, Service End Date"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 4
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Process Deferred Accounting record stored
+    entities:
+      - ProcessDeferredAccounting
+entities:
+  - ProcessDeferredAccounting
+screens:
+  - S-068
+acceptance:
+  - id: AC-070
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Process Deferred Accounting
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"process-deferred-accounting\")."

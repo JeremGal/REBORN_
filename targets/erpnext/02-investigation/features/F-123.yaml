@@ -1,0 +1,65 @@
+id: F-123
+title: Create and edit a Supplier
+module: Buying
+priority: should
+status: partial
+confidence: medium
+user_goal: A company or person you buy goods or services from.
+entry_points:
+  - screen: S-122
+    action: open the form
+inputs:
+  - label: Supplier Name
+    field: Supplier.supplier_name
+    type: string
+    required: true
+  - label: Supplier Type
+    field: Supplier.supplier_type
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Supplier form
+    screen: S-122
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Supplier Name, Supplier Type"
+  - n: 3
+    actor: user
+    does: "adds lines in: Per-Company Accounts, Allowed to transact with, Allowed Companies, Supplier Portal Users, Customer Numbers"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Supplier record stored
+    entities:
+      - Supplier
+entities:
+  - Supplier
+  - PartyAccount
+  - AllowedToTransactWith
+  - CompanyRestriction
+  - PortalUser
+  - CustomerNumberAtSupplier
+screens:
+  - S-122
+acceptance:
+  - id: AC-124
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Supplier
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 157
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"supplier\")."

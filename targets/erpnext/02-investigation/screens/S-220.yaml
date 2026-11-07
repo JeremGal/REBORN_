@@ -1,0 +1,35 @@
+id: S-220
+title: Calendar View
+purpose: create, view and edit Calendar View records
+kind: form
+layout: 5 fields
+fields:
+  - label: Reference Document Type
+    control: lookup
+    binds: CalendarView.reference_doctype
+    required: true
+    validation: chosen among DocType records
+  - label: Subject Field
+    control: select
+    binds: CalendarView.subject_field
+    required: true
+  - label: Start Date Field
+    control: select
+    binds: CalendarView.start_date_field
+    required: true
+  - label: End Date Field
+    control: select
+    binds: CalendarView.end_date_field
+    required: true
+  - label: All Day
+    control: checkbox
+    binds: CalendarView.all_day
+actions:
+  - label: Save
+    triggers: F-221
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Calendar View
+    note: declared by the program

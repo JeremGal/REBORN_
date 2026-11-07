@@ -1,0 +1,25 @@
+id: S-298
+title: BOM Update Tool
+purpose: settings of BOM Update Tool
+kind: settings
+layout: "sections: Replace BOM, Update Cost; 2 fields"
+fields:
+  - label: Current BOM
+    control: lookup
+    binds: BOMUpdateTool.current_bom
+    required: true
+    validation: chosen among BOM records
+  - label: New BOM
+    control: lookup
+    binds: BOMUpdateTool.new_bom
+    required: true
+    validation: chosen among BOM records
+actions:
+  - label: Save
+    triggers: F-299
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of BOM Update Tool
+    note: declared by the program

@@ -1,0 +1,40 @@
+id: S-187
+title: SMS Settings
+purpose: settings of SMS Settings
+kind: settings
+layout: 6 fields
+fields:
+  - label: SMS Gateway URL
+    control: text
+    binds: SMSSettings.sms_gateway_url
+    required: true
+  - label: Message Parameter
+    control: text
+    binds: SMSSettings.message_parameter
+    required: true
+  - label: Receiver Parameter
+    control: text
+    binds: SMSSettings.receiver_parameter
+    required: true
+  - label: Static Parameters
+    control: grid
+    columns:
+      - Parameter
+      - Value
+      - Header
+  - label: Use POST
+    control: checkbox
+    binds: SMSSettings.use_post
+  - label: Allowed Roles
+    control: grid
+    columns:
+      - Role
+actions:
+  - label: Save
+    triggers: F-188
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of SMS Settings
+    note: declared by the program

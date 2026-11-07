@@ -1,0 +1,58 @@
+id: F-404
+title: Create and edit a Putaway Rule
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: Which warehouse received items go to.
+entry_points:
+  - screen: S-403
+    action: open the form
+inputs:
+  - label: Item
+    field: PutawayRule.item_code
+    type: ref
+    required: true
+  - label: Warehouse
+    field: PutawayRule.warehouse
+    type: ref
+    required: true
+  - label: Company
+    field: PutawayRule.company
+    type: ref
+    required: true
+  - label: Capacity
+    field: PutawayRule.capacity
+    type: decimal
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Putaway Rule form
+    screen: S-403
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Item, Warehouse, Company, Capacity"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Putaway Rule record stored
+    entities:
+      - PutawayRule
+entities:
+  - PutawayRule
+screens:
+  - S-403
+acceptance:
+  - id: AC-405
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Putaway Rule
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"putaway-rule\")."

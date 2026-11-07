@@ -1,0 +1,40 @@
+id: S-273
+title: Currency
+purpose: create, view and edit Currency records
+kind: form
+layout: 8 fields
+fields:
+  - label: Currency Name
+    control: text
+    binds: Currency.currency_name
+    required: true
+  - label: Enabled
+    control: checkbox
+    binds: Currency.enabled
+  - label: Fraction
+    control: text
+    binds: Currency.fraction
+  - label: Fraction Units
+    control: number
+    binds: Currency.fraction_units
+  - label: Smallest Currency Fraction Value
+    control: money
+    binds: Currency.smallest_currency_fraction_value
+  - label: Symbol
+    control: text
+    binds: Currency.symbol
+  - label: Show Currency Symbol on Right Side
+    control: checkbox
+    binds: Currency.symbol_on_right
+  - label: Number Format
+    control: select
+    binds: Currency.number_format
+actions:
+  - label: Save
+    triggers: F-274
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Currency
+    note: declared by the program

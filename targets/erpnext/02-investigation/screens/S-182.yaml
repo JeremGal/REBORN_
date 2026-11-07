@@ -1,0 +1,23 @@
+id: S-182
+title: Scheduler Event
+purpose: create, view and edit Scheduler Event records
+kind: form
+layout: 2 fields
+fields:
+  - label: Scheduled Against
+    control: lookup
+    binds: SchedulerEvent.scheduled_against
+    required: true
+    validation: chosen among DocType records
+  - label: Method
+    control: text
+    binds: SchedulerEvent.method
+actions:
+  - label: Save
+    triggers: F-183
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Scheduler Event
+    note: declared by the program

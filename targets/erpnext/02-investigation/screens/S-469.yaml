@@ -1,0 +1,19 @@
+id: S-469
+title: Workflow Action Master
+purpose: create, view and edit Workflow Action Master records
+kind: form
+layout: 1 fields
+fields:
+  - label: Workflow Action Name
+    control: text
+    binds: WorkflowActionMaster.workflow_action_name
+    required: true
+actions:
+  - label: Save
+    triggers: F-470
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Workflow Action Master
+    note: declared by the program

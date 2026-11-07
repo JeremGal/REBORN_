@@ -1,0 +1,71 @@
+id: F-303
+title: Create and edit a Master Production Schedule
+module: Manufacturing
+priority: should
+status: partial
+confidence: medium
+user_goal: How much of each item to make, and when.
+entry_points:
+  - screen: S-302
+    action: open the form
+inputs:
+  - label: Naming Series
+    field: MasterProductionSchedule.naming_series
+    type: enum
+    required: true
+  - label: Company
+    field: MasterProductionSchedule.company
+    type: ref
+    required: true
+  - label: Posting Date
+    field: MasterProductionSchedule.posting_date
+    type: date
+    required: true
+  - label: From Date
+    field: MasterProductionSchedule.from_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Master Production Schedule form
+    screen: S-302
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Naming Series, Company, Posting Date, From Date"
+  - n: 3
+    actor: user
+    does: "adds lines in: Select Items, Sales Orders, Material Requests, Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Master Production Schedule record stored
+    entities:
+      - MasterProductionSchedule
+entities:
+  - MasterProductionSchedule
+  - MasterProductionScheduleItem
+  - ProductionPlanSalesOrder
+  - ProductionPlanMaterialRequest
+screens:
+  - S-302
+acceptance:
+  - id: AC-304
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Master Production Schedule
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 83
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

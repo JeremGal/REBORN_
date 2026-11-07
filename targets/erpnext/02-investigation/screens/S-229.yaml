@@ -1,0 +1,72 @@
+id: S-229
+title: Desktop Icon
+purpose: create, view and edit Desktop Icon records
+kind: form
+layout: "tabs: Roles; 17 fields"
+fields:
+  - label: Label
+    control: text
+    binds: DesktopIcon.label
+  - label: Icon Type
+    control: select
+    binds: DesktopIcon.icon_type
+  - label: Link Type
+    control: select
+    binds: DesktopIcon.link_type
+  - label: Link To
+    control: lookup
+    binds: DesktopIcon.link_to
+    validation: 'shown only when eval: doc.link_type != "External"'
+  - label: Parent Icon
+    control: lookup
+    binds: DesktopIcon.parent_icon
+    validation: chosen among Desktop Icon records
+  - label: Sidebar
+    control: lookup
+    binds: DesktopIcon.sidebar
+    validation: chosen among Workspace Sidebar records
+  - label: Icon Image
+    control: other
+    binds: DesktopIcon.icon_image
+  - label: Standard
+    control: checkbox
+    binds: DesktopIcon.standard
+  - label: App
+    control: text
+    binds: DesktopIcon.app
+    validation: "shown only when eval: doc.standard == 1"
+  - label: Icon
+    control: other
+    binds: DesktopIcon.icon
+  - label: Logo URL
+    control: text
+    binds: DesktopIcon.logo_url
+  - label: Idx
+    control: number
+    binds: DesktopIcon.idx
+  - label: Link
+    control: text
+    binds: DesktopIcon.link
+    validation: 'shown only when eval: doc.link_type == "External"'
+  - label: Hidden
+    control: checkbox
+    binds: DesktopIcon.hidden
+  - label: Restrict Removal
+    control: checkbox
+    binds: DesktopIcon.restrict_removal
+  - label: Background Color
+    control: select
+    binds: DesktopIcon.bg_color
+  - label: Roles
+    control: grid
+    columns:
+      - Role
+actions:
+  - label: Save
+    triggers: F-230
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Desktop Icon
+    note: declared by the program

@@ -1,0 +1,31 @@
+id: S-152
+title: Document Share Key
+purpose: create, view and edit Document Share Key records
+kind: form
+layout: 4 fields
+fields:
+  - label: Reference Document Type
+    control: lookup
+    binds: DocumentShareKey.reference_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Reference Document Name
+    control: lookup
+    binds: DocumentShareKey.reference_docname
+    validation: read only (computed or filled by the program)
+  - label: Key
+    control: text
+    binds: DocumentShareKey.key
+    validation: read only (computed or filled by the program)
+  - label: Expires On
+    control: date
+    binds: DocumentShareKey.expires_on
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-153
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Document Share Key
+    note: declared by the program

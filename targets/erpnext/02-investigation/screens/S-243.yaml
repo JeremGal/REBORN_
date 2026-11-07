@@ -1,0 +1,22 @@
+id: S-243
+title: Notification Type
+purpose: create, view and edit Notification Type records
+kind: form
+layout: 2 fields
+fields:
+  - label: Type Name
+    control: text
+    binds: NotificationType.type_name
+    required: true
+  - label: Enabled
+    control: checkbox
+    binds: NotificationType.enabled
+actions:
+  - label: Save
+    triggers: F-244
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Notification Type
+    note: declared by the program

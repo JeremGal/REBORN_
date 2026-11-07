@@ -1,0 +1,24 @@
+id: S-087
+title: Subscription Settings
+purpose: settings of Subscription Settings
+kind: settings
+layout: 3 fields
+fields:
+  - label: Grace Period
+    control: number
+    binds: SubscriptionSettings.grace_period
+  - label: Cancel Subscription After Grace Period
+    control: checkbox
+    binds: SubscriptionSettings.cancel_after_grace
+  - label: Prorate
+    control: checkbox
+    binds: SubscriptionSettings.prorate
+actions:
+  - label: Save
+    triggers: F-088
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Subscription Settings
+    note: declared by the program

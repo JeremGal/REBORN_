@@ -1,0 +1,72 @@
+id: F-428
+title: Create, submit and cancel a Subcontracting Inward Order
+module: Subcontracting
+priority: could
+status: partial
+confidence: medium
+user_goal: An order to make items for a customer from materials they send.
+entry_points:
+  - screen: S-427
+    action: open the form
+inputs:
+  - label: Series
+    field: SubcontractingInwardOrder.naming_series
+    type: enum
+    required: true
+  - label: Subcontracting Sales Order
+    field: SubcontractingInwardOrder.sales_order
+    type: ref
+    required: true
+  - label: Company
+    field: SubcontractingInwardOrder.company
+    type: ref
+    required: true
+  - label: Date
+    field: SubcontractingInwardOrder.transaction_date
+    type: date
+    required: true
+  - label: Customer Warehouse
+    field: SubcontractingInwardOrder.customer_warehouse
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Subcontracting Inward Order form
+    screen: S-427
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Subcontracting Sales Order, Company, Date, Customer Warehouse"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items, Required Items, Secondary Items, Service Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Subcontracting Inward Order record stored
+    entities:
+      - SubcontractingInwardOrder
+entities:
+  - SubcontractingInwardOrder
+  - SubcontractingInwardOrderItem
+  - SubcontractingInwardOrderReceivedItem
+  - SubcontractingInwardOrderSecondaryItem
+  - SubcontractingInwardOrderServiceItem
+screens:
+  - S-427
+acceptance:
+  - id: AC-429
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Subcontracting Inward Order
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

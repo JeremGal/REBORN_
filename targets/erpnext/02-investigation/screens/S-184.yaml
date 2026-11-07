@@ -1,0 +1,65 @@
+id: S-184
+title: Server Script
+purpose: create, view and edit Server Script records
+kind: form
+layout: "sections: Rate Limiting, Help; 13 fields"
+fields:
+  - label: Script Type
+    control: select
+    binds: ServerScript.script_type
+    required: true
+  - label: Reference Document Type
+    control: lookup
+    binds: ServerScript.reference_doctype
+    validation: shown only when eval:['DocType Event', 'Permission Query'].includes(doc.script_type); chosen among DocType records
+  - label: Event Frequency
+    control: select
+    binds: ServerScript.event_frequency
+    validation: shown only when eval:doc.script_type == "Scheduler Event"
+  - label: Cron Format
+    control: text
+    binds: ServerScript.cron_format
+    validation: shown only when eval:doc.script_type === "Scheduler Event" && doc.event_frequency === 'Cron'
+  - label: DocType Event
+    control: select
+    binds: ServerScript.doctype_event
+    validation: shown only when eval:doc.script_type==='DocType Event'
+  - label: API Method
+    control: text
+    binds: ServerScript.api_method
+    validation: shown only when eval:doc.script_type==='API'
+  - label: Allow Guest
+    control: checkbox
+    binds: ServerScript.allow_guest
+    validation: shown only when eval:doc.script_type==='API'
+  - label: Module (for export)
+    control: lookup
+    binds: ServerScript.module
+    validation: chosen among Module Def records
+  - label: Disabled
+    control: checkbox
+    binds: ServerScript.disabled
+  - label: Script
+    control: text
+    binds: ServerScript.script
+    required: true
+  - label: Enable Rate Limit
+    control: checkbox
+    binds: ServerScript.enable_rate_limit
+  - label: Request Limit
+    control: number
+    binds: ServerScript.rate_limit_count
+    validation: shown only when enable_rate_limit
+  - label: Time Window (Seconds)
+    control: number
+    binds: ServerScript.rate_limit_seconds
+    validation: shown only when enable_rate_limit
+actions:
+  - label: Save
+    triggers: F-185
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Server Script
+    note: declared by the program

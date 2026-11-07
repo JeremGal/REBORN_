@@ -1,0 +1,54 @@
+id: F-219
+title: Create and edit a Property Setter
+module: Custom
+priority: could
+status: partial
+confidence: medium
+user_goal: Property Setter overrides a standard DocType or Field property
+entry_points:
+  - screen: S-218
+    action: open the form
+inputs:
+  - label: Applied On
+    field: PropertySetter.doctype_or_field
+    type: enum
+    required: true
+  - label: DocType
+    field: PropertySetter.doc_type
+    type: ref
+    required: true
+  - label: Property
+    field: PropertySetter.property
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Property Setter form
+    screen: S-218
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Applied On, DocType, Property"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Property Setter record stored
+    entities:
+      - PropertySetter
+entities:
+  - PropertySetter
+screens:
+  - S-218
+acceptance:
+  - id: AC-220
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Property Setter
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

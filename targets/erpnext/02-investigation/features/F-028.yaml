@@ -1,0 +1,54 @@
+id: F-028
+title: Create and edit a Cost Center
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: A part of your business you track income and expenses for, like a branch or product line.
+entry_points:
+  - screen: S-027
+    action: open the form
+inputs:
+  - label: Cost Center Name
+    field: CostCenter.cost_center_name
+    type: string
+    required: true
+  - label: Parent Cost Center
+    field: CostCenter.parent_cost_center
+    type: ref
+    required: true
+  - label: Company
+    field: CostCenter.company
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Cost Center form
+    screen: S-027
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Cost Center Name, Parent Cost Center, Company"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Cost Center record stored
+    entities:
+      - CostCenter
+entities:
+  - CostCenter
+screens:
+  - S-027
+acceptance:
+  - id: AC-029
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Cost Center
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"cost-center\")."

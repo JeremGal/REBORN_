@@ -1,0 +1,41 @@
+id: F-463
+title: Configure Website Script
+module: Website
+priority: could
+status: partial
+confidence: medium
+user_goal: Script to attach to all web pages.
+entry_points:
+  - screen: S-462
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Website Script form
+    screen: S-462
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - WebsiteScript
+entities:
+  - WebsiteScript
+screens:
+  - S-462
+acceptance:
+  - id: AC-464
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Website Script
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

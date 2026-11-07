@@ -1,0 +1,24 @@
+id: S-177
+title: Role Profile
+purpose: create, view and edit Role Profile records
+kind: form
+layout: 2 fields
+fields:
+  - label: Role Name
+    control: text
+    binds: RoleProfile.role_profile
+    required: true
+  - label: Roles Assigned
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Role
+actions:
+  - label: Save
+    triggers: F-178
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Role Profile
+    note: declared by the program

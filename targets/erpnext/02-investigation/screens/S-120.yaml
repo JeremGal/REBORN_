@@ -1,0 +1,463 @@
+id: S-120
+title: Purchase Order
+purpose: create, view and edit Purchase Order records
+kind: form
+layout: "tabs: Address & Contact, Drop Ship, Terms, More Info, Connections; sections: Accounting Dimensions , Currency and Price List, Pricing Rules, Taxes and Charges, Totals, Totals (Company Currency), Additional Discount, Tax Breakup, Supplier Address, Shipping Address, Company Billing Address, Payment Terms, Terms & Conditions, Order Status, Printing Settings, Auto Repeat, Additional Info, Raw Materials Supplied; 106 fields; observed labels differ from the declared form (18/43 match; not declared: no., code de l'art..., requis pour l..., quantit..., udm, prix usd, montant usd, entrepôt cible)"
+fields:
+  - label: Series
+    control: select
+    binds: PurchaseOrder.naming_series
+    required: true
+  - label: Supplier
+    control: lookup
+    binds: PurchaseOrder.supplier
+    required: true
+    validation: chosen among Supplier records
+  - label: Supplier Name
+    control: text
+    binds: PurchaseOrder.supplier_name
+    validation: read only (computed or filled by the program)
+  - label: Order Confirmation No
+    control: text
+    binds: PurchaseOrder.order_confirmation_no
+    validation: shown only when eval:doc.docstatus===1
+  - label: Order Confirmation Date
+    control: date
+    binds: PurchaseOrder.order_confirmation_date
+    validation: shown only when eval:doc.order_confirmation_no
+  - label: Date
+    control: date
+    binds: PurchaseOrder.transaction_date
+    required: true
+  - label: Time
+    control: date
+    binds: PurchaseOrder.transaction_time
+    validation: shown only when is_internal_supplier
+  - label: Required By
+    control: date
+    binds: PurchaseOrder.schedule_date
+  - label: Company
+    control: lookup
+    binds: PurchaseOrder.company
+    required: true
+    validation: chosen among Company records
+  - label: Is Subcontracted
+    control: checkbox
+    binds: PurchaseOrder.is_subcontracted
+  - label: Has Unit Price Items
+    control: checkbox
+    binds: PurchaseOrder.has_unit_price_items
+  - label: Supplier Warehouse
+    control: lookup
+    binds: PurchaseOrder.supplier_warehouse
+    validation: shown only when eval:doc.is_subcontracted; chosen among Warehouse records
+  - label: Cost Center
+    control: lookup
+    binds: PurchaseOrder.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: PurchaseOrder.project
+    validation: chosen among Project records
+  - label: Currency
+    control: lookup
+    binds: PurchaseOrder.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: PurchaseOrder.conversion_rate
+    required: true
+  - label: Price List
+    control: lookup
+    binds: PurchaseOrder.buying_price_list
+    validation: chosen among Price List records
+  - label: Price List Currency
+    control: lookup
+    binds: PurchaseOrder.price_list_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Price List Exchange Rate
+    control: number
+    binds: PurchaseOrder.plc_conversion_rate
+  - label: Ignore Pricing Rule
+    control: checkbox
+    binds: PurchaseOrder.ignore_pricing_rule
+  - label: Scan Barcode
+    control: text
+    binds: PurchaseOrder.scan_barcode
+  - label: Last Scanned Warehouse
+    control: text
+    binds: PurchaseOrder.last_scanned_warehouse
+    validation: "shown only when eval: doc.last_scanned_warehouse"
+  - label: Set From Warehouse
+    control: lookup
+    binds: PurchaseOrder.set_from_warehouse
+    validation: shown only when is_internal_supplier; chosen among Warehouse records
+  - label: Set Target Warehouse
+    control: lookup
+    binds: PurchaseOrder.set_warehouse
+    validation: chosen among Warehouse records
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Required By
+      - Quantity
+      - UOM
+      - Rate
+      - Amount
+      - Target Warehouse
+  - label: Total Quantity
+    control: number
+    binds: PurchaseOrder.total_qty
+    validation: read only (computed or filled by the program)
+  - label: Total Net Weight
+    control: number
+    binds: PurchaseOrder.total_net_weight
+    validation: read only (computed or filled by the program); shown only when total_net_weight
+  - label: Total (Company Currency)
+    control: money
+    binds: PurchaseOrder.base_total
+    validation: read only (computed or filled by the program)
+  - label: Net Total (Company Currency)
+    control: money
+    binds: PurchaseOrder.base_net_total
+    validation: read only (computed or filled by the program)
+  - label: Total
+    control: money
+    binds: PurchaseOrder.total
+    validation: read only (computed or filled by the program)
+  - label: Net Total
+    control: money
+    binds: PurchaseOrder.net_total
+    validation: read only (computed or filled by the program)
+  - label: Purchase Order Pricing Rule
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Pricing Rule
+      - Item Code
+  - label: Set Reserve Warehouse
+    control: lookup
+    binds: PurchaseOrder.set_reserve_warehouse
+    validation: shown only when supplied_items; chosen among Warehouse records
+  - label: Tax Category
+    control: lookup
+    binds: PurchaseOrder.tax_category
+    validation: chosen among Tax Category records
+  - label: Purchase Taxes and Charges Template
+    control: lookup
+    binds: PurchaseOrder.taxes_and_charges
+    validation: chosen among Purchase Taxes and Charges Template records
+  - label: Shipping Rule
+    control: lookup
+    binds: PurchaseOrder.shipping_rule
+    validation: chosen among Shipping Rule records
+  - label: Incoterm
+    control: lookup
+    binds: PurchaseOrder.incoterm
+    validation: chosen among Incoterm records
+  - label: Named Place
+    control: text
+    binds: PurchaseOrder.named_place
+    validation: shown only when incoterm
+  - label: Purchase Taxes and Charges
+    control: grid
+    columns:
+      - Type
+      - Account Head
+      - Tax Rate
+      - Net Amount
+      - Amount
+      - Total
+  - label: Taxes and Charges Added (Company Currency)
+    control: money
+    binds: PurchaseOrder.base_taxes_and_charges_added
+    validation: read only (computed or filled by the program); shown only when base_taxes_and_charges_added
+  - label: Taxes and Charges Deducted (Company Currency)
+    control: money
+    binds: PurchaseOrder.base_taxes_and_charges_deducted
+    validation: read only (computed or filled by the program); shown only when base_taxes_and_charges_deducted
+  - label: Total Taxes and Charges (Company Currency)
+    control: money
+    binds: PurchaseOrder.base_total_taxes_and_charges
+    validation: read only (computed or filled by the program); shown only when base_total_taxes_and_charges
+  - label: Taxes and Charges Added
+    control: money
+    binds: PurchaseOrder.taxes_and_charges_added
+    validation: read only (computed or filled by the program); shown only when taxes_and_charges_added
+  - label: Taxes and Charges Deducted
+    control: money
+    binds: PurchaseOrder.taxes_and_charges_deducted
+    validation: read only (computed or filled by the program); shown only when taxes_and_charges_deducted
+  - label: Total Taxes and Charges
+    control: money
+    binds: PurchaseOrder.total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Grand Total
+    control: money
+    binds: PurchaseOrder.grand_total
+    validation: read only (computed or filled by the program)
+  - label: In Words
+    control: text
+    binds: PurchaseOrder.in_words
+    validation: read only (computed or filled by the program)
+  - label: Disable Rounded Total
+    control: checkbox
+    binds: PurchaseOrder.disable_rounded_total
+  - label: Rounding Adjustment
+    control: money
+    binds: PurchaseOrder.rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total
+    control: money
+    binds: PurchaseOrder.rounded_total
+    validation: read only (computed or filled by the program)
+  - label: Grand Total
+    control: money
+    binds: PurchaseOrder.base_grand_total
+    validation: read only (computed or filled by the program)
+  - label: In Words
+    control: text
+    binds: PurchaseOrder.base_in_words
+    validation: read only (computed or filled by the program)
+  - label: Rounding Adjustment
+    control: money
+    binds: PurchaseOrder.base_rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total
+    control: money
+    binds: PurchaseOrder.base_rounded_total
+    validation: read only (computed or filled by the program)
+  - label: Advance Paid (Company Currency)
+    control: money
+    binds: PurchaseOrder.advance_paid
+    validation: read only (computed or filled by the program)
+  - label: Apply Additional Discount On
+    control: select
+    binds: PurchaseOrder.apply_discount_on
+  - label: Additional Discount Amount (Company Currency)
+    control: money
+    binds: PurchaseOrder.base_discount_amount
+    validation: read only (computed or filled by the program)
+  - label: Additional Discount Percentage
+    control: number
+    binds: PurchaseOrder.additional_discount_percentage
+  - label: Additional Discount Amount
+    control: money
+    binds: PurchaseOrder.discount_amount
+  - label: Taxes and Charges Calculation
+    control: text
+    binds: PurchaseOrder.other_charges_calculation
+    validation: read only (computed or filled by the program)
+  - label: Item Wise Tax Details
+    control: grid
+    columns:
+      - Item Row
+      - Tax Row
+      - Tax Rate
+      - Tax Amount
+      - Taxable Amount
+  - label: Supplier Address
+    control: lookup
+    binds: PurchaseOrder.supplier_address
+    validation: chosen among Address records
+  - label: Supplier Address Details
+    control: text
+    binds: PurchaseOrder.address_display
+    validation: read only (computed or filled by the program)
+  - label: Supplier Group
+    control: lookup
+    binds: PurchaseOrder.supplier_group
+    validation: chosen among Supplier Group records
+  - label: Supplier Contact
+    control: lookup
+    binds: PurchaseOrder.contact_person
+    validation: chosen among Contact records
+  - label: Contact Name
+    control: text
+    binds: PurchaseOrder.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Contact Mobile No
+    control: text
+    binds: PurchaseOrder.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: PurchaseOrder.contact_email
+    validation: read only (computed or filled by the program)
+  - label: Dispatch Address
+    control: lookup
+    binds: PurchaseOrder.dispatch_address
+    validation: chosen among Address records
+  - label: Dispatch Address Details
+    control: text
+    binds: PurchaseOrder.dispatch_address_display
+    validation: read only (computed or filled by the program)
+  - label: Shipping Address
+    control: lookup
+    binds: PurchaseOrder.shipping_address
+    validation: chosen among Address records
+  - label: Shipping Address Details
+    control: text
+    binds: PurchaseOrder.shipping_address_display
+    validation: read only (computed or filled by the program)
+  - label: Company Billing Address
+    control: lookup
+    binds: PurchaseOrder.billing_address
+    validation: chosen among Address records
+  - label: Billing Address Details
+    control: text
+    binds: PurchaseOrder.billing_address_display
+    validation: read only (computed or filled by the program)
+  - label: Customer
+    control: lookup
+    binds: PurchaseOrder.customer
+    validation: read only (computed or filled by the program); chosen among Customer records
+  - label: Customer Name
+    control: text
+    binds: PurchaseOrder.customer_name
+    validation: read only (computed or filled by the program)
+  - label: Customer Contact
+    control: lookup
+    binds: PurchaseOrder.customer_contact_person
+    validation: chosen among Contact records
+  - label: Customer Contact
+    control: text
+    binds: PurchaseOrder.customer_contact_display
+  - label: Customer Mobile No
+    control: text
+    binds: PurchaseOrder.customer_contact_mobile
+  - label: Customer Contact Email
+    control: text
+    binds: PurchaseOrder.customer_contact_email
+  - label: Payment Terms Template
+    control: lookup
+    binds: PurchaseOrder.payment_terms_template
+    validation: chosen among Payment Terms Template records
+  - label: Payment Schedule
+    control: grid
+    columns:
+      - Payment Term
+      - Description
+      - Due Date
+      - Invoice Portion
+      - Payment Amount
+  - label: Terms
+    control: lookup
+    binds: PurchaseOrder.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Terms and Conditions
+    control: text
+    binds: PurchaseOrder.terms
+  - label: Status
+    control: select
+    binds: PurchaseOrder.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Advance Payment Status
+    control: select
+    binds: PurchaseOrder.advance_payment_status
+  - label: "% Billed"
+    control: number
+    binds: PurchaseOrder.per_billed
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: "% Received"
+    control: number
+    binds: PurchaseOrder.per_received
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: Letter Head
+    control: lookup
+    binds: PurchaseOrder.letter_head
+    validation: chosen among Letter Head records
+  - label: Group same items
+    control: checkbox
+    binds: PurchaseOrder.group_same_items
+  - label: Print Heading
+    control: lookup
+    binds: PurchaseOrder.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Print Language
+    control: text
+    binds: PurchaseOrder.language
+  - label: From Date
+    control: date
+    binds: PurchaseOrder.from_date
+  - label: To Date
+    control: date
+    binds: PurchaseOrder.to_date
+  - label: Auto Repeat
+    control: lookup
+    binds: PurchaseOrder.auto_repeat
+    validation: read only (computed or filled by the program); chosen among Auto Repeat records
+  - label: Title
+    control: text
+    binds: PurchaseOrder.title
+  - label: Party Account Currency
+    control: lookup
+    binds: PurchaseOrder.party_account_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Represents Company
+    control: lookup
+    binds: PurchaseOrder.represents_company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Supplier Quotation
+    control: lookup
+    binds: PurchaseOrder.ref_sq
+    validation: read only (computed or filled by the program); chosen among Supplier Quotation records
+  - label: Amended From
+    control: lookup
+    binds: PurchaseOrder.amended_from
+    validation: read only (computed or filled by the program); chosen among Purchase Order records
+  - label: MPS
+    control: lookup
+    binds: PurchaseOrder.mps
+    validation: read only (computed or filled by the program); chosen among Master Production Schedule records
+  - label: Is Internal Supplier
+    control: checkbox
+    binds: PurchaseOrder.is_internal_supplier
+    validation: read only (computed or filled by the program)
+  - label: Inter Company Order Reference
+    control: lookup
+    binds: PurchaseOrder.inter_company_order_reference
+    validation: read only (computed or filled by the program); chosen among Sales Order records
+  - label: Is Old Subcontracting Flow
+    control: checkbox
+    binds: PurchaseOrder.is_old_subcontracting_flow
+    validation: read only (computed or filled by the program)
+  - label: Remarks
+    control: text
+    binds: PurchaseOrder.remarks
+  - label: Supplied Items
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Item Code
+      - Raw Material Item Code
+      - Reserve Warehouse
+      - Rate
+      - Required Qty
+      - Supplied Qty
+actions:
+  - label: Save
+    triggers: F-121
+  - label: Submit
+    triggers: F-121
+  - label: Cancel
+    triggers: F-121
+  - label: Amend
+    triggers: F-121
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Purchase Order
+    note: declared by the program
+  - ref: run-20261107T193759-h-EXP_006
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 18/43 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T193759-h-EXP_006/step_07.png
+  - 01-exploration/runs/run-20261107T193759-h-EXP_006/step_07.png

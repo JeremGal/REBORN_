@@ -1,0 +1,41 @@
+id: F-199
+title: Create and edit a View Log
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain View Log records.
+entry_points:
+  - screen: S-198
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the View Log form
+    screen: S-198
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a View Log record stored
+    entities:
+      - ViewLog
+entities:
+  - ViewLog
+screens:
+  - S-198
+acceptance:
+  - id: AC-200
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of View Log
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

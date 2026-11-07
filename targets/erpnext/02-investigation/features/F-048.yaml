@@ -1,0 +1,50 @@
+id: F-048
+title: Create and edit a Mode of Payment
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: A way you pay or get paid, like cash, bank transfer or card.
+entry_points:
+  - screen: S-047
+    action: open the form
+inputs:
+  - label: Mode of Payment
+    field: ModeOfPayment.mode_of_payment
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Mode of Payment form
+    screen: S-047
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Mode of Payment"
+  - n: 3
+    actor: user
+    does: "adds lines in: Accounts"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Mode of Payment record stored
+    entities:
+      - ModeOfPayment
+entities:
+  - ModeOfPayment
+  - ModeOfPaymentAccount
+screens:
+  - S-047
+acceptance:
+  - id: AC-049
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Mode of Payment
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"mode-of-payment\")."

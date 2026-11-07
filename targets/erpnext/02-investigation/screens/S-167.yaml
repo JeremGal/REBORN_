@@ -1,0 +1,46 @@
+id: S-167
+title: Page
+purpose: create, view and edit Page records
+kind: form
+layout: "sections: Page HTML; 8 fields"
+fields:
+  - label: System Page
+    control: checkbox
+    binds: Page.system_page
+  - label: Page Name
+    control: text
+    binds: Page.page_name
+    required: true
+  - label: Title
+    control: text
+    binds: Page.title
+  - label: icon
+    control: text
+    binds: Page.icon
+  - label: Module
+    control: lookup
+    binds: Page.module
+    required: true
+    validation: chosen among Module Def records
+  - label: Restrict To Domain
+    control: lookup
+    binds: Page.restrict_to_domain
+    validation: chosen among Domain records
+  - label: Standard
+    control: select
+    binds: Page.standard
+    required: true
+  - label: Roles
+    control: grid
+    validation: shown only when eval:doc.standard == 'Yes'
+    columns:
+      - Role
+actions:
+  - label: Save
+    triggers: F-168
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Page
+    note: declared by the program

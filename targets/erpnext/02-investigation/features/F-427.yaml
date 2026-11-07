@@ -1,0 +1,66 @@
+id: F-427
+title: Create and edit a Subcontracting BOM
+module: Subcontracting
+priority: could
+status: partial
+confidence: medium
+user_goal: The materials a subcontractor uses to make an item for you.
+entry_points:
+  - screen: S-426
+    action: open the form
+inputs:
+  - label: Finished Good
+    field: SubcontractingBOM.finished_good
+    type: ref
+    required: true
+  - label: Finished Good Qty
+    field: SubcontractingBOM.finished_good_qty
+    type: decimal
+    required: true
+  - label: Finished Good BOM
+    field: SubcontractingBOM.finished_good_bom
+    type: ref
+    required: true
+  - label: Service Item
+    field: SubcontractingBOM.service_item
+    type: ref
+    required: true
+  - label: Service Item Qty
+    field: SubcontractingBOM.service_item_qty
+    type: decimal
+    required: true
+  - label: Service Item UOM
+    field: SubcontractingBOM.service_item_uom
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Subcontracting BOM form
+    screen: S-426
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Finished Good, Finished Good Qty, Finished Good BOM, Service Item, Service Item Qty, Service Item UOM"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Subcontracting BOM record stored
+    entities:
+      - SubcontractingBOM
+entities:
+  - SubcontractingBOM
+screens:
+  - S-426
+acceptance:
+  - id: AC-428
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Subcontracting BOM
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

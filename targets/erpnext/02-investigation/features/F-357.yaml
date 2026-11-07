@@ -1,0 +1,46 @@
+id: F-357
+title: Create and edit a Branch
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: A branch of your company.
+entry_points:
+  - screen: S-356
+    action: open the form
+inputs:
+  - label: Branch
+    field: Branch.branch
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Branch form
+    screen: S-356
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Branch"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Branch record stored
+    entities:
+      - Branch
+entities:
+  - Branch
+screens:
+  - S-356
+acceptance:
+  - id: AC-358
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Branch
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

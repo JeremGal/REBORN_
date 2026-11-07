@@ -1,0 +1,41 @@
+id: S-277
+title: Google Contacts
+purpose: create, view and edit Google Contacts records
+kind: form
+layout: "sections: Google Contacts, Sync; 8 fields"
+fields:
+  - label: Enable
+    control: checkbox
+    binds: GoogleContacts.enable
+  - label: Email Address
+    control: text
+    binds: GoogleContacts.email_id
+    required: true
+  - label: Last Sync On
+    control: date
+    binds: GoogleContacts.last_sync_on
+    validation: read only (computed or filled by the program)
+  - label: Authorization Code
+    control: text
+    binds: GoogleContacts.authorization_code
+  - label: Refresh Token
+    control: text
+    binds: GoogleContacts.refresh_token
+  - label: Next Sync Token
+    control: text
+    binds: GoogleContacts.next_sync_token
+  - label: Pull from Google Contacts
+    control: checkbox
+    binds: GoogleContacts.pull_from_google_contacts
+  - label: Push to Google Contacts
+    control: checkbox
+    binds: GoogleContacts.push_to_google_contacts
+actions:
+  - label: Save
+    triggers: F-278
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Google Contacts
+    note: declared by the program

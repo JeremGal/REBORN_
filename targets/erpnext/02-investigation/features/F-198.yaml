@@ -1,0 +1,50 @@
+id: F-198
+title: Create and edit a Version
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Version records.
+entry_points:
+  - screen: S-197
+    action: open the form
+inputs:
+  - label: DocType
+    field: Version.ref_doctype
+    type: ref
+    required: true
+  - label: Document Name
+    field: Version.docname
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Version form
+    screen: S-197
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: DocType, Document Name"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Version record stored
+    entities:
+      - Version
+entities:
+  - Version
+screens:
+  - S-197
+acceptance:
+  - id: AC-199
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Version
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

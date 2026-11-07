@@ -1,0 +1,50 @@
+id: F-148
+title: Create and edit a DocShare
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: Internal record of document shares
+entry_points:
+  - screen: S-147
+    action: open the form
+inputs:
+  - label: Document Type
+    field: DocShare.share_doctype
+    type: ref
+    required: true
+  - label: Document Name
+    field: DocShare.share_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the DocShare form
+    screen: S-147
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Document Type, Document Name"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a DocShare record stored
+    entities:
+      - DocShare
+entities:
+  - DocShare
+screens:
+  - S-147
+acceptance:
+  - id: AC-149
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of DocShare
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

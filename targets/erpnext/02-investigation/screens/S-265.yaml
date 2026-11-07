@@ -1,0 +1,97 @@
+id: S-265
+title: Email Queue
+purpose: create, view and edit Email Queue records
+kind: form
+layout: 22 fields
+fields:
+  - label: Sender
+    control: text
+    binds: EmailQueue.sender
+  - label: Recipient
+    control: grid
+    columns:
+      - Recipient
+      - Status
+  - label: Show as cc
+    control: text
+    binds: EmailQueue.show_as_cc
+  - label: Message
+    control: text
+    binds: EmailQueue.message
+  - label: Status
+    control: select
+    binds: EmailQueue.status
+  - label: Error
+    control: text
+    binds: EmailQueue.error
+    validation: shown only when eval:doc.error
+  - label: Message ID
+    control: text
+    binds: EmailQueue.message_id
+    validation: read only (computed or filled by the program)
+  - label: Reference Document Type
+    control: lookup
+    binds: EmailQueue.reference_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Reference DocName
+    control: text
+    binds: EmailQueue.reference_name
+    validation: read only (computed or filled by the program)
+  - label: Communication
+    control: lookup
+    binds: EmailQueue.communication
+    validation: chosen among Communication records
+  - label: Send After
+    control: date
+    binds: EmailQueue.send_after
+    validation: read only (computed or filled by the program)
+  - label: Priority
+    control: number
+    binds: EmailQueue.priority
+    validation: read only (computed or filled by the program)
+  - label: Add Unsubscribe Link
+    control: checkbox
+    binds: EmailQueue.add_unsubscribe_link
+  - label: Unsubscribe Params
+    control: text
+    binds: EmailQueue.unsubscribe_params
+    validation: read only (computed or filled by the program)
+  - label: Unsubscribe Method
+    control: text
+    binds: EmailQueue.unsubscribe_method
+  - label: Email Read Tracker URL
+    control: text
+    binds: EmailQueue.email_read_tracker_url
+    validation: read only (computed or filled by the program)
+  - label: Expose Recipients
+    control: text
+    binds: EmailQueue.expose_recipients
+  - label: Attachments
+    control: text
+    binds: EmailQueue.attachments
+    validation: read only (computed or filled by the program)
+  - label: Retry
+    control: number
+    binds: EmailQueue.retry
+    validation: read only (computed or filled by the program)
+  - label: Email Account
+    control: lookup
+    binds: EmailQueue.email_account
+    validation: chosen among Email Account records
+  - label: Send As Raw HTML
+    control: checkbox
+    binds: EmailQueue.raw_html
+    validation: read only (computed or filled by the program)
+  - label: Redact Message After Send
+    control: checkbox
+    binds: EmailQueue.redact_message_after_send
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-266
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Email Queue
+    note: declared by the program

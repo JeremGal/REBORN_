@@ -1,0 +1,50 @@
+id: F-451
+title: Create and edit a Personal Data Deletion Request
+module: Website
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Personal Data Deletion Request records.
+entry_points:
+  - screen: S-450
+    action: open the form
+inputs:
+  - label: Email
+    field: PersonalDataDeletionRequest.email
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Personal Data Deletion Request form
+    screen: S-450
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Email"
+  - n: 3
+    actor: user
+    does: "adds lines in: Deletion Steps"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Personal Data Deletion Request record stored
+    entities:
+      - PersonalDataDeletionRequest
+entities:
+  - PersonalDataDeletionRequest
+  - PersonalDataDeletionStep
+screens:
+  - S-450
+acceptance:
+  - id: AC-452
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Personal Data Deletion Request
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

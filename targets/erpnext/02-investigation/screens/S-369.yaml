@@ -1,0 +1,26 @@
+id: S-369
+title: Incoterm
+purpose: create, view and edit Incoterm records
+kind: form
+layout: 3 fields
+fields:
+  - label: Code
+    control: text
+    binds: Incoterm.code
+    required: true
+  - label: Title
+    control: text
+    binds: Incoterm.title
+    required: true
+  - label: Description
+    control: text
+    binds: Incoterm.description
+actions:
+  - label: Save
+    triggers: F-370
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Incoterm
+    note: declared by the program

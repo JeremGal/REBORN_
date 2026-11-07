@@ -1,0 +1,78 @@
+id: F-413
+title: Create, submit and cancel a Shipment
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: A parcel you send through a carrier.
+entry_points:
+  - screen: S-412
+    action: open the form
+inputs:
+  - label: Address
+    field: Shipment.pickup_address_name
+    type: ref
+    required: true
+  - label: Address
+    field: Shipment.delivery_address_name
+    type: ref
+    required: true
+  - label: Value of Goods
+    field: Shipment.value_of_goods
+    type: money
+    required: true
+  - label: Pickup Date
+    field: Shipment.pickup_date
+    type: date
+    required: true
+  - label: Pickup from
+    field: Shipment.pickup_from
+    type: time
+    required: true
+  - label: Pickup to
+    field: Shipment.pickup_to
+    type: time
+    required: true
+  - label: Description of Content
+    field: Shipment.description_of_content
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Shipment form
+    screen: S-412
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Address, Address, Value of Goods, Pickup Date, Pickup from, Pickup to, Description of Content"
+  - n: 3
+    actor: user
+    does: "adds lines in: Shipment Parcel, Shipment Delivery Note"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Shipment record stored
+    entities:
+      - Shipment
+entities:
+  - Shipment
+  - ShipmentParcel
+  - ShipmentDeliveryNote
+screens:
+  - S-412
+acceptance:
+  - id: AC-414
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Shipment
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"shipment\")."

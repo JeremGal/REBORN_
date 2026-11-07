@@ -1,0 +1,69 @@
+id: F-029
+title: Create, submit and cancel a Cost Center Allocation
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: Splits one cost center's amounts across others by percentage.
+entry_points:
+  - screen: S-028
+    action: open the form
+inputs:
+  - label: Main Cost Center
+    field: CostCenterAllocation.main_cost_center
+    type: ref
+    required: true
+  - label: Company
+    field: CostCenterAllocation.company
+    type: ref
+    required: true
+  - label: Valid From
+    field: CostCenterAllocation.valid_from
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Cost Center Allocation form
+    screen: S-028
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Main Cost Center, Company, Valid From"
+  - n: 3
+    actor: user
+    does: "adds lines in: Cost Center Allocation Percentages"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Cost Center Allocation record stored
+    entities:
+      - CostCenterAllocation
+entities:
+  - CostCenterAllocation
+  - CostCenterAllocationPercentage
+screens:
+  - S-028
+acceptance:
+  - id: AC-030
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Cost Center Allocation
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 41
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"cost-center-allocation\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "erpnext.accounts.doctype.cost_center_allocation.cost_center_allocation.WrongPercentageAllocation: Le pourcentage total contre les centres de coûts doit être de 100"

@@ -1,0 +1,57 @@
+id: F-392
+title: Create and edit a Item Attribute
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: A property item variants differ by, like size or colour.
+entry_points:
+  - screen: S-391
+    action: open the form
+inputs:
+  - label: Attribute Name
+    field: ItemAttribute.attribute_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Item Attribute form
+    screen: S-391
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Attribute Name"
+  - n: 3
+    actor: user
+    does: "adds lines in: Item Attribute Values"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Item Attribute record stored
+    entities:
+      - ItemAttribute
+entities:
+  - ItemAttribute
+  - ItemAttributeValue
+screens:
+  - S-391
+acceptance:
+  - id: AC-393
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Item Attribute
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 65
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"item-attribute\")."

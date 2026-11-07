@@ -1,0 +1,46 @@
+id: F-274
+title: Create and edit a Currency
+module: Geo
+priority: could
+status: partial
+confidence: medium
+user_goal: Currency list stores the currency value, its symbol and fraction unit
+entry_points:
+  - screen: S-273
+    action: open the form
+inputs:
+  - label: Currency Name
+    field: Currency.currency_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Currency form
+    screen: S-273
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Currency Name"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Currency record stored
+    entities:
+      - Currency
+entities:
+  - Currency
+screens:
+  - S-273
+acceptance:
+  - id: AC-275
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Currency
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"currency\")."

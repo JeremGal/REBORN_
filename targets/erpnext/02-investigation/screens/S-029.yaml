@@ -1,0 +1,58 @@
+id: S-029
+title: Coupon Code
+purpose: create, view and edit Coupon Code records
+kind: form
+layout: "sections: Validity and Usage; 12 fields"
+fields:
+  - label: Coupon Name
+    control: text
+    binds: CouponCode.coupon_name
+    required: true
+  - label: Coupon Type
+    control: select
+    binds: CouponCode.coupon_type
+    required: true
+  - label: Customer
+    control: lookup
+    binds: CouponCode.customer
+    validation: 'shown only when eval: doc.coupon_type == "Gift Card"; chosen among Customer records'
+  - label: Coupon Code
+    control: text
+    binds: CouponCode.coupon_code
+  - label: From External Ecomm Platform
+    control: checkbox
+    binds: CouponCode.from_external_ecomm_platform
+  - label: Pricing Rule
+    control: lookup
+    binds: CouponCode.pricing_rule
+    validation: "shown only when eval: !doc.from_external_ecomm_platform; chosen among Pricing Rule records"
+  - label: Valid From
+    control: date
+    binds: CouponCode.valid_from
+  - label: Valid Up To
+    control: date
+    binds: CouponCode.valid_upto
+  - label: Maximum Use
+    control: number
+    binds: CouponCode.maximum_use
+    validation: 'shown only when eval: doc.coupon_type == "Promotional"'
+  - label: Used
+    control: number
+    binds: CouponCode.used
+    validation: read only (computed or filled by the program)
+  - label: Coupon Description
+    control: text
+    binds: CouponCode.description
+  - label: Amended From
+    control: lookup
+    binds: CouponCode.amended_from
+    validation: read only (computed or filled by the program); chosen among Coupon Code records
+actions:
+  - label: Save
+    triggers: F-030
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Coupon Code
+    note: declared by the program

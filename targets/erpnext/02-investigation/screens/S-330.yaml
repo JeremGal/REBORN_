@@ -1,0 +1,45 @@
+id: S-330
+title: Non Conformance
+purpose: create, view and edit Non Conformance records
+kind: form
+layout: 8 fields
+fields:
+  - label: Subject
+    control: text
+    binds: NonConformance.subject
+    required: true
+  - label: Procedure
+    control: lookup
+    binds: NonConformance.procedure
+    required: true
+    validation: chosen among Quality Procedure records
+  - label: Process Owner
+    control: text
+    binds: NonConformance.process_owner
+    validation: read only (computed or filled by the program)
+  - label: Full Name
+    control: text
+    binds: NonConformance.full_name
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: NonConformance.status
+    required: true
+  - label: Details
+    control: text
+    binds: NonConformance.details
+  - label: Corrective Action
+    control: text
+    binds: NonConformance.corrective_action
+  - label: Preventive Action
+    control: text
+    binds: NonConformance.preventive_action
+actions:
+  - label: Save
+    triggers: F-331
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Non Conformance
+    note: declared by the program

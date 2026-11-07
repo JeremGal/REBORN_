@@ -1,0 +1,186 @@
+id: S-305
+title: Production Plan
+purpose: create, view and edit Production Plan records
+kind: form
+layout: "sections: Filters, Sales Orders, Material Request Detail, Select Items to Manufacture, Sub Assembly Items, Preview Required Materials, For Raw Materials, Other Details; 37 fields"
+fields:
+  - label: Naming Series
+    control: select
+    binds: ProductionPlan.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: ProductionPlan.company
+    required: true
+    validation: chosen among Company records
+  - label: Get Items From
+    control: select
+    binds: ProductionPlan.get_items_from
+  - label: Posting Date
+    control: date
+    binds: ProductionPlan.posting_date
+    required: true
+  - label: Reserve Stock
+    control: checkbox
+    binds: ProductionPlan.reserve_stock
+  - label: Consider Process Loss
+    control: checkbox
+    binds: ProductionPlan.consider_process_loss
+  - label: Item Code
+    control: lookup
+    binds: ProductionPlan.item_code
+    validation: chosen among Item records
+  - label: Customer
+    control: lookup
+    binds: ProductionPlan.customer
+    validation: 'shown only when eval: doc.get_items_from == "Sales Order"; chosen among Customer records'
+  - label: Warehouse
+    control: lookup
+    binds: ProductionPlan.warehouse
+    validation: 'shown only when eval: doc.get_items_from == "Material Request"; chosen among Warehouse records'
+  - label: Project
+    control: lookup
+    binds: ProductionPlan.project
+    validation: 'shown only when eval: doc.get_items_from == "Sales Order"; chosen among Project records'
+  - label: Sales Order Status
+    control: select
+    binds: ProductionPlan.sales_order_status
+    validation: 'shown only when eval: doc.get_items_from == "Sales Order"'
+  - label: From Date
+    control: date
+    binds: ProductionPlan.from_date
+  - label: To Date
+    control: date
+    binds: ProductionPlan.to_date
+  - label: From Delivery Date
+    control: date
+    binds: ProductionPlan.from_delivery_date
+    validation: shown only when eval:doc.get_items_from == 'Sales Order'
+  - label: To Delivery Date
+    control: date
+    binds: ProductionPlan.to_delivery_date
+    validation: shown only when eval:doc.get_items_from == 'Sales Order'
+  - label: Consolidate Sales Order Items
+    control: checkbox
+    binds: ProductionPlan.combine_items
+    validation: shown only when eval:doc.get_items_from == 'Sales Order'
+  - label: Sales Orders
+    control: grid
+    columns:
+      - Sales Order
+      - Sales Order Date
+      - Customer
+      - Grand Total
+      - Status
+  - label: Material Requests
+    control: grid
+    columns:
+      - Material Request
+      - Material Request Date
+  - label: Assembly Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - BOM No
+      - Planned Qty
+      - UOM
+      - Finished Goods Warehouse
+      - Planned Start Date
+  - label: Production Plan Item Reference
+    control: grid
+    columns:
+      - Item Reference
+      - Sales Order Reference
+      - Sales Order Item
+      - Qty
+  - label: Sub Assembly Warehouse
+    control: lookup
+    binds: ProductionPlan.sub_assembly_warehouse
+    validation: chosen among Warehouse records
+  - label: Consider Projected Qty in Calculation
+    control: checkbox
+    binds: ProductionPlan.skip_available_sub_assembly_item
+  - label: Consolidate Sub Assembly Items
+    control: checkbox
+    binds: ProductionPlan.combine_sub_items
+  - label: sub_assembly_items
+    control: grid
+    columns:
+      - Sub Assembly Item Code
+      - BOM No
+      - Manufacturing Type
+      - Required Qty
+      - Projected Qty
+      - Qty to Order
+      - Supplier
+  - label: Include Non Stock Items
+    control: checkbox
+    binds: ProductionPlan.include_non_stock_items
+  - label: Include Subcontracted Items
+    control: checkbox
+    binds: ProductionPlan.include_subcontracted_items
+  - label: Consider Minimum Order Qty
+    control: checkbox
+    binds: ProductionPlan.consider_minimum_order_qty
+  - label: Include Safety Stock in Required Qty Calculation
+    control: checkbox
+    binds: ProductionPlan.include_safety_stock
+  - label: Consider Projected Qty in Calculation (RM)
+    control: checkbox
+    binds: ProductionPlan.ignore_existing_ordered_qty
+  - label: Raw Material Group Warehouse
+    control: lookup
+    binds: ProductionPlan.raw_material_group_warehouse
+    validation: chosen among Warehouse records
+  - label: For Warehouse
+    control: lookup
+    binds: ProductionPlan.for_warehouse
+    validation: chosen among Warehouse records
+  - label: Raw Materials
+    control: grid
+    columns:
+      - Item Code
+      - For Warehouse
+      - Type
+      - Reqd Qty (BOM)
+      - Projected Qty
+      - Required Qty
+      - Required By
+      - Minimum Order Quantity
+  - label: Total Planned Qty
+    control: number
+    binds: ProductionPlan.total_planned_qty
+    validation: read only (computed or filled by the program)
+  - label: Total Produced Qty
+    control: number
+    binds: ProductionPlan.total_produced_qty
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: ProductionPlan.status
+    validation: read only (computed or filled by the program)
+  - label: Warehouses
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Warehouse
+  - label: Amended From
+    control: lookup
+    binds: ProductionPlan.amended_from
+    validation: read only (computed or filled by the program); chosen among Production Plan records
+actions:
+  - label: Save
+    triggers: F-306
+  - label: Submit
+    triggers: F-306
+  - label: Cancel
+    triggers: F-306
+  - label: Amend
+    triggers: F-306
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Production Plan
+    note: declared by the program

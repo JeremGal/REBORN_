@@ -1,0 +1,46 @@
+id: F-377
+title: Create and edit a Terms and Conditions
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: Standard terms to add to quotes, orders and invoices.
+entry_points:
+  - screen: S-376
+    action: open the form
+inputs:
+  - label: Title
+    field: TermsAndConditions.title
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Terms and Conditions form
+    screen: S-376
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Title"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Terms and Conditions record stored
+    entities:
+      - TermsAndConditions
+entities:
+  - TermsAndConditions
+screens:
+  - S-376
+acceptance:
+  - id: AC-378
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Terms and Conditions
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"terms-and-conditions\")."

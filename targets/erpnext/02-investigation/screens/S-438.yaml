@@ -1,0 +1,29 @@
+id: S-438
+title: Telephony Call Type
+purpose: create, view and edit Telephony Call Type records
+kind: form
+layout: 2 fields
+fields:
+  - label: Call Type
+    control: text
+    binds: TelephonyCallType.call_type
+    required: true
+  - label: Amended From
+    control: lookup
+    binds: TelephonyCallType.amended_from
+    validation: read only (computed or filled by the program); chosen among Telephony Call Type records
+actions:
+  - label: Save
+    triggers: F-439
+  - label: Submit
+    triggers: F-439
+  - label: Cancel
+    triggers: F-439
+  - label: Amend
+    triggers: F-439
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Telephony Call Type
+    note: declared by the program

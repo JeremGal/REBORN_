@@ -1,0 +1,69 @@
+id: S-241
+title: Notification Log
+purpose: create, view and edit Notification Log records
+kind: form
+layout: "sections: Notification, Reference Document, Recipient & Status, Attachment, Email; 16 fields"
+fields:
+  - label: Type
+    control: lookup
+    binds: NotificationLog.type
+    validation: chosen among Notification Type records
+  - label: Title
+    control: text
+    binds: NotificationLog.title
+  - label: Description
+    control: text
+    binds: NotificationLog.description
+  - label: Document Type
+    control: lookup
+    binds: NotificationLog.document_type
+    validation: chosen among DocType records
+  - label: Document Name
+    control: text
+    binds: NotificationLog.document_name
+  - label: Source Document Type
+    control: lookup
+    binds: NotificationLog.source_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Source Document Name
+    control: lookup
+    binds: NotificationLog.source_name
+    validation: read only (computed or filled by the program)
+  - label: App
+    control: select
+    binds: NotificationLog.app
+  - label: Link
+    control: text
+    binds: NotificationLog.link
+  - label: For User
+    control: lookup
+    binds: NotificationLog.for_user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: From User
+    control: lookup
+    binds: NotificationLog.from_user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Read
+    control: checkbox
+    binds: NotificationLog.read
+  - label: Attached File
+    control: text
+    binds: NotificationLog.attached_file
+  - label: Subject
+    control: text
+    binds: NotificationLog.subject
+  - label: Message
+    control: text
+    binds: NotificationLog.email_content
+  - label: Email Header
+    control: text
+    binds: NotificationLog.email_header
+actions:
+  - label: Save
+    triggers: F-242
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Notification Log
+    note: declared by the program

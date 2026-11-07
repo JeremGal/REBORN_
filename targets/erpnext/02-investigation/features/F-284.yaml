@@ -1,0 +1,58 @@
+id: F-284
+title: Create and edit a OAuth Client
+module: Integrations
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain OAuth Client records.
+entry_points:
+  - screen: S-283
+    action: open the form
+inputs:
+  - label: Default Redirect URI
+    field: OAuthClient.default_redirect_uri
+    type: string
+    required: true
+  - label: App Name (Client Name)
+    field: OAuthClient.app_name
+    type: string
+    required: true
+  - label: Scopes
+    field: OAuthClient.scopes
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the OAuth Client form
+    screen: S-283
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Default Redirect URI, App Name (Client Name), Scopes"
+  - n: 3
+    actor: user
+    does: "adds lines in: Allowed Roles"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a OAuth Client record stored
+    entities:
+      - OAuthClient
+entities:
+  - OAuthClient
+  - OAuthClientRole
+screens:
+  - S-283
+acceptance:
+  - id: AC-285
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of OAuth Client
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

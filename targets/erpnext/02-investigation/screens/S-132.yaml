@@ -1,0 +1,112 @@
+id: S-132
+title: Contact
+purpose: create, view and edit Contact records
+kind: form
+layout: "sections: Google Contacts, Contact Details, Reference, More Information; 26 fields"
+fields:
+  - label: First Name
+    control: text
+    binds: Contact.first_name
+  - label: Middle Name
+    control: text
+    binds: Contact.middle_name
+  - label: Last Name
+    control: text
+    binds: Contact.last_name
+  - label: Full Name
+    control: text
+    binds: Contact.full_name
+    validation: read only (computed or filled by the program)
+  - label: Email Address
+    control: text
+    binds: Contact.email_id
+    validation: read only (computed or filled by the program)
+  - label: User Id
+    control: lookup
+    binds: Contact.user
+    validation: chosen among User records
+  - label: Address
+    control: lookup
+    binds: Contact.address
+    validation: chosen among Address records
+  - label: Sync with Google Contacts
+    control: checkbox
+    binds: Contact.sync_with_google_contacts
+  - label: Status
+    control: select
+    binds: Contact.status
+  - label: Salutation
+    control: lookup
+    binds: Contact.salutation
+    validation: chosen among Salutation records
+  - label: Designation
+    control: text
+    binds: Contact.designation
+  - label: Gender
+    control: lookup
+    binds: Contact.gender
+    validation: chosen among Gender records
+  - label: Phone
+    control: text
+    binds: Contact.phone
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: Contact.mobile_no
+    validation: read only (computed or filled by the program)
+  - label: Company Name
+    control: text
+    binds: Contact.company_name
+  - label: Image
+    control: other
+    binds: Contact.image
+  - label: Google Contacts
+    control: lookup
+    binds: Contact.google_contacts
+    validation: chosen among Google Contacts records
+  - label: Google Contacts Id
+    control: text
+    binds: Contact.google_contacts_id
+    validation: read only (computed or filled by the program)
+  - label: Pulled from Google Contacts
+    control: checkbox
+    binds: Contact.pulled_from_google_contacts
+    validation: read only (computed or filled by the program)
+  - label: Email IDs
+    control: grid
+    columns:
+      - Email ID
+      - Is Primary
+  - label: Contact Numbers
+    control: grid
+    columns:
+      - Number
+      - Is Primary Phone
+      - Is Primary Mobile
+  - label: Links
+    control: grid
+    columns:
+      - Link Document Type
+      - Link Name
+      - Link Title
+  - label: Is Primary Contact
+    control: checkbox
+    binds: Contact.is_primary_contact
+  - label: Is Billing Contact
+    control: checkbox
+    binds: Contact.is_billing_contact
+  - label: Department
+    control: text
+    binds: Contact.department
+  - label: Unsubscribed
+    control: checkbox
+    binds: Contact.unsubscribed
+actions:
+  - label: Save
+    triggers: F-133
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Contact
+    note: declared by the program

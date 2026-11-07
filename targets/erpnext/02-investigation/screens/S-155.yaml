@@ -1,0 +1,38 @@
+id: S-155
+title: DuckDB Sync
+purpose: create, view and edit DuckDB Sync records
+kind: form
+layout: 4 fields
+fields:
+  - label: Doctype
+    control: lookup
+    binds: DuckDBSync.doc_type
+    required: true
+    validation: chosen among DocType records
+  - label: Filename
+    control: text
+    binds: DuckDBSync.filename
+  - label: DB Tables
+    control: grid
+    columns:
+      - Table
+      - Synced
+  - label: Amended From
+    control: lookup
+    binds: DuckDBSync.amended_from
+    validation: read only (computed or filled by the program); chosen among DuckDB Sync records
+actions:
+  - label: Save
+    triggers: F-156
+  - label: Submit
+    triggers: F-156
+  - label: Cancel
+    triggers: F-156
+  - label: Amend
+    triggers: F-156
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of DuckDB Sync
+    note: declared by the program

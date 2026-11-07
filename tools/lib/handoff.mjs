@@ -168,11 +168,15 @@ export function computeCoverage(t) {
   const found = (key) => t.evidence.reduce((m, e) => Math.max(m, Number(e.counts?.[key]) || 0), 0) || null;
   const row = (carded, inventoried, source) => ({ carded, inventoried, ratio: inventoried ? Math.round((carded / inventoried) * 100) : null, source });
   const topics = found("features");
+  // "observed" = behaviour seen in a run of the program (h-run evidence or an acceptance scenario with a source run),
+  // as opposed to cards that only describe a structure the program declares.
+  const seen = (c) => (c.evidence || []).some((e) => e.kind === "h-run" || e.kind === "observation" || e.kind === "screenshot") || (c.acceptance || []).some((a) => a.source_run) || (c.screenshots || []).length > 0;
+  const observed = { features: t.features.filter(seen).length, screens: t.screens.filter(seen).length };
   return {
-    screens: row(t.screens.length, found("windows"), "window inventory (counts.windows)"),
+    screens: { ...row(t.screens.length, found("windows"), "window inventory (counts.windows)"), observed: observed.screens },
     entities: row(t.entities.length, found("tables"), "table inventory (counts.tables)"),
     features: topics
-      ? { ...row(t.features.length, topics, "documented topics in the user manual (counts.features)"), note: "manual topics are not features one to one: a lower bound of what the program offers, not an exact list" }
+      ? { ...row(t.features.length, topics, "documented topics in the user manual (counts.features)"), observed: observed.features, note: "manual topics are not features one to one: a lower bound of what the program offers, not an exact list" }
       : { carded: t.features.length, inventoried: null, ratio: null, note: "no independent feature inventory yet (run: reborn manual <target> <manual.chm|pdf>): coverage is unknown, not complete" },
   };
 }

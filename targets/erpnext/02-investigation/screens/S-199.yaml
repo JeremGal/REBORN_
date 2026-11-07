@@ -1,0 +1,63 @@
+id: S-199
+title: Appointment
+purpose: create, view and edit Appointment records
+kind: form
+layout: "sections: Customer Details, Linked Documents; 13 fields"
+fields:
+  - label: Scheduled Time
+    control: date
+    binds: Appointment.scheduled_time
+    required: true
+  - label: Status
+    control: select
+    binds: Appointment.status
+    required: true
+  - label: Created through Portal
+    control: checkbox
+    binds: Appointment.created_through_portal
+    validation: read only (computed or filled by the program)
+  - label: Email Verified
+    control: checkbox
+    binds: Appointment.email_verified
+    validation: read only (computed or filled by the program); shown only when eval:doc.created_through_portal === 1;
+  - label: Verification Token
+    control: text
+    binds: Appointment.verification_token
+    validation: read only (computed or filled by the program)
+  - label: Name
+    control: text
+    binds: Appointment.customer_name
+    required: true
+  - label: Phone Number
+    control: text
+    binds: Appointment.customer_phone_number
+  - label: Skype ID
+    control: text
+    binds: Appointment.customer_skype
+  - label: Email
+    control: text
+    binds: Appointment.customer_email
+    required: true
+  - label: Details
+    control: text
+    binds: Appointment.customer_details
+  - label: Appointment With
+    control: lookup
+    binds: Appointment.appointment_with
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: Appointment.party
+  - label: Calendar Event
+    control: lookup
+    binds: Appointment.calendar_event
+    validation: chosen among Event records
+actions:
+  - label: Save
+    triggers: F-200
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Appointment
+    note: declared by the program

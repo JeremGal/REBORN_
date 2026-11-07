@@ -1,0 +1,78 @@
+id: S-301
+title: Manufacturing Settings
+purpose: settings of Manufacturing Settings
+kind: settings
+layout: "tabs: BOM and Production, Job Card and Capacity Planning; sections: Raw Materials Consumption, BOM, Overproduction for Sales and Work Order, Extra Material Transfer, Capacity Planning, Other Settings; 19 fields"
+fields:
+  - label: Allow Continuous Material Consumption
+    control: checkbox
+    binds: ManufacturingSettings.material_consumption
+  - label: Get Raw Materials Cost from Consumption Entry
+    control: checkbox
+    binds: ManufacturingSettings.get_rm_cost_from_consumption_entry
+    validation: "shown only when eval: doc.material_consumption"
+  - label: Backflush Raw Materials Based On
+    control: select
+    binds: ManufacturingSettings.backflush_raw_materials_based_on
+  - label: Validate Components and Quantities Per BOM
+    control: checkbox
+    binds: ManufacturingSettings.validate_components_quantities_per_bom
+    validation: shown only when eval:doc.backflush_raw_materials_based_on == "BOM"
+  - label: Update BOM Cost Automatically
+    control: checkbox
+    binds: ManufacturingSettings.update_bom_costs_automatically
+  - label: Allow Editing of Items and Quantities in Work Order
+    control: checkbox
+    binds: ManufacturingSettings.allow_editing_of_items_and_quantities_in_work_order
+  - label: Overproduction Percentage For Sales Order
+    control: number
+    binds: ManufacturingSettings.overproduction_percentage_for_sales_order
+  - label: Overproduction Percentage For Work Order
+    control: number
+    binds: ManufacturingSettings.overproduction_percentage_for_work_order
+  - label: Transfer Extra Raw Materials to WIP (%)
+    control: number
+    binds: ManufacturingSettings.transfer_extra_materials_percentage
+  - label: Add Corrective Operation Cost in Finished Good Valuation
+    control: checkbox
+    binds: ManufacturingSettings.add_corrective_operation_cost_in_finished_good_valuation
+  - label: Enforce Time Logs
+    control: checkbox
+    binds: ManufacturingSettings.enforce_time_logs
+  - label: Allow Excess Material Transfer
+    control: checkbox
+    binds: ManufacturingSettings.job_card_excess_transfer
+  - label: Disable Capacity Planning
+    control: checkbox
+    binds: ManufacturingSettings.disable_capacity_planning
+  - label: Allow Overtime
+    control: checkbox
+    binds: ManufacturingSettings.allow_overtime
+    validation: shown only when eval:!doc.disable_capacity_planning
+  - label: Allow Production on Holidays
+    control: checkbox
+    binds: ManufacturingSettings.allow_production_on_holidays
+    validation: shown only when eval:!doc.disable_capacity_planning
+  - label: Capacity Planning For (Days)
+    control: number
+    binds: ManufacturingSettings.capacity_planning_for_days
+    validation: shown only when eval:!doc.disable_capacity_planning
+  - label: Time Between Operations (Mins)
+    control: number
+    binds: ManufacturingSettings.mins_between_operations
+    validation: shown only when eval:!doc.disable_capacity_planning
+  - label: Set Operating Cost / Secondary Items From Sub-assemblies
+    control: checkbox
+    binds: ManufacturingSettings.set_op_cost_and_secondary_items_from_sub_assemblies
+  - label: Make Serial No / Batch from Work Order
+    control: checkbox
+    binds: ManufacturingSettings.make_serial_no_batch_from_work_order
+actions:
+  - label: Save
+    triggers: F-302
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Manufacturing Settings
+    note: declared by the program

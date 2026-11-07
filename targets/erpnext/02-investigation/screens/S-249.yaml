@@ -1,0 +1,31 @@
+id: S-249
+title: System Console
+purpose: settings of System Console
+kind: settings
+layout: "sections: Execute, Database Processes; 5 fields"
+fields:
+  - label: Type
+    control: select
+    binds: SystemConsole.type
+  - label: Console
+    control: text
+    binds: SystemConsole.console
+  - label: Commit
+    control: checkbox
+    binds: SystemConsole.commit
+  - label: Output
+    control: text
+    binds: SystemConsole.output
+    validation: read only (computed or filled by the program)
+  - label: Show Processlist
+    control: checkbox
+    binds: SystemConsole.show_processlist
+actions:
+  - label: Save
+    triggers: F-250
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of System Console
+    note: declared by the program

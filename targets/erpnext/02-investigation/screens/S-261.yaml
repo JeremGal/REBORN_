@@ -1,0 +1,68 @@
+id: S-261
+title: Email Domain
+purpose: create, view and edit Email Domain records
+kind: form
+layout: "sections: Incoming Settings, Outgoing Settings; 15 fields"
+fields:
+  - label: Domain Name
+    control: text
+    binds: EmailDomain.domain_name
+    required: true
+  - label: Incoming Server
+    control: text
+    binds: EmailDomain.email_server
+    required: true
+  - label: Use IMAP
+    control: checkbox
+    binds: EmailDomain.use_imap
+  - label: Use SSL
+    control: checkbox
+    binds: EmailDomain.use_ssl
+  - label: Validate SSL Certificate
+    control: checkbox
+    binds: EmailDomain.validate_ssl_certificate
+    validation: shown only when eval:doc.use_ssl
+  - label: Use STARTTLS
+    control: checkbox
+    binds: EmailDomain.use_starttls
+    validation: shown only when eval:doc.use_imap && !doc.use_ssl
+  - label: Port
+    control: text
+    binds: EmailDomain.incoming_port
+  - label: Attachment Limit (MB)
+    control: number
+    binds: EmailDomain.attachment_limit
+  - label: Outgoing Server
+    control: text
+    binds: EmailDomain.smtp_server
+    required: true
+  - label: Use TLS
+    control: checkbox
+    binds: EmailDomain.use_tls
+  - label: Use SSL
+    control: checkbox
+    binds: EmailDomain.use_ssl_for_outgoing
+  - label: Validate SSL Certificate
+    control: checkbox
+    binds: EmailDomain.validate_ssl_certificate_for_outgoing
+    validation: shown only when eval:doc.use_ssl
+  - label: Port
+    control: text
+    binds: EmailDomain.smtp_port
+  - label: Append Emails to Sent Folder
+    control: checkbox
+    binds: EmailDomain.append_emails_to_sent_folder
+    validation: shown only when eval:doc.use_imap
+  - label: Sent Folder Name
+    control: text
+    binds: EmailDomain.sent_folder_name
+    validation: "shown only when eval: doc.append_emails_to_sent_folder"
+actions:
+  - label: Save
+    triggers: F-262
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Email Domain
+    note: declared by the program

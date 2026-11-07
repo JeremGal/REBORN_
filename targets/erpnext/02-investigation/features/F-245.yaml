@@ -1,0 +1,46 @@
+id: F-245
+title: Create and edit a Number Card
+module: Desk
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Number Card records.
+entry_points:
+  - screen: S-244
+    action: open the form
+inputs:
+  - label: Label
+    field: NumberCard.label
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Number Card form
+    screen: S-244
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Label"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Number Card record stored
+    entities:
+      - NumberCard
+entities:
+  - NumberCard
+screens:
+  - S-244
+acceptance:
+  - id: AC-246
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Number Card
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

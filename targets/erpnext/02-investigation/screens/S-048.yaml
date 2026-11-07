@@ -1,0 +1,28 @@
+id: S-048
+title: Monthly Distribution
+purpose: create, view and edit Monthly Distribution records
+kind: form
+layout: 3 fields
+fields:
+  - label: Distribution Name
+    control: text
+    binds: MonthlyDistribution.distribution_id
+    required: true
+  - label: Fiscal Year
+    control: lookup
+    binds: MonthlyDistribution.fiscal_year
+    validation: chosen among Fiscal Year records
+  - label: Monthly Distribution Percentages
+    control: grid
+    columns:
+      - Month
+      - Percentage Allocation
+actions:
+  - label: Save
+    triggers: F-049
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Monthly Distribution
+    note: declared by the program

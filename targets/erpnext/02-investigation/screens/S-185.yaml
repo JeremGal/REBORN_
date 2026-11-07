@@ -1,0 +1,19 @@
+id: S-185
+title: Session Default Settings
+purpose: settings of Session Default Settings
+kind: settings
+layout: 1 fields
+fields:
+  - label: Session Defaults
+    control: grid
+    columns:
+      - Document Type
+actions:
+  - label: Save
+    triggers: F-186
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Session Default Settings
+    note: declared by the program

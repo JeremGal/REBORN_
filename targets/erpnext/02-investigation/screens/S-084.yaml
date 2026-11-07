@@ -1,0 +1,60 @@
+id: S-084
+title: Shipping Rule
+purpose: create, view and edit Shipping Rule records
+kind: form
+layout: "sections: Accounting, Accounting Dimensions, Shipping Rule Conditions, Restrict to Countries; 11 fields"
+fields:
+  - label: Shipping Rule Label
+    control: text
+    binds: ShippingRule.label
+    required: true
+  - label: Disabled
+    control: checkbox
+    binds: ShippingRule.disabled
+  - label: Shipping Rule Type
+    control: select
+    binds: ShippingRule.shipping_rule_type
+  - label: Company
+    control: lookup
+    binds: ShippingRule.company
+    required: true
+    validation: chosen among Company records
+  - label: Shipping Account
+    control: lookup
+    binds: ShippingRule.account
+    required: true
+    validation: chosen among Account records
+  - label: Cost Center
+    control: lookup
+    binds: ShippingRule.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: ShippingRule.project
+    validation: chosen among Project records
+  - label: Calculate Based On
+    control: select
+    binds: ShippingRule.calculate_based_on
+  - label: Shipping Amount
+    control: money
+    binds: ShippingRule.shipping_amount
+    validation: shown only when eval:doc.calculate_based_on==='Fixed'
+  - label: Shipping Rule Conditions
+    control: grid
+    columns:
+      - From Value
+      - To Value
+      - Shipping Amount
+  - label: Valid for Countries
+    control: grid
+    columns:
+      - Country
+actions:
+  - label: Save
+    triggers: F-085
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Shipping Rule
+    note: declared by the program

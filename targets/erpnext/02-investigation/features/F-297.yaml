@@ -1,0 +1,83 @@
+id: F-297
+title: Create, submit and cancel a BOM Creator
+module: Manufacturing
+priority: must
+status: partial
+confidence: medium
+user_goal: Build a multi-level BOM by hand or from a CAD design, plan its operations, and create the BOMs.
+entry_points:
+  - screen: S-296
+    action: open the form
+inputs:
+  - label: Finished Good
+    field: BOMCreator.item_code
+    type: ref
+    required: true
+  - label: Company
+    field: BOMCreator.company
+    type: ref
+    required: true
+  - label: Finished Good Quantity
+    field: BOMCreator.qty
+    type: decimal
+    required: true
+  - label: Rate Of Materials Based On
+    field: BOMCreator.rm_cost_as_per
+    type: enum
+    required: true
+  - label: Currency
+    field: BOMCreator.currency
+    type: ref
+    required: true
+  - label: Series
+    field: BOMCreator.naming_series
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the BOM Creator form
+    screen: S-296
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Finished Good, Company, Finished Good Quantity, Rate Of Materials Based On, Currency, Series"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items, Operations, Materials"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a BOM Creator record stored
+    entities:
+      - BOMCreator
+entities:
+  - BOMCreator
+  - BOMCreatorItem
+  - BOMCreatorOperation
+  - BOMCreatorMaterial
+screens:
+  - S-296
+acceptance:
+  - id: AC-298
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of BOM Creator
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 32
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"bom-creator\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Une nomenclature non fantôme ne peut pas être créée pour l'article non stocké TEST-ART-001."

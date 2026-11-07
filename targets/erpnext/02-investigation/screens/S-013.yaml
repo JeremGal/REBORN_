@@ -1,0 +1,18 @@
+id: S-013
+title: Bank Account Type
+purpose: create, view and edit Bank Account Type records
+kind: form
+layout: 1 fields
+fields:
+  - label: Account Type
+    control: text
+    binds: BankAccountType.account_type
+actions:
+  - label: Save
+    triggers: F-014
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bank Account Type
+    note: declared by the program

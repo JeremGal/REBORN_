@@ -1,0 +1,59 @@
+id: S-339
+title: Lower Deduction Certificate
+purpose: create, view and edit Lower Deduction Certificate records
+kind: form
+layout: "sections: Certificate Details, Deductee Details, Validity Details; 10 fields"
+fields:
+  - label: Tax Withholding Category
+    control: lookup
+    binds: LowerDeductionCertificate.tax_withholding_category
+    required: true
+    validation: chosen among Tax Withholding Category records
+  - label: Fiscal Year
+    control: lookup
+    binds: LowerDeductionCertificate.fiscal_year
+    required: true
+    validation: chosen among Fiscal Year records
+  - label: Company
+    control: lookup
+    binds: LowerDeductionCertificate.company
+    required: true
+    validation: chosen among Company records
+  - label: Certificate No
+    control: text
+    binds: LowerDeductionCertificate.certificate_no
+    required: true
+  - label: Supplier
+    control: lookup
+    binds: LowerDeductionCertificate.supplier
+    required: true
+    validation: chosen among Supplier records
+  - label: PAN No
+    control: text
+    binds: LowerDeductionCertificate.pan_no
+    required: true
+  - label: Valid From
+    control: date
+    binds: LowerDeductionCertificate.valid_from
+    required: true
+  - label: Valid Up To
+    control: date
+    binds: LowerDeductionCertificate.valid_upto
+    required: true
+  - label: Rate Of TDS As Per Certificate
+    control: number
+    binds: LowerDeductionCertificate.rate
+    required: true
+  - label: Certificate Limit
+    control: money
+    binds: LowerDeductionCertificate.certificate_limit
+    required: true
+actions:
+  - label: Save
+    triggers: F-340
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Lower Deduction Certificate
+    note: declared by the program

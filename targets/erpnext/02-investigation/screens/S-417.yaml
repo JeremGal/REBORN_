@@ -1,0 +1,27 @@
+id: S-417
+title: Stock Entry Type
+purpose: create, view and edit Stock Entry Type records
+kind: form
+layout: 3 fields
+fields:
+  - label: Purpose
+    control: select
+    binds: StockEntryType.purpose
+    required: true
+  - label: Add to Transit
+    control: checkbox
+    binds: StockEntryType.add_to_transit
+    validation: "shown only when eval: doc.purpose == 'Material Transfer'"
+  - label: Is Standard
+    control: checkbox
+    binds: StockEntryType.is_standard
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-418
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Stock Entry Type
+    note: declared by the program

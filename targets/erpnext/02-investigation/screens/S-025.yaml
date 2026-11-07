@@ -1,0 +1,23 @@
+id: S-025
+title: Chart of Accounts Importer
+purpose: settings of Chart of Accounts Importer
+kind: settings
+layout: "sections: Chart Preview; 2 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: ChartOfAccountsImporter.company
+    validation: chosen among Company records
+  - label: Attach custom Chart of Accounts file
+    control: other
+    binds: ChartOfAccountsImporter.import_file
+    validation: shown only when company
+actions:
+  - label: Save
+    triggers: F-026
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Chart of Accounts Importer
+    note: declared by the program

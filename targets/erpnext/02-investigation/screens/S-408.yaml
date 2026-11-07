@@ -1,0 +1,48 @@
+id: S-408
+title: Quick Stock Balance
+purpose: settings of Quick Stock Balance
+kind: settings
+layout: 8 fields
+fields:
+  - label: Warehouse
+    control: lookup
+    binds: QuickStockBalance.warehouse
+    required: true
+    validation: chosen among Warehouse records
+  - label: Date
+    control: date
+    binds: QuickStockBalance.date
+    required: true
+  - label: Item Barcode
+    control: text
+    binds: QuickStockBalance.item_barcode
+  - label: Item Code
+    control: lookup
+    binds: QuickStockBalance.item
+    required: true
+    validation: chosen among Item records
+  - label: Item Name
+    control: text
+    binds: QuickStockBalance.item_name
+    validation: read only (computed or filled by the program)
+  - label: Item Description
+    control: text
+    binds: QuickStockBalance.item_description
+    validation: read only (computed or filled by the program)
+  - label: Available Quantity
+    control: number
+    binds: QuickStockBalance.qty
+    validation: read only (computed or filled by the program)
+  - label: Stock Value
+    control: money
+    binds: QuickStockBalance.value
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-409
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quick Stock Balance
+    note: declared by the program

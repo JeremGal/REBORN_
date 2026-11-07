@@ -1,0 +1,108 @@
+id: S-102
+title: Asset Repair
+purpose: create, view and edit Asset Repair records
+kind: form
+layout: "tabs: Connection; sections: Description, Consumed Stock Items, Totals, Accounting Dimension; 21 fields"
+fields:
+  - label: Series
+    control: select
+    binds: AssetRepair.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: AssetRepair.company
+    validation: chosen among Company records
+  - label: Asset
+    control: lookup
+    binds: AssetRepair.asset
+    required: true
+    validation: chosen among Asset records
+  - label: Asset Name
+    control: display
+    binds: AssetRepair.asset_name
+  - label: Repair Status
+    control: select
+    binds: AssetRepair.repair_status
+  - label: Failure Date
+    control: date
+    binds: AssetRepair.failure_date
+    required: true
+  - label: Completion Date
+    control: date
+    binds: AssetRepair.completion_date
+    validation: shown only when eval:doc.repair_status=="Completed"
+  - label: Downtime
+    control: text
+    binds: AssetRepair.downtime
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: AssetRepair.amended_from
+    validation: read only (computed or filled by the program); chosen among Asset Repair records
+  - label: Error Description
+    control: text
+    binds: AssetRepair.description
+  - label: Actions performed
+    control: text
+    binds: AssetRepair.actions_performed
+  - label: Repair Purchase Invoices
+    control: grid
+    columns:
+      - Purchase Invoice
+      - Expense Account
+      - Repair Cost
+  - label: Repair Cost
+    control: money
+    binds: AssetRepair.repair_cost
+    validation: read only (computed or filled by the program)
+  - label: Stock Items
+    control: grid
+    columns:
+      - Item
+      - Warehouse
+      - Valuation Rate
+      - Consumed Quantity
+      - Total Value
+  - label: Consumed Items Cost
+    control: money
+    binds: AssetRepair.consumed_items_cost
+    validation: "shown only when eval: doc.consumed_items_cost"
+  - label: Capitalize Repair Cost
+    control: checkbox
+    binds: AssetRepair.capitalize_repair_cost
+    validation: shown only when eval:!doc.__islocal
+  - label: Increase In Asset Life(Months)
+    control: number
+    binds: AssetRepair.increase_in_asset_life
+    validation: shown only when capitalize_repair_cost
+  - label: Asset Value Updated
+    control: checkbox
+    binds: AssetRepair.asset_value_updated
+    validation: read only (computed or filled by the program)
+  - label: Total Repair Cost
+    control: money
+    binds: AssetRepair.total_repair_cost
+    validation: read only (computed or filled by the program)
+  - label: Cost Center
+    control: lookup
+    binds: AssetRepair.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: AssetRepair.project
+    validation: chosen among Project records
+actions:
+  - label: Save
+    triggers: F-103
+  - label: Submit
+    triggers: F-103
+  - label: Cancel
+    triggers: F-103
+  - label: Amend
+    triggers: F-103
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Repair
+    note: declared by the program

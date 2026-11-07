@@ -1,0 +1,27 @@
+id: S-143
+title: Data Export
+purpose: settings of Data Export
+kind: settings
+layout: 3 fields
+fields:
+  - label: Select Doctype
+    control: lookup
+    binds: DataExport.reference_doctype
+    required: true
+    validation: chosen among DocType records
+  - label: Export without main header
+    control: checkbox
+    binds: DataExport.export_without_main_header
+  - label: File Type
+    control: select
+    binds: DataExport.file_type
+    required: true
+actions:
+  - label: Save
+    triggers: F-144
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Data Export
+    note: declared by the program

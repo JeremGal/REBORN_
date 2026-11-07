@@ -1,0 +1,48 @@
+id: S-377
+title: Territory
+purpose: create, view and edit Territory records
+kind: form
+layout: "sections: Territory Targets; 8 fields"
+fields:
+  - label: Territory Name
+    control: text
+    binds: Territory.territory_name
+    required: true
+  - label: Parent Territory
+    control: lookup
+    binds: Territory.parent_territory
+    validation: chosen among Territory records
+  - label: Is Group
+    control: checkbox
+    binds: Territory.is_group
+  - label: Territory Manager
+    control: lookup
+    binds: Territory.territory_manager
+    validation: chosen among Sales Person records
+  - label: lft
+    control: number
+    binds: Territory.lft
+  - label: rgt
+    control: number
+    binds: Territory.rgt
+  - label: old_parent
+    control: lookup
+    binds: Territory.old_parent
+    validation: chosen among Territory records
+  - label: Targets
+    control: grid
+    columns:
+      - Item Group
+      - Fiscal Year
+      - Target Qty
+      - Target  Amount
+      - Target Distribution
+actions:
+  - label: Save
+    triggers: F-378
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Territory
+    note: declared by the program

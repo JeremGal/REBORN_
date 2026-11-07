@@ -1,0 +1,138 @@
+id: run-20261107T194304-h-EXP_014
+mission: M-003
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_014.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T19:41:43.200Z
+ended_at: 2026-11-07T19:43:04.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.199, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+    screenshot: step_01.png
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+    screenshot: step_02.png
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+    screenshot: step_03.png
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 600, "scroll_element": null})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Total"})'
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["enter"]})'
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+    screenshot: step_11.png
+  - n: 12
+    action:
+      type: other
+      target_desc: 'web_fetch({"url": "https://***/desk/accounts/sales-invoice/ACC-SINV-2026-00010", "render_js": true, "extract_images": false})'
+    screenshot: step_12.png
+  - n: 13
+    action:
+      type: other
+      target_desc: 'go_to_web({"url": "https://***/desk/accounts/sales-invoice/ACC-SINV-2026-00010"})'
+    screenshot: step_13.png
+  - n: 14
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+    screenshot: step_14.png
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+    screenshot: step_15.png
+  - n: 16
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Total"})'
+    screenshot: step_16.png
+  - n: 17
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["enter"]})'
+    screenshot: step_17.png
+  - n: 18
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.5, "element": "Main content area of the invoice form"})'
+    screenshot: step_18.png
+  - n: 19
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+    screenshot: step_19.png
+  - n: 20
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+    screenshot: step_20.png
+  - n: 21
+    action:
+      type: other
+      target_desc: 'answer({"notes": "Taxes rows: 1) Sur le total... 44587 - Ta... rate 10% amount $100.00; 2) Le Total de... 44578 - Ta... rate 5% amount $110.00. Total des Taxes et Frais (USD): $15.50. Total TTC (USD): $115.50. Total arrondi (USD): $115.50.", "net_total": "$100.00", "grand_total": "$115.50", "line_am'
+  - n: 22
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_20.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Invoice
+        path: /app/sales-invoice/ACC-SINV-2026-00010
+        kind: totals
+      document_name: null
+      net_total: $100.00
+      total_taxes_and_charges: $15.50
+      grand_total: $115.50
+      rounded_total: $115.50
+      line_amounts:
+        - "TEST-ART-001: TEST Article: $100.00 (10 × $10.00)"
+      notes: "Taxes rows: 1) Sur le total... 44587 - Ta... rate 10% amount $100.00; 2) Le Total de... 44578 - Ta... rate 5% amount $110.00. Total des Taxes et Frais (USD): $15.50. Total TTC (USD): $115.50. Total arrondi (USD): $115.50."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/6aa5885a-e735-4f4a-9ec8-1b7999d3b83e attempts: 1"

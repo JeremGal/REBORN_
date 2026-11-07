@@ -1,0 +1,29 @@
+id: S-268
+title: Email Unsubscribe
+purpose: create, view and edit Email Unsubscribe records
+kind: form
+layout: 4 fields
+fields:
+  - label: Email
+    control: text
+    binds: EmailUnsubscribe.email
+    required: true
+  - label: Reference Document Type
+    control: lookup
+    binds: EmailUnsubscribe.reference_doctype
+    validation: chosen among DocType records
+  - label: Reference Name
+    control: lookup
+    binds: EmailUnsubscribe.reference_name
+  - label: Global Unsubscribe
+    control: checkbox
+    binds: EmailUnsubscribe.global_unsubscribe
+actions:
+  - label: Save
+    triggers: F-269
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Email Unsubscribe
+    note: declared by the program

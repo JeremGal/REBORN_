@@ -1,0 +1,76 @@
+id: S-069
+title: Process Payment Reconciliation
+purpose: create, view and edit Process Payment Reconciliation records
+kind: form
+layout: "sections: Filters, Status; 14 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: ProcessPaymentReconciliation.company
+    required: true
+    validation: chosen among Company records
+  - label: Party Type
+    control: lookup
+    binds: ProcessPaymentReconciliation.party_type
+    required: true
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: ProcessPaymentReconciliation.party
+    required: true
+  - label: Receivable/Payable Account
+    control: lookup
+    binds: ProcessPaymentReconciliation.receivable_payable_account
+    required: true
+    validation: chosen among Account records
+  - label: Default Advance Account
+    control: lookup
+    binds: ProcessPaymentReconciliation.default_advance_account
+    validation: shown only when eval:doc.party; chosen among Account records
+  - label: From Invoice Date
+    control: date
+    binds: ProcessPaymentReconciliation.from_invoice_date
+  - label: To Invoice Date
+    control: date
+    binds: ProcessPaymentReconciliation.to_invoice_date
+  - label: From Payment Date
+    control: date
+    binds: ProcessPaymentReconciliation.from_payment_date
+  - label: To Payment Date
+    control: date
+    binds: ProcessPaymentReconciliation.to_payment_date
+  - label: Cost Center
+    control: lookup
+    binds: ProcessPaymentReconciliation.cost_center
+    validation: chosen among Cost Center records
+  - label: Bank/Cash Account
+    control: lookup
+    binds: ProcessPaymentReconciliation.bank_cash_account
+    validation: chosen among Account records
+  - label: Status
+    control: select
+    binds: ProcessPaymentReconciliation.status
+    validation: read only (computed or filled by the program)
+  - label: Error Log
+    control: text
+    binds: ProcessPaymentReconciliation.error_log
+    validation: shown only when eval:doc.error_log
+  - label: Amended From
+    control: lookup
+    binds: ProcessPaymentReconciliation.amended_from
+    validation: read only (computed or filled by the program); chosen among Process Payment Reconciliation records
+actions:
+  - label: Save
+    triggers: F-070
+  - label: Submit
+    triggers: F-070
+  - label: Cancel
+    triggers: F-070
+  - label: Amend
+    triggers: F-070
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Process Payment Reconciliation
+    note: declared by the program

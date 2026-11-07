@@ -1,0 +1,137 @@
+id: S-023
+title: Budget
+purpose: create, view and edit Budget records
+kind: form
+layout: "sections: Control Action, Control Action for Cumulative Expense; 29 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Budget.naming_series
+    required: true
+  - label: Budget Against
+    control: select
+    binds: Budget.budget_against
+    required: true
+  - label: Company
+    control: lookup
+    binds: Budget.company
+    required: true
+    validation: chosen among Company records
+  - label: Cost Center
+    control: lookup
+    binds: Budget.cost_center
+    validation: shown only when eval:doc.budget_against == 'Cost Center'; chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: Budget.project
+    validation: shown only when eval:doc.budget_against == 'Project'; chosen among Project records
+  - label: Account
+    control: lookup
+    binds: Budget.account
+    required: true
+    validation: chosen among Account records
+  - label: Amended From
+    control: lookup
+    binds: Budget.amended_from
+    validation: read only (computed or filled by the program); chosen among Budget records
+  - label: From Fiscal Year
+    control: lookup
+    binds: Budget.from_fiscal_year
+    required: true
+    validation: chosen among Fiscal Year records
+  - label: To Fiscal Year
+    control: lookup
+    binds: Budget.to_fiscal_year
+    required: true
+    validation: chosen among Fiscal Year records
+  - label: Budget Start Date
+    control: date
+    binds: Budget.budget_start_date
+  - label: Budget End Date
+    control: date
+    binds: Budget.budget_end_date
+  - label: Distribution Frequency
+    control: select
+    binds: Budget.distribution_frequency
+    required: true
+  - label: Budget Amount
+    control: money
+    binds: Budget.budget_amount
+    required: true
+  - label: Distribute Equally
+    control: checkbox
+    binds: Budget.distribute_equally
+  - label: Budget Distribution
+    control: grid
+    columns:
+      - Start Date
+      - End Date
+      - Amount
+      - Percent
+  - label: Budget Distribution Total
+    control: money
+    binds: Budget.budget_distribution_total
+    validation: read only (computed or filled by the program)
+  - label: Applicable on Material Request
+    control: checkbox
+    binds: Budget.applicable_on_material_request
+  - label: Action if Annual Budget Exceeded on MR
+    control: select
+    binds: Budget.action_if_annual_budget_exceeded_on_mr
+    validation: shown only when eval:doc.applicable_on_material_request == 1
+  - label: Action if Accumulated Monthly Budget Exceeded on MR
+    control: select
+    binds: Budget.action_if_accumulated_monthly_budget_exceeded_on_mr
+    validation: shown only when eval:doc.applicable_on_material_request == 1
+  - label: Applicable on Purchase Order
+    control: checkbox
+    binds: Budget.applicable_on_purchase_order
+  - label: Action if Annual Budget Exceeded on PO
+    control: select
+    binds: Budget.action_if_annual_budget_exceeded_on_po
+    validation: shown only when eval:doc.applicable_on_purchase_order == 1
+  - label: Action if Accumulated Monthly Budget Exceeded on PO
+    control: select
+    binds: Budget.action_if_accumulated_monthly_budget_exceeded_on_po
+    validation: shown only when eval:doc.applicable_on_purchase_order == 1
+  - label: Applicable on booking actual expenses
+    control: checkbox
+    binds: Budget.applicable_on_booking_actual_expenses
+  - label: Action if Annual Budget Exceeded on Actual
+    control: select
+    binds: Budget.action_if_annual_budget_exceeded
+    validation: shown only when eval:doc.applicable_on_booking_actual_expenses == 1
+  - label: Action if Accumulated Monthly Budget Exceeded on Actual
+    control: select
+    binds: Budget.action_if_accumulated_monthly_budget_exceeded
+    validation: shown only when eval:doc.applicable_on_booking_actual_expenses == 1
+  - label: Applicable on Cumulative Expense
+    control: checkbox
+    binds: Budget.applicable_on_cumulative_expense
+  - label: Action if Anual Budget Exceeded on Cumulative Expense
+    control: select
+    binds: Budget.action_if_annual_exceeded_on_cumulative_expense
+    validation: shown only when eval:doc.applicable_on_cumulative_expense == 1
+  - label: Action if Accumulative Monthly Budget Exceeded on Cumulative Expense
+    control: select
+    binds: Budget.action_if_accumulated_monthly_exceeded_on_cumulative_expense
+    validation: shown only when eval:doc.applicable_on_cumulative_expense == 1
+  - label: Revision Of
+    control: text
+    binds: Budget.revision_of
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-024
+  - label: Submit
+    triggers: F-024
+  - label: Cancel
+    triggers: F-024
+  - label: Amend
+    triggers: F-024
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Budget
+    note: declared by the program

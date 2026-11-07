@@ -1,0 +1,89 @@
+id: S-424
+title: Warehouse
+purpose: create, view and edit Warehouse records
+kind: form
+layout: "sections: Warehouse Detail, Address and Contact, Warehouse Contact Info, Transit, Tree Details; 21 fields"
+fields:
+  - label: Disabled
+    control: checkbox
+    binds: Warehouse.disabled
+  - label: Warehouse Name
+    control: text
+    binds: Warehouse.warehouse_name
+    required: true
+  - label: Company
+    control: lookup
+    binds: Warehouse.company
+    required: true
+    validation: chosen among Company records
+  - label: Is Rejected Warehouse
+    control: checkbox
+    binds: Warehouse.is_rejected_warehouse
+  - label: Account
+    control: lookup
+    binds: Warehouse.account
+    validation: chosen among Account records
+  - label: Parent Warehouse
+    control: lookup
+    binds: Warehouse.parent_warehouse
+    validation: chosen among Warehouse records
+  - label: Is Group Warehouse
+    control: checkbox
+    binds: Warehouse.is_group
+  - label: Customer
+    control: lookup
+    binds: Warehouse.customer
+    validation: shown only when eval:!doc.disabled; chosen among Customer records
+  - label: Email Address
+    control: text
+    binds: Warehouse.email_id
+  - label: Phone No
+    control: text
+    binds: Warehouse.phone_no
+  - label: Mobile No
+    control: text
+    binds: Warehouse.mobile_no
+  - label: Address Line 1
+    control: text
+    binds: Warehouse.address_line_1
+  - label: Address Line 2
+    control: text
+    binds: Warehouse.address_line_2
+  - label: City
+    control: text
+    binds: Warehouse.city
+  - label: State/Province
+    control: text
+    binds: Warehouse.state
+  - label: PIN
+    control: text
+    binds: Warehouse.pin
+  - label: Warehouse Type
+    control: lookup
+    binds: Warehouse.warehouse_type
+    validation: shown only when eval:(!doc.is_group);; chosen among Warehouse Type records
+  - label: Default In-Transit Warehouse
+    control: lookup
+    binds: Warehouse.default_in_transit_warehouse
+    validation: "shown only when eval: doc.warehouse_type !== 'Transit';; chosen among Warehouse records"
+  - label: lft
+    control: number
+    binds: Warehouse.lft
+    validation: read only (computed or filled by the program)
+  - label: rgt
+    control: number
+    binds: Warehouse.rgt
+    validation: read only (computed or filled by the program)
+  - label: Old Parent
+    control: lookup
+    binds: Warehouse.old_parent
+    validation: read only (computed or filled by the program); chosen among Warehouse records
+actions:
+  - label: Save
+    triggers: F-425
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Warehouse
+    note: declared by the program

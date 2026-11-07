@@ -1,0 +1,93 @@
+id: S-244
+title: Number Card
+purpose: create, view and edit Number Card records
+kind: form
+layout: "sections: Custom Configuration, Stats, Filters Section, Dynamic Filters Section; 22 fields"
+fields:
+  - label: Is Standard
+    control: checkbox
+    binds: NumberCard.is_standard
+  - label: Module
+    control: lookup
+    binds: NumberCard.module
+    validation: "shown only when eval: doc.is_standard; chosen among Module Def records"
+  - label: Label
+    control: text
+    binds: NumberCard.label
+    required: true
+  - label: Type
+    control: select
+    binds: NumberCard.type
+  - label: Report Name
+    control: lookup
+    binds: NumberCard.report_name
+    validation: "shown only when eval: doc.type == 'Report'; chosen among Report records"
+  - label: Method
+    control: text
+    binds: NumberCard.method
+    validation: "shown only when eval: doc.type == 'Custom'"
+  - label: Function
+    control: select
+    binds: NumberCard.function
+    validation: "shown only when eval: doc.type == 'Document Type'"
+  - label: Aggregate Function Based On
+    control: select
+    binds: NumberCard.aggregate_function_based_on
+    validation: "shown only when eval: doc.type === 'Document Type' &&  doc.function !== 'Count'"
+  - label: Document Type
+    control: lookup
+    binds: NumberCard.document_type
+    validation: "shown only when eval: ['Document Type', 'Custom'].includes(doc.type); chosen among DocType records"
+  - label: Parent Document Type
+    control: lookup
+    binds: NumberCard.parent_document_type
+    validation: "shown only when eval: doc.type === 'Document Type'; chosen among DocType records"
+  - label: Field
+    control: select
+    binds: NumberCard.report_field
+    validation: "shown only when eval: doc.type == 'Report'"
+  - label: Function
+    control: select
+    binds: NumberCard.report_function
+    validation: "shown only when eval: doc.type == 'Report'"
+  - label: Is Public
+    control: checkbox
+    binds: NumberCard.is_public
+  - label: Currency
+    control: lookup
+    binds: NumberCard.currency
+    validation: chosen among Currency records
+  - label: Show Full Number
+    control: checkbox
+    binds: NumberCard.show_full_number
+  - label: Filters Configuration
+    control: text
+    binds: NumberCard.filters_config
+  - label: Show Percentage Stats
+    control: checkbox
+    binds: NumberCard.show_percentage_stats
+  - label: Stats Time Interval
+    control: select
+    binds: NumberCard.stats_time_interval
+    validation: "shown only when eval: doc.show_percentage_stats"
+  - label: Filters JSON
+    control: text
+    binds: NumberCard.filters_json
+  - label: Dynamic Filters JSON
+    control: text
+    binds: NumberCard.dynamic_filters_json
+  - label: Color
+    control: other
+    binds: NumberCard.color
+  - label: Background Color
+    control: other
+    binds: NumberCard.background_color
+actions:
+  - label: Save
+    triggers: F-245
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Number Card
+    note: declared by the program

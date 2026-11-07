@@ -1,0 +1,50 @@
+id: S-090
+title: Tax Withholding Category
+purpose: create, view and edit Tax Withholding Category records
+kind: form
+layout: "sections: Category Details, Tax Withholding Rates, Account Details; 8 fields"
+fields:
+  - label: Category Name
+    control: text
+    binds: TaxWithholdingCategory.category_name
+  - label: Deduct Tax On Basis
+    control: select
+    binds: TaxWithholdingCategory.tax_deduction_basis
+    required: true
+  - label: Round Off Tax Amount
+    control: checkbox
+    binds: TaxWithholdingCategory.round_off_tax_amount
+  - label: "Only Deduct Tax On Excess Amount "
+    control: checkbox
+    binds: TaxWithholdingCategory.tax_on_excess_amount
+  - label: Disable Cumulative Threshold
+    control: checkbox
+    binds: TaxWithholdingCategory.disable_cumulative_threshold
+  - label: Disable Transaction Threshold
+    control: checkbox
+    binds: TaxWithholdingCategory.disable_transaction_threshold
+  - label: Rates
+    control: grid
+    required: true
+    columns:
+      - From Date
+      - To Date
+      - Tax Withholding Group
+      - Tax Withholding Rate
+      - Cumulative Threshold
+      - Transaction Threshold
+  - label: Accounts
+    control: grid
+    required: true
+    columns:
+      - Company
+      - Account
+actions:
+  - label: Save
+    triggers: F-091
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Tax Withholding Category
+    note: declared by the program

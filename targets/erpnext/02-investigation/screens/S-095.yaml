@@ -1,0 +1,124 @@
+id: S-095
+title: Asset Capitalization
+purpose: create, view and edit Asset Capitalization records
+kind: form
+layout: "sections: Consumed Stock Items, Consumed Assets, Service Expenses, Totals, Accounting Dimensions; 22 fields"
+fields:
+  - label: Title
+    control: text
+    binds: AssetCapitalization.title
+  - label: Series
+    control: select
+    binds: AssetCapitalization.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: AssetCapitalization.company
+    required: true
+    validation: chosen among Company records
+  - label: Target Asset
+    control: lookup
+    binds: AssetCapitalization.target_asset
+    required: true
+    validation: chosen among Asset records
+  - label: Asset Name
+    control: text
+    binds: AssetCapitalization.target_asset_name
+    validation: read only (computed or filled by the program)
+  - label: Finance Book
+    control: lookup
+    binds: AssetCapitalization.finance_book
+    validation: chosen among Finance Book records
+  - label: Posting Date
+    control: date
+    binds: AssetCapitalization.posting_date
+    required: true
+  - label: Posting Time
+    control: date
+    binds: AssetCapitalization.posting_time
+    required: true
+  - label: Edit Posting Date and Time
+    control: checkbox
+    binds: AssetCapitalization.set_posting_time
+    validation: shown only when eval:doc.docstatus==0
+  - label: Target Item Code
+    control: lookup
+    binds: AssetCapitalization.target_item_code
+    validation: read only (computed or filled by the program); shown only when eval:(doc.target_item_code && !doc.__islocal); chosen among Item records
+  - label: Amended From
+    control: lookup
+    binds: AssetCapitalization.amended_from
+    validation: read only (computed or filled by the program); chosen among Asset Capitalization records
+  - label: Stock Items
+    control: grid
+    columns:
+      - Item Code
+      - Warehouse
+      - Quantity
+      - Valuation Rate
+      - Amount
+      - Stock UOM
+  - label: Consumed Stock Total Value
+    control: money
+    binds: AssetCapitalization.stock_items_total
+    validation: "read only (computed or filled by the program); shown only when eval: doc.stock_items_total"
+  - label: Assets
+    control: grid
+    columns:
+      - Asset
+      - Asset Name
+      - Item Code
+      - Current Asset Value
+      - Asset Value
+  - label: Consumed Asset Total Value
+    control: money
+    binds: AssetCapitalization.asset_items_total
+    validation: "read only (computed or filled by the program); shown only when eval: doc.asset_items_total"
+  - label: Services
+    control: grid
+    columns:
+      - Item Code
+      - Expense Account
+      - Qty
+      - UOM
+      - Rate
+      - Amount
+  - label: Service Expense Total Amount
+    control: money
+    binds: AssetCapitalization.service_items_total
+    validation: "read only (computed or filled by the program); shown only when eval: doc.service_items_total"
+  - label: Total Value
+    control: money
+    binds: AssetCapitalization.total_value
+    validation: read only (computed or filled by the program)
+  - label: Target Incoming Rate
+    control: money
+    binds: AssetCapitalization.target_incoming_rate
+    validation: read only (computed or filled by the program)
+  - label: Cost Center
+    control: lookup
+    binds: AssetCapitalization.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: AssetCapitalization.project
+    validation: chosen among Project records
+  - label: Target Fixed Asset Account
+    control: lookup
+    binds: AssetCapitalization.target_fixed_asset_account
+    validation: read only (computed or filled by the program); chosen among Account records
+actions:
+  - label: Save
+    triggers: F-096
+  - label: Submit
+    triggers: F-096
+  - label: Cancel
+    triggers: F-096
+  - label: Amend
+    triggers: F-096
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Capitalization
+    note: declared by the program

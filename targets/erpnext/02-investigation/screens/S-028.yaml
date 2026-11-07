@@ -1,0 +1,45 @@
+id: S-028
+title: Cost Center Allocation
+purpose: create, view and edit Cost Center Allocation records
+kind: form
+layout: 5 fields
+fields:
+  - label: Main Cost Center
+    control: lookup
+    binds: CostCenterAllocation.main_cost_center
+    required: true
+    validation: chosen among Cost Center records
+  - label: Company
+    control: lookup
+    binds: CostCenterAllocation.company
+    required: true
+    validation: chosen among Company records
+  - label: Valid From
+    control: date
+    binds: CostCenterAllocation.valid_from
+    required: true
+  - label: Cost Center Allocation Percentages
+    control: grid
+    required: true
+    columns:
+      - Cost Center
+      - Percentage (%)
+  - label: Amended From
+    control: lookup
+    binds: CostCenterAllocation.amended_from
+    validation: read only (computed or filled by the program); chosen among Cost Center Allocation records
+actions:
+  - label: Save
+    triggers: F-029
+  - label: Submit
+    triggers: F-029
+  - label: Cancel
+    triggers: F-029
+  - label: Amend
+    triggers: F-029
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Cost Center Allocation
+    note: declared by the program

@@ -1,0 +1,31 @@
+id: S-346
+title: Party Specific Item
+purpose: create, view and edit Party Specific Item records
+kind: form
+layout: 4 fields
+fields:
+  - label: Party Type
+    control: select
+    binds: PartySpecificItem.party_type
+    required: true
+  - label: Party Name
+    control: lookup
+    binds: PartySpecificItem.party
+    required: true
+  - label: Restrict Items Based On
+    control: select
+    binds: PartySpecificItem.restrict_based_on
+    required: true
+  - label: Based On Value
+    control: lookup
+    binds: PartySpecificItem.based_on_value
+    required: true
+actions:
+  - label: Save
+    triggers: F-347
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Party Specific Item
+    note: declared by the program

@@ -1,0 +1,159 @@
+id: S-296
+title: BOM Creator
+purpose: create, view and edit BOM Creator records
+kind: form
+layout: "tabs: Design, Costing, Details, Connections; sections: More Information; 32 fields"
+fields:
+  - label: Design Name
+    control: text
+    binds: BOMCreator.design_name
+  - label: Finished Good
+    control: lookup
+    binds: BOMCreator.item_code
+    required: true
+    validation: chosen among Item records
+  - label: Company
+    control: lookup
+    binds: BOMCreator.company
+    required: true
+    validation: chosen among Company records
+  - label: Design File
+    control: other
+    binds: BOMCreator.design_file
+  - label: Produce Item per Operation
+    control: checkbox
+    binds: BOMCreator.track_semi_finished_goods
+    validation: shown only when eval:!doc.is_phantom
+  - label: Finished Good Quantity
+    control: number
+    binds: BOMCreator.qty
+    required: true
+    validation: shown only when track_semi_finished_goods
+  - label: Items
+    control: grid
+    columns:
+      - Part Number
+      - Quantity
+      - Change
+      - Item Code
+      - UOM
+  - label: Operations
+    control: grid
+    columns:
+      - Operation
+      - Workstation Type
+      - Operation Time (Minutes)
+      - Output Item
+  - label: Materials
+    control: grid
+    columns:
+      - Part Node
+      - Item Code
+      - Quantity
+      - UOM
+  - label: Rate Of Materials Based On
+    control: select
+    binds: BOMCreator.rm_cost_as_per
+    required: true
+  - label: Price List
+    control: lookup
+    binds: BOMCreator.buying_price_list
+    validation: shown only when eval:doc.rm_cost_as_per==="Price List"; chosen among Price List records
+  - label: Price List Currency
+    control: lookup
+    binds: BOMCreator.price_list_currency
+    validation: read only (computed or filled by the program); shown only when eval:doc.rm_cost_as_per=='Price List'; chosen among Currency records
+  - label: Price List Exchange Rate
+    control: number
+    binds: BOMCreator.plc_conversion_rate
+    validation: shown only when eval:doc.rm_cost_as_per=='Price List'
+  - label: Set Valuation Rate Based on Source Warehouse
+    control: checkbox
+    binds: BOMCreator.set_rate_based_on_warehouse
+    validation: shown only when eval:doc.rm_cost_as_per === "Valuation Rate"
+  - label: Default Source Warehouse
+    control: lookup
+    binds: BOMCreator.default_warehouse
+    validation: shown only when eval:doc.rm_cost_as_per === "Valuation Rate"; chosen among Warehouse records
+  - label: Currency
+    control: lookup
+    binds: BOMCreator.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Conversion Rate
+    control: number
+    binds: BOMCreator.conversion_rate
+  - label: Total Cost
+    control: money
+    binds: BOMCreator.raw_material_cost
+    validation: read only (computed or filled by the program)
+  - label: Series
+    control: select
+    binds: BOMCreator.naming_series
+    required: true
+  - label: Item Group for New Items
+    control: lookup
+    binds: BOMCreator.item_group
+    validation: chosen among Item Group records
+  - label: Project
+    control: lookup
+    binds: BOMCreator.project
+    validation: chosen among Project records
+  - label: Routing
+    control: lookup
+    binds: BOMCreator.routing
+    validation: shown only when eval:!doc.is_phantom && !doc.track_semi_finished_goods; chosen among Routing records
+  - label: Part Number
+    control: text
+    binds: BOMCreator.part_number
+    validation: shown only when design_file
+  - label: Is Phantom BOM
+    control: checkbox
+    binds: BOMCreator.is_phantom
+    validation: shown only when eval:!doc.track_semi_finished_goods
+  - label: Item Name
+    control: text
+    binds: BOMCreator.item_name
+    validation: read only (computed or filled by the program)
+  - label: UOM
+    control: lookup
+    binds: BOMCreator.uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Remarks
+    control: text
+    binds: BOMCreator.remarks
+  - label: Status
+    control: select
+    binds: BOMCreator.status
+    validation: read only (computed or filled by the program)
+  - label: Previous Revision
+    control: lookup
+    binds: BOMCreator.previous_revision
+    validation: read only (computed or filled by the program); chosen among BOM Creator records
+  - label: Error Log
+    control: text
+    binds: BOMCreator.error_log
+    validation: read only (computed or filled by the program); shown only when error_log
+  - label: Revision
+    control: number
+    binds: BOMCreator.revision
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: BOMCreator.amended_from
+    validation: read only (computed or filled by the program); chosen among BOM Creator records
+actions:
+  - label: Save
+    triggers: F-297
+  - label: Submit
+    triggers: F-297
+  - label: Cancel
+    triggers: F-297
+  - label: Amend
+    triggers: F-297
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of BOM Creator
+    note: declared by the program

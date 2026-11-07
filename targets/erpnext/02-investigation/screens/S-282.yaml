@@ -1,0 +1,47 @@
+id: S-282
+title: OAuth Bearer Token
+purpose: create, view and edit OAuth Bearer Token records
+kind: form
+layout: 8 fields
+fields:
+  - label: OAuth Client
+    control: lookup
+    binds: OAuthBearerToken.client
+    validation: read only (computed or filled by the program); chosen among OAuth Client records
+  - label: User
+    control: lookup
+    binds: OAuthBearerToken.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Scopes
+    control: text
+    binds: OAuthBearerToken.scopes
+    validation: read only (computed or filled by the program)
+  - label: Access Token
+    control: text
+    binds: OAuthBearerToken.access_token
+    validation: read only (computed or filled by the program)
+  - label: Refresh Token
+    control: text
+    binds: OAuthBearerToken.refresh_token
+    validation: read only (computed or filled by the program)
+  - label: Expiration time
+    control: date
+    binds: OAuthBearerToken.expiration_time
+    validation: read only (computed or filled by the program)
+  - label: Expires In
+    control: number
+    binds: OAuthBearerToken.expires_in
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: OAuthBearerToken.status
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-283
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of OAuth Bearer Token
+    note: declared by the program

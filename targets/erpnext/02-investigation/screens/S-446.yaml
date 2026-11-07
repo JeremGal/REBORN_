@@ -1,0 +1,22 @@
+id: S-446
+title: Discussion Reply
+purpose: create, view and edit Discussion Reply records
+kind: form
+layout: 2 fields
+fields:
+  - label: Topic
+    control: lookup
+    binds: DiscussionReply.topic
+    validation: chosen among Discussion Topic records
+  - label: Reply
+    control: text
+    binds: DiscussionReply.reply
+actions:
+  - label: Save
+    triggers: F-447
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Discussion Reply
+    note: declared by the program

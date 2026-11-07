@@ -1,0 +1,46 @@
+id: F-269
+title: Create and edit a Email Unsubscribe
+module: Email
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Email Unsubscribe records.
+entry_points:
+  - screen: S-268
+    action: open the form
+inputs:
+  - label: Email
+    field: EmailUnsubscribe.email
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Email Unsubscribe form
+    screen: S-268
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Email"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Email Unsubscribe record stored
+    entities:
+      - EmailUnsubscribe
+entities:
+  - EmailUnsubscribe
+screens:
+  - S-268
+acceptance:
+  - id: AC-270
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Email Unsubscribe
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

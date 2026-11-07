@@ -1,0 +1,61 @@
+id: F-106
+title: Create, submit and cancel a Asset Value Adjustment
+module: Assets
+priority: must
+status: partial
+confidence: medium
+user_goal: Changes an asset's value outside its depreciation.
+entry_points:
+  - screen: S-105
+    action: open the form
+inputs:
+  - label: Asset
+    field: AssetValueAdjustment.asset
+    type: ref
+    required: true
+  - label: Date
+    field: AssetValueAdjustment.date
+    type: date
+    required: true
+  - label: New Asset Value
+    field: AssetValueAdjustment.new_asset_value
+    type: money
+    required: true
+  - label: Difference Account
+    field: AssetValueAdjustment.difference_account
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Asset Value Adjustment form
+    screen: S-105
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Asset, Date, New Asset Value, Difference Account"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 4
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Asset Value Adjustment record stored
+    entities:
+      - AssetValueAdjustment
+entities:
+  - AssetValueAdjustment
+screens:
+  - S-105
+acceptance:
+  - id: AC-107
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Asset Value Adjustment
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"asset-value-adjustment\")."

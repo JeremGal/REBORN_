@@ -1,0 +1,67 @@
+id: S-279
+title: Integration Request
+purpose: create, view and edit Integration Request records
+kind: form
+layout: "sections: Response, Reference; 13 fields"
+fields:
+  - label: Request ID
+    control: text
+    binds: IntegrationRequest.request_id
+    validation: read only (computed or filled by the program)
+  - label: Service
+    control: text
+    binds: IntegrationRequest.integration_request_service
+    validation: read only (computed or filled by the program)
+  - label: Is Remote Request?
+    control: checkbox
+    binds: IntegrationRequest.is_remote_request
+    validation: read only (computed or filled by the program)
+  - label: Request Description
+    control: text
+    binds: IntegrationRequest.request_description
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: IntegrationRequest.status
+    validation: read only (computed or filled by the program)
+  - label: URL
+    control: text
+    binds: IntegrationRequest.url
+    validation: read only (computed or filled by the program)
+  - label: Request Headers
+    control: text
+    binds: IntegrationRequest.request_headers
+    validation: read only (computed or filled by the program)
+  - label: Request Data
+    control: text
+    binds: IntegrationRequest.data
+    validation: read only (computed or filled by the program)
+  - label: Response Headers
+    control: text
+    binds: IntegrationRequest.response_headers
+    validation: read only (computed or filled by the program)
+  - label: Output
+    control: text
+    binds: IntegrationRequest.output
+    validation: read only (computed or filled by the program)
+  - label: Error
+    control: text
+    binds: IntegrationRequest.error
+    validation: read only (computed or filled by the program)
+  - label: Reference Document Type
+    control: lookup
+    binds: IntegrationRequest.reference_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Reference Document Name
+    control: lookup
+    binds: IntegrationRequest.reference_docname
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-280
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Integration Request
+    note: declared by the program

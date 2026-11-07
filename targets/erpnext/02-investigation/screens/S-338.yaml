@@ -1,0 +1,51 @@
+id: S-338
+title: Import Supplier Invoice
+purpose: create, view and edit Import Supplier Invoice records
+kind: form
+layout: "sections: Upload XML Invoices; 8 fields"
+fields:
+  - label: Invoice Series
+    control: select
+    binds: ImportSupplierInvoice.invoice_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: ImportSupplierInvoice.company
+    required: true
+    validation: chosen among Company records
+  - label: Item Code
+    control: lookup
+    binds: ImportSupplierInvoice.item_code
+    required: true
+    validation: chosen among Item records
+  - label: Supplier Group
+    control: lookup
+    binds: ImportSupplierInvoice.supplier_group
+    required: true
+    validation: chosen among Supplier Group records
+  - label: Tax Account
+    control: lookup
+    binds: ImportSupplierInvoice.tax_account
+    required: true
+    validation: chosen among Account records
+  - label: Default Buying Price List
+    control: lookup
+    binds: ImportSupplierInvoice.default_buying_price_list
+    required: true
+    validation: chosen among Price List records
+  - label: Zip File
+    control: other
+    binds: ImportSupplierInvoice.zip_file
+  - label: Status
+    control: text
+    binds: ImportSupplierInvoice.status
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-339
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Import Supplier Invoice
+    note: declared by the program

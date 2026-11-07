@@ -1,0 +1,129 @@
+id: S-352
+title: Selling Settings
+purpose: settings of Selling Settings
+kind: settings
+layout: "tabs: Customer Defaults, Pricing, Transaction, Advanced Features, Subcontracting Inward, Document Naming; sections: Transaction Settings, Zero-Quantity Line Items, Blanket Orders, Proforma Invoice, Experimental; 35 fields"
+fields:
+  - label: Customer Naming By
+    control: select
+    binds: SellingSettings.cust_master_name
+  - label: Naming Series options
+    control: text
+    binds: SellingSettings.naming_series_details
+    validation: read only (computed or filled by the program)
+  - label: Default Customer Group
+    control: lookup
+    binds: SellingSettings.customer_group
+    validation: chosen among Customer Group records
+  - label: Default Territory
+    control: lookup
+    binds: SellingSettings.territory
+    validation: chosen among Territory records
+  - label: Default Price List
+    control: lookup
+    binds: SellingSettings.selling_price_list
+    validation: chosen among Price List records
+  - label: Use prices from Default Price List as fallback
+    control: checkbox
+    binds: SellingSettings.fallback_to_default_price_list
+  - label: Allow editing Price List rate in transactions
+    control: checkbox
+    binds: SellingSettings.editable_price_list_rate
+  - label: Maintain same rate throughout sales cycle
+    control: checkbox
+    binds: SellingSettings.maintain_same_sales_rate
+  - label: Action if same rate is not maintained throughout sales cycle
+    control: select
+    binds: SellingSettings.maintain_same_rate_action
+    validation: shown only when maintain_same_sales_rate
+  - label: Role allowed to override stop action
+    control: lookup
+    binds: SellingSettings.role_to_override_stop_action
+    validation: "shown only when eval: doc.maintain_same_sales_rate && doc.maintain_same_rate_action == 'Stop'; chosen among Role records"
+  - label: Validate selling price for Item against purchase or valuation rate
+    control: checkbox
+    binds: SellingSettings.validate_selling_price
+  - label: Calculate Product Bundle price based on child Item's rates
+    control: checkbox
+    binds: SellingSettings.editable_bundle_item_rates
+  - label: Allow negative rates for Items
+    control: checkbox
+    binds: SellingSettings.allow_negative_rates_for_items
+  - label: Is Sales Order required to create Sales Invoice/Delivery Note?
+    control: select
+    binds: SellingSettings.so_required
+  - label: Is Delivery Note required to create Sales Invoice?
+    control: select
+    binds: SellingSettings.dn_required
+  - label: How often should sales data be updated in Company/Project?
+    control: select
+    binds: SellingSettings.sales_update_frequency
+    required: true
+  - label: Allow same Item to be added multiple times in a transaction
+    control: checkbox
+    binds: SellingSettings.allow_multiple_items
+  - label: Allow multiple Sales Orders against a customer's Purchase Order
+    control: checkbox
+    binds: SellingSettings.allow_against_multiple_purchase_orders
+  - label: Hide Customer's Tax ID from sales transactions
+    control: checkbox
+    binds: SellingSettings.hide_tax_id
+  - label: Allow Sales Order creation for expired Quotation
+    control: checkbox
+    binds: SellingSettings.allow_sales_order_creation_for_expired_quotation
+  - label: Don't reserve Sales Order qty on sales return
+    control: checkbox
+    binds: SellingSettings.dont_reserve_sales_order_qty_on_sales_return
+  - label: Enable cut-off date on creating bulk Delivery Notes
+    control: checkbox
+    binds: SellingSettings.enable_cutoff_date_on_bulk_delivery_note_creation
+  - label: Set incoming rate as zero for expired Batch
+    control: checkbox
+    binds: SellingSettings.set_zero_rate_for_expired_batch
+  - label: Allow Quotation with zero quantity
+    control: checkbox
+    binds: SellingSettings.allow_zero_qty_in_quotation
+  - label: Allow Sales Order with zero quantity
+    control: checkbox
+    binds: SellingSettings.allow_zero_qty_in_sales_order
+  - label: Blanket Order Allowance (%)
+    control: number
+    binds: SellingSettings.blanket_order_allowance
+  - label: Enable Proforma Invoice
+    control: checkbox
+    binds: SellingSettings.enable_proforma_invoice
+  - label: Default Proforma Print Format
+    control: lookup
+    binds: SellingSettings.default_proforma_print_format
+    validation: shown only when enable_proforma_invoice; chosen among Print Format records
+  - label: Proforma Email Template
+    control: lookup
+    binds: SellingSettings.proforma_email_template
+    validation: shown only when enable_proforma_invoice; chosen among Email Template records
+  - label: Enable tracking sales commissions
+    control: checkbox
+    binds: SellingSettings.enable_tracking_sales_commissions
+  - label: Enable discount accounting for selling
+    control: checkbox
+    binds: SellingSettings.enable_discount_accounting
+  - label: Enable UTM
+    control: checkbox
+    binds: SellingSettings.enable_utm
+  - label: Use Legacy (Client side) Reactivity
+    control: checkbox
+    binds: SellingSettings.use_legacy_js_reactivity
+  - label: Allow delivery of overproduced quantity
+    control: checkbox
+    binds: SellingSettings.allow_delivery_of_overproduced_qty
+  - label: Deliver secondary Items
+    control: checkbox
+    binds: SellingSettings.deliver_secondary_items
+actions:
+  - label: Save
+    triggers: F-353
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Selling Settings
+    note: declared by the program

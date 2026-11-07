@@ -1,0 +1,70 @@
+id: S-063
+title: POS Invoice Merge Log
+purpose: create, view and edit POS Invoice Merge Log records
+kind: form
+layout: "sections: References; 11 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: POSInvoiceMergeLog.company
+    required: true
+    validation: chosen among Company records
+  - label: Posting Date
+    control: date
+    binds: POSInvoiceMergeLog.posting_date
+    required: true
+  - label: Posting Time
+    control: date
+    binds: POSInvoiceMergeLog.posting_time
+    required: true
+  - label: Merge Invoices Based On
+    control: select
+    binds: POSInvoiceMergeLog.merge_invoices_based_on
+    required: true
+  - label: POS Closing Entry
+    control: lookup
+    binds: POSInvoiceMergeLog.pos_closing_entry
+    validation: chosen among POS Closing Entry records
+  - label: Customer
+    control: lookup
+    binds: POSInvoiceMergeLog.customer
+    required: true
+    validation: chosen among Customer records
+  - label: Customer Group
+    control: lookup
+    binds: POSInvoiceMergeLog.customer_group
+    validation: shown only when eval:doc.merge_invoices_based_on == 'Customer Group'; chosen among Customer Group records
+  - label: POS Invoices
+    control: grid
+    required: true
+    columns:
+      - POS Invoice
+      - Date
+      - Amount
+  - label: Consolidated Sales Invoice
+    control: lookup
+    binds: POSInvoiceMergeLog.consolidated_invoice
+    validation: read only (computed or filled by the program); chosen among Sales Invoice records
+  - label: Consolidated Credit Note
+    control: lookup
+    binds: POSInvoiceMergeLog.consolidated_credit_note
+    validation: read only (computed or filled by the program); chosen among Sales Invoice records
+  - label: Amended From
+    control: lookup
+    binds: POSInvoiceMergeLog.amended_from
+    validation: read only (computed or filled by the program); chosen among POS Invoice Merge Log records
+actions:
+  - label: Save
+    triggers: F-064
+  - label: Submit
+    triggers: F-064
+  - label: Cancel
+    triggers: F-064
+  - label: Amend
+    triggers: F-064
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of POS Invoice Merge Log
+    note: declared by the program

@@ -1,0 +1,166 @@
+id: S-456
+title: Web Form
+purpose: create, view and edit Web Form records
+kind: form
+layout: "tabs: Form, Settings, Customization; sections: Access Control, Form Settings, Dynamic Filters, List Settings, Sidebar Settings, After Submission, Meta, Scripting / Style; 42 fields"
+fields:
+  - label: Title
+    control: text
+    binds: WebForm.title
+    required: true
+  - label: Route
+    control: text
+    binds: WebForm.route
+  - label: Published
+    control: checkbox
+    binds: WebForm.published
+  - label: Select DocType
+    control: lookup
+    binds: WebForm.doc_type
+    required: true
+    validation: chosen among DocType records
+  - label: Module
+    control: lookup
+    binds: WebForm.module
+    validation: chosen among Module Def records
+  - label: Is standard
+    control: checkbox
+    binds: WebForm.is_standard
+  - label: Introduction
+    control: text
+    binds: WebForm.introduction_text
+  - label: Web Form Fields
+    control: grid
+    columns:
+      - Field
+      - Fieldtype
+      - Custom Label
+      - Mandatory
+      - Options
+  - label: Key required
+    control: checkbox
+    binds: WebForm.key_required
+  - label: Anonymous responses
+    control: checkbox
+    binds: WebForm.anonymous
+  - label: Login required
+    control: checkbox
+    binds: WebForm.login_required
+    validation: shown only when eval:!doc.anonymous
+  - label: Apply document permissions
+    control: checkbox
+    binds: WebForm.apply_document_permissions
+  - label: Allow editing after submit
+    control: checkbox
+    binds: WebForm.allow_edit
+    validation: "shown only when eval: doc.login_required || doc.key_required"
+  - label: Allow multiple responses
+    control: checkbox
+    binds: WebForm.allow_multiple
+    validation: "shown only when eval: doc.login_required || doc.key_required"
+  - label: Allow delete
+    control: checkbox
+    binds: WebForm.allow_delete
+    validation: "shown only when eval: doc.allow_multiple && (doc.login_required || doc.key_required)"
+  - label: Allow incomplete forms
+    control: checkbox
+    binds: WebForm.allow_incomplete
+  - label: Allow comments
+    control: checkbox
+    binds: WebForm.allow_comments
+    validation: shown only when login_required
+  - label: Allow print
+    control: checkbox
+    binds: WebForm.allow_print
+    validation: shown only when login_required
+  - label: Print Format
+    control: lookup
+    binds: WebForm.print_format
+    validation: shown only when allow_print; chosen among Print Format records
+  - label: Max attachment size
+    control: number
+    binds: WebForm.max_attachment_size
+  - label: Show attachments
+    control: checkbox
+    binds: WebForm.show_attachments
+    validation: shown only when login_required
+  - label: Hide navbar
+    control: checkbox
+    binds: WebForm.hide_navbar
+  - label: Hide footer
+    control: checkbox
+    binds: WebForm.hide_footer
+  - label: Allowed embedding domains
+    control: text
+    binds: WebForm.allowed_embedding_domains
+  - label: Condition JSON
+    control: other
+    binds: WebForm.condition_json
+  - label: Dynamic Filters JSON
+    control: other
+    binds: WebForm.dynamic_filters_json
+  - label: Show list
+    control: checkbox
+    binds: WebForm.show_list
+    validation: "shown only when eval: doc.login_required || doc.key_required"
+  - label: Title
+    control: text
+    binds: WebForm.list_title
+    validation: shown only when show_list
+  - label: List Columns
+    control: grid
+    validation: shown only when show_list
+    columns:
+      - Field
+      - Fieldtype
+      - Custom Label
+      - Options
+  - label: Show sidebar
+    control: checkbox
+    binds: WebForm.show_sidebar
+  - label: Website Sidebar
+    control: lookup
+    binds: WebForm.website_sidebar
+    validation: chosen among Website Sidebar records
+  - label: Submit button label
+    control: text
+    binds: WebForm.button_label
+  - label: Banner Image
+    control: other
+    binds: WebForm.banner_image
+  - label: Breadcrumbs
+    control: text
+    binds: WebForm.breadcrumbs
+  - label: Success title
+    control: text
+    binds: WebForm.success_title
+  - label: Success URL
+    control: text
+    binds: WebForm.success_url
+  - label: Success message
+    control: text
+    binds: WebForm.success_message
+  - label: Meta title
+    control: text
+    binds: WebForm.meta_title
+  - label: Meta description
+    control: text
+    binds: WebForm.meta_description
+  - label: Meta image
+    control: other
+    binds: WebForm.meta_image
+  - label: Client script
+    control: text
+    binds: WebForm.client_script
+  - label: Custom CSS
+    control: text
+    binds: WebForm.custom_css
+actions:
+  - label: Save
+    triggers: F-457
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Web Form
+    note: declared by the program

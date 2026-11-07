@@ -1,0 +1,116 @@
+id: S-458
+title: Web Page
+purpose: create, view and edit Web Page records
+kind: form
+layout: "tabs: Content, Scripting, Style, Settings; sections: Content, Context, Script, Publishing Dates, Meta Tags, Sidebar and Comments, Header and Breadcrumbs; 30 fields"
+fields:
+  - label: Title
+    control: text
+    binds: WebPage.title
+    required: true
+  - label: Route
+    control: text
+    binds: WebPage.route
+  - label: Dynamic Route
+    control: checkbox
+    binds: WebPage.dynamic_route
+  - label: Published
+    control: checkbox
+    binds: WebPage.published
+  - label: Module (for export)
+    control: lookup
+    binds: WebPage.module
+    validation: chosen among Module Def records
+  - label: Content Type
+    control: select
+    binds: WebPage.content_type
+  - label: Slideshow
+    control: lookup
+    binds: WebPage.slideshow
+    validation: shown only when eval:doc.content_type=='Slideshow'; chosen among Website Slideshow records
+  - label: Dynamic Template
+    control: checkbox
+    binds: WebPage.dynamic_template
+  - label: Main Section
+    control: text
+    binds: WebPage.main_section
+    validation: shown only when eval:doc.content_type==='Rich Text'
+  - label: Main Section (Markdown)
+    control: text
+    binds: WebPage.main_section_md
+    validation: shown only when eval:doc.content_type==='Markdown'
+  - label: Main Section (HTML)
+    control: other
+    binds: WebPage.main_section_html
+    validation: shown only when eval:doc.content_type==='HTML'
+  - label: Page Building Blocks
+    control: grid
+    validation: shown only when eval:doc.content_type=='Page Builder'
+    columns:
+      - Web Template
+      - Edit Values
+  - label: Context Script
+    control: text
+    binds: WebPage.context_script
+  - label: Javascript
+    control: text
+    binds: WebPage.javascript
+  - label: Insert Style
+    control: checkbox
+    binds: WebPage.insert_style
+  - label: Text Align
+    control: select
+    binds: WebPage.text_align
+  - label: CSS
+    control: text
+    binds: WebPage.css
+    validation: shown only when insert_style
+  - label: Full Width
+    control: checkbox
+    binds: WebPage.full_width
+  - label: Show Title
+    control: checkbox
+    binds: WebPage.show_title
+  - label: Start Date
+    control: date
+    binds: WebPage.start_date
+  - label: End Date
+    control: date
+    binds: WebPage.end_date
+  - label: Title
+    control: text
+    binds: WebPage.meta_title
+  - label: Description
+    control: text
+    binds: WebPage.meta_description
+  - label: Image
+    control: other
+    binds: WebPage.meta_image
+  - label: Show Sidebar
+    control: checkbox
+    binds: WebPage.show_sidebar
+  - label: Priority
+    control: number
+    binds: WebPage.idx
+  - label: Website Sidebar
+    control: lookup
+    binds: WebPage.website_sidebar
+    validation: chosen among Website Sidebar records
+  - label: Enable Comments
+    control: checkbox
+    binds: WebPage.enable_comments
+  - label: Header
+    control: other
+    binds: WebPage.header
+  - label: Breadcrumbs
+    control: text
+    binds: WebPage.breadcrumbs
+actions:
+  - label: Save
+    triggers: F-459
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Web Page
+    note: declared by the program

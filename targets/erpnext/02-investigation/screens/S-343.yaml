@@ -1,0 +1,55 @@
+id: S-343
+title: Delivery Schedule Item
+purpose: create, view and edit Delivery Schedule Item records
+kind: form
+layout: 10 fields
+fields:
+  - label: Item Code
+    control: lookup
+    binds: DeliveryScheduleItem.item_code
+    validation: read only (computed or filled by the program); chosen among Item records
+  - label: Warehouse
+    control: lookup
+    binds: DeliveryScheduleItem.warehouse
+    validation: read only (computed or filled by the program); chosen among Warehouse records
+  - label: Delivery Date
+    control: date
+    binds: DeliveryScheduleItem.delivery_date
+    validation: read only (computed or filled by the program)
+  - label: Sales Order
+    control: lookup
+    binds: DeliveryScheduleItem.sales_order
+    validation: read only (computed or filled by the program); chosen among Sales Order records
+  - label: Sales Order Item
+    control: text
+    binds: DeliveryScheduleItem.sales_order_item
+    validation: read only (computed or filled by the program)
+  - label: Qty
+    control: number
+    binds: DeliveryScheduleItem.qty
+    validation: read only (computed or filled by the program)
+  - label: UOM
+    control: lookup
+    binds: DeliveryScheduleItem.uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Conversion Factor
+    control: number
+    binds: DeliveryScheduleItem.conversion_factor
+    validation: read only (computed or filled by the program)
+  - label: Stock Qty
+    control: number
+    binds: DeliveryScheduleItem.stock_qty
+    validation: read only (computed or filled by the program)
+  - label: Stock UOM
+    control: lookup
+    binds: DeliveryScheduleItem.stock_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+actions:
+  - label: Save
+    triggers: F-344
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Delivery Schedule Item
+    note: declared by the program

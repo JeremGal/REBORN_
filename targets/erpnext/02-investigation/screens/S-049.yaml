@@ -1,0 +1,46 @@
+id: S-049
+title: Opening Invoice Creation Tool
+purpose: settings of Opening Invoice Creation Tool
+kind: settings
+layout: "sections: Accounting Dimensions, Invoices; 6 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: OpeningInvoiceCreationTool.company
+    required: true
+    validation: chosen among Company records
+  - label: Create Missing Party
+    control: checkbox
+    binds: OpeningInvoiceCreationTool.create_missing_party
+  - label: Invoice Type
+    control: select
+    binds: OpeningInvoiceCreationTool.invoice_type
+    required: true
+  - label: Cost Center
+    control: lookup
+    binds: OpeningInvoiceCreationTool.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: OpeningInvoiceCreationTool.project
+    validation: chosen among Project records
+  - label: invoices
+    control: grid
+    required: true
+    columns:
+      - Party ID
+      - Party Name
+      - Posting Date
+      - Due Date
+      - Item Name
+      - Currency
+      - Outstanding Amount
+actions:
+  - label: Save
+    triggers: F-050
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Opening Invoice Creation Tool
+    note: declared by the program

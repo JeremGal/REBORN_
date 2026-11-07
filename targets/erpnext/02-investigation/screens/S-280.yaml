@@ -1,0 +1,115 @@
+id: S-280
+title: LDAP Settings
+purpose: settings of LDAP Settings
+kind: settings
+layout: "sections: LDAP Server Settings, LDAP Auth, LDAP Search and Paths, LDAP User Creation and Mapping, LDAP Security, LDAP Custom Settings, LDAP Group Mappings; 28 fields"
+fields:
+  - label: Enabled
+    control: checkbox
+    binds: LDAPSettings.enabled
+  - label: Directory Server
+    control: select
+    binds: LDAPSettings.ldap_directory_server
+    required: true
+  - label: LDAP Server Url
+    control: text
+    binds: LDAPSettings.ldap_server_url
+    required: true
+  - label: Base Distinguished Name (DN)
+    control: text
+    binds: LDAPSettings.base_dn
+    required: true
+  - label: Password for Base DN
+    control: text
+    binds: LDAPSettings.password
+    required: true
+  - label: LDAP search path for Users
+    control: text
+    binds: LDAPSettings.ldap_search_path_user
+    required: true
+  - label: LDAP Search String
+    control: text
+    binds: LDAPSettings.ldap_search_string
+    required: true
+  - label: LDAP search path for Groups
+    control: text
+    binds: LDAPSettings.ldap_search_path_group
+    required: true
+  - label: LDAP Email Field
+    control: text
+    binds: LDAPSettings.ldap_email_field
+    required: true
+  - label: LDAP Username Field
+    control: text
+    binds: LDAPSettings.ldap_username_field
+    required: true
+  - label: LDAP First Name Field
+    control: text
+    binds: LDAPSettings.ldap_first_name_field
+    required: true
+  - label: Do Not Create New User
+    control: checkbox
+    binds: LDAPSettings.do_not_create_new_user
+  - label: LDAP Middle Name Field
+    control: text
+    binds: LDAPSettings.ldap_middle_name_field
+  - label: LDAP Last Name Field
+    control: text
+    binds: LDAPSettings.ldap_last_name_field
+  - label: LDAP Phone Field
+    control: text
+    binds: LDAPSettings.ldap_phone_field
+  - label: LDAP Mobile Field
+    control: text
+    binds: LDAPSettings.ldap_mobile_field
+  - label: SSL/TLS Mode
+    control: select
+    binds: LDAPSettings.ssl_tls_mode
+  - label: Require Trusted Certificate
+    control: select
+    binds: LDAPSettings.require_trusted_certificate
+    required: true
+  - label: Path to private Key File
+    control: text
+    binds: LDAPSettings.local_private_key_file
+  - label: Path to Server Certificate
+    control: text
+    binds: LDAPSettings.local_server_certificate_file
+  - label: Path to CA Certs File
+    control: text
+    binds: LDAPSettings.local_ca_certs_file
+  - label: Group Object Class
+    control: text
+    binds: LDAPSettings.ldap_group_objectclass
+  - label: Custom Group Search
+    control: text
+    binds: LDAPSettings.ldap_custom_group_search
+  - label: LDAP Group Member attribute
+    control: text
+    binds: LDAPSettings.ldap_group_member_attribute
+  - label: Default User Type
+    control: lookup
+    binds: LDAPSettings.default_user_type
+    required: true
+    validation: chosen among User Type records
+  - label: Default User Role
+    control: lookup
+    binds: LDAPSettings.default_role
+    validation: 'shown only when eval: doc.default_user_type == "System User"; chosen among Role records'
+  - label: LDAP Group Mappings
+    control: grid
+    columns:
+      - LDAP Group
+      - User Role
+  - label: LDAP Group Field
+    control: text
+    binds: LDAPSettings.ldap_group_field
+actions:
+  - label: Save
+    triggers: F-281
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of LDAP Settings
+    note: declared by the program

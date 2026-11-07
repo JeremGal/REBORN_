@@ -1,0 +1,27 @@
+id: S-264
+title: Email Group Member
+purpose: create, view and edit Email Group Member records
+kind: form
+layout: 3 fields
+fields:
+  - label: Email Group
+    control: lookup
+    binds: EmailGroupMember.email_group
+    required: true
+    validation: chosen among Email Group records
+  - label: Email
+    control: text
+    binds: EmailGroupMember.email
+    required: true
+  - label: Unsubscribed
+    control: checkbox
+    binds: EmailGroupMember.unsubscribed
+actions:
+  - label: Save
+    triggers: F-265
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Email Group Member
+    note: declared by the program

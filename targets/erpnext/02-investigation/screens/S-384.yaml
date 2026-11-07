@@ -1,0 +1,22 @@
+id: S-384
+title: Customs Tariff Number
+purpose: create, view and edit Customs Tariff Number records
+kind: form
+layout: 2 fields
+fields:
+  - label: Tariff Number
+    control: text
+    binds: CustomsTariffNumber.tariff_number
+    required: true
+  - label: Description
+    control: text
+    binds: CustomsTariffNumber.description
+actions:
+  - label: Save
+    triggers: F-385
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Customs Tariff Number
+    note: declared by the program

@@ -1,0 +1,54 @@
+id: F-418
+title: Create and edit a Stock Entry Type
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: A kind of stock entry, like material transfer or manufacture.
+entry_points:
+  - screen: S-417
+    action: open the form
+inputs:
+  - label: Purpose
+    field: StockEntryType.purpose
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Stock Entry Type form
+    screen: S-417
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Purpose"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Stock Entry Type record stored
+    entities:
+      - StockEntryType
+entities:
+  - StockEntryType
+screens:
+  - S-417
+acceptance:
+  - id: AC-419
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Stock Entry Type
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 147
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"

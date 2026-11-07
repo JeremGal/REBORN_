@@ -1,0 +1,61 @@
+id: S-363
+title: Driver
+purpose: create, view and edit Driver records
+kind: form
+layout: "sections: License Details, Driving License Categories; 12 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Driver.naming_series
+  - label: Full Name
+    control: text
+    binds: Driver.full_name
+    required: true
+  - label: Status
+    control: select
+    binds: Driver.status
+    required: true
+  - label: Transporter
+    control: lookup
+    binds: Driver.transporter
+    validation: chosen among Supplier records
+  - label: Employee
+    control: lookup
+    binds: Driver.employee
+    validation: chosen among Employee records
+  - label: Cellphone Number
+    control: text
+    binds: Driver.cell_number
+  - label: Address
+    control: lookup
+    binds: Driver.address
+    validation: chosen among Address records
+  - label: User
+    control: lookup
+    binds: Driver.user
+    validation: chosen among User records
+  - label: License Number
+    control: text
+    binds: Driver.license_number
+  - label: Issuing Date
+    control: date
+    binds: Driver.issuing_date
+  - label: Expiry Date
+    control: date
+    binds: Driver.expiry_date
+  - label: Driving License Category
+    control: grid
+    columns:
+      - Driver licence class
+      - Description
+      - Issuing Date
+      - Expiry Date
+actions:
+  - label: Save
+    triggers: F-364
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Driver
+    note: declared by the program

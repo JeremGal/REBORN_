@@ -1,0 +1,63 @@
+id: F-108
+title: Create and edit a Assignment Rule
+module: Automation
+priority: could
+status: partial
+confidence: medium
+user_goal: Automatically Assign Documents to Users
+entry_points:
+  - screen: S-107
+    action: open the form
+inputs:
+  - label: Document Type
+    field: AssignmentRule.document_type
+    type: ref
+    required: true
+  - label: Description
+    field: AssignmentRule.description
+    type: string
+    required: true
+  - label: Assign Condition
+    field: AssignmentRule.assign_condition
+    type: string
+    required: true
+  - label: Rule
+    field: AssignmentRule.rule
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Assignment Rule form
+    screen: S-107
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Document Type, Description, Assign Condition, Rule"
+  - n: 3
+    actor: user
+    does: "adds lines in: Assignment Days, Users, Users"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Assignment Rule record stored
+    entities:
+      - AssignmentRule
+entities:
+  - AssignmentRule
+  - AssignmentRuleDay
+  - AssignmentRuleUser
+screens:
+  - S-107
+acceptance:
+  - id: AC-109
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Assignment Rule
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"assignment-rule\")."

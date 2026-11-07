@@ -1,0 +1,32 @@
+id: S-439
+title: Voice Call Settings
+purpose: create, view and edit Voice Call Settings records
+kind: form
+layout: 5 fields
+fields:
+  - label: User
+    control: lookup
+    binds: VoiceCallSettings.user
+    required: true
+    validation: chosen among User records
+  - label: Call Receiving Device
+    control: select
+    binds: VoiceCallSettings.call_receiving_device
+  - label: Greeting Message
+    control: text
+    binds: VoiceCallSettings.greeting_message
+  - label: Agent Busy Message
+    control: text
+    binds: VoiceCallSettings.agent_busy_message
+  - label: Agent Unavailable Message
+    control: text
+    binds: VoiceCallSettings.agent_unavailable_message
+actions:
+  - label: Save
+    triggers: F-440
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Voice Call Settings
+    note: declared by the program

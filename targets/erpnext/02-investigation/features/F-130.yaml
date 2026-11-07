@@ -1,0 +1,50 @@
+id: F-130
+title: Create and edit a Communication Medium
+module: Communication
+priority: could
+status: partial
+confidence: medium
+user_goal: A channel customers reach you on, like a phone line.
+entry_points:
+  - screen: S-129
+    action: open the form
+inputs:
+  - label: Communication Medium Type
+    field: CommunicationMedium.communication_medium_type
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Communication Medium form
+    screen: S-129
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Communication Medium Type"
+  - n: 3
+    actor: user
+    does: "adds lines in: Timeslots"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Communication Medium record stored
+    entities:
+      - CommunicationMedium
+entities:
+  - CommunicationMedium
+  - CommunicationMediumTimeslot
+screens:
+  - S-129
+acceptance:
+  - id: AC-131
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Communication Medium
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

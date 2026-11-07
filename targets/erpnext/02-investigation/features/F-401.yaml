@@ -1,0 +1,65 @@
+id: F-401
+title: Create, submit and cancel a Pick List
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: The items and quantities to pick from the warehouse.
+entry_points:
+  - screen: S-400
+    action: open the form
+inputs:
+  - label: Company
+    field: PickList.company
+    type: ref
+    required: true
+  - label: Series
+    field: PickList.naming_series
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Pick List form
+    screen: S-400
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Series"
+  - n: 3
+    actor: user
+    does: "adds lines in: Item Locations"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Pick List record stored
+    entities:
+      - PickList
+entities:
+  - PickList
+  - PickListItem
+screens:
+  - S-400
+acceptance:
+  - id: AC-402
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Pick List
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 99
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"pick-list\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: La quantité de l'article Produit fini doit être supérieure à 0."

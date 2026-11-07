@@ -1,0 +1,53 @@
+id: S-057
+title: Payment Term
+purpose: create, view and edit Payment Term records
+kind: form
+layout: "sections: Discount Settings; 11 fields"
+fields:
+  - label: Payment Term Name
+    control: text
+    binds: PaymentTerm.payment_term_name
+  - label: Invoice Portion (%)
+    control: number
+    binds: PaymentTerm.invoice_portion
+  - label: Mode of Payment
+    control: lookup
+    binds: PaymentTerm.mode_of_payment
+    validation: chosen among Mode of Payment records
+  - label: Due Date Based On
+    control: select
+    binds: PaymentTerm.due_date_based_on
+  - label: Credit Days
+    control: number
+    binds: PaymentTerm.credit_days
+    validation: "shown only when eval:in_list(['Day(s) after invoice date', 'Day(s) after the end of the invoice "
+  - label: Credit Months
+    control: number
+    binds: PaymentTerm.credit_months
+    validation: shown only when eval:doc.due_date_based_on=='Month(s) after the end of the invoice month'
+  - label: Discount Type
+    control: select
+    binds: PaymentTerm.discount_type
+  - label: Discount
+    control: number
+    binds: PaymentTerm.discount
+  - label: Discount Validity Based On
+    control: select
+    binds: PaymentTerm.discount_validity_based_on
+    validation: shown only when discount
+  - label: Discount Validity
+    control: number
+    binds: PaymentTerm.discount_validity
+    validation: shown only when discount
+  - label: Description
+    control: text
+    binds: PaymentTerm.description
+actions:
+  - label: Save
+    triggers: F-058
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Payment Term
+    note: declared by the program

@@ -1,0 +1,183 @@
+id: S-056
+title: Payment Request
+purpose: create, view and edit Payment Request records
+kind: form
+layout: "sections: Party Details, Transaction Details, Subscription, Bank Account Details, Accounting Dimensions, Recipient Message And Payment Details, Payment Gateway Details; 42 fields"
+fields:
+  - label: Payment Request Type
+    control: select
+    binds: PaymentRequest.payment_request_type
+    required: true
+  - label: Transaction Date
+    control: date
+    binds: PaymentRequest.transaction_date
+  - label: Reason for Failure
+    control: text
+    binds: PaymentRequest.failed_reason
+    validation: read only (computed or filled by the program)
+  - label: Series
+    control: select
+    binds: PaymentRequest.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: PaymentRequest.company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Mode of Payment
+    control: lookup
+    binds: PaymentRequest.mode_of_payment
+    validation: chosen among Mode of Payment records
+  - label: Party Type
+    control: lookup
+    binds: PaymentRequest.party_type
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: PaymentRequest.party
+  - label: Party Name
+    control: text
+    binds: PaymentRequest.party_name
+    validation: read only (computed or filled by the program)
+  - label: Reference Doctype
+    control: lookup
+    binds: PaymentRequest.reference_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Reference Name
+    control: lookup
+    binds: PaymentRequest.reference_name
+    validation: read only (computed or filled by the program)
+  - label: Payment Reference
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Payment Term
+      - Description
+      - Due Date
+      - Amount
+  - label: Amount
+    control: money
+    binds: PaymentRequest.grand_total
+    required: true
+  - label: Transaction Currency
+    control: lookup
+    binds: PaymentRequest.currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Is a Subscription
+    control: checkbox
+    binds: PaymentRequest.is_a_subscription
+  - label: Outstanding Amount
+    control: money
+    binds: PaymentRequest.outstanding_amount
+    validation: "read only (computed or filled by the program); shown only when eval: doc.docstatus === 1"
+  - label: Party Account Currency
+    control: lookup
+    binds: PaymentRequest.party_account_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Subscription Plans
+    control: grid
+    columns:
+      - Plan
+      - Quantity
+  - label: Bank Account
+    control: lookup
+    binds: PaymentRequest.bank_account
+    validation: chosen among Bank Account records
+  - label: Bank
+    control: lookup
+    binds: PaymentRequest.bank
+    validation: read only (computed or filled by the program); chosen among Bank records
+  - label: Bank Account No
+    control: display
+    binds: PaymentRequest.bank_account_no
+  - label: Account
+    control: display
+    binds: PaymentRequest.account
+  - label: IBAN
+    control: display
+    binds: PaymentRequest.iban
+  - label: Branch Code
+    control: display
+    binds: PaymentRequest.branch_code
+  - label: SWIFT Number
+    control: display
+    binds: PaymentRequest.swift_number
+  - label: Cost Center
+    control: lookup
+    binds: PaymentRequest.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: PaymentRequest.project
+    validation: chosen among Project records
+  - label: Print Format
+    control: select
+    binds: PaymentRequest.print_format
+    validation: 'shown only when eval: doc.payment_channel == "Email" || (!doc.payment_channel)'
+  - label: To
+    control: text
+    binds: PaymentRequest.email_to
+  - label: Subject
+    control: text
+    binds: PaymentRequest.subject
+    validation: 'shown only when eval: doc.payment_channel == "Email" || (!doc.payment_channel)'
+  - label: Payment Gateway Account
+    control: lookup
+    binds: PaymentRequest.payment_gateway_account
+    validation: "shown only when eval: doc.payment_request_type == 'Inward'; chosen among Payment Gateway Account records"
+  - label: Status
+    control: select
+    binds: PaymentRequest.status
+    validation: read only (computed or filled by the program)
+  - label: Make Sales Invoice
+    control: checkbox
+    binds: PaymentRequest.make_sales_invoice
+    validation: read only (computed or filled by the program); shown only when eval:doc.reference_doctype=="Sales Order"
+  - label: Message
+    control: text
+    binds: PaymentRequest.message
+    validation: 'shown only when eval: doc.payment_channel == "Email" || (!doc.payment_channel)'
+  - label: Mute Email
+    control: checkbox
+    binds: PaymentRequest.mute_email
+    validation: read only (computed or filled by the program)
+  - label: Payment Gateway
+    control: display
+    binds: PaymentRequest.payment_gateway
+  - label: Payment Account
+    control: display
+    binds: PaymentRequest.payment_account
+    validation: read only (computed or filled by the program)
+  - label: Payment Channel
+    control: select
+    binds: PaymentRequest.payment_channel
+    validation: 'read only (computed or filled by the program); shown only when eval: doc.payment_channel=="Phone"'
+  - label: Payment Order
+    control: lookup
+    binds: PaymentRequest.payment_order
+    validation: read only (computed or filled by the program); chosen among Payment Order records
+  - label: Amended From
+    control: lookup
+    binds: PaymentRequest.amended_from
+    validation: read only (computed or filled by the program); chosen among Payment Request records
+  - label: Payment URL
+    control: text
+    binds: PaymentRequest.payment_url
+    validation: read only (computed or filled by the program)
+  - label: Phone Number
+    control: text
+    binds: PaymentRequest.phone_number
+actions:
+  - label: Save
+    triggers: F-057
+  - label: Submit
+    triggers: F-057
+  - label: Cancel
+    triggers: F-057
+  - label: Amend
+    triggers: F-057
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Payment Request
+    note: declared by the program

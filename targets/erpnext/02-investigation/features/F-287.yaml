@@ -1,0 +1,41 @@
+id: F-287
+title: Configure Push Notification Settings
+module: Integrations
+priority: could
+status: partial
+confidence: medium
+user_goal: Enabling this will register your site on a central relay server to send push notifications for all installed apps through Firebase Cloud Messaging. This server only stores user tokens and error logs, and no messages are saved.
+entry_points:
+  - screen: S-286
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Push Notification Settings form
+    screen: S-286
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - PushNotificationSettings
+entities:
+  - PushNotificationSettings
+screens:
+  - S-286
+acceptance:
+  - id: AC-288
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Push Notification Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

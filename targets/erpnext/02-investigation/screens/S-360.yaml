@@ -1,0 +1,58 @@
+id: S-360
+title: Customer Group
+purpose: create, view and edit Customer Group records
+kind: form
+layout: "sections: Default Accounts, Credit Limits; 10 fields"
+fields:
+  - label: Customer Group Name
+    control: text
+    binds: CustomerGroup.customer_group_name
+    required: true
+  - label: Parent Customer Group
+    control: lookup
+    binds: CustomerGroup.parent_customer_group
+    validation: chosen among Customer Group records
+  - label: Is Group
+    control: checkbox
+    binds: CustomerGroup.is_group
+  - label: Default Price List
+    control: lookup
+    binds: CustomerGroup.default_price_list
+    validation: chosen among Price List records
+  - label: Default Payment Terms Template
+    control: lookup
+    binds: CustomerGroup.payment_terms
+    validation: chosen among Payment Terms Template records
+  - label: lft
+    control: number
+    binds: CustomerGroup.lft
+  - label: rgt
+    control: number
+    binds: CustomerGroup.rgt
+  - label: old_parent
+    control: lookup
+    binds: CustomerGroup.old_parent
+    validation: chosen among Customer Group records
+  - label: Accounts
+    control: grid
+    validation: shown only when eval:!doc.__islocal
+    columns:
+      - Company
+      - Default Account
+      - Advance Account
+  - label: Credit & Overdue Limits
+    control: grid
+    columns:
+      - Company
+      - Credit Limit
+      - Overdue Limit
+      - Bypass credit limit check at sales order
+actions:
+  - label: Save
+    triggers: F-361
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Customer Group
+    note: declared by the program

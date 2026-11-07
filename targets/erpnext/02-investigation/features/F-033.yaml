@@ -1,0 +1,54 @@
+id: F-033
+title: Create and edit a Dunning Type
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: The wording and fee for a kind of payment reminder.
+entry_points:
+  - screen: S-032
+    action: open the form
+inputs:
+  - label: Dunning Type
+    field: DunningType.dunning_type
+    type: string
+    required: true
+  - label: Company
+    field: DunningType.company
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Dunning Type form
+    screen: S-032
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Dunning Type, Company"
+  - n: 3
+    actor: user
+    does: "adds lines in: dunning_letter_text"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Dunning Type record stored
+    entities:
+      - DunningType
+entities:
+  - DunningType
+  - DunningLetterText
+screens:
+  - S-032
+acceptance:
+  - id: AC-034
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Dunning Type
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

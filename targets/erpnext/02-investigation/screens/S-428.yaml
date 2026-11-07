@@ -1,0 +1,204 @@
+id: S-428
+title: Subcontracting Order
+purpose: create, view and edit Subcontracting Order records
+kind: form
+layout: "tabs: Address and Contact, Additional Costs, Other Info, Connections; sections: Accounting Dimensions, Service Items, Raw Materials Supplied, Order Status, Printing Settings; 40 fields"
+fields:
+  - label: Series
+    control: select
+    binds: SubcontractingOrder.naming_series
+    required: true
+  - label: Subcontracting Purchase Order
+    control: lookup
+    binds: SubcontractingOrder.purchase_order
+    required: true
+    validation: chosen among Purchase Order records
+  - label: Job Worker
+    control: lookup
+    binds: SubcontractingOrder.supplier
+    required: true
+    validation: chosen among Supplier records
+  - label: Job Worker Name
+    control: text
+    binds: SubcontractingOrder.supplier_name
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Job Worker Warehouse
+    control: lookup
+    binds: SubcontractingOrder.supplier_warehouse
+    required: true
+    validation: shown only when supplier; chosen among Warehouse records
+  - label: Job Worker Currency
+    control: lookup
+    binds: SubcontractingOrder.supplier_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: SubcontractingOrder.conversion_rate
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: SubcontractingOrder.company
+    required: true
+    validation: chosen among Company records
+  - label: Date
+    control: date
+    binds: SubcontractingOrder.transaction_date
+    required: true
+  - label: Required By
+    control: date
+    binds: SubcontractingOrder.schedule_date
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: SubcontractingOrder.amended_from
+    validation: read only (computed or filled by the program); chosen among Subcontracting Order records
+  - label: Cost Center
+    control: lookup
+    binds: SubcontractingOrder.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: SubcontractingOrder.project
+    validation: chosen among Project records
+  - label: Set Target Warehouse
+    control: lookup
+    binds: SubcontractingOrder.set_warehouse
+    validation: shown only when purchase_order; chosen among Warehouse records
+  - label: Items
+    control: grid
+    required: true
+    validation: shown only when purchase_order
+    columns:
+      - Item Code
+      - BOM
+      - Quantity
+      - Rate
+      - Amount
+  - label: Total Quantity
+    control: number
+    binds: SubcontractingOrder.total_qty
+    validation: read only (computed or filled by the program); shown only when purchase_order
+  - label: Total
+    control: money
+    binds: SubcontractingOrder.total
+    validation: read only (computed or filled by the program); shown only when purchase_order
+  - label: Service Items
+    control: grid
+    required: true
+    validation: read only (computed or filled by the program)
+    columns:
+      - Item Code
+      - Item Name
+      - Quantity
+      - Rate
+      - Amount
+  - label: Set Reserve Warehouse
+    control: lookup
+    binds: SubcontractingOrder.set_reserve_warehouse
+    validation: shown only when supplied_items; chosen among Warehouse records
+  - label: Reserve Stock
+    control: checkbox
+    binds: SubcontractingOrder.reserve_stock
+  - label: Supplied Items
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Item Code
+      - Raw Material Item Code
+      - Reserve Warehouse
+      - Rate
+      - Required Qty
+      - Supplied Qty
+  - label: Job Worker Address
+    control: lookup
+    binds: SubcontractingOrder.supplier_address
+    validation: chosen among Address records
+  - label: Job Worker Address Details
+    control: text
+    binds: SubcontractingOrder.address_display
+    validation: read only (computed or filled by the program)
+  - label: Job Worker Contact
+    control: lookup
+    binds: SubcontractingOrder.contact_person
+    validation: chosen among Contact records
+  - label: Contact Name
+    control: text
+    binds: SubcontractingOrder.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Contact Mobile No
+    control: text
+    binds: SubcontractingOrder.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: SubcontractingOrder.contact_email
+    validation: read only (computed or filled by the program)
+  - label: Company Shipping Address
+    control: lookup
+    binds: SubcontractingOrder.shipping_address
+    validation: chosen among Address records
+  - label: Shipping Address Details
+    control: text
+    binds: SubcontractingOrder.shipping_address_display
+    validation: read only (computed or filled by the program)
+  - label: Company Billing Address
+    control: lookup
+    binds: SubcontractingOrder.billing_address
+    validation: chosen among Address records
+  - label: Billing Address Details
+    control: text
+    binds: SubcontractingOrder.billing_address_display
+    validation: read only (computed or filled by the program)
+  - label: "Distribute Additional Costs Based On "
+    control: select
+    binds: SubcontractingOrder.distribute_additional_costs_based_on
+  - label: Additional Costs
+    control: grid
+    columns:
+      - Expense Account
+      - Description
+      - Amount
+  - label: Total Additional Costs
+    control: money
+    binds: SubcontractingOrder.total_additional_costs
+    validation: read only (computed or filled by the program)
+  - label: Title
+    control: text
+    binds: SubcontractingOrder.title
+  - label: Status
+    control: select
+    binds: SubcontractingOrder.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: "% Received"
+    control: number
+    binds: SubcontractingOrder.per_received
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: Print Heading
+    control: lookup
+    binds: SubcontractingOrder.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Letter Head
+    control: lookup
+    binds: SubcontractingOrder.letter_head
+    validation: chosen among Letter Head records
+  - label: Production Plan
+    control: text
+    binds: SubcontractingOrder.production_plan
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-429
+  - label: Submit
+    triggers: F-429
+  - label: Cancel
+    triggers: F-429
+  - label: Amend
+    triggers: F-429
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Subcontracting Order
+    note: declared by the program

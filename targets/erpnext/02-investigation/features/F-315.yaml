@@ -1,0 +1,46 @@
+id: F-315
+title: Create and edit a Print Format
+module: Printing
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Print Format records.
+entry_points:
+  - screen: S-314
+    action: open the form
+inputs:
+  - label: Standard
+    field: PrintFormat.standard
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Print Format form
+    screen: S-314
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Standard"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Print Format record stored
+    entities:
+      - PrintFormat
+entities:
+  - PrintFormat
+screens:
+  - S-314
+acceptance:
+  - id: AC-316
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Print Format
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"print-format\")."

@@ -1,0 +1,91 @@
+id: S-081
+title: Share Transfer
+purpose: create, view and edit Share Transfer records
+kind: form
+layout: 17 fields
+fields:
+  - label: Transfer Type
+    control: select
+    binds: ShareTransfer.transfer_type
+    required: true
+  - label: Date
+    control: date
+    binds: ShareTransfer.date
+    required: true
+  - label: From Shareholder
+    control: lookup
+    binds: ShareTransfer.from_shareholder
+    validation: shown only when eval:doc.transfer_type != 'Issue'; chosen among Shareholder records
+  - label: From Folio No
+    control: text
+    binds: ShareTransfer.from_folio_no
+    validation: shown only when eval:doc.transfer_type != 'Issue'
+  - label: To Shareholder
+    control: lookup
+    binds: ShareTransfer.to_shareholder
+    validation: shown only when eval:doc.transfer_type != 'Purchase'; chosen among Shareholder records
+  - label: To Folio No
+    control: text
+    binds: ShareTransfer.to_folio_no
+    validation: shown only when eval:doc.transfer_type != 'Purchase'
+  - label: Equity/Liability Account
+    control: lookup
+    binds: ShareTransfer.equity_or_liability_account
+    required: true
+    validation: shown only when eval:doc.company; chosen among Account records
+  - label: Asset Account
+    control: lookup
+    binds: ShareTransfer.asset_account
+    validation: shown only when eval:(doc.transfer_type != 'Transfer') && (doc.company); chosen among Account records
+  - label: Share Type
+    control: lookup
+    binds: ShareTransfer.share_type
+    required: true
+    validation: chosen among Share Type records
+  - label: From No
+    control: number
+    binds: ShareTransfer.from_no
+    required: true
+  - label: Rate
+    control: money
+    binds: ShareTransfer.rate
+    required: true
+  - label: No of Shares
+    control: number
+    binds: ShareTransfer.no_of_shares
+    required: true
+  - label: To No
+    control: number
+    binds: ShareTransfer.to_no
+    required: true
+  - label: Amount
+    control: money
+    binds: ShareTransfer.amount
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: ShareTransfer.company
+    required: true
+    validation: chosen among Company records
+  - label: Remarks
+    control: text
+    binds: ShareTransfer.remarks
+  - label: Amended From
+    control: lookup
+    binds: ShareTransfer.amended_from
+    validation: read only (computed or filled by the program); chosen among Share Transfer records
+actions:
+  - label: Save
+    triggers: F-082
+  - label: Submit
+    triggers: F-082
+  - label: Cancel
+    triggers: F-082
+  - label: Amend
+    triggers: F-082
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Share Transfer
+    note: declared by the program

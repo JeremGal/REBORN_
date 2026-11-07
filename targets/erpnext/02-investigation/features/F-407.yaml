@@ -1,0 +1,53 @@
+id: F-407
+title: Create and edit a Quality Inspection Parameter Group
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: A grouping of inspection parameters.
+entry_points:
+  - screen: S-406
+    action: open the form
+inputs:
+  - label: Parameter Group Name
+    field: QualityInspectionParameterGroup.group_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Quality Inspection Parameter Group form
+    screen: S-406
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Parameter Group Name"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Quality Inspection Parameter Group record stored
+    entities:
+      - QualityInspectionParameterGroup
+entities:
+  - QualityInspectionParameterGroup
+screens:
+  - S-406
+acceptance:
+  - id: AC-408
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Quality Inspection Parameter Group
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 125
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

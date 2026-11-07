@@ -1,0 +1,26 @@
+id: S-104
+title: Asset Shift Factor
+purpose: create, view and edit Asset Shift Factor records
+kind: form
+layout: 3 fields
+fields:
+  - label: Shift Name
+    control: text
+    binds: AssetShiftFactor.shift_name
+    required: true
+  - label: Shift Factor
+    control: number
+    binds: AssetShiftFactor.shift_factor
+    required: true
+  - label: Default
+    control: checkbox
+    binds: AssetShiftFactor.default
+actions:
+  - label: Save
+    triggers: F-105
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Shift Factor
+    note: declared by the program

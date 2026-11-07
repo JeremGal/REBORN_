@@ -1,0 +1,32 @@
+id: S-222
+title: Custom HTML Block
+purpose: create, view and edit Custom HTML Block records
+kind: form
+layout: "sections: Preview, HTML, Javascript, CSS, Roles; 5 fields"
+fields:
+  - label: Private
+    control: checkbox
+    binds: CustomHTMLBlock.private
+    validation: "read only (computed or filled by the program); shown only when eval: doc.private || doc.__unsaved"
+  - label: html
+    control: text
+    binds: CustomHTMLBlock.html
+  - label: script
+    control: text
+    binds: CustomHTMLBlock.script
+  - label: style
+    control: text
+    binds: CustomHTMLBlock.style
+  - label: Roles
+    control: grid
+    columns:
+      - Role
+actions:
+  - label: Save
+    triggers: F-223
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Custom HTML Block
+    note: declared by the program

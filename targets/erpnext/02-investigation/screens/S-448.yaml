@@ -1,0 +1,52 @@
+id: S-448
+title: Help Article
+purpose: create, view and edit Help Article records
+kind: form
+layout: 10 fields
+fields:
+  - label: Title
+    control: text
+    binds: HelpArticle.title
+    required: true
+  - label: Category
+    control: lookup
+    binds: HelpArticle.category
+    required: true
+    validation: chosen among Help Category records
+  - label: Published
+    control: checkbox
+    binds: HelpArticle.published
+  - label: Author
+    control: text
+    binds: HelpArticle.author
+  - label: Level
+    control: select
+    binds: HelpArticle.level
+  - label: Content
+    control: text
+    binds: HelpArticle.content
+    required: true
+  - label: Likes
+    control: number
+    binds: HelpArticle.likes
+    validation: read only (computed or filled by the program)
+  - label: Route
+    control: text
+    binds: HelpArticle.route
+  - label: Helpful
+    control: number
+    binds: HelpArticle.helpful
+    validation: read only (computed or filled by the program)
+  - label: Not Helpful
+    control: number
+    binds: HelpArticle.not_helpful
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-449
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Help Article
+    note: declared by the program

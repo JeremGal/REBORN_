@@ -1,0 +1,45 @@
+id: S-361
+title: Department
+purpose: create, view and edit Department records
+kind: form
+layout: 8 fields
+fields:
+  - label: Department
+    control: text
+    binds: Department.department_name
+    required: true
+  - label: Parent Department
+    control: lookup
+    binds: Department.parent_department
+    validation: chosen among Department records
+  - label: Company
+    control: lookup
+    binds: Department.company
+    required: true
+    validation: chosen among Company records
+  - label: Is Group
+    control: checkbox
+    binds: Department.is_group
+  - label: Disabled
+    control: checkbox
+    binds: Department.disabled
+  - label: lft
+    control: number
+    binds: Department.lft
+    validation: read only (computed or filled by the program)
+  - label: rgt
+    control: number
+    binds: Department.rgt
+    validation: read only (computed or filled by the program)
+  - label: Old Parent
+    control: text
+    binds: Department.old_parent
+actions:
+  - label: Save
+    triggers: F-362
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Department
+    note: declared by the program

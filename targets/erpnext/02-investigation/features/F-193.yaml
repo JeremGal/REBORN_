@@ -1,0 +1,60 @@
+id: F-193
+title: Create and edit a User
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: Someone who can log in to your site.
+entry_points:
+  - screen: S-192
+    action: open the form
+inputs:
+  - label: Email
+    field: User.email
+    type: string
+    required: true
+  - label: First Name
+    field: User.first_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the User form
+    screen: S-192
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Email, First Name"
+  - n: 3
+    actor: user
+    does: "adds lines in: Role Profiles, Roles Assigned, Block Modules, User Emails, User Defaults, Social Logins, Active Sessions"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a User record stored
+    entities:
+      - User
+entities:
+  - User
+  - UserRoleProfile
+  - HasRole
+  - BlockModule
+  - UserEmail
+  - DefaultValue
+  - UserSocialLogin
+  - UserSessionDisplay
+screens:
+  - S-192
+acceptance:
+  - id: AC-194
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of User
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

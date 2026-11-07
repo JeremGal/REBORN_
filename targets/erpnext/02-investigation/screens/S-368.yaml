@@ -1,0 +1,53 @@
+id: S-368
+title: Holiday List
+purpose: create, view and edit Holiday List records
+kind: form
+layout: "sections: Add Weekly Holidays, Add Local Holidays, Holidays; 10 fields"
+fields:
+  - label: Holiday List Name
+    control: text
+    binds: HolidayList.holiday_list_name
+    required: true
+  - label: From Date
+    control: date
+    binds: HolidayList.from_date
+    required: true
+  - label: To Date
+    control: date
+    binds: HolidayList.to_date
+    required: true
+  - label: Total Holidays
+    control: number
+    binds: HolidayList.total_holidays
+    validation: read only (computed or filled by the program)
+  - label: Weekly Off
+    control: select
+    binds: HolidayList.weekly_off
+  - label: Is Half Day
+    control: checkbox
+    binds: HolidayList.is_half_day
+  - label: Country
+    control: text
+    binds: HolidayList.country
+  - label: Subdivision
+    control: text
+    binds: HolidayList.subdivision
+    validation: shown only when country
+  - label: Holidays
+    control: grid
+    columns:
+      - Date
+      - Description
+      - Is Half Day
+  - label: Color
+    control: other
+    binds: HolidayList.color
+actions:
+  - label: Save
+    triggers: F-369
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Holiday List
+    note: declared by the program

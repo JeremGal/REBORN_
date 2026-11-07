@@ -1,0 +1,46 @@
+id: F-470
+title: Create and edit a Workflow Action Master
+module: Workflow
+priority: could
+status: partial
+confidence: medium
+user_goal: Workflow Action Master
+entry_points:
+  - screen: S-469
+    action: open the form
+inputs:
+  - label: Workflow Action Name
+    field: WorkflowActionMaster.workflow_action_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Workflow Action Master form
+    screen: S-469
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Workflow Action Name"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Workflow Action Master record stored
+    entities:
+      - WorkflowActionMaster
+entities:
+  - WorkflowActionMaster
+screens:
+  - S-469
+acceptance:
+  - id: AC-471
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Workflow Action Master
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

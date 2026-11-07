@@ -1,0 +1,37 @@
+id: S-004
+title: Accounting Dimension
+purpose: create, view and edit Accounting Dimension records
+kind: form
+layout: 5 fields
+fields:
+  - label: Reference Document Type
+    control: lookup
+    binds: AccountingDimension.document_type
+    required: true
+    validation: chosen among DocType records
+  - label: Dimension Name
+    control: text
+    binds: AccountingDimension.label
+  - label: Fieldname
+    control: text
+    binds: AccountingDimension.fieldname
+  - label: Dimension Defaults
+    control: grid
+    columns:
+      - Company
+      - Default Dimension
+      - Mandatory For Balance Sheet
+      - Mandatory For Profit and Loss Account
+  - label: Disable
+    control: checkbox
+    binds: AccountingDimension.disabled
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-005
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Accounting Dimension
+    note: declared by the program

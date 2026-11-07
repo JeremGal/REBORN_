@@ -1,0 +1,41 @@
+id: F-327
+title: Configure Projects Settings
+module: Projects
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Projects Settings settings.
+entry_points:
+  - screen: S-326
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Projects Settings form
+    screen: S-326
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - ProjectsSettings
+entities:
+  - ProjectsSettings
+screens:
+  - S-326
+acceptance:
+  - id: AC-328
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Projects Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

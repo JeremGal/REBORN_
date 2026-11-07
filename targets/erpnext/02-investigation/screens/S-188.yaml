@@ -1,0 +1,47 @@
+id: S-188
+title: Submission Queue
+purpose: create, view and edit Submission Queue records
+kind: form
+layout: 8 fields
+fields:
+  - label: Status
+    control: select
+    binds: SubmissionQueue.status
+    validation: read only (computed or filled by the program)
+  - label: Created At
+    control: date
+    binds: SubmissionQueue.created_at
+    validation: read only (computed or filled by the program)
+  - label: Enqueued By
+    control: text
+    binds: SubmissionQueue.enqueued_by
+    validation: read only (computed or filled by the program)
+  - label: Job Id
+    control: lookup
+    binds: SubmissionQueue.job_id
+    validation: read only (computed or filled by the program); chosen among RQ Job records
+  - label: Ended At
+    control: date
+    binds: SubmissionQueue.ended_at
+    validation: read only (computed or filled by the program)
+  - label: Reference DocType
+    control: lookup
+    binds: SubmissionQueue.ref_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Reference Docname
+    control: lookup
+    binds: SubmissionQueue.ref_docname
+    validation: read only (computed or filled by the program)
+  - label: Exception
+    control: text
+    binds: SubmissionQueue.exception
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-189
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Submission Queue
+    note: declared by the program

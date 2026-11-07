@@ -1,0 +1,53 @@
+id: F-410
+title: Create, submit and cancel a Repost Item Valuation
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: Recalculates stock values after a backdated change.
+entry_points:
+  - screen: S-409
+    action: open the form
+inputs:
+  - label: Based On
+    field: RepostItemValuation.based_on
+    type: enum
+    required: true
+  - label: Posting Date
+    field: RepostItemValuation.posting_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Repost Item Valuation form
+    screen: S-409
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Based On, Posting Date"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 4
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Repost Item Valuation record stored
+    entities:
+      - RepostItemValuation
+entities:
+  - RepostItemValuation
+screens:
+  - S-409
+acceptance:
+  - id: AC-411
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Repost Item Valuation
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"repost-item-valuation\")."

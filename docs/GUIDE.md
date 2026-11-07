@@ -115,6 +115,11 @@ node tools/reborn.mjs relations <id>                    # links implied by colum
 node tools/reborn.mjs parity <id>                       # share of the kit's expectations the rebuild has proven
 node tools/reborn.mjs frappe <id> model                 # Frappe/ERPNext site: every document type -> entity cards
 node tools/reborn.mjs frappe <id> observe <cases.json>  # fictitious drafts created, computed amounts read back -> a run
+node tools/reborn.mjs frappe <id> features              # one feature card and one screen card per form (structure, graded partial)
+node tools/reborn.mjs frappe <id> probe                 # a minimal draft of every business document: stored or refused -> a run
+node tools/reborn.mjs frappe <id> cleanup <run-id>      # delete the drafts a probe created
+node tools/reborn.mjs frappe <id> translations --lang fr   # official translations, to compare screens read by the agent
+<venv>/python -I tools/h_run.py <plan.json>             # Elias's H Company explorer on the site, then import-run
 node tools/reborn.mjs import-run <id> <EXP.json|dir> --mission M-xxx [--root h-explorer]   # H Company explorer -> runs
 node tools/reborn.mjs native <id> <binary> [--engine ghidra-mcp|rea] [--find RE] [--decompile a,b] [--max 3]
 node tools/reborn.mjs rea <id> <command> [args]

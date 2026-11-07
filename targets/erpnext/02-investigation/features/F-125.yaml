@@ -1,0 +1,55 @@
+id: F-125
+title: Create and edit a Supplier Scorecard
+module: Buying
+priority: should
+status: partial
+confidence: medium
+user_goal: Rates a supplier over time on criteria you choose.
+entry_points:
+  - screen: S-124
+    action: open the form
+inputs:
+  - label: Evaluation Period
+    field: SupplierScorecard.period
+    type: enum
+    required: true
+  - label: Weighting Function
+    field: SupplierScorecard.weighting_function
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Supplier Scorecard form
+    screen: S-124
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Evaluation Period, Weighting Function"
+  - n: 3
+    actor: user
+    does: "adds lines in: Scoring Standings, Scoring Criteria"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Supplier Scorecard record stored
+    entities:
+      - SupplierScorecard
+entities:
+  - SupplierScorecard
+  - SupplierScorecardScoringStanding
+  - SupplierScorecardScoringCriteria
+screens:
+  - S-124
+acceptance:
+  - id: AC-126
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Supplier Scorecard
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"supplier-scorecard\")."

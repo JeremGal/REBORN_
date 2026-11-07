@@ -1,0 +1,182 @@
+id: S-322
+title: Project
+purpose: create, view and edit Project records
+kind: form
+layout: "tabs: Costing, Progress, More Info, Connections; sections: Timeline, Costing and Billing, Margin, Customer Details, Users, Notes; 43 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Project.naming_series
+    required: true
+  - label: Project Name
+    control: text
+    binds: Project.project_name
+    required: true
+  - label: Status
+    control: select
+    binds: Project.status
+  - label: Project Type
+    control: lookup
+    binds: Project.project_type
+    validation: chosen among Project Type records
+  - label: "% Complete Method"
+    control: select
+    binds: Project.percent_complete_method
+  - label: From Template
+    control: lookup
+    binds: Project.project_template
+    validation: chosen among Project Template records
+  - label: Priority
+    control: select
+    binds: Project.priority
+  - label: Department
+    control: lookup
+    binds: Project.department
+    validation: chosen among Department records
+  - label: Is Active
+    control: select
+    binds: Project.is_active
+  - label: "% Completed"
+    control: number
+    binds: Project.percent_complete
+  - label: Expected Start Date
+    control: date
+    binds: Project.expected_start_date
+  - label: Actual Start Date (via Timesheet)
+    control: date
+    binds: Project.actual_start_date
+    validation: read only (computed or filled by the program)
+  - label: Actual Time in Hours (via Timesheet)
+    control: number
+    binds: Project.actual_time
+    validation: read only (computed or filled by the program)
+  - label: Expected End Date
+    control: date
+    binds: Project.expected_end_date
+  - label: Actual End Date (via Timesheet)
+    control: date
+    binds: Project.actual_end_date
+    validation: read only (computed or filled by the program)
+  - label: Estimated Cost
+    control: money
+    binds: Project.estimated_costing
+  - label: Total Costing Amount (via Timesheet)
+    control: money
+    binds: Project.total_costing_amount
+    validation: read only (computed or filled by the program)
+  - label: Total Purchase Cost (via Purchase Invoice)
+    control: money
+    binds: Project.total_purchase_cost
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: Project.company
+    required: true
+    validation: chosen among Company records
+  - label: Total Sales Amount (via Sales Order)
+    control: money
+    binds: Project.total_sales_amount
+    validation: read only (computed or filled by the program)
+  - label: Total Billable Amount (via Timesheet)
+    control: money
+    binds: Project.total_billable_amount
+    validation: read only (computed or filled by the program)
+  - label: Total Billed Amount (via Sales Invoice)
+    control: money
+    binds: Project.total_billed_amount
+    validation: read only (computed or filled by the program)
+  - label: Total Consumed Material Cost
+    control: money
+    binds: Project.total_consumed_material_cost
+    validation: read only (computed or filled by the program)
+  - label: Default Cost Center
+    control: lookup
+    binds: Project.cost_center
+    validation: chosen among Cost Center records
+  - label: Gross Margin
+    control: money
+    binds: Project.gross_margin
+    validation: read only (computed or filled by the program)
+  - label: Gross Margin %
+    control: number
+    binds: Project.per_gross_margin
+    validation: read only (computed or filled by the program)
+  - label: Collect Progress
+    control: checkbox
+    binds: Project.collect_progress
+  - label: Holiday List
+    control: lookup
+    binds: Project.holiday_list
+    validation: shown only when collect_progress; chosen among Holiday List records
+  - label: Frequency To Collect Progress
+    control: select
+    binds: Project.frequency
+    validation: shown only when eval:doc.collect_progress == true
+  - label: From Time
+    control: date
+    binds: Project.from_time
+    validation: shown only when eval:(doc.frequency == "Hourly" && doc.collect_progress)
+  - label: To Time
+    control: date
+    binds: Project.to_time
+    validation: shown only when eval:(doc.frequency == "Hourly" && doc.collect_progress)
+  - label: First Email
+    control: date
+    binds: Project.first_email
+    validation: |+
+      shown only when eval:(doc.frequency == "Twice Daily" && doc.collect_progress == true)
+
+  - label: Second Email
+    control: date
+    binds: Project.second_email
+    validation: shown only when eval:(doc.frequency == "Twice Daily" && doc.collect_progress == true)
+  - label: Daily Time to send
+    control: date
+    binds: Project.daily_time_to_send
+    validation: shown only when eval:(doc.frequency == "Daily" && doc.collect_progress == true)
+  - label: Day to Send
+    control: select
+    binds: Project.day_to_send
+    validation: shown only when eval:(doc.frequency == "Weekly" && doc.collect_progress == true)
+  - label: Weekly Time to send
+    control: date
+    binds: Project.weekly_time_to_send
+    validation: shown only when eval:(doc.frequency == "Weekly" && doc.collect_progress == true)
+  - label: Subject
+    control: text
+    binds: Project.subject
+    validation: shown only when collect_progress
+  - label: Message
+    control: text
+    binds: Project.message
+    validation: shown only when collect_progress
+  - label: Customer
+    control: lookup
+    binds: Project.customer
+    validation: chosen among Customer records
+  - label: Sales Order
+    control: lookup
+    binds: Project.sales_order
+    validation: chosen among Sales Order records
+  - label: Users
+    control: grid
+    columns:
+      - User
+      - Full Name
+      - View attachments
+  - label: Copied From
+    control: text
+    binds: Project.copied_from
+    validation: read only (computed or filled by the program)
+  - label: Notes
+    control: text
+    binds: Project.notes
+actions:
+  - label: Save
+    triggers: F-323
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Project
+    note: declared by the program

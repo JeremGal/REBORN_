@@ -1,0 +1,54 @@
+id: F-409
+title: Configure Quick Stock Balance
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Quick Stock Balance settings.
+entry_points:
+  - screen: S-408
+    action: open the form
+inputs:
+  - label: Warehouse
+    field: QuickStockBalance.warehouse
+    type: ref
+    required: true
+  - label: Date
+    field: QuickStockBalance.date
+    type: date
+    required: true
+  - label: Item Code
+    field: QuickStockBalance.item
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Quick Stock Balance form
+    screen: S-408
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Warehouse, Date, Item Code"
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - QuickStockBalance
+entities:
+  - QuickStockBalance
+screens:
+  - S-408
+acceptance:
+  - id: AC-410
+    given: every mandatory field filled with a valid value
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Quick Stock Balance
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"quick-stock-balance\")."

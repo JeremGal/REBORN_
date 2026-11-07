@@ -1,0 +1,61 @@
+id: F-412
+title: Create and edit a Serial No
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: A single unit of an item, tracked by its own number.
+entry_points:
+  - screen: S-411
+    action: open the form
+inputs:
+  - label: Serial No
+    field: SerialNo.serial_no
+    type: string
+    required: true
+  - label: Item Code
+    field: SerialNo.item_code
+    type: ref
+    required: true
+  - label: Company
+    field: SerialNo.company
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Serial No form
+    screen: S-411
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Serial No, Item Code, Company"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Serial No record stored
+    entities:
+      - SerialNo
+entities:
+  - SerialNo
+screens:
+  - S-411
+acceptance:
+  - id: AC-413
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Serial No
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 141
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"serial-no\")."

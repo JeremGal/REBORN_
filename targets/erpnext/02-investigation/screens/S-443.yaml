@@ -1,0 +1,47 @@
+id: S-443
+title: About Us Settings
+purpose: settings of About Us Settings
+kind: settings
+layout: "sections: Org History, Team Members; 9 fields"
+fields:
+  - label: Disabled
+    control: checkbox
+    binds: AboutUsSettings.is_disabled
+  - label: Page Title
+    control: text
+    binds: AboutUsSettings.page_title
+  - label: Company Introduction
+    control: text
+    binds: AboutUsSettings.company_introduction
+  - label: Org History Heading
+    control: text
+    binds: AboutUsSettings.company_history_heading
+  - label: Org History
+    control: grid
+    columns:
+      - Year
+      - Highlight
+  - label: Team Members Heading
+    control: text
+    binds: AboutUsSettings.team_members_heading
+  - label: Team Members Subtitle
+    control: text
+    binds: AboutUsSettings.team_members_subtitle
+  - label: Team Members
+    control: grid
+    columns:
+      - Full Name
+      - Image Link
+      - Bio
+  - label: Footer
+    control: text
+    binds: AboutUsSettings.footer
+actions:
+  - label: Save
+    triggers: F-444
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of About Us Settings
+    note: declared by the program

@@ -1,0 +1,21 @@
+id: M-003
+title: Open the core business forms and record what they show
+goal: >-
+  Sign in with the test user, open each core form (new document), and report its title, section labels, field labels
+  and buttons, without saving anything. Then open one fictitious draft invoice and read its totals on screen, to
+  compare them with the values the program returned through its API.
+persona: accountant
+priority: must
+start_state: Alan's own site with fictitious TEST- data; a test user with business roles only
+steps_hint:
+  - sign in, open the form address directly, scroll to the end, read labels
+  - never save, submit or delete
+capture:
+  screenshots: key-steps
+  read_values: [page title, section labels, field labels, buttons, invoice totals as displayed]
+  network: false
+success_criteria:
+  - every form listed has its labels reported with screenshots
+  - the draft invoice totals read on screen match the API values
+requested_by: block 2 (screens and cross-check of computations)
+status: todo

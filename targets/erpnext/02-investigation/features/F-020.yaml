@@ -1,0 +1,60 @@
+id: F-020
+title: Create, submit and cancel a Bank Transaction
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: A line from your bank statement, ready to be matched with a payment.
+entry_points:
+  - screen: S-019
+    action: open the form
+inputs:
+  - label: Series
+    field: BankTransaction.naming_series
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Bank Transaction form
+    screen: S-019
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series"
+  - n: 3
+    actor: user
+    does: "adds lines in: Payment Entries"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Bank Transaction record stored
+    entities:
+      - BankTransaction
+entities:
+  - BankTransaction
+  - BankTransactionPayments
+screens:
+  - S-019
+acceptance:
+  - id: AC-021
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Bank Transaction
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 26
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"bank-transaction\")."

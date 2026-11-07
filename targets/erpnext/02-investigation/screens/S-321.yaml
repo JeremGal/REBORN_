@@ -1,0 +1,28 @@
+id: S-321
+title: Activity Type
+purpose: create, view and edit Activity Type records
+kind: form
+layout: 4 fields
+fields:
+  - label: Activity Type
+    control: text
+    binds: ActivityType.activity_type
+    required: true
+  - label: Default Costing Rate
+    control: money
+    binds: ActivityType.costing_rate
+  - label: Default Billing Rate
+    control: money
+    binds: ActivityType.billing_rate
+  - label: Disabled
+    control: checkbox
+    binds: ActivityType.disabled
+actions:
+  - label: Save
+    triggers: F-322
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Activity Type
+    note: declared by the program

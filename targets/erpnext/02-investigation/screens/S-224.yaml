@@ -1,0 +1,50 @@
+id: S-224
+title: Custom Workspace
+purpose: create, view and edit Custom Workspace records
+kind: form
+layout: "sections: Visibility, Appearance, Content; 10 fields"
+fields:
+  - label: Workspace
+    control: lookup
+    binds: CustomWorkspace.workspace
+    required: true
+    validation: chosen among Workspace records
+  - label: Visibility
+    control: select
+    binds: CustomWorkspace.visibility
+  - label: Added Roles
+    control: grid
+    columns:
+      - Role
+  - label: Removed Roles
+    control: grid
+    columns:
+      - Role
+  - label: Icon
+    control: text
+    binds: CustomWorkspace.icon
+  - label: Indicator Color
+    control: select
+    binds: CustomWorkspace.indicator_color
+  - label: Override Sidebar Position
+    control: checkbox
+    binds: CustomWorkspace.override_sequence
+  - label: Sidebar Position
+    control: number
+    binds: CustomWorkspace.sequence_id
+    validation: shown only when override_sequence
+  - label: Content
+    control: text
+    binds: CustomWorkspace.content
+  - label: Added Widgets
+    control: text
+    binds: CustomWorkspace.widgets
+actions:
+  - label: Save
+    triggers: F-225
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Custom Workspace
+    note: declared by the program

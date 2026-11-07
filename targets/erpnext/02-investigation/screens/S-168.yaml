@@ -1,0 +1,27 @@
+id: S-168
+title: Patch Log
+purpose: create, view and edit Patch Log records
+kind: form
+layout: 3 fields
+fields:
+  - label: Patch
+    control: text
+    binds: PatchLog.patch
+    validation: read only (computed or filled by the program)
+  - label: Skipped
+    control: checkbox
+    binds: PatchLog.skipped
+    validation: read only (computed or filled by the program)
+  - label: Traceback
+    control: text
+    binds: PatchLog.traceback
+    validation: read only (computed or filled by the program); shown only when eval:doc.skipped == 1
+actions:
+  - label: Save
+    triggers: F-169
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Patch Log
+    note: declared by the program

@@ -1,0 +1,27 @@
+id: S-313
+title: Network Printer Settings
+purpose: create, view and edit Network Printer Settings records
+kind: form
+layout: 3 fields
+fields:
+  - label: Server IP
+    control: text
+    binds: NetworkPrinterSettings.server_ip
+    required: true
+  - label: Port
+    control: number
+    binds: NetworkPrinterSettings.port
+    required: true
+  - label: Printer Name
+    control: select
+    binds: NetworkPrinterSettings.printer_name
+    required: true
+actions:
+  - label: Save
+    triggers: F-314
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Network Printer Settings
+    note: declared by the program

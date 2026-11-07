@@ -1,0 +1,292 @@
+id: S-190
+title: System Settings
+purpose: settings of System Settings
+kind: settings
+layout: "tabs: Login, Password, Email, Files, App, Display, Backups, Advanced, AI Agents; sections: Date and Number Format, Permissions, Login Methods, Brute Force Security, Two Factor Authentication, Password, Reports, Snapshot Reports, Background Workers, Telemetry, Search, API Logging, MCP Settings, frappectl; 84 fields"
+fields:
+  - label: Application Name
+    control: text
+    binds: SystemSettings.app_name
+  - label: Country
+    control: lookup
+    binds: SystemSettings.country
+    validation: chosen among Country records
+  - label: Language
+    control: lookup
+    binds: SystemSettings.language
+    required: true
+    validation: chosen among Language records
+  - label: Time Zone
+    control: select
+    binds: SystemSettings.time_zone
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Currency
+    control: lookup
+    binds: SystemSettings.currency
+    validation: chosen among Currency records
+  - label: Enable Onboarding
+    control: checkbox
+    binds: SystemSettings.enable_onboarding
+  - label: Setup Complete
+    control: checkbox
+    binds: SystemSettings.setup_complete
+    validation: read only (computed or filled by the program)
+  - label: Disable Document Sharing
+    control: checkbox
+    binds: SystemSettings.disable_document_sharing
+  - label: Date Format
+    control: select
+    binds: SystemSettings.date_format
+    required: true
+  - label: Time Format
+    control: select
+    binds: SystemSettings.time_format
+    required: true
+  - label: Number Format
+    control: select
+    binds: SystemSettings.number_format
+    required: true
+  - label: Use Number Format from Currency
+    control: checkbox
+    binds: SystemSettings.use_number_format_from_currency
+  - label: First Day of the Week
+    control: select
+    binds: SystemSettings.first_day_of_the_week
+  - label: Float Precision
+    control: select
+    binds: SystemSettings.float_precision
+  - label: Currency Precision
+    control: select
+    binds: SystemSettings.currency_precision
+  - label: Rounding Method
+    control: select
+    binds: SystemSettings.rounding_method
+  - label: Show Absolute Datetime in Timeline
+    control: checkbox
+    binds: SystemSettings.show_absolute_datetime_in_timeline
+  - label: Apply Strict User Permissions
+    control: checkbox
+    binds: SystemSettings.apply_strict_user_permissions
+  - label: Show External Link Warning
+    control: select
+    binds: SystemSettings.show_external_link_warning
+  - label: Session Expiry (idle timeout)
+    control: text
+    binds: SystemSettings.session_expiry
+  - label: Document Share Key Expiry (in Days)
+    control: number
+    binds: SystemSettings.document_share_key_expiry
+  - label: Allow only one session per user
+    control: checkbox
+    binds: SystemSettings.deny_multiple_sessions
+  - label: Disable Username/Password Login
+    control: checkbox
+    binds: SystemSettings.disable_user_pass_login
+  - label: Max signups allowed per hour
+    control: number
+    binds: SystemSettings.max_signups_allowed_per_hour
+  - label: Allow Login using Mobile Number
+    control: checkbox
+    binds: SystemSettings.allow_login_using_mobile_number
+  - label: Allow Login using User Name
+    control: checkbox
+    binds: SystemSettings.allow_login_using_user_name
+  - label: Login with email link
+    control: checkbox
+    binds: SystemSettings.login_with_email_link
+  - label: Login with email link expiry (in minutes)
+    control: number
+    binds: SystemSettings.login_with_email_link_expiry
+    validation: shown only when login_with_email_link
+  - label: Rate limit for email link login
+    control: number
+    binds: SystemSettings.rate_limit_email_link_login
+    validation: shown only when login_with_email_link
+  - label: Allow Consecutive Login Attempts
+    control: number
+    binds: SystemSettings.allow_consecutive_login_attempts
+  - label: Allow Login After Fail
+    control: number
+    binds: SystemSettings.allow_login_after_fail
+  - label: Enable Two Factor Auth
+    control: checkbox
+    binds: SystemSettings.enable_two_factor_auth
+  - label: Bypass Two Factor Auth for users who login from restricted IP Address
+    control: checkbox
+    binds: SystemSettings.bypass_2fa_for_retricted_ip_users
+    validation: shown only when enable_two_factor_auth
+  - label: Bypass restricted IP Address check If Two Factor Auth Enabled
+    control: checkbox
+    binds: SystemSettings.bypass_restrict_ip_check_if_2fa_enabled
+    validation: shown only when enable_two_factor_auth
+  - label: Two Factor Authentication method
+    control: select
+    binds: SystemSettings.two_factor_method
+    validation: shown only when enable_two_factor_auth
+  - label: Expiry time of QR Code Image Page
+    control: number
+    binds: SystemSettings.lifespan_qrcode_image
+    validation: shown only when eval:doc.enable_two_factor_auth && doc.two_factor_method == "OTP App"
+  - label: OTP Issuer Name
+    control: text
+    binds: SystemSettings.otp_issuer_name
+    validation: shown only when enable_two_factor_auth
+  - label: OTP SMS Template
+    control: text
+    binds: SystemSettings.otp_sms_template
+    validation: shown only when eval:doc.enable_two_factor_auth==1 && doc.two_factor_method=="SMS"
+  - label: Logout All Sessions on Password Reset
+    control: checkbox
+    binds: SystemSettings.logout_on_password_reset
+  - label: Force User to Reset Password
+    control: number
+    binds: SystemSettings.force_user_to_reset_password
+  - label: Reset Password Link Expiry Duration
+    control: number
+    binds: SystemSettings.reset_password_link_expiry_duration
+  - label: Password Reset Link Generation Limit
+    control: number
+    binds: SystemSettings.password_reset_limit
+  - label: Enable Password Policy
+    control: checkbox
+    binds: SystemSettings.enable_password_policy
+  - label: Minimum Password Score
+    control: select
+    binds: SystemSettings.minimum_password_score
+    validation: shown only when eval:doc.enable_password_policy==1
+  - label: Email Footer Address
+    control: text
+    binds: SystemSettings.email_footer_address
+  - label: Email Retry Limit
+    control: number
+    binds: SystemSettings.email_retry_limit
+  - label: Disable Standard Email Footer
+    control: checkbox
+    binds: SystemSettings.disable_standard_email_footer
+  - label: Hide footer in auto email reports
+    control: checkbox
+    binds: SystemSettings.hide_footer_in_auto_email_reports
+  - label: Include Web View Link in Email
+    control: checkbox
+    binds: SystemSettings.attach_view_link
+  - label: Store Attached PDF Document
+    control: checkbox
+    binds: SystemSettings.store_attached_pdf_document
+  - label: Welcome Email Template
+    control: lookup
+    binds: SystemSettings.welcome_email_template
+    validation: chosen among Email Template records
+  - label: Reset Password Template
+    control: lookup
+    binds: SystemSettings.reset_password_template
+    validation: chosen among Email Template records
+  - label: Max File Size (MB)
+    control: number
+    binds: SystemSettings.max_file_size
+  - label: Max Zip Extract Size (MB)
+    control: number
+    binds: SystemSettings.max_zip_extract_size
+  - label: Allow Guests to Upload Files
+    control: checkbox
+    binds: SystemSettings.allow_guests_to_upload_files
+  - label: Force Web Capture Mode for Uploads
+    control: checkbox
+    binds: SystemSettings.force_web_capture_mode_for_uploads
+  - label: Strip EXIF tags from uploaded images
+    control: checkbox
+    binds: SystemSettings.strip_exif_metadata_from_uploaded_images
+  - label: Only allow System Managers to upload public files
+    control: checkbox
+    binds: SystemSettings.only_allow_system_managers_to_upload_public_files
+  - label: Delete Background Exported Reports After (Hours)
+    control: number
+    binds: SystemSettings.delete_background_exported_reports_after
+  - label: Allowed File Extensions
+    control: text
+    binds: SystemSettings.allowed_file_extensions
+  - label: Allowed Doctypes for Guest Uploads
+    control: text
+    binds: SystemSettings.allowed_doctypes_for_guest_uploads
+    validation: shown only when eval:doc.allow_guests_to_upload_files == 1
+  - label: Default App
+    control: select
+    binds: SystemSettings.default_app
+  - label: Disable System Update Notification
+    control: checkbox
+    binds: SystemSettings.disable_system_update_notification
+  - label: Disable Change Log Notification
+    control: checkbox
+    binds: SystemSettings.disable_change_log_notification
+  - label: Hide Empty Read-Only Fields
+    control: checkbox
+    binds: SystemSettings.hide_empty_read_only_fields
+  - label: Disable Product Suggestion
+    control: checkbox
+    binds: SystemSettings.disable_product_suggestion
+  - label: Number of Backups
+    control: number
+    binds: SystemSettings.backup_limit
+  - label: Encrypt Backups
+    control: checkbox
+    binds: SystemSettings.encrypt_backup
+  - label: Max auto email report per user
+    control: number
+    binds: SystemSettings.max_auto_email_report_per_user
+  - label: Max Report Rows
+    control: number
+    binds: SystemSettings.max_report_rows
+  - label: Enable Snapshot Reports
+    control: checkbox
+    binds: SystemSettings.enable_snapshot_reports
+  - label: Sync In Batches
+    control: checkbox
+    binds: SystemSettings.sync_in_batch
+    validation: "shown only when eval: doc.enable_snapshot_reports"
+  - label: Frequency
+    control: select
+    binds: SystemSettings.frequency
+    validation: "shown only when eval: doc.enable_snapshot_reports"
+  - label: Sync Timeout (Seconds)
+    control: number
+    binds: SystemSettings.sync_timeout
+    validation: "shown only when eval: doc.enable_snapshot_reports"
+  - label: Enable Scheduled Jobs
+    control: checkbox
+    binds: SystemSettings.enable_scheduler
+  - label: Run Jobs only Daily if Inactive For (Days)
+    control: number
+    binds: SystemSettings.dormant_days
+  - label: Show Full Error and Allow Reporting of Issues to the Developer
+    control: checkbox
+    binds: SystemSettings.allow_error_traceback
+  - label: Allow Sending Usage Data for Improving Applications
+    control: checkbox
+    binds: SystemSettings.enable_telemetry
+  - label: Link Field Results Limit
+    control: number
+    binds: SystemSettings.link_field_results_limit
+  - label: Allow Clearing Link Fields
+    control: checkbox
+    binds: SystemSettings.allow_clearing_link_fields
+  - label: Log API Requests
+    control: checkbox
+    binds: SystemSettings.log_api_requests
+  - label: Enable MCP
+    control: checkbox
+    binds: SystemSettings.enable_mcp
+  - label: Server Name
+    control: text
+    binds: SystemSettings.server_name
+  - label: Agent Instructions
+    control: text
+    binds: SystemSettings.agent_instructions
+actions:
+  - label: Save
+    triggers: F-191
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of System Settings
+    note: declared by the program

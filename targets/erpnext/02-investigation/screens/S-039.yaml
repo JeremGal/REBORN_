@@ -1,0 +1,34 @@
+id: S-039
+title: Item Tax Template
+purpose: create, view and edit Item Tax Template records
+kind: form
+layout: 4 fields
+fields:
+  - label: Title
+    control: text
+    binds: ItemTaxTemplate.title
+    required: true
+  - label: Company
+    control: lookup
+    binds: ItemTaxTemplate.company
+    required: true
+    validation: chosen among Company records
+  - label: Disabled
+    control: checkbox
+    binds: ItemTaxTemplate.disabled
+  - label: Tax Rates
+    control: grid
+    required: true
+    columns:
+      - Tax
+      - Tax Rate
+      - Not Applicable
+actions:
+  - label: Save
+    triggers: F-040
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Item Tax Template
+    note: declared by the program

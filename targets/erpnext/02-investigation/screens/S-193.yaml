@@ -1,0 +1,20 @@
+id: S-193
+title: User Group
+purpose: create, view and edit User Group records
+kind: form
+layout: 1 fields
+fields:
+  - label: User Group Members
+    control: grid
+    required: true
+    columns:
+      - User
+actions:
+  - label: Save
+    triggers: F-194
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of User Group
+    note: declared by the program

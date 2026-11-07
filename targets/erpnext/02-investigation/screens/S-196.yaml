@@ -1,0 +1,53 @@
+id: S-196
+title: User Type
+purpose: create, view and edit User Type records
+kind: form
+layout: "sections: Document Types and Permissions, Allowed Modules; 8 fields"
+fields:
+  - label: Is Standard
+    control: checkbox
+    binds: UserType.is_standard
+    validation: "shown only when eval: frappe.boot.developer_mode"
+  - label: Role
+    control: lookup
+    binds: UserType.role
+    validation: "shown only when eval: !doc.is_standard; chosen among Role records"
+  - label: Apply User Permission On
+    control: lookup
+    binds: UserType.apply_user_permission_on
+    validation: "shown only when eval: !doc.is_standard; chosen among DocType records"
+  - label: User Id Field
+    control: select
+    binds: UserType.user_id_field
+    validation: shown only when apply_user_permission_on
+  - label: Document Types
+    control: grid
+    validation: "shown only when eval: !doc.is_standard"
+    columns:
+      - Document Type
+      - Read
+      - Write
+      - Create
+  - label: Custom Document Types (Select Permission)
+    control: grid
+    columns:
+      - Document Type
+  - label: Document Types (Select Permissions Only)
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Document Type
+  - label: User Type Module
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Module
+actions:
+  - label: Save
+    triggers: F-197
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of User Type
+    note: declared by the program

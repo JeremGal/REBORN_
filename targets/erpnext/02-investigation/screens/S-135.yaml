@@ -1,0 +1,55 @@
+id: S-135
+title: Access Log
+purpose: create, view and edit Access Log records
+kind: form
+layout: "sections: Log Data, File Information, Report Information, RAW Information Log; 10 fields"
+fields:
+  - label: Export From
+    control: text
+    binds: AccessLog.export_from
+    validation: read only (computed or filled by the program)
+  - label: User
+    control: lookup
+    binds: AccessLog.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Reference Document
+    control: text
+    binds: AccessLog.reference_document
+    validation: read only (computed or filled by the program)
+  - label: Timestamp
+    control: date
+    binds: AccessLog.timestamp
+    validation: read only (computed or filled by the program)
+  - label: File Type
+    control: text
+    binds: AccessLog.file_type
+    validation: read only (computed or filled by the program)
+  - label: Method
+    control: text
+    binds: AccessLog.method
+    validation: read only (computed or filled by the program)
+  - label: Report Name
+    control: text
+    binds: AccessLog.report_name
+    validation: read only (computed or filled by the program)
+  - label: Filters
+    control: text
+    binds: AccessLog.filters
+    validation: "read only (computed or filled by the program); shown only when eval: doc.filters != null"
+  - label: HTML Page
+    control: other
+    binds: AccessLog.page
+    validation: read only (computed or filled by the program)
+  - label: Columns / Fields
+    control: other
+    binds: AccessLog.columns
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-136
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Access Log
+    note: declared by the program

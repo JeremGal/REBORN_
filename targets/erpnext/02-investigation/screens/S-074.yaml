@@ -1,0 +1,140 @@
+id: S-074
+title: Promotional Scheme
+purpose: create, view and edit Promotional Scheme records
+kind: form
+layout: "sections: Discount on Other Item, Party Information, Period Settings, Price Discount Slabs, Product Discount Slabs; 27 fields"
+fields:
+  - label: Apply On
+    control: select
+    binds: PromotionalScheme.apply_on
+    required: true
+  - label: Disable
+    control: checkbox
+    binds: PromotionalScheme.disable
+  - label: Pricing Rule Item Code
+    control: grid
+    validation: shown only when eval:doc.apply_on == 'Item Code'
+    columns:
+      - Item Code
+      - UOM
+  - label: Pricing Rule Item Group
+    control: grid
+    validation: shown only when eval:doc.apply_on == 'Item Group'
+    columns:
+      - Item Group
+      - UOM
+  - label: Pricing Rule Brand
+    control: grid
+    validation: shown only when eval:doc.apply_on == 'Brand'
+    columns:
+      - Brand
+      - UOM
+  - label: Mixed Conditions
+    control: checkbox
+    binds: PromotionalScheme.mixed_conditions
+    validation: shown only when eval:doc.apply_on != 'Transaction'
+  - label: Is Cumulative
+    control: checkbox
+    binds: PromotionalScheme.is_cumulative
+    validation: shown only when eval:doc.apply_on != 'Transaction'
+  - label: Apply Rule On Other
+    control: select
+    binds: PromotionalScheme.apply_rule_on_other
+  - label: Item Code
+    control: lookup
+    binds: PromotionalScheme.other_item_code
+    validation: shown only when eval:doc.apply_rule_on_other == 'Item Code'; chosen among Item records
+  - label: Item Group
+    control: lookup
+    binds: PromotionalScheme.other_item_group
+    validation: shown only when eval:doc.apply_rule_on_other == 'Item Group'; chosen among Item Group records
+  - label: Brand
+    control: lookup
+    binds: PromotionalScheme.other_brand
+    validation: shown only when eval:doc.apply_rule_on_other == 'Brand'; chosen among Brand records
+  - label: Selling
+    control: checkbox
+    binds: PromotionalScheme.selling
+  - label: Buying
+    control: checkbox
+    binds: PromotionalScheme.buying
+  - label: Applicable For
+    control: select
+    binds: PromotionalScheme.applicable_for
+    validation: "shown only when eval: doc.buying || doc.selling"
+  - label: Customer
+    control: grid
+    validation: shown only when eval:doc.applicable_for=='Customer'
+    columns:
+      - "Customer "
+  - label: Customer Group
+    control: grid
+    validation: shown only when eval:doc.applicable_for=="Customer Group"
+    columns:
+      - Customer Group
+  - label: Territory
+    control: grid
+    validation: shown only when eval:doc.applicable_for=="Territory"
+    columns:
+      - Territory
+  - label: Sales Partner
+    control: grid
+    validation: shown only when eval:doc.applicable_for=="Sales Partner"
+    columns:
+      - "Sales Partner "
+  - label: Campaign
+    control: grid
+    validation: shown only when eval:doc.applicable_for=="Campaign"
+    columns:
+      - Campaign
+  - label: Supplier
+    control: grid
+    validation: shown only when eval:doc.applicable_for=='Supplier'
+    columns:
+      - Supplier
+  - label: Supplier Group
+    control: grid
+    validation: shown only when eval:doc.applicable_for=="Supplier Group"
+    columns:
+      - Supplier Group
+  - label: Valid From
+    control: date
+    binds: PromotionalScheme.valid_from
+  - label: Valid Up To
+    control: date
+    binds: PromotionalScheme.valid_upto
+  - label: Company
+    control: lookup
+    binds: PromotionalScheme.company
+    required: true
+    validation: chosen among Company records
+  - label: Currency
+    control: lookup
+    binds: PromotionalScheme.currency
+    validation: chosen among Currency records
+  - label: Promotional Scheme Price Discount
+    control: grid
+    columns:
+      - Min Qty
+      - Max Qty
+      - Min Amount
+      - Max Amount
+      - Discount Type
+  - label: Promotional Scheme Product Discount
+    control: grid
+    columns:
+      - Min Qty
+      - Max Qty
+      - Min Amount
+      - Max Amount
+      - Item Code
+      - Qty
+actions:
+  - label: Save
+    triggers: F-075
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Promotional Scheme
+    note: declared by the program

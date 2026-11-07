@@ -1,0 +1,25 @@
+id: S-366
+title: Employee Group
+purpose: create, view and edit Employee Group records
+kind: form
+layout: "sections: Employee; 2 fields"
+fields:
+  - label: Name
+    control: text
+    binds: EmployeeGroup.employee_group_name
+    required: true
+  - label: Employee
+    control: grid
+    columns:
+      - Employee
+      - Employee Name
+      - ERPNext User ID
+actions:
+  - label: Save
+    triggers: F-367
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Employee Group
+    note: declared by the program

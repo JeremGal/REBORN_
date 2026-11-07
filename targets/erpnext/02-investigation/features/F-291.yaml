@@ -1,0 +1,59 @@
+id: F-291
+title: Create and edit a Webhook
+module: Integrations
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Webhook records.
+entry_points:
+  - screen: S-290
+    action: open the form
+inputs:
+  - label: DocType
+    field: Webhook.webhook_doctype
+    type: ref
+    required: true
+  - label: Request URL
+    field: Webhook.request_url
+    type: string
+    required: true
+  - label: Request Method
+    field: Webhook.request_method
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Webhook form
+    screen: S-290
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: DocType, Request URL, Request Method"
+  - n: 3
+    actor: user
+    does: "adds lines in: Headers, Data"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Webhook record stored
+    entities:
+      - Webhook
+entities:
+  - Webhook
+  - WebhookHeader
+  - WebhookData
+screens:
+  - S-290
+acceptance:
+  - id: AC-292
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Webhook
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

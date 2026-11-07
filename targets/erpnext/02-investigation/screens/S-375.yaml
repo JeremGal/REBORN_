@@ -1,0 +1,47 @@
+id: S-375
+title: Supplier Group
+purpose: create, view and edit Supplier Group records
+kind: form
+layout: "sections: Credit Limit, Default Payable Account; 8 fields"
+fields:
+  - label: Supplier Group Name
+    control: text
+    binds: SupplierGroup.supplier_group_name
+    required: true
+  - label: Parent Supplier Group
+    control: lookup
+    binds: SupplierGroup.parent_supplier_group
+    validation: chosen among Supplier Group records
+  - label: Is Group
+    control: checkbox
+    binds: SupplierGroup.is_group
+  - label: Default Payment Terms Template
+    control: lookup
+    binds: SupplierGroup.payment_terms
+    validation: chosen among Payment Terms Template records
+  - label: Accounts
+    control: grid
+    validation: shown only when eval:!doc.__islocal
+    columns:
+      - Company
+      - Default Account
+      - Advance Account
+  - label: lft
+    control: number
+    binds: SupplierGroup.lft
+  - label: rgt
+    control: number
+    binds: SupplierGroup.rgt
+  - label: Old Parent
+    control: lookup
+    binds: SupplierGroup.old_parent
+    validation: chosen among Supplier Group records
+actions:
+  - label: Save
+    triggers: F-376
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Supplier Group
+    note: declared by the program

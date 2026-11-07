@@ -1,0 +1,46 @@
+id: F-353
+title: Configure Selling Settings
+module: Selling
+priority: should
+status: partial
+confidence: medium
+user_goal: How quotations, sales orders and pricing work.
+entry_points:
+  - screen: S-352
+    action: open the form
+inputs:
+  - label: How often should sales data be updated in Company/Project?
+    field: SellingSettings.sales_update_frequency
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Selling Settings form
+    screen: S-352
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: How often should sales data be updated in Company/Project?"
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - SellingSettings
+entities:
+  - SellingSettings
+screens:
+  - S-352
+acceptance:
+  - id: AC-354
+    given: every mandatory field filled with a valid value
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Selling Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"selling-settings\")."

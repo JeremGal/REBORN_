@@ -1,0 +1,133 @@
+id: S-427
+title: Subcontracting Inward Order
+purpose: create, view and edit Subcontracting Inward Order records
+kind: form
+layout: "tabs: Other Info, Connections; sections: Items, Raw Materials Required, Secondary Items Generated, Service Items, Order Status; 22 fields"
+fields:
+  - label: Series
+    control: select
+    binds: SubcontractingInwardOrder.naming_series
+    required: true
+  - label: Subcontracting Sales Order
+    control: lookup
+    binds: SubcontractingInwardOrder.sales_order
+    required: true
+    validation: chosen among Sales Order records
+  - label: Customer
+    control: lookup
+    binds: SubcontractingInwardOrder.customer
+    required: true
+    validation: read only (computed or filled by the program); chosen among Customer records
+  - label: Customer Name
+    control: text
+    binds: SubcontractingInwardOrder.customer_name
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Customer Currency
+    control: lookup
+    binds: SubcontractingInwardOrder.currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Company
+    control: lookup
+    binds: SubcontractingInwardOrder.company
+    required: true
+    validation: chosen among Company records
+  - label: Date
+    control: date
+    binds: SubcontractingInwardOrder.transaction_date
+    required: true
+  - label: Customer Warehouse
+    control: lookup
+    binds: SubcontractingInwardOrder.customer_warehouse
+    required: true
+    validation: chosen among Warehouse records
+  - label: Amended From
+    control: lookup
+    binds: SubcontractingInwardOrder.amended_from
+    validation: read only (computed or filled by the program); chosen among Subcontracting Inward Order records
+  - label: Set Delivery Warehouse
+    control: lookup
+    binds: SubcontractingInwardOrder.set_delivery_warehouse
+    validation: chosen among Warehouse records
+  - label: Items
+    control: grid
+    required: true
+    validation: shown only when sales_order
+    columns:
+      - Item Code
+      - BOM
+      - Delivery Warehouse
+      - Quantity
+      - Delivered Qty
+  - label: Required Items
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Item Code
+      - Raw Material Item Code
+      - Required Qty
+      - Received Qty
+  - label: Secondary Items
+    control: grid
+    columns:
+      - Item Code
+      - Finished Good Item Code
+      - Produced Qty
+      - Delivered Qty
+  - label: Service Items
+    control: grid
+    required: true
+    validation: read only (computed or filled by the program)
+    columns:
+      - Item Code
+      - Item Name
+      - Quantity
+      - Rate
+      - Amount
+  - label: Title
+    control: text
+    binds: SubcontractingInwardOrder.title
+  - label: Status
+    control: select
+    binds: SubcontractingInwardOrder.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: "% Raw Material Received"
+    control: number
+    binds: SubcontractingInwardOrder.per_raw_material_received
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: "% Produced"
+    control: number
+    binds: SubcontractingInwardOrder.per_produced
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: "% Delivered"
+    control: number
+    binds: SubcontractingInwardOrder.per_delivered
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: "% Raw Material Returned"
+    control: number
+    binds: SubcontractingInwardOrder.per_raw_material_returned
+    validation: read only (computed or filled by the program)
+  - label: "% Process Loss"
+    control: number
+    binds: SubcontractingInwardOrder.per_process_loss
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: "% Returned"
+    control: number
+    binds: SubcontractingInwardOrder.per_returned
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-428
+  - label: Submit
+    triggers: F-428
+  - label: Cancel
+    triggers: F-428
+  - label: Amend
+    triggers: F-428
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Subcontracting Inward Order
+    note: declared by the program

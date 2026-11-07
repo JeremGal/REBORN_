@@ -1,0 +1,39 @@
+id: S-116
+title: Reminder
+purpose: create, view and edit Reminder records
+kind: form
+layout: 6 fields
+fields:
+  - label: User
+    control: lookup
+    binds: Reminder.user
+    required: true
+    validation: chosen among User records
+  - label: Remind At
+    control: date
+    binds: Reminder.remind_at
+    required: true
+  - label: Description
+    control: text
+    binds: Reminder.description
+    required: true
+  - label: Document Type
+    control: lookup
+    binds: Reminder.reminder_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Document Name
+    control: lookup
+    binds: Reminder.reminder_docname
+    validation: read only (computed or filled by the program)
+  - label: notified
+    control: checkbox
+    binds: Reminder.notified
+actions:
+  - label: Save
+    triggers: F-117
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Reminder
+    note: declared by the program

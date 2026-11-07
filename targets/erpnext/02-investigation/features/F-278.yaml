@@ -1,0 +1,46 @@
+id: F-278
+title: Create and edit a Google Contacts
+module: Integrations
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Google Contacts records.
+entry_points:
+  - screen: S-277
+    action: open the form
+inputs:
+  - label: Email Address
+    field: GoogleContacts.email_id
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Google Contacts form
+    screen: S-277
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Email Address"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Google Contacts record stored
+    entities:
+      - GoogleContacts
+entities:
+  - GoogleContacts
+screens:
+  - S-277
+acceptance:
+  - id: AC-279
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Google Contacts
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"google-contacts\")."

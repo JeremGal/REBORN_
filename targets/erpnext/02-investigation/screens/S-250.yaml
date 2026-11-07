@@ -1,0 +1,130 @@
+id: S-250
+title: System Health Report
+purpose: settings of System Health Report
+kind: settings
+layout: "tabs: Report; sections: Background Jobs, Scheduler, Database, MariaDB Variables, Cache, Realtime (SocketIO), File Storage, Backups, Users, Emails, Errors; 34 fields"
+fields:
+  - label: Total Background Workers
+    control: number
+    binds: SystemHealthReport.total_background_workers
+  - label: Background Jobs Check
+    control: text
+    binds: SystemHealthReport.background_jobs_check
+  - label: Test Job ID
+    control: text
+    binds: SystemHealthReport.test_job_id
+  - label: Queue Status
+    control: grid
+    columns:
+      - Queue
+      - Pending Jobs
+  - label: Background Workers
+    control: grid
+    columns:
+      - Queues
+      - Count
+      - Utilization
+      - Failed Jobs
+  - label: Scheduler Status
+    control: text
+    binds: SystemHealthReport.scheduler_status
+  - label: Oldest Unscheduled Job
+    control: lookup
+    binds: SystemHealthReport.oldest_unscheduled_job
+    validation: chosen among Scheduled Job Type records
+  - label: Failing Scheduled Jobs (last 7 days)
+    control: grid
+    columns:
+      - Scheduled Job Type
+      - Failure Rate
+  - label: Database
+    control: text
+    binds: SystemHealthReport.database
+  - label: Database Version
+    control: text
+    binds: SystemHealthReport.database_version
+  - label: Storage Usage (MB)
+    control: number
+    binds: SystemHealthReport.db_storage_usage
+  - label: Storage Usage By Table
+    control: grid
+    columns:
+      - Table
+      - Size (MB)
+  - label: Bufferpool Size
+    control: text
+    binds: SystemHealthReport.bufferpool_size
+  - label: Binary Logging
+    control: text
+    binds: SystemHealthReport.binary_logging
+  - label: Number of keys
+    control: number
+    binds: SystemHealthReport.cache_keys
+  - label: Memory Usage
+    control: text
+    binds: SystemHealthReport.cache_memory_usage
+  - label: SocketIO Ping Check
+    control: select
+    binds: SystemHealthReport.socketio_ping_check
+  - label: SocketIO Transport Mode
+    control: select
+    binds: SystemHealthReport.socketio_transport_mode
+  - label: Public Files (MB)
+    control: number
+    binds: SystemHealthReport.public_files_size
+  - label: Private Files (MB)
+    control: number
+    binds: SystemHealthReport.private_files_size
+  - label: Number of onsite backups
+    control: number
+    binds: SystemHealthReport.onsite_backups
+  - label: Backups (MB)
+    control: number
+    binds: SystemHealthReport.backups_size
+  - label: Total Users
+    control: number
+    binds: SystemHealthReport.total_users
+  - label: New Users (Last 30 days)
+    control: number
+    binds: SystemHealthReport.new_users
+  - label: Failed Logins (Last 30 days)
+    control: number
+    binds: SystemHealthReport.failed_logins
+  - label: Active Sessions
+    control: number
+    binds: SystemHealthReport.active_sessions
+  - label: Last 10 active users
+    control: text
+    binds: SystemHealthReport.last_10_active_users
+  - label: Total Outgoing Emails
+    control: number
+    binds: SystemHealthReport.total_outgoing_emails
+  - label: Pending Emails
+    control: number
+    binds: SystemHealthReport.pending_emails
+  - label: Failed Emails
+    control: number
+    binds: SystemHealthReport.failed_emails
+  - label: Handled Emails
+    control: number
+    binds: SystemHealthReport.handled_emails
+  - label: Unhandled Emails
+    control: number
+    binds: SystemHealthReport.unhandled_emails
+  - label: Total Errors (last 1 day)
+    control: number
+    binds: SystemHealthReport.total_errors
+  - label: Top Errors
+    control: grid
+    columns:
+      - Title
+      - Occurrences
+actions:
+  - label: Save
+    triggers: F-251
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of System Health Report
+    note: declared by the program

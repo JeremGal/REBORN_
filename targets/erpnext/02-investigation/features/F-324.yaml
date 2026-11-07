@@ -1,0 +1,45 @@
+id: F-324
+title: Create and edit a Project Template
+module: Projects
+priority: should
+status: partial
+confidence: medium
+user_goal: A set of tasks to start new projects from.
+entry_points:
+  - screen: S-323
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Project Template form
+    screen: S-323
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Tasks"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Project Template record stored
+    entities:
+      - ProjectTemplate
+entities:
+  - ProjectTemplate
+  - ProjectTemplateTask
+screens:
+  - S-323
+acceptance:
+  - id: AC-325
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Project Template
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"project-template\")."

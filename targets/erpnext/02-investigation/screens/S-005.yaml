@@ -1,0 +1,48 @@
+id: S-005
+title: Accounting Dimension Filter
+purpose: create, view and edit Accounting Dimension Filter records
+kind: form
+layout: 8 fields
+fields:
+  - label: Accounting Dimension
+    control: select
+    binds: AccountingDimensionFilter.accounting_dimension
+    required: true
+  - label: Fieldname
+    control: text
+    binds: AccountingDimensionFilter.fieldname
+  - label: Disabled
+    control: checkbox
+    binds: AccountingDimensionFilter.disabled
+  - label: Company
+    control: lookup
+    binds: AccountingDimensionFilter.company
+    required: true
+    validation: chosen among Company records
+  - label: Apply restriction on dimension values
+    control: checkbox
+    binds: AccountingDimensionFilter.apply_restriction_on_values
+  - label: Allow Or Restrict Dimension
+    control: select
+    binds: AccountingDimensionFilter.allow_or_restrict
+    required: true
+    validation: shown only when eval:doc.apply_restriction_on_values == 1;
+  - label: Applicable On Account
+    control: grid
+    required: true
+    columns:
+      - Accounts
+      - Is Mandatory
+  - label: Applicable Dimension
+    control: grid
+    validation: shown only when eval:doc.accounting_dimension && doc.apply_restriction_on_values
+    columns: []
+actions:
+  - label: Save
+    triggers: F-006
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Accounting Dimension Filter
+    note: declared by the program

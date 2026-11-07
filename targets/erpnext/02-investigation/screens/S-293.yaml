@@ -1,0 +1,114 @@
+id: S-293
+title: Maintenance Visit
+purpose: create, view and edit Maintenance Visit records
+kind: form
+layout: "sections: More Information, Contact Info; 22 fields"
+fields:
+  - label: Series
+    control: select
+    binds: MaintenanceVisit.naming_series
+    required: true
+  - label: Customer
+    control: lookup
+    binds: MaintenanceVisit.customer
+    required: true
+    validation: chosen among Customer records
+  - label: Customer Name
+    control: text
+    binds: MaintenanceVisit.customer_name
+    validation: read only (computed or filled by the program)
+  - label: Address
+    control: text
+    binds: MaintenanceVisit.address_display
+    validation: read only (computed or filled by the program)
+  - label: Contact
+    control: text
+    binds: MaintenanceVisit.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: MaintenanceVisit.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: MaintenanceVisit.contact_email
+    validation: read only (computed or filled by the program)
+  - label: Maintenance Schedule
+    control: lookup
+    binds: MaintenanceVisit.maintenance_schedule
+    validation: read only (computed or filled by the program); chosen among Maintenance Schedule records
+  - label: Maintenance Schedule Detail
+    control: lookup
+    binds: MaintenanceVisit.maintenance_schedule_detail
+    validation: chosen among Maintenance Schedule Detail records
+  - label: Maintenance Date
+    control: date
+    binds: MaintenanceVisit.mntc_date
+    required: true
+  - label: Maintenance Time
+    control: date
+    binds: MaintenanceVisit.mntc_time
+  - label: Completion Status
+    control: select
+    binds: MaintenanceVisit.completion_status
+    required: true
+  - label: Maintenance Type
+    control: select
+    binds: MaintenanceVisit.maintenance_type
+    required: true
+  - label: Purposes
+    control: grid
+    columns:
+      - Item Code
+      - Item Name
+      - Sales Person
+      - Description
+      - Work Done
+  - label: Customer Feedback
+    control: text
+    binds: MaintenanceVisit.customer_feedback
+  - label: Status
+    control: select
+    binds: MaintenanceVisit.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: MaintenanceVisit.amended_from
+    validation: read only (computed or filled by the program); chosen among Maintenance Visit records
+  - label: Company
+    control: lookup
+    binds: MaintenanceVisit.company
+    required: true
+    validation: chosen among Company records
+  - label: Customer Address
+    control: lookup
+    binds: MaintenanceVisit.customer_address
+    validation: chosen among Address records
+  - label: Contact Person
+    control: lookup
+    binds: MaintenanceVisit.contact_person
+    validation: chosen among Contact records
+  - label: Territory
+    control: lookup
+    binds: MaintenanceVisit.territory
+    validation: chosen among Territory records
+  - label: Customer Group
+    control: lookup
+    binds: MaintenanceVisit.customer_group
+    validation: chosen among Customer Group records
+actions:
+  - label: Save
+    triggers: F-294
+  - label: Submit
+    triggers: F-294
+  - label: Cancel
+    triggers: F-294
+  - label: Amend
+    triggers: F-294
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Maintenance Visit
+    note: declared by the program

@@ -1,0 +1,29 @@
+id: S-275
+title: Geolocation Settings
+purpose: settings of Geolocation Settings
+kind: settings
+layout: 4 fields
+fields:
+  - label: Enable Address Autocompletion
+    control: checkbox
+    binds: GeolocationSettings.enable_address_autocompletion
+  - label: Provider
+    control: select
+    binds: GeolocationSettings.provider
+  - label: Base URL
+    control: text
+    binds: GeolocationSettings.base_url
+    validation: 'shown only when eval: doc.provider === "Nomatim"'
+  - label: API Key
+    control: text
+    binds: GeolocationSettings.api_key
+    validation: 'shown only when eval: ["Geoapify", "HERE"].includes(doc.provider)'
+actions:
+  - label: Save
+    triggers: F-276
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Geolocation Settings
+    note: declared by the program

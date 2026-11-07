@@ -1,0 +1,149 @@
+id: S-463
+title: Website Settings
+purpose: settings of Website Settings
+kind: settings
+layout: "tabs: Home, Navbar, Footer, Integrations, Header, Robots, Redirects; sections: Landing Page, Login Page, Theme, Brand, Navbar, Navbar Template, Banner, Footer Items, Footer Details, Custom Footer, Analytics, Account Deletion Settings; 40 fields"
+fields:
+  - label: Home Page
+    control: text
+    binds: WebsiteSettings.home_page
+  - label: Title Prefix
+    control: text
+    binds: WebsiteSettings.title_prefix
+  - label: App Name
+    control: text
+    binds: WebsiteSettings.app_name
+  - label: Disable signups
+    control: checkbox
+    binds: WebsiteSettings.disable_signup
+  - label: Show footer on login
+    control: checkbox
+    binds: WebsiteSettings.show_footer_on_login
+  - label: App Logo
+    control: other
+    binds: WebsiteSettings.app_logo
+  - label: Website Theme
+    control: lookup
+    binds: WebsiteSettings.website_theme
+    validation: chosen among Website Theme records
+  - label: Website Theme image link
+    control: text
+    binds: WebsiteSettings.website_theme_image_link
+  - label: Brand Image
+    control: other
+    binds: WebsiteSettings.banner_image
+  - label: Splash Image
+    control: other
+    binds: WebsiteSettings.splash_image
+  - label: Brand HTML
+    control: text
+    binds: WebsiteSettings.brand_html
+  - label: FavIcon
+    control: other
+    binds: WebsiteSettings.favicon
+  - label: Top Bar Items
+    control: grid
+    columns:
+      - Label
+      - URL
+      - Parent Label
+  - label: Hide Login
+    control: checkbox
+    binds: WebsiteSettings.hide_login
+  - label: Show Language Picker
+    control: checkbox
+    binds: WebsiteSettings.show_language_picker
+  - label: Navbar Template
+    control: lookup
+    binds: WebsiteSettings.navbar_template
+    validation: chosen among Web Template records
+  - label: Navbar Template Values
+    control: text
+    binds: WebsiteSettings.navbar_template_values
+  - label: Call To Action
+    control: text
+    binds: WebsiteSettings.call_to_action
+  - label: Call To Action URL
+    control: text
+    binds: WebsiteSettings.call_to_action_url
+  - label: Banner HTML
+    control: text
+    binds: WebsiteSettings.banner_html
+  - label: Footer Items
+    control: grid
+    columns:
+      - Label
+      - URL
+      - Parent Label
+  - label: Copyright
+    control: text
+    binds: WebsiteSettings.copyright
+  - label: Footer Logo
+    control: other
+    binds: WebsiteSettings.footer_logo
+  - label: Hide footer signup
+    control: checkbox
+    binds: WebsiteSettings.hide_footer_signup
+  - label: Address
+    control: text
+    binds: WebsiteSettings.address
+  - label: Footer "Powered By"
+    control: text
+    binds: WebsiteSettings.footer_powered
+  - label: Footer Template
+    control: lookup
+    binds: WebsiteSettings.footer_template
+    validation: chosen among Web Template records
+  - label: Footer Template Values
+    control: text
+    binds: WebsiteSettings.footer_template_values
+  - label: Enable in-app website tracking
+    control: checkbox
+    binds: WebsiteSettings.enable_view_tracking
+  - label: Enable Google indexing
+    control: checkbox
+    binds: WebsiteSettings.enable_google_indexing
+  - label: Indexing refresh token
+    control: text
+    binds: WebsiteSettings.indexing_refresh_token
+    validation: read only (computed or filled by the program)
+  - label: Indexing authorization code
+    control: text
+    binds: WebsiteSettings.indexing_authorization_code
+    validation: read only (computed or filled by the program)
+  - label: Google Analytics ID
+    control: text
+    binds: WebsiteSettings.google_analytics_id
+  - label: Google Analytics anonymise IP
+    control: checkbox
+    binds: WebsiteSettings.google_analytics_anonymize_ip
+  - label: Automatically delete account within (hours)
+    control: number
+    binds: WebsiteSettings.auto_account_deletion
+  - label: Show account deletion link in My Account page
+    control: checkbox
+    binds: WebsiteSettings.show_account_deletion_link
+  - label: Subdomain
+    control: text
+    binds: WebsiteSettings.subdomain
+    validation: read only (computed or filled by the program)
+  - label: "&lt;head&gt; HTML"
+    control: text
+    binds: WebsiteSettings.head_html
+  - label: Robots.txt
+    control: text
+    binds: WebsiteSettings.robots_txt
+  - label: Route Redirects
+    control: grid
+    columns:
+      - Source
+      - Target
+actions:
+  - label: Save
+    triggers: F-464
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Website Settings
+    note: declared by the program

@@ -1,0 +1,135 @@
+id: S-329
+title: Timesheet
+purpose: create, view and edit Timesheet records
+kind: form
+layout: "tabs: Billing; sections: Employee Detail, Billing Details; 28 fields"
+fields:
+  - label: Title
+    control: text
+    binds: Timesheet.title
+  - label: Series
+    control: select
+    binds: Timesheet.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: Timesheet.company
+    validation: chosen among Company records
+  - label: Customer
+    control: lookup
+    binds: Timesheet.customer
+    validation: chosen among Customer records
+  - label: Currency
+    control: lookup
+    binds: Timesheet.currency
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: Timesheet.exchange_rate
+  - label: Sales Invoice
+    control: lookup
+    binds: Timesheet.sales_invoice
+    validation: read only (computed or filled by the program); chosen among Sales Invoice records
+  - label: Status
+    control: select
+    binds: Timesheet.status
+    validation: read only (computed or filled by the program)
+  - label: Project
+    control: lookup
+    binds: Timesheet.parent_project
+    validation: chosen among Project records
+  - label: User
+    control: lookup
+    binds: Timesheet.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Start Date
+    control: date
+    binds: Timesheet.start_date
+    validation: read only (computed or filled by the program)
+  - label: End Date
+    control: date
+    binds: Timesheet.end_date
+    validation: read only (computed or filled by the program)
+  - label: Employee
+    control: lookup
+    binds: Timesheet.employee
+    validation: chosen among Employee records
+  - label: Department
+    control: lookup
+    binds: Timesheet.department
+    validation: read only (computed or filled by the program); chosen among Department records
+  - label: Employee Name
+    control: text
+    binds: Timesheet.employee_name
+    validation: read only (computed or filled by the program); shown only when employee
+  - label: Time Sheets
+    control: grid
+    required: true
+    columns:
+      - Activity Type
+      - From Time
+      - Hrs
+      - Project
+      - Is Billable
+  - label: Total Working Hours
+    control: number
+    binds: Timesheet.total_hours
+    validation: read only (computed or filled by the program)
+  - label: Total Billable Hours
+    control: number
+    binds: Timesheet.total_billable_hours
+    validation: read only (computed or filled by the program)
+  - label: Total Billable Amount
+    control: money
+    binds: Timesheet.total_billable_amount
+    validation: read only (computed or filled by the program)
+  - label: Total Costing Amount
+    control: money
+    binds: Timesheet.total_costing_amount
+    validation: read only (computed or filled by the program)
+  - label: Base Total Billable Amount
+    control: money
+    binds: Timesheet.base_total_billable_amount
+    validation: read only (computed or filled by the program)
+  - label: Base Total Costing Amount
+    control: money
+    binds: Timesheet.base_total_costing_amount
+    validation: read only (computed or filled by the program)
+  - label: Total Billed Hours
+    control: number
+    binds: Timesheet.total_billed_hours
+    validation: read only (computed or filled by the program)
+  - label: Total Billed Amount
+    control: money
+    binds: Timesheet.total_billed_amount
+    validation: read only (computed or filled by the program)
+  - label: Base Total Billed Amount
+    control: money
+    binds: Timesheet.base_total_billed_amount
+    validation: read only (computed or filled by the program)
+  - label: "% Amount Billed"
+    control: number
+    binds: Timesheet.per_billed
+    validation: read only (computed or filled by the program)
+  - label: Note
+    control: text
+    binds: Timesheet.note
+  - label: Amended From
+    control: lookup
+    binds: Timesheet.amended_from
+    validation: read only (computed or filled by the program); chosen among Timesheet records
+actions:
+  - label: Save
+    triggers: F-330
+  - label: Submit
+    triggers: F-330
+  - label: Cancel
+    triggers: F-330
+  - label: Amend
+    triggers: F-330
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Timesheet
+    note: declared by the program

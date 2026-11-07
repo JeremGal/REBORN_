@@ -1,0 +1,38 @@
+id: S-100
+title: Asset Maintenance Team
+purpose: create, view and edit Asset Maintenance Team records
+kind: form
+layout: "sections: Team; 5 fields"
+fields:
+  - label: Maintenance Team Name
+    control: text
+    binds: AssetMaintenanceTeam.maintenance_team_name
+    required: true
+  - label: Maintenance Manager
+    control: lookup
+    binds: AssetMaintenanceTeam.maintenance_manager
+    validation: chosen among User records
+  - label: Maintenance Manager Name
+    control: display
+    binds: AssetMaintenanceTeam.maintenance_manager_name
+  - label: Company
+    control: lookup
+    binds: AssetMaintenanceTeam.company
+    required: true
+    validation: chosen among Company records
+  - label: Maintenance Team Members
+    control: grid
+    required: true
+    columns:
+      - Team Member
+      - Full Name
+      - Maintenance Role
+actions:
+  - label: Save
+    triggers: F-101
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Maintenance Team
+    note: declared by the program

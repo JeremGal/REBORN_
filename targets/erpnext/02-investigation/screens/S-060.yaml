@@ -1,0 +1,67 @@
+id: S-060
+title: Period Closing Voucher
+purpose: create, view and edit Period Closing Voucher records
+kind: form
+layout: 11 fields
+fields:
+  - label: Transaction Date
+    control: date
+    binds: PeriodClosingVoucher.transaction_date
+  - label: Company
+    control: lookup
+    binds: PeriodClosingVoucher.company
+    required: true
+    validation: chosen among Company records
+  - label: Fiscal Year
+    control: lookup
+    binds: PeriodClosingVoucher.fiscal_year
+    required: true
+    validation: chosen among Fiscal Year records
+  - label: Period Start Date
+    control: date
+    binds: PeriodClosingVoucher.period_start_date
+    required: true
+  - label: Period End Date
+    control: date
+    binds: PeriodClosingVoucher.period_end_date
+    required: true
+  - label: Amended From
+    control: lookup
+    binds: PeriodClosingVoucher.amended_from
+    validation: read only (computed or filled by the program); chosen among Period Closing Voucher records
+  - label: Closing Account Head
+    control: lookup
+    binds: PeriodClosingVoucher.closing_account_head
+    required: true
+    validation: chosen among Account records
+  - label: Accepted Stock Value Difference
+    control: money
+    binds: PeriodClosingVoucher.stock_value_difference
+    validation: read only (computed or filled by the program); shown only when eval:doc.stock_value_difference
+  - label: GL Entry Processing Status
+    control: select
+    binds: PeriodClosingVoucher.gle_processing_status
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus!=0
+  - label: Remarks
+    control: text
+    binds: PeriodClosingVoucher.remarks
+    required: true
+  - label: Error Message
+    control: text
+    binds: PeriodClosingVoucher.error_message
+    validation: read only (computed or filled by the program); shown only when eval:doc.gle_processing_status=='Failed'
+actions:
+  - label: Save
+    triggers: F-061
+  - label: Submit
+    triggers: F-061
+  - label: Cancel
+    triggers: F-061
+  - label: Amend
+    triggers: F-061
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Period Closing Voucher
+    note: declared by the program

@@ -1,0 +1,49 @@
+id: S-151
+title: Document Naming Settings
+purpose: settings of Document Naming Settings
+kind: settings
+layout: "tabs: Naming Series; sections: Setup Series for transactions, Update Series Counter, Amended Documents; 9 fields"
+fields:
+  - label: Select Transaction
+    control: text
+    binds: DocumentNamingSettings.transaction_type
+  - label: Series List for this Transaction
+    control: text
+    binds: DocumentNamingSettings.naming_series_options
+    validation: shown only when transaction_type
+  - label: User must always select
+    control: checkbox
+    binds: DocumentNamingSettings.user_must_always_select
+    validation: shown only when transaction_type
+  - label: Try a Naming Series
+    control: text
+    binds: DocumentNamingSettings.try_naming_series
+    validation: shown only when transaction_type
+  - label: Preview of generated names
+    control: text
+    binds: DocumentNamingSettings.series_preview
+    validation: read only (computed or filled by the program)
+  - label: Prefix
+    control: text
+    binds: DocumentNamingSettings.prefix
+  - label: Current Value
+    control: number
+    binds: DocumentNamingSettings.current_value
+  - label: Default Amendment Naming
+    control: select
+    binds: DocumentNamingSettings.default_amend_naming
+    required: true
+  - label: Amendment Naming Override
+    control: grid
+    columns:
+      - DocType
+      - Action
+actions:
+  - label: Save
+    triggers: F-152
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Document Naming Settings
+    note: declared by the program

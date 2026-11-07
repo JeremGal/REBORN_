@@ -1,0 +1,32 @@
+id: S-043
+title: Ledger Health Monitor
+purpose: settings of Ledger Health Monitor
+kind: settings
+layout: "sections: Configuration, Companies; 5 fields"
+fields:
+  - label: Enable Health Monitor
+    control: checkbox
+    binds: LedgerHealthMonitor.enable_health_monitor
+  - label: Monitor for Last 'X' days
+    control: number
+    binds: LedgerHealthMonitor.monitor_for_last_x_days
+    required: true
+  - label: Debit-Credit Mismatch
+    control: checkbox
+    binds: LedgerHealthMonitor.debit_credit_mismatch
+  - label: Discrepancy between General and Payment Ledger
+    control: checkbox
+    binds: LedgerHealthMonitor.general_and_payment_ledger_mismatch
+  - label: companies
+    control: grid
+    columns:
+      - Company
+actions:
+  - label: Save
+    triggers: F-044
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Ledger Health Monitor
+    note: declared by the program

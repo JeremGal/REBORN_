@@ -1,0 +1,63 @@
+id: S-045
+title: Loyalty Point Entry
+purpose: create, view and edit Loyalty Point Entry records
+kind: form
+layout: 12 fields
+fields:
+  - label: Loyalty Program
+    control: lookup
+    binds: LoyaltyPointEntry.loyalty_program
+    required: true
+    validation: chosen among Loyalty Program records
+  - label: Loyalty Program Tier
+    control: text
+    binds: LoyaltyPointEntry.loyalty_program_tier
+  - label: Customer
+    control: lookup
+    binds: LoyaltyPointEntry.customer
+    required: true
+    validation: chosen among Customer records
+  - label: Invoice Type
+    control: lookup
+    binds: LoyaltyPointEntry.invoice_type
+    required: true
+    validation: chosen among DocType records
+  - label: Invoice
+    control: lookup
+    binds: LoyaltyPointEntry.invoice
+  - label: Redeem Against
+    control: lookup
+    binds: LoyaltyPointEntry.redeem_against
+    validation: chosen among Loyalty Point Entry records
+  - label: Loyalty Points
+    control: number
+    binds: LoyaltyPointEntry.loyalty_points
+    required: true
+  - label: Purchase Amount
+    control: money
+    binds: LoyaltyPointEntry.purchase_amount
+  - label: Expiry Date
+    control: date
+    binds: LoyaltyPointEntry.expiry_date
+    required: true
+  - label: Posting Date
+    control: date
+    binds: LoyaltyPointEntry.posting_date
+    required: true
+  - label: Company
+    control: lookup
+    binds: LoyaltyPointEntry.company
+    required: true
+    validation: chosen among Company records
+  - label: Discretionary Reason
+    control: text
+    binds: LoyaltyPointEntry.discretionary_reason
+actions:
+  - label: Save
+    triggers: F-046
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Loyalty Point Entry
+    note: declared by the program

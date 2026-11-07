@@ -1,0 +1,41 @@
+id: F-285
+title: Configure OAuth Provider Settings
+module: Integrations
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain OAuth Provider Settings settings.
+entry_points:
+  - screen: S-284
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the OAuth Provider Settings form
+    screen: S-284
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - OAuthProviderSettings
+entities:
+  - OAuthProviderSettings
+screens:
+  - S-284
+acceptance:
+  - id: AC-286
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of OAuth Provider Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

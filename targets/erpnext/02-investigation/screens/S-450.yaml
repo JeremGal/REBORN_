@@ -1,0 +1,32 @@
+id: S-450
+title: Personal Data Deletion Request
+purpose: create, view and edit Personal Data Deletion Request records
+kind: form
+layout: 4 fields
+fields:
+  - label: Email
+    control: text
+    binds: PersonalDataDeletionRequest.email
+    required: true
+  - label: Status
+    control: select
+    binds: PersonalDataDeletionRequest.status
+    validation: read only (computed or filled by the program)
+  - label: Anonymization Matrix
+    control: text
+    binds: PersonalDataDeletionRequest.anonymization_matrix
+    validation: read only (computed or filled by the program)
+  - label: Deletion Steps
+    control: grid
+    columns:
+      - Document Type
+      - Status
+actions:
+  - label: Save
+    triggers: F-451
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Personal Data Deletion Request
+    note: declared by the program

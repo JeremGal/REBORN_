@@ -1,0 +1,47 @@
+id: S-032
+title: Dunning Type
+purpose: create, view and edit Dunning Type records
+kind: form
+layout: "sections: Dunning Letter, Accounting Details; 8 fields"
+fields:
+  - label: Dunning Type
+    control: text
+    binds: DunningType.dunning_type
+    required: true
+  - label: Is Default
+    control: checkbox
+    binds: DunningType.is_default
+  - label: Company
+    control: lookup
+    binds: DunningType.company
+    required: true
+    validation: chosen among Company records
+  - label: Dunning Fee
+    control: money
+    binds: DunningType.dunning_fee
+  - label: Rate of Interest (%) Yearly
+    control: number
+    binds: DunningType.rate_of_interest
+  - label: dunning_letter_text
+    control: grid
+    columns:
+      - Language
+      - Body Text
+      - Closing Text
+  - label: Income Account
+    control: lookup
+    binds: DunningType.income_account
+    validation: chosen among Account records
+  - label: Cost Center
+    control: lookup
+    binds: DunningType.cost_center
+    validation: chosen among Cost Center records
+actions:
+  - label: Save
+    triggers: F-033
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Dunning Type
+    note: declared by the program

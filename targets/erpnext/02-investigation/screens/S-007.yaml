@@ -1,0 +1,221 @@
+id: S-007
+title: Accounts Settings
+purpose: settings of Accounts Settings
+kind: settings
+layout: "tabs: Invoice and Billing, Payments, Credit Limits, Assets, Accounts Closing, Reports, Others, Document Naming; sections: Invoice Cancellation, Invoicing Features, Stock Expense Accounting, Analytical Accounting, Journals, Deferred Accounting Settings, Tax Settings, Print Settings, Item Price Settings, Currency Exchange Settings, Payment Reconciliation Settings, Repost, Payment Options, Asset Settings, General Ledger Report, Accounts Receivable / Payable Report, Legacy Fields, Chart of Accounts, Banking, Payment Request, Budget; 65 fields"
+fields:
+  - label: Unlink Payment on cancellation of invoice
+    control: checkbox
+    binds: AccountsSettings.unlink_payment_on_cancellation_of_invoice
+  - label: Unlink Advance Payment on cancellation of order
+    control: checkbox
+    binds: AccountsSettings.unlink_advance_payment_on_cancelation_of_order
+  - label: Delete Accounting and Stock Ledger entries on deletion of transaction
+    control: checkbox
+    binds: AccountsSettings.delete_linked_ledger_entries
+  - label: Enable Immutable Ledger
+    control: checkbox
+    binds: AccountsSettings.enable_immutable_ledger
+  - label: Check Supplier invoice number uniqueness
+    control: checkbox
+    binds: AccountsSettings.check_supplier_invoice_uniqueness
+  - label: Automatically fetch Payment Terms from Order/Quotation
+    control: checkbox
+    binds: AccountsSettings.automatically_fetch_payment_terms
+  - label: Enable Subscription
+    control: checkbox
+    binds: AccountsSettings.enable_subscription
+  - label: Enable Common Party Accounting
+    control: checkbox
+    binds: AccountsSettings.enable_common_party_accounting
+  - label: "Allow multi-currency invoices against single party account "
+    control: checkbox
+    binds: AccountsSettings.allow_multi_currency_invoices_against_single_party_account
+  - label: Confirm before resetting posting date
+    control: checkbox
+    binds: AccountsSettings.confirm_before_resetting_posting_date
+  - label: Book Stock Expense GL Entries
+    control: checkbox
+    binds: AccountsSettings.book_stock_expense_gl_entries
+  - label: Enable Discounts and Margin
+    control: checkbox
+    binds: AccountsSettings.enable_discounts_and_margin
+  - label: Enable Accounting Dimensions
+    control: checkbox
+    binds: AccountsSettings.enable_accounting_dimensions
+  - label: Merge similar Account Heads
+    control: checkbox
+    binds: AccountsSettings.merge_similar_account_heads
+  - label: Book Deferred entries based on
+    control: select
+    binds: AccountsSettings.book_deferred_entries_based_on
+  - label: Automatically process deferred Accounting entry
+    control: checkbox
+    binds: AccountsSettings.automatically_process_deferred_accounting_entry
+  - label: Book deferred entries via Journal Entry
+    control: checkbox
+    binds: AccountsSettings.book_deferred_entries_via_journal_entry
+  - label: Submit Journal entries
+    control: checkbox
+    binds: AccountsSettings.submit_journal_entries
+    validation: shown only when eval:doc.book_deferred_entries_via_journal_entry
+  - label: Determine Address Tax Category from
+    control: select
+    binds: AccountsSettings.determine_address_tax_category_from
+  - label: Automatically add Taxes and Charges from Item Tax Template
+    control: checkbox
+    binds: AccountsSettings.add_taxes_from_item_tax_template
+  - label: Automatically add taxes from Taxes and Charges Template
+    control: checkbox
+    binds: AccountsSettings.add_taxes_from_taxes_and_charges_template
+  - label: Book tax loss on early payment discount
+    control: checkbox
+    binds: AccountsSettings.book_tax_discount_loss
+  - label: Round tax amount row-wise
+    control: checkbox
+    binds: AccountsSettings.round_row_wise_tax
+  - label: Show inclusive tax in print
+    control: checkbox
+    binds: AccountsSettings.show_inclusive_tax_in_print
+  - label: Show taxes as table in print
+    control: checkbox
+    binds: AccountsSettings.show_taxes_as_table_in_print
+  - label: Show Payment Schedule in print
+    control: checkbox
+    binds: AccountsSettings.show_payment_schedule_in_print
+  - label: Maintain same rate throughout internal Transaction
+    control: checkbox
+    binds: AccountsSettings.maintain_same_internal_transaction_rate
+  - label: Fetch valuation rate for internal Transaction
+    control: checkbox
+    binds: AccountsSettings.fetch_valuation_rate_for_internal_transaction
+  - label: Action if same rate is not maintained throughout internal transaction
+    control: select
+    binds: AccountsSettings.maintain_same_rate_action
+    validation: shown only when maintain_same_internal_transaction_rate
+  - label: Role allowed to override stop action
+    control: lookup
+    binds: AccountsSettings.role_to_override_stop_action
+    validation: "shown only when eval: doc.maintain_same_internal_transaction_rate && doc.maintain_same_rate_acti; chosen among Role records"
+  - label: Allow Stale Exchange Rates
+    control: checkbox
+    binds: AccountsSettings.allow_stale
+  - label: Allow Implicit Pegged Currency Conversion
+    control: checkbox
+    binds: AccountsSettings.allow_pegged_currencies_exchange_rates
+  - label: Stale Days
+    control: number
+    binds: AccountsSettings.stale_days
+    validation: shown only when eval:doc.allow_stale==0
+  - label: Auto reconcile Payments
+    control: checkbox
+    binds: AccountsSettings.auto_reconcile_payments
+  - label: Posting Date inheritance for exchange gain / loss
+    control: select
+    binds: AccountsSettings.exchange_gain_loss_posting_date
+  - label: Auto Reconciliation job trigger
+    control: number
+    binds: AccountsSettings.auto_reconciliation_job_trigger
+  - label: Reconciliation queue size
+    control: number
+    binds: AccountsSettings.reconciliation_queue_size
+  - label: Allowed DocTypes
+    control: grid
+    columns:
+      - Doctype
+  - label: Fetch Payment Schedule in Payment Request
+    control: checkbox
+    binds: AccountsSettings.fetch_payment_schedule_in_payment_request
+  - label: Enable Loyalty Point Program
+    control: checkbox
+    binds: AccountsSettings.enable_loyalty_point_program
+  - label: Make Payment via Journal Entry
+    control: checkbox
+    binds: AccountsSettings.make_payment_via_journal_entry
+  - label: Over Billing Allowance (%)
+    control: money
+    binds: AccountsSettings.over_billing_allowance
+  - label: Role allowed to bypass credit limit
+    control: lookup
+    binds: AccountsSettings.credit_controller
+    validation: chosen among Role records
+  - label: "Role Allowed to over bill "
+    control: lookup
+    binds: AccountsSettings.role_allowed_to_over_bill
+    validation: "shown only when eval: doc.over_billing_allowance > 0; chosen among Role records"
+  - label: Prevent Sales Invoice when Customer is Overdue
+    control: checkbox
+    binds: AccountsSettings.enable_overdue_billing_threshold
+  - label: Role Allowed to Bypass Over Billing Restriction
+    control: lookup
+    binds: AccountsSettings.role_allowed_to_bypass_overdue_billing
+    validation: shown only when eval:doc.enable_overdue_billing_threshold; chosen among Role records
+  - label: Book Asset Depreciation entry automatically
+    control: checkbox
+    binds: AccountsSettings.book_asset_depreciation_entry_automatically
+  - label: Calculate daily depreciation using total days in depreciation period
+    control: checkbox
+    binds: AccountsSettings.calculate_depr_using_total_days
+  - label: Role to Notify on Depreciation Failure
+    control: lookup
+    binds: AccountsSettings.role_to_notify_on_depreciation_failure
+    validation: chosen among Role records
+  - label: Ignore Account closing balance
+    control: checkbox
+    binds: AccountsSettings.ignore_account_closing_balance
+  - label: Use legacy controller for Period Closing Voucher
+    control: checkbox
+    binds: AccountsSettings.use_legacy_controller_for_pcv
+  - label: PCV Job Timeout (seconds)
+    control: number
+    binds: AccountsSettings.pcv_job_timeout
+    validation: "shown only when eval: !doc.use_legacy_controller_for_pcv"
+  - label: Disable "Consider Accounting Dimension" Filter
+    control: checkbox
+    binds: AccountsSettings.disable_include_dimensions
+  - label: General Ledger remarks length
+    control: number
+    binds: AccountsSettings.general_ledger_remarks_length
+  - label: Data fetch method
+    control: select
+    binds: AccountsSettings.receivable_payable_fetch_method
+  - label: Default Ageing Range
+    control: text
+    binds: AccountsSettings.default_ageing_range
+  - label: Accounts Receivable / Payable remarks length
+    control: number
+    binds: AccountsSettings.receivable_payable_remarks_length
+  - label: Ignore Is Opening check for reporting
+    control: checkbox
+    binds: AccountsSettings.ignore_is_opening_check_for_reporting
+  - label: Show balances in Chart of Accounts
+    control: checkbox
+    binds: AccountsSettings.show_balance_in_coa
+  - label: Enable Automatic Party Matching
+    control: checkbox
+    binds: AccountsSettings.enable_party_matching
+  - label: Automatically run rules on unreconciled transactions
+    control: checkbox
+    binds: AccountsSettings.automatically_run_rules_on_unreconciled_transactions
+  - label: Enable Fuzzy Matching
+    control: checkbox
+    binds: AccountsSettings.enable_fuzzy_matching
+    validation: shown only when enable_party_matching
+  - label: Match transfers within 'N' days
+    control: number
+    binds: AccountsSettings.transfer_match_days
+  - label: Create payment requests in Draft status
+    control: checkbox
+    binds: AccountsSettings.create_pr_in_draft_status
+  - label: Use legacy Budget Controller
+    control: checkbox
+    binds: AccountsSettings.use_legacy_budget_controller
+actions:
+  - label: Save
+    triggers: F-008
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Accounts Settings
+    note: declared by the program

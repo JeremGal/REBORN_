@@ -1,0 +1,98 @@
+id: F-063
+title: Create, submit and cancel a POS Invoice
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: A sale made at the point of sale.
+entry_points:
+  - screen: S-062
+    action: open the form
+inputs:
+  - label: Series
+    field: POSInvoice.naming_series
+    type: enum
+    required: true
+  - label: Company
+    field: POSInvoice.company
+    type: ref
+    required: true
+  - label: Date
+    field: POSInvoice.posting_date
+    type: date
+    required: true
+  - label: Currency
+    field: POSInvoice.currency
+    type: ref
+    required: true
+  - label: Exchange Rate
+    field: POSInvoice.conversion_rate
+    type: decimal
+    required: true
+  - label: Price List
+    field: POSInvoice.selling_price_list
+    type: ref
+    required: true
+  - label: Price List Exchange Rate
+    field: POSInvoice.plc_conversion_rate
+    type: decimal
+    required: true
+  - label: Debit To
+    field: POSInvoice.debit_to
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the POS Invoice form
+    screen: S-062
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Company, Date, Currency, Exchange Rate, Price List, Price List Exchange Rate, Debit To"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items, Pricing Rule Detail, Packed Items, Time Sheets, Sales Taxes and Charges, Item Wise Tax Details, Sales Invoice Payment, Advances, Payment Schedule, Sales Team"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a POS Invoice record stored
+    entities:
+      - POSInvoice
+entities:
+  - POSInvoice
+  - POSInvoiceItem
+  - PricingRuleDetail
+  - PackedItem
+  - SalesInvoiceTimesheet
+  - SalesTaxesAndCharges
+  - ItemWiseTaxDetail
+  - SalesInvoicePayment
+  - SalesInvoiceAdvance
+  - PaymentSchedule
+  - SalesTeam
+screens:
+  - S-062
+acceptance:
+  - id: AC-064
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of POS Invoice
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 102
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: S'il vous plaît sélectionnez d'abord le client"

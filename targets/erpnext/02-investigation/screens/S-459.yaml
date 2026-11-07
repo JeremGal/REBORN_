@@ -1,0 +1,56 @@
+id: S-459
+title: Web Page View
+purpose: create, view and edit Web Page View records
+kind: form
+layout: 12 fields
+fields:
+  - label: Path
+    control: text
+    binds: WebPageView.path
+  - label: Referrer
+    control: text
+    binds: WebPageView.referrer
+  - label: Browser
+    control: text
+    binds: WebPageView.browser
+  - label: Browser Version
+    control: text
+    binds: WebPageView.browser_version
+  - label: Is Unique
+    control: text
+    binds: WebPageView.is_unique
+  - label: Time Zone
+    control: text
+    binds: WebPageView.time_zone
+  - label: User Agent
+    control: text
+    binds: WebPageView.user_agent
+  - label: Source
+    control: text
+    binds: WebPageView.source
+    validation: read only (computed or filled by the program)
+  - label: Campaign
+    control: text
+    binds: WebPageView.campaign
+    validation: read only (computed or filled by the program)
+  - label: Medium
+    control: text
+    binds: WebPageView.medium
+    validation: read only (computed or filled by the program)
+  - label: Visitor ID
+    control: text
+    binds: WebPageView.visitor_id
+    validation: read only (computed or filled by the program)
+  - label: Content
+    control: text
+    binds: WebPageView.content
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-460
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Web Page View
+    note: declared by the program

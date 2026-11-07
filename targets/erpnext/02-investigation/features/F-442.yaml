@@ -1,0 +1,58 @@
+id: F-442
+title: Create and edit a Video
+module: Utilities
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Video records.
+entry_points:
+  - screen: S-441
+    action: open the form
+inputs:
+  - label: Title
+    field: Video.title
+    type: string
+    required: true
+  - label: Provider
+    field: Video.provider
+    type: enum
+    required: true
+  - label: URL
+    field: Video.url
+    type: string
+    required: true
+  - label: Description
+    field: Video.description
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Video form
+    screen: S-441
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Title, Provider, URL, Description"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Video record stored
+    entities:
+      - Video
+entities:
+  - Video
+screens:
+  - S-441
+acceptance:
+  - id: AC-443
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Video
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

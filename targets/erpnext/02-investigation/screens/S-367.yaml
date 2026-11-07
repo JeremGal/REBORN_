@@ -1,0 +1,51 @@
+id: S-367
+title: Global Defaults
+purpose: settings of Global Defaults
+kind: settings
+layout: 10 fields
+fields:
+  - label: Default Company
+    control: lookup
+    binds: GlobalDefaults.default_company
+    validation: chosen among Company records
+  - label: Country
+    control: lookup
+    binds: GlobalDefaults.country
+    validation: chosen among Country records
+  - label: Default Distance Unit
+    control: lookup
+    binds: GlobalDefaults.default_distance_unit
+    validation: chosen among UOM records
+  - label: Default Currency
+    control: lookup
+    binds: GlobalDefaults.default_currency
+    required: true
+    validation: chosen among Currency records
+  - label: Hide Currency Symbol
+    control: select
+    binds: GlobalDefaults.hide_currency_symbol
+  - label: Disable Rounded Total
+    control: checkbox
+    binds: GlobalDefaults.disable_rounded_total
+  - label: Disable In Words
+    control: checkbox
+    binds: GlobalDefaults.disable_in_words
+  - label: Use Posting Datetime for Naming Documents
+    control: checkbox
+    binds: GlobalDefaults.use_posting_datetime_for_naming_documents
+  - label: Demo Company
+    control: lookup
+    binds: GlobalDefaults.demo_company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Enable Item Search Index
+    control: checkbox
+    binds: GlobalDefaults.enable_item_search_index
+actions:
+  - label: Save
+    triggers: F-368
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Global Defaults
+    note: declared by the program

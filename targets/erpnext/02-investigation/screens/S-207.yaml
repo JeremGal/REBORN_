@@ -1,0 +1,167 @@
+id: S-207
+title: Lead
+purpose: create, view and edit Lead records
+kind: form
+layout: "tabs: Activities, Notes, Connections; sections: Contact Info, Organization, Address & Contacts, Analytics, Qualification, Additional Information, All Activities; 44 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Lead.naming_series
+  - label: Salutation
+    control: lookup
+    binds: Lead.salutation
+    validation: chosen among Salutation records
+  - label: First Name
+    control: text
+    binds: Lead.first_name
+  - label: Middle Name
+    control: text
+    binds: Lead.middle_name
+  - label: Last Name
+    control: text
+    binds: Lead.last_name
+  - label: Full Name
+    control: text
+    binds: Lead.lead_name
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: Job Title
+    control: text
+    binds: Lead.job_title
+  - label: Gender
+    control: lookup
+    binds: Lead.gender
+    validation: chosen among Gender records
+  - label: Lead Owner
+    control: lookup
+    binds: Lead.lead_owner
+    validation: chosen among User records
+  - label: Status
+    control: select
+    binds: Lead.status
+    required: true
+  - label: From Customer
+    control: lookup
+    binds: Lead.customer
+    validation: shown only when eval:doc.utm_source == 'Existing Customer'; chosen among Customer records
+  - label: Lead Type
+    control: select
+    binds: Lead.type
+  - label: Request Type
+    control: select
+    binds: Lead.request_type
+  - label: Email
+    control: text
+    binds: Lead.email_id
+  - label: Website
+    control: text
+    binds: Lead.website
+  - label: Mobile No
+    control: text
+    binds: Lead.mobile_no
+  - label: WhatsApp
+    control: text
+    binds: Lead.whatsapp_no
+  - label: Phone
+    control: text
+    binds: Lead.phone
+  - label: Phone Ext.
+    control: text
+    binds: Lead.phone_ext
+  - label: Organization Name
+    control: text
+    binds: Lead.company_name
+  - label: No of Employees
+    control: select
+    binds: Lead.no_of_employees
+  - label: Annual Revenue
+    control: money
+    binds: Lead.annual_revenue
+  - label: Industry
+    control: lookup
+    binds: Lead.industry
+    validation: chosen among Industry Type records
+  - label: Market Segment
+    control: lookup
+    binds: Lead.market_segment
+    validation: chosen among Market Segment records
+  - label: Territory
+    control: lookup
+    binds: Lead.territory
+    validation: chosen among Territory records
+  - label: Fax
+    control: text
+    binds: Lead.fax
+  - label: City
+    control: text
+    binds: Lead.city
+  - label: State/Province
+    control: text
+    binds: Lead.state
+  - label: Country
+    control: lookup
+    binds: Lead.country
+    validation: chosen among Country records
+  - label: Source
+    control: lookup
+    binds: Lead.utm_source
+    validation: chosen among UTM Source records
+  - label: Medium
+    control: lookup
+    binds: Lead.utm_medium
+    validation: chosen among UTM Medium records
+  - label: Campaign
+    control: lookup
+    binds: Lead.utm_campaign
+    validation: chosen among UTM Campaign records
+  - label: Content
+    control: text
+    binds: Lead.utm_content
+  - label: Qualification Status
+    control: select
+    binds: Lead.qualification_status
+  - label: Qualified By
+    control: lookup
+    binds: Lead.qualified_by
+    validation: chosen among User records
+  - label: Qualified on
+    control: date
+    binds: Lead.qualified_on
+  - label: Company
+    control: lookup
+    binds: Lead.company
+    validation: chosen among Company records
+  - label: Print Language
+    control: lookup
+    binds: Lead.language
+    validation: chosen among Language records
+  - label: Image
+    control: other
+    binds: Lead.image
+  - label: Title
+    control: text
+    binds: Lead.title
+    validation: read only (computed or filled by the program)
+  - label: Disabled
+    control: checkbox
+    binds: Lead.disabled
+  - label: Unsubscribed
+    control: checkbox
+    binds: Lead.unsubscribed
+  - label: Blog Subscriber
+    control: checkbox
+    binds: Lead.blog_subscriber
+  - label: Notes
+    control: grid
+    columns:
+      - Note
+      - Added By
+      - Added On
+actions:
+  - label: Save
+    triggers: F-208
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Lead
+    note: declared by the program

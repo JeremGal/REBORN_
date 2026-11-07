@@ -1,0 +1,81 @@
+id: F-308
+title: Create, submit and cancel a Sales Forecast
+module: Manufacturing
+priority: must
+status: partial
+confidence: medium
+user_goal: How much you expect to sell, to plan production.
+entry_points:
+  - screen: S-307
+    action: open the form
+inputs:
+  - label: Naming Series
+    field: SalesForecast.naming_series
+    type: enum
+    required: true
+  - label: Company
+    field: SalesForecast.company
+    type: ref
+    required: true
+  - label: From Date
+    field: SalesForecast.from_date
+    type: date
+    required: true
+  - label: Frequency
+    field: SalesForecast.frequency
+    type: enum
+    required: true
+  - label: Number of Weeks / Months
+    field: SalesForecast.demand_number
+    type: integer
+    required: true
+  - label: Parent Warehouse
+    field: SalesForecast.parent_warehouse
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Sales Forecast form
+    screen: S-307
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Naming Series, Company, From Date, Frequency, Number of Weeks / Months, Parent Warehouse"
+  - n: 3
+    actor: user
+    does: "adds lines in: Select Items, Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Sales Forecast record stored
+    entities:
+      - SalesForecast
+entities:
+  - SalesForecast
+  - SalesForecastItem
+screens:
+  - S-307
+acceptance:
+  - id: AC-309
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Sales Forecast
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 133
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.MandatoryError: [Sales Forecast, SF26-000001]: item_code"

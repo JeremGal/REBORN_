@@ -1,0 +1,24 @@
+id: S-333
+title: Quality Feedback Template
+purpose: create, view and edit Quality Feedback Template records
+kind: form
+layout: 2 fields
+fields:
+  - label: Template Name
+    control: text
+    binds: QualityFeedbackTemplate.template
+    required: true
+  - label: Parameters
+    control: grid
+    required: true
+    columns:
+      - Parameter
+actions:
+  - label: Save
+    triggers: F-334
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quality Feedback Template
+    note: declared by the program

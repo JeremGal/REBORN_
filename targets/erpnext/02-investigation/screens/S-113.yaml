@@ -1,0 +1,54 @@
+id: S-113
+title: Automation Trigger Queue
+purpose: create, view and edit Automation Trigger Queue records
+kind: form
+layout: "sections: Wait Resume; 12 fields"
+fields:
+  - label: Automation Flow
+    control: lookup
+    binds: AutomationTriggerQueue.automation
+    required: true
+    validation: chosen among Automation Flow records
+  - label: Reference Document Type
+    control: text
+    binds: AutomationTriggerQueue.ref_doctype
+  - label: Reference Name
+    control: text
+    binds: AutomationTriggerQueue.ref_name
+  - label: Status
+    control: select
+    binds: AutomationTriggerQueue.status
+  - label: Triggered At
+    control: date
+    binds: AutomationTriggerQueue.triggered_at
+  - label: Run After
+    control: date
+    binds: AutomationTriggerQueue.run_after
+  - label: Attempt
+    control: number
+    binds: AutomationTriggerQueue.attempt
+  - label: Recursion Depth
+    control: number
+    binds: AutomationTriggerQueue.depth
+  - label: Triggered By
+    control: lookup
+    binds: AutomationTriggerQueue.triggered_by
+    validation: chosen among User records
+  - label: Event Payload
+    control: other
+    binds: AutomationTriggerQueue.event_payload
+  - label: Resume Run
+    control: text
+    binds: AutomationTriggerQueue.resume_run
+  - label: Resume From Step
+    control: number
+    binds: AutomationTriggerQueue.resume_from_idx
+actions:
+  - label: Save
+    triggers: F-114
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Automation Trigger Queue
+    note: declared by the program

@@ -1,0 +1,27 @@
+id: S-227
+title: Dashboard Chart Source
+purpose: create, view and edit Dashboard Chart Source records
+kind: form
+layout: 3 fields
+fields:
+  - label: Source Name
+    control: text
+    binds: DashboardChartSource.source_name
+    required: true
+  - label: Module
+    control: lookup
+    binds: DashboardChartSource.module
+    required: true
+    validation: chosen among Module Def records
+  - label: Timeseries
+    control: checkbox
+    binds: DashboardChartSource.timeseries
+actions:
+  - label: Save
+    triggers: F-228
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Dashboard Chart Source
+    note: declared by the program

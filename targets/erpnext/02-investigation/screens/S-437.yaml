@@ -1,0 +1,35 @@
+id: S-437
+title: Incoming Call Settings
+purpose: create, view and edit Incoming Call Settings records
+kind: form
+layout: 5 fields
+fields:
+  - label: Call Routing
+    control: select
+    binds: IncomingCallSettings.call_routing
+  - label: Greeting Message
+    control: text
+    binds: IncomingCallSettings.greeting_message
+  - label: Agent Busy Message
+    control: text
+    binds: IncomingCallSettings.agent_busy_message
+  - label: Agent Unavailable Message
+    control: text
+    binds: IncomingCallSettings.agent_unavailable_message
+  - label: Call Handling Schedule
+    control: grid
+    required: true
+    columns:
+      - Day Of Week
+      - From Time
+      - To Time
+      - Agent Group
+actions:
+  - label: Save
+    triggers: F-438
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Incoming Call Settings
+    note: declared by the program

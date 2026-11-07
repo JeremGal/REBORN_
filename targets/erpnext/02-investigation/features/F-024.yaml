@@ -1,0 +1,81 @@
+id: F-024
+title: Create, submit and cancel a Budget
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: How much a cost center or project may spend over a fiscal year.
+entry_points:
+  - screen: S-023
+    action: open the form
+inputs:
+  - label: Series
+    field: Budget.naming_series
+    type: enum
+    required: true
+  - label: Budget Against
+    field: Budget.budget_against
+    type: enum
+    required: true
+  - label: Company
+    field: Budget.company
+    type: ref
+    required: true
+  - label: Account
+    field: Budget.account
+    type: ref
+    required: true
+  - label: From Fiscal Year
+    field: Budget.from_fiscal_year
+    type: ref
+    required: true
+  - label: To Fiscal Year
+    field: Budget.to_fiscal_year
+    type: ref
+    required: true
+  - label: Distribution Frequency
+    field: Budget.distribution_frequency
+    type: enum
+    required: true
+  - label: Budget Amount
+    field: Budget.budget_amount
+    type: money
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Budget form
+    screen: S-023
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Budget Against, Company, Account, From Fiscal Year, To Fiscal Year, Distribution Frequency, Budget Amount"
+  - n: 3
+    actor: user
+    does: "adds lines in: Budget Distribution"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Budget record stored
+    entities:
+      - Budget
+entities:
+  - Budget
+  - BudgetDistribution
+screens:
+  - S-023
+acceptance:
+  - id: AC-025
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Budget
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"budget\")."

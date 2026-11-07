@@ -1,0 +1,85 @@
+id: F-405
+title: Create, submit and cancel a Quality Inspection
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: Checks an item against its quality parameters.
+entry_points:
+  - screen: S-404
+    action: open the form
+inputs:
+  - label: Series
+    field: QualityInspection.naming_series
+    type: enum
+    required: true
+  - label: Report Date
+    field: QualityInspection.report_date
+    type: date
+    required: true
+  - label: Status
+    field: QualityInspection.status
+    type: enum
+    required: true
+  - label: Inspection Type
+    field: QualityInspection.inspection_type
+    type: enum
+    required: true
+  - label: Reference Type
+    field: QualityInspection.reference_type
+    type: enum
+    required: true
+  - label: Reference Name
+    field: QualityInspection.reference_name
+    type: string
+    required: true
+  - label: Item Code
+    field: QualityInspection.item_code
+    type: ref
+    required: true
+  - label: Sample Size
+    field: QualityInspection.sample_size
+    type: decimal
+    required: true
+  - label: Inspected By
+    field: QualityInspection.inspected_by
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Quality Inspection form
+    screen: S-404
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Report Date, Status, Inspection Type, Reference Type, Reference Name, Item Code, Sample Size, Inspected By"
+  - n: 3
+    actor: user
+    does: "adds lines in: Readings"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Quality Inspection record stored
+    entities:
+      - QualityInspection
+entities:
+  - QualityInspection
+  - QualityInspectionReading
+screens:
+  - S-404
+acceptance:
+  - id: AC-406
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Quality Inspection
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"quality-inspection\")."

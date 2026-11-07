@@ -1,0 +1,132 @@
+id: S-418
+title: Stock Ledger Entry
+purpose: create, view and edit Stock Ledger Entry records
+kind: form
+layout: 31 fields
+fields:
+  - label: Item Code
+    control: lookup
+    binds: StockLedgerEntry.item_code
+    validation: read only (computed or filled by the program); chosen among Item records
+  - label: Warehouse
+    control: lookup
+    binds: StockLedgerEntry.warehouse
+    validation: read only (computed or filled by the program); chosen among Warehouse records
+  - label: Posting Date
+    control: date
+    binds: StockLedgerEntry.posting_date
+    validation: read only (computed or filled by the program)
+  - label: Posting Time
+    control: date
+    binds: StockLedgerEntry.posting_time
+    validation: read only (computed or filled by the program)
+  - label: Posting Datetime
+    control: date
+    binds: StockLedgerEntry.posting_datetime
+  - label: Is Adjustment Entry
+    control: checkbox
+    binds: StockLedgerEntry.is_adjustment_entry
+  - label: Auto Created Serial and Batch Bundle
+    control: checkbox
+    binds: StockLedgerEntry.auto_created_serial_and_batch_bundle
+    validation: shown only when serial_and_batch_bundle
+  - label: Voucher Type
+    control: lookup
+    binds: StockLedgerEntry.voucher_type
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Voucher No
+    control: lookup
+    binds: StockLedgerEntry.voucher_no
+    validation: read only (computed or filled by the program)
+  - label: Voucher Detail No
+    control: text
+    binds: StockLedgerEntry.voucher_detail_no
+    validation: read only (computed or filled by the program)
+  - label: Serial and Batch Bundle
+    control: lookup
+    binds: StockLedgerEntry.serial_and_batch_bundle
+    validation: chosen among Serial and Batch Bundle records
+  - label: Dependant SLE Voucher Detail No
+    control: text
+    binds: StockLedgerEntry.dependant_sle_voucher_detail_no
+  - label: Recalculate Incoming/Outgoing Rate
+    control: checkbox
+    binds: StockLedgerEntry.recalculate_rate
+    validation: read only (computed or filled by the program)
+  - label: Qty Change
+    control: number
+    binds: StockLedgerEntry.actual_qty
+    validation: read only (computed or filled by the program)
+  - label: Qty After Transaction
+    control: number
+    binds: StockLedgerEntry.qty_after_transaction
+    validation: read only (computed or filled by the program)
+  - label: Incoming Rate
+    control: money
+    binds: StockLedgerEntry.incoming_rate
+    validation: read only (computed or filled by the program)
+  - label: Outgoing Rate
+    control: money
+    binds: StockLedgerEntry.outgoing_rate
+    validation: read only (computed or filled by the program)
+  - label: Average Rate
+    control: money
+    binds: StockLedgerEntry.valuation_rate
+    validation: read only (computed or filled by the program)
+  - label: Balance Stock Value
+    control: money
+    binds: StockLedgerEntry.stock_value
+    validation: read only (computed or filled by the program)
+  - label: Change in Stock Value
+    control: money
+    binds: StockLedgerEntry.stock_value_difference
+    validation: read only (computed or filled by the program)
+  - label: FIFO Stock Queue (qty, rate)
+    control: text
+    binds: StockLedgerEntry.stock_queue
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: StockLedgerEntry.company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Stock UOM
+    control: lookup
+    binds: StockLedgerEntry.stock_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Project
+    control: lookup
+    binds: StockLedgerEntry.project
+    validation: chosen among Project records
+  - label: Fiscal Year
+    control: text
+    binds: StockLedgerEntry.fiscal_year
+    validation: read only (computed or filled by the program)
+  - label: Has Batch No
+    control: checkbox
+    binds: StockLedgerEntry.has_batch_no
+  - label: Has Serial No
+    control: checkbox
+    binds: StockLedgerEntry.has_serial_no
+  - label: Is Cancelled
+    control: checkbox
+    binds: StockLedgerEntry.is_cancelled
+  - label: To Rename
+    control: checkbox
+    binds: StockLedgerEntry.to_rename
+  - label: Serial No
+    control: text
+    binds: StockLedgerEntry.serial_no
+    validation: read only (computed or filled by the program)
+  - label: Batch No
+    control: text
+    binds: StockLedgerEntry.batch_no
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-419
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Stock Ledger Entry
+    note: declared by the program

@@ -1,0 +1,63 @@
+id: S-445
+title: Contact Us Settings
+purpose: settings of Contact Us Settings
+kind: settings
+layout: "sections: Introduction, Address; 16 fields"
+fields:
+  - label: Disabled
+    control: checkbox
+    binds: ContactUsSettings.is_disabled
+  - label: Send Acknowledgement Email
+    control: checkbox
+    binds: ContactUsSettings.send_acknowledgement_email
+  - label: Forward To Email Address
+    control: text
+    binds: ContactUsSettings.forward_to_email
+  - label: Heading
+    control: text
+    binds: ContactUsSettings.heading
+  - label: Introduction
+    control: text
+    binds: ContactUsSettings.introduction
+  - label: Query Options
+    control: text
+    binds: ContactUsSettings.query_options
+  - label: Address Title
+    control: text
+    binds: ContactUsSettings.address_title
+  - label: Address Line 1
+    control: text
+    binds: ContactUsSettings.address_line1
+  - label: Address Line 2
+    control: text
+    binds: ContactUsSettings.address_line2
+  - label: City
+    control: text
+    binds: ContactUsSettings.city
+  - label: State/Province
+    control: text
+    binds: ContactUsSettings.state
+  - label: Pincode
+    control: text
+    binds: ContactUsSettings.pincode
+  - label: Country
+    control: text
+    binds: ContactUsSettings.country
+  - label: Phone
+    control: text
+    binds: ContactUsSettings.phone
+  - label: Email Id
+    control: text
+    binds: ContactUsSettings.email_id
+  - label: Skype
+    control: text
+    binds: ContactUsSettings.skype
+actions:
+  - label: Save
+    triggers: F-446
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Contact Us Settings
+    note: declared by the program

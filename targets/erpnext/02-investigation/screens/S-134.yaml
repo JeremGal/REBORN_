@@ -1,0 +1,18 @@
+id: S-134
+title: Salutation
+purpose: create, view and edit Salutation records
+kind: form
+layout: 1 fields
+fields:
+  - label: Salutation
+    control: text
+    binds: Salutation.salutation
+actions:
+  - label: Save
+    triggers: F-135
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Salutation
+    note: declared by the program

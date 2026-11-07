@@ -1,0 +1,65 @@
+id: F-025
+title: Create, submit and cancel a Cashier Closing
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Cashier Closing records.
+entry_points:
+  - screen: S-024
+    action: open the form
+inputs:
+  - label: From Time
+    field: CashierClosing.from_time
+    type: time
+    required: true
+  - label: To Time
+    field: CashierClosing.time
+    type: time
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Cashier Closing form
+    screen: S-024
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: From Time, To Time"
+  - n: 3
+    actor: user
+    does: "adds lines in: Payments"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Cashier Closing record stored
+    entities:
+      - CashierClosing
+entities:
+  - CashierClosing
+  - CashierClosingPayments
+screens:
+  - S-024
+acceptance:
+  - id: AC-026
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Cashier Closing
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 36
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Du temps devrait être moins que du temps"

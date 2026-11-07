@@ -1,0 +1,64 @@
+id: S-388
+title: Inventory Dimension
+purpose: create, view and edit Inventory Dimension records
+kind: form
+layout: "tabs: Dimension Details, Applicable For; sections: Field Mapping, Mandatory Section, Conditional Rule Examples; 13 fields"
+fields:
+  - label: Dimension Name
+    control: text
+    binds: InventoryDimension.dimension_name
+    required: true
+  - label: Reference Document
+    control: lookup
+    binds: InventoryDimension.reference_document
+    required: true
+    validation: chosen among DocType records
+  - label: Source Fieldname
+    control: text
+    binds: InventoryDimension.source_fieldname
+    validation: read only (computed or filled by the program)
+  - label: Target Fieldname (Stock Ledger Entry)
+    control: text
+    binds: InventoryDimension.target_fieldname
+    validation: read only (computed or filled by the program)
+  - label: Apply to All Inventory Documents
+    control: checkbox
+    binds: InventoryDimension.apply_to_all_doctypes
+  - label: Validate Negative Stock
+    control: checkbox
+    binds: InventoryDimension.validate_negative_stock
+  - label: Apply to Document
+    control: lookup
+    binds: InventoryDimension.document_type
+    validation: shown only when eval:!doc.apply_to_all_doctypes; chosen among DocType records
+  - label: Type of Transaction
+    control: select
+    binds: InventoryDimension.type_of_transaction
+    validation: shown only when eval:!doc.apply_to_all_doctypes
+  - label: Fetch Value From
+    control: select
+    binds: InventoryDimension.fetch_from_parent
+  - label: " Is Child Table"
+    control: checkbox
+    binds: InventoryDimension.istable
+    validation: read only (computed or filled by the program); shown only when eval:!doc.apply_to_all_doctypes && doc.document_type
+  - label: Conditional Rule
+    control: text
+    binds: InventoryDimension.condition
+    validation: shown only when eval:!doc.apply_to_all_doctypes
+  - label: Mandatory
+    control: checkbox
+    binds: InventoryDimension.reqd
+  - label: Mandatory Depends On (Backend)
+    control: text
+    binds: InventoryDimension.mandatory_depends_on_backend
+    validation: shown only when eval:!doc.reqd
+actions:
+  - label: Save
+    triggers: F-389
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Inventory Dimension
+    note: declared by the program

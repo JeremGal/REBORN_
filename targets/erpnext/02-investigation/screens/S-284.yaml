@@ -1,0 +1,18 @@
+id: S-284
+title: OAuth Provider Settings
+purpose: settings of OAuth Provider Settings
+kind: settings
+layout: 1 fields
+fields:
+  - label: Skip Authorization
+    control: select
+    binds: OAuthProviderSettings.skip_authorization
+actions:
+  - label: Save
+    triggers: F-285
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of OAuth Provider Settings
+    note: declared by the program

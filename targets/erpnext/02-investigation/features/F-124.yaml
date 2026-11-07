@@ -1,0 +1,76 @@
+id: F-124
+title: Create, submit and cancel a Supplier Quotation
+module: Buying
+priority: must
+status: partial
+confidence: medium
+user_goal: Prices a supplier offered you.
+entry_points:
+  - screen: S-123
+    action: open the form
+inputs:
+  - label: Series
+    field: SupplierQuotation.naming_series
+    type: enum
+    required: true
+  - label: Supplier
+    field: SupplierQuotation.supplier
+    type: ref
+    required: true
+  - label: Company
+    field: SupplierQuotation.company
+    type: ref
+    required: true
+  - label: Date
+    field: SupplierQuotation.transaction_date
+    type: date
+    required: true
+  - label: Currency
+    field: SupplierQuotation.currency
+    type: ref
+    required: true
+  - label: Exchange Rate
+    field: SupplierQuotation.conversion_rate
+    type: decimal
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Supplier Quotation form
+    screen: S-123
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Supplier, Company, Date, Currency, Exchange Rate"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items, Purchase Taxes and Charges, Item Wise Tax Details, Pricing Rule Detail"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Supplier Quotation record stored
+    entities:
+      - SupplierQuotation
+entities:
+  - SupplierQuotation
+  - SupplierQuotationItem
+  - PurchaseTaxesAndCharges
+  - ItemWiseTaxDetail
+  - PricingRuleDetail
+screens:
+  - S-123
+acceptance:
+  - id: AC-125
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Supplier Quotation
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"supplier-quotation\")."

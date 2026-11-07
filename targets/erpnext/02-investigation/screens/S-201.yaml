@@ -1,0 +1,30 @@
+id: S-201
+title: Campaign
+purpose: create, view and edit Campaign records
+kind: form
+layout: "sections: Campaign, Campaign Schedules; 4 fields"
+fields:
+  - label: Campaign Name
+    control: text
+    binds: Campaign.campaign_name
+    required: true
+  - label: Naming Series
+    control: select
+    binds: Campaign.naming_series
+  - label: Campaign Schedules
+    control: grid
+    columns:
+      - Email Template
+      - Send After (days)
+  - label: Description
+    control: text
+    binds: Campaign.description
+actions:
+  - label: Save
+    triggers: F-202
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Campaign
+    note: declared by the program

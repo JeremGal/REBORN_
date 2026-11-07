@@ -1,0 +1,102 @@
+id: S-345
+title: Installation Note
+purpose: create, view and edit Installation Note records
+kind: form
+layout: "sections: Installation Note; 19 fields"
+fields:
+  - label: Series
+    control: select
+    binds: InstallationNote.naming_series
+    required: true
+  - label: Customer
+    control: lookup
+    binds: InstallationNote.customer
+    required: true
+    validation: chosen among Customer records
+  - label: Customer Address
+    control: lookup
+    binds: InstallationNote.customer_address
+    validation: shown only when customer; chosen among Address records
+  - label: Contact Person
+    control: lookup
+    binds: InstallationNote.contact_person
+    validation: shown only when customer; chosen among Contact records
+  - label: Name
+    control: text
+    binds: InstallationNote.customer_name
+    validation: read only (computed or filled by the program)
+  - label: Address
+    control: text
+    binds: InstallationNote.address_display
+    validation: read only (computed or filled by the program)
+  - label: Contact
+    control: text
+    binds: InstallationNote.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: InstallationNote.contact_mobile
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Contact Email
+    control: text
+    binds: InstallationNote.contact_email
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Territory
+    control: lookup
+    binds: InstallationNote.territory
+    required: true
+    validation: shown only when customer; chosen among Territory records
+  - label: Customer Group
+    control: lookup
+    binds: InstallationNote.customer_group
+    validation: shown only when customer; chosen among Customer Group records
+  - label: Installation Date
+    control: date
+    binds: InstallationNote.inst_date
+    required: true
+  - label: Installation Time
+    control: date
+    binds: InstallationNote.inst_time
+  - label: Status
+    control: select
+    binds: InstallationNote.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: InstallationNote.company
+    required: true
+    validation: chosen among Company records
+  - label: Project
+    control: lookup
+    binds: InstallationNote.project
+    validation: chosen among Project records
+  - label: Amended From
+    control: lookup
+    binds: InstallationNote.amended_from
+    validation: read only (computed or filled by the program); chosen among Installation Note records
+  - label: Remarks
+    control: text
+    binds: InstallationNote.remarks
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Installed Qty
+      - Description
+actions:
+  - label: Save
+    triggers: F-346
+  - label: Submit
+    triggers: F-346
+  - label: Cancel
+    triggers: F-346
+  - label: Amend
+    triggers: F-346
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Installation Note
+    note: declared by the program

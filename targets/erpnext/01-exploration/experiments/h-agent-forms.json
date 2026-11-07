@@ -1,0 +1,78 @@
+﻿{
+    "mission":  "M-003",
+    "application":  "ERPNext (fictitious data)",
+    "experiments":  [
+                        {
+                            "kind":  "form",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/new"
+                        },
+                        {
+                            "kind":  "form",
+                            "doctype":  "Purchase Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/purchase-invoice/new"
+                        },
+                        {
+                            "kind":  "form",
+                            "doctype":  "Payment Entry",
+                            "module":  "Accounts",
+                            "path":  "/app/payment-entry/new"
+                        },
+                        {
+                            "kind":  "form",
+                            "doctype":  "Journal Entry",
+                            "module":  "Accounts",
+                            "path":  "/app/journal-entry/new"
+                        },
+                        {
+                            "kind":  "form",
+                            "doctype":  "Sales Order",
+                            "module":  "Selling",
+                            "path":  "/app/sales-order/new"
+                        },
+                        {
+                            "kind":  "form",
+                            "doctype":  "Purchase Order",
+                            "module":  "Buying",
+                            "path":  "/app/purchase-order/new"
+                        },
+                        {
+                            "kind":  "form",
+                            "doctype":  "Delivery Note",
+                            "module":  "Stock",
+                            "path":  "/app/delivery-note/new"
+                        },
+                        {
+                            "kind":  "form",
+                            "doctype":  "Stock Entry",
+                            "module":  "Stock",
+                            "path":  "/app/stock-entry/new"
+                        },
+                        {
+                            "kind":  "form",
+                            "doctype":  "Item",
+                            "module":  "Stock",
+                            "path":  "/app/item/new"
+                        },
+                        {
+                            "kind":  "form",
+                            "doctype":  "Customer",
+                            "module":  "Selling",
+                            "path":  "/app/customer/new"
+                        },
+                        {
+                            "kind":  "totals",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/ACC-SINV-2026-00001"
+                        },
+                        {
+                            "kind":  "totals",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/ACC-SINV-2026-00010"
+                        }
+                    ]
+}

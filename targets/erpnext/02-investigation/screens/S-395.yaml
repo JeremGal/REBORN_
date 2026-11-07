@@ -1,0 +1,28 @@
+id: S-395
+title: Item Variant Settings
+purpose: settings of Item Variant Settings
+kind: settings
+layout: "sections: Copy Fields to Variant; 4 fields"
+fields:
+  - label: Do not update variants on save
+    control: checkbox
+    binds: ItemVariantSettings.do_not_update_variants
+  - label: Allow Rename Attribute Value
+    control: checkbox
+    binds: ItemVariantSettings.allow_rename_attribute_value
+  - label: Allow Variant UOM to be different from Template UOM
+    control: checkbox
+    binds: ItemVariantSettings.allow_different_uom
+  - label: Fields
+    control: grid
+    columns:
+      - Field Name
+actions:
+  - label: Save
+    triggers: F-396
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Item Variant Settings
+    note: declared by the program

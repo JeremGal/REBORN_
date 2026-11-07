@@ -1,0 +1,24 @@
+id: S-326
+title: Projects Settings
+purpose: settings of Projects Settings
+kind: settings
+layout: "sections: Timesheets; 3 fields"
+fields:
+  - label: Ignore User Time Overlap
+    control: checkbox
+    binds: ProjectsSettings.ignore_user_time_overlap
+  - label: Ignore Employee Time Overlap
+    control: checkbox
+    binds: ProjectsSettings.ignore_employee_time_overlap
+  - label: Fetch Timesheet in Sales Invoice
+    control: checkbox
+    binds: ProjectsSettings.fetch_timesheet_in_sales_invoice
+actions:
+  - label: Save
+    triggers: F-327
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Projects Settings
+    note: declared by the program

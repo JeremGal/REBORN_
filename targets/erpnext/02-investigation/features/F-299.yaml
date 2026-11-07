@@ -1,0 +1,50 @@
+id: F-299
+title: Configure BOM Update Tool
+module: Manufacturing
+priority: should
+status: partial
+confidence: medium
+user_goal: Replace a BOM everywhere it is used, or update the cost of all BOMs.
+entry_points:
+  - screen: S-298
+    action: open the form
+inputs:
+  - label: Current BOM
+    field: BOMUpdateTool.current_bom
+    type: ref
+    required: true
+  - label: New BOM
+    field: BOMUpdateTool.new_bom
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the BOM Update Tool form
+    screen: S-298
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Current BOM, New BOM"
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - BOMUpdateTool
+entities:
+  - BOMUpdateTool
+screens:
+  - S-298
+acceptance:
+  - id: AC-300
+    given: every mandatory field filled with a valid value
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of BOM Update Tool
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"bom-update-tool\")."

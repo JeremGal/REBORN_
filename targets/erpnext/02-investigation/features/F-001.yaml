@@ -42,6 +42,8 @@ acceptance:
 evidence:
   - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "10 cases" }
   - { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "5 cases" }
+  - { ref: run-20261107T194304-h-EXP_013, kind: h-run, locator: "invoice totals read on screen by the H agent" }
+  - { ref: run-20261107T194304-h-EXP_014, kind: h-run, locator: "invoice totals read on screen by the H agent" }
 unknowns: [U-001, U-002]
 rebuild_notes: >-
   Compute in a decimal type with banker's rounding to the currency's precision, read from settings (R-005). Keep a

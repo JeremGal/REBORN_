@@ -1,0 +1,55 @@
+id: F-145
+title: Create and edit a Data Import
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Data Import records.
+entry_points:
+  - screen: S-144
+    action: open the form
+inputs:
+  - label: Document Type
+    field: DataImport.reference_doctype
+    type: ref
+    required: true
+  - label: Import Type
+    field: DataImport.import_type
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Data Import form
+    screen: S-144
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Document Type, Import Type"
+  - n: 3
+    actor: user
+    does: "adds lines in: value_mappings, skipped_rows"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Data Import record stored
+    entities:
+      - DataImport
+entities:
+  - DataImport
+  - DataImportValueMapping
+  - DataImportSkippedRow
+screens:
+  - S-144
+acceptance:
+  - id: AC-146
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Data Import
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"data-import\")."

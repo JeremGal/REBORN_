@@ -1,0 +1,61 @@
+id: F-070
+title: Create, submit and cancel a Process Payment Reconciliation
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: Matches payments to invoices in the background.
+entry_points:
+  - screen: S-069
+    action: open the form
+inputs:
+  - label: Company
+    field: ProcessPaymentReconciliation.company
+    type: ref
+    required: true
+  - label: Party Type
+    field: ProcessPaymentReconciliation.party_type
+    type: ref
+    required: true
+  - label: Party
+    field: ProcessPaymentReconciliation.party
+    type: string
+    required: true
+  - label: Receivable/Payable Account
+    field: ProcessPaymentReconciliation.receivable_payable_account
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Process Payment Reconciliation form
+    screen: S-069
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Party Type, Party, Receivable/Payable Account"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 4
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Process Payment Reconciliation record stored
+    entities:
+      - ProcessPaymentReconciliation
+entities:
+  - ProcessPaymentReconciliation
+screens:
+  - S-069
+acceptance:
+  - id: AC-071
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Process Payment Reconciliation
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

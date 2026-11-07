@@ -1,0 +1,82 @@
+id: S-001
+title: Account
+purpose: create, view and edit Account records
+kind: form
+layout: 18 fields
+fields:
+  - label: Disable
+    control: checkbox
+    binds: Account.disabled
+  - label: Account Name
+    control: text
+    binds: Account.account_name
+    required: true
+  - label: Account Number
+    control: text
+    binds: Account.account_number
+  - label: Is Group
+    control: checkbox
+    binds: Account.is_group
+  - label: Company
+    control: lookup
+    binds: Account.company
+    required: true
+    validation: chosen among Company records
+  - label: Root Type
+    control: select
+    binds: Account.root_type
+    validation: read only (computed or filled by the program)
+  - label: Report Type
+    control: select
+    binds: Account.report_type
+    validation: read only (computed or filled by the program)
+  - label: Currency
+    control: lookup
+    binds: Account.account_currency
+    validation: shown only when eval:doc.is_group==0; chosen among Currency records
+  - label: Parent Account
+    control: lookup
+    binds: Account.parent_account
+    required: true
+    validation: chosen among Account records
+  - label: Account Category
+    control: lookup
+    binds: Account.account_category
+    validation: chosen among Account Category records
+  - label: Account Type
+    control: select
+    binds: Account.account_type
+  - label: Tax Rate
+    control: number
+    binds: Account.tax_rate
+  - label: Frozen
+    control: select
+    binds: Account.freeze_account
+  - label: Balance must be
+    control: select
+    binds: Account.balance_must_be
+  - label: Lft
+    control: number
+    binds: Account.lft
+    validation: read only (computed or filled by the program)
+  - label: Rgt
+    control: number
+    binds: Account.rgt
+    validation: read only (computed or filled by the program)
+  - label: Old Parent
+    control: text
+    binds: Account.old_parent
+    validation: read only (computed or filled by the program)
+  - label: Include in gross
+    control: checkbox
+    binds: Account.include_in_gross
+    validation: shown only when eval:(doc.report_type == 'Profit and Loss' && !doc.is_group)
+actions:
+  - label: Save
+    triggers: F-002
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Account
+    note: declared by the program

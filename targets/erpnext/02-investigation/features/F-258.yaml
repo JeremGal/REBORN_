@@ -1,0 +1,58 @@
+id: F-258
+title: Create and edit a Common Code
+module: EDI
+priority: could
+status: partial
+confidence: medium
+user_goal: A code from a code list and what it maps to.
+entry_points:
+  - screen: S-257
+    action: open the form
+inputs:
+  - label: Code List
+    field: CommonCode.code_list
+    type: ref
+    required: true
+  - label: Title
+    field: CommonCode.title
+    type: string
+    required: true
+  - label: Common Code
+    field: CommonCode.common_code
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Common Code form
+    screen: S-257
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Code List, Title, Common Code"
+  - n: 3
+    actor: user
+    does: "adds lines in: Applies To"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Common Code record stored
+    entities:
+      - CommonCode
+entities:
+  - CommonCode
+  - DynamicLink
+screens:
+  - S-257
+acceptance:
+  - id: AC-259
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Common Code
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

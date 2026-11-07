@@ -1,0 +1,57 @@
+id: F-202
+title: Create and edit a Campaign
+module: CRM
+priority: should
+status: partial
+confidence: medium
+user_goal: A marketing campaign, to see which leads and sales it brought in.
+entry_points:
+  - screen: S-201
+    action: open the form
+inputs:
+  - label: Campaign Name
+    field: Campaign.campaign_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Campaign form
+    screen: S-201
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Campaign Name"
+  - n: 3
+    actor: user
+    does: "adds lines in: Campaign Schedules"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Campaign record stored
+    entities:
+      - Campaign
+entities:
+  - Campaign
+  - CampaignEmailSchedule
+screens:
+  - S-201
+acceptance:
+  - id: AC-203
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Campaign
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 35
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"campaign\")."

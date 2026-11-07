@@ -1,0 +1,44 @@
+id: S-468
+title: Workflow Action
+purpose: create, view and edit Workflow Action records
+kind: form
+layout: 8 fields
+fields:
+  - label: Status
+    control: select
+    binds: WorkflowAction.status
+  - label: Reference Name
+    control: lookup
+    binds: WorkflowAction.reference_name
+  - label: Reference Document Type
+    control: lookup
+    binds: WorkflowAction.reference_doctype
+    validation: chosen among DocType records
+  - label: Workflow State
+    control: text
+    binds: WorkflowAction.workflow_state
+  - label: Completed By Role
+    control: lookup
+    binds: WorkflowAction.completed_by_role
+    validation: "read only (computed or filled by the program); shown only when eval: doc.completed_by_role; chosen among Role records"
+  - label: Completed By User
+    control: lookup
+    binds: WorkflowAction.completed_by
+    validation: "read only (computed or filled by the program); shown only when eval: doc.completed_by; chosen among User records"
+  - label: Permitted Roles
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns: []
+  - label: User
+    control: lookup
+    binds: WorkflowAction.user
+    validation: chosen among User records
+actions:
+  - label: Save
+    triggers: F-469
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Workflow Action
+    note: declared by the program

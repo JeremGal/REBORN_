@@ -1,0 +1,53 @@
+id: F-027
+title: Create and edit a Cheque Print Template
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: Where each detail goes when you print on your bank's cheque.
+entry_points:
+  - screen: S-026
+    action: open the form
+inputs:
+  - label: Bank Name
+    field: ChequePrintTemplate.bank_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Cheque Print Template form
+    screen: S-026
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Bank Name"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Cheque Print Template record stored
+    entities:
+      - ChequePrintTemplate
+entities:
+  - ChequePrintTemplate
+screens:
+  - S-026
+acceptance:
+  - id: AC-028
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Cheque Print Template
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 37
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"cheque-print-template\")."

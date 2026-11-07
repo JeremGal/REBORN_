@@ -1,0 +1,61 @@
+id: F-102
+title: Create, submit and cancel a Asset Movement
+module: Assets
+priority: must
+status: partial
+confidence: medium
+user_goal: Moves an asset to another location or person.
+entry_points:
+  - screen: S-101
+    action: open the form
+inputs:
+  - label: Company
+    field: AssetMovement.company
+    type: ref
+    required: true
+  - label: Purpose
+    field: AssetMovement.purpose
+    type: enum
+    required: true
+  - label: Transaction Date
+    field: AssetMovement.transaction_date
+    type: datetime
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Asset Movement form
+    screen: S-101
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Purpose, Transaction Date"
+  - n: 3
+    actor: user
+    does: "adds lines in: Assets"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Asset Movement record stored
+    entities:
+      - AssetMovement
+entities:
+  - AssetMovement
+  - AssetMovementItem
+screens:
+  - S-101
+acceptance:
+  - id: AC-103
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Asset Movement
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"asset-movement\")."

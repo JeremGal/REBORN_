@@ -1,0 +1,77 @@
+id: F-420
+title: Create, submit and cancel a Stock Reconciliation
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: Sets stock quantities and values to what is actually in your warehouses.
+entry_points:
+  - screen: S-419
+    action: open the form
+inputs:
+  - label: Series
+    field: StockReconciliation.naming_series
+    type: enum
+    required: true
+  - label: Company
+    field: StockReconciliation.company
+    type: ref
+    required: true
+  - label: Purpose
+    field: StockReconciliation.purpose
+    type: enum
+    required: true
+  - label: Posting Date
+    field: StockReconciliation.posting_date
+    type: date
+    required: true
+  - label: Posting Time
+    field: StockReconciliation.posting_time
+    type: time
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Stock Reconciliation form
+    screen: S-419
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Company, Purpose, Posting Date, Posting Time"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Stock Reconciliation record stored
+    entities:
+      - StockReconciliation
+entities:
+  - StockReconciliation
+  - StockReconciliationItem
+screens:
+  - S-419
+acceptance:
+  - id: AC-421
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Stock Reconciliation
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 149
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"stock-reconciliation\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "erpnext.stock.doctype.stock_reconciliation.stock_reconciliation.EmptyStockReconciliationItemsError: Aucun des Articles n’a de changement en quantité ou en valeur."

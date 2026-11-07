@@ -1,0 +1,41 @@
+id: S-452
+title: Portal Settings
+purpose: settings of Portal Settings
+kind: settings
+layout: "sections: Standard Sidebar Menu, Custom Sidebar Menu; 5 fields"
+fields:
+  - label: Default Role at Time of Signup
+    control: lookup
+    binds: PortalSettings.default_role
+    validation: chosen among Role records
+  - label: Default Portal Home
+    control: text
+    binds: PortalSettings.default_portal_home
+  - label: Hide Standard Menu
+    control: checkbox
+    binds: PortalSettings.hide_standard_menu
+  - label: Portal Menu
+    control: grid
+    columns:
+      - Title
+      - Enabled
+      - Route
+      - Reference Document Type
+      - Role
+  - label: Custom Menu Items
+    control: grid
+    columns:
+      - Title
+      - Enabled
+      - Route
+      - Reference Document Type
+      - Role
+actions:
+  - label: Save
+    triggers: F-453
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Portal Settings
+    note: declared by the program

@@ -1,0 +1,88 @@
+id: S-381
+title: Vehicle
+purpose: create, view and edit Vehicle records
+kind: form
+layout: "sections: Details, Insurance Details, Additional Details; 21 fields"
+fields:
+  - label: License Plate
+    control: text
+    binds: Vehicle.license_plate
+    required: true
+  - label: Make
+    control: text
+    binds: Vehicle.make
+    required: true
+  - label: Model
+    control: text
+    binds: Vehicle.model
+    required: true
+  - label: Company
+    control: lookup
+    binds: Vehicle.company
+    validation: chosen among Company records
+  - label: Odometer Value (Last)
+    control: number
+    binds: Vehicle.last_odometer
+    required: true
+  - label: Acquisition Date
+    control: date
+    binds: Vehicle.acquisition_date
+  - label: Location
+    control: text
+    binds: Vehicle.location
+  - label: Chassis No
+    control: text
+    binds: Vehicle.chassis_no
+  - label: Vehicle Value
+    control: money
+    binds: Vehicle.vehicle_value
+  - label: Employee
+    control: lookup
+    binds: Vehicle.employee
+    validation: chosen among Employee records
+  - label: Insurance Company
+    control: text
+    binds: Vehicle.insurance_company
+  - label: Policy No
+    control: text
+    binds: Vehicle.policy_no
+  - label: Start Date
+    control: date
+    binds: Vehicle.start_date
+  - label: End Date
+    control: date
+    binds: Vehicle.end_date
+  - label: Fuel Type
+    control: select
+    binds: Vehicle.fuel_type
+    required: true
+  - label: Fuel UOM
+    control: lookup
+    binds: Vehicle.uom
+    required: true
+    validation: chosen among UOM records
+  - label: Last Carbon Check
+    control: date
+    binds: Vehicle.carbon_check_date
+  - label: Color
+    control: text
+    binds: Vehicle.color
+  - label: Wheels
+    control: number
+    binds: Vehicle.wheels
+  - label: Doors
+    control: number
+    binds: Vehicle.doors
+  - label: Amended From
+    control: lookup
+    binds: Vehicle.amended_from
+    validation: read only (computed or filled by the program); chosen among Vehicle records
+actions:
+  - label: Save
+    triggers: F-382
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Vehicle
+    note: declared by the program

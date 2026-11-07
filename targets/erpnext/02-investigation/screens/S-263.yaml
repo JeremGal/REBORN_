@@ -1,0 +1,38 @@
+id: S-263
+title: Email Group
+purpose: create, view and edit Email Group records
+kind: form
+layout: "sections: Sign Up and Confirmation; 6 fields"
+fields:
+  - label: Title
+    control: text
+    binds: EmailGroup.title
+    required: true
+  - label: Total Subscribers
+    control: number
+    binds: EmailGroup.total_subscribers
+    validation: read only (computed or filled by the program)
+  - label: Confirmation Email Template
+    control: lookup
+    binds: EmailGroup.confirmation_email_template
+    validation: chosen among Email Template records
+  - label: Welcome Email Template
+    control: lookup
+    binds: EmailGroup.welcome_email_template
+    validation: chosen among Email Template records
+  - label: Welcome URL
+    control: text
+    binds: EmailGroup.welcome_url
+  - label: Add Query Parameters
+    control: checkbox
+    binds: EmailGroup.add_query_parameters
+    validation: shown only when welcome_url
+actions:
+  - label: Save
+    triggers: F-264
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Email Group
+    note: declared by the program

@@ -1,0 +1,85 @@
+id: F-295
+title: Create, submit and cancel a Blanket Order
+module: Manufacturing
+priority: must
+status: partial
+confidence: medium
+user_goal: An agreement to buy or sell an item at a fixed price over a period.
+entry_points:
+  - screen: S-294
+    action: open the form
+inputs:
+  - label: Series
+    field: BlanketOrder.naming_series
+    type: enum
+    required: true
+  - label: Order Type
+    field: BlanketOrder.blanket_order_type
+    type: enum
+    required: true
+  - label: From Date
+    field: BlanketOrder.from_date
+    type: date
+    required: true
+  - label: To Date
+    field: BlanketOrder.to_date
+    type: date
+    required: true
+  - label: Company
+    field: BlanketOrder.company
+    type: ref
+    required: true
+  - label: Currency
+    field: BlanketOrder.currency
+    type: ref
+    required: true
+  - label: Exchange Rate
+    field: BlanketOrder.conversion_rate
+    type: decimal
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Blanket Order form
+    screen: S-294
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Order Type, From Date, To Date, Company, Currency, Exchange Rate"
+  - n: 3
+    actor: user
+    does: "adds lines in: Item"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Blanket Order record stored
+    entities:
+      - BlanketOrder
+entities:
+  - BlanketOrder
+  - BlanketOrderItem
+screens:
+  - S-294
+acceptance:
+  - id: AC-296
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Blanket Order
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 30
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"blanket-order\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.MandatoryError: Client is mandatory for a Vente Blanket Order"

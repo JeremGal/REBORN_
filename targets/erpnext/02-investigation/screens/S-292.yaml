@@ -1,0 +1,101 @@
+id: S-292
+title: Maintenance Schedule
+purpose: create, view and edit Maintenance Schedule records
+kind: form
+layout: "sections: Schedule, Contact Info; 17 fields"
+fields:
+  - label: Series
+    control: select
+    binds: MaintenanceSchedule.naming_series
+    required: true
+  - label: Customer
+    control: lookup
+    binds: MaintenanceSchedule.customer
+    validation: chosen among Customer records
+  - label: Status
+    control: select
+    binds: MaintenanceSchedule.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Transaction Date
+    control: date
+    binds: MaintenanceSchedule.transaction_date
+    required: true
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Item Name
+      - Start Date
+      - Periodicity
+      - No of Visits
+  - label: Schedules
+    control: grid
+    columns:
+      - Item Code
+      - Scheduled Date
+      - Actual Date
+      - Sales Person
+      - Completion Status
+      - Serial No
+  - label: Customer Name
+    control: text
+    binds: MaintenanceSchedule.customer_name
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Contact Person
+    control: lookup
+    binds: MaintenanceSchedule.contact_person
+    validation: shown only when customer; chosen among Contact records
+  - label: Mobile No
+    control: text
+    binds: MaintenanceSchedule.contact_mobile
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Contact Email
+    control: text
+    binds: MaintenanceSchedule.contact_email
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Contact
+    control: text
+    binds: MaintenanceSchedule.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Customer Address
+    control: lookup
+    binds: MaintenanceSchedule.customer_address
+    validation: shown only when customer; chosen among Address records
+  - label: Address
+    control: text
+    binds: MaintenanceSchedule.address_display
+    validation: read only (computed or filled by the program)
+  - label: Territory
+    control: lookup
+    binds: MaintenanceSchedule.territory
+    validation: shown only when customer; chosen among Territory records
+  - label: Customer Group
+    control: lookup
+    binds: MaintenanceSchedule.customer_group
+    validation: shown only when customer; chosen among Customer Group records
+  - label: Company
+    control: lookup
+    binds: MaintenanceSchedule.company
+    required: true
+    validation: chosen among Company records
+  - label: Amended From
+    control: lookup
+    binds: MaintenanceSchedule.amended_from
+    validation: read only (computed or filled by the program); chosen among Maintenance Schedule records
+actions:
+  - label: Save
+    triggers: F-293
+  - label: Submit
+    triggers: F-293
+  - label: Cancel
+    triggers: F-293
+  - label: Amend
+    triggers: F-293
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Maintenance Schedule
+    note: declared by the program

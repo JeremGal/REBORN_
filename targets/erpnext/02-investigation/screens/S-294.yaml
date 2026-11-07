@@ -1,0 +1,108 @@
+id: S-294
+title: Blanket Order
+purpose: create, view and edit Blanket Order records
+kind: form
+layout: "sections: Currency and Price List, Terms and Conditions; 21 fields"
+fields:
+  - label: Series
+    control: select
+    binds: BlanketOrder.naming_series
+    required: true
+  - label: Order Type
+    control: select
+    binds: BlanketOrder.blanket_order_type
+    required: true
+  - label: Customer
+    control: lookup
+    binds: BlanketOrder.customer
+    validation: shown only when eval:doc.blanket_order_type == "Selling"; chosen among Customer records
+  - label: Customer Name
+    control: text
+    binds: BlanketOrder.customer_name
+    validation: read only (computed or filled by the program); shown only when eval:doc.blanket_order_type == "Selling"
+  - label: Supplier
+    control: lookup
+    binds: BlanketOrder.supplier
+    validation: shown only when eval:doc.blanket_order_type == "Purchasing"; chosen among Supplier records
+  - label: Supplier Name
+    control: text
+    binds: BlanketOrder.supplier_name
+    validation: read only (computed or filled by the program); shown only when eval:doc.blanket_order_type == "Purchasing"
+  - label: Order No
+    control: text
+    binds: BlanketOrder.order_no
+  - label: Order Date
+    control: date
+    binds: BlanketOrder.order_date
+    validation: shown only when eval:doc.order_no
+  - label: From Date
+    control: date
+    binds: BlanketOrder.from_date
+    required: true
+  - label: To Date
+    control: date
+    binds: BlanketOrder.to_date
+    required: true
+  - label: Company
+    control: lookup
+    binds: BlanketOrder.company
+    required: true
+    validation: chosen among Company records
+  - label: Currency
+    control: lookup
+    binds: BlanketOrder.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: BlanketOrder.conversion_rate
+    required: true
+  - label: Price List
+    control: lookup
+    binds: BlanketOrder.selling_price_list
+    validation: shown only when eval:doc.blanket_order_type == "Selling"; chosen among Price List records
+  - label: Price List
+    control: lookup
+    binds: BlanketOrder.buying_price_list
+    validation: shown only when eval:doc.blanket_order_type == "Purchasing"; chosen among Price List records
+  - label: Price List Currency
+    control: lookup
+    binds: BlanketOrder.price_list_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Price List Exchange Rate
+    control: number
+    binds: BlanketOrder.plc_conversion_rate
+  - label: Item
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Quantity
+      - Rate
+      - Ordered Quantity
+  - label: Amended From
+    control: lookup
+    binds: BlanketOrder.amended_from
+    validation: read only (computed or filled by the program); chosen among Blanket Order records
+  - label: Terms
+    control: lookup
+    binds: BlanketOrder.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Terms and Conditions Details
+    control: text
+    binds: BlanketOrder.terms
+actions:
+  - label: Save
+    triggers: F-295
+  - label: Submit
+    triggers: F-295
+  - label: Cancel
+    triggers: F-295
+  - label: Amend
+    triggers: F-295
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Blanket Order
+    note: declared by the program

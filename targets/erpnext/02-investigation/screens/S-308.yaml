@@ -1,0 +1,274 @@
+id: S-308
+title: Work Order
+purpose: create, view and edit Work Order records
+kind: form
+layout: "tabs: Production Item, Scheduling & Costing, Job Cards, Material Requests, Stock Entries, More Info, Connections; sections: Warehouse, Operations, Required Items, Time, Operation Cost, Production Item Info, Finished Good Serial / Batch, Reference; 59 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: WorkOrder.company
+    required: true
+    validation: chosen among Company records
+  - label: Series
+    control: select
+    binds: WorkOrder.naming_series
+    required: true
+  - label: Item To Manufacture
+    control: lookup
+    binds: WorkOrder.production_item
+    required: true
+    validation: chosen among Item records
+  - label: BOM No
+    control: lookup
+    binds: WorkOrder.bom_no
+    required: true
+    validation: chosen among BOM records
+  - label: Qty To Manufacture
+    control: number
+    binds: WorkOrder.qty
+    required: true
+  - label: Sales Order
+    control: lookup
+    binds: WorkOrder.sales_order
+    validation: shown only when eval:!doc.subcontracting_inward_order; chosen among Sales Order records
+  - label: Reserve Stock
+    control: checkbox
+    binds: WorkOrder.reserve_stock
+  - label: Allow Alternative Item
+    control: checkbox
+    binds: WorkOrder.allow_alternative_item
+    validation: shown only when eval:!doc.subcontracting_inward_order
+  - label: Manufactured Qty
+    control: number
+    binds: WorkOrder.produced_qty
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus==1
+  - label: Process Loss Qty
+    control: number
+    binds: WorkOrder.process_loss_qty
+    validation: "read only (computed or filled by the program); shown only when eval: doc.process_loss_qty"
+  - label: Disassembled Qty
+    control: number
+    binds: WorkOrder.disassembled_qty
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus==1
+  - label: Material Transferred for Manufacturing
+    control: number
+    binds: WorkOrder.material_transferred_for_manufacturing
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus==1 && doc.skip_transfer==0 && doc.track_semi_finished_goods =
+  - label: Additional Transferred Qty
+    control: number
+    binds: WorkOrder.additional_transferred_qty
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus==1 && doc.skip_transfer==0
+  - label: Max Producible Qty
+    control: number
+    binds: WorkOrder.max_producible_qty
+    validation: read only (computed or filled by the program)
+  - label: Work-in-Progress Warehouse
+    control: lookup
+    binds: WorkOrder.wip_warehouse
+    validation: shown only when eval:!(doc.skip_transfer && doc.subcontracting_inward_order); chosen among Warehouse records
+  - label: Target Warehouse
+    control: lookup
+    binds: WorkOrder.fg_warehouse
+    validation: chosen among Warehouse records
+  - label: Scrap Warehouse
+    control: lookup
+    binds: WorkOrder.scrap_warehouse
+    validation: chosen among Warehouse records
+  - label: Skip Material Transfer to WIP Warehouse
+    control: checkbox
+    binds: WorkOrder.skip_transfer
+  - label: Backflush Raw Materials From Work-in-Progress Warehouse
+    control: checkbox
+    binds: WorkOrder.from_wip_warehouse
+    validation: shown only when eval:doc.skip_transfer && !doc.subcontracting_inward_order
+  - label: Transfer Material Against
+    control: select
+    binds: WorkOrder.transfer_material_against
+    validation: "shown only when eval: doc.operations?.length && doc.track_semi_finished_goods === 0"
+  - label: Operations
+    control: grid
+    columns:
+      - Operation
+      - Workstation
+      - Output Item
+      - Source Warehouse
+      - Finished Goods Warehouse
+      - Time
+  - label: Use Multi-Level BOM
+    control: checkbox
+    binds: WorkOrder.use_multi_level_bom
+  - label: Default source Warehouse
+    control: lookup
+    binds: WorkOrder.source_warehouse
+    validation: chosen among Warehouse records
+  - label: required_items
+    control: grid
+    columns:
+      - Item Code
+      - Source Warehouse
+      - Required Qty
+      - Transferred Qty
+      - Consumed Qty
+      - "Returned Qty "
+  - label: Planned Start Date
+    control: date
+    binds: WorkOrder.planned_start_date
+    required: true
+  - label: Planned End Date
+    control: date
+    binds: WorkOrder.planned_end_date
+  - label: Expected Delivery Date
+    control: date
+    binds: WorkOrder.expected_delivery_date
+  - label: Actual Start Date
+    control: date
+    binds: WorkOrder.actual_start_date
+  - label: Actual End Date
+    control: date
+    binds: WorkOrder.actual_end_date
+  - label: Lead Time
+    control: number
+    binds: WorkOrder.lead_time
+    validation: read only (computed or filled by the program)
+  - label: Planned Operating Cost
+    control: money
+    binds: WorkOrder.planned_operating_cost
+    validation: read only (computed or filled by the program)
+  - label: Actual Operating Cost
+    control: money
+    binds: WorkOrder.actual_operating_cost
+    validation: read only (computed or filled by the program)
+  - label: Additional Operating Cost
+    control: money
+    binds: WorkOrder.additional_operating_cost
+  - label: Corrective Operation Cost
+    control: money
+    binds: WorkOrder.corrective_operation_cost
+    validation: read only (computed or filled by the program)
+  - label: Total Operating Cost
+    control: money
+    binds: WorkOrder.total_operating_cost
+    validation: read only (computed or filled by the program)
+  - label: Image
+    control: other
+    binds: WorkOrder.image
+    validation: read only (computed or filled by the program)
+  - label: Item Name
+    control: text
+    binds: WorkOrder.item_name
+    validation: read only (computed or filled by the program); shown only when eval:doc.production_item
+  - label: Stock UOM
+    control: lookup
+    binds: WorkOrder.stock_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Item Description
+    control: text
+    binds: WorkOrder.description
+    validation: read only (computed or filled by the program)
+  - label: Has Serial No
+    control: checkbox
+    binds: WorkOrder.has_serial_no
+    validation: read only (computed or filled by the program)
+  - label: Has Batch No
+    control: checkbox
+    binds: WorkOrder.has_batch_no
+    validation: read only (computed or filled by the program)
+  - label: Batch Size
+    control: number
+    binds: WorkOrder.batch_size
+    validation: shown only when has_batch_no
+  - label: Additional Costs (as per BOM)
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Item Code
+      - Type
+      - Qty
+      - UOM
+      - Rate
+      - Amount
+  - label: Secondary Items (as per BOM)
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Item Code
+      - Type
+      - Qty
+      - UOM
+      - Rate
+      - Amount
+  - label: Update Consumed Material Cost In Project
+    control: checkbox
+    binds: WorkOrder.update_consumed_material_cost_in_project
+  - label: Project
+    control: lookup
+    binds: WorkOrder.project
+    validation: chosen among Project records
+  - label: Subcontracting Inward Order
+    control: lookup
+    binds: WorkOrder.subcontracting_inward_order
+    validation: read only (computed or filled by the program); shown only when subcontracting_inward_order; chosen among Subcontracting Inward Order records
+  - label: Production Plan
+    control: lookup
+    binds: WorkOrder.production_plan
+    validation: read only (computed or filled by the program); chosen among Production Plan records
+  - label: MPS
+    control: lookup
+    binds: WorkOrder.mps
+    validation: read only (computed or filled by the program); chosen among Master Production Schedule records
+  - label: Material Request
+    control: lookup
+    binds: WorkOrder.material_request
+    validation: read only (computed or filled by the program); shown only when eval:!doc.subcontracting_inward_order; chosen among Material Request records
+  - label: Material Request Item
+    control: text
+    binds: WorkOrder.material_request_item
+    validation: read only (computed or filled by the program)
+  - label: Subcontracting Inward Order Item
+    control: text
+    binds: WorkOrder.subcontracting_inward_order_item
+    validation: read only (computed or filled by the program)
+  - label: Sales Order Item
+    control: text
+    binds: WorkOrder.sales_order_item
+    validation: read only (computed or filled by the program)
+  - label: Production Plan Sub Assembly Item
+    control: text
+    binds: WorkOrder.production_plan_sub_assembly_item
+    validation: read only (computed or filled by the program)
+  - label: Production Plan Item
+    control: text
+    binds: WorkOrder.production_plan_item
+    validation: read only (computed or filled by the program)
+  - label: Product Bundle Item
+    control: lookup
+    binds: WorkOrder.product_bundle_item
+    validation: read only (computed or filled by the program); chosen among Item records
+  - label: Status
+    control: select
+    binds: WorkOrder.status
+    required: true
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: Produce Item per Operation
+    control: checkbox
+    binds: WorkOrder.track_semi_finished_goods
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: WorkOrder.amended_from
+    validation: read only (computed or filled by the program); chosen among Work Order records
+actions:
+  - label: Save
+    triggers: F-309
+  - label: Submit
+    triggers: F-309
+  - label: Cancel
+    triggers: F-309
+  - label: Amend
+    triggers: F-309
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Work Order
+    note: declared by the program

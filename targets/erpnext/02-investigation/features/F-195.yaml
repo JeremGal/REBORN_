@@ -1,0 +1,58 @@
+id: F-195
+title: Create and edit a User Invitation
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain User Invitation records.
+entry_points:
+  - screen: S-194
+    action: open the form
+inputs:
+  - label: Email
+    field: UserInvitation.email
+    type: string
+    required: true
+  - label: App Name
+    field: UserInvitation.app_name
+    type: enum
+    required: true
+  - label: Redirect To Path
+    field: UserInvitation.redirect_to_path
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the User Invitation form
+    screen: S-194
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Email, App Name, Redirect To Path"
+  - n: 3
+    actor: user
+    does: "adds lines in: Roles"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a User Invitation record stored
+    entities:
+      - UserInvitation
+entities:
+  - UserInvitation
+  - UserRole
+screens:
+  - S-194
+acceptance:
+  - id: AC-196
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of User Invitation
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

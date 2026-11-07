@@ -1,0 +1,82 @@
+id: S-010
+title: Bank Account
+purpose: create, view and edit Bank Account records
+kind: form
+layout: "sections: Party Details, Account Details, Address and Contact, Integration Details; 19 fields"
+fields:
+  - label: Account Name
+    control: text
+    binds: BankAccount.account_name
+    required: true
+  - label: Company Account
+    control: lookup
+    binds: BankAccount.account
+    validation: shown only when is_company_account; chosen among Account records
+  - label: Bank
+    control: lookup
+    binds: BankAccount.bank
+    required: true
+    validation: chosen among Bank records
+  - label: Account Type
+    control: lookup
+    binds: BankAccount.account_type
+    validation: chosen among Bank Account Type records
+  - label: Account Subtype
+    control: lookup
+    binds: BankAccount.account_subtype
+    validation: chosen among Bank Account Subtype records
+  - label: Disabled
+    control: checkbox
+    binds: BankAccount.disabled
+  - label: Is Default Account
+    control: checkbox
+    binds: BankAccount.is_default
+  - label: Is Company Account
+    control: checkbox
+    binds: BankAccount.is_company_account
+  - label: Company
+    control: lookup
+    binds: BankAccount.company
+    validation: shown only when is_company_account; chosen among Company records
+  - label: Is Credit Card
+    control: checkbox
+    binds: BankAccount.is_credit_card
+  - label: Party Type
+    control: lookup
+    binds: BankAccount.party_type
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: BankAccount.party
+  - label: IBAN
+    control: text
+    binds: BankAccount.iban
+  - label: Branch Code
+    control: text
+    binds: BankAccount.branch_code
+  - label: Bank Account No
+    control: text
+    binds: BankAccount.bank_account_no
+  - label: Statement PDF Password
+    control: text
+    binds: BankAccount.statement_password
+  - label: Integration ID
+    control: text
+    binds: BankAccount.integration_id
+    validation: read only (computed or filled by the program)
+  - label: Last Integration Date
+    control: date
+    binds: BankAccount.last_integration_date
+  - label: Mask
+    control: text
+    binds: BankAccount.mask
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-011
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bank Account
+    note: declared by the program

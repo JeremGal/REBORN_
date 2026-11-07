@@ -1,0 +1,18 @@
+id: S-034
+title: Finance Book
+purpose: create, view and edit Finance Book records
+kind: form
+layout: 1 fields
+fields:
+  - label: Name
+    control: text
+    binds: FinanceBook.finance_book_name
+actions:
+  - label: Save
+    triggers: F-035
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Finance Book
+    note: declared by the program

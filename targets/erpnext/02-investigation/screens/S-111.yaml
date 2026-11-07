@@ -1,0 +1,77 @@
+id: S-111
+title: Automation Run
+purpose: create, view and edit Automation Run records
+kind: form
+layout: "sections: Timing, Steps, Snapshot; 15 fields"
+fields:
+  - label: Automation Flow
+    control: lookup
+    binds: AutomationRun.automation
+    validation: chosen among Automation Flow records
+  - label: Automation Flow Title
+    control: text
+    binds: AutomationRun.automation_title
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: AutomationRun.status
+  - label: Reference Document Type
+    control: lookup
+    binds: AutomationRun.reference_doctype
+    validation: chosen among DocType records
+  - label: Reference Name
+    control: lookup
+    binds: AutomationRun.reference_name
+  - label: Run As
+    control: lookup
+    binds: AutomationRun.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Recursion Depth
+    control: number
+    binds: AutomationRun.depth
+    validation: read only (computed or filled by the program)
+  - label: Trigger Queue Row
+    control: text
+    binds: AutomationRun.queue_row
+    validation: read only (computed or filled by the program)
+  - label: Started At
+    control: date
+    binds: AutomationRun.started_at
+    validation: read only (computed or filled by the program)
+  - label: Ended At
+    control: date
+    binds: AutomationRun.ended_at
+    validation: read only (computed or filled by the program)
+  - label: Error Summary
+    control: text
+    binds: AutomationRun.error_summary
+    validation: read only (computed or filled by the program)
+  - label: Steps
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Step
+      - Action Type
+      - Status
+      - Duration (ms)
+  - label: Actions Snapshot
+    control: other
+    binds: AutomationRun.actions_snapshot
+    validation: read only (computed or filled by the program)
+  - label: Relationships Snapshot
+    control: other
+    binds: AutomationRun.relationships
+    validation: read only (computed or filled by the program)
+  - label: Run State
+    control: other
+    binds: AutomationRun.run_state
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-112
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Automation Run
+    note: declared by the program

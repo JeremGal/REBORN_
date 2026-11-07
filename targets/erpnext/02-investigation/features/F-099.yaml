@@ -1,0 +1,58 @@
+id: F-099
+title: Create and edit a Asset Maintenance
+module: Assets
+priority: should
+status: partial
+confidence: medium
+user_goal: The upkeep tasks an asset needs, and who does them.
+entry_points:
+  - screen: S-098
+    action: open the form
+inputs:
+  - label: Asset Name
+    field: AssetMaintenance.asset_name
+    type: ref
+    required: true
+  - label: Company
+    field: AssetMaintenance.company
+    type: ref
+    required: true
+  - label: Maintenance Team
+    field: AssetMaintenance.maintenance_team
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Asset Maintenance form
+    screen: S-098
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Asset Name, Company, Maintenance Team"
+  - n: 3
+    actor: user
+    does: "adds lines in: Maintenance Tasks"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Asset Maintenance record stored
+    entities:
+      - AssetMaintenance
+entities:
+  - AssetMaintenance
+  - AssetMaintenanceTask
+screens:
+  - S-098
+acceptance:
+  - id: AC-100
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Asset Maintenance
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"asset-maintenance\")."

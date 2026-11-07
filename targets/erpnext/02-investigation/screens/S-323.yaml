@@ -1,0 +1,28 @@
+id: S-323
+title: Project Template
+purpose: create, view and edit Project Template records
+kind: form
+layout: 3 fields
+fields:
+  - label: Project Type
+    control: lookup
+    binds: ProjectTemplate.project_type
+    validation: chosen among Project Type records
+  - label: Disabled
+    control: checkbox
+    binds: ProjectTemplate.disabled
+  - label: Tasks
+    control: grid
+    required: true
+    columns:
+      - Task
+      - Subject
+actions:
+  - label: Save
+    triggers: F-324
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Project Template
+    note: declared by the program

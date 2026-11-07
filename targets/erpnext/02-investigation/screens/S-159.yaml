@@ -1,0 +1,45 @@
+id: S-159
+title: Language
+purpose: create, view and edit Language records
+kind: form
+layout: 9 fields
+fields:
+  - label: Enabled
+    control: checkbox
+    binds: Language.enabled
+  - label: Language Code
+    control: text
+    binds: Language.language_code
+    required: true
+  - label: Language Name
+    control: text
+    binds: Language.language_name
+    required: true
+  - label: Flag
+    control: text
+    binds: Language.flag
+  - label: Based On
+    control: lookup
+    binds: Language.based_on
+    validation: chosen among Language records
+  - label: Date Format
+    control: select
+    binds: Language.date_format
+  - label: Time Format
+    control: select
+    binds: Language.time_format
+  - label: Number Format
+    control: select
+    binds: Language.number_format
+  - label: First Day of the Week
+    control: select
+    binds: Language.first_day_of_the_week
+actions:
+  - label: Save
+    triggers: F-160
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Language
+    note: declared by the program

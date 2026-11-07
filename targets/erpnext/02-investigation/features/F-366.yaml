@@ -1,0 +1,72 @@
+id: F-366
+title: Create and edit a Employee
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Employee records.
+entry_points:
+  - screen: S-365
+    action: open the form
+inputs:
+  - label: First Name
+    field: Employee.first_name
+    type: string
+    required: true
+  - label: Gender
+    field: Employee.gender
+    type: ref
+    required: true
+  - label: Date of Birth
+    field: Employee.date_of_birth
+    type: date
+    required: true
+  - label: Date of Joining
+    field: Employee.date_of_joining
+    type: date
+    required: true
+  - label: Status
+    field: Employee.status
+    type: enum
+    required: true
+  - label: Company
+    field: Employee.company
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Employee form
+    screen: S-365
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: First Name, Gender, Date of Birth, Date of Joining, Status, Company"
+  - n: 3
+    actor: user
+    does: "adds lines in: Education, External Work History, Internal Work History"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Employee record stored
+    entities:
+      - Employee
+entities:
+  - Employee
+  - EmployeeEducation
+  - EmployeeExternalWorkHistory
+  - EmployeeInternalWorkHistory
+screens:
+  - S-365
+acceptance:
+  - id: AC-367
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Employee
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

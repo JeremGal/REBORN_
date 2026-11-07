@@ -1,0 +1,78 @@
+id: F-121
+title: Create, submit and cancel a Purchase Order
+module: Buying
+priority: must
+status: partial
+confidence: medium
+user_goal: An order you place with a supplier.
+entry_points:
+  - screen: S-120
+    action: open the form
+inputs:
+  - label: Series
+    field: PurchaseOrder.naming_series
+    type: enum
+    required: true
+  - label: Supplier
+    field: PurchaseOrder.supplier
+    type: ref
+    required: true
+  - label: Date
+    field: PurchaseOrder.transaction_date
+    type: date
+    required: true
+  - label: Company
+    field: PurchaseOrder.company
+    type: ref
+    required: true
+  - label: Currency
+    field: PurchaseOrder.currency
+    type: ref
+    required: true
+  - label: Exchange Rate
+    field: PurchaseOrder.conversion_rate
+    type: decimal
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Purchase Order form
+    screen: S-120
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Supplier, Date, Company, Currency, Exchange Rate"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items, Purchase Order Pricing Rule, Purchase Taxes and Charges, Item Wise Tax Details, Payment Schedule, Supplied Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Purchase Order record stored
+    entities:
+      - PurchaseOrder
+entities:
+  - PurchaseOrder
+  - PurchaseOrderItem
+  - PricingRuleDetail
+  - PurchaseTaxesAndCharges
+  - ItemWiseTaxDetail
+  - PaymentSchedule
+  - PurchaseOrderItemSupplied
+screens:
+  - S-120
+acceptance:
+  - id: AC-122
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Purchase Order
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"purchase-order\")."

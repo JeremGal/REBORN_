@@ -1,0 +1,110 @@
+id: S-019
+title: Bank Transaction
+purpose: create, view and edit Bank Transaction records
+kind: form
+layout: "sections: Payment From / To, Extended Bank Statement; 25 fields"
+fields:
+  - label: Series
+    control: select
+    binds: BankTransaction.naming_series
+    required: true
+  - label: Date
+    control: date
+    binds: BankTransaction.date
+  - label: Is Rule Evaluated
+    control: checkbox
+    binds: BankTransaction.is_rule_evaluated
+    validation: read only (computed or filled by the program)
+  - label: Matched Transaction Rule
+    control: lookup
+    binds: BankTransaction.matched_transaction_rule
+    validation: read only (computed or filled by the program); chosen among Bank Transaction Rule records
+  - label: Status
+    control: select
+    binds: BankTransaction.status
+  - label: Bank Account
+    control: lookup
+    binds: BankTransaction.bank_account
+    validation: chosen among Bank Account records
+  - label: Company
+    control: lookup
+    binds: BankTransaction.company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Amended From
+    control: lookup
+    binds: BankTransaction.amended_from
+    validation: read only (computed or filled by the program); chosen among Bank Transaction records
+  - label: Deposit
+    control: money
+    binds: BankTransaction.deposit
+  - label: Withdrawal
+    control: money
+    binds: BankTransaction.withdrawal
+  - label: Currency
+    control: lookup
+    binds: BankTransaction.currency
+    validation: chosen among Currency records
+  - label: Description
+    control: text
+    binds: BankTransaction.description
+  - label: Reference Number
+    control: text
+    binds: BankTransaction.reference_number
+  - label: Transaction ID
+    control: text
+    binds: BankTransaction.transaction_id
+    validation: read only (computed or filled by the program)
+  - label: Transaction Type
+    control: text
+    binds: BankTransaction.transaction_type
+  - label: Payment Entries
+    control: grid
+    columns:
+      - Payment Document
+      - Payment Entry
+      - Allocated Amount
+  - label: Allocated Amount
+    control: money
+    binds: BankTransaction.allocated_amount
+    validation: read only (computed or filled by the program)
+  - label: Unallocated Amount
+    control: money
+    binds: BankTransaction.unallocated_amount
+    validation: read only (computed or filled by the program)
+  - label: Party Type
+    control: lookup
+    binds: BankTransaction.party_type
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: BankTransaction.party
+  - label: Party Name/Account Holder (Bank Statement)
+    control: text
+    binds: BankTransaction.bank_party_name
+  - label: Party Account No. (Bank Statement)
+    control: text
+    binds: BankTransaction.bank_party_account_number
+  - label: Party IBAN (Bank Statement)
+    control: text
+    binds: BankTransaction.bank_party_iban
+  - label: Included Fee
+    control: money
+    binds: BankTransaction.included_fee
+  - label: Excluded Fee
+    control: money
+    binds: BankTransaction.excluded_fee
+actions:
+  - label: Save
+    triggers: F-020
+  - label: Submit
+    triggers: F-020
+  - label: Cancel
+    triggers: F-020
+  - label: Amend
+    triggers: F-020
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bank Transaction
+    note: declared by the program

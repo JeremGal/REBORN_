@@ -1,0 +1,49 @@
+id: S-276
+title: Google Calendar
+purpose: create, view and edit Google Calendar records
+kind: form
+layout: "sections: Google Calendar, Sync; 10 fields"
+fields:
+  - label: Enable
+    control: checkbox
+    binds: GoogleCalendar.enable
+  - label: Calendar Name
+    control: text
+    binds: GoogleCalendar.calendar_name
+    required: true
+  - label: User
+    control: lookup
+    binds: GoogleCalendar.user
+    required: true
+    validation: chosen among User records
+  - label: Pull from Google Calendar
+    control: checkbox
+    binds: GoogleCalendar.pull_from_google_calendar
+  - label: Sync events from Google as public
+    control: checkbox
+    binds: GoogleCalendar.sync_as_public
+  - label: Push to Google Calendar
+    control: checkbox
+    binds: GoogleCalendar.push_to_google_calendar
+  - label: Google Calendar ID
+    control: text
+    binds: GoogleCalendar.google_calendar_id
+    validation: read only (computed or filled by the program)
+  - label: Refresh Token
+    control: text
+    binds: GoogleCalendar.refresh_token
+  - label: Authorization Code
+    control: text
+    binds: GoogleCalendar.authorization_code
+  - label: Next Sync Token
+    control: text
+    binds: GoogleCalendar.next_sync_token
+actions:
+  - label: Save
+    triggers: F-277
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Google Calendar
+    note: declared by the program

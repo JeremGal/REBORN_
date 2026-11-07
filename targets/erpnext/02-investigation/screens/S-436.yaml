@@ -1,0 +1,79 @@
+id: S-436
+title: Call Log
+purpose: create, view and edit Call Log records
+kind: form
+layout: "sections: Call Details, Call Summary, Reference; 16 fields"
+fields:
+  - label: ID
+    control: text
+    binds: CallLog.id
+    validation: read only (computed or filled by the program)
+  - label: From
+    control: text
+    binds: CallLog.from
+    validation: read only (computed or filled by the program)
+  - label: To
+    control: text
+    binds: CallLog.to
+    validation: read only (computed or filled by the program)
+  - label: Call Received By
+    control: lookup
+    binds: CallLog.call_received_by
+    validation: read only (computed or filled by the program); shown only when to; chosen among Employee records
+  - label: Employee User Id
+    control: lookup
+    binds: CallLog.employee_user_id
+    validation: chosen among User records
+  - label: Medium
+    control: text
+    binds: CallLog.medium
+    validation: read only (computed or filled by the program)
+  - label: Start Time
+    control: date
+    binds: CallLog.start_time
+    validation: read only (computed or filled by the program)
+  - label: End Time
+    control: date
+    binds: CallLog.end_time
+    validation: read only (computed or filled by the program)
+  - label: Type
+    control: select
+    binds: CallLog.type
+    validation: read only (computed or filled by the program)
+  - label: Customer
+    control: lookup
+    binds: CallLog.customer
+    validation: read only (computed or filled by the program); chosen among Customer records
+  - label: Status
+    control: select
+    binds: CallLog.status
+    validation: read only (computed or filled by the program)
+  - label: Duration
+    control: number
+    binds: CallLog.duration
+    validation: read only (computed or filled by the program)
+  - label: Recording URL
+    control: text
+    binds: CallLog.recording_url
+  - label: Type Of Call
+    control: lookup
+    binds: CallLog.type_of_call
+    validation: chosen among Telephony Call Type records
+  - label: Summary
+    control: text
+    binds: CallLog.summary
+  - label: Links
+    control: grid
+    columns:
+      - Link Document Type
+      - Link Name
+      - Link Title
+actions:
+  - label: Save
+    triggers: F-437
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Call Log
+    note: declared by the program

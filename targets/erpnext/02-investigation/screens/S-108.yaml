@@ -1,0 +1,92 @@
+id: S-108
+title: Auto Repeat
+purpose: create, view and edit Auto Repeat records
+kind: form
+layout: "tabs: Schedule, Notification; 20 fields"
+fields:
+  - label: Reference Document Type
+    control: lookup
+    binds: AutoRepeat.reference_doctype
+    required: true
+    validation: chosen among DocType records
+  - label: Reference Document
+    control: lookup
+    binds: AutoRepeat.reference_document
+    required: true
+  - label: Submit on Creation
+    control: checkbox
+    binds: AutoRepeat.submit_on_creation
+  - label: Start Date
+    control: date
+    binds: AutoRepeat.start_date
+    required: true
+  - label: End Date
+    control: date
+    binds: AutoRepeat.end_date
+  - label: Disabled
+    control: checkbox
+    binds: AutoRepeat.disabled
+  - label: Frequency
+    control: select
+    binds: AutoRepeat.frequency
+    required: true
+  - label: Repeat on Day
+    control: number
+    binds: AutoRepeat.repeat_on_day
+    validation: 'shown only when eval: in_list(["Monthly", "Quarterly", "Half-yearly", "Yearly"], doc.frequency) '
+  - label: Repeat on Last Day of the Month
+    control: checkbox
+    binds: AutoRepeat.repeat_on_last_day
+    validation: shown only when eval:doc.frequency === 'Monthly'
+  - label: Next Schedule Date
+    control: date
+    binds: AutoRepeat.next_schedule_date
+    validation: read only (computed or filled by the program)
+  - label: Generate Separate Documents For Each Assignee
+    control: checkbox
+    binds: AutoRepeat.generate_separate_documents_for_each_assignee
+  - label: Assignee
+    control: grid
+    columns:
+      - User
+  - label: Repeat on Days
+    control: grid
+    validation: shown only when eval:doc.frequency==='Weekly';
+    columns:
+      - Day
+  - label: Notify by Email
+    control: checkbox
+    binds: AutoRepeat.notify_by_email
+  - label: Recipients
+    control: text
+    binds: AutoRepeat.recipients
+    validation: shown only when notify_by_email
+  - label: Template
+    control: lookup
+    binds: AutoRepeat.template
+    validation: "shown only when eval: doc.notify_by_email; chosen among Email Template records"
+  - label: Subject
+    control: text
+    binds: AutoRepeat.subject
+    validation: "shown only when eval: doc.notify_by_email"
+  - label: Message
+    control: text
+    binds: AutoRepeat.message
+    validation: "shown only when eval: doc.notify_by_email"
+  - label: Print Format
+    control: lookup
+    binds: AutoRepeat.print_format
+    validation: shown only when notify_by_email; chosen among Print Format records
+  - label: Status
+    control: select
+    binds: AutoRepeat.status
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-109
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Auto Repeat
+    note: declared by the program

@@ -1,0 +1,82 @@
+id: run-20261107T193754-h-EXP_004
+mission: M-003
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_004.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T19:37:14.900Z
+ended_at: 2026-11-07T19:37:54.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+    screenshot: step_01.png
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+    screenshot: step_02.png
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+    screenshot: step_03.png
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"buttons\": [\"Saisie rapide\", \"Enregistrer\"], \"page_title\": \"Nouveau(elle) Écriture de Journal - new-journal-entry-mtotjxdiwx\", \"field_labels\": [\"Société\", \"Séries\", \"Type d'Écriture\", \"Date de Comptabilisation\", \"Multi-devis\", \"No.\", \"Compte\", \"Type de Tiers\", \"Tiers\", \"Débit\", \"Crédit\", \"Aj"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Journal Entry
+        path: /app/journal-entry/new
+        kind: form
+      page_title: Nouveau(elle) Écriture de Journal - new-journal-entry-mtotjxdiwx
+      section_labels:
+        - Détails
+        - Plus d'info
+        - Écritures Comptables
+      field_labels:
+        - Société
+        - Séries
+        - Type d'Écriture
+        - Date de Comptabilisation
+        - Multi-devis
+        - No.
+        - Compte
+        - Type de Tiers
+        - Tiers
+        - Débit
+        - Crédit
+        - Ajouter une ligne
+        - Total Débit
+        - Total Crédit
+        - Numéro de référence
+        - Date de référence
+      buttons:
+        - Saisie rapide
+        - Enregistrer
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/eeca094a-9ea0-4cd3-84da-43a0f64db1b9 attempts: 1"

@@ -1,0 +1,58 @@
+id: F-270
+title: Create and edit a Notification
+module: Email
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Notification records.
+entry_points:
+  - screen: S-269
+    action: open the form
+inputs:
+  - label: Channel
+    field: Notification.channel
+    type: enum
+    required: true
+  - label: Send Alert On
+    field: Notification.event
+    type: enum
+    required: true
+  - label: Document Type
+    field: Notification.document_type
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Notification form
+    screen: S-269
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Channel, Send Alert On, Document Type"
+  - n: 3
+    actor: user
+    does: "adds lines in: Recipients"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Notification record stored
+    entities:
+      - Notification
+entities:
+  - Notification
+  - NotificationRecipient
+screens:
+  - S-269
+acceptance:
+  - id: AC-271
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Notification
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

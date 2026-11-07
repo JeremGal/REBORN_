@@ -1,0 +1,24 @@
+id: S-162
+title: Module Profile
+purpose: create, view and edit Module Profile records
+kind: form
+layout: 2 fields
+fields:
+  - label: Module Profile Name
+    control: text
+    binds: ModuleProfile.module_profile_name
+    required: true
+  - label: Block Modules
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Module
+actions:
+  - label: Save
+    triggers: F-163
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Module Profile
+    note: declared by the program

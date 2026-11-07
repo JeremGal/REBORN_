@@ -1,0 +1,172 @@
+id: S-072
+title: Process Statement Of Accounts
+purpose: create, view and edit Process Statement Of Accounts records
+kind: form
+layout: "sections: Report Filters, Customers, Print Preferences, Email Settings; 42 fields"
+fields:
+  - label: Report
+    control: select
+    binds: ProcessStatementOfAccounts.report
+    required: true
+  - label: From Date
+    control: date
+    binds: ProcessStatementOfAccounts.from_date
+    validation: shown only when eval:(!doc.enable_auto_email && doc.report == 'General Ledger');
+  - label: Posting Date
+    control: date
+    binds: ProcessStatementOfAccounts.posting_date
+    validation: shown only when eval:(doc.report == 'Accounts Receivable');
+  - label: Company
+    control: lookup
+    binds: ProcessStatementOfAccounts.company
+    required: true
+    validation: chosen among Company records
+  - label: Account
+    control: lookup
+    binds: ProcessStatementOfAccounts.account
+    validation: chosen among Account records
+  - label: Categorize By
+    control: select
+    binds: ProcessStatementOfAccounts.categorize_by
+    validation: shown only when eval:(doc.report == 'General Ledger');
+  - label: Cost Center
+    control: grid
+    columns:
+      - Cost Center
+  - label: Territory
+    control: lookup
+    binds: ProcessStatementOfAccounts.territory
+    validation: "shown only when eval: (doc.report == 'Accounts Receivable');; chosen among Territory records"
+  - label: Show Opening Entries
+    control: checkbox
+    binds: ProcessStatementOfAccounts.show_opening_entries
+    validation: shown only when eval:(doc.report == 'General Ledger');
+  - label: Ignore Exchange Rate Revaluation and Gain / Loss Journals
+    control: checkbox
+    binds: ProcessStatementOfAccounts.ignore_exchange_rate_revaluation_journals
+  - label: Ignore System Generated Credit / Debit Notes
+    control: checkbox
+    binds: ProcessStatementOfAccounts.ignore_cr_dr_notes
+  - label: To Date
+    control: date
+    binds: ProcessStatementOfAccounts.to_date
+    validation: shown only when eval:(!doc.enable_auto_email && doc.report == 'General Ledger');
+  - label: Finance Book
+    control: lookup
+    binds: ProcessStatementOfAccounts.finance_book
+    validation: chosen among Finance Book records
+  - label: Currency
+    control: lookup
+    binds: ProcessStatementOfAccounts.currency
+    validation: "shown only when eval: (doc.report == 'General Ledger');; chosen among Currency records"
+  - label: Project
+    control: grid
+    validation: "shown only when eval: (doc.report == 'General Ledger');"
+    columns: []
+  - label: Payment Terms Template
+    control: lookup
+    binds: ProcessStatementOfAccounts.payment_terms_template
+    validation: "shown only when eval: (doc.report == 'Accounts Receivable');; chosen among Payment Terms Template records"
+  - label: Sales Partner
+    control: lookup
+    binds: ProcessStatementOfAccounts.sales_partner
+    validation: "shown only when eval: (doc.report == 'Accounts Receivable');; chosen among Sales Partner records"
+  - label: Sales Person
+    control: lookup
+    binds: ProcessStatementOfAccounts.sales_person
+    validation: "shown only when eval: (doc.report == 'Accounts Receivable');; chosen among Sales Person records"
+  - label: Show Remarks
+    control: checkbox
+    binds: ProcessStatementOfAccounts.show_remarks
+  - label: Based On Payment Terms
+    control: checkbox
+    binds: ProcessStatementOfAccounts.based_on_payment_terms
+    validation: shown only when eval:(doc.report == 'Accounts Receivable');
+  - label: Show Future Payments
+    control: checkbox
+    binds: ProcessStatementOfAccounts.show_future_payments
+    validation: shown only when eval:(doc.report == 'Accounts Receivable');
+  - label: Select Customers By
+    control: select
+    binds: ProcessStatementOfAccounts.customer_collection
+  - label: Recipient
+    control: lookup
+    binds: ProcessStatementOfAccounts.collection_name
+    validation: "shown only when eval: doc.customer_collection !== ''"
+  - label: Send To Primary Contact
+    control: checkbox
+    binds: ProcessStatementOfAccounts.primary_mandatory
+  - label: Show Net Values in Party Account
+    control: checkbox
+    binds: ProcessStatementOfAccounts.show_net_values_in_party_account
+    validation: "shown only when eval: (doc.report == 'General Ledger');"
+  - label: Customers
+    control: grid
+    required: true
+    columns:
+      - Customer
+      - Billing Email
+      - Primary Contact Email
+  - label: Print Format
+    control: lookup
+    binds: ProcessStatementOfAccounts.print_format
+    validation: chosen among Print Format records
+  - label: Orientation
+    control: select
+    binds: ProcessStatementOfAccounts.orientation
+  - label: Page Break After Each SoA
+    control: checkbox
+    binds: ProcessStatementOfAccounts.include_break
+  - label: Include Ageing Summary
+    control: checkbox
+    binds: ProcessStatementOfAccounts.include_ageing
+  - label: Ageing Based On
+    control: select
+    binds: ProcessStatementOfAccounts.ageing_based_on
+    validation: shown only when eval:doc.include_ageing === 1
+  - label: Letter Head
+    control: lookup
+    binds: ProcessStatementOfAccounts.letter_head
+    validation: chosen among Letter Head records
+  - label: Terms and Conditions
+    control: lookup
+    binds: ProcessStatementOfAccounts.terms_and_conditions
+    validation: chosen among Terms and Conditions records
+  - label: Enable Auto Email
+    control: checkbox
+    binds: ProcessStatementOfAccounts.enable_auto_email
+  - label: Sender
+    control: lookup
+    binds: ProcessStatementOfAccounts.sender
+    validation: chosen among Email Account records
+  - label: Frequency
+    control: select
+    binds: ProcessStatementOfAccounts.frequency
+  - label: Filter Duration (Months)
+    control: number
+    binds: ProcessStatementOfAccounts.filter_duration
+  - label: Start Date
+    control: date
+    binds: ProcessStatementOfAccounts.start_date
+  - label: PDF Name
+    control: text
+    binds: ProcessStatementOfAccounts.pdf_name
+  - label: Subject
+    control: text
+    binds: ProcessStatementOfAccounts.subject
+  - label: CC To
+    control: grid
+    columns:
+      - CC
+  - label: Body
+    control: text
+    binds: ProcessStatementOfAccounts.body
+actions:
+  - label: Save
+    triggers: F-073
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Process Statement Of Accounts
+    note: declared by the program

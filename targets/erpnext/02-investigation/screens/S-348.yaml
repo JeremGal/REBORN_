@@ -1,0 +1,104 @@
+id: S-348
+title: Proforma Invoice
+purpose: create, view and edit Proforma Invoice records
+kind: form
+layout: "sections: Details, Items, Print Settings, Status; 19 fields"
+fields:
+  - label: Series
+    control: select
+    binds: ProformaInvoice.naming_series
+    required: true
+  - label: Sales Order
+    control: lookup
+    binds: ProformaInvoice.sales_order
+    required: true
+    validation: read only (computed or filled by the program); chosen among Sales Order records
+  - label: Customer
+    control: lookup
+    binds: ProformaInvoice.customer
+    validation: read only (computed or filled by the program); chosen among Customer records
+  - label: Customer Name
+    control: text
+    binds: ProformaInvoice.customer_name
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: ProformaInvoice.company
+    required: true
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Date
+    control: date
+    binds: ProformaInvoice.proforma_date
+    required: true
+  - label: Currency
+    control: lookup
+    binds: ProformaInvoice.currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Based On
+    control: select
+    binds: ProformaInvoice.based_on
+    validation: read only (computed or filled by the program)
+  - label: Hide Item Quantity in Print
+    control: checkbox
+    binds: ProformaInvoice.hide_item_qty
+    validation: read only (computed or filled by the program); shown only when eval:doc.based_on=="Amount"
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Item Name
+      - Quantity
+      - Rate
+      - Amount
+  - label: Total Quantity
+    control: number
+    binds: ProformaInvoice.total_qty
+    validation: read only (computed or filled by the program)
+  - label: Grand Total
+    control: money
+    binds: ProformaInvoice.grand_total
+    validation: read only (computed or filled by the program)
+  - label: Print Format
+    control: lookup
+    binds: ProformaInvoice.print_format
+    validation: read only (computed or filled by the program); chosen among Print Format records
+  - label: Letter Head
+    control: lookup
+    binds: ProformaInvoice.letter_head
+    validation: read only (computed or filled by the program); chosen among Letter Head records
+  - label: Proforma PDF
+    control: other
+    binds: ProformaInvoice.proforma_pdf
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: ProformaInvoice.status
+    validation: read only (computed or filled by the program)
+  - label: Sent On
+    control: date
+    binds: ProformaInvoice.sent_on
+    validation: read only (computed or filled by the program)
+  - label: Emailed To
+    control: text
+    binds: ProformaInvoice.emailed_to
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: ProformaInvoice.amended_from
+    validation: read only (computed or filled by the program); chosen among Proforma Invoice records
+actions:
+  - label: Save
+    triggers: F-349
+  - label: Submit
+    triggers: F-349
+  - label: Cancel
+    triggers: F-349
+  - label: Amend
+    triggers: F-349
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Proforma Invoice
+    note: declared by the program

@@ -1,0 +1,51 @@
+id: S-291
+title: Webhook Request Log
+purpose: create, view and edit Webhook Request Log records
+kind: form
+layout: 9 fields
+fields:
+  - label: Webhook
+    control: lookup
+    binds: WebhookRequestLog.webhook
+    validation: chosen among Webhook records
+  - label: Reference Doctype
+    control: text
+    binds: WebhookRequestLog.reference_doctype
+    validation: read only (computed or filled by the program)
+  - label: Reference Document
+    control: text
+    binds: WebhookRequestLog.reference_document
+    validation: read only (computed or filled by the program)
+  - label: Headers
+    control: text
+    binds: WebhookRequestLog.headers
+    validation: read only (computed or filled by the program)
+  - label: Data
+    control: text
+    binds: WebhookRequestLog.data
+    validation: read only (computed or filled by the program)
+  - label: User
+    control: lookup
+    binds: WebhookRequestLog.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: URL
+    control: text
+    binds: WebhookRequestLog.url
+    validation: read only (computed or filled by the program)
+  - label: Response
+    control: text
+    binds: WebhookRequestLog.response
+    validation: read only (computed or filled by the program)
+  - label: Error
+    control: text
+    binds: WebhookRequestLog.error
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-292
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Webhook Request Log
+    note: declared by the program

@@ -1,0 +1,18 @@
+id: S-133
+title: Gender
+purpose: create, view and edit Gender records
+kind: form
+layout: 1 fields
+fields:
+  - label: Gender
+    control: text
+    binds: Gender.gender
+actions:
+  - label: Save
+    triggers: F-134
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Gender
+    note: declared by the program

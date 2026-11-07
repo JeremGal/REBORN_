@@ -1,0 +1,56 @@
+id: S-289
+title: Token Cache
+purpose: create, view and edit Token Cache records
+kind: form
+layout: 10 fields
+fields:
+  - label: User
+    control: lookup
+    binds: TokenCache.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Connected App
+    control: lookup
+    binds: TokenCache.connected_app
+    validation: read only (computed or filled by the program); chosen among Connected App records
+  - label: Provider Name
+    control: text
+    binds: TokenCache.provider_name
+    validation: read only (computed or filled by the program)
+  - label: Access Token
+    control: text
+    binds: TokenCache.access_token
+    validation: read only (computed or filled by the program)
+  - label: Refresh Token
+    control: text
+    binds: TokenCache.refresh_token
+    validation: read only (computed or filled by the program)
+  - label: Expires In
+    control: number
+    binds: TokenCache.expires_in
+    validation: read only (computed or filled by the program)
+  - label: State
+    control: text
+    binds: TokenCache.state
+    validation: read only (computed or filled by the program)
+  - label: Scopes
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Scope
+  - label: Success URI
+    control: text
+    binds: TokenCache.success_uri
+    validation: read only (computed or filled by the program)
+  - label: Token Type
+    control: text
+    binds: TokenCache.token_type
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-290
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Token Cache
+    note: declared by the program

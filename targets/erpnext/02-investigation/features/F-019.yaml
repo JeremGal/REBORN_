@@ -1,0 +1,54 @@
+id: F-019
+title: Create and edit a Bank Statement Import Log
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Bank Statement Import Log records.
+entry_points:
+  - screen: S-018
+    action: open the form
+inputs:
+  - label: Bank Account
+    field: BankStatementImportLog.bank_account
+    type: ref
+    required: true
+  - label: File
+    field: BankStatementImportLog.file
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Bank Statement Import Log form
+    screen: S-018
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Bank Account, File"
+  - n: 3
+    actor: user
+    does: "adds lines in: Column Mapping"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Bank Statement Import Log record stored
+    entities:
+      - BankStatementImportLog
+entities:
+  - BankStatementImportLog
+  - BankStatementImportLogColumnMap
+screens:
+  - S-018
+acceptance:
+  - id: AC-020
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Bank Statement Import Log
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

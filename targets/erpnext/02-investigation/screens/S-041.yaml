@@ -1,0 +1,44 @@
+id: S-041
+title: Journal Entry Template
+purpose: create, view and edit Journal Entry Template records
+kind: form
+layout: 7 fields
+fields:
+  - label: Template Title
+    control: text
+    binds: JournalEntryTemplate.template_title
+    required: true
+  - label: Journal Entry Type
+    control: select
+    binds: JournalEntryTemplate.voucher_type
+    required: true
+  - label: Series
+    control: select
+    binds: JournalEntryTemplate.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: JournalEntryTemplate.company
+    required: true
+    validation: chosen among Company records
+  - label: Is Opening
+    control: select
+    binds: JournalEntryTemplate.is_opening
+  - label: Multi Currency
+    control: checkbox
+    binds: JournalEntryTemplate.multi_currency
+  - label: Accounting Entries
+    control: grid
+    columns:
+      - Account
+      - Party Type
+      - Party
+actions:
+  - label: Save
+    triggers: F-042
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Journal Entry Template
+    note: declared by the program

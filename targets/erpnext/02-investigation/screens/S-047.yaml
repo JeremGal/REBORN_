@@ -1,0 +1,30 @@
+id: S-047
+title: Mode of Payment
+purpose: create, view and edit Mode of Payment records
+kind: form
+layout: 4 fields
+fields:
+  - label: Mode of Payment
+    control: text
+    binds: ModeOfPayment.mode_of_payment
+    required: true
+  - label: Enabled
+    control: checkbox
+    binds: ModeOfPayment.enabled
+  - label: Type
+    control: select
+    binds: ModeOfPayment.type
+  - label: Accounts
+    control: grid
+    columns:
+      - Company
+      - Default Account
+actions:
+  - label: Save
+    triggers: F-048
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Mode of Payment
+    note: declared by the program

@@ -1,0 +1,58 @@
+id: F-333
+title: Create and edit a Quality Feedback
+module: Quality Management
+priority: could
+status: partial
+confidence: medium
+user_goal: Feedback on your quality from a customer or employee.
+entry_points:
+  - screen: S-332
+    action: open the form
+inputs:
+  - label: Template
+    field: QualityFeedback.template
+    type: ref
+    required: true
+  - label: Type
+    field: QualityFeedback.document_type
+    type: enum
+    required: true
+  - label: Feedback By
+    field: QualityFeedback.document_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Quality Feedback form
+    screen: S-332
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Template, Type, Feedback By"
+  - n: 3
+    actor: user
+    does: "adds lines in: Parameters"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Quality Feedback record stored
+    entities:
+      - QualityFeedback
+entities:
+  - QualityFeedback
+  - QualityFeedbackParameter
+screens:
+  - S-332
+acceptance:
+  - id: AC-334
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Quality Feedback
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"quality-feedback\")."

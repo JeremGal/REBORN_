@@ -1,0 +1,33 @@
+id: S-214
+title: Client Script
+purpose: create, view and edit Client Script records
+kind: form
+layout: 5 fields
+fields:
+  - label: DocType
+    control: lookup
+    binds: ClientScript.dt
+    required: true
+    validation: chosen among DocType records
+  - label: Apply To
+    control: select
+    binds: ClientScript.view
+  - label: Module (for export)
+    control: lookup
+    binds: ClientScript.module
+    validation: chosen among Module Def records
+  - label: Enabled
+    control: checkbox
+    binds: ClientScript.enabled
+  - label: Script
+    control: text
+    binds: ClientScript.script
+actions:
+  - label: Save
+    triggers: F-215
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Client Script
+    note: declared by the program

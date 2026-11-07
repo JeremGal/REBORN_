@@ -1,0 +1,147 @@
+id: S-327
+title: Task
+purpose: create, view and edit Task records
+kind: form
+layout: "tabs: Dependencies, More Info; sections: Timeline, Details, Costing, Additional Info; 36 fields"
+fields:
+  - label: Subject
+    control: text
+    binds: Task.subject
+    required: true
+  - label: Project
+    control: lookup
+    binds: Task.project
+    validation: chosen among Project records
+  - label: Issue
+    control: lookup
+    binds: Task.issue
+    validation: chosen among Issue records
+  - label: Type
+    control: lookup
+    binds: Task.type
+    validation: chosen among Task Type records
+  - label: Color
+    control: other
+    binds: Task.color
+  - label: Is Group
+    control: checkbox
+    binds: Task.is_group
+  - label: Status
+    control: select
+    binds: Task.status
+  - label: Priority
+    control: select
+    binds: Task.priority
+  - label: Weight
+    control: number
+    binds: Task.task_weight
+  - label: Parent Task
+    control: lookup
+    binds: Task.parent_task
+    validation: chosen among Task records
+  - label: Completed By
+    control: lookup
+    binds: Task.completed_by
+    validation: 'shown only when eval: doc.status == "Completed"; chosen among User records'
+  - label: Completed On
+    control: date
+    binds: Task.completed_on
+    validation: 'shown only when eval: doc.status == "Completed"'
+  - label: Is Template
+    control: checkbox
+    binds: Task.is_template
+  - label: Begin On (Days)
+    control: number
+    binds: Task.start
+    validation: shown only when is_template
+  - label: Duration (Days)
+    control: number
+    binds: Task.duration
+    validation: shown only when is_template
+  - label: Expected Start Date
+    control: date
+    binds: Task.exp_start_date
+  - label: Expected Time (in hours)
+    control: number
+    binds: Task.expected_time
+  - label: Expected End Date
+    control: date
+    binds: Task.exp_end_date
+  - label: "% Progress"
+    control: number
+    binds: Task.progress
+  - label: Is Milestone
+    control: checkbox
+    binds: Task.is_milestone
+  - label: Task Description
+    control: text
+    binds: Task.description
+  - label: Dependent Tasks
+    control: grid
+    columns:
+      - Task
+      - Subject
+  - label: Depends on Tasks
+    control: text
+    binds: Task.depends_on_tasks
+    validation: read only (computed or filled by the program)
+  - label: Actual Start Date (via Timesheet)
+    control: date
+    binds: Task.act_start_date
+    validation: read only (computed or filled by the program)
+  - label: Actual Time in Hours (via Timesheet)
+    control: number
+    binds: Task.actual_time
+    validation: read only (computed or filled by the program)
+  - label: Actual End Date (via Timesheet)
+    control: date
+    binds: Task.act_end_date
+    validation: read only (computed or filled by the program)
+  - label: Total Costing Amount (via Timesheet)
+    control: money
+    binds: Task.total_costing_amount
+    validation: read only (computed or filled by the program)
+  - label: Total Billable Amount (via Timesheet)
+    control: money
+    binds: Task.total_billing_amount
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: Task.company
+    validation: chosen among Company records
+  - label: Review Date
+    control: date
+    binds: Task.review_date
+    validation: shown only when eval:doc.status == "Completed" || doc.status == "Pending Review"
+  - label: Closing Date
+    control: date
+    binds: Task.closing_date
+    validation: shown only when eval:doc.status == "Completed"
+  - label: Department
+    control: lookup
+    binds: Task.department
+    validation: chosen among Department records
+  - label: lft
+    control: number
+    binds: Task.lft
+    validation: read only (computed or filled by the program)
+  - label: rgt
+    control: number
+    binds: Task.rgt
+    validation: read only (computed or filled by the program)
+  - label: Old Parent
+    control: text
+    binds: Task.old_parent
+    validation: read only (computed or filled by the program)
+  - label: Template Task
+    control: text
+    binds: Task.template_task
+actions:
+  - label: Save
+    triggers: F-328
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Task
+    note: declared by the program

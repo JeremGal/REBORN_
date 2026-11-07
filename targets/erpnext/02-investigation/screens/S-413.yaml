@@ -1,0 +1,35 @@
+id: S-413
+title: Shipment Parcel Template
+purpose: create, view and edit Shipment Parcel Template records
+kind: form
+layout: 5 fields
+fields:
+  - label: Parcel Template Name
+    control: text
+    binds: ShipmentParcelTemplate.parcel_template_name
+    required: true
+  - label: Length (cm)
+    control: number
+    binds: ShipmentParcelTemplate.length
+    required: true
+  - label: Width (cm)
+    control: number
+    binds: ShipmentParcelTemplate.width
+    required: true
+  - label: Height (cm)
+    control: number
+    binds: ShipmentParcelTemplate.height
+    required: true
+  - label: Weight (kg)
+    control: number
+    binds: ShipmentParcelTemplate.weight
+    required: true
+actions:
+  - label: Save
+    triggers: F-414
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Shipment Parcel Template
+    note: declared by the program

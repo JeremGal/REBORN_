@@ -1,0 +1,47 @@
+id: S-083
+title: Shareholder
+purpose: create, view and edit Shareholder records
+kind: form
+layout: "sections: Address and Contacts, Share Balance; 7 fields"
+fields:
+  - label: Title
+    control: text
+    binds: Shareholder.title
+    required: true
+  - label: naming_series
+    control: select
+    binds: Shareholder.naming_series
+  - label: Folio no.
+    control: text
+    binds: Shareholder.folio_no
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: Shareholder.company
+    required: true
+    validation: chosen among Company records
+  - label: Is Company
+    control: checkbox
+    binds: Shareholder.is_company
+    validation: read only (computed or filled by the program)
+  - label: Share Balance
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Share Type
+      - Rate
+      - No of Shares
+      - Amount
+  - label: Contact List
+    control: text
+    binds: Shareholder.contact_list
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-084
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Shareholder
+    note: declared by the program

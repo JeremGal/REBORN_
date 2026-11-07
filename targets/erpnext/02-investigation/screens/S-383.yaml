@@ -1,0 +1,81 @@
+id: S-383
+title: Bin
+purpose: create, view and edit Bin records
+kind: form
+layout: "sections: Item and Warehouse, Available / Future Inventory, Reserved Inventory; 16 fields"
+fields:
+  - label: Item Code
+    control: lookup
+    binds: Bin.item_code
+    required: true
+    validation: read only (computed or filled by the program); chosen among Item records
+  - label: Warehouse
+    control: lookup
+    binds: Bin.warehouse
+    required: true
+    validation: read only (computed or filled by the program); chosen among Warehouse records
+  - label: Actual Qty
+    control: number
+    binds: Bin.actual_qty
+    validation: read only (computed or filled by the program)
+  - label: Planned Qty
+    control: number
+    binds: Bin.planned_qty
+    validation: read only (computed or filled by the program)
+  - label: Requested Qty
+    control: number
+    binds: Bin.indented_qty
+    validation: read only (computed or filled by the program)
+  - label: Ordered Qty
+    control: number
+    binds: Bin.ordered_qty
+    validation: read only (computed or filled by the program)
+  - label: Reserved Qty
+    control: number
+    binds: Bin.reserved_qty
+    validation: read only (computed or filled by the program)
+  - label: Reserved Qty for Production
+    control: number
+    binds: Bin.reserved_qty_for_production
+    validation: read only (computed or filled by the program)
+  - label: Reserved Qty for Subcontract
+    control: number
+    binds: Bin.reserved_qty_for_sub_contract
+    validation: read only (computed or filled by the program)
+  - label: Reserved Qty for Production Plan
+    control: number
+    binds: Bin.reserved_qty_for_production_plan
+    validation: read only (computed or filled by the program)
+  - label: Projected Qty
+    control: number
+    binds: Bin.projected_qty
+    validation: read only (computed or filled by the program)
+  - label: Reserved Stock
+    control: number
+    binds: Bin.reserved_stock
+    validation: read only (computed or filled by the program)
+  - label: UOM
+    control: lookup
+    binds: Bin.stock_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Company
+    control: lookup
+    binds: Bin.company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Valuation Rate
+    control: number
+    binds: Bin.valuation_rate
+    validation: read only (computed or filled by the program)
+  - label: Stock Value
+    control: number
+    binds: Bin.stock_value
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-384
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bin
+    note: declared by the program

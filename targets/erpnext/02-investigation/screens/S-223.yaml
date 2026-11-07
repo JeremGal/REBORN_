@@ -1,0 +1,39 @@
+id: S-223
+title: Custom Sidebar
+purpose: create, view and edit Custom Sidebar records
+kind: form
+layout: "sections: Sidebar Items; 5 fields"
+fields:
+  - label: Module
+    control: lookup
+    binds: CustomSidebar.module
+    required: true
+    validation: chosen among Module Def records
+  - label: User
+    control: lookup
+    binds: CustomSidebar.user
+    validation: chosen among User records
+  - label: Label
+    control: text
+    binds: CustomSidebar.label
+  - label: Header Icon
+    control: other
+    binds: CustomSidebar.header_icon
+  - label: Sidebar Items
+    control: grid
+    columns:
+      - Label
+      - Link Type
+      - Icon
+      - Type
+      - Link To
+      - Child Item
+actions:
+  - label: Save
+    triggers: F-224
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Custom Sidebar
+    note: declared by the program

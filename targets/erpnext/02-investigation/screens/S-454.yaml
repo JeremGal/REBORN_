@@ -1,0 +1,21 @@
+id: S-454
+title: UTM Medium
+purpose: create, view and edit UTM Medium records
+kind: form
+layout: 2 fields
+fields:
+  - label: Slug
+    control: text
+    binds: UTMMedium.slug
+  - label: Description
+    control: text
+    binds: UTMMedium.description
+actions:
+  - label: Save
+    triggers: F-455
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of UTM Medium
+    note: declared by the program

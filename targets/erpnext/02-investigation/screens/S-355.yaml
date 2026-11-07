@@ -1,0 +1,61 @@
+id: S-355
+title: Authorization Rule
+purpose: create, view and edit Authorization Rule records
+kind: form
+layout: 12 fields
+fields:
+  - label: Transaction
+    control: select
+    binds: AuthorizationRule.transaction
+    required: true
+  - label: Based On
+    control: select
+    binds: AuthorizationRule.based_on
+    required: true
+  - label: Customer or Item
+    control: select
+    binds: AuthorizationRule.customer_or_item
+    validation: read only (computed or filled by the program)
+  - label: Customer / Item / Item Group
+    control: lookup
+    binds: AuthorizationRule.master_name
+  - label: Company
+    control: lookup
+    binds: AuthorizationRule.company
+    validation: chosen among Company records
+  - label: Authorized Value
+    control: number
+    binds: AuthorizationRule.value
+  - label: Applicable To (Role)
+    control: lookup
+    binds: AuthorizationRule.system_role
+    validation: chosen among Role records
+  - label: Applicable To (Employee)
+    control: lookup
+    binds: AuthorizationRule.to_emp
+    validation: chosen among Employee records
+  - label: Applicable To (User)
+    control: lookup
+    binds: AuthorizationRule.system_user
+    validation: chosen among User records
+  - label: Applicable To (Designation)
+    control: lookup
+    binds: AuthorizationRule.to_designation
+    validation: chosen among Designation records
+  - label: Approving Role (above authorized value)
+    control: lookup
+    binds: AuthorizationRule.approving_role
+    validation: chosen among Role records
+  - label: Approving User  (above authorized value)
+    control: lookup
+    binds: AuthorizationRule.approving_user
+    validation: chosen among User records
+actions:
+  - label: Save
+    triggers: F-356
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Authorization Rule
+    note: declared by the program

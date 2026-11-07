@@ -1,0 +1,61 @@
+id: S-373
+title: Sales Partner
+purpose: create, view and edit Sales Partner records
+kind: form
+layout: "sections: Address & Contacts, Sales Partner Target, Website; 12 fields"
+fields:
+  - label: Sales Partner Name
+    control: text
+    binds: SalesPartner.partner_name
+    required: true
+  - label: Partner Type
+    control: lookup
+    binds: SalesPartner.partner_type
+    validation: chosen among Sales Partner Type records
+  - label: Territory
+    control: lookup
+    binds: SalesPartner.territory
+    required: true
+    validation: chosen among Territory records
+  - label: Commission Rate
+    control: number
+    binds: SalesPartner.commission_rate
+    required: true
+  - label: Targets
+    control: grid
+    columns:
+      - Item Group
+      - Fiscal Year
+      - Target Qty
+      - Target  Amount
+      - Target Distribution
+  - label: Show In Website
+    control: checkbox
+    binds: SalesPartner.show_in_website
+  - label: Referral Code
+    control: text
+    binds: SalesPartner.referral_code
+  - label: Route
+    control: text
+    binds: SalesPartner.route
+  - label: Logo
+    control: other
+    binds: SalesPartner.logo
+  - label: Partner website
+    control: text
+    binds: SalesPartner.partner_website
+  - label: Introduction
+    control: text
+    binds: SalesPartner.introduction
+  - label: Description
+    control: text
+    binds: SalesPartner.description
+actions:
+  - label: Save
+    triggers: F-374
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Sales Partner
+    note: declared by the program

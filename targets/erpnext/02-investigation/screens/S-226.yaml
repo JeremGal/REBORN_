@@ -1,0 +1,148 @@
+id: S-226
+title: Dashboard Chart
+purpose: create, view and edit Dashboard Chart records
+kind: form
+layout: "sections: Filters, Dynamic Filters, Chart Options; 34 fields"
+fields:
+  - label: Is Standard
+    control: checkbox
+    binds: DashboardChart.is_standard
+  - label: Module
+    control: lookup
+    binds: DashboardChart.module
+    validation: "shown only when eval: doc.is_standard; chosen among Module Def records"
+  - label: Chart Name
+    control: text
+    binds: DashboardChart.chart_name
+    required: true
+  - label: Chart Type
+    control: select
+    binds: DashboardChart.chart_type
+  - label: Report Name
+    control: lookup
+    binds: DashboardChart.report_name
+    validation: shown only when eval:doc.chart_type === 'Report'; chosen among Report records
+  - label: Use Report Chart
+    control: checkbox
+    binds: DashboardChart.use_report_chart
+    validation: "shown only when eval: doc.report_name"
+  - label: X Field
+    control: select
+    binds: DashboardChart.x_field
+    validation: shown only when eval:doc.chart_type == 'Report' && doc.report_name && !doc.use_report_chart
+  - label: Y Axis
+    control: grid
+    validation: shown only when eval:doc.chart_type == 'Report' && doc.report_name && !doc.use_report_chart
+    columns:
+      - Y Field
+      - Color
+  - label: Chart Source
+    control: lookup
+    binds: DashboardChart.source
+    validation: shown only when eval:doc.chart_type === 'Custom'; chosen among Dashboard Chart Source records
+  - label: Document Type
+    control: lookup
+    binds: DashboardChart.document_type
+    validation: "shown only when eval: doc.chart_type !== 'Custom' && doc.chart_type !== 'Report'; chosen among DocType records"
+  - label: Parent Document Type
+    control: lookup
+    binds: DashboardChart.parent_document_type
+    validation: "shown only when eval: doc.chart_type !== 'Custom' && doc.chart_type !== 'Report'; chosen among DocType records"
+  - label: Time Series Based On
+    control: select
+    binds: DashboardChart.based_on
+    validation: "shown only when eval: ['Count', 'Sum', 'Average'].includes(doc.chart_type)"
+  - label: Value Based On
+    control: select
+    binds: DashboardChart.value_based_on
+    validation: |
+      shown only when eval: ['Sum', 'Average'].includes(doc.chart_type)
+  - label: Group By Type
+    control: select
+    binds: DashboardChart.group_by_type
+    validation: shown only when eval:doc.chart_type === 'Group By'
+  - label: Group By Based On
+    control: select
+    binds: DashboardChart.group_by_based_on
+    validation: shown only when eval:doc.chart_type === 'Group By'
+  - label: Aggregate Function Based On
+    control: select
+    binds: DashboardChart.aggregate_function_based_on
+    validation: "shown only when eval: ['Sum', 'Average'].includes(doc.group_by_type)"
+  - label: Number of Groups
+    control: number
+    binds: DashboardChart.number_of_groups
+    validation: shown only when eval:doc.chart_type === 'Group By'
+  - label: Is Public
+    control: checkbox
+    binds: DashboardChart.is_public
+  - label: Year
+    control: select
+    binds: DashboardChart.heatmap_year
+    validation: "shown only when eval: doc.type == 'Heatmap'"
+  - label: Timespan
+    control: select
+    binds: DashboardChart.timespan
+    validation: "shown only when eval: doc.timeseries && doc.type !== 'Heatmap'"
+  - label: From Date
+    control: date
+    binds: DashboardChart.from_date
+    validation: shown only when eval:doc.timespan === 'Select Date Range'
+  - label: To Date
+    control: date
+    binds: DashboardChart.to_date
+    validation: shown only when eval:doc.timespan === 'Select Date Range'
+  - label: Time Interval
+    control: select
+    binds: DashboardChart.time_interval
+    validation: "shown only when eval: doc.timeseries && doc.type !== 'Heatmap'"
+  - label: Time Series
+    control: checkbox
+    binds: DashboardChart.timeseries
+    validation: |
+      shown only when eval: !['Group By', 'Report'].includes(doc.chart_type)
+  - label: Type
+    control: select
+    binds: DashboardChart.type
+  - label: Show Values over Chart
+    control: checkbox
+    binds: DashboardChart.show_values_over_chart
+    validation: 'shown only when eval: doc.type == "Bar" || doc.type == "Line"'
+  - label: Currency
+    control: lookup
+    binds: DashboardChart.currency
+    validation: chosen among Currency records
+  - label: Filters JSON
+    control: text
+    binds: DashboardChart.filters_json
+    required: true
+  - label: Dynamic Filters JSON
+    control: text
+    binds: DashboardChart.dynamic_filters_json
+  - label: Custom Options
+    control: text
+    binds: DashboardChart.custom_options
+  - label: Color
+    control: other
+    binds: DashboardChart.color
+    validation: "shown only when eval: doc.chart_type !== 'Report' && doc.type !== 'Heatmap'"
+  - label: Empty State Message
+    control: text
+    binds: DashboardChart.empty_state_message
+  - label: Last Synced On
+    control: date
+    binds: DashboardChart.last_synced_on
+    validation: read only (computed or filled by the program)
+  - label: Roles
+    control: grid
+    columns:
+      - Role
+actions:
+  - label: Save
+    triggers: F-227
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Dashboard Chart
+    note: declared by the program

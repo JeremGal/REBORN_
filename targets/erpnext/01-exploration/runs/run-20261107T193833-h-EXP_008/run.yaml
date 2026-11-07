@@ -1,0 +1,86 @@
+id: run-20261107T193833-h-EXP_008
+mission: M-003
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_008.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Stock
+started_at: 2026-11-07T19:37:55.300Z
+ended_at: 2026-11-07T19:38:33.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+    screenshot: step_01.png
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+    screenshot: step_02.png
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+    screenshot: step_03.png
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 800, "scroll_element": null})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: other
+      target_desc: "answer({\"buttons\": [\"Créer\", \"Obtenir les articles de\", \"Enregistrer\", \"Ajouter une ligne\", \"Ajouter plusieurs\", \"Télécharger\", \"Charger\", \"Mettre à Jour le Prix et la Disponibilité\"], \"page_title\": \"Nouveau(elle) Écriture de Stock - new-stock-entry-gwnzdomzmu\", \"field_labels\": [\"Séries *\", \"Type d'"
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: read
+      target_desc: values shown by the application (Stock)
+    screenshot: step_06.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Stock Entry
+        path: /app/stock-entry/new
+        kind: form
+      page_title: Nouveau(elle) Écriture de Stock - new-stock-entry-gwnzdomzmu
+      section_labels:
+        - Détails
+        - Autres Info
+      field_labels:
+        - Séries *
+        - Type d'entrée de stock *
+        - Date de Comptabilisation
+        - Heure de Publication
+        - Modifier la Date et l'Heure de la Publication
+        - Inspection obligatoire
+        - Informations sur la nomenclature
+        - Entrepôt par Défaut
+        - Scan Code Barre
+        - Articles
+        - No.
+        - Entrepôt source
+        - Code de l'Article *
+        - Qté *
+        - Prix de base (comme l...)
+      buttons:
+        - Créer
+        - Obtenir les articles de
+        - Enregistrer
+        - Ajouter une ligne
+        - Ajouter plusieurs
+        - Télécharger
+        - Charger
+        - Mettre à Jour le Prix et la Disponibilité
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/84591050-5e16-4e3d-aed2-ba28dfda2299 attempts: 1"

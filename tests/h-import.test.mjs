@@ -29,6 +29,14 @@ test("an explorer experiment becomes a run with the values the agent read", asyn
   assert.deepEqual(run.steps.at(-1).extracted.inputs, EXP.inputs);
 });
 
+test("text typed into a password field and known secret values never reach the run", async () => {
+  const { experimentToRun, sanitizeAction } = await lib("h-import");
+  assert.equal(sanitizeAction('write({"text": "s3cretPass!", "element": "Password input field"})'), 'write({"text": "***", "element": "Password input field"})');
+  const exp = { ...EXP, evidence: { ...EXP.evidence, actions: ['write({"text": "agent@example.com", "element": "Email"})', 'write({"text": "s3cretPass!", "element": "Mot de passe"})'] }, observed_output: { notes: "logged in with s3cretPass!" } };
+  const run = experimentToRun(exp, { target: "gnucash", mission: "M-001", secrets: ["s3cretPass!"] });
+  assert.ok(!JSON.stringify(run).includes("s3cretPass!"), JSON.stringify(run));
+});
+
 test("a failed experiment becomes a failed run with no extracted values", async () => {
   const { experimentToRun } = await lib("h-import");
   const run = experimentToRun({ ...EXP, status: "failed", error: "timeout", observed_output: null }, { target: "gnucash", mission: "M-001" });

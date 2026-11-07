@@ -1,0 +1,42 @@
+id: S-195
+title: User Permission
+purpose: create, view and edit User Permission records
+kind: form
+layout: "sections: Advanced Control; 7 fields"
+fields:
+  - label: User
+    control: lookup
+    binds: UserPermission.user
+    required: true
+    validation: chosen among User records
+  - label: Allow
+    control: lookup
+    binds: UserPermission.allow
+    required: true
+    validation: chosen among DocType records
+  - label: For Value
+    control: lookup
+    binds: UserPermission.for_value
+    required: true
+  - label: Is Default
+    control: checkbox
+    binds: UserPermission.is_default
+  - label: Apply To All Document Types
+    control: checkbox
+    binds: UserPermission.apply_to_all_doctypes
+  - label: Applicable For
+    control: lookup
+    binds: UserPermission.applicable_for
+    validation: shown only when eval:!doc.apply_to_all_doctypes; chosen among DocType records
+  - label: Hide Descendants
+    control: checkbox
+    binds: UserPermission.hide_descendants
+actions:
+  - label: Save
+    triggers: F-196
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of User Permission
+    note: declared by the program

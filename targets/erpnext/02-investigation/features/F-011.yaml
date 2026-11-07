@@ -1,0 +1,50 @@
+id: F-011
+title: Create and edit a Bank Account
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: A bank account of yours or of a customer or supplier.
+entry_points:
+  - screen: S-010
+    action: open the form
+inputs:
+  - label: Account Name
+    field: BankAccount.account_name
+    type: string
+    required: true
+  - label: Bank
+    field: BankAccount.bank
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Bank Account form
+    screen: S-010
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Account Name, Bank"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Bank Account record stored
+    entities:
+      - BankAccount
+entities:
+  - BankAccount
+screens:
+  - S-010
+acceptance:
+  - id: AC-012
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Bank Account
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"bank-account\")."

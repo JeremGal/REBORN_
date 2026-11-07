@@ -1,0 +1,291 @@
+id: S-148
+title: DocType
+purpose: create, view and edit DocType records
+kind: form
+layout: "tabs: Form, Permissions, Naming, Settings, Fields, Actions, Links, States, Web View, Connections; sections: Form Settings, View Settings, Email Settings, Fields, Advanced; 72 fields"
+fields:
+  - label: Permissions
+    control: grid
+    columns:
+      - Role
+      - Level
+      - Select
+      - Read
+      - Write
+      - Create
+      - Delete
+      - Submit
+      - Cancel
+  - label: Restrict To Domain
+    control: lookup
+    binds: DocType.restrict_to_domain
+    validation: chosen among Domain records
+  - label: User Cannot Search
+    control: checkbox
+    binds: DocType.read_only
+  - label: User Cannot Create
+    control: checkbox
+    binds: DocType.in_create
+  - label: Protect Attached Files
+    control: checkbox
+    binds: DocType.protect_attached_files
+  - label: Naming Rule
+    control: select
+    binds: DocType.naming_rule
+  - label: Auto Name
+    control: text
+    binds: DocType.autoname
+  - label: Title Field
+    control: text
+    binds: DocType.title_field
+    validation: shown only when eval:!doc.istable
+  - label: Allow Rename
+    control: checkbox
+    binds: DocType.allow_rename
+    validation: shown only when eval:!doc.issingle
+  - label: Module
+    control: lookup
+    binds: DocType.module
+    required: true
+    validation: chosen among Module Def records
+  - label: Is Submittable
+    control: checkbox
+    binds: DocType.is_submittable
+    validation: shown only when eval:!doc.istable
+  - label: Is Child Table
+    control: checkbox
+    binds: DocType.istable
+  - label: Is Single
+    control: checkbox
+    binds: DocType.issingle
+    validation: shown only when eval:!doc.istable
+  - label: Is Tree
+    control: checkbox
+    binds: DocType.is_tree
+    validation: shown only when eval:!doc.istable
+  - label: Is Calendar and Gantt
+    control: checkbox
+    binds: DocType.is_calendar_and_gantt
+    validation: shown only when eval:!doc.istable
+  - label: Editable Grid
+    control: checkbox
+    binds: DocType.editable_grid
+    validation: shown only when istable
+  - label: Quick Entry
+    control: checkbox
+    binds: DocType.quick_entry
+    validation: shown only when eval:!doc.istable
+  - label: Grid Page Length
+    control: number
+    binds: DocType.grid_page_length
+    validation: shown only when istable
+  - label: Rows Threshold for Grid Search
+    control: number
+    binds: DocType.rows_threshold_for_grid_search
+    validation: shown only when istable
+  - label: Allow Bulk Edit
+    control: checkbox
+    binds: DocType.allow_bulk_edit
+    validation: shown only when istable
+  - label: Track Changes
+    control: checkbox
+    binds: DocType.track_changes
+    validation: shown only when eval:!doc.istable
+  - label: Track Seen
+    control: checkbox
+    binds: DocType.track_seen
+    validation: shown only when eval:!doc.istable
+  - label: Track Views
+    control: checkbox
+    binds: DocType.track_views
+    validation: shown only when eval:!doc.istable
+  - label: Custom?
+    control: checkbox
+    binds: DocType.custom
+  - label: Beta
+    control: checkbox
+    binds: DocType.beta
+    validation: shown only when eval:!doc.istable
+  - label: Deprecated
+    control: checkbox
+    binds: DocType.deprecated
+    validation: shown only when eval:!doc.istable
+  - label: Is Virtual
+    control: checkbox
+    binds: DocType.is_virtual
+  - label: Queue in Background (BETA)
+    control: checkbox
+    binds: DocType.queue_in_background
+    validation: "shown only when eval: doc.is_submittable"
+  - label: Description
+    control: text
+    binds: DocType.description
+  - label: Image Field
+    control: text
+    binds: DocType.image_field
+  - label: Timeline Field
+    control: text
+    binds: DocType.timeline_field
+    validation: shown only when eval:!doc.istable
+  - label: Parent Field (Tree)
+    control: text
+    binds: DocType.nsm_parent_field
+    validation: shown only when is_tree
+  - label: Max Attachments
+    control: number
+    binds: DocType.max_attachments
+  - label: Documentation Link
+    control: text
+    binds: DocType.documentation
+  - label: Hide Sidebar, Menu, and Comments
+    control: checkbox
+    binds: DocType.hide_toolbar
+  - label: Hide Copy
+    control: checkbox
+    binds: DocType.allow_copy
+  - label: Allow Import (via Data Import Tool)
+    control: checkbox
+    binds: DocType.allow_import
+    validation: shown only when eval:!doc.issingle
+  - label: Allow events in timeline
+    control: checkbox
+    binds: DocType.allow_events_in_timeline
+  - label: Allow Auto Repeat
+    control: checkbox
+    binds: DocType.allow_auto_repeat
+  - label: Make Attachments Public by Default
+    control: checkbox
+    binds: DocType.make_attachments_public
+  - label: Show Title in Link Fields
+    control: checkbox
+    binds: DocType.show_title_field_in_link
+  - label: Translate Link Fields
+    control: checkbox
+    binds: DocType.translated_doctype
+  - label: Search Fields
+    control: text
+    binds: DocType.search_fields
+    validation: shown only when eval:!doc.istable
+  - label: Default Print Format
+    control: text
+    binds: DocType.default_print_format
+  - label: Default Sort Field
+    control: text
+    binds: DocType.sort_field
+    validation: shown only when eval:!doc.istable
+  - label: Default Sort Order
+    control: select
+    binds: DocType.sort_order
+    validation: shown only when eval:!doc.istable
+  - label: Default View
+    control: select
+    binds: DocType.default_view
+  - label: Force Re-route to Default View
+    control: checkbox
+    binds: DocType.force_re_route_to_default_view
+  - label: Show in Module Section
+    control: select
+    binds: DocType.document_type
+  - label: Icon
+    control: other
+    binds: DocType.icon
+  - label: Color
+    control: text
+    binds: DocType.color
+  - label: Show Preview Popup
+    control: checkbox
+    binds: DocType.show_preview_popup
+  - label: Make "name" searchable in Global Search
+    control: checkbox
+    binds: DocType.show_name_in_global_search
+  - label: Default Email Template
+    control: lookup
+    binds: DocType.default_email_template
+    validation: chosen among Email Template records
+  - label: Allow document creation via Email
+    control: checkbox
+    binds: DocType.email_append_to
+  - label: Sender Email Field
+    control: text
+    binds: DocType.sender_field
+    validation: shown only when email_append_to
+  - label: Sender Name Field
+    control: text
+    binds: DocType.sender_name_field
+    validation: shown only when email_append_to
+  - label: Recipient Account Field
+    control: text
+    binds: DocType.recipient_account_field
+    validation: shown only when email_append_to
+  - label: Subject Field
+    control: text
+    binds: DocType.subject_field
+    validation: shown only when email_append_to
+  - label: Fields
+    control: grid
+    columns:
+      - Label
+      - Type
+      - Name
+      - Mandatory
+      - Options
+      - Description
+  - label: Document Actions
+    control: grid
+    columns:
+      - Label
+      - Action Type
+      - Action / Route
+      - Group
+  - label: Document Links
+    control: grid
+    columns:
+      - Link DocType
+      - Link Fieldname
+      - Group
+  - label: Document States
+    control: grid
+    columns:
+      - Title
+      - Color
+  - label: Has Web View
+    control: checkbox
+    binds: DocType.has_web_view
+  - label: Allow Guest to View
+    control: checkbox
+    binds: DocType.allow_guest_to_view
+    validation: shown only when has_web_view
+  - label: Index Web Pages for Search
+    control: checkbox
+    binds: DocType.index_web_pages_for_search
+  - label: Route
+    control: text
+    binds: DocType.route
+    validation: shown only when eval:!doc.istable
+  - label: Is Published Field
+    control: text
+    binds: DocType.is_published_field
+    validation: shown only when has_web_view
+  - label: Website Search Field
+    control: text
+    binds: DocType.website_search_field
+    validation: shown only when has_web_view
+  - label: Database Engine
+    control: select
+    binds: DocType.engine
+    validation: shown only when eval:!doc.issingle
+  - label: migration_hash
+    control: text
+    binds: DocType.migration_hash
+  - label: Row Format
+    control: select
+    binds: DocType.row_format
+actions:
+  - label: Save
+    triggers: F-149
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of DocType
+    note: declared by the program

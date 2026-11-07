@@ -1,0 +1,239 @@
+id: S-260
+title: Email Account
+purpose: create, view and edit Email Account records
+kind: form
+layout: "tabs: Incoming, Outgoing; sections: Account, Authentication, Incoming (POP/IMAP) Settings, IMAP Details, Document Linking, Headers, Outgoing (SMTP) Settings, Signature, Auto Reply, Footer; 63 fields"
+fields:
+  - label: Email Address
+    control: text
+    binds: EmailAccount.email_id
+    required: true
+  - label: Company
+    control: lookup
+    binds: EmailAccount.company
+    validation: chosen among Company records
+  - label: Email Account Name
+    control: text
+    binds: EmailAccount.email_account_name
+  - label: Enable Incoming
+    control: checkbox
+    binds: EmailAccount.enable_incoming
+  - label: Enable Outgoing
+    control: checkbox
+    binds: EmailAccount.enable_outgoing
+  - label: Service
+    control: select
+    binds: EmailAccount.service
+    validation: shown only when eval:!doc.domain
+  - label: Domain
+    control: lookup
+    binds: EmailAccount.domain
+    validation: shown only when eval:!doc.service; chosen among Email Domain records
+  - label: Frappe Mail Site
+    control: text
+    binds: EmailAccount.frappe_mail_site
+    validation: 'shown only when eval: doc.service == "Frappe Mail"'
+  - label: Method
+    control: select
+    binds: EmailAccount.auth_method
+  - label: Authenticate as Service Principal
+    control: checkbox
+    binds: EmailAccount.backend_app_flow
+    validation: 'shown only when eval: doc.auth_method === "OAuth"'
+  - label: Password
+    control: text
+    binds: EmailAccount.password
+    validation: 'shown only when eval: doc.auth_method === "Basic" && doc.service != "Frappe Mail"'
+  - label: Awaiting password
+    control: checkbox
+    binds: EmailAccount.awaiting_password
+    validation: 'shown only when eval: doc.auth_method === "Basic" && doc.service != "Frappe Mail"'
+  - label: Use ASCII encoding for password
+    control: checkbox
+    binds: EmailAccount.ascii_encode_password
+    validation: 'shown only when eval: doc.auth_method === "Basic" && doc.service != "Frappe Mail"'
+  - label: API Key
+    control: text
+    binds: EmailAccount.api_key
+    validation: 'shown only when eval: doc.service == "Frappe Mail" && doc.auth_method == "Basic"'
+  - label: API Secret
+    control: text
+    binds: EmailAccount.api_secret
+    validation: 'shown only when eval: doc.service == "Frappe Mail" && doc.auth_method == "Basic"'
+  - label: Connected App
+    control: lookup
+    binds: EmailAccount.connected_app
+    validation: 'shown only when eval: doc.auth_method === "OAuth"; chosen among Connected App records'
+  - label: Connected User
+    control: lookup
+    binds: EmailAccount.connected_user
+    validation: 'shown only when eval: doc.auth_method === "OAuth" && !doc.backend_app_flow; chosen among User records'
+  - label: Use different Email ID
+    control: checkbox
+    binds: EmailAccount.login_id_is_different
+    validation: 'shown only when eval: doc.service != "Frappe Mail" && !doc.backend_app_flow'
+  - label: Alternative Email ID
+    control: text
+    binds: EmailAccount.login_id
+    validation: shown only when login_id_is_different
+  - label: Default Incoming
+    control: checkbox
+    binds: EmailAccount.default_incoming
+    validation: shown only when enable_incoming
+  - label: Attachment Limit (MB)
+    control: number
+    binds: EmailAccount.attachment_limit
+  - label: Last Received At
+    control: date
+    binds: EmailAccount.last_received_at
+    validation: 'shown only when eval: doc.service == "Frappe Mail"'
+  - label: Use IMAP
+    control: checkbox
+    binds: EmailAccount.use_imap
+  - label: Use SSL
+    control: checkbox
+    binds: EmailAccount.use_ssl
+  - label: Validate SSL Certificate
+    control: checkbox
+    binds: EmailAccount.validate_ssl_certificate
+    validation: shown only when use_ssl
+  - label: Use STARTTLS
+    control: checkbox
+    binds: EmailAccount.use_starttls
+    validation: "shown only when eval: doc.use_imap && !doc.use_ssl"
+  - label: Incoming Server
+    control: text
+    binds: EmailAccount.email_server
+  - label: Port
+    control: text
+    binds: EmailAccount.incoming_port
+  - label: Email Sync Option
+    control: select
+    binds: EmailAccount.email_sync_option
+    validation: shown only when use_imap
+  - label: Initial Sync Count
+    control: select
+    binds: EmailAccount.initial_sync_count
+    validation: shown only when use_imap
+  - label: IMAP Folder
+    control: grid
+    validation: shown only when use_imap
+    columns:
+      - Folder Name
+      - Append To
+  - label: Append Emails to Sent Folder
+    control: checkbox
+    binds: EmailAccount.append_emails_to_sent_folder
+    validation: shown only when eval:!doc.domain && doc.enable_outgoing && doc.enable_incoming && doc.use_imap
+  - label: Sent Folder Name
+    control: text
+    binds: EmailAccount.sent_folder_name
+    validation: shown only when eval:!doc.domain && doc.enable_outgoing && doc.enable_incoming && doc.use_imap
+  - label: Append To
+    control: lookup
+    binds: EmailAccount.append_to
+    validation: "shown only when eval: !doc.use_imap; chosen among DocType records"
+  - label: Create Contacts from Incoming Emails
+    control: checkbox
+    binds: EmailAccount.create_contact
+  - label: Enable Automatic Linking in Documents
+    control: checkbox
+    binds: EmailAccount.enable_automatic_linking
+  - label: Notify if unreplied
+    control: checkbox
+    binds: EmailAccount.notify_if_unreplied
+  - label: Notify if unreplied for (in mins)
+    control: number
+    binds: EmailAccount.unreplied_for_mins
+    validation: shown only when notify_if_unreplied
+  - label: Send Notification to
+    control: text
+    binds: EmailAccount.send_notification_to
+    validation: shown only when notify_if_unreplied
+  - label: Default Outgoing
+    control: checkbox
+    binds: EmailAccount.default_outgoing
+  - label: Always use this email address as sender address
+    control: checkbox
+    binds: EmailAccount.always_use_account_email_id_as_sender
+  - label: Always use this name as sender name
+    control: checkbox
+    binds: EmailAccount.always_use_account_name_as_sender_name
+  - label: Send unsubscribe message in email
+    control: checkbox
+    binds: EmailAccount.send_unsubscribe_message
+  - label: Track Email Status
+    control: checkbox
+    binds: EmailAccount.track_email_status
+  - label: Add X-Original-From header
+    control: checkbox
+    binds: EmailAccount.add_x_original_from
+  - label: Add Reply-To header
+    control: checkbox
+    binds: EmailAccount.add_reply_to_header
+  - label: Reply-To Addresses
+    control: grid
+    validation: "shown only when eval: doc.add_reply_to_header"
+    columns:
+      - Name
+      - Email
+  - label: Use TLS
+    control: checkbox
+    binds: EmailAccount.use_tls
+  - label: Use SSL
+    control: checkbox
+    binds: EmailAccount.use_ssl_for_outgoing
+  - label: Outgoing Server
+    control: text
+    binds: EmailAccount.smtp_server
+  - label: Port
+    control: text
+    binds: EmailAccount.smtp_port
+  - label: Disable SMTP server authentication
+    control: checkbox
+    binds: EmailAccount.no_smtp_authentication
+  - label: Delivery Status Notification Type
+    control: select
+    binds: EmailAccount.dsn_notify_type
+  - label: Always BCC Address
+    control: text
+    binds: EmailAccount.always_bcc
+  - label: Add Signature
+    control: checkbox
+    binds: EmailAccount.add_signature
+  - label: Signature
+    control: text
+    binds: EmailAccount.signature
+    validation: shown only when add_signature
+  - label: Enable Auto Reply
+    control: checkbox
+    binds: EmailAccount.enable_auto_reply
+  - label: Auto Reply Message
+    control: text
+    binds: EmailAccount.auto_reply_message
+    validation: shown only when enable_auto_reply
+  - label: Footer Content
+    control: text
+    binds: EmailAccount.footer
+  - label: Brand Logo
+    control: other
+    binds: EmailAccount.brand_logo
+  - label: UIDVALIDITY
+    control: text
+    binds: EmailAccount.uidvalidity
+  - label: UIDNEXT
+    control: number
+    binds: EmailAccount.uidnext
+  - label: no failed attempts
+    control: number
+    binds: EmailAccount.no_failed
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-261
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Email Account
+    note: declared by the program

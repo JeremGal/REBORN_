@@ -1,0 +1,48 @@
+id: S-285
+title: OAuth Settings
+purpose: settings of OAuth Settings
+kind: settings
+layout: "tabs: Authorization, Resource; sections: Config, Metadata; 11 fields"
+fields:
+  - label: Show Auth Server Metadata
+    control: checkbox
+    binds: OAuthSettings.show_auth_server_metadata
+  - label: Skip Authorization
+    control: checkbox
+    binds: OAuthSettings.skip_authorization
+  - label: Enable Dynamic Client Registration
+    control: checkbox
+    binds: OAuthSettings.enable_dynamic_client_registration
+  - label: Allowed Public Client Origins
+    control: text
+    binds: OAuthSettings.allowed_public_client_origins
+  - label: Show Protected Resource Metadata
+    control: checkbox
+    binds: OAuthSettings.show_protected_resource_metadata
+  - label: Show Social Login Key as Authorization Server
+    control: checkbox
+    binds: OAuthSettings.show_social_login_key_as_authorization_server
+  - label: Resource Name
+    control: text
+    binds: OAuthSettings.resource_name
+  - label: Resource Policy URI
+    control: text
+    binds: OAuthSettings.resource_policy_uri
+  - label: Resource Documentation
+    control: text
+    binds: OAuthSettings.resource_documentation
+  - label: Resource TOS URI
+    control: text
+    binds: OAuthSettings.resource_tos_uri
+  - label: Scopes Supported
+    control: text
+    binds: OAuthSettings.scopes_supported
+actions:
+  - label: Save
+    triggers: F-286
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of OAuth Settings
+    note: declared by the program

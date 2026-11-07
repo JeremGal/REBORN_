@@ -1,0 +1,58 @@
+id: F-347
+title: Create and edit a Party Specific Item
+module: Selling
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Party Specific Item records.
+entry_points:
+  - screen: S-346
+    action: open the form
+inputs:
+  - label: Party Type
+    field: PartySpecificItem.party_type
+    type: enum
+    required: true
+  - label: Party Name
+    field: PartySpecificItem.party
+    type: string
+    required: true
+  - label: Restrict Items Based On
+    field: PartySpecificItem.restrict_based_on
+    type: enum
+    required: true
+  - label: Based On Value
+    field: PartySpecificItem.based_on_value
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Party Specific Item form
+    screen: S-346
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Party Type, Party Name, Restrict Items Based On, Based On Value"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Party Specific Item record stored
+    entities:
+      - PartySpecificItem
+entities:
+  - PartySpecificItem
+screens:
+  - S-346
+acceptance:
+  - id: AC-348
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Party Specific Item
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"party-specific-item\")."

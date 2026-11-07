@@ -1,0 +1,49 @@
+id: S-127
+title: Supplier Scorecard Standing
+purpose: create, view and edit Supplier Scorecard Standing records
+kind: form
+layout: 11 fields
+fields:
+  - label: Standing Name
+    control: text
+    binds: SupplierScorecardStanding.standing_name
+  - label: Color
+    control: select
+    binds: SupplierScorecardStanding.standing_color
+  - label: Min Grade
+    control: number
+    binds: SupplierScorecardStanding.min_grade
+  - label: Max Grade
+    control: number
+    binds: SupplierScorecardStanding.max_grade
+  - label: Warn RFQs
+    control: checkbox
+    binds: SupplierScorecardStanding.warn_rfqs
+  - label: Warn Purchase Orders
+    control: checkbox
+    binds: SupplierScorecardStanding.warn_pos
+  - label: Prevent RFQs
+    control: checkbox
+    binds: SupplierScorecardStanding.prevent_rfqs
+  - label: Prevent Purchase Orders
+    control: checkbox
+    binds: SupplierScorecardStanding.prevent_pos
+  - label: Notify Supplier
+    control: checkbox
+    binds: SupplierScorecardStanding.notify_supplier
+  - label: Notify Other
+    control: checkbox
+    binds: SupplierScorecardStanding.notify_employee
+  - label: Other
+    control: lookup
+    binds: SupplierScorecardStanding.employee_link
+    validation: chosen among Employee records
+actions:
+  - label: Save
+    triggers: F-128
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Supplier Scorecard Standing
+    note: declared by the program

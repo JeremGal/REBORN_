@@ -1,0 +1,57 @@
+id: F-079
+title: Create, submit and cancel a Repost Payment Ledger
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: Rebuilds the payment ledger so outstanding amounts are right again.
+entry_points:
+  - screen: S-078
+    action: open the form
+inputs:
+  - label: Company
+    field: RepostPaymentLedger.company
+    type: ref
+    required: true
+  - label: Posting Date
+    field: RepostPaymentLedger.posting_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Repost Payment Ledger form
+    screen: S-078
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Posting Date"
+  - n: 3
+    actor: user
+    does: "adds lines in: Selected Vouchers"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Repost Payment Ledger record stored
+    entities:
+      - RepostPaymentLedger
+entities:
+  - RepostPaymentLedger
+  - RepostPaymentLedgerItems
+screens:
+  - S-078
+acceptance:
+  - id: AC-080
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Repost Payment Ledger
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

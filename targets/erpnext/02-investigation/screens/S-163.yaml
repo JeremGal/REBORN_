@@ -1,0 +1,41 @@
+id: S-163
+title: Navbar Settings
+purpose: settings of Navbar Settings
+kind: settings
+layout: "sections: Application Logo, Dropdowns, Announcements; 6 fields"
+fields:
+  - label: Application Logo
+    control: other
+    binds: NavbarSettings.app_logo
+  - label: Settings Dropdown
+    control: grid
+    columns:
+      - Item Label
+      - Item Type
+      - Route
+      - Hidden
+  - label: Help Dropdown
+    control: grid
+    columns:
+      - Item Label
+      - Item Type
+      - Route
+      - Hidden
+  - label: Announcement Widget
+    control: text
+    binds: NavbarSettings.announcement_widget
+  - label: Widget Color
+    control: other
+    binds: NavbarSettings.announcement_widget_color
+  - label: Is Dismissible
+    control: checkbox
+    binds: NavbarSettings.dismissible_announcement_widget
+actions:
+  - label: Save
+    triggers: F-164
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Navbar Settings
+    note: declared by the program

@@ -1,0 +1,78 @@
+id: S-130
+title: Address
+purpose: create, view and edit Address records
+kind: form
+layout: "sections: Reference; 18 fields"
+fields:
+  - label: Address Title
+    control: text
+    binds: Address.address_title
+  - label: Address Type
+    control: select
+    binds: Address.address_type
+    required: true
+  - label: Address Line 1
+    control: text
+    binds: Address.address_line1
+    required: true
+  - label: Address Line 2
+    control: text
+    binds: Address.address_line2
+  - label: City/Town
+    control: text
+    binds: Address.city
+    required: true
+  - label: County
+    control: text
+    binds: Address.county
+  - label: State/Province
+    control: text
+    binds: Address.state
+  - label: Country
+    control: lookup
+    binds: Address.country
+    required: true
+    validation: chosen among Country records
+  - label: Postal Code
+    control: text
+    binds: Address.pincode
+  - label: Email Address
+    control: text
+    binds: Address.email_id
+  - label: Phone
+    control: text
+    binds: Address.phone
+  - label: Fax
+    control: text
+    binds: Address.fax
+  - label: Tax Category
+    control: lookup
+    binds: Address.tax_category
+    validation: chosen among Tax Category records
+  - label: Preferred Billing Address
+    control: checkbox
+    binds: Address.is_primary_address
+  - label: Preferred Shipping Address
+    control: checkbox
+    binds: Address.is_shipping_address
+  - label: Disabled
+    control: checkbox
+    binds: Address.disabled
+  - label: Is Your Company Address
+    control: checkbox
+    binds: Address.is_your_company_address
+  - label: Links
+    control: grid
+    columns:
+      - Link Document Type
+      - Link Name
+      - Link Title
+actions:
+  - label: Save
+    triggers: F-131
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Address
+    note: declared by the program

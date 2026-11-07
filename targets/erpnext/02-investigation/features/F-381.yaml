@@ -1,0 +1,58 @@
+id: F-381
+title: Create and edit a UOM Conversion Factor
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: How many of one unit make another, like 1000 g in a kg.
+entry_points:
+  - screen: S-380
+    action: open the form
+inputs:
+  - label: Category
+    field: UOMConversionFactor.category
+    type: ref
+    required: true
+  - label: From
+    field: UOMConversionFactor.from_uom
+    type: ref
+    required: true
+  - label: To
+    field: UOMConversionFactor.to_uom
+    type: ref
+    required: true
+  - label: Value
+    field: UOMConversionFactor.value
+    type: decimal
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the UOM Conversion Factor form
+    screen: S-380
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Category, From, To, Value"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a UOM Conversion Factor record stored
+    entities:
+      - UOMConversionFactor
+entities:
+  - UOMConversionFactor
+screens:
+  - S-380
+acceptance:
+  - id: AC-382
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of UOM Conversion Factor
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

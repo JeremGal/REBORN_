@@ -25,5 +25,7 @@ confidence: high
 evidence:
   - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "steps 1, 7" }
   - { ref: run-20261107T191620-api-sales-invoice-2, kind: h-run, locator: "steps 1-2" }
+  - { ref: run-20261107T194304-h-EXP_013, kind: h-run, locator: "last step", note: "on screen: tax 6.00, grand total 36.00" }
+  - { ref: run-20261107T194304-h-EXP_014, kind: h-run, locator: "last step", note: "on screen: second tax computed on 110.00, grand total 115.50" }
 contradictions:
   - "When two tax rows use the same tax account, the earlier row was computed with the later row's rate (R-007): the cascade examples above use two different accounts."

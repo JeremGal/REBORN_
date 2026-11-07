@@ -1,0 +1,58 @@
+id: F-168
+title: Create and edit a Page
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Page records.
+entry_points:
+  - screen: S-167
+    action: open the form
+inputs:
+  - label: Page Name
+    field: Page.page_name
+    type: string
+    required: true
+  - label: Module
+    field: Page.module
+    type: ref
+    required: true
+  - label: Standard
+    field: Page.standard
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Page form
+    screen: S-167
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Page Name, Module, Standard"
+  - n: 3
+    actor: user
+    does: "adds lines in: Roles"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Page record stored
+    entities:
+      - Page
+entities:
+  - Page
+  - HasRole
+screens:
+  - S-167
+acceptance:
+  - id: AC-169
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Page
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

@@ -1,0 +1,69 @@
+id: F-414
+title: Create and edit a Shipment Parcel Template
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: A parcel size you ship often.
+entry_points:
+  - screen: S-413
+    action: open the form
+inputs:
+  - label: Parcel Template Name
+    field: ShipmentParcelTemplate.parcel_template_name
+    type: string
+    required: true
+  - label: Length (cm)
+    field: ShipmentParcelTemplate.length
+    type: decimal
+    required: true
+  - label: Width (cm)
+    field: ShipmentParcelTemplate.width
+    type: decimal
+    required: true
+  - label: Height (cm)
+    field: ShipmentParcelTemplate.height
+    type: decimal
+    required: true
+  - label: Weight (kg)
+    field: ShipmentParcelTemplate.weight
+    type: decimal
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Shipment Parcel Template form
+    screen: S-413
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Parcel Template Name, Length (cm), Width (cm), Height (cm), Weight (kg)"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Shipment Parcel Template record stored
+    entities:
+      - ShipmentParcelTemplate
+entities:
+  - ShipmentParcelTemplate
+screens:
+  - S-413
+acceptance:
+  - id: AC-415
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Shipment Parcel Template
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 144
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

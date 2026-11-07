@@ -1,0 +1,57 @@
+id: S-297
+title: BOM Update Log
+purpose: create, view and edit BOM Update Log records
+kind: form
+layout: "sections: Progress; 9 fields"
+fields:
+  - label: Update Type
+    control: select
+    binds: BOMUpdateLog.update_type
+  - label: Status
+    control: select
+    binds: BOMUpdateLog.status
+  - label: Current BOM
+    control: lookup
+    binds: BOMUpdateLog.current_bom
+    validation: chosen among BOM records
+  - label: New BOM
+    control: lookup
+    binds: BOMUpdateLog.new_bom
+    validation: chosen among BOM records
+  - label: Error Log
+    control: lookup
+    binds: BOMUpdateLog.error_log
+    validation: chosen among Error Log records
+  - label: Current Level
+    control: number
+    binds: BOMUpdateLog.current_level
+    validation: shown only when eval:doc.status !== "Completed"
+  - label: Processed BOMs
+    control: text
+    binds: BOMUpdateLog.processed_boms
+  - label: bom_batches
+    control: grid
+    columns:
+      - Level
+      - Batch No.
+      - BOMs Updated
+      - Status
+  - label: Amended From
+    control: lookup
+    binds: BOMUpdateLog.amended_from
+    validation: read only (computed or filled by the program); chosen among BOM Update Log records
+actions:
+  - label: Save
+    triggers: F-298
+  - label: Submit
+    triggers: F-298
+  - label: Cancel
+    triggers: F-298
+  - label: Amend
+    triggers: F-298
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of BOM Update Log
+    note: declared by the program

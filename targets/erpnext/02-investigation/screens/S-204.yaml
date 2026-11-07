@@ -1,0 +1,29 @@
+id: S-204
+title: Contract Template
+purpose: create, view and edit Contract Template records
+kind: form
+layout: 4 fields
+fields:
+  - label: Title
+    control: text
+    binds: ContractTemplate.title
+  - label: Contract Terms and Conditions
+    control: text
+    binds: ContractTemplate.contract_terms
+  - label: Requires Fulfilment
+    control: checkbox
+    binds: ContractTemplate.requires_fulfilment
+  - label: Fulfilment Terms and Conditions
+    control: grid
+    validation: shown only when eval:doc.requires_fulfilment==1
+    columns:
+      - Requirement
+actions:
+  - label: Save
+    triggers: F-205
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Contract Template
+    note: declared by the program

@@ -1,0 +1,64 @@
+id: F-068
+title: Create and edit a Pricing Rule
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: Changes a price or gives a discount when its conditions are met.
+entry_points:
+  - screen: S-067
+    action: open the form
+inputs:
+  - label: Title
+    field: PricingRule.title
+    type: string
+    required: true
+  - label: Apply On
+    field: PricingRule.apply_on
+    type: enum
+    required: true
+  - label: Price or Product Discount
+    field: PricingRule.price_or_product_discount
+    type: enum
+    required: true
+  - label: Currency
+    field: PricingRule.currency
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Pricing Rule form
+    screen: S-067
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Title, Apply On, Price or Product Discount, Currency"
+  - n: 3
+    actor: user
+    does: "adds lines in: Apply Rule On Item Code, Apply Rule On Item Group, Apply Rule On Brand"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Pricing Rule record stored
+    entities:
+      - PricingRule
+entities:
+  - PricingRule
+  - PricingRuleItemCode
+  - PricingRuleItemGroup
+  - PricingRuleBrand
+screens:
+  - S-067
+acceptance:
+  - id: AC-069
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Pricing Rule
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"pricing-rule\")."

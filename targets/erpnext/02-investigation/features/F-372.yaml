@@ -1,0 +1,50 @@
+id: F-372
+title: Create and edit a Party Type
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Party Type records.
+entry_points:
+  - screen: S-371
+    action: open the form
+inputs:
+  - label: Party Type
+    field: PartyType.party_type
+    type: ref
+    required: true
+  - label: Account Type
+    field: PartyType.account_type
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Party Type form
+    screen: S-371
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Party Type, Account Type"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Party Type record stored
+    entities:
+      - PartyType
+entities:
+  - PartyType
+screens:
+  - S-371
+acceptance:
+  - id: AC-373
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Party Type
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

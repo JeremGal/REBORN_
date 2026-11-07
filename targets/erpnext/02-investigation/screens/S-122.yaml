@@ -1,0 +1,180 @@
+id: S-122
+title: Supplier
+purpose: create, view and edit Supplier records
+kind: form
+layout: "tabs: Address & Contact, Accounting, Tax, Settings, Portal Users, More Info, Connections; sections: Defaults, Address and Contacts, Primary Address and Contact, Default Accounts, Internal Supplier Details, Tax Identification, Company Restrictions, Block Supplier, RFQ and Purchase Order Settings, More Information; 44 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Supplier.naming_series
+  - label: Supplier Name
+    control: text
+    binds: Supplier.supplier_name
+    required: true
+  - label: Supplier Type
+    control: select
+    binds: Supplier.supplier_type
+    required: true
+  - label: Alias
+    control: text
+    binds: Supplier.alias
+  - label: Gender
+    control: lookup
+    binds: Supplier.gender
+    validation: shown only when eval:doc.supplier_type == 'Individual'; chosen among Gender records
+  - label: Supplier Group
+    control: lookup
+    binds: Supplier.supplier_group
+    validation: chosen among Supplier Group records
+  - label: Country
+    control: lookup
+    binds: Supplier.country
+    validation: chosen among Country records
+  - label: Image
+    control: other
+    binds: Supplier.image
+  - label: Billing Currency
+    control: lookup
+    binds: Supplier.default_currency
+    validation: chosen among Currency records
+  - label: Company Bank Account
+    control: lookup
+    binds: Supplier.default_bank_account
+    validation: chosen among Bank Account records
+  - label: Price List
+    control: lookup
+    binds: Supplier.default_price_list
+    validation: chosen among Price List records
+  - label: Payment Terms Template
+    control: lookup
+    binds: Supplier.payment_terms
+    validation: chosen among Payment Terms Template records
+  - label: Primary Address
+    control: lookup
+    binds: Supplier.supplier_primary_address
+    validation: chosen among Address records
+  - label: Primary Address Preview
+    control: text
+    binds: Supplier.primary_address
+    validation: read only (computed or filled by the program)
+  - label: Primary Contact
+    control: lookup
+    binds: Supplier.supplier_primary_contact
+    validation: chosen among Contact records
+  - label: Mobile No
+    control: display
+    binds: Supplier.mobile_no
+  - label: Email ID
+    control: display
+    binds: Supplier.email_id
+  - label: Per-Company Accounts
+    control: grid
+    columns:
+      - Company
+      - Default Account
+      - Advance Account
+  - label: Is Internal Supplier
+    control: checkbox
+    binds: Supplier.is_internal_supplier
+  - label: Represents Company
+    control: lookup
+    binds: Supplier.represents_company
+    validation: shown only when is_internal_supplier; chosen among Company records
+  - label: Allowed to transact with
+    control: grid
+    validation: shown only when represents_company
+    columns:
+      - Company
+  - label: Tax ID
+    control: text
+    binds: Supplier.tax_id
+  - label: Tax Category
+    control: lookup
+    binds: Supplier.tax_category
+    validation: chosen among Tax Category records
+  - label: Tax Withholding Category
+    control: lookup
+    binds: Supplier.tax_withholding_category
+    validation: chosen among Tax Withholding Category records
+  - label: Tax Withholding Group
+    control: lookup
+    binds: Supplier.tax_withholding_group
+    validation: chosen among Tax Withholding Group records
+  - label: Restrict to Companies
+    control: checkbox
+    binds: Supplier.restrict_to_companies
+  - label: Allowed Companies
+    control: grid
+    validation: shown only when eval:doc.restrict_to_companies
+    columns:
+      - Company
+  - label: Is Transporter
+    control: checkbox
+    binds: Supplier.is_transporter
+  - label: Allow purchase invoice creation without purchase order
+    control: checkbox
+    binds: Supplier.allow_purchase_invoice_creation_without_purchase_order
+  - label: Allow purchase invoice creation without purchase receipt
+    control: checkbox
+    binds: Supplier.allow_purchase_invoice_creation_without_purchase_receipt
+  - label: Disabled
+    control: checkbox
+    binds: Supplier.disabled
+  - label: Is Frozen
+    control: checkbox
+    binds: Supplier.is_frozen
+  - label: Block Supplier
+    control: checkbox
+    binds: Supplier.on_hold
+  - label: Hold Type
+    control: select
+    binds: Supplier.hold_type
+    validation: shown only when eval:doc.on_hold
+  - label: Release Date
+    control: date
+    binds: Supplier.release_date
+    validation: shown only when eval:doc.on_hold
+  - label: Warn RFQs
+    control: checkbox
+    binds: Supplier.warn_rfqs
+    validation: read only (computed or filled by the program)
+  - label: Prevent RFQs
+    control: checkbox
+    binds: Supplier.prevent_rfqs
+    validation: read only (computed or filled by the program)
+  - label: Warn POs
+    control: checkbox
+    binds: Supplier.warn_pos
+    validation: read only (computed or filled by the program)
+  - label: Prevent POs
+    control: checkbox
+    binds: Supplier.prevent_pos
+    validation: read only (computed or filled by the program)
+  - label: Supplier Portal Users
+    control: grid
+    columns:
+      - User
+  - label: Website
+    control: text
+    binds: Supplier.website
+  - label: Print Language
+    control: lookup
+    binds: Supplier.language
+    validation: chosen among Language records
+  - label: Supplier Details
+    control: text
+    binds: Supplier.supplier_details
+  - label: Customer Numbers
+    control: grid
+    columns:
+      - Company
+      - Customer Number
+actions:
+  - label: Save
+    triggers: F-123
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Supplier
+    note: declared by the program

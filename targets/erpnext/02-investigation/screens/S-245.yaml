@@ -1,0 +1,109 @@
+id: S-245
+title: Onboarding Step
+purpose: create, view and edit Onboarding Step records
+kind: form
+layout: "sections: Description; 25 fields"
+fields:
+  - label: Title
+    control: text
+    binds: OnboardingStep.title
+    required: true
+  - label: Is Complete
+    control: checkbox
+    binds: OnboardingStep.is_complete
+  - label: Is Skipped
+    control: checkbox
+    binds: OnboardingStep.is_skipped
+  - label: Description
+    control: text
+    binds: OnboardingStep.description
+  - label: Intro Video URL
+    control: text
+    binds: OnboardingStep.intro_video_url
+  - label: Action
+    control: select
+    binds: OnboardingStep.action
+    required: true
+  - label: Action Label
+    control: text
+    binds: OnboardingStep.action_label
+  - label: Reference Document
+    control: lookup
+    binds: OnboardingStep.reference_document
+    validation: shown only when eval:doc.action == "Create Entry" || doc.action == "Update Settings" || doc.acti; chosen among DocType records
+  - label: Module Onboarding
+    control: lookup
+    binds: OnboardingStep.module_onboarding
+    validation: shown only when eval:doc.action == "Complete Onboarding";; chosen among Module Onboarding records
+  - label: Show Full Form?
+    control: checkbox
+    binds: OnboardingStep.show_full_form
+    validation: shown only when eval:doc.action == "Create Entry"
+  - label: Show Form Tour
+    control: checkbox
+    binds: OnboardingStep.show_form_tour
+    validation: shown only when eval:doc.action=="Create Entry" && doc.show_full_form
+  - label: Form Tour
+    control: lookup
+    binds: OnboardingStep.form_tour
+    validation: shown only when show_form_tour; chosen among Form Tour records
+  - label: Is Single
+    control: checkbox
+    binds: OnboardingStep.is_single
+    validation: shown only when eval:doc.action == "Create Entry" || doc.action == "Update Settings" || doc.acti
+  - label: Reference Report
+    control: lookup
+    binds: OnboardingStep.reference_report
+    validation: shown only when eval:doc.action == "View Report"; chosen among Report records
+  - label: Report Reference Doctype
+    control: text
+    binds: OnboardingStep.report_reference_doctype
+    validation: read only (computed or filled by the program)
+  - label: Report Type
+    control: text
+    binds: OnboardingStep.report_type
+    validation: read only (computed or filled by the program); shown only when eval:doc.action == "View Report"
+  - label: Report Description
+    control: text
+    binds: OnboardingStep.report_description
+    validation: shown only when eval:doc.action == "View Report"
+  - label: Path
+    control: text
+    binds: OnboardingStep.path
+    validation: shown only when eval:doc.action == "Go to Page" || doc.action === "View Docs"
+  - label: Callback Title
+    control: text
+    binds: OnboardingStep.callback_title
+    validation: shown only when eval:doc.action == "Go to Page"
+  - label: Callback Message
+    control: text
+    binds: OnboardingStep.callback_message
+    validation: shown only when eval:doc.action == "Go to Page"
+  - label: Validate Field
+    control: checkbox
+    binds: OnboardingStep.validate_action
+    validation: shown only when eval:doc.action == "Update Settings"
+  - label: Field
+    control: select
+    binds: OnboardingStep.field
+    validation: shown only when eval:doc.action == "Update Settings" && doc.validate_action
+  - label: Value to Validate
+    control: text
+    binds: OnboardingStep.value_to_validate
+    validation: shown only when eval:doc.action == "Update Settings" && doc.validate_action
+  - label: Video URL
+    control: text
+    binds: OnboardingStep.video_url
+    validation: shown only when eval:doc.action == "Watch Video"
+  - label: Route Options
+    control: text
+    binds: OnboardingStep.route_options
+actions:
+  - label: Save
+    triggers: F-246
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Onboarding Step
+    note: declared by the program

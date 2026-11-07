@@ -1,0 +1,52 @@
+id: S-172
+title: Prepared Report
+purpose: create, view and edit Prepared Report records
+kind: form
+layout: "sections: Filters; 9 fields"
+fields:
+  - label: Status
+    control: select
+    binds: PreparedReport.status
+    validation: read only (computed or filled by the program)
+  - label: Report Name
+    control: text
+    binds: PreparedReport.report_name
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Queued By
+    control: text
+    binds: PreparedReport.queued_by
+    validation: read only (computed or filled by the program)
+  - label: Job ID
+    control: text
+    binds: PreparedReport.job_id
+    validation: read only (computed or filled by the program)
+  - label: Queued At
+    control: date
+    binds: PreparedReport.queued_at
+    validation: read only (computed or filled by the program)
+  - label: Finished At
+    control: date
+    binds: PreparedReport.report_end_time
+    validation: read only (computed or filled by the program)
+  - label: Peak Memory Usage
+    control: number
+    binds: PreparedReport.peak_memory_usage
+    validation: read only (computed or filled by the program)
+  - label: Error Message
+    control: text
+    binds: PreparedReport.error_message
+    validation: read only (computed or filled by the program)
+  - label: Filters
+    control: text
+    binds: PreparedReport.filters
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-173
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Prepared Report
+    note: declared by the program

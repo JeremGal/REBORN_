@@ -1,0 +1,62 @@
+id: F-103
+title: Create, submit and cancel a Asset Repair
+module: Assets
+priority: must
+status: partial
+confidence: medium
+user_goal: A repair made to an asset, and what it cost.
+entry_points:
+  - screen: S-102
+    action: open the form
+inputs:
+  - label: Series
+    field: AssetRepair.naming_series
+    type: enum
+    required: true
+  - label: Asset
+    field: AssetRepair.asset
+    type: ref
+    required: true
+  - label: Failure Date
+    field: AssetRepair.failure_date
+    type: datetime
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Asset Repair form
+    screen: S-102
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Asset, Failure Date"
+  - n: 3
+    actor: user
+    does: "adds lines in: Repair Purchase Invoices, Stock Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Asset Repair record stored
+    entities:
+      - AssetRepair
+entities:
+  - AssetRepair
+  - AssetRepairPurchaseInvoice
+  - AssetRepairConsumedItem
+screens:
+  - S-102
+acceptance:
+  - id: AC-104
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Asset Repair
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"asset-repair\")."

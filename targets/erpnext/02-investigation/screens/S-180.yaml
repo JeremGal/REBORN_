@@ -1,0 +1,33 @@
+id: S-180
+title: Scheduled Job Log
+purpose: create, view and edit Scheduled Job Log records
+kind: form
+layout: 4 fields
+fields:
+  - label: Status
+    control: select
+    binds: ScheduledJobLog.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Scheduled Job
+    control: lookup
+    binds: ScheduledJobLog.scheduled_job_type
+    required: true
+    validation: read only (computed or filled by the program); chosen among Scheduled Job Type records
+  - label: Details
+    control: text
+    binds: ScheduledJobLog.details
+    validation: read only (computed or filled by the program)
+  - label: Debug Log
+    control: text
+    binds: ScheduledJobLog.debug_log
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-181
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Scheduled Job Log
+    note: declared by the program

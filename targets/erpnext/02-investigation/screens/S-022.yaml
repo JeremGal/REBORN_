@@ -1,0 +1,45 @@
+id: S-022
+title: Bisect Nodes
+purpose: create, view and edit Bisect Nodes records
+kind: form
+layout: 9 fields
+fields:
+  - label: Root
+    control: lookup
+    binds: BisectNodes.root
+    validation: chosen among Bisect Nodes records
+  - label: Left Child
+    control: lookup
+    binds: BisectNodes.left_child
+    validation: chosen among Bisect Nodes records
+  - label: Right Child
+    control: lookup
+    binds: BisectNodes.right_child
+    validation: chosen among Bisect Nodes records
+  - label: Period_from_date
+    control: date
+    binds: BisectNodes.period_from_date
+  - label: Period To Date
+    control: date
+    binds: BisectNodes.period_to_date
+  - label: Difference
+    control: number
+    binds: BisectNodes.difference
+  - label: Balance Sheet Summary
+    control: number
+    binds: BisectNodes.balance_sheet_summary
+  - label: Profit and Loss Summary
+    control: number
+    binds: BisectNodes.profit_loss_summary
+  - label: Generated
+    control: checkbox
+    binds: BisectNodes.generated
+actions:
+  - label: Save
+    triggers: F-023
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bisect Nodes
+    note: declared by the program

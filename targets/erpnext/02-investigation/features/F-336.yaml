@@ -1,0 +1,53 @@
+id: F-336
+title: Create and edit a Quality Meeting
+module: Quality Management
+priority: could
+status: partial
+confidence: medium
+user_goal: A meeting to review quality, with its agenda and minutes.
+entry_points:
+  - screen: S-335
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Quality Meeting form
+    screen: S-335
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Agenda, Minutes"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Quality Meeting record stored
+    entities:
+      - QualityMeeting
+entities:
+  - QualityMeeting
+  - QualityMeetingAgenda
+  - QualityMeetingMinutes
+screens:
+  - S-335
+acceptance:
+  - id: AC-337
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Quality Meeting
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 126
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"quality-meeting\")."

@@ -1,0 +1,57 @@
+id: F-034
+title: Create, submit and cancel a Exchange Rate Revaluation
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: Restates foreign currency balances at today's exchange rate.
+entry_points:
+  - screen: S-033
+    action: open the form
+inputs:
+  - label: Posting Date
+    field: ExchangeRateRevaluation.posting_date
+    type: date
+    required: true
+  - label: Company
+    field: ExchangeRateRevaluation.company
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Exchange Rate Revaluation form
+    screen: S-033
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Posting Date, Company"
+  - n: 3
+    actor: user
+    does: "adds lines in: Exchange Rate Revaluation Account"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Exchange Rate Revaluation record stored
+    entities:
+      - ExchangeRateRevaluation
+entities:
+  - ExchangeRateRevaluation
+  - ExchangeRateRevaluationAccount
+screens:
+  - S-033
+acceptance:
+  - id: AC-035
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Exchange Rate Revaluation
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"exchange-rate-revaluation\")."

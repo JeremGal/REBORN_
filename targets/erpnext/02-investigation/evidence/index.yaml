@@ -51,3 +51,40 @@ entries:
     counts:
       features: 755
       chapters: 1
+  - id: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    tool: frappe-api
+    operation: doctype-metadata
+    subject:
+      label: all document types
+    created_at: 2026-11-07T19:32:43.629Z
+    file: frappe/20261107T193243Z-30816-4640d2-doctype-metadata.json
+    bytes: 27486824
+    sha256: c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    summary: 835 document type definitions (0 unreadable)
+    counts:
+      tables: 835
+      windows: 471
+  - id: rb_6d78f435d7b54641c5c9f31b6881c5342f113eca38c85b4010238c2624312ea3
+    kind: rea
+    tool: frappe-api
+    operation: observe probe
+    subject:
+      label: 181 business document types
+    created_at: 2026-11-07T19:39:12.237Z
+    file: frappe/20261107T193912Z-33028-5c8c9a-observe-probe.json
+    bytes: 95286
+    sha256: 6d78f435d7b54641c5c9f31b6881c5342f113eca38c85b4010238c2624312ea3
+    summary: 67 stored, 66 refused, 48 not attempted (run run-20261107T193858-api-probe)
+  - id: rb_5c9630882d8fc0f702b25b5dbac2a90a5f8f0212d51fe837fde14223da464f5a
+    kind: rea
+    tool: frappe-locale
+    operation: translations fr
+    subject:
+      label: fr translation files of the installed version
+    created_at: 2026-11-07T19:48:45.366Z
+    file: frappe/20261107T194845Z-11284-bf439a-translations-fr.json
+    bytes: 1310590
+    sha256: 5c9630882d8fc0f702b25b5dbac2a90a5f8f0212d51fe837fde14223da464f5a
+    summary: 16161 fr translations (frappe, erpnext)
+    basis: shipped-data

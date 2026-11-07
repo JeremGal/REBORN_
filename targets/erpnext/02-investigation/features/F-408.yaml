@@ -1,0 +1,50 @@
+id: F-408
+title: Create and edit a Quality Inspection Template
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: The parameters to check an item for.
+entry_points:
+  - screen: S-407
+    action: open the form
+inputs:
+  - label: Quality Inspection Template Name
+    field: QualityInspectionTemplate.quality_inspection_template_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Quality Inspection Template form
+    screen: S-407
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Quality Inspection Template Name"
+  - n: 3
+    actor: user
+    does: "adds lines in: Item Quality Inspection Parameter"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Quality Inspection Template record stored
+    entities:
+      - QualityInspectionTemplate
+entities:
+  - QualityInspectionTemplate
+  - ItemQualityInspectionParameter
+screens:
+  - S-407
+acceptance:
+  - id: AC-409
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Quality Inspection Template
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

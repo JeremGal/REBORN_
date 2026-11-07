@@ -1,0 +1,25 @@
+id: S-340
+title: South Africa VAT Settings
+purpose: create, view and edit South Africa VAT Settings records
+kind: form
+layout: 2 fields
+fields:
+  - label: Company
+    control: lookup
+    binds: SouthAfricaVATSettings.company
+    required: true
+    validation: chosen among Company records
+  - label: VAT Accounts
+    control: grid
+    required: true
+    columns:
+      - Account
+actions:
+  - label: Save
+    triggers: F-341
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of South Africa VAT Settings
+    note: declared by the program

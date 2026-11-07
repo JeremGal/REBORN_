@@ -1,0 +1,50 @@
+id: F-233
+title: Create and edit a Dock
+module: Desk
+priority: could
+status: partial
+confidence: medium
+user_goal: "One layer of one app's dock. Three of them share this table, told apart by `app`, `user` and `standard`: the app's own dock, which an app ships as an exported document and a developer authors; the site's arrangement of it, curated by a Workspace Manager and applying to everyone; and one person's own"
+entry_points:
+  - screen: S-232
+    action: open the form
+inputs:
+  - label: App
+    field: Dock.app
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Dock form
+    screen: S-232
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: App"
+  - n: 3
+    actor: user
+    does: "adds lines in: Dock Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Dock record stored
+    entities:
+      - Dock
+entities:
+  - Dock
+  - DockItem
+screens:
+  - S-232
+acceptance:
+  - id: AC-234
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Dock
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

@@ -1,0 +1,31 @@
+id: S-357
+title: Brand
+purpose: create, view and edit Brand records
+kind: form
+layout: "sections: Defaults; 4 fields"
+fields:
+  - label: Brand Name
+    control: text
+    binds: Brand.brand
+    required: true
+  - label: Image
+    control: other
+    binds: Brand.image
+  - label: Description
+    control: text
+    binds: Brand.description
+  - label: Brand Defaults
+    control: grid
+    columns:
+      - Company
+      - Default Warehouse
+      - Default Price List
+actions:
+  - label: Save
+    triggers: F-358
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Brand
+    note: declared by the program

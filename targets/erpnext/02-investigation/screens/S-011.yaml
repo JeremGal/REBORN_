@@ -1,0 +1,32 @@
+id: S-011
+title: Bank Account Balance
+purpose: create, view and edit Bank Account Balance records
+kind: form
+layout: 4 fields
+fields:
+  - label: Bank Account
+    control: lookup
+    binds: BankAccountBalance.bank_account
+    required: true
+    validation: chosen among Bank Account records
+  - label: Date
+    control: date
+    binds: BankAccountBalance.date
+    required: true
+  - label: Balance
+    control: money
+    binds: BankAccountBalance.balance
+    required: true
+  - label: Company
+    control: lookup
+    binds: BankAccountBalance.company
+    validation: read only (computed or filled by the program); chosen among Company records
+actions:
+  - label: Save
+    triggers: F-012
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bank Account Balance
+    note: declared by the program

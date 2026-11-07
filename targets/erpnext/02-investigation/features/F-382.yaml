@@ -1,0 +1,73 @@
+id: F-382
+title: Create and edit a Vehicle
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Vehicle records.
+entry_points:
+  - screen: S-381
+    action: open the form
+inputs:
+  - label: License Plate
+    field: Vehicle.license_plate
+    type: string
+    required: true
+  - label: Make
+    field: Vehicle.make
+    type: string
+    required: true
+  - label: Model
+    field: Vehicle.model
+    type: string
+    required: true
+  - label: Odometer Value (Last)
+    field: Vehicle.last_odometer
+    type: integer
+    required: true
+  - label: Fuel Type
+    field: Vehicle.fuel_type
+    type: enum
+    required: true
+  - label: Fuel UOM
+    field: Vehicle.uom
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Vehicle form
+    screen: S-381
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: License Plate, Make, Model, Odometer Value (Last), Fuel Type, Fuel UOM"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Vehicle record stored
+    entities:
+      - Vehicle
+entities:
+  - Vehicle
+screens:
+  - S-381
+acceptance:
+  - id: AC-383
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Vehicle
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 174
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

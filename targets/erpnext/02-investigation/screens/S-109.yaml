@@ -1,0 +1,48 @@
+id: S-109
+title: Automation Event Subscription
+purpose: create, view and edit Automation Event Subscription records
+kind: form
+layout: 8 fields
+fields:
+  - label: Event Name
+    control: text
+    binds: AutomationEventSubscription.event_name
+    required: true
+  - label: Correlation Key
+    control: text
+    binds: AutomationEventSubscription.correlation_key
+    required: true
+  - label: Status
+    control: select
+    binds: AutomationEventSubscription.status
+    required: true
+  - label: Expires At
+    control: date
+    binds: AutomationEventSubscription.expires_at
+    required: true
+  - label: Run
+    control: lookup
+    binds: AutomationEventSubscription.run
+    required: true
+    validation: chosen among Automation Run records
+  - label: Step Key
+    control: text
+    binds: AutomationEventSubscription.step_key
+    required: true
+  - label: Resume Queue
+    control: lookup
+    binds: AutomationEventSubscription.resume_queue
+    required: true
+    validation: chosen among Automation Trigger Queue records
+  - label: Event Payload
+    control: other
+    binds: AutomationEventSubscription.event_payload
+actions:
+  - label: Save
+    triggers: F-110
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Automation Event Subscription
+    note: declared by the program

@@ -1,0 +1,54 @@
+id: F-012
+title: Create and edit a Bank Account Balance
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Bank Account Balance records.
+entry_points:
+  - screen: S-011
+    action: open the form
+inputs:
+  - label: Bank Account
+    field: BankAccountBalance.bank_account
+    type: ref
+    required: true
+  - label: Date
+    field: BankAccountBalance.date
+    type: date
+    required: true
+  - label: Balance
+    field: BankAccountBalance.balance
+    type: money
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Bank Account Balance form
+    screen: S-011
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Bank Account, Date, Balance"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Bank Account Balance record stored
+    entities:
+      - BankAccountBalance
+entities:
+  - BankAccountBalance
+screens:
+  - S-011
+acceptance:
+  - id: AC-013
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Bank Account Balance
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

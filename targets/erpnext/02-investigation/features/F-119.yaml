@@ -1,0 +1,41 @@
+id: F-119
+title: Create and edit a Bulk Transaction Log Detail
+module: Bulk Transaction
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Bulk Transaction Log Detail records.
+entry_points:
+  - screen: S-118
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Bulk Transaction Log Detail form
+    screen: S-118
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Bulk Transaction Log Detail record stored
+    entities:
+      - BulkTransactionLogDetail
+entities:
+  - BulkTransactionLogDetail
+screens:
+  - S-118
+acceptance:
+  - id: AC-120
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Bulk Transaction Log Detail
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

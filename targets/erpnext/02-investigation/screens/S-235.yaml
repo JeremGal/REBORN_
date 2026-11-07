@@ -1,0 +1,20 @@
+id: S-235
+title: Global Search Settings
+purpose: settings of Global Search Settings
+kind: settings
+layout: 1 fields
+fields:
+  - label: Search Priorities
+    control: grid
+    columns:
+      - Document Type
+      - Configure
+actions:
+  - label: Save
+    triggers: F-236
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Global Search Settings
+    note: declared by the program

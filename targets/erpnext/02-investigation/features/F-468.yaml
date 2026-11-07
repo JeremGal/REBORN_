@@ -1,0 +1,59 @@
+id: F-468
+title: Create and edit a Workflow
+module: Workflow
+priority: could
+status: partial
+confidence: medium
+user_goal: Defines workflow states and rules for a document.
+entry_points:
+  - screen: S-467
+    action: open the form
+inputs:
+  - label: Workflow Name
+    field: Workflow.workflow_name
+    type: string
+    required: true
+  - label: Document Type
+    field: Workflow.document_type
+    type: ref
+    required: true
+  - label: Workflow State Field
+    field: Workflow.workflow_state_field
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Workflow form
+    screen: S-467
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Workflow Name, Document Type, Workflow State Field"
+  - n: 3
+    actor: user
+    does: "adds lines in: Document States, Transitions"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Workflow record stored
+    entities:
+      - Workflow
+entities:
+  - Workflow
+  - WorkflowDocumentState
+  - WorkflowTransition
+screens:
+  - S-467
+acceptance:
+  - id: AC-469
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Workflow
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"workflow\")."

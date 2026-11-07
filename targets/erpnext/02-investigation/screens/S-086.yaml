@@ -1,0 +1,60 @@
+id: S-086
+title: Subscription Plan
+purpose: create, view and edit Subscription Plan records
+kind: form
+layout: "sections: Payment Plan, Accounting Dimensions; 11 fields"
+fields:
+  - label: Plan Name
+    control: text
+    binds: SubscriptionPlan.plan_name
+    required: true
+  - label: Currency
+    control: lookup
+    binds: SubscriptionPlan.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Item
+    control: lookup
+    binds: SubscriptionPlan.item
+    required: true
+    validation: chosen among Item records
+  - label: Subscription Price Based On
+    control: select
+    binds: SubscriptionPlan.price_determination
+    required: true
+  - label: Cost
+    control: money
+    binds: SubscriptionPlan.cost
+    validation: shown only when eval:['Fixed Rate', 'Monthly Rate'].includes(doc.price_determination)
+  - label: Price List
+    control: lookup
+    binds: SubscriptionPlan.price_list
+    validation: shown only when eval:doc.price_determination=="Based On Price List"; chosen among Price List records
+  - label: Billing Interval
+    control: select
+    binds: SubscriptionPlan.billing_interval
+    required: true
+  - label: Billing Interval Count
+    control: number
+    binds: SubscriptionPlan.billing_interval_count
+    required: true
+  - label: Product Price ID
+    control: text
+    binds: SubscriptionPlan.product_price_id
+  - label: Payment Gateway
+    control: lookup
+    binds: SubscriptionPlan.payment_gateway
+    validation: chosen among Payment Gateway Account records
+  - label: Cost Center
+    control: lookup
+    binds: SubscriptionPlan.cost_center
+    validation: chosen among Cost Center records
+actions:
+  - label: Save
+    triggers: F-087
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Subscription Plan
+    note: declared by the program

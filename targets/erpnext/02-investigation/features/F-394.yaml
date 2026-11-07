@@ -1,0 +1,54 @@
+id: F-394
+title: Create and edit a Item Manufacturer
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Item Manufacturer records.
+entry_points:
+  - screen: S-393
+    action: open the form
+inputs:
+  - label: Item Code
+    field: ItemManufacturer.item_code
+    type: ref
+    required: true
+  - label: Manufacturer
+    field: ItemManufacturer.manufacturer
+    type: ref
+    required: true
+  - label: Manufacturer Part Number
+    field: ItemManufacturer.manufacturer_part_no
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Item Manufacturer form
+    screen: S-393
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Item Code, Manufacturer, Manufacturer Part Number"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Item Manufacturer record stored
+    entities:
+      - ItemManufacturer
+entities:
+  - ItemManufacturer
+screens:
+  - S-393
+acceptance:
+  - id: AC-395
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Item Manufacturer
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

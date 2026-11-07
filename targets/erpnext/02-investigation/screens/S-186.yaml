@@ -1,0 +1,43 @@
+id: S-186
+title: SMS Log
+purpose: create, view and edit SMS Log records
+kind: form
+layout: 7 fields
+fields:
+  - label: Sender Name
+    control: text
+    binds: SMSLog.sender_name
+    validation: read only (computed or filled by the program)
+  - label: Sent On
+    control: date
+    binds: SMSLog.sent_on
+    validation: read only (computed or filled by the program)
+  - label: Message
+    control: text
+    binds: SMSLog.message
+    validation: read only (computed or filled by the program)
+  - label: No of Requested SMS
+    control: number
+    binds: SMSLog.no_of_requested_sms
+    validation: read only (computed or filled by the program)
+  - label: Requested Numbers
+    control: text
+    binds: SMSLog.requested_numbers
+    validation: read only (computed or filled by the program)
+  - label: No of Sent SMS
+    control: number
+    binds: SMSLog.no_of_sent_sms
+    validation: read only (computed or filled by the program)
+  - label: Sent To
+    control: text
+    binds: SMSLog.sent_to
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-187
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of SMS Log
+    note: declared by the program

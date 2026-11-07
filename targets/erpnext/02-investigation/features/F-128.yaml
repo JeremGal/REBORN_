@@ -1,0 +1,49 @@
+id: F-128
+title: Create and edit a Supplier Scorecard Standing
+module: Buying
+priority: should
+status: partial
+confidence: medium
+user_goal: A band of scores, and what happens to suppliers in it.
+entry_points:
+  - screen: S-127
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Supplier Scorecard Standing form
+    screen: S-127
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Supplier Scorecard Standing record stored
+    entities:
+      - SupplierScorecardStanding
+entities:
+  - SupplierScorecardStanding
+screens:
+  - S-127
+acceptance:
+  - id: AC-129
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Supplier Scorecard Standing
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 163
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Standing Name est requis"

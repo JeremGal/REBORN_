@@ -1,0 +1,50 @@
+id: F-049
+title: Create and edit a Monthly Distribution
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: Spreads a yearly budget or target across months for seasonal businesses.
+entry_points:
+  - screen: S-048
+    action: open the form
+inputs:
+  - label: Distribution Name
+    field: MonthlyDistribution.distribution_id
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Monthly Distribution form
+    screen: S-048
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Distribution Name"
+  - n: 3
+    actor: user
+    does: "adds lines in: Monthly Distribution Percentages"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Monthly Distribution record stored
+    entities:
+      - MonthlyDistribution
+entities:
+  - MonthlyDistribution
+  - MonthlyDistributionPercentage
+screens:
+  - S-048
+acceptance:
+  - id: AC-050
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Monthly Distribution
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

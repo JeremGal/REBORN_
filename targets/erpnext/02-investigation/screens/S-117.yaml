@@ -1,0 +1,31 @@
+id: S-117
+title: Bulk Transaction Log
+purpose: create, view and edit Bulk Transaction Log records
+kind: form
+layout: 4 fields
+fields:
+  - label: Date
+    control: date
+    binds: BulkTransactionLog.date
+    validation: read only (computed or filled by the program)
+  - label: Log Entries
+    control: number
+    binds: BulkTransactionLog.log_entries
+    validation: read only (computed or filled by the program)
+  - label: Succeeded
+    control: number
+    binds: BulkTransactionLog.succeeded
+    validation: read only (computed or filled by the program)
+  - label: Failed
+    control: number
+    binds: BulkTransactionLog.failed
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-118
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bulk Transaction Log
+    note: declared by the program

@@ -1,0 +1,24 @@
+id: S-286
+title: Push Notification Settings
+purpose: settings of Push Notification Settings
+kind: settings
+layout: "sections: Relay Settings, Authentication; 3 fields"
+fields:
+  - label: Enable Push Notification Relay
+    control: checkbox
+    binds: PushNotificationSettings.enable_push_notification_relay
+  - label: API Key
+    control: text
+    binds: PushNotificationSettings.api_key
+  - label: API Secret
+    control: text
+    binds: PushNotificationSettings.api_secret
+actions:
+  - label: Save
+    triggers: F-287
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Push Notification Settings
+    note: declared by the program

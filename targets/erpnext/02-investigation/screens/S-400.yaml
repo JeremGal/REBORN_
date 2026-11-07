@@ -1,0 +1,102 @@
+id: S-400
+title: Pick List
+purpose: create, view and edit Pick List records
+kind: form
+layout: "tabs: More Info, Connections; sections: Print Settings, Status, Reference; 21 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: PickList.company
+    required: true
+    validation: chosen among Company records
+  - label: Series
+    control: select
+    binds: PickList.naming_series
+    required: true
+  - label: Purpose
+    control: select
+    binds: PickList.purpose
+  - label: Customer
+    control: lookup
+    binds: PickList.customer
+    validation: shown only when eval:doc.purpose==='Delivery'; chosen among Customer records
+  - label: Qty of Finished Goods Item
+    control: number
+    binds: PickList.for_qty
+    validation: read only (computed or filled by the program); shown only when eval:doc.purpose==='Material Transfer for Manufacture'
+  - label: Warehouse
+    control: lookup
+    binds: PickList.parent_warehouse
+    validation: chosen among Warehouse records
+  - label: Consider Rejected Warehouses
+    control: checkbox
+    binds: PickList.consider_rejected_warehouses
+  - label: Pick Manually
+    control: checkbox
+    binds: PickList.pick_manually
+  - label: Ignore Pricing Rule
+    control: checkbox
+    binds: PickList.ignore_pricing_rule
+  - label: Scan Barcode
+    control: text
+    binds: PickList.scan_barcode
+  - label: Scan Mode
+    control: checkbox
+    binds: PickList.scan_mode
+  - label: Prompt Qty
+    control: checkbox
+    binds: PickList.prompt_qty
+  - label: Item Locations
+    control: grid
+    columns:
+      - Item
+      - Warehouse
+      - Qty
+      - Qty (in Stock UOM)
+      - Picked Qty (in Stock UOM)
+  - label: Group Same Items
+    control: checkbox
+    binds: PickList.group_same_items
+  - label: "% Delivered"
+    control: number
+    binds: PickList.per_delivered
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal && doc.purpose === "Delivery"
+  - label: Delivery Status
+    control: select
+    binds: PickList.delivery_status
+  - label: Status
+    control: select
+    binds: PickList.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Work Order
+    control: lookup
+    binds: PickList.work_order
+    validation: shown only when eval:doc.purpose==='Material Transfer for Manufacture'; chosen among Work Order records
+  - label: Customer Name
+    control: text
+    binds: PickList.customer_name
+    validation: read only (computed or filled by the program); shown only when eval:doc.purpose==='Delivery' && doc.customer
+  - label: Material Request
+    control: lookup
+    binds: PickList.material_request
+    validation: shown only when eval:['Material Transfer', 'Material Issue'].includes(doc.purpose); chosen among Material Request records
+  - label: Amended From
+    control: lookup
+    binds: PickList.amended_from
+    validation: read only (computed or filled by the program); chosen among Pick List records
+actions:
+  - label: Save
+    triggers: F-401
+  - label: Submit
+    triggers: F-401
+  - label: Cancel
+    triggers: F-401
+  - label: Amend
+    triggers: F-401
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Pick List
+    note: declared by the program

@@ -1,0 +1,43 @@
+id: S-150
+title: Document Naming Rule
+purpose: create, view and edit Document Naming Rule records
+kind: form
+layout: "sections: Rule Conditions, Naming; 7 fields"
+fields:
+  - label: Document Type
+    control: lookup
+    binds: DocumentNamingRule.document_type
+    required: true
+    validation: chosen among DocType records
+  - label: Disabled
+    control: checkbox
+    binds: DocumentNamingRule.disabled
+  - label: Priority
+    control: number
+    binds: DocumentNamingRule.priority
+  - label: Conditions
+    control: grid
+    columns:
+      - Field
+      - Condition
+      - Value
+  - label: Prefix
+    control: text
+    binds: DocumentNamingRule.prefix
+    required: true
+  - label: Counter
+    control: number
+    binds: DocumentNamingRule.counter
+  - label: Digits
+    control: number
+    binds: DocumentNamingRule.prefix_digits
+    required: true
+actions:
+  - label: Save
+    triggers: F-151
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Document Naming Rule
+    note: declared by the program

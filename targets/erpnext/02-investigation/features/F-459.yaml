@@ -1,0 +1,50 @@
+id: F-459
+title: Create and edit a Web Page
+module: Website
+priority: could
+status: partial
+confidence: medium
+user_goal: Page to show on the website
+entry_points:
+  - screen: S-458
+    action: open the form
+inputs:
+  - label: Title
+    field: WebPage.title
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Web Page form
+    screen: S-458
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Title"
+  - n: 3
+    actor: user
+    does: "adds lines in: Page Building Blocks"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Web Page record stored
+    entities:
+      - WebPage
+entities:
+  - WebPage
+  - WebPageBlock
+screens:
+  - S-458
+acceptance:
+  - id: AC-460
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Web Page
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"web-page\")."

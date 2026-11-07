@@ -1,0 +1,49 @@
+id: F-305
+title: Create and edit a Plant Floor
+module: Manufacturing
+priority: should
+status: partial
+confidence: medium
+user_goal: A view of your workstations and what each is doing.
+entry_points:
+  - screen: S-304
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Plant Floor form
+    screen: S-304
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Plant Floor record stored
+    entities:
+      - PlantFloor
+entities:
+  - PlantFloor
+screens:
+  - S-304
+acceptance:
+  - id: AC-306
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Plant Floor
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 100
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"plant-floor\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Floor Name est requis"

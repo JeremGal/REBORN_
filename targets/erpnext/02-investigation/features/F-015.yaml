@@ -1,0 +1,58 @@
+id: F-015
+title: Configure Bank Clearance
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Bank Clearance settings.
+entry_points:
+  - screen: S-014
+    action: open the form
+inputs:
+  - label: Account
+    field: BankClearance.account
+    type: ref
+    required: true
+  - label: From Date
+    field: BankClearance.from_date
+    type: date
+    required: true
+  - label: To Date
+    field: BankClearance.to_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Bank Clearance form
+    screen: S-014
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Account, From Date, To Date"
+  - n: 3
+    actor: user
+    does: "adds lines in: Payment Entries"
+  - n: 4
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - BankClearance
+entities:
+  - BankClearance
+  - BankClearanceDetail
+screens:
+  - S-014
+acceptance:
+  - id: AC-016
+    given: every mandatory field filled with a valid value
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Bank Clearance
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

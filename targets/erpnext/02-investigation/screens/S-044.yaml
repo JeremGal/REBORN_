@@ -1,0 +1,52 @@
+id: S-044
+title: Ledger Merge
+purpose: create, view and edit Ledger Merge records
+kind: form
+layout: 8 fields
+fields:
+  - label: Root Type
+    control: select
+    binds: LedgerMerge.root_type
+    required: true
+  - label: Account
+    control: lookup
+    binds: LedgerMerge.account
+    required: true
+    validation: shown only when root_type; chosen among Account records
+  - label: Account Name
+    control: text
+    binds: LedgerMerge.account_name
+    required: true
+    validation: read only (computed or filled by the program); shown only when account
+  - label: Company
+    control: lookup
+    binds: LedgerMerge.company
+    required: true
+    validation: chosen among Company records
+  - label: Status
+    control: select
+    binds: LedgerMerge.status
+    validation: read only (computed or filled by the program)
+  - label: Is Group
+    control: checkbox
+    binds: LedgerMerge.is_group
+    validation: read only (computed or filled by the program); shown only when account
+  - label: Account Type
+    control: text
+    binds: LedgerMerge.account_type
+    validation: read only (computed or filled by the program); shown only when eval:doc.account && !doc.is_group
+  - label: Accounts to Merge
+    control: grid
+    required: true
+    columns:
+      - Account
+      - Merged
+actions:
+  - label: Save
+    triggers: F-045
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Ledger Merge
+    note: declared by the program

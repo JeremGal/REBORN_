@@ -1,0 +1,46 @@
+id: F-244
+title: Create and edit a Notification Type
+module: Desk
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Notification Type records.
+entry_points:
+  - screen: S-243
+    action: open the form
+inputs:
+  - label: Type Name
+    field: NotificationType.type_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Notification Type form
+    screen: S-243
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Type Name"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Notification Type record stored
+    entities:
+      - NotificationType
+entities:
+  - NotificationType
+screens:
+  - S-243
+acceptance:
+  - id: AC-245
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Notification Type
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

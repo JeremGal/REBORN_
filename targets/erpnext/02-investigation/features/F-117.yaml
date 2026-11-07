@@ -1,0 +1,54 @@
+id: F-117
+title: Create and edit a Reminder
+module: Automation
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Reminder records.
+entry_points:
+  - screen: S-116
+    action: open the form
+inputs:
+  - label: User
+    field: Reminder.user
+    type: ref
+    required: true
+  - label: Remind At
+    field: Reminder.remind_at
+    type: datetime
+    required: true
+  - label: Description
+    field: Reminder.description
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Reminder form
+    screen: S-116
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: User, Remind At, Description"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Reminder record stored
+    entities:
+      - Reminder
+entities:
+  - Reminder
+screens:
+  - S-116
+acceptance:
+  - id: AC-118
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Reminder
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

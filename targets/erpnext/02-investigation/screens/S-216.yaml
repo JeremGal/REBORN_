@@ -1,0 +1,177 @@
+id: S-216
+title: Customize Form
+purpose: settings of Customize Form
+kind: settings
+layout: "tabs: Details, Form; sections: Naming, Form Settings, View Settings, Email Settings, List Settings, Document Actions, Document Links, Document States, Fields; 44 fields"
+fields:
+  - label: Enter Form Type
+    control: lookup
+    binds: CustomizeForm.doc_type
+    validation: chosen among DocType records
+  - label: Change Label (via Custom Translation)
+    control: text
+    binds: CustomizeForm.label
+  - label: Search Fields
+    control: text
+    binds: CustomizeForm.search_fields
+  - label: Grid Page Length
+    control: number
+    binds: CustomizeForm.grid_page_length
+    validation: shown only when istable
+  - label: Rows Threshold for Grid Search
+    control: number
+    binds: CustomizeForm.rows_threshold_for_grid_search
+    validation: shown only when istable
+  - label: Link Filters
+    control: other
+    binds: CustomizeForm.link_filters
+  - label: Is Table
+    control: checkbox
+    binds: CustomizeForm.istable
+    validation: read only (computed or filled by the program)
+  - label: Is Calendar and Gantt
+    control: checkbox
+    binds: CustomizeForm.is_calendar_and_gantt
+  - label: Editable Grid
+    control: checkbox
+    binds: CustomizeForm.editable_grid
+    validation: shown only when istable
+  - label: Quick Entry
+    control: checkbox
+    binds: CustomizeForm.quick_entry
+  - label: Track Changes
+    control: checkbox
+    binds: CustomizeForm.track_changes
+  - label: Track Views
+    control: checkbox
+    binds: CustomizeForm.track_views
+  - label: Allow Auto Repeat
+    control: checkbox
+    binds: CustomizeForm.allow_auto_repeat
+  - label: Allow Import (via Data Import Tool)
+    control: checkbox
+    binds: CustomizeForm.allow_import
+  - label: Allow Bulk Edit
+    control: checkbox
+    binds: CustomizeForm.allow_bulk_edit
+    validation: shown only when istable
+  - label: Queue in Background (BETA)
+    control: checkbox
+    binds: CustomizeForm.queue_in_background
+  - label: Naming Rule
+    control: select
+    binds: CustomizeForm.naming_rule
+  - label: Auto Name
+    control: text
+    binds: CustomizeForm.autoname
+  - label: Image Field
+    control: text
+    binds: CustomizeForm.image_field
+  - label: Max Attachments
+    control: number
+    binds: CustomizeForm.max_attachments
+  - label: Hide Sidebar, Menu, and Comments
+    control: checkbox
+    binds: CustomizeForm.hide_toolbar
+  - label: Hide Copy
+    control: checkbox
+    binds: CustomizeForm.allow_copy
+  - label: Make Attachments Public by Default
+    control: checkbox
+    binds: CustomizeForm.make_attachments_public
+  - label: Protect Attached Files
+    control: checkbox
+    binds: CustomizeForm.protect_attached_files
+  - label: Title Field
+    control: text
+    binds: CustomizeForm.title_field
+  - label: Show Title in Link Fields
+    control: checkbox
+    binds: CustomizeForm.show_title_field_in_link
+  - label: Translate Link Fields
+    control: checkbox
+    binds: CustomizeForm.translated_doctype
+  - label: Default Print Format
+    control: lookup
+    binds: CustomizeForm.default_print_format
+    validation: chosen among Print Format records
+  - label: Default View
+    control: select
+    binds: CustomizeForm.default_view
+  - label: Force Re-route to Default View
+    control: checkbox
+    binds: CustomizeForm.force_re_route_to_default_view
+    validation: shown only when default_view
+  - label: Show Preview Popup
+    control: checkbox
+    binds: CustomizeForm.show_preview_popup
+  - label: Make "name" searchable in Global Search
+    control: checkbox
+    binds: CustomizeForm.show_name_in_global_search
+  - label: Default Email Template
+    control: lookup
+    binds: CustomizeForm.default_email_template
+    validation: chosen among Email Template records
+  - label: Allow document creation via Email
+    control: checkbox
+    binds: CustomizeForm.email_append_to
+  - label: Sender Email Field
+    control: text
+    binds: CustomizeForm.sender_field
+    validation: shown only when email_append_to
+  - label: Sender Name Field
+    control: text
+    binds: CustomizeForm.sender_name_field
+    validation: shown only when email_append_to
+  - label: Recipient Account Field
+    control: text
+    binds: CustomizeForm.recipient_account_field
+    validation: shown only when email_append_to
+  - label: Subject Field
+    control: text
+    binds: CustomizeForm.subject_field
+    validation: shown only when email_append_to
+  - label: Sort Field
+    control: select
+    binds: CustomizeForm.sort_field
+  - label: Sort Order
+    control: select
+    binds: CustomizeForm.sort_order
+  - label: Actions
+    control: grid
+    columns:
+      - Label
+      - Action Type
+      - Action / Route
+      - Group
+  - label: Links
+    control: grid
+    columns:
+      - Link DocType
+      - Link Fieldname
+      - Group
+  - label: States
+    control: grid
+    columns:
+      - Title
+      - Color
+  - label: Fields
+    control: grid
+    required: true
+    columns:
+      - Label
+      - Type
+      - Name
+      - Mandatory
+      - Options
+      - Perm Level
+      - Width
+actions:
+  - label: Save
+    triggers: F-217
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Customize Form
+    note: declared by the program

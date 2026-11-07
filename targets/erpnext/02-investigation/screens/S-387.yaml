@@ -1,0 +1,87 @@
+id: S-387
+title: Delivery Trip
+purpose: create, view and edit Delivery Trip records
+kind: form
+layout: "sections: Delivery Details, Delivery Stops; 15 fields"
+fields:
+  - label: Series
+    control: select
+    binds: DeliveryTrip.naming_series
+  - label: Company
+    control: lookup
+    binds: DeliveryTrip.company
+    required: true
+    validation: chosen among Company records
+  - label: Initial Email Notification Sent
+    control: checkbox
+    binds: DeliveryTrip.email_notification_sent
+    validation: read only (computed or filled by the program)
+  - label: Driver
+    control: lookup
+    binds: DeliveryTrip.driver
+    validation: chosen among Driver records
+  - label: Driver Name
+    control: text
+    binds: DeliveryTrip.driver_name
+    validation: read only (computed or filled by the program)
+  - label: Driver Email
+    control: text
+    binds: DeliveryTrip.driver_email
+    validation: read only (computed or filled by the program)
+  - label: Driver Address
+    control: lookup
+    binds: DeliveryTrip.driver_address
+    validation: chosen among Address records
+  - label: Total Estimated Distance
+    control: number
+    binds: DeliveryTrip.total_distance
+    validation: read only (computed or filled by the program)
+  - label: Distance UOM
+    control: lookup
+    binds: DeliveryTrip.uom
+    validation: read only (computed or filled by the program); shown only when eval:doc.total_distance; chosen among UOM records
+  - label: Vehicle
+    control: lookup
+    binds: DeliveryTrip.vehicle
+    required: true
+    validation: chosen among Vehicle records
+  - label: Departure Time
+    control: date
+    binds: DeliveryTrip.departure_time
+    required: true
+  - label: Employee
+    control: lookup
+    binds: DeliveryTrip.employee
+    validation: read only (computed or filled by the program); chosen among Employee records
+  - label: Delivery Stop
+    control: grid
+    required: true
+    columns:
+      - Customer
+      - Address Name
+      - Locked
+      - Delivery Note
+      - Estimated Arrival
+  - label: Status
+    control: select
+    binds: DeliveryTrip.status
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: DeliveryTrip.amended_from
+    validation: read only (computed or filled by the program); chosen among Delivery Trip records
+actions:
+  - label: Save
+    triggers: F-388
+  - label: Submit
+    triggers: F-388
+  - label: Cancel
+    triggers: F-388
+  - label: Amend
+    triggers: F-388
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Delivery Trip
+    note: declared by the program

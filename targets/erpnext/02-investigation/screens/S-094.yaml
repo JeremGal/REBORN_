@@ -1,0 +1,35 @@
+id: S-094
+title: Asset Activity
+purpose: create, view and edit Asset Activity records
+kind: form
+layout: 4 fields
+fields:
+  - label: Asset
+    control: lookup
+    binds: AssetActivity.asset
+    required: true
+    validation: read only (computed or filled by the program); chosen among Asset records
+  - label: Date
+    control: date
+    binds: AssetActivity.date
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: User
+    control: lookup
+    binds: AssetActivity.user
+    required: true
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Subject
+    control: text
+    binds: AssetActivity.subject
+    required: true
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-095
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Activity
+    note: declared by the program

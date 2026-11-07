@@ -1,0 +1,51 @@
+id: S-336
+title: Quality Procedure
+purpose: create, view and edit Quality Procedure records
+kind: form
+layout: "sections: Parent; 9 fields"
+fields:
+  - label: Quality Procedure
+    control: text
+    binds: QualityProcedure.quality_procedure_name
+    required: true
+  - label: Process Owner
+    control: lookup
+    binds: QualityProcedure.process_owner
+    validation: chosen among User records
+  - label: Process Owner Full Name
+    control: text
+    binds: QualityProcedure.process_owner_full_name
+  - label: Processes
+    control: grid
+    columns:
+      - Process Description
+      - Sub Procedure
+  - label: Parent Procedure
+    control: lookup
+    binds: QualityProcedure.parent_quality_procedure
+    validation: chosen among Quality Procedure records
+  - label: Is Group
+    control: checkbox
+    binds: QualityProcedure.is_group
+    validation: read only (computed or filled by the program)
+  - label: Right Index
+    control: number
+    binds: QualityProcedure.rgt
+    validation: read only (computed or filled by the program)
+  - label: Left Index
+    control: number
+    binds: QualityProcedure.lft
+    validation: read only (computed or filled by the program)
+  - label: old_parent
+    control: text
+    binds: QualityProcedure.old_parent
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-337
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quality Procedure
+    note: declared by the program

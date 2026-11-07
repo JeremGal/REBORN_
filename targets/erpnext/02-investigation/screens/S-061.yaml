@@ -1,0 +1,114 @@
+id: S-061
+title: POS Closing Entry
+purpose: create, view and edit POS Closing Entry records
+kind: form
+layout: "sections: Period Details, User Details, Linked Invoices, Taxes and Charges, Totals, Modes of Payment, Failure Description; 19 fields"
+fields:
+  - label: Period Start Date
+    control: date
+    binds: POSClosingEntry.period_start_date
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Period End Date
+    control: date
+    binds: POSClosingEntry.period_end_date
+    required: true
+  - label: Posting Date
+    control: date
+    binds: POSClosingEntry.posting_date
+    required: true
+  - label: Posting Time
+    control: date
+    binds: POSClosingEntry.posting_time
+    required: true
+  - label: POS Opening Entry
+    control: lookup
+    binds: POSClosingEntry.pos_opening_entry
+    required: true
+    validation: chosen among POS Opening Entry records
+  - label: Status
+    control: select
+    binds: POSClosingEntry.status
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: POSClosingEntry.company
+    required: true
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: POS Profile
+    control: lookup
+    binds: POSClosingEntry.pos_profile
+    required: true
+    validation: read only (computed or filled by the program); chosen among POS Profile records
+  - label: Cashier
+    control: lookup
+    binds: POSClosingEntry.user
+    required: true
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: POS Transactions
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - POS Invoice
+      - Date
+      - Amount
+  - label: Sales Invoice Transactions
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Sales Invoice
+      - Date
+      - Amount
+  - label: Taxes
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Account Head
+      - Amount
+  - label: Total Quantity
+    control: number
+    binds: POSClosingEntry.total_quantity
+    validation: read only (computed or filled by the program)
+  - label: Net Total
+    control: money
+    binds: POSClosingEntry.net_total
+    validation: read only (computed or filled by the program)
+  - label: Total Taxes and Charges
+    control: money
+    binds: POSClosingEntry.total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Grand Total
+    control: money
+    binds: POSClosingEntry.grand_total
+    validation: read only (computed or filled by the program)
+  - label: Payment Reconciliation
+    control: grid
+    columns:
+      - Mode of Payment
+      - Opening Amount
+      - Expected Amount
+      - Closing Amount
+      - Difference
+  - label: Error
+    control: text
+    binds: POSClosingEntry.error_message
+    validation: read only (computed or filled by the program); shown only when error_message
+  - label: Amended From
+    control: lookup
+    binds: POSClosingEntry.amended_from
+    validation: read only (computed or filled by the program); chosen among POS Closing Entry records
+actions:
+  - label: Save
+    triggers: F-062
+  - label: Submit
+    triggers: F-062
+  - label: Cancel
+    triggers: F-062
+  - label: Amend
+    triggers: F-062
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of POS Closing Entry
+    note: declared by the program

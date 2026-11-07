@@ -1,0 +1,58 @@
+id: F-037
+title: Create and edit a Fiscal Year
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: The year your books are kept and closed for.
+entry_points:
+  - screen: S-036
+    action: open the form
+inputs:
+  - label: Year Name
+    field: FiscalYear.year
+    type: string
+    required: true
+  - label: Year Start Date
+    field: FiscalYear.year_start_date
+    type: date
+    required: true
+  - label: Year End Date
+    field: FiscalYear.year_end_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Fiscal Year form
+    screen: S-036
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Year Name, Year Start Date, Year End Date"
+  - n: 3
+    actor: user
+    does: "adds lines in: Companies"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Fiscal Year record stored
+    entities:
+      - FiscalYear
+entities:
+  - FiscalYear
+  - FiscalYearCompany
+screens:
+  - S-036
+acceptance:
+  - id: AC-038
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Fiscal Year
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"fiscal-year\")."

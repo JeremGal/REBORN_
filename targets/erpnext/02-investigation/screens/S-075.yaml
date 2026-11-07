@@ -1,0 +1,576 @@
+id: S-075
+title: Purchase Invoice
+purpose: create, view and edit Purchase Invoice records
+kind: form
+layout: "tabs: Payments, Address & Contact, Terms, More Info, Connections; sections: Supplier Invoice, Accounting Dimensions , Currency and Price List, Items, Taxes and Charges, Totals, Totals (Company Currency), Tax Withholding Entry, Additional Discount, Tax Breakup, Pricing Rules, Raw Materials Supplied, Payments, Advance Payments, Write Off, Supplier Address, Shipping Address, Company Billing Address, Payment Terms, Terms and Conditions, Status, Accounting Details, Subscription, Automation, Print Settings, ...; 135 fields; observed labels differ from the declared form (23/50 match; not declared: no., item, quantité acceptée, prix usd, montant usd, ajouter une ligne, ajouter plusieurs, télécharger)"
+fields:
+  - label: Series
+    control: select
+    binds: PurchaseInvoice.naming_series
+    required: true
+  - label: Supplier
+    control: lookup
+    binds: PurchaseInvoice.supplier
+    required: true
+    validation: chosen among Supplier records
+  - label: Supplier Name
+    control: text
+    binds: PurchaseInvoice.supplier_name
+    validation: read only (computed or filled by the program); shown only when supplier
+  - label: Tax Id
+    control: display
+    binds: PurchaseInvoice.tax_id
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: PurchaseInvoice.company
+    validation: chosen among Company records
+  - label: Posting Date
+    control: date
+    binds: PurchaseInvoice.posting_date
+    required: true
+  - label: Posting Time
+    control: date
+    binds: PurchaseInvoice.posting_time
+  - label: Edit Posting Date and Time
+    control: checkbox
+    binds: PurchaseInvoice.set_posting_time
+    validation: shown only when eval:doc.docstatus==0
+  - label: Due Date
+    control: date
+    binds: PurchaseInvoice.due_date
+  - label: Is Paid
+    control: checkbox
+    binds: PurchaseInvoice.is_paid
+  - label: Is Return (Debit Note)
+    control: checkbox
+    binds: PurchaseInvoice.is_return
+  - label: Return Against Purchase Invoice
+    control: lookup
+    binds: PurchaseInvoice.return_against
+    validation: read only (computed or filled by the program); shown only when return_against; chosen among Purchase Invoice records
+  - label: Update Outstanding for Self
+    control: checkbox
+    binds: PurchaseInvoice.update_outstanding_for_self
+    validation: "shown only when eval: doc.is_return && doc.return_against"
+  - label: Update Billed Amount in Purchase Order
+    control: checkbox
+    binds: PurchaseInvoice.update_billed_amount_in_purchase_order
+    validation: "shown only when eval: doc.is_return"
+  - label: Update Billed Amount in Purchase Receipt
+    control: checkbox
+    binds: PurchaseInvoice.update_billed_amount_in_purchase_receipt
+    validation: "shown only when eval: doc.is_return"
+  - label: Consider for Tax Withholding
+    control: checkbox
+    binds: PurchaseInvoice.apply_tds
+  - label: Amended From
+    control: lookup
+    binds: PurchaseInvoice.amended_from
+    validation: read only (computed or filled by the program); chosen among Purchase Invoice records
+  - label: Supplier Invoice No
+    control: text
+    binds: PurchaseInvoice.bill_no
+  - label: Supplier Invoice Date
+    control: date
+    binds: PurchaseInvoice.bill_date
+  - label: Cost Center
+    control: lookup
+    binds: PurchaseInvoice.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: PurchaseInvoice.project
+    validation: chosen among Project records
+  - label: Currency
+    control: lookup
+    binds: PurchaseInvoice.currency
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: PurchaseInvoice.conversion_rate
+  - label: Use Transaction Date Exchange Rate
+    control: checkbox
+    binds: PurchaseInvoice.use_transaction_date_exchange_rate
+    validation: read only (computed or filled by the program)
+  - label: Price List
+    control: lookup
+    binds: PurchaseInvoice.buying_price_list
+    validation: chosen among Price List records
+  - label: Price List Currency
+    control: lookup
+    binds: PurchaseInvoice.price_list_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Price List Exchange Rate
+    control: number
+    binds: PurchaseInvoice.plc_conversion_rate
+  - label: Ignore Pricing Rule
+    control: checkbox
+    binds: PurchaseInvoice.ignore_pricing_rule
+  - label: Scan Barcode
+    control: text
+    binds: PurchaseInvoice.scan_barcode
+  - label: Last Scanned Warehouse
+    control: text
+    binds: PurchaseInvoice.last_scanned_warehouse
+    validation: "shown only when eval: doc.last_scanned_warehouse"
+  - label: Update Stock
+    control: checkbox
+    binds: PurchaseInvoice.update_stock
+    validation: shown only when eval:doc.items.every((item) => !item.pr_detail)
+  - label: Set Accepted Warehouse
+    control: lookup
+    binds: PurchaseInvoice.set_warehouse
+    validation: shown only when update_stock; chosen among Warehouse records
+  - label: Set From Warehouse
+    control: lookup
+    binds: PurchaseInvoice.set_from_warehouse
+    validation: shown only when eval:doc.update_stock && doc.is_internal_supplier; chosen among Warehouse records
+  - label: Is Subcontracted
+    control: checkbox
+    binds: PurchaseInvoice.is_subcontracted
+    validation: read only (computed or filled by the program)
+  - label: Rejected Warehouse
+    control: lookup
+    binds: PurchaseInvoice.rejected_warehouse
+    validation: shown only when update_stock; chosen among Warehouse records
+  - label: Supplier Warehouse
+    control: lookup
+    binds: PurchaseInvoice.supplier_warehouse
+    validation: shown only when eval:doc.is_subcontracted; chosen among Warehouse records
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item
+      - Accepted Qty
+      - Rate
+      - Amount
+  - label: Total Quantity
+    control: number
+    binds: PurchaseInvoice.total_qty
+    validation: read only (computed or filled by the program)
+  - label: Total Net Weight
+    control: number
+    binds: PurchaseInvoice.total_net_weight
+    validation: read only (computed or filled by the program); shown only when total_net_weight
+  - label: Total (Company Currency)
+    control: money
+    binds: PurchaseInvoice.base_total
+    validation: read only (computed or filled by the program)
+  - label: Net Total (Company Currency)
+    control: money
+    binds: PurchaseInvoice.base_net_total
+    validation: read only (computed or filled by the program)
+  - label: Claimed Landed Cost Amount (Company Currency)
+    control: money
+    binds: PurchaseInvoice.claimed_landed_cost_amount
+    validation: read only (computed or filled by the program)
+  - label: Total
+    control: money
+    binds: PurchaseInvoice.total
+    validation: read only (computed or filled by the program)
+  - label: Net Total
+    control: money
+    binds: PurchaseInvoice.net_total
+    validation: read only (computed or filled by the program)
+  - label: Tax Category
+    control: lookup
+    binds: PurchaseInvoice.tax_category
+    validation: chosen among Tax Category records
+  - label: Purchase Taxes and Charges Template
+    control: lookup
+    binds: PurchaseInvoice.taxes_and_charges
+    validation: chosen among Purchase Taxes and Charges Template records
+  - label: Shipping Rule
+    control: lookup
+    binds: PurchaseInvoice.shipping_rule
+    validation: chosen among Shipping Rule records
+  - label: Incoterm
+    control: lookup
+    binds: PurchaseInvoice.incoterm
+    validation: chosen among Incoterm records
+  - label: Named Place
+    control: text
+    binds: PurchaseInvoice.named_place
+    validation: shown only when incoterm
+  - label: Purchase Taxes and Charges
+    control: grid
+    columns:
+      - Type
+      - Account Head
+      - Tax Rate
+      - Net Amount
+      - Amount
+      - Total
+  - label: Taxes and Charges Added (Company Currency)
+    control: money
+    binds: PurchaseInvoice.base_taxes_and_charges_added
+    validation: read only (computed or filled by the program)
+  - label: Taxes and Charges Deducted (Company Currency)
+    control: money
+    binds: PurchaseInvoice.base_taxes_and_charges_deducted
+    validation: read only (computed or filled by the program)
+  - label: Total Taxes and Charges (Company Currency)
+    control: money
+    binds: PurchaseInvoice.base_total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Taxes and Charges Added
+    control: money
+    binds: PurchaseInvoice.taxes_and_charges_added
+    validation: read only (computed or filled by the program)
+  - label: Taxes and Charges Deducted
+    control: money
+    binds: PurchaseInvoice.taxes_and_charges_deducted
+    validation: read only (computed or filled by the program)
+  - label: Total Taxes and Charges
+    control: money
+    binds: PurchaseInvoice.total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Use Company Default Round Off Cost Center
+    control: checkbox
+    binds: PurchaseInvoice.use_company_roundoff_cost_center
+  - label: Grand Total
+    control: money
+    binds: PurchaseInvoice.grand_total
+    validation: read only (computed or filled by the program)
+  - label: In Words
+    control: text
+    binds: PurchaseInvoice.in_words
+    validation: read only (computed or filled by the program)
+  - label: Disable Rounded Total
+    control: checkbox
+    binds: PurchaseInvoice.disable_rounded_total
+    validation: shown only when grand_total
+  - label: Rounding Adjustment
+    control: money
+    binds: PurchaseInvoice.rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total
+    control: money
+    binds: PurchaseInvoice.rounded_total
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Grand Total
+    control: money
+    binds: PurchaseInvoice.base_grand_total
+    validation: read only (computed or filled by the program)
+  - label: In Words
+    control: text
+    binds: PurchaseInvoice.base_in_words
+    validation: read only (computed or filled by the program)
+  - label: Rounding Adjustment
+    control: money
+    binds: PurchaseInvoice.base_rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total
+    control: money
+    binds: PurchaseInvoice.base_rounded_total
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Total Advance
+    control: money
+    binds: PurchaseInvoice.total_advance
+    validation: read only (computed or filled by the program)
+  - label: Outstanding Amount
+    control: money
+    binds: PurchaseInvoice.outstanding_amount
+    validation: read only (computed or filled by the program)
+  - label: Tax Withholding Group
+    control: lookup
+    binds: PurchaseInvoice.tax_withholding_group
+    validation: chosen among Tax Withholding Group records
+  - label: Ignore Tax Withholding Threshold
+    control: checkbox
+    binds: PurchaseInvoice.ignore_tax_withholding_threshold
+  - label: Edit Tax Withholding Entries
+    control: checkbox
+    binds: PurchaseInvoice.override_tax_withholding_entries
+  - label: Tax Withholding Entries
+    control: grid
+    columns:
+      - Tax Withholding Category
+      - Tax Withholding Group
+      - Base Taxable Amount
+      - Tax Rate
+      - Base Tax Withheld
+      - Taxable Document Name
+  - label: Apply Additional Discount On
+    control: select
+    binds: PurchaseInvoice.apply_discount_on
+  - label: Additional Discount Amount (Company Currency)
+    control: money
+    binds: PurchaseInvoice.base_discount_amount
+    validation: read only (computed or filled by the program)
+  - label: Additional Discount Percentage
+    control: number
+    binds: PurchaseInvoice.additional_discount_percentage
+  - label: Additional Discount Amount
+    control: money
+    binds: PurchaseInvoice.discount_amount
+  - label: Taxes and Charges Calculation
+    control: text
+    binds: PurchaseInvoice.other_charges_calculation
+    validation: read only (computed or filled by the program)
+  - label: Item Wise Tax Details
+    control: grid
+    columns:
+      - Item Row
+      - Tax Row
+      - Tax Rate
+      - Tax Amount
+      - Taxable Amount
+  - label: Pricing Rule Detail
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Pricing Rule
+      - Item Code
+  - label: Supplied Items
+    control: grid
+    validation: shown only when update_stock
+    columns:
+      - Item Code
+      - Raw Material Item Code
+      - BOM Detail No
+      - Reference Name
+      - Available Qty For Consumption
+      - Qty to Be Consumed
+      - Current Stock
+  - label: Mode of Payment
+    control: lookup
+    binds: PurchaseInvoice.mode_of_payment
+    validation: chosen among Mode of Payment records
+  - label: Paid Amount (Company Currency)
+    control: money
+    binds: PurchaseInvoice.base_paid_amount
+    validation: read only (computed or filled by the program)
+  - label: Clearance Date
+    control: date
+    binds: PurchaseInvoice.clearance_date
+    validation: read only (computed or filled by the program)
+  - label: Cash/Bank Account
+    control: lookup
+    binds: PurchaseInvoice.cash_bank_account
+    validation: chosen among Account records
+  - label: Paid Amount
+    control: money
+    binds: PurchaseInvoice.paid_amount
+    validation: shown only when is_paid
+  - label: Set Advances and Allocate (FIFO)
+    control: checkbox
+    binds: PurchaseInvoice.allocate_advances_automatically
+  - label: Only Include Allocated Payments
+    control: checkbox
+    binds: PurchaseInvoice.only_include_allocated_payments
+    validation: shown only when allocate_advances_automatically
+  - label: Advances
+    control: grid
+    columns:
+      - Reference Name
+      - Remarks
+      - Advance Amount
+      - Allocated Amount
+      - Difference Posting Date
+  - label: Write Off Amount
+    control: money
+    binds: PurchaseInvoice.write_off_amount
+  - label: Write Off Amount (Company Currency)
+    control: money
+    binds: PurchaseInvoice.base_write_off_amount
+    validation: read only (computed or filled by the program)
+  - label: Write Off Account
+    control: lookup
+    binds: PurchaseInvoice.write_off_account
+    validation: shown only when eval:flt(doc.write_off_amount)!=0; chosen among Account records
+  - label: Write Off Cost Center
+    control: lookup
+    binds: PurchaseInvoice.write_off_cost_center
+    validation: shown only when eval:flt(doc.write_off_amount)!=0; chosen among Cost Center records
+  - label: Select Supplier Address
+    control: lookup
+    binds: PurchaseInvoice.supplier_address
+    validation: chosen among Address records
+  - label: Address
+    control: text
+    binds: PurchaseInvoice.address_display
+    validation: read only (computed or filled by the program)
+  - label: Contact Person
+    control: lookup
+    binds: PurchaseInvoice.contact_person
+    validation: chosen among Contact records
+  - label: Contact
+    control: text
+    binds: PurchaseInvoice.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: PurchaseInvoice.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: PurchaseInvoice.contact_email
+    validation: read only (computed or filled by the program)
+  - label: "Select Dispatch Address "
+    control: lookup
+    binds: PurchaseInvoice.dispatch_address
+    validation: chosen among Address records
+  - label: Dispatch Address
+    control: text
+    binds: PurchaseInvoice.dispatch_address_display
+    validation: read only (computed or filled by the program)
+  - label: Select Shipping Address
+    control: lookup
+    binds: PurchaseInvoice.shipping_address
+    validation: chosen among Address records
+  - label: Shipping Address
+    control: text
+    binds: PurchaseInvoice.shipping_address_display
+    validation: read only (computed or filled by the program)
+  - label: Select Billing Address
+    control: lookup
+    binds: PurchaseInvoice.billing_address
+    validation: chosen among Address records
+  - label: Billing Address
+    control: text
+    binds: PurchaseInvoice.billing_address_display
+    validation: read only (computed or filled by the program)
+  - label: Payment Terms Template
+    control: lookup
+    binds: PurchaseInvoice.payment_terms_template
+    validation: shown only when eval:(!doc.is_paid && !doc.is_return); chosen among Payment Terms Template records
+  - label: Ignore Default Payment Terms Template
+    control: checkbox
+    binds: PurchaseInvoice.ignore_default_payment_terms_template
+    validation: read only (computed or filled by the program)
+  - label: Payment Schedule
+    control: grid
+    validation: shown only when eval:(!doc.is_paid && !doc.is_return)
+    columns:
+      - Payment Term
+      - Description
+      - Due Date
+      - Invoice Portion
+      - Payment Amount
+  - label: Terms
+    control: lookup
+    binds: PurchaseInvoice.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Terms and Conditions
+    control: text
+    binds: PurchaseInvoice.terms
+  - label: Status
+    control: select
+    binds: PurchaseInvoice.status
+  - label: Per Received
+    control: number
+    binds: PurchaseInvoice.per_received
+    validation: read only (computed or filled by the program)
+  - label: Credit To
+    control: lookup
+    binds: PurchaseInvoice.credit_to
+    required: true
+    validation: chosen among Account records
+  - label: Party Account Currency
+    control: lookup
+    binds: PurchaseInvoice.party_account_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Is Opening Entry
+    control: select
+    binds: PurchaseInvoice.is_opening
+  - label: Against Expense Account
+    control: text
+    binds: PurchaseInvoice.against_expense_account
+  - label: Unrealized Profit / Loss Account
+    control: lookup
+    binds: PurchaseInvoice.unrealized_profit_loss_account
+    validation: shown only when eval:doc.is_internal_supplier; chosen among Account records
+  - label: Subscription
+    control: lookup
+    binds: PurchaseInvoice.subscription
+    validation: chosen among Subscription records
+  - label: From Date
+    control: date
+    binds: PurchaseInvoice.from_date
+  - label: To Date
+    control: date
+    binds: PurchaseInvoice.to_date
+  - label: Auto Repeat
+    control: lookup
+    binds: PurchaseInvoice.auto_repeat
+    validation: read only (computed or filled by the program); chosen among Auto Repeat records
+  - label: Letter Head
+    control: lookup
+    binds: PurchaseInvoice.letter_head
+    validation: chosen among Letter Head records
+  - label: Group same items
+    control: checkbox
+    binds: PurchaseInvoice.group_same_items
+  - label: Print Heading
+    control: lookup
+    binds: PurchaseInvoice.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Print Language
+    control: text
+    binds: PurchaseInvoice.language
+    validation: read only (computed or filled by the program)
+  - label: Hold Invoice
+    control: checkbox
+    binds: PurchaseInvoice.on_hold
+  - label: Release Date
+    control: date
+    binds: PurchaseInvoice.release_date
+    validation: shown only when eval:doc.on_hold
+  - label: Reason For Putting On Hold
+    control: text
+    binds: PurchaseInvoice.hold_comment
+    validation: shown only when eval:doc.on_hold
+  - label: Is Internal Supplier
+    control: checkbox
+    binds: PurchaseInvoice.is_internal_supplier
+    validation: read only (computed or filled by the program)
+  - label: Title
+    control: text
+    binds: PurchaseInvoice.title
+  - label: Represents Company
+    control: lookup
+    binds: PurchaseInvoice.represents_company
+    validation: read only (computed or filled by the program); shown only when eval:doc.is_internal_supplier; chosen among Company records
+  - label: Supplier Group
+    control: lookup
+    binds: PurchaseInvoice.supplier_group
+    validation: chosen among Supplier Group records
+  - label: Sender
+    control: text
+    binds: PurchaseInvoice.sender
+  - label: Inter Company Invoice Reference
+    control: lookup
+    binds: PurchaseInvoice.inter_company_invoice_reference
+    validation: read only (computed or filled by the program); chosen among Sales Invoice records
+  - label: Is Old Subcontracting Flow
+    control: checkbox
+    binds: PurchaseInvoice.is_old_subcontracting_flow
+    validation: read only (computed or filled by the program)
+  - label: Remarks
+    control: text
+    binds: PurchaseInvoice.remarks
+actions:
+  - label: Save
+    triggers: F-076
+  - label: Submit
+    triggers: F-076
+  - label: Cancel
+    triggers: F-076
+  - label: Amend
+    triggers: F-076
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Purchase Invoice
+    note: declared by the program
+  - ref: run-20261107T193709-h-EXP_002
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 23/50 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T193709-h-EXP_002/step_09.png
+  - 01-exploration/runs/run-20261107T193709-h-EXP_002/step_09.png

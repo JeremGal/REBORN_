@@ -1,0 +1,34 @@
+id: S-146
+title: Deleted Document
+purpose: create, view and edit Deleted Document records
+kind: form
+layout: 5 fields
+fields:
+  - label: Deleted Name
+    control: text
+    binds: DeletedDocument.deleted_name
+    validation: read only (computed or filled by the program)
+  - label: Deleted DocType
+    control: text
+    binds: DeletedDocument.deleted_doctype
+    validation: read only (computed or filled by the program)
+  - label: Restored
+    control: checkbox
+    binds: DeletedDocument.restored
+    validation: read only (computed or filled by the program)
+  - label: New Name
+    control: display
+    binds: DeletedDocument.new_name
+  - label: Data
+    control: text
+    binds: DeletedDocument.data
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-147
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Deleted Document
+    note: declared by the program

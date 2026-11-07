@@ -1,0 +1,58 @@
+id: F-348
+title: Create and edit a Product Bundle
+module: Selling
+priority: should
+status: partial
+confidence: medium
+user_goal: Sells several items together as one item.
+entry_points:
+  - screen: S-347
+    action: open the form
+inputs:
+  - label: Parent Item
+    field: ProductBundle.new_item_code
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Product Bundle form
+    screen: S-347
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Parent Item"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Product Bundle record stored
+    entities:
+      - ProductBundle
+entities:
+  - ProductBundle
+  - ProductBundleItem
+screens:
+  - S-347
+acceptance:
+  - id: AC-349
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Product Bundle
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 107
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"product-bundle\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Row #1: A Product Bundle cannot contain its own parent Item TEST-ART-001."

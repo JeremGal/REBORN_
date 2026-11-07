@@ -1,0 +1,50 @@
+id: F-273
+title: Create and edit a Country
+module: Geo
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Country records.
+entry_points:
+  - screen: S-272
+    action: open the form
+inputs:
+  - label: Country Name
+    field: Country.country_name
+    type: string
+    required: true
+  - label: Code
+    field: Country.code
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Country form
+    screen: S-272
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Country Name, Code"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Country record stored
+    entities:
+      - Country
+entities:
+  - Country
+screens:
+  - S-272
+acceptance:
+  - id: AC-274
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Country
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"country\")."

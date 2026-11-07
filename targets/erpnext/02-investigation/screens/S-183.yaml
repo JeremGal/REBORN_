@@ -1,0 +1,34 @@
+id: S-183
+title: Security Settings
+purpose: settings of Security Settings
+kind: settings
+layout: "sections: Security.txt; 5 fields"
+fields:
+  - label: Expires
+    control: date
+    binds: SecuritySettings.public_expires
+  - label: Contact
+    control: grid
+    columns:
+      - Type
+      - Contact
+  - label: Preferred Language
+    control: grid
+    columns:
+      - Language
+  - label: Policy
+    control: text
+    binds: SecuritySettings.public_policy
+  - label: Preview
+    control: text
+    binds: SecuritySettings.security_txt
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-184
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Security Settings
+    note: declared by the program

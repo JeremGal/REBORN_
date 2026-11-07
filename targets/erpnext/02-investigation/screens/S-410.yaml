@@ -1,0 +1,112 @@
+id: S-410
+title: Serial and Batch Bundle
+purpose: create, view and edit Serial and Batch Bundle records
+kind: form
+layout: "tabs: Serial and Batch, Quantity and Rate, Reference; sections: Serial / Batch No; 22 fields"
+fields:
+  - label: Naming Series
+    control: select
+    binds: SerialAndBatchBundle.naming_series
+  - label: Company
+    control: lookup
+    binds: SerialAndBatchBundle.company
+    required: true
+    validation: chosen among Company records
+  - label: Item Name
+    control: text
+    binds: SerialAndBatchBundle.item_name
+    validation: read only (computed or filled by the program)
+  - label: Has Serial No
+    control: checkbox
+    binds: SerialAndBatchBundle.has_serial_no
+    validation: read only (computed or filled by the program)
+  - label: Has Batch No
+    control: checkbox
+    binds: SerialAndBatchBundle.has_batch_no
+    validation: read only (computed or filled by the program)
+  - label: Item Code
+    control: lookup
+    binds: SerialAndBatchBundle.item_code
+    required: true
+    validation: chosen among Item records
+  - label: Warehouse
+    control: lookup
+    binds: SerialAndBatchBundle.warehouse
+    validation: shown only when company; chosen among Warehouse records
+  - label: Type of Transaction
+    control: select
+    binds: SerialAndBatchBundle.type_of_transaction
+    required: true
+  - label: entries
+    control: grid
+    required: true
+    columns:
+      - Serial No
+      - Batch No
+      - Qty
+      - Warehouse
+  - label: Total Qty
+    control: number
+    binds: SerialAndBatchBundle.total_qty
+    validation: read only (computed or filled by the program)
+  - label: Item Group
+    control: lookup
+    binds: SerialAndBatchBundle.item_group
+    validation: chosen among Item Group records
+  - label: Avg Rate
+    control: number
+    binds: SerialAndBatchBundle.avg_rate
+    validation: read only (computed or filled by the program)
+  - label: Total Amount
+    control: number
+    binds: SerialAndBatchBundle.total_amount
+    validation: read only (computed or filled by the program)
+  - label: Voucher Type
+    control: lookup
+    binds: SerialAndBatchBundle.voucher_type
+    required: true
+    validation: chosen among DocType records
+  - label: Voucher No
+    control: lookup
+    binds: SerialAndBatchBundle.voucher_no
+  - label: Voucher Detail No
+    control: text
+    binds: SerialAndBatchBundle.voucher_detail_no
+    validation: read only (computed or filled by the program)
+  - label: Posting Datetime
+    control: date
+    binds: SerialAndBatchBundle.posting_datetime
+  - label: Returned Against
+    control: text
+    binds: SerialAndBatchBundle.returned_against
+    validation: read only (computed or filled by the program)
+  - label: Is Cancelled
+    control: checkbox
+    binds: SerialAndBatchBundle.is_cancelled
+    validation: read only (computed or filled by the program)
+  - label: Is Packed
+    control: checkbox
+    binds: SerialAndBatchBundle.is_packed
+  - label: Is Rejected
+    control: checkbox
+    binds: SerialAndBatchBundle.is_rejected
+    validation: read only (computed or filled by the program); shown only when eval:doc.voucher_type == "Purchase Receipt"
+  - label: Amended From
+    control: lookup
+    binds: SerialAndBatchBundle.amended_from
+    validation: read only (computed or filled by the program); chosen among Serial and Batch Bundle records
+actions:
+  - label: Save
+    triggers: F-411
+  - label: Submit
+    triggers: F-411
+  - label: Cancel
+    triggers: F-411
+  - label: Amend
+    triggers: F-411
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Serial and Batch Bundle
+    note: declared by the program

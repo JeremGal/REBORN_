@@ -1,0 +1,48 @@
+id: S-255
+title: Workspace Sidebar
+purpose: create, view and edit Workspace Sidebar records
+kind: form
+layout: 8 fields
+fields:
+  - label: Title
+    control: text
+    binds: WorkspaceSidebar.title
+  - label: Header Icon
+    control: other
+    binds: WorkspaceSidebar.header_icon
+  - label: For User
+    control: lookup
+    binds: WorkspaceSidebar.for_user
+    validation: chosen among User records
+  - label: Module
+    control: text
+    binds: WorkspaceSidebar.module
+  - label: Standard
+    control: checkbox
+    binds: WorkspaceSidebar.standard
+  - label: App
+    control: text
+    binds: WorkspaceSidebar.app
+    validation: "shown only when eval: doc.standard == 1"
+  - label: Module Onboarding
+    control: lookup
+    binds: WorkspaceSidebar.module_onboarding
+    validation: chosen among Module Onboarding records
+  - label: Items
+    control: grid
+    columns:
+      - Label
+      - Link Type
+      - Icon
+      - Type
+      - Link To
+      - Child Item
+actions:
+  - label: Save
+    triggers: F-256
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Workspace Sidebar
+    note: declared by the program

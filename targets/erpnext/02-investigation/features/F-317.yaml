@@ -1,0 +1,50 @@
+id: F-317
+title: Create and edit a Print Format Snippet
+module: Printing
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Print Format Snippet records.
+entry_points:
+  - screen: S-316
+    action: open the form
+inputs:
+  - label: Snippet Type
+    field: PrintFormatSnippet.snippet_type
+    type: enum
+    required: true
+  - label: Content
+    field: PrintFormatSnippet.content
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Print Format Snippet form
+    screen: S-316
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Snippet Type, Content"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Print Format Snippet record stored
+    entities:
+      - PrintFormatSnippet
+entities:
+  - PrintFormatSnippet
+screens:
+  - S-316
+acceptance:
+  - id: AC-318
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Print Format Snippet
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

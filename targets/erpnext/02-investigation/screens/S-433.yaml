@@ -1,0 +1,83 @@
+id: S-433
+title: Service Level Agreement
+purpose: create, view and edit Service Level Agreement records
+kind: form
+layout: "sections: Assignment Conditions, Valid From, Response and Resolution, Status Details, Working Hours; 16 fields"
+fields:
+  - label: Apply On
+    control: lookup
+    binds: ServiceLevelAgreement.document_type
+    required: true
+    validation: chosen among DocType records
+  - label: Default Priority
+    control: lookup
+    binds: ServiceLevelAgreement.default_priority
+    validation: read only (computed or filled by the program); chosen among Issue Priority records
+  - label: Service Level Name
+    control: text
+    binds: ServiceLevelAgreement.service_level
+    required: true
+  - label: Enabled
+    control: checkbox
+    binds: ServiceLevelAgreement.enabled
+  - label: Default Service Level Agreement
+    control: checkbox
+    binds: ServiceLevelAgreement.default_service_level_agreement
+  - label: Entity Type
+    control: select
+    binds: ServiceLevelAgreement.entity_type
+    validation: "shown only when eval: !doc.default_service_level_agreement"
+  - label: Entity
+    control: lookup
+    binds: ServiceLevelAgreement.entity
+    validation: "shown only when eval: !doc.default_service_level_agreement"
+  - label: Condition
+    control: text
+    binds: ServiceLevelAgreement.condition
+    validation: "shown only when eval: !doc.default_service_level_agreement"
+  - label: Start Date
+    control: date
+    binds: ServiceLevelAgreement.start_date
+  - label: End Date
+    control: date
+    binds: ServiceLevelAgreement.end_date
+  - label: Apply SLA for Resolution Time
+    control: checkbox
+    binds: ServiceLevelAgreement.apply_sla_for_resolution
+  - label: Priorities
+    control: grid
+    required: true
+    columns:
+      - Default Priority
+      - Priority
+      - First Response Time
+  - label: SLA Fulfilled On
+    control: grid
+    required: true
+    columns:
+      - Status
+  - label: SLA Paused On
+    control: grid
+    columns:
+      - Status
+  - label: Holiday List
+    control: lookup
+    binds: ServiceLevelAgreement.holiday_list
+    required: true
+    validation: chosen among Holiday List records
+  - label: Working Hours
+    control: grid
+    required: true
+    columns:
+      - Workday
+      - Start Time
+      - End Time
+actions:
+  - label: Save
+    triggers: F-434
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Service Level Agreement
+    note: declared by the program

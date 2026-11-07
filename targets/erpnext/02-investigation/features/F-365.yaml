@@ -1,0 +1,54 @@
+id: F-365
+title: Create and edit a Email Digest
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: A regular email summing up how the business is doing.
+entry_points:
+  - screen: S-364
+    action: open the form
+inputs:
+  - label: For Company
+    field: EmailDigest.company
+    type: ref
+    required: true
+  - label: How frequently?
+    field: EmailDigest.frequency
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Email Digest form
+    screen: S-364
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: For Company, How frequently?"
+  - n: 3
+    actor: user
+    does: "adds lines in: Recipients"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Email Digest record stored
+    entities:
+      - EmailDigest
+entities:
+  - EmailDigest
+  - EmailDigestRecipient
+screens:
+  - S-364
+acceptance:
+  - id: AC-366
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Email Digest
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"email-digest\")."

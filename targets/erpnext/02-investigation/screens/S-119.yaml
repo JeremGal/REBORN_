@@ -1,0 +1,112 @@
+id: S-119
+title: Buying Settings
+purpose: settings of Buying Settings
+kind: settings
+layout: "tabs: Defaults, Pricing, Transaction Settings, Subcontracting Settings, Request for Quotation, Document Naming; sections: Supplier Defaults, Purchase Invoice Settings, Zero-Quantity Line Items, Blanket Orders; 29 fields"
+fields:
+  - label: Supplier Naming By
+    control: select
+    binds: BuyingSettings.supp_master_name
+  - label: Naming Series options
+    control: text
+    binds: BuyingSettings.naming_series_details
+  - label: Default Supplier Group
+    control: lookup
+    binds: BuyingSettings.supplier_group
+    validation: chosen among Supplier Group records
+  - label: Default Buying Price List
+    control: lookup
+    binds: BuyingSettings.buying_price_list
+    validation: chosen among Price List records
+  - label: Maintain same rate throughout the purchase  cycle
+    control: checkbox
+    binds: BuyingSettings.maintain_same_rate
+  - label: Set Landed Cost Based on Purchase Invoice Rate
+    control: checkbox
+    binds: BuyingSettings.set_landed_cost_based_on_purchase_invoice_rate
+    validation: "shown only when eval: !doc.maintain_same_rate"
+  - label: Action if same rate is not maintained
+    control: select
+    binds: BuyingSettings.maintain_same_rate_action
+    validation: shown only when maintain_same_rate
+  - label: Role allowed to override stop action
+    control: lookup
+    binds: BuyingSettings.role_to_override_stop_action
+    validation: shown only when maintain_same_rate; chosen among Role records
+  - label: Is Purchase Order required for Purchase Invoice & Receipt creation?
+    control: select
+    binds: BuyingSettings.po_required
+  - label: Is Purchase Receipt required for Purchase Invoice creation?
+    control: select
+    binds: BuyingSettings.pr_required
+  - label: How often should project be updated of Total Purchase Cost ?
+    control: select
+    binds: BuyingSettings.project_update_frequency
+  - label: Over Order Allowance (%)
+    control: number
+    binds: BuyingSettings.over_order_allowance
+  - label: Allow Item to be added multiple times in a transaction
+    control: checkbox
+    binds: BuyingSettings.allow_multiple_items
+  - label: Allow negative rates for Items
+    control: checkbox
+    binds: BuyingSettings.allow_negative_rates_for_items
+  - label: Set valuation rate for rejected Materials
+    control: checkbox
+    binds: BuyingSettings.set_valuation_rate_for_rejected_materials
+    validation: shown only when bill_for_rejected_quantity_in_purchase_invoice
+  - label: Disable last purchase rate
+    control: checkbox
+    binds: BuyingSettings.disable_last_purchase_rate
+  - label: Show pay button in Purchase Order portal
+    control: checkbox
+    binds: BuyingSettings.show_pay_button
+    validation: "shown only when eval: frappe.boot.versions && frappe.boot.versions.payments"
+  - label: Bill for rejected quantity in Purchase Invoice
+    control: checkbox
+    binds: BuyingSettings.bill_for_rejected_quantity_in_purchase_invoice
+  - label: Use Transaction Date Exchange Rate
+    control: checkbox
+    binds: BuyingSettings.use_transaction_date_exchange_rate
+  - label: Allow Supplier Quotation with Zero Quantity
+    control: checkbox
+    binds: BuyingSettings.allow_zero_qty_in_supplier_quotation
+  - label: Allow Request for Quotation with Zero Quantity
+    control: checkbox
+    binds: BuyingSettings.allow_zero_qty_in_request_for_quotation
+  - label: Allow Purchase Order with Zero Quantity
+    control: checkbox
+    binds: BuyingSettings.allow_zero_qty_in_purchase_order
+  - label: Blanket Order Allowance (%)
+    control: number
+    binds: BuyingSettings.blanket_order_allowance
+  - label: Backflush raw materials of subcontract based on
+    control: select
+    binds: BuyingSettings.backflush_raw_materials_of_subcontract_based_on
+  - label: Over Transfer Allowance (%)
+    control: number
+    binds: BuyingSettings.over_transfer_allowance
+    validation: shown only when eval:doc.backflush_raw_materials_of_subcontract_based_on == "BOM"
+  - label: Validate consumed quantity (as per BOM)
+    control: checkbox
+    binds: BuyingSettings.validate_consumed_qty
+    validation: shown only when eval:doc.backflush_raw_materials_of_subcontract_based_on == "Material Transferre
+  - label: Auto create Subcontracting Order
+    control: checkbox
+    binds: BuyingSettings.auto_create_subcontracting_order
+  - label: Auto create Purchase Receipt
+    control: checkbox
+    binds: BuyingSettings.auto_create_purchase_receipt
+  - label: Fixed Outgoing Email Account
+    control: lookup
+    binds: BuyingSettings.fixed_email
+    validation: chosen among Email Account records
+actions:
+  - label: Save
+    triggers: F-120
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Buying Settings
+    note: declared by the program

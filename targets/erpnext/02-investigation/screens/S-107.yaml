@@ -1,0 +1,77 @@
+id: S-107
+title: Assignment Rule
+purpose: create, view and edit Assignment Rule records
+kind: form
+layout: "sections: Assignment Rules, Assignment Days, Assign To Users; 15 fields"
+fields:
+  - label: Document Type
+    control: lookup
+    binds: AssignmentRule.document_type
+    required: true
+    validation: chosen among DocType records
+  - label: Due Date Based On
+    control: select
+    binds: AssignmentRule.due_date_based_on
+    validation: shown only when document_type
+  - label: Priority
+    control: number
+    binds: AssignmentRule.priority
+  - label: Disabled
+    control: checkbox
+    binds: AssignmentRule.disabled
+  - label: Description
+    control: text
+    binds: AssignmentRule.description
+    required: true
+  - label: Assign Condition
+    control: text
+    binds: AssignmentRule.assign_condition
+    required: true
+  - label: Unassign Condition
+    control: text
+    binds: AssignmentRule.unassign_condition
+  - label: Close Condition
+    control: text
+    binds: AssignmentRule.close_condition
+  - label: Assignment Days
+    control: grid
+    required: true
+    columns:
+      - Day
+  - label: Rule
+    control: select
+    binds: AssignmentRule.rule
+    required: true
+  - label: Field
+    control: select
+    binds: AssignmentRule.field
+    validation: "shown only when eval: doc.rule == 'Based on Field'"
+  - label: Users
+    control: grid
+    validation: shown only when eval:in_list(['Round Robin', "Load Balancing"],  doc.rule)
+    columns:
+      - User
+      - Weight
+  - label: Users
+    control: grid
+    validation: shown only when eval:doc.rule=='Weighted Distribution'
+    columns:
+      - User
+      - Weight
+  - label: Last User
+    control: lookup
+    binds: AssignmentRule.last_user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Current Index
+    control: number
+    binds: AssignmentRule.current_index
+    validation: read only (computed or filled by the program); shown only when eval:doc.rule=='Weighted Distribution'
+actions:
+  - label: Save
+    triggers: F-108
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Assignment Rule
+    note: declared by the program

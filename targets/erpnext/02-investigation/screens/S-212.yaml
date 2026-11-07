@@ -1,0 +1,79 @@
+id: S-212
+title: Prospect
+purpose: create, view and edit Prospect records
+kind: form
+layout: "tabs: Overview, Address & Contact, Leads, Opportunities, Activities, Comments; sections: Address, All Activities; 14 fields"
+fields:
+  - label: Company Name
+    control: text
+    binds: Prospect.company_name
+  - label: Customer Group
+    control: lookup
+    binds: Prospect.customer_group
+    validation: chosen among Customer Group records
+  - label: No. of Employees
+    control: select
+    binds: Prospect.no_of_employees
+  - label: Annual Revenue
+    control: money
+    binds: Prospect.annual_revenue
+  - label: Market Segment
+    control: lookup
+    binds: Prospect.market_segment
+    validation: chosen among Market Segment records
+  - label: Industry
+    control: lookup
+    binds: Prospect.industry
+    validation: chosen among Industry Type records
+  - label: Territory
+    control: lookup
+    binds: Prospect.territory
+    validation: chosen among Territory records
+  - label: Prospect Owner
+    control: lookup
+    binds: Prospect.prospect_owner
+    validation: chosen among User records
+  - label: Website
+    control: text
+    binds: Prospect.website
+  - label: Fax
+    control: text
+    binds: Prospect.fax
+  - label: Company
+    control: lookup
+    binds: Prospect.company
+    required: true
+    validation: chosen among Company records
+  - label: leads
+    control: grid
+    columns:
+      - Lead
+      - Lead Name
+      - Email
+      - Mobile No
+      - Lead Owner
+      - Status
+  - label: Opportunities
+    control: grid
+    columns:
+      - Opportunity
+      - Amount
+      - Stage
+      - Deal Owner
+      - Probability
+      - Closing
+  - label: Notes
+    control: grid
+    columns:
+      - Note
+      - Added By
+      - Added On
+actions:
+  - label: Save
+    triggers: F-213
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Prospect
+    note: declared by the program

@@ -1,0 +1,26 @@
+id: S-287
+title: Slack Webhook URL
+purpose: create, view and edit Slack Webhook URL records
+kind: form
+layout: 3 fields
+fields:
+  - label: Name
+    control: text
+    binds: SlackWebhookURL.webhook_name
+    required: true
+  - label: Webhook URL
+    control: text
+    binds: SlackWebhookURL.webhook_url
+    required: true
+  - label: Show link to document
+    control: checkbox
+    binds: SlackWebhookURL.show_document_link
+actions:
+  - label: Save
+    triggers: F-288
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Slack Webhook URL
+    note: declared by the program

@@ -1,0 +1,52 @@
+id: S-218
+title: Property Setter
+purpose: create, view and edit Property Setter records
+kind: form
+layout: 10 fields
+fields:
+  - label: Is System Generated
+    control: checkbox
+    binds: PropertySetter.is_system_generated
+    validation: read only (computed or filled by the program)
+  - label: Applied On
+    control: select
+    binds: PropertySetter.doctype_or_field
+    required: true
+  - label: DocType
+    control: lookup
+    binds: PropertySetter.doc_type
+    required: true
+    validation: chosen among DocType records
+  - label: Field Name
+    control: text
+    binds: PropertySetter.field_name
+    validation: shown only when eval:doc.doctype_or_field=='DocField'
+  - label: Row Name
+    control: text
+    binds: PropertySetter.row_name
+  - label: Module (for export)
+    control: lookup
+    binds: PropertySetter.module
+    validation: chosen among Module Def records
+  - label: Property
+    control: text
+    binds: PropertySetter.property
+    required: true
+  - label: Property Type
+    control: text
+    binds: PropertySetter.property_type
+  - label: Set Value
+    control: text
+    binds: PropertySetter.value
+  - label: Default Value
+    control: text
+    binds: PropertySetter.default_value
+actions:
+  - label: Save
+    triggers: F-219
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Property Setter
+    note: declared by the program

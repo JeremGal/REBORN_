@@ -1,0 +1,47 @@
+id: F-133
+title: Create and edit a Contact
+module: Contacts
+priority: could
+status: partial
+confidence: medium
+user_goal: A person you deal with, at a customer, supplier or anywhere else.
+entry_points:
+  - screen: S-132
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Contact form
+    screen: S-132
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Email IDs, Contact Numbers, Links"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Contact record stored
+    entities:
+      - Contact
+entities:
+  - Contact
+  - ContactEmail
+  - ContactPhone
+  - DynamicLink
+screens:
+  - S-132
+acceptance:
+  - id: AC-134
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Contact
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"contact\")."

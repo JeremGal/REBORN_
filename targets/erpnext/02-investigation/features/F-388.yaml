@@ -1,0 +1,61 @@
+id: F-388
+title: Create, submit and cancel a Delivery Trip
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: A vehicle's route to deliver to several customers.
+entry_points:
+  - screen: S-387
+    action: open the form
+inputs:
+  - label: Company
+    field: DeliveryTrip.company
+    type: ref
+    required: true
+  - label: Vehicle
+    field: DeliveryTrip.vehicle
+    type: ref
+    required: true
+  - label: Departure Time
+    field: DeliveryTrip.departure_time
+    type: datetime
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Delivery Trip form
+    screen: S-387
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Vehicle, Departure Time"
+  - n: 3
+    actor: user
+    does: "adds lines in: Delivery Stop"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Delivery Trip record stored
+    entities:
+      - DeliveryTrip
+entities:
+  - DeliveryTrip
+  - DeliveryStop
+screens:
+  - S-387
+acceptance:
+  - id: AC-389
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Delivery Trip
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"delivery-trip\")."

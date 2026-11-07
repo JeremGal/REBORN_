@@ -1,0 +1,65 @@
+id: F-075
+title: Create and edit a Promotional Scheme
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: A set of discounts and free items, like buy two get one free.
+entry_points:
+  - screen: S-074
+    action: open the form
+inputs:
+  - label: Apply On
+    field: PromotionalScheme.apply_on
+    type: enum
+    required: true
+  - label: Company
+    field: PromotionalScheme.company
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Promotional Scheme form
+    screen: S-074
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Apply On, Company"
+  - n: 3
+    actor: user
+    does: "adds lines in: Pricing Rule Item Code, Pricing Rule Item Group, Pricing Rule Brand, Customer, Customer Group, Territory, Sales Partner, Campaign, Supplier, Supplier Group, Promotional Scheme Price Discount, Promotional Scheme Product Discount"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Promotional Scheme record stored
+    entities:
+      - PromotionalScheme
+entities:
+  - PromotionalScheme
+  - PricingRuleItemCode
+  - PricingRuleItemGroup
+  - PricingRuleBrand
+  - CustomerItem
+  - CustomerGroupItem
+  - TerritoryItem
+  - SalesPartnerItem
+  - CampaignItem
+  - SupplierItem
+  - SupplierGroupItem
+  - PromotionalSchemePriceDiscount
+  - PromotionalSchemeProductDiscount
+screens:
+  - S-074
+acceptance:
+  - id: AC-076
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Promotional Scheme
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"promotional-scheme\")."

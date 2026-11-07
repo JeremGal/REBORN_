@@ -1,0 +1,68 @@
+id: F-255
+title: Create and edit a Workspace
+module: Desk
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Workspace records.
+entry_points:
+  - screen: S-254
+    action: open the form
+inputs:
+  - label: Name
+    field: Workspace.label
+    type: string
+    required: true
+  - label: Title
+    field: Workspace.title
+    type: string
+    required: true
+  - label: Module
+    field: Workspace.module
+    type: ref
+    required: true
+  - label: Type
+    field: Workspace.type
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Workspace form
+    screen: S-254
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Name, Title, Module, Type"
+  - n: 3
+    actor: user
+    does: "adds lines in: Number Cards, Charts, Shortcuts, Links, Quick Lists, Custom Blocks, Roles"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Workspace record stored
+    entities:
+      - Workspace
+entities:
+  - Workspace
+  - WorkspaceNumberCard
+  - WorkspaceChart
+  - WorkspaceShortcut
+  - WorkspaceLink
+  - WorkspaceQuickList
+  - WorkspaceCustomBlock
+  - HasRole
+screens:
+  - S-254
+acceptance:
+  - id: AC-256
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Workspace
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"workspace\")."

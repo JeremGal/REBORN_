@@ -1,0 +1,369 @@
+id: S-358
+title: Company
+purpose: create, view and edit Company records
+kind: form
+layout: "tabs: Accounts, Accounts Closing, Buying and Selling, Stock and Manufacturing, Dashboard; sections: Address & Contact, Chart of Accounts, Default Accounts, Exchange Gain / Loss, Round Off, Deferred Accounting, Advance Payments, Exchange Rate Revaluation Settings, Budget Detail, Fixed Asset Defaults, Buying & Selling Settings, Purchase Expense, Stock Expense, Stock Settings, Manufacturing, Warehouse Defaults; 94 fields"
+fields:
+  - label: Company
+    control: text
+    binds: Company.company_name
+    required: true
+  - label: Abbr
+    control: text
+    binds: Company.abbr
+    required: true
+  - label: Default Currency
+    control: lookup
+    binds: Company.default_currency
+    required: true
+    validation: chosen among Currency records
+  - label: Country
+    control: lookup
+    binds: Company.country
+    required: true
+    validation: chosen among Country records
+  - label: Is Group
+    control: checkbox
+    binds: Company.is_group
+  - label: Default Holiday List
+    control: lookup
+    binds: Company.default_holiday_list
+    validation: chosen among Holiday List records
+  - label: Default Letter Head
+    control: lookup
+    binds: Company.default_letter_head
+    validation: chosen among Letter Head records
+  - label: Tax ID
+    control: text
+    binds: Company.tax_id
+  - label: Domain
+    control: text
+    binds: Company.domain
+  - label: Date of Establishment
+    control: date
+    binds: Company.date_of_establishment
+  - label: Parent Company
+    control: lookup
+    binds: Company.parent_company
+    validation: chosen among Company records
+  - label: Reporting Currency
+    control: lookup
+    binds: Company.reporting_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Company Logo
+    control: other
+    binds: Company.company_logo
+  - label: Date of Incorporation
+    control: date
+    binds: Company.date_of_incorporation
+  - label: Phone No
+    control: text
+    binds: Company.phone_no
+  - label: Email
+    control: text
+    binds: Company.email
+  - label: Company Description
+    control: text
+    binds: Company.company_description
+  - label: Date of Commencement
+    control: date
+    binds: Company.date_of_commencement
+    validation: shown only when eval:doc.date_of_incorporation
+  - label: Fax
+    control: text
+    binds: Company.fax
+  - label: Website
+    control: text
+    binds: Company.website
+  - label: Registration Details
+    control: text
+    binds: Company.registration_details
+  - label: Lft
+    control: number
+    binds: Company.lft
+    validation: read only (computed or filled by the program)
+  - label: Rgt
+    control: number
+    binds: Company.rgt
+    validation: read only (computed or filled by the program)
+  - label: old_parent
+    control: text
+    binds: Company.old_parent
+    validation: read only (computed or filled by the program)
+  - label: Create Chart Of Accounts Based On
+    control: select
+    binds: Company.create_chart_of_accounts_based_on
+  - label: "Existing Company "
+    control: lookup
+    binds: Company.existing_company
+    validation: shown only when eval:doc.create_chart_of_accounts_based_on==="Existing Company"; chosen among Company records
+  - label: Chart Of Accounts Template
+    control: select
+    binds: Company.chart_of_accounts
+    validation: shown only when eval:doc.create_chart_of_accounts_based_on==="Standard Template"
+  - label: Default Bank Account
+    control: lookup
+    binds: Company.default_bank_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Default Cash Account
+    control: lookup
+    binds: Company.default_cash_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Default Receivable Account
+    control: lookup
+    binds: Company.default_receivable_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Default Payable Account
+    control: lookup
+    binds: Company.default_payable_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Write Off Account
+    control: lookup
+    binds: Company.write_off_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Unrealized Profit / Loss Account
+    control: lookup
+    binds: Company.unrealized_profit_loss_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Allow Account Creation Against Child Company
+    control: checkbox
+    binds: Company.allow_account_creation_against_child_company
+    validation: shown only when eval:doc.parent_company
+  - label: Default Cost of Goods Sold Account
+    control: lookup
+    binds: Company.default_expense_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Default Income Account
+    control: lookup
+    binds: Company.default_income_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Default Payment Discount Account
+    control: lookup
+    binds: Company.default_discount_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Default Payment Terms Template
+    control: lookup
+    binds: Company.payment_terms
+    validation: chosen among Payment Terms Template records
+  - label: Default Cost Center
+    control: lookup
+    binds: Company.cost_center
+    validation: shown only when eval:!doc.__islocal; chosen among Cost Center records
+  - label: Default Finance Book
+    control: lookup
+    binds: Company.default_finance_book
+    validation: chosen among Finance Book records
+  - label: Exchange Gain / Loss Account
+    control: lookup
+    binds: Company.exchange_gain_loss_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Unrealized Exchange Gain/Loss Account
+    control: lookup
+    binds: Company.unrealized_exchange_gain_loss_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Round Off Account
+    control: lookup
+    binds: Company.round_off_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Round Off Cost Center
+    control: lookup
+    binds: Company.round_off_cost_center
+    validation: shown only when eval:!doc.__islocal; chosen among Cost Center records
+  - label: Round Off for Opening
+    control: lookup
+    binds: Company.round_off_for_opening
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Default Deferred Revenue Account
+    control: lookup
+    binds: Company.default_deferred_revenue_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Default Deferred Expense Account
+    control: lookup
+    binds: Company.default_deferred_expense_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Book Advance Payments in Separate Party Account
+    control: checkbox
+    binds: Company.book_advance_payments_in_separate_party_account
+  - label: Reconcile on Advance Payment Date
+    control: checkbox
+    binds: Company.reconcile_on_advance_payment_date
+    validation: "shown only when eval: doc.book_advance_payments_in_separate_party_account"
+  - label: Reconciliation Takes Effect On
+    control: select
+    binds: Company.reconciliation_takes_effect_on
+  - label: Default Advance Received Account
+    control: lookup
+    binds: Company.default_advance_received_account
+    validation: shown only when eval:doc.book_advance_payments_in_separate_party_account; chosen among Account records
+  - label: Default Advance Paid Account
+    control: lookup
+    binds: Company.default_advance_paid_account
+    validation: shown only when eval:doc.book_advance_payments_in_separate_party_account; chosen among Account records
+  - label: Auto Create Exchange Rate Revaluation
+    control: checkbox
+    binds: Company.auto_exchange_rate_revaluation
+  - label: Frequency
+    control: select
+    binds: Company.auto_err_frequency
+  - label: Submit ERR Journals?
+    control: checkbox
+    binds: Company.submit_err_jv
+  - label: Exception Budget Approver Role
+    control: lookup
+    binds: Company.exception_budget_approver_role
+    validation: chosen among Role records
+  - label: Accumulated Depreciation Account
+    control: lookup
+    binds: Company.accumulated_depreciation_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Depreciation Expense Account
+    control: lookup
+    binds: Company.depreciation_expense_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Series for Asset Depreciation Entry (Journal Entry)
+    control: text
+    binds: Company.series_for_depreciation_entry
+  - label: Gain/Loss Account on Asset Disposal
+    control: lookup
+    binds: Company.disposal_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Asset Depreciation Cost Center
+    control: lookup
+    binds: Company.depreciation_cost_center
+    validation: shown only when eval:!doc.__islocal; chosen among Cost Center records
+  - label: Capital Work In Progress Account
+    control: lookup
+    binds: Company.capital_work_in_progress_account
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Asset Received But Not Billed
+    control: lookup
+    binds: Company.asset_received_but_not_billed
+    validation: shown only when eval:!doc.__islocal; chosen among Account records
+  - label: Accounts Frozen Till Date
+    control: date
+    binds: Company.accounts_frozen_till_date
+  - label: Roles Allowed to Set and Edit Frozen Account Entries
+    control: lookup
+    binds: Company.role_allowed_for_frozen_entries
+    validation: chosen among Role records
+  - label: Default Buying Terms
+    control: lookup
+    binds: Company.default_buying_terms
+    validation: chosen among Terms and Conditions records
+  - label: Sales Monthly History
+    control: text
+    binds: Company.sales_monthly_history
+    validation: read only (computed or filled by the program)
+  - label: Monthly Sales Target
+    control: money
+    binds: Company.monthly_sales_target
+  - label: Total Monthly Sales
+    control: money
+    binds: Company.total_monthly_sales
+    validation: read only (computed or filled by the program)
+  - label: Default Selling Terms
+    control: lookup
+    binds: Company.default_selling_terms
+    validation: chosen among Terms and Conditions records
+  - label: Default Sales Contact
+    control: lookup
+    binds: Company.default_sales_contact
+    validation: chosen among Contact records
+  - label: Credit Limit
+    control: money
+    binds: Company.credit_limit
+    validation: shown only when eval:!doc.__islocal
+  - label: Transactions Annual History
+    control: text
+    binds: Company.transactions_annual_history
+    validation: read only (computed or filled by the program)
+  - label: Purchase Expense Account
+    control: lookup
+    binds: Company.purchase_expense_account
+    validation: chosen among Account records
+  - label: Service Expense Account
+    control: lookup
+    binds: Company.service_expense_account
+    validation: chosen among Account records
+  - label: Purchase Expense Contra Account
+    control: lookup
+    binds: Company.purchase_expense_contra_account
+    validation: chosen among Account records
+  - label: Expenses Added To Stock Account
+    control: lookup
+    binds: Company.expenses_added_to_stock_account
+    validation: chosen among Account records
+  - label: Expenses Added To Stock Contra Account
+    control: lookup
+    binds: Company.expenses_added_to_stock_contra_account
+    validation: chosen among Account records
+  - label: Enable Perpetual Inventory
+    control: checkbox
+    binds: Company.enable_perpetual_inventory
+  - label: Enable Item-wise Inventory Account
+    control: checkbox
+    binds: Company.enable_item_wise_inventory_account
+  - label: Enable Provisional Accounting For Non Stock Items
+    control: checkbox
+    binds: Company.enable_provisional_accounting_for_non_stock_items
+  - label: Default Inventory Account
+    control: lookup
+    binds: Company.default_inventory_account
+    validation: chosen among Account records
+  - label: Default Stock Valuation Method
+    control: select
+    binds: Company.valuation_method
+    required: true
+  - label: Stock Adjustment Account
+    control: lookup
+    binds: Company.stock_adjustment_account
+    validation: chosen among Account records
+  - label: Stock Received But Not Billed
+    control: lookup
+    binds: Company.stock_received_but_not_billed
+    validation: chosen among Account records
+  - label: Default Provisional Account
+    control: lookup
+    binds: Company.default_provisional_account
+    validation: chosen among Account records
+  - label: Default Operating Cost Account
+    control: lookup
+    binds: Company.default_operating_cost_account
+    validation: chosen among Account records
+  - label: Default Warehouse
+    control: lookup
+    binds: Company.default_warehouse
+    validation: chosen among Warehouse records
+  - label: Sample Retention Warehouse
+    control: lookup
+    binds: Company.sample_retention_warehouse
+    validation: chosen among Warehouse records
+  - label: Default In-Transit Warehouse
+    control: lookup
+    binds: Company.default_in_transit_warehouse
+    validation: chosen among Warehouse records
+  - label: Default Warehouse for Sales Return
+    control: lookup
+    binds: Company.default_warehouse_for_sales_return
+    validation: chosen among Warehouse records
+  - label: " Default Work In Progress Warehouse "
+    control: lookup
+    binds: Company.default_wip_warehouse
+    validation: chosen among Warehouse records
+  - label: Default Finished Goods Warehouse
+    control: lookup
+    binds: Company.default_fg_warehouse
+    validation: chosen among Warehouse records
+  - label: Default Scrap Warehouse
+    control: lookup
+    binds: Company.default_scrap_warehouse
+    validation: chosen among Warehouse records
+actions:
+  - label: Save
+    triggers: F-359
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Company
+    note: declared by the program

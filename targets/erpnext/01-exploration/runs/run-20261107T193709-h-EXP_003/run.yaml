@@ -1,0 +1,91 @@
+id: run-20261107T193709-h-EXP_003
+mission: M-003
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_003.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T19:36:23.800Z
+ended_at: 2026-11-07T19:37:09.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+    screenshot: step_01.png
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.252, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+    screenshot: step_02.png
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.325, "element": "Continue button"})'
+    screenshot: step_03.png
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 600, "scroll_element": null})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 1000, "scroll_element": null})'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"buttons\": [\"Enregistrer\"], \"page_title\": \"Nouveau(elle) Écriture de Paiement - new-payment-entry-xorvdakpnp\", \"field_labels\": [\"Séries\", \"Date de Comptabilisation\", \"Type de paiement\", \"Moyen de paiement\", \"Compte bancaire de l'entreprise\", \"Type de Tiers\", \"Tiers\", \"Nom du Tiers\", \"Comptab"
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Payment Entry
+        path: /app/payment-entry/new
+        kind: form
+      page_title: Nouveau(elle) Écriture de Paiement - new-payment-entry-xorvdakpnp
+      section_labels:
+        - Type de Paiement
+        - Paiement De / À
+        - Accounts and Transaction Details
+        - Taxes et Frais
+      field_labels:
+        - Séries
+        - Date de Comptabilisation
+        - Type de paiement
+        - Moyen de paiement
+        - Compte bancaire de l'entreprise
+        - Type de Tiers
+        - Tiers
+        - Nom du Tiers
+        - Comptabiliser les acomptes sur un compte de tiers distinct
+        - Compte Payé Au
+        - Modèle de Taxes et Frais de Vente
+        - Impôts et taxes anticipés
+        - No.
+        - Type
+        - Compte compt.
+        - Taux d'Impositi...
+        - Montant Net
+        - Montant
+        - Total
+        - Ajouter une ligne
+      buttons:
+        - Enregistrer
+      notes: null
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/8dc47a82-5f47-4f7d-9277-82965e734d03 attempts: 1"

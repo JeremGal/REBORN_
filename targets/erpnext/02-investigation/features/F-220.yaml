@@ -1,0 +1,54 @@
+id: F-220
+title: Configure Bulk Update
+module: Desk
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Bulk Update settings.
+entry_points:
+  - screen: S-219
+    action: open the form
+inputs:
+  - label: Document Type
+    field: BulkUpdate.document_type
+    type: ref
+    required: true
+  - label: Field
+    field: BulkUpdate.field
+    type: enum
+    required: true
+  - label: Update Value
+    field: BulkUpdate.update_value
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Bulk Update form
+    screen: S-219
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Document Type, Field, Update Value"
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - BulkUpdate
+entities:
+  - BulkUpdate
+screens:
+  - S-219
+acceptance:
+  - id: AC-221
+    given: every mandatory field filled with a valid value
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Bulk Update
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"bulk-update\")."

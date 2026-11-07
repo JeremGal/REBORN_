@@ -1,0 +1,70 @@
+id: S-288
+title: Social Login Key
+purpose: create, view and edit Social Login Key records
+kind: form
+layout: "sections: Client Credentials, Identity Details, Configuration, Client URLs, Client Information; 17 fields"
+fields:
+  - label: Enable Social Login
+    control: checkbox
+    binds: SocialLoginKey.enable_social_login
+  - label: Social Login Provider
+    control: select
+    binds: SocialLoginKey.social_login_provider
+    validation: shown only when eval:doc.custom!=1
+  - label: Client ID
+    control: text
+    binds: SocialLoginKey.client_id
+  - label: Provider Name
+    control: text
+    binds: SocialLoginKey.provider_name
+    required: true
+  - label: Client Secret
+    control: text
+    binds: SocialLoginKey.client_secret
+  - label: Icon
+    control: text
+    binds: SocialLoginKey.icon
+    validation: shown only when eval:doc.social_login_provider=="Custom"
+  - label: Base URL
+    control: text
+    binds: SocialLoginKey.base_url
+  - label: Sign ups
+    control: select
+    binds: SocialLoginKey.sign_ups
+  - label: Show in Resource Metadata
+    control: checkbox
+    binds: SocialLoginKey.show_in_resource_metadata
+  - label: Authorize URL
+    control: text
+    binds: SocialLoginKey.authorize_url
+  - label: Access Token URL
+    control: text
+    binds: SocialLoginKey.access_token_url
+  - label: Redirect URL
+    control: text
+    binds: SocialLoginKey.redirect_url
+  - label: API Endpoint
+    control: text
+    binds: SocialLoginKey.api_endpoint
+  - label: Custom Base URL
+    control: checkbox
+    binds: SocialLoginKey.custom_base_url
+  - label: API Endpoint Args
+    control: text
+    binds: SocialLoginKey.api_endpoint_args
+  - label: Auth URL Data
+    control: text
+    binds: SocialLoginKey.auth_url_data
+  - label: User ID Property
+    control: text
+    binds: SocialLoginKey.user_id_property
+    validation: shown only when eval:doc.social_login_provider==="Custom"
+actions:
+  - label: Save
+    triggers: F-289
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Social Login Key
+    note: declared by the program

@@ -1,0 +1,31 @@
+id: S-270
+title: Unhandled Email
+purpose: create, view and edit Unhandled Email records
+kind: form
+layout: 5 fields
+fields:
+  - label: Email Account
+    control: lookup
+    binds: UnhandledEmail.email_account
+    validation: chosen among Email Account records
+  - label: UID
+    control: text
+    binds: UnhandledEmail.uid
+  - label: Reason
+    control: text
+    binds: UnhandledEmail.reason
+  - label: Message-id
+    control: text
+    binds: UnhandledEmail.message_id
+  - label: Raw Email
+    control: text
+    binds: UnhandledEmail.raw
+actions:
+  - label: Save
+    triggers: F-271
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Unhandled Email
+    note: declared by the program

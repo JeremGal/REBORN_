@@ -1,0 +1,46 @@
+id: F-471
+title: Create and edit a Workflow State
+module: Workflow
+priority: could
+status: partial
+confidence: medium
+user_goal: Workflow state represents the current state of a document.
+entry_points:
+  - screen: S-470
+    action: open the form
+inputs:
+  - label: State
+    field: WorkflowState.workflow_state_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Workflow State form
+    screen: S-470
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: State"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Workflow State record stored
+    entities:
+      - WorkflowState
+entities:
+  - WorkflowState
+screens:
+  - S-470
+acceptance:
+  - id: AC-472
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Workflow State
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"workflow-state\")."

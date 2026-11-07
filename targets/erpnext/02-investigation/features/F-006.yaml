@@ -1,0 +1,59 @@
+id: F-006
+title: Create and edit a Accounting Dimension Filter
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Accounting Dimension Filter records.
+entry_points:
+  - screen: S-005
+    action: open the form
+inputs:
+  - label: Accounting Dimension
+    field: AccountingDimensionFilter.accounting_dimension
+    type: enum
+    required: true
+  - label: Company
+    field: AccountingDimensionFilter.company
+    type: ref
+    required: true
+  - label: Allow Or Restrict Dimension
+    field: AccountingDimensionFilter.allow_or_restrict
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Accounting Dimension Filter form
+    screen: S-005
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Accounting Dimension, Company, Allow Or Restrict Dimension"
+  - n: 3
+    actor: user
+    does: "adds lines in: Applicable On Account, Applicable Dimension"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Accounting Dimension Filter record stored
+    entities:
+      - AccountingDimensionFilter
+entities:
+  - AccountingDimensionFilter
+  - ApplicableOnAccount
+  - AllowedDimension
+screens:
+  - S-005
+acceptance:
+  - id: AC-007
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Accounting Dimension Filter
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"accounting-dimension-filter\")."

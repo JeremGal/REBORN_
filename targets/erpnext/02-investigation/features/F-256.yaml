@@ -1,0 +1,45 @@
+id: F-256
+title: Create and edit a Workspace Sidebar
+module: Desk
+priority: could
+status: partial
+confidence: medium
+user_goal: Archive of the previous navigation. Nothing reads it at runtime; it is kept as the migration's source so the conversion to module sidebars can be run again.
+entry_points:
+  - screen: S-255
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Workspace Sidebar form
+    screen: S-255
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Workspace Sidebar record stored
+    entities:
+      - WorkspaceSidebar
+entities:
+  - WorkspaceSidebar
+  - WorkspaceSidebarItem
+screens:
+  - S-255
+acceptance:
+  - id: AC-257
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Workspace Sidebar
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

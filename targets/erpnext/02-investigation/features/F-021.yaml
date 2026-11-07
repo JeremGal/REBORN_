@@ -1,0 +1,75 @@
+id: F-021
+title: Create and edit a Bank Transaction Rule
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Bank Transaction Rule records.
+entry_points:
+  - screen: S-020
+    action: open the form
+inputs:
+  - label: Rule Name
+    field: BankTransactionRule.rule_name
+    type: string
+    required: true
+  - label: Transaction Type
+    field: BankTransactionRule.transaction_type
+    type: enum
+    required: true
+  - label: Priority
+    field: BankTransactionRule.priority
+    type: integer
+    required: true
+  - label: Company
+    field: BankTransactionRule.company
+    type: ref
+    required: true
+  - label: Classify As
+    field: BankTransactionRule.classify_as
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Bank Transaction Rule form
+    screen: S-020
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Rule Name, Transaction Type, Priority, Company, Classify As"
+  - n: 3
+    actor: user
+    does: "adds lines in: Description Rules, Accounts"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Bank Transaction Rule record stored
+    entities:
+      - BankTransactionRule
+entities:
+  - BankTransactionRule
+  - BankTransactionRuleDescriptionConditions
+  - BankTransactionRuleAccounts
+screens:
+  - S-020
+acceptance:
+  - id: AC-022
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Bank Transaction Rule
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 27
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Veuillez ajouter un compte pour la règle d'écriture bancaire."

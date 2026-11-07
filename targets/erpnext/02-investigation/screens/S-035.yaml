@@ -1,0 +1,39 @@
+id: S-035
+title: Financial Report Template
+purpose: create, view and edit Financial Report Template records
+kind: form
+layout: 5 fields
+fields:
+  - label: Template Name
+    control: text
+    binds: FinancialReportTemplate.template_name
+    required: true
+  - label: Report Type
+    control: select
+    binds: FinancialReportTemplate.report_type
+    required: true
+  - label: Module (for Export)
+    control: lookup
+    binds: FinancialReportTemplate.module
+    validation: shown only when eval:frappe.boot.developer_mode; chosen among Module Def records
+  - label: Disabled
+    control: checkbox
+    binds: FinancialReportTemplate.disabled
+  - label: Report Line Items
+    control: grid
+    columns:
+      - Line Reference
+      - Display Name
+      - Indent Level
+      - Data Source
+      - Balance Type
+      - Reverse Sign
+actions:
+  - label: Save
+    triggers: F-036
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Financial Report Template
+    note: declared by the program

@@ -1,0 +1,61 @@
+id: S-403
+title: Putaway Rule
+purpose: create, view and edit Putaway Rule records
+kind: form
+layout: 11 fields
+fields:
+  - label: Disable
+    control: checkbox
+    binds: PutawayRule.disable
+    validation: shown only when eval:!doc.__islocal
+  - label: Item
+    control: lookup
+    binds: PutawayRule.item_code
+    required: true
+    validation: chosen among Item records
+  - label: Item Name
+    control: text
+    binds: PutawayRule.item_name
+    validation: read only (computed or filled by the program)
+  - label: Warehouse
+    control: lookup
+    binds: PutawayRule.warehouse
+    required: true
+    validation: chosen among Warehouse records
+  - label: Priority
+    control: number
+    binds: PutawayRule.priority
+  - label: Company
+    control: lookup
+    binds: PutawayRule.company
+    required: true
+    validation: chosen among Company records
+  - label: Capacity
+    control: number
+    binds: PutawayRule.capacity
+    required: true
+  - label: UOM
+    control: lookup
+    binds: PutawayRule.uom
+    validation: chosen among UOM records
+  - label: Conversion Factor
+    control: number
+    binds: PutawayRule.conversion_factor
+    validation: read only (computed or filled by the program)
+  - label: Stock UOM
+    control: lookup
+    binds: PutawayRule.stock_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Capacity in Stock UOM
+    control: number
+    binds: PutawayRule.stock_capacity
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-404
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Putaway Rule
+    note: declared by the program

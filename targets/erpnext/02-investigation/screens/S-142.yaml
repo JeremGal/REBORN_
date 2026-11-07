@@ -1,0 +1,30 @@
+id: S-142
+title: Custom Role
+purpose: create, view and edit Custom Role records
+kind: form
+layout: "sections: Permission Rules; 4 fields"
+fields:
+  - label: Page
+    control: lookup
+    binds: CustomRole.page
+    validation: chosen among Page records
+  - label: Report
+    control: lookup
+    binds: CustomRole.report
+    validation: chosen among Report records
+  - label: Role
+    control: grid
+    columns:
+      - Role
+  - label: Reference Document Type
+    control: text
+    binds: CustomRole.ref_doctype
+actions:
+  - label: Save
+    triggers: F-143
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Custom Role
+    note: declared by the program

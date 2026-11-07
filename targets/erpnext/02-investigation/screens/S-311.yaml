@@ -1,0 +1,31 @@
+id: S-311
+title: Workstation Type
+purpose: create, view and edit Workstation Type records
+kind: form
+layout: "tabs: Description; sections: Operating Costs (Per Hour); 4 fields"
+fields:
+  - label: Workstation Type
+    control: text
+    binds: WorkstationType.workstation_type
+    required: true
+  - label: Operating Components Cost
+    control: grid
+    columns:
+      - Operating Component
+      - Operating Cost
+  - label: Net Hour Rate
+    control: money
+    binds: WorkstationType.hour_rate
+    validation: read only (computed or filled by the program)
+  - label: Description
+    control: text
+    binds: WorkstationType.description
+actions:
+  - label: Save
+    triggers: F-312
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Workstation Type
+    note: declared by the program

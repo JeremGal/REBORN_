@@ -1,0 +1,41 @@
+id: S-240
+title: Note
+purpose: create, view and edit Note records
+kind: form
+layout: "sections: Seen By; 7 fields"
+fields:
+  - label: Title
+    control: text
+    binds: Note.title
+    required: true
+  - label: Public
+    control: checkbox
+    binds: Note.public
+  - label: Notify users with a popup when they log in
+    control: checkbox
+    binds: Note.notify_on_login
+    validation: shown only when public
+  - label: Notify Users On Every Login
+    control: checkbox
+    binds: Note.notify_on_every_login
+    validation: shown only when notify_on_login
+  - label: Expire Notification On
+    control: date
+    binds: Note.expire_notification_on
+    validation: shown only when eval:doc.notify_on_login && doc.public
+  - label: Content
+    control: text
+    binds: Note.content
+  - label: Seen By Table
+    control: grid
+    columns:
+      - User
+actions:
+  - label: Save
+    triggers: F-241
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Note
+    note: declared by the program

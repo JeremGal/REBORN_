@@ -1,0 +1,116 @@
+id: S-409
+title: Repost Item Valuation
+purpose: create, view and edit Repost Item Valuation records
+kind: form
+layout: "sections: Error, Reposting Item and Warehouse, Reposting Vouchers; 25 fields"
+fields:
+  - label: Based On
+    control: select
+    binds: RepostItemValuation.based_on
+    required: true
+  - label: Voucher Type
+    control: lookup
+    binds: RepostItemValuation.voucher_type
+    validation: shown only when eval:doc.based_on=='Transaction'; chosen among DocType records
+  - label: Voucher No
+    control: lookup
+    binds: RepostItemValuation.voucher_no
+    validation: shown only when eval:doc.based_on=='Transaction'
+  - label: Item Code
+    control: lookup
+    binds: RepostItemValuation.item_code
+    validation: shown only when eval:doc.based_on=='Item and Warehouse'; chosen among Item records
+  - label: Warehouse
+    control: lookup
+    binds: RepostItemValuation.warehouse
+    validation: shown only when eval:doc.based_on=='Item and Warehouse'; chosen among Warehouse records
+  - label: Posting Date
+    control: date
+    binds: RepostItemValuation.posting_date
+    required: true
+  - label: Posting Time
+    control: date
+    binds: RepostItemValuation.posting_time
+  - label: Status
+    control: select
+    binds: RepostItemValuation.status
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: RepostItemValuation.company
+    validation: chosen among Company records
+  - label: Reposting Reference
+    control: text
+    binds: RepostItemValuation.reposting_reference
+    validation: read only (computed or filled by the program); shown only when repost_only_accounting_ledgers
+  - label: Repost Only Accounting Ledgers
+    control: checkbox
+    binds: RepostItemValuation.repost_only_accounting_ledgers
+    validation: shown only when eval:doc.based_on === "Transaction"
+  - label: Allow Negative Stock
+    control: checkbox
+    binds: RepostItemValuation.allow_negative_stock
+  - label: Via Landed Cost Voucher
+    control: checkbox
+    binds: RepostItemValuation.via_landed_cost_voucher
+  - label: Allow Zero Rate
+    control: checkbox
+    binds: RepostItemValuation.allow_zero_rate
+  - label: Recreate Stock Ledgers
+    control: checkbox
+    binds: RepostItemValuation.recreate_stock_ledgers
+    validation: shown only when eval:doc.based_on == "Transaction"
+  - label: Recalculate Valuation Rate
+    control: checkbox
+    binds: RepostItemValuation.recalculate_valuation_rate
+  - label: Error Log
+    control: text
+    binds: RepostItemValuation.error_log
+    validation: read only (computed or filled by the program)
+  - label: Items to Be Repost
+    control: text
+    binds: RepostItemValuation.items_to_be_repost
+    validation: read only (computed or filled by the program)
+  - label: No of Items to Repost
+    control: number
+    binds: RepostItemValuation.total_reposting_count
+    validation: read only (computed or filled by the program)
+  - label: Current Index
+    control: number
+    binds: RepostItemValuation.current_index
+    validation: read only (computed or filled by the program)
+  - label: GL reposting index
+    control: number
+    binds: RepostItemValuation.gl_reposting_index
+    validation: read only (computed or filled by the program)
+  - label: Reposting Data File
+    control: other
+    binds: RepostItemValuation.reposting_data_file
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: RepostItemValuation.amended_from
+    validation: read only (computed or filled by the program); chosen among Repost Item Valuation records
+  - label: Total Ledgers
+    control: number
+    binds: RepostItemValuation.total_vouchers
+    validation: read only (computed or filled by the program)
+  - label: Ledgers Posted
+    control: number
+    binds: RepostItemValuation.vouchers_posted
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-410
+  - label: Submit
+    triggers: F-410
+  - label: Cancel
+    triggers: F-410
+  - label: Amend
+    triggers: F-410
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Repost Item Valuation
+    note: declared by the program

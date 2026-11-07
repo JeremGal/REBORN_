@@ -1,0 +1,49 @@
+id: S-030
+title: Currency Exchange Settings
+purpose: settings of Currency Exchange Settings
+kind: settings
+layout: "sections: API Details, Request Parameters; 8 fields"
+fields:
+  - label: Disabled
+    control: checkbox
+    binds: CurrencyExchangeSettings.disabled
+  - label: Service Provider
+    control: select
+    binds: CurrencyExchangeSettings.service_provider
+    required: true
+  - label: API Endpoint
+    control: text
+    binds: CurrencyExchangeSettings.api_endpoint
+    required: true
+  - label: Use HTTP Protocol
+    control: checkbox
+    binds: CurrencyExchangeSettings.use_http
+    validation: 'shown only when eval: doc.service_provider != "Custom"'
+  - label: Access Key
+    control: text
+    binds: CurrencyExchangeSettings.access_key
+    validation: shown only when eval:doc.service_provider == 'exchangerate.host';
+  - label: Example URL
+    control: text
+    binds: CurrencyExchangeSettings.url
+    validation: read only (computed or filled by the program)
+  - label: Parameters
+    control: grid
+    required: true
+    columns:
+      - Key
+      - Value
+  - label: Result Key
+    control: grid
+    required: true
+    columns:
+      - Key
+actions:
+  - label: Save
+    triggers: F-031
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Currency Exchange Settings
+    note: declared by the program

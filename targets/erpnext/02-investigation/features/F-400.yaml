@@ -1,0 +1,61 @@
+id: F-400
+title: Create, submit and cancel a Packing Slip
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: The contents and weight of each package in a delivery.
+entry_points:
+  - screen: S-399
+    action: open the form
+inputs:
+  - label: Delivery Note
+    field: PackingSlip.delivery_note
+    type: ref
+    required: true
+  - label: Series
+    field: PackingSlip.naming_series
+    type: enum
+    required: true
+  - label: From Package No.
+    field: PackingSlip.from_case_no
+    type: integer
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Packing Slip form
+    screen: S-399
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Delivery Note, Series, From Package No."
+  - n: 3
+    actor: user
+    does: "adds lines in: Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Packing Slip record stored
+    entities:
+      - PackingSlip
+entities:
+  - PackingSlip
+  - PackingSlipItem
+screens:
+  - S-399
+acceptance:
+  - id: AC-401
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Packing Slip
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"packing-slip\")."

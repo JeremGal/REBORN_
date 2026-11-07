@@ -1,0 +1,58 @@
+id: F-151
+title: Create and edit a Document Naming Rule
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Document Naming Rule records.
+entry_points:
+  - screen: S-150
+    action: open the form
+inputs:
+  - label: Document Type
+    field: DocumentNamingRule.document_type
+    type: ref
+    required: true
+  - label: Prefix
+    field: DocumentNamingRule.prefix
+    type: string
+    required: true
+  - label: Digits
+    field: DocumentNamingRule.prefix_digits
+    type: integer
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Document Naming Rule form
+    screen: S-150
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Document Type, Prefix, Digits"
+  - n: 3
+    actor: user
+    does: "adds lines in: Conditions"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Document Naming Rule record stored
+    entities:
+      - DocumentNamingRule
+entities:
+  - DocumentNamingRule
+  - DocumentNamingRuleCondition
+screens:
+  - S-150
+acceptance:
+  - id: AC-152
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Document Naming Rule
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

@@ -1,0 +1,115 @@
+id: S-404
+title: Quality Inspection
+purpose: create, view and edit Quality Inspection records
+kind: form
+layout: "sections: Print Settings; 23 fields"
+fields:
+  - label: Series
+    control: select
+    binds: QualityInspection.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: QualityInspection.company
+    validation: chosen among Company records
+  - label: Report Date
+    control: date
+    binds: QualityInspection.report_date
+    required: true
+  - label: Status
+    control: select
+    binds: QualityInspection.status
+    required: true
+  - label: Child Row Reference
+    control: text
+    binds: QualityInspection.child_row_reference
+    validation: read only (computed or filled by the program)
+  - label: Inspection Type
+    control: select
+    binds: QualityInspection.inspection_type
+    required: true
+  - label: Reference Type
+    control: select
+    binds: QualityInspection.reference_type
+    required: true
+  - label: Reference Name
+    control: lookup
+    binds: QualityInspection.reference_name
+    required: true
+  - label: Item Code
+    control: lookup
+    binds: QualityInspection.item_code
+    required: true
+    validation: chosen among Item records
+  - label: Item Serial No
+    control: lookup
+    binds: QualityInspection.item_serial_no
+    validation: chosen among Serial No records
+  - label: Batch No
+    control: lookup
+    binds: QualityInspection.batch_no
+    validation: chosen among Batch records
+  - label: Sample Size
+    control: number
+    binds: QualityInspection.sample_size
+    required: true
+  - label: Item Name
+    control: text
+    binds: QualityInspection.item_name
+    validation: read only (computed or filled by the program)
+  - label: Description
+    control: text
+    binds: QualityInspection.description
+  - label: BOM No
+    control: lookup
+    binds: QualityInspection.bom_no
+    validation: read only (computed or filled by the program); chosen among BOM records
+  - label: Quality Inspection Template
+    control: lookup
+    binds: QualityInspection.quality_inspection_template
+    validation: chosen among Quality Inspection Template records
+  - label: Manual Inspection
+    control: checkbox
+    binds: QualityInspection.manual_inspection
+  - label: Readings
+    control: grid
+    columns:
+      - Parameter
+      - Status
+      - Numeric
+      - Reading Value
+      - Reading 1
+  - label: Inspected By
+    control: lookup
+    binds: QualityInspection.inspected_by
+    required: true
+    validation: chosen among User records
+  - label: Verified By
+    control: text
+    binds: QualityInspection.verified_by
+  - label: Remarks
+    control: text
+    binds: QualityInspection.remarks
+  - label: Amended From
+    control: lookup
+    binds: QualityInspection.amended_from
+    validation: read only (computed or filled by the program); chosen among Quality Inspection records
+  - label: Letter Head
+    control: lookup
+    binds: QualityInspection.letter_head
+    validation: chosen among Letter Head records
+actions:
+  - label: Save
+    triggers: F-405
+  - label: Submit
+    triggers: F-405
+  - label: Cancel
+    triggers: F-405
+  - label: Amend
+    triggers: F-405
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quality Inspection
+    note: declared by the program

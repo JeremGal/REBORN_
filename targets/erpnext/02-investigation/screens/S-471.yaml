@@ -1,0 +1,21 @@
+id: S-471
+title: Workflow Transition Tasks
+purpose: create, view and edit Workflow Transition Tasks records
+kind: form
+layout: 1 fields
+fields:
+  - label: Tasks
+    control: grid
+    columns:
+      - Task
+      - Asynchronous
+      - Enabled
+actions:
+  - label: Save
+    triggers: F-472
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Workflow Transition Tasks
+    note: declared by the program

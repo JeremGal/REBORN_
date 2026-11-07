@@ -1,0 +1,35 @@
+id: S-460
+title: Web Template
+purpose: create, view and edit Web Template records
+kind: form
+layout: 5 fields
+fields:
+  - label: Type
+    control: select
+    binds: WebTemplate.type
+  - label: Standard
+    control: checkbox
+    binds: WebTemplate.standard
+  - label: Module
+    control: lookup
+    binds: WebTemplate.module
+    validation: chosen among Module Def records
+  - label: Template
+    control: text
+    binds: WebTemplate.template
+    validation: shown only when eval:!doc.standard
+  - label: Fields
+    control: grid
+    columns:
+      - Label
+      - Fieldname
+      - Fieldtype
+actions:
+  - label: Save
+    triggers: F-461
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Web Template
+    note: declared by the program

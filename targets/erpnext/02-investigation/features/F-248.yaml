@@ -1,0 +1,50 @@
+id: F-248
+title: Create and edit a Sidebar
+module: Desk
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Sidebar records.
+entry_points:
+  - screen: S-247
+    action: open the form
+inputs:
+  - label: Title
+    field: Sidebar.title
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Sidebar form
+    screen: S-247
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Title"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Sidebar record stored
+    entities:
+      - Sidebar
+entities:
+  - Sidebar
+  - SidebarItem
+screens:
+  - S-247
+acceptance:
+  - id: AC-249
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Sidebar
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

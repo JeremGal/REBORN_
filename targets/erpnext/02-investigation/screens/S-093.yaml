@@ -1,0 +1,219 @@
+id: S-093
+title: Asset
+purpose: create, view and edit Asset records
+kind: form
+layout: "tabs: Depreciation, More Info, Connections; sections: Purchase Details, Depreciation Details, Depreciation Schedule, Accounting Dimensions, Ownership, Insurance, Additional Info; 53 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Asset.naming_series
+  - label: Item Code
+    control: lookup
+    binds: Asset.item_code
+    required: true
+    validation: chosen among Item records
+  - label: Item Name
+    control: display
+    binds: Asset.item_name
+  - label: Asset Name
+    control: text
+    binds: Asset.asset_name
+    required: true
+    validation: shown only when item_code
+  - label: Location
+    control: lookup
+    binds: Asset.location
+    required: true
+    validation: chosen among Location records
+  - label: Image
+    control: other
+    binds: Asset.image
+  - label: Company
+    control: lookup
+    binds: Asset.company
+    required: true
+    validation: chosen among Company records
+  - label: Asset Category
+    control: lookup
+    binds: Asset.asset_category
+    validation: read only (computed or filled by the program); shown only when item_code; chosen among Asset Category records
+  - label: Asset Type
+    control: select
+    binds: Asset.asset_type
+  - label: Maintenance Required
+    control: checkbox
+    binds: Asset.maintenance_required
+  - label: Calculate Depreciation
+    control: checkbox
+    binds: Asset.calculate_depreciation
+  - label: Purchase Receipt
+    control: lookup
+    binds: Asset.purchase_receipt
+    validation: shown only when eval:doc.asset_type != "Composite Asset" && doc.asset_type != "Existing Asset"; chosen among Purchase Receipt records
+  - label: Purchase Receipt Item
+    control: text
+    binds: Asset.purchase_receipt_item
+  - label: Purchase Invoice
+    control: lookup
+    binds: Asset.purchase_invoice
+    validation: shown only when eval:doc.asset_type != "Composite Asset" && doc.asset_type != "Existing Asset"; chosen among Purchase Invoice records
+  - label: Purchase Invoice Item
+    control: text
+    binds: Asset.purchase_invoice_item
+  - label: Purchase Date
+    control: date
+    binds: Asset.purchase_date
+    required: true
+  - label: Available for Use Date
+    control: date
+    binds: Asset.available_for_use_date
+  - label: Disposal Date
+    control: date
+    binds: Asset.disposal_date
+    validation: read only (computed or filled by the program)
+  - label: Net Purchase Amount
+    control: money
+    binds: Asset.net_purchase_amount
+  - label: Purchase Amount
+    control: money
+    binds: Asset.purchase_amount
+    validation: read only (computed or filled by the program)
+  - label: Asset Quantity
+    control: number
+    binds: Asset.asset_quantity
+  - label: Additional Asset Cost
+    control: money
+    binds: Asset.additional_asset_cost
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus > 0
+  - label: Value Adjustment Amount
+    control: money
+    binds: Asset.value_adjustment_amount
+    validation: read only (computed or filled by the program); shown only when value_adjustment_amount
+  - label: Total Asset Cost
+    control: money
+    binds: Asset.total_asset_cost
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus > 0
+  - label: Opening Accumulated Depreciation
+    control: money
+    binds: Asset.opening_accumulated_depreciation
+    validation: shown only when eval:(doc.asset_type == "Existing Asset")
+  - label: Is Fully Depreciated
+    control: checkbox
+    binds: Asset.is_fully_depreciated
+    validation: shown only when eval:(doc.asset_type == "Existing Asset" && !doc.calculate_depreciation) || doc.
+  - label: Opening Number of Booked Depreciations
+    control: number
+    binds: Asset.opening_number_of_booked_depreciations
+    validation: shown only when eval:(doc.asset_type == "Existing Asset")
+  - label: Finance Books
+    control: grid
+    columns:
+      - Finance Book
+      - Depreciation Method
+      - Frequency of Depreciation (Months)
+      - Total Number of Depreciations
+      - Depreciation Posting Date
+  - label: Depreciation Method
+    control: select
+    binds: Asset.depreciation_method
+  - label: Value After Depreciation
+    control: money
+    binds: Asset.value_after_depreciation
+    validation: read only (computed or filled by the program)
+  - label: Frequency of Depreciation (Months)
+    control: number
+    binds: Asset.frequency_of_depreciation
+  - label: Next Depreciation Date
+    control: date
+    binds: Asset.next_depreciation_date
+  - label: Total Number of Depreciations
+    control: number
+    binds: Asset.total_number_of_depreciations
+  - label: Cost Center
+    control: lookup
+    binds: Asset.cost_center
+    validation: chosen among Cost Center records
+  - label: Asset Owner
+    control: select
+    binds: Asset.asset_owner
+  - label: Asset Owner Company
+    control: lookup
+    binds: Asset.asset_owner_company
+    validation: shown only when eval:doc.asset_owner == "Company"; chosen among Company records
+  - label: Customer
+    control: lookup
+    binds: Asset.customer
+    validation: shown only when eval:doc.asset_owner == "Customer"; chosen among Customer records
+  - label: Supplier
+    control: lookup
+    binds: Asset.supplier
+    validation: shown only when eval:doc.asset_owner == "Supplier"; chosen among Supplier records
+  - label: Policy number
+    control: text
+    binds: Asset.policy_number
+  - label: Insurer
+    control: text
+    binds: Asset.insurer
+  - label: Insured value
+    control: text
+    binds: Asset.insured_value
+  - label: Insurance Start Date
+    control: date
+    binds: Asset.insurance_start_date
+  - label: Insurance End Date
+    control: date
+    binds: Asset.insurance_end_date
+  - label: Comprehensive Insurance
+    control: text
+    binds: Asset.comprehensive_insurance
+  - label: Status
+    control: select
+    binds: Asset.status
+    validation: read only (computed or filled by the program)
+  - label: Custodian
+    control: lookup
+    binds: Asset.custodian
+    validation: chosen among Employee records
+  - label: Department
+    control: lookup
+    binds: Asset.department
+    validation: chosen among Department records
+  - label: Default Finance Book
+    control: lookup
+    binds: Asset.default_finance_book
+    validation: read only (computed or filled by the program); chosen among Finance Book records
+  - label: Depreciation Entry Posting Status
+    control: select
+    binds: Asset.depr_entry_posting_status
+    validation: read only (computed or filled by the program)
+  - label: Journal Entry for Scrap
+    control: lookup
+    binds: Asset.journal_entry_for_scrap
+    validation: read only (computed or filled by the program); chosen among Journal Entry records
+  - label: Split From
+    control: lookup
+    binds: Asset.split_from
+    validation: read only (computed or filled by the program); chosen among Asset records
+  - label: Amended From
+    control: lookup
+    binds: Asset.amended_from
+    validation: read only (computed or filled by the program); chosen among Asset records
+  - label: Booked Fixed Asset
+    control: checkbox
+    binds: Asset.booked_fixed_asset
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-094
+  - label: Submit
+    triggers: F-094
+  - label: Cancel
+    triggers: F-094
+  - label: Amend
+    triggers: F-094
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset
+    note: declared by the program

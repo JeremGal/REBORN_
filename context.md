@@ -213,6 +213,19 @@ Choix d'Alan : schéma livré + lecture du code = deux natures de preuve, donc u
 | Vecteurs de test | 18 |
 | Couverture des fonctionnalités | 1 sur 755 pages de la documentation actuelle |
 
+**Mise à l'échelle (même soirée)** :
+
+| Mesure ERPNext | Décrit (structure déclarée) | Observé (programme qui tourne) |
+|---|---|---|
+| Entités | 835 / 835 | |
+| Écrans | 471 / 471 formulaires | 10 ouverts par l'agent H, 3 confirmés par recoupement des libellés (traductions officielles fr) |
+| Fonctionnalités | 472 / 755 pages du manuel | 134 (brouillons enregistrés ou refusés par l'API, factures calculées) |
+| Fonctionnalités prêtes à reconstruire | 69 | |
+| Vecteurs de test | 86 | |
+| Attentes vérifiables pour le bloc 3 | 1017 | 0 prouvée (aucune refonte encore) |
+
+Commandes : `frappe features` (une fiche fonctionnalité et une fiche écran par formulaire), `frappe probe` (brouillon minimal de 181 documents métier : 67 enregistrés, 66 refusés avec leur message, 48 non tentés faute de fiche liée ; jamais validés ; `frappe cleanup <run>` les supprime), `frappe translations --lang fr`. L'agent H se lance avec `tools/h_run.py <plan.json>` (venv `tools/py-hexplorer`, clé lue dans le `.env`, utilisateur de test `reborn.agent.test@example.com` à rôles métier, mot de passe dans `tools/secrets/frappe-agent.env` hors du repo, changé après chaque série). Leçon : l'agent a d'abord lu le total des lignes comme total TTC faute d'avoir fait défiler la page ; consigne corrigée, lectures EXP_011 et EXP_012 écartées. Les sessions H n'apparaissaient pas pour Alan : la clé de son `.env` voit 14 sessions, son tableau de bord est sans doute sur une autre organisation.
+
 Découvertes : arrondi bancaire au centime (0,625 donne 0,62), réglable dans les paramètres système ; deux lignes de taxe sur le **même compte** partagent un taux (la première prend le taux de la dernière, cause non établie, U-001) ; quantité décimale refusée pour les unités « nombre entier ». Prochaines familles de calcul à observer avec `frappe observe` : achats, paiements et soldes restants, stock (valorisation), règles de prix, échéanciers.
 
 Temps mesurés : `symbols` liste les 19 954 exports du moteur GnuCash en 8,5 s sans Ghidra ; une recherche Java dans uniCenta prend 1,3 s ; `find --engine ghidra-mcp` (11,3 s) n'est pas plus rapide que Craft (10,2 s), son intérêt est le classement et la décompilation immédiate qui suit. `relations` ne trouve aucun lien implicite sur nos trois cibles (toutes les clés sont déclarées) : il servira sur les vieilles bases sans clés étrangères.

@@ -1,0 +1,89 @@
+id: S-258
+title: Auto Email Report
+purpose: create, view and edit Auto Email Report records
+kind: form
+layout: "sections: Filter Data, Report Filters, Dynamic Report Filters, Email Settings, Message; 20 fields"
+fields:
+  - label: Report
+    control: lookup
+    binds: AutoEmailReport.report
+    required: true
+    validation: chosen among Report records
+  - label: Based on Permissions For User
+    control: lookup
+    binds: AutoEmailReport.user
+    required: true
+    validation: chosen among User records
+  - label: Enabled
+    control: checkbox
+    binds: AutoEmailReport.enabled
+  - label: Report Type
+    control: display
+    binds: AutoEmailReport.report_type
+  - label: Reference Report
+    control: text
+    binds: AutoEmailReport.reference_report
+    validation: read only (computed or filled by the program)
+  - label: Send only if there is any data
+    control: checkbox
+    binds: AutoEmailReport.send_if_data
+  - label: Only Send Records Updated in Last X Hours
+    control: number
+    binds: AutoEmailReport.data_modified_till
+    validation: shown only when eval:doc.report_type=='Report Builder'
+  - label: No of Rows (Max 500)
+    control: number
+    binds: AutoEmailReport.no_of_rows
+    validation: shown only when eval:doc.report_type=='Report Builder'
+  - label: Filters
+    control: text
+    binds: AutoEmailReport.filters
+  - label: Filter Meta
+    control: text
+    binds: AutoEmailReport.filter_meta
+    validation: read only (computed or filled by the program)
+  - label: From Date Field
+    control: select
+    binds: AutoEmailReport.from_date_field
+  - label: To Date Field
+    control: select
+    binds: AutoEmailReport.to_date_field
+  - label: Period
+    control: select
+    binds: AutoEmailReport.dynamic_date_period
+  - label: Use First Day of Period
+    control: checkbox
+    binds: AutoEmailReport.use_first_day_of_period
+    validation: "shown only when eval: doc.dynamic_date_period != 'Daily'"
+  - label: Email To
+    control: text
+    binds: AutoEmailReport.email_to
+    required: true
+  - label: Day of Week
+    control: select
+    binds: AutoEmailReport.day_of_week
+    validation: shown only when eval:doc.frequency=='Weekly'
+  - label: Sender
+    control: lookup
+    binds: AutoEmailReport.sender
+    validation: chosen among Email Account records
+  - label: Frequency
+    control: select
+    binds: AutoEmailReport.frequency
+    required: true
+  - label: Format
+    control: select
+    binds: AutoEmailReport.format
+    required: true
+  - label: Message
+    control: text
+    binds: AutoEmailReport.description
+actions:
+  - label: Save
+    triggers: F-259
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Auto Email Report
+    note: declared by the program

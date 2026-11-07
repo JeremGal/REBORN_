@@ -1,0 +1,85 @@
+id: S-318
+title: Print Settings
+purpose: settings of Print Settings
+kind: settings
+layout: "sections: PDF Settings, Page Settings, Print Server, Raw Printing, Print Style, Fonts; 22 fields"
+fields:
+  - label: Send Print as PDF
+    control: checkbox
+    binds: PrintSettings.send_print_as_pdf
+  - label: Repeat Header and Footer
+    control: checkbox
+    binds: PrintSettings.repeat_header_footer
+  - label: Print the PDF
+    control: checkbox
+    binds: PrintSettings.print_generated_pdf
+  - label: PDF Generator
+    control: select
+    binds: PrintSettings.pdf_generator
+  - label: Max Bulk Print Documents
+    control: number
+    binds: PrintSettings.max_bulk_print_docs
+  - label: Max Concurrent Bulk Exports Per User
+    control: number
+    binds: PrintSettings.max_concurrent_bulk_exports
+  - label: PDF Page Size
+    control: select
+    binds: PrintSettings.pdf_page_size
+  - label: PDF Page Height (in mm)
+    control: number
+    binds: PrintSettings.pdf_page_height
+    validation: shown only when eval:doc.pdf_page_size == "Custom"
+  - label: PDF Page Width (in mm)
+    control: number
+    binds: PrintSettings.pdf_page_width
+    validation: shown only when eval:doc.pdf_page_size == "Custom"
+  - label: Print with letterhead
+    control: checkbox
+    binds: PrintSettings.with_letterhead
+  - label: Compact Item Print
+    control: checkbox
+    binds: PrintSettings.compact_item_print
+  - label: Print UOM after Quantity
+    control: checkbox
+    binds: PrintSettings.print_uom_after_quantity
+  - label: Allow Print for Draft
+    control: checkbox
+    binds: PrintSettings.allow_print_for_draft
+  - label: Always add "Draft" Heading for printing draft documents
+    control: checkbox
+    binds: PrintSettings.add_draft_heading
+  - label: Allow page break inside tables
+    control: checkbox
+    binds: PrintSettings.allow_page_break_inside_tables
+  - label: Allow Print for Cancelled
+    control: checkbox
+    binds: PrintSettings.allow_print_for_cancelled
+  - label: Print taxes with zero amount
+    control: checkbox
+    binds: PrintSettings.print_taxes_with_zero_amount
+  - label: Enable Print Server
+    control: checkbox
+    binds: PrintSettings.enable_print_server
+    validation: shown only when enable_print_server
+  - label: Enable Raw Printing
+    control: checkbox
+    binds: PrintSettings.enable_raw_printing
+  - label: Print Style
+    control: lookup
+    binds: PrintSettings.print_style
+    validation: chosen among Print Style records
+  - label: Font
+    control: select
+    binds: PrintSettings.font
+  - label: Font Size
+    control: number
+    binds: PrintSettings.font_size
+actions:
+  - label: Save
+    triggers: F-319
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Print Settings
+    note: declared by the program

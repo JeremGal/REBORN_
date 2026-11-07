@@ -1,0 +1,98 @@
+id: F-386
+title: Create, submit and cancel a Delivery Note
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: Items shipped to a customer.
+entry_points:
+  - screen: S-385
+    action: open the form
+inputs:
+  - label: Series
+    field: DeliveryNote.naming_series
+    type: enum
+    required: true
+  - label: Customer
+    field: DeliveryNote.customer
+    type: ref
+    required: true
+  - label: Date
+    field: DeliveryNote.posting_date
+    type: date
+    required: true
+  - label: Posting Time
+    field: DeliveryNote.posting_time
+    type: time
+    required: true
+  - label: Company
+    field: DeliveryNote.company
+    type: ref
+    required: true
+  - label: Currency
+    field: DeliveryNote.currency
+    type: ref
+    required: true
+  - label: Exchange Rate
+    field: DeliveryNote.conversion_rate
+    type: decimal
+    required: true
+  - label: Price List
+    field: DeliveryNote.selling_price_list
+    type: ref
+    required: true
+  - label: Price List Exchange Rate
+    field: DeliveryNote.plc_conversion_rate
+    type: decimal
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Delivery Note form
+    screen: S-385
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Customer, Date, Posting Time, Company, Currency, Exchange Rate, Price List, Price List Exchange Rate"
+  - n: 3
+    actor: user
+    does: "adds lines in: Delivery Note Item, Sales Taxes and Charges, Item Wise Tax Details, Packed Items, Pricing Rule Detail, Sales Team"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Delivery Note record stored
+    entities:
+      - DeliveryNote
+entities:
+  - DeliveryNote
+  - DeliveryNoteItem
+  - SalesTaxesAndCharges
+  - ItemWiseTaxDetail
+  - PackedItem
+  - PricingRuleDetail
+  - SalesTeam
+screens:
+  - S-385
+acceptance:
+  - id: AC-387
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Delivery Note
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 46
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"delivery-note\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: La liste de prix Standard Buying ne peut pas être utilisée pour une transaction de vente"

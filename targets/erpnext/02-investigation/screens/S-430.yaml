@@ -1,0 +1,144 @@
+id: S-430
+title: Issue
+purpose: create, view and edit Issue records
+kind: form
+layout: "sections: Details, Service Level Agreement Details, Response Details, Resolution Details, Reference; 34 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Issue.naming_series
+  - label: Subject
+    control: text
+    binds: Issue.subject
+    required: true
+  - label: Customer
+    control: lookup
+    binds: Issue.customer
+    validation: chosen among Customer records
+  - label: Raised By (Email)
+    control: text
+    binds: Issue.raised_by
+    validation: shown only when eval:doc.__islocal
+  - label: Status
+    control: select
+    binds: Issue.status
+  - label: Priority
+    control: lookup
+    binds: Issue.priority
+    validation: chosen among Issue Priority records
+  - label: Issue Type
+    control: lookup
+    binds: Issue.issue_type
+    validation: chosen among Issue Type records
+  - label: Issue Split From
+    control: lookup
+    binds: Issue.issue_split_from
+    validation: read only (computed or filled by the program); chosen among Issue records
+  - label: Description
+    control: text
+    binds: Issue.description
+  - label: Service Level Agreement
+    control: lookup
+    binds: Issue.service_level_agreement
+    validation: chosen among Service Level Agreement records
+  - label: Response By
+    control: date
+    binds: Issue.response_by
+    validation: "read only (computed or filled by the program); shown only when eval: doc.status != 'Replied' && doc.service_level_agreement;"
+  - label: Service Level Agreement Status
+    control: select
+    binds: Issue.agreement_status
+    validation: "read only (computed or filled by the program); shown only when eval: doc.service_level_agreement"
+  - label: Resolution By
+    control: date
+    binds: Issue.sla_resolution_by
+    validation: "read only (computed or filled by the program); shown only when eval: doc.status != 'Replied' && doc.service_level_agreement;"
+  - label: Service Level Agreement Creation
+    control: date
+    binds: Issue.service_level_agreement_creation
+    validation: read only (computed or filled by the program)
+  - label: On Hold Since
+    control: date
+    binds: Issue.on_hold_since
+    validation: read only (computed or filled by the program)
+  - label: Total Hold Time
+    control: number
+    binds: Issue.total_hold_time
+    validation: read only (computed or filled by the program)
+  - label: First Response Time
+    control: number
+    binds: Issue.first_response_time
+    validation: read only (computed or filled by the program)
+  - label: First Responded On
+    control: date
+    binds: Issue.first_responded_on
+  - label: Average Response Time
+    control: number
+    binds: Issue.avg_response_time
+    validation: read only (computed or filled by the program)
+  - label: Resolution Details
+    control: text
+    binds: Issue.resolution_details
+    validation: shown only when eval:!doc.__islocal
+  - label: Opening Date
+    control: date
+    binds: Issue.opening_date
+    validation: read only (computed or filled by the program)
+  - label: Opening Time
+    control: date
+    binds: Issue.opening_time
+    validation: read only (computed or filled by the program)
+  - label: Resolution Date
+    control: date
+    binds: Issue.sla_resolution_date
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: Resolution Time
+    control: number
+    binds: Issue.resolution_time
+    validation: read only (computed or filled by the program)
+  - label: User Resolution Time
+    control: number
+    binds: Issue.user_resolution_time
+    validation: read only (computed or filled by the program)
+  - label: Lead
+    control: lookup
+    binds: Issue.lead
+    validation: chosen among Lead records
+  - label: Contact
+    control: lookup
+    binds: Issue.contact
+    validation: chosen among Contact records
+  - label: Email Account
+    control: lookup
+    binds: Issue.email_account
+    validation: chosen among Email Account records
+  - label: Customer Name
+    control: text
+    binds: Issue.customer_name
+    validation: read only (computed or filled by the program)
+  - label: Project
+    control: lookup
+    binds: Issue.project
+    validation: chosen among Project records
+  - label: Company
+    control: lookup
+    binds: Issue.company
+    validation: chosen among Company records
+  - label: Via Customer Portal
+    control: checkbox
+    binds: Issue.via_customer_portal
+  - label: Attachment
+    control: other
+    binds: Issue.attachment
+  - label: Content Type
+    control: text
+    binds: Issue.content_type
+actions:
+  - label: Save
+    triggers: F-431
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Issue
+    note: declared by the program

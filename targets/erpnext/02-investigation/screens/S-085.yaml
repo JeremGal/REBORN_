@@ -1,0 +1,107 @@
+id: S-085
+title: Subscription
+purpose: create, view and edit Subscription records
+kind: form
+layout: "sections: Subscription Period, Plans, Taxes, Discounts, Accounting Dimensions; 25 fields"
+fields:
+  - label: Party Type
+    control: lookup
+    binds: Subscription.party_type
+    required: true
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: Subscription.party
+    required: true
+  - label: Company
+    control: lookup
+    binds: Subscription.company
+    validation: chosen among Company records
+  - label: Status
+    control: select
+    binds: Subscription.status
+    validation: read only (computed or filled by the program)
+  - label: Subscription Start Date
+    control: date
+    binds: Subscription.start_date
+  - label: Subscription End Date
+    control: date
+    binds: Subscription.end_date
+  - label: Cancelation Date
+    control: date
+    binds: Subscription.cancelation_date
+    validation: read only (computed or filled by the program)
+  - label: Trial Period Start Date
+    control: date
+    binds: Subscription.trial_period_start
+  - label: Trial Period End Date
+    control: date
+    binds: Subscription.trial_period_end
+    validation: shown only when eval:doc.trial_period_start
+  - label: Follow Calendar Months
+    control: checkbox
+    binds: Subscription.follow_calendar_months
+  - label: Generate New Invoices Past Due Date
+    control: checkbox
+    binds: Subscription.generate_new_invoices_past_due_date
+  - label: Submit Generated Invoices
+    control: checkbox
+    binds: Subscription.submit_invoice
+  - label: Current Invoice Start Date
+    control: date
+    binds: Subscription.current_invoice_start
+    validation: read only (computed or filled by the program)
+  - label: Current Invoice End Date
+    control: date
+    binds: Subscription.current_invoice_end
+    validation: read only (computed or filled by the program)
+  - label: Days Until Due
+    control: number
+    binds: Subscription.days_until_due
+  - label: Generate Invoice At
+    control: select
+    binds: Subscription.generate_invoice_at
+    required: true
+  - label: Number of Days
+    control: number
+    binds: Subscription.number_of_days
+    validation: shown only when eval:doc.generate_invoice_at === "Days before the current subscription period"
+  - label: Cancel At End Of Period
+    control: checkbox
+    binds: Subscription.cancel_at_period_end
+  - label: Plans
+    control: grid
+    required: true
+    columns:
+      - Plan
+      - Quantity
+  - label: Sales Taxes and Charges Template
+    control: lookup
+    binds: Subscription.sales_tax_template
+    validation: shown only when eval:doc.party_type === 'Customer'; chosen among Sales Taxes and Charges Template records
+  - label: Purchase Taxes and Charges Template
+    control: lookup
+    binds: Subscription.purchase_tax_template
+    validation: shown only when eval:doc.party_type === 'Supplier'; chosen among Purchase Taxes and Charges Template records
+  - label: Apply Additional Discount On
+    control: select
+    binds: Subscription.apply_additional_discount
+  - label: Additional Discount Percentage
+    control: number
+    binds: Subscription.additional_discount_percentage
+  - label: Additional Discount Amount
+    control: money
+    binds: Subscription.additional_discount_amount
+  - label: Cost Center
+    control: lookup
+    binds: Subscription.cost_center
+    validation: chosen among Cost Center records
+actions:
+  - label: Save
+    triggers: F-086
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Subscription
+    note: declared by the program

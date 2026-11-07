@@ -1,0 +1,60 @@
+id: S-441
+title: Video
+purpose: create, view and edit Video records
+kind: form
+layout: "sections: Youtube Statistics; 12 fields"
+fields:
+  - label: Title
+    control: text
+    binds: Video.title
+    required: true
+  - label: Provider
+    control: select
+    binds: Video.provider
+    required: true
+  - label: URL
+    control: text
+    binds: Video.url
+    required: true
+  - label: Youtube ID
+    control: text
+    binds: Video.youtube_video_id
+    validation: read only (computed or filled by the program)
+  - label: Publish Date
+    control: date
+    binds: Video.publish_date
+  - label: Duration
+    control: number
+    binds: Video.duration
+  - label: Likes
+    control: number
+    binds: Video.like_count
+    validation: read only (computed or filled by the program)
+  - label: Views
+    control: number
+    binds: Video.view_count
+    validation: read only (computed or filled by the program)
+  - label: Dislikes
+    control: number
+    binds: Video.dislike_count
+    validation: read only (computed or filled by the program)
+  - label: Comments
+    control: number
+    binds: Video.comment_count
+    validation: read only (computed or filled by the program)
+  - label: Description
+    control: text
+    binds: Video.description
+    required: true
+  - label: Image
+    control: other
+    binds: Video.image
+actions:
+  - label: Save
+    triggers: F-442
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Video
+    note: declared by the program

@@ -1,0 +1,85 @@
+id: S-378
+title: Transaction Deletion Record
+purpose: create, view and edit Transaction Deletion Record records
+kind: form
+layout: "sections: Tasks; 14 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: TransactionDeletionRecord.company
+    required: true
+    validation: chosen among Company records
+  - label: Status
+    control: select
+    binds: TransactionDeletionRecord.status
+    validation: read only (computed or filled by the program)
+  - label: Error Log
+    control: text
+    binds: TransactionDeletionRecord.error_log
+    validation: "shown only when eval: doc.error_log"
+  - label: Delete Bins
+    control: select
+    binds: TransactionDeletionRecord.delete_bin_data_status
+    validation: read only (computed or filled by the program)
+  - label: Delete Leads and Addresses
+    control: select
+    binds: TransactionDeletionRecord.delete_leads_and_addresses_status
+    validation: read only (computed or filled by the program)
+  - label: Reset Company Default Values
+    control: select
+    binds: TransactionDeletionRecord.reset_company_default_values_status
+    validation: read only (computed or filled by the program)
+  - label: Clear Notifications
+    control: select
+    binds: TransactionDeletionRecord.clear_notifications_status
+    validation: read only (computed or filled by the program)
+  - label: Initialize Summary Table
+    control: select
+    binds: TransactionDeletionRecord.initialize_doctypes_table_status
+    validation: read only (computed or filled by the program)
+  - label: Delete Transactions
+    control: select
+    binds: TransactionDeletionRecord.delete_transactions_status
+    validation: read only (computed or filled by the program)
+  - label: Summary
+    control: grid
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus > 0 && (!doc.doctypes_to_delete || doc.doctypes_to_delete.len
+    columns:
+      - DocType
+      - No of Docs
+      - Done
+  - label: DocTypes To Delete
+    control: grid
+    columns:
+      - DocType
+      - Company Field
+      - Document Count
+      - Child DocTypes
+      - Deleted
+  - label: Excluded DocTypes
+    control: grid
+    columns:
+      - DocType
+  - label: Amended From
+    control: lookup
+    binds: TransactionDeletionRecord.amended_from
+    validation: read only (computed or filled by the program); chosen among Transaction Deletion Record records
+  - label: Process in Single Transaction
+    control: checkbox
+    binds: TransactionDeletionRecord.process_in_single_transaction
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-379
+  - label: Submit
+    triggers: F-379
+  - label: Cancel
+    triggers: F-379
+  - label: Amend
+    triggers: F-379
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Transaction Deletion Record
+    note: declared by the program

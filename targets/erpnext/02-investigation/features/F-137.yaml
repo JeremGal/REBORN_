@@ -1,0 +1,46 @@
+id: F-137
+title: Create and edit a Activity Log
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: Keep track of all update feeds
+entry_points:
+  - screen: S-136
+    action: open the form
+inputs:
+  - label: Subject
+    field: ActivityLog.subject
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Activity Log form
+    screen: S-136
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Subject"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Activity Log record stored
+    entities:
+      - ActivityLog
+entities:
+  - ActivityLog
+screens:
+  - S-136
+acceptance:
+  - id: AC-138
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Activity Log
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

@@ -1,0 +1,72 @@
+id: S-309
+title: Workstation
+purpose: create, view and edit Workstation records
+kind: form
+layout: "tabs: Job Cards, Details, Workstation Status, Operating Costs, Description, Working Hours, Connections; sections: Status Illustration, Operating Costs (Per Hour); 15 fields"
+fields:
+  - label: Workstation Name
+    control: text
+    binds: Workstation.workstation_name
+    required: true
+  - label: Workstation Type
+    control: lookup
+    binds: Workstation.workstation_type
+    validation: chosen among Workstation Type records
+  - label: Plant Floor
+    control: lookup
+    binds: Workstation.plant_floor
+    validation: chosen among Plant Floor records
+  - label: Disabled
+    control: checkbox
+    binds: Workstation.disabled
+  - label: Job Capacity
+    control: number
+    binds: Workstation.production_capacity
+    required: true
+  - label: Warehouse
+    control: lookup
+    binds: Workstation.warehouse
+    validation: chosen among Warehouse records
+  - label: Status
+    control: select
+    binds: Workstation.status
+  - label: Active Status
+    control: other
+    binds: Workstation.on_status_image
+  - label: Inactive Status
+    control: other
+    binds: Workstation.off_status_image
+  - label: Operating Components Cost
+    control: grid
+    columns:
+      - Operating Component
+      - Operating Cost
+  - label: Net Hour Rate
+    control: money
+    binds: Workstation.hour_rate
+    validation: read only (computed or filled by the program)
+  - label: Description
+    control: text
+    binds: Workstation.description
+  - label: Holiday List
+    control: lookup
+    binds: Workstation.holiday_list
+    validation: chosen among Holiday List records
+  - label: Working Hours
+    control: grid
+    columns:
+      - Start Time
+      - End Time
+      - Enabled
+  - label: Total Working Hours
+    control: number
+    binds: Workstation.total_working_hours
+actions:
+  - label: Save
+    triggers: F-310
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Workstation
+    note: declared by the program

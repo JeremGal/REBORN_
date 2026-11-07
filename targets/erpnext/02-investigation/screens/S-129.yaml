@@ -1,0 +1,40 @@
+id: S-129
+title: Communication Medium
+purpose: create, view and edit Communication Medium records
+kind: form
+layout: "sections: Timeslots; 6 fields"
+fields:
+  - label: Communication Channel
+    control: select
+    binds: CommunicationMedium.communication_channel
+  - label: Communication Medium Type
+    control: select
+    binds: CommunicationMedium.communication_medium_type
+    required: true
+  - label: Catch All
+    control: lookup
+    binds: CommunicationMedium.catch_all
+    validation: chosen among Employee Group records
+  - label: Provider
+    control: lookup
+    binds: CommunicationMedium.provider
+    validation: chosen among Supplier records
+  - label: Disabled
+    control: checkbox
+    binds: CommunicationMedium.disabled
+  - label: Timeslots
+    control: grid
+    columns:
+      - Day of Week
+      - From Time
+      - To Time
+      - Employee Group
+actions:
+  - label: Save
+    triggers: F-130
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Communication Medium
+    note: declared by the program

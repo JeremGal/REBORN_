@@ -1,0 +1,34 @@
+id: S-376
+title: Terms and Conditions
+purpose: create, view and edit Terms and Conditions records
+kind: form
+layout: "sections: Applicable Modules; 6 fields"
+fields:
+  - label: Title
+    control: text
+    binds: TermsAndConditions.title
+    required: true
+  - label: Disabled
+    control: checkbox
+    binds: TermsAndConditions.disabled
+  - label: Copy Attachments to Transaction
+    control: checkbox
+    binds: TermsAndConditions.copy_attachments_to_transaction
+  - label: Selling
+    control: checkbox
+    binds: TermsAndConditions.selling
+  - label: Buying
+    control: checkbox
+    binds: TermsAndConditions.buying
+  - label: Terms and Conditions
+    control: text
+    binds: TermsAndConditions.terms
+actions:
+  - label: Save
+    triggers: F-377
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Terms and Conditions
+    note: declared by the program

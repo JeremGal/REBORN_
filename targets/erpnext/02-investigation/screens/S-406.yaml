@@ -1,0 +1,19 @@
+id: S-406
+title: Quality Inspection Parameter Group
+purpose: create, view and edit Quality Inspection Parameter Group records
+kind: form
+layout: 1 fields
+fields:
+  - label: Parameter Group Name
+    control: text
+    binds: QualityInspectionParameterGroup.group_name
+    required: true
+actions:
+  - label: Save
+    triggers: F-407
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quality Inspection Parameter Group
+    note: declared by the program

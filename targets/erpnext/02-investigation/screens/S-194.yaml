@@ -1,0 +1,56 @@
+id: S-194
+title: User Invitation
+purpose: create, view and edit User Invitation records
+kind: form
+layout: 10 fields
+fields:
+  - label: Email
+    control: text
+    binds: UserInvitation.email
+    required: true
+  - label: App Name
+    control: select
+    binds: UserInvitation.app_name
+    required: true
+  - label: Redirect To Path
+    control: text
+    binds: UserInvitation.redirect_to_path
+    required: true
+  - label: Roles
+    control: grid
+    required: true
+    columns:
+      - Role
+  - label: Status
+    control: select
+    binds: UserInvitation.status
+    validation: read only (computed or filled by the program)
+  - label: Invited By
+    control: lookup
+    binds: UserInvitation.invited_by
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Key
+    control: text
+    binds: UserInvitation.key
+    validation: read only (computed or filled by the program)
+  - label: User
+    control: lookup
+    binds: UserInvitation.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Email Sent At
+    control: date
+    binds: UserInvitation.email_sent_at
+    validation: read only (computed or filled by the program)
+  - label: Accepted At
+    control: date
+    binds: UserInvitation.accepted_at
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-195
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of User Invitation
+    note: declared by the program

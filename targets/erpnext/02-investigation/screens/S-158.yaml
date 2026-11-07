@@ -1,0 +1,24 @@
+id: S-158
+title: Installed Applications
+purpose: settings of Installed Applications
+kind: settings
+layout: 1 fields
+fields:
+  - label: Installed Applications
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Application Name
+      - Application Version
+      - Git Branch
+      - Has Setup Wizard
+      - Is Setup Complete?
+actions:
+  - label: Save
+    triggers: F-159
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Installed Applications
+    note: declared by the program

@@ -1,0 +1,86 @@
+id: S-283
+title: OAuth Client
+purpose: create, view and edit OAuth Client records
+kind: form
+layout: "sections: Client Metadata, Advanced Settings; 19 fields"
+fields:
+  - label: Client ID
+    control: text
+    binds: OAuthClient.client_id
+    validation: read only (computed or filled by the program)
+  - label: User
+    control: lookup
+    binds: OAuthClient.user
+    validation: chosen among User records
+  - label: Allowed Roles
+    control: grid
+    columns:
+      - Role
+  - label: Client Secret
+    control: text
+    binds: OAuthClient.client_secret
+    validation: read only (computed or filled by the program)
+  - label: Default Redirect URI
+    control: text
+    binds: OAuthClient.default_redirect_uri
+    required: true
+  - label: Skip Authorization
+    control: checkbox
+    binds: OAuthClient.skip_authorization
+  - label: App Name (Client Name)
+    control: text
+    binds: OAuthClient.app_name
+    required: true
+  - label: Scopes
+    control: text
+    binds: OAuthClient.scopes
+    required: true
+  - label: Redirect URIs
+    control: text
+    binds: OAuthClient.redirect_uris
+  - label: Client URI
+    control: text
+    binds: OAuthClient.client_uri
+    validation: "shown only when eval: doc.client_uri"
+  - label: Software ID
+    control: text
+    binds: OAuthClient.software_id
+    validation: "shown only when eval: doc.software_id"
+  - label: TOS URI
+    control: text
+    binds: OAuthClient.tos_uri
+    validation: "shown only when eval: doc.tos_uri"
+  - label: Contacts
+    control: text
+    binds: OAuthClient.contacts
+    validation: "shown only when eval: doc.contacts"
+  - label: Logo URI
+    control: text
+    binds: OAuthClient.logo_uri
+    validation: "shown only when eval: doc.client_uri"
+  - label: Software Version
+    control: text
+    binds: OAuthClient.software_version
+    validation: "shown only when eval: doc.software_version"
+  - label: Policy URI
+    control: text
+    binds: OAuthClient.policy_uri
+    validation: "shown only when eval: doc.policy_uri"
+  - label: Grant Type
+    control: select
+    binds: OAuthClient.grant_type
+  - label: Token Endpoint Auth Method
+    control: select
+    binds: OAuthClient.token_endpoint_auth_method
+  - label: Response Type
+    control: select
+    binds: OAuthClient.response_type
+actions:
+  - label: Save
+    triggers: F-284
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of OAuth Client
+    note: declared by the program

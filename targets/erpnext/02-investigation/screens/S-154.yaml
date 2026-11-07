@@ -1,0 +1,20 @@
+id: S-154
+title: Domain Settings
+purpose: settings of Domain Settings
+kind: settings
+layout: "sections: Active Domains; 1 fields"
+fields:
+  - label: Active Domains
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Domain
+actions:
+  - label: Save
+    triggers: F-155
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Domain Settings
+    note: declared by the program

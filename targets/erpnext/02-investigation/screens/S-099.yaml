@@ -1,0 +1,89 @@
+id: S-099
+title: Asset Maintenance Log
+purpose: create, view and edit Asset Maintenance Log records
+kind: form
+layout: "sections: Maintenance Details; 19 fields"
+fields:
+  - label: Asset Maintenance
+    control: lookup
+    binds: AssetMaintenanceLog.asset_maintenance
+    validation: chosen among Asset Maintenance records
+  - label: Series
+    control: select
+    binds: AssetMaintenanceLog.naming_series
+    required: true
+  - label: Asset Name
+    control: display
+    binds: AssetMaintenanceLog.asset_name
+  - label: Item Code
+    control: display
+    binds: AssetMaintenanceLog.item_code
+  - label: Item Name
+    control: display
+    binds: AssetMaintenanceLog.item_name
+  - label: Task
+    control: lookup
+    binds: AssetMaintenanceLog.task
+    validation: chosen among Asset Maintenance Task records
+  - label: Task Name
+    control: text
+    binds: AssetMaintenanceLog.task_name
+    validation: read only (computed or filled by the program)
+  - label: Maintenance Type
+    control: display
+    binds: AssetMaintenanceLog.maintenance_type
+  - label: Periodicity
+    control: text
+    binds: AssetMaintenanceLog.periodicity
+    validation: read only (computed or filled by the program)
+  - label: "Has Certificate "
+    control: checkbox
+    binds: AssetMaintenanceLog.has_certificate
+  - label: Certificate
+    control: other
+    binds: AssetMaintenanceLog.certificate_attachement
+    validation: shown only when eval:doc.has_certificate
+  - label: Maintenance Status
+    control: select
+    binds: AssetMaintenanceLog.maintenance_status
+    required: true
+  - label: Assign To
+    control: display
+    binds: AssetMaintenanceLog.assign_to_name
+  - label: Task Assignee Email
+    control: text
+    binds: AssetMaintenanceLog.task_assignee_email
+    validation: read only (computed or filled by the program)
+  - label: Due Date
+    control: date
+    binds: AssetMaintenanceLog.due_date
+    validation: read only (computed or filled by the program)
+  - label: Completion Date
+    control: date
+    binds: AssetMaintenanceLog.completion_date
+  - label: Description
+    control: display
+    binds: AssetMaintenanceLog.description
+    validation: read only (computed or filled by the program)
+  - label: Actions performed
+    control: text
+    binds: AssetMaintenanceLog.actions_performed
+  - label: Amended From
+    control: lookup
+    binds: AssetMaintenanceLog.amended_from
+    validation: read only (computed or filled by the program); chosen among Asset Maintenance Log records
+actions:
+  - label: Save
+    triggers: F-100
+  - label: Submit
+    triggers: F-100
+  - label: Cancel
+    triggers: F-100
+  - label: Amend
+    triggers: F-100
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Maintenance Log
+    note: declared by the program

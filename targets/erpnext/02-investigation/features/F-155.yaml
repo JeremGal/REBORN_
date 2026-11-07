@@ -1,0 +1,45 @@
+id: F-155
+title: Configure Domain Settings
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Domain Settings settings.
+entry_points:
+  - screen: S-154
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Domain Settings form
+    screen: S-154
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Active Domains"
+  - n: 4
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - DomainSettings
+entities:
+  - DomainSettings
+  - HasDomain
+screens:
+  - S-154
+acceptance:
+  - id: AC-156
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Domain Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"domain-settings\")."

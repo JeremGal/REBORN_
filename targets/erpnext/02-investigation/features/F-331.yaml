@@ -1,0 +1,54 @@
+id: F-331
+title: Create and edit a Non Conformance
+module: Quality Management
+priority: could
+status: partial
+confidence: medium
+user_goal: Something that did not meet your quality standard.
+entry_points:
+  - screen: S-330
+    action: open the form
+inputs:
+  - label: Subject
+    field: NonConformance.subject
+    type: string
+    required: true
+  - label: Procedure
+    field: NonConformance.procedure
+    type: ref
+    required: true
+  - label: Status
+    field: NonConformance.status
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Non Conformance form
+    screen: S-330
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Subject, Procedure, Status"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Non Conformance record stored
+    entities:
+      - NonConformance
+entities:
+  - NonConformance
+screens:
+  - S-330
+acceptance:
+  - id: AC-332
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Non Conformance
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"non-conformance\")."

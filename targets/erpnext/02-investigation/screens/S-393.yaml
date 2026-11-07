@@ -1,0 +1,40 @@
+id: S-393
+title: Item Manufacturer
+purpose: create, view and edit Item Manufacturer records
+kind: form
+layout: 6 fields
+fields:
+  - label: Item Code
+    control: lookup
+    binds: ItemManufacturer.item_code
+    required: true
+    validation: chosen among Item records
+  - label: Manufacturer
+    control: lookup
+    binds: ItemManufacturer.manufacturer
+    required: true
+    validation: chosen among Manufacturer records
+  - label: Manufacturer Part Number
+    control: text
+    binds: ItemManufacturer.manufacturer_part_no
+    required: true
+  - label: Item Name
+    control: text
+    binds: ItemManufacturer.item_name
+    validation: read only (computed or filled by the program)
+  - label: Description
+    control: text
+    binds: ItemManufacturer.description
+    validation: read only (computed or filled by the program)
+  - label: Is Default
+    control: checkbox
+    binds: ItemManufacturer.is_default
+actions:
+  - label: Save
+    triggers: F-394
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Item Manufacturer
+    note: declared by the program

@@ -1,0 +1,53 @@
+id: S-147
+title: DocShare
+purpose: create, view and edit DocShare records
+kind: form
+layout: 10 fields
+fields:
+  - label: User
+    control: lookup
+    binds: DocShare.user
+    validation: chosen among User records
+  - label: Document Type
+    control: lookup
+    binds: DocShare.share_doctype
+    required: true
+    validation: chosen among DocType records
+  - label: Document Name
+    control: lookup
+    binds: DocShare.share_name
+    required: true
+  - label: Read
+    control: checkbox
+    binds: DocShare.read
+  - label: Write
+    control: checkbox
+    binds: DocShare.write
+  - label: Share
+    control: checkbox
+    binds: DocShare.share
+  - label: Submit
+    control: checkbox
+    binds: DocShare.submit
+  - label: Everyone
+    control: checkbox
+    binds: DocShare.everyone
+  - label: Notify by email
+    control: checkbox
+    binds: DocShare.notify_by_email
+  - label: Impersonate
+    control: checkbox
+    binds: DocShare.impersonate
+    validation: |-
+      shown only when eval:[
+       "User"
+      ].includes(doc.share_doctype)
+actions:
+  - label: Save
+    triggers: F-148
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of DocShare
+    note: declared by the program

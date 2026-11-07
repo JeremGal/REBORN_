@@ -1,0 +1,46 @@
+id: F-264
+title: Create and edit a Email Group
+module: Email
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Email Group records.
+entry_points:
+  - screen: S-263
+    action: open the form
+inputs:
+  - label: Title
+    field: EmailGroup.title
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Email Group form
+    screen: S-263
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Title"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Email Group record stored
+    entities:
+      - EmailGroup
+entities:
+  - EmailGroup
+screens:
+  - S-263
+acceptance:
+  - id: AC-265
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Email Group
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"email-group\")."

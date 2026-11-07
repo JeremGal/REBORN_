@@ -1,0 +1,126 @@
+id: S-435
+title: Warranty Claim
+purpose: create, view and edit Warranty Claim records
+kind: form
+layout: "sections: Item and Warranty Details, Resolution, Customer Details, More Information; 29 fields"
+fields:
+  - label: Series
+    control: select
+    binds: WarrantyClaim.naming_series
+    required: true
+  - label: Status
+    control: select
+    binds: WarrantyClaim.status
+    required: true
+  - label: Issue Date
+    control: date
+    binds: WarrantyClaim.complaint_date
+    required: true
+  - label: Customer
+    control: lookup
+    binds: WarrantyClaim.customer
+    required: true
+    validation: chosen among Customer records
+  - label: Serial No
+    control: lookup
+    binds: WarrantyClaim.serial_no
+    validation: chosen among Serial No records
+  - label: Issue
+    control: text
+    binds: WarrantyClaim.complaint
+    required: true
+  - label: Item Code
+    control: lookup
+    binds: WarrantyClaim.item_code
+    validation: chosen among Item records
+  - label: Item Name
+    control: text
+    binds: WarrantyClaim.item_name
+    validation: read only (computed or filled by the program); shown only when eval:doc.item_code
+  - label: Description
+    control: text
+    binds: WarrantyClaim.description
+    validation: read only (computed or filled by the program); shown only when eval:doc.item_code
+  - label: Warranty / AMC Status
+    control: select
+    binds: WarrantyClaim.warranty_amc_status
+  - label: Warranty Expiry Date
+    control: date
+    binds: WarrantyClaim.warranty_expiry_date
+  - label: AMC Expiry Date
+    control: date
+    binds: WarrantyClaim.amc_expiry_date
+  - label: Resolution Date
+    control: date
+    binds: WarrantyClaim.resolution_date
+  - label: Resolved By
+    control: lookup
+    binds: WarrantyClaim.resolved_by
+    validation: chosen among User records
+  - label: Resolution Details
+    control: text
+    binds: WarrantyClaim.resolution_details
+  - label: Customer Name
+    control: text
+    binds: WarrantyClaim.customer_name
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Contact Person
+    control: lookup
+    binds: WarrantyClaim.contact_person
+    validation: chosen among Contact records
+  - label: Contact
+    control: text
+    binds: WarrantyClaim.contact_display
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Mobile No
+    control: text
+    binds: WarrantyClaim.contact_mobile
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Contact Email
+    control: text
+    binds: WarrantyClaim.contact_email
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Territory
+    control: lookup
+    binds: WarrantyClaim.territory
+    validation: read only (computed or filled by the program); shown only when customer; chosen among Territory records
+  - label: Customer Group
+    control: lookup
+    binds: WarrantyClaim.customer_group
+    validation: read only (computed or filled by the program); shown only when customer; chosen among Customer Group records
+  - label: Customer Address
+    control: lookup
+    binds: WarrantyClaim.customer_address
+    validation: chosen among Address records
+  - label: Address
+    control: text
+    binds: WarrantyClaim.address_display
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Service Address
+    control: text
+    binds: WarrantyClaim.service_address
+    validation: shown only when customer
+  - label: Company
+    control: lookup
+    binds: WarrantyClaim.company
+    required: true
+    validation: chosen among Company records
+  - label: Raised By
+    control: text
+    binds: WarrantyClaim.complaint_raised_by
+  - label: From Company
+    control: text
+    binds: WarrantyClaim.from_company
+  - label: Amended From
+    control: lookup
+    binds: WarrantyClaim.amended_from
+    validation: chosen among Warranty Claim records
+actions:
+  - label: Save
+    triggers: F-436
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Warranty Claim
+    note: declared by the program

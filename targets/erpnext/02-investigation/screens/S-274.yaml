@@ -1,0 +1,56 @@
+id: S-274
+title: Connected App
+purpose: create, view and edit Connected App records
+kind: form
+layout: "sections: Client Credentials, Scopes, Endpoints, Extra Parameters; 12 fields"
+fields:
+  - label: Provider Name
+    control: text
+    binds: ConnectedApp.provider_name
+    required: true
+  - label: OpenID Configuration
+    control: text
+    binds: ConnectedApp.openid_configuration
+  - label: Client Id
+    control: text
+    binds: ConnectedApp.client_id
+  - label: Redirect URI
+    control: text
+    binds: ConnectedApp.redirect_uri
+    validation: read only (computed or filled by the program)
+  - label: Client Secret
+    control: text
+    binds: ConnectedApp.client_secret
+  - label: Scopes
+    control: grid
+    columns:
+      - Scope
+  - label: Authorization URI
+    control: text
+    binds: ConnectedApp.authorization_uri
+  - label: Token URI
+    control: text
+    binds: ConnectedApp.token_uri
+  - label: Revocation URI
+    control: text
+    binds: ConnectedApp.revocation_uri
+  - label: Userinfo URI
+    control: text
+    binds: ConnectedApp.userinfo_uri
+  - label: Introspection URI
+    control: text
+    binds: ConnectedApp.introspection_uri
+  - label: Query Parameters
+    control: grid
+    columns:
+      - Key
+      - Value
+actions:
+  - label: Save
+    triggers: F-275
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Connected App
+    note: declared by the program

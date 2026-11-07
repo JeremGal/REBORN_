@@ -1,0 +1,25 @@
+id: S-137
+title: API Request Log
+purpose: create, view and edit API Request Log records
+kind: form
+layout: 3 fields
+fields:
+  - label: Path
+    control: text
+    binds: APIRequestLog.path
+  - label: Method
+    control: text
+    binds: APIRequestLog.method
+  - label: User
+    control: lookup
+    binds: APIRequestLog.user
+    validation: chosen among User records
+actions:
+  - label: Save
+    triggers: F-138
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of API Request Log
+    note: declared by the program

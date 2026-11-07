@@ -1,0 +1,68 @@
+id: S-024
+title: Cashier Closing
+purpose: create, view and edit Cashier Closing records
+kind: form
+layout: 12 fields
+fields:
+  - label: Series
+    control: select
+    binds: CashierClosing.naming_series
+    validation: read only (computed or filled by the program)
+  - label: User
+    control: lookup
+    binds: CashierClosing.user
+    required: true
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Date
+    control: date
+    binds: CashierClosing.date
+    validation: read only (computed or filled by the program)
+  - label: From Time
+    control: date
+    binds: CashierClosing.from_time
+    required: true
+  - label: To Time
+    control: date
+    binds: CashierClosing.time
+    required: true
+  - label: Expense
+    control: number
+    binds: CashierClosing.expense
+  - label: Custody
+    control: number
+    binds: CashierClosing.custody
+  - label: Returns
+    control: number
+    binds: CashierClosing.returns
+  - label: Outstanding Amount
+    control: number
+    binds: CashierClosing.outstanding_amount
+    validation: read only (computed or filled by the program)
+  - label: Payments
+    control: grid
+    columns:
+      - Mode of Payment
+      - Amount
+  - label: Net Amount
+    control: number
+    binds: CashierClosing.net_amount
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: CashierClosing.amended_from
+    validation: read only (computed or filled by the program); chosen among Cashier Closing records
+actions:
+  - label: Save
+    triggers: F-025
+  - label: Submit
+    triggers: F-025
+  - label: Cancel
+    triggers: F-025
+  - label: Amend
+    triggers: F-025
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Cashier Closing
+    note: declared by the program

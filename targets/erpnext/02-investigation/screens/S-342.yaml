@@ -1,0 +1,229 @@
+id: S-342
+title: Customer
+purpose: create, view and edit Customer records
+kind: form
+layout: "tabs: Address & Contact, Accounting, Tax, Settings, Sales Team, Portal Users, More Info, Connections; sections: Defaults, Loyalty Points, Primary Address and Contact, Internal Customer Accounting, Company Restrictions, Block Customer, Sales Partner, References; 53 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Customer.naming_series
+  - label: Customer Name
+    control: text
+    binds: Customer.customer_name
+    required: true
+  - label: Customer Type
+    control: select
+    binds: Customer.customer_type
+    required: true
+  - label: Alias
+    control: text
+    binds: Customer.alias
+  - label: Gender
+    control: lookup
+    binds: Customer.gender
+    validation: shown only when eval:doc.customer_type == 'Individual'; chosen among Gender records
+  - label: Customer Group
+    control: lookup
+    binds: Customer.customer_group
+    validation: chosen among Customer Group records
+  - label: Territory
+    control: lookup
+    binds: Customer.territory
+    validation: chosen among Territory records
+  - label: Image
+    control: other
+    binds: Customer.image
+  - label: Billing Currency
+    control: lookup
+    binds: Customer.default_currency
+    validation: chosen among Currency records
+  - label: Company Bank Account
+    control: lookup
+    binds: Customer.default_bank_account
+    validation: chosen among Bank Account records
+  - label: Price List
+    control: lookup
+    binds: Customer.default_price_list
+    validation: chosen among Price List records
+  - label: Payment Terms Template
+    control: lookup
+    binds: Customer.payment_terms
+    validation: chosen among Payment Terms Template records
+  - label: Loyalty Program
+    control: lookup
+    binds: Customer.loyalty_program
+    validation: chosen among Loyalty Program records
+  - label: Loyalty Program Tier
+    control: text
+    binds: Customer.loyalty_program_tier
+    validation: read only (computed or filled by the program)
+  - label: Customer Primary Address
+    control: lookup
+    binds: Customer.customer_primary_address
+    validation: chosen among Address records
+  - label: Primary Address
+    control: text
+    binds: Customer.primary_address
+    validation: read only (computed or filled by the program)
+  - label: Customer Primary Contact
+    control: lookup
+    binds: Customer.customer_primary_contact
+    validation: chosen among Contact records
+  - label: Mobile No
+    control: display
+    binds: Customer.mobile_no
+  - label: Email Id
+    control: display
+    binds: Customer.email_id
+  - label: First Name
+    control: display
+    binds: Customer.first_name
+  - label: Last Name
+    control: display
+    binds: Customer.last_name
+  - label: Default Accounts
+    control: grid
+    columns:
+      - Company
+      - Default Account
+      - Advance Account
+  - label: Credit & Overdue Limits
+    control: grid
+    columns:
+      - Company
+      - Credit Limit
+      - Overdue Limit
+      - Bypass credit limit check at sales order
+  - label: Is Internal Customer
+    control: checkbox
+    binds: Customer.is_internal_customer
+  - label: Represents Company
+    control: lookup
+    binds: Customer.represents_company
+    validation: shown only when is_internal_customer; chosen among Company records
+  - label: Allowed to transact with
+    control: grid
+    validation: "shown only when eval: doc.is_internal_customer && doc.represents_company"
+    columns:
+      - Company
+  - label: Tax ID
+    control: text
+    binds: Customer.tax_id
+  - label: Tax Category
+    control: lookup
+    binds: Customer.tax_category
+    validation: chosen among Tax Category records
+  - label: Tax Withholding Group
+    control: lookup
+    binds: Customer.tax_withholding_group
+    validation: chosen among Tax Withholding Group records
+  - label: Tax Withholding Category
+    control: lookup
+    binds: Customer.tax_withholding_category
+    validation: chosen among Tax Withholding Category records
+  - label: Restrict to Companies
+    control: checkbox
+    binds: Customer.restrict_to_companies
+  - label: Allowed Companies
+    control: grid
+    validation: shown only when eval:doc.restrict_to_companies
+    columns:
+      - Company
+  - label: Allow sales invoice creation without sales order
+    control: checkbox
+    binds: Customer.so_required
+  - label: Allow sales invoice creation without delivery note
+    control: checkbox
+    binds: Customer.dn_required
+  - label: Disabled
+    control: checkbox
+    binds: Customer.disabled
+  - label: Is Frozen
+    control: checkbox
+    binds: Customer.is_frozen
+  - label: Block Customer
+    control: checkbox
+    binds: Customer.on_hold
+  - label: Release Date
+    control: date
+    binds: Customer.release_date
+    validation: shown only when eval:doc.on_hold
+  - label: Account Manager
+    control: lookup
+    binds: Customer.account_manager
+    validation: chosen among User records
+  - label: Sales Team
+    control: grid
+    columns:
+      - Sales Person
+      - Contact No.
+      - Contribution (%)
+      - Contribution to Net Total
+      - Commission Rate
+      - Incentives
+  - label: Sales Partner
+    control: lookup
+    binds: Customer.default_sales_partner
+    validation: chosen among Sales Partner records
+  - label: Commission Rate
+    control: number
+    binds: Customer.default_commission_rate
+  - label: Customer Portal Users
+    control: grid
+    columns:
+      - User
+  - label: Lead
+    control: lookup
+    binds: Customer.lead_name
+    validation: read only (computed or filled by the program); chosen among Lead records
+  - label: Opportunity
+    control: lookup
+    binds: Customer.opportunity_name
+    validation: read only (computed or filled by the program); chosen among Opportunity records
+  - label: Prospect
+    control: lookup
+    binds: Customer.prospect_name
+    validation: read only (computed or filled by the program); chosen among Prospect records
+  - label: Market Segment
+    control: lookup
+    binds: Customer.market_segment
+    validation: chosen among Market Segment records
+  - label: Industry
+    control: lookup
+    binds: Customer.industry
+    validation: chosen among Industry Type records
+  - label: Website
+    control: text
+    binds: Customer.website
+  - label: Print Language
+    control: lookup
+    binds: Customer.language
+    validation: chosen among Language records
+  - label: Customer POS ID
+    control: text
+    binds: Customer.customer_pos_id
+    validation: read only (computed or filled by the program)
+  - label: Customer Details
+    control: text
+    binds: Customer.customer_details
+  - label: Supplier Numbers
+    control: grid
+    columns:
+      - Company
+      - Supplier Number
+actions:
+  - label: Save
+    triggers: F-343
+status: confirmed
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Customer
+    note: declared by the program
+  - ref: run-20261107T193911-h-EXP_010
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 16/17 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T193911-h-EXP_010/step_05.png
+  - 01-exploration/runs/run-20261107T193911-h-EXP_010/step_05.png

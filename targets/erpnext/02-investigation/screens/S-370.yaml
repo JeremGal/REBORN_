@@ -1,0 +1,53 @@
+id: S-370
+title: Item Group
+purpose: create, view and edit Item Group records
+kind: form
+layout: "sections: General Settings, Defaults, Item Tax; 9 fields"
+fields:
+  - label: Item Group Name
+    control: text
+    binds: ItemGroup.item_group_name
+    required: true
+  - label: Parent Item Group
+    control: lookup
+    binds: ItemGroup.parent_item_group
+    validation: chosen among Item Group records
+  - label: Is Group
+    control: checkbox
+    binds: ItemGroup.is_group
+  - label: Image
+    control: other
+    binds: ItemGroup.image
+  - label: Item Group Defaults
+    control: grid
+    columns:
+      - Company
+      - Default Warehouse
+      - Default Price List
+  - label: Taxes
+    control: grid
+    columns:
+      - Item Tax Template
+      - Tax Category
+      - Valid From
+      - Minimum Net Rate
+      - Maximum Net Rate
+  - label: lft
+    control: number
+    binds: ItemGroup.lft
+  - label: old_parent
+    control: lookup
+    binds: ItemGroup.old_parent
+    validation: chosen among Item Group records
+  - label: rgt
+    control: number
+    binds: ItemGroup.rgt
+actions:
+  - label: Save
+    triggers: F-371
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Item Group
+    note: declared by the program

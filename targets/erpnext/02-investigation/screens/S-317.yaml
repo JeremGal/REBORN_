@@ -1,0 +1,22 @@
+id: S-317
+title: Print Heading
+purpose: create, view and edit Print Heading records
+kind: form
+layout: 2 fields
+fields:
+  - label: Print Heading
+    control: text
+    binds: PrintHeading.print_heading
+    required: true
+  - label: Description
+    control: text
+    binds: PrintHeading.description
+actions:
+  - label: Save
+    triggers: F-318
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Print Heading
+    note: declared by the program

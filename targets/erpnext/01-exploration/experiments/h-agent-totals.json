@@ -1,0 +1,18 @@
+﻿{
+    "mission":  "M-003",
+    "application":  "ERPNext (fictitious data)",
+    "experiments":  [
+                        {
+                            "kind":  "totals",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/ACC-SINV-2026-00001"
+                        },
+                        {
+                            "kind":  "totals",
+                            "doctype":  "Sales Invoice",
+                            "module":  "Accounts",
+                            "path":  "/app/sales-invoice/ACC-SINV-2026-00010"
+                        }
+                    ]
+}

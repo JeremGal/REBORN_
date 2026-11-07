@@ -1,0 +1,53 @@
+id: S-242
+title: Notification Settings
+purpose: create, view and edit Notification Settings records
+kind: form
+layout: "sections: Email Settings; 10 fields"
+fields:
+  - label: Enable System Notification
+    control: checkbox
+    binds: NotificationSettings.enabled
+  - label: Open Documents
+    control: grid
+    columns:
+      - Document
+  - label: Enable Email Notifications
+    control: checkbox
+    binds: NotificationSettings.enable_email_notifications
+  - label: Email me for these notification types
+    control: grid
+    validation: shown only when enable_email_notifications
+    columns:
+      - Notification Type
+  - label: Email Threads on Assigned Document
+    control: checkbox
+    binds: NotificationSettings.enable_email_threads_on_assigned_document
+    validation: shown only when enable_email_notifications
+  - label: Event Reminders
+    control: checkbox
+    binds: NotificationSettings.enable_email_event_reminders
+    validation: shown only when enable_email_notifications
+  - label: Mentions
+    control: checkbox
+    binds: NotificationSettings.enable_email_mention
+    validation: shown only when enable_email_notifications
+  - label: Assignments
+    control: checkbox
+    binds: NotificationSettings.enable_email_assignment
+    validation: shown only when enable_email_notifications
+  - label: Document Share
+    control: checkbox
+    binds: NotificationSettings.enable_email_share
+    validation: shown only when enable_email_notifications
+  - label: Seen
+    control: checkbox
+    binds: NotificationSettings.seen
+actions:
+  - label: Save
+    triggers: F-243
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Notification Settings
+    note: declared by the program

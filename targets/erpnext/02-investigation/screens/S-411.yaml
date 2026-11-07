@@ -1,0 +1,111 @@
+id: S-411
+title: Serial No
+purpose: create, view and edit Serial No records
+kind: form
+layout: "sections: Asset Details, Warranty / AMC Details, More Information, Source Document; 24 fields"
+fields:
+  - label: Serial No
+    control: text
+    binds: SerialNo.serial_no
+    required: true
+  - label: Item Code
+    control: lookup
+    binds: SerialNo.item_code
+    required: true
+    validation: chosen among Item records
+  - label: Batch No
+    control: lookup
+    binds: SerialNo.batch_no
+    validation: read only (computed or filled by the program); chosen among Batch records
+  - label: Warehouse
+    control: lookup
+    binds: SerialNo.warehouse
+    validation: read only (computed or filled by the program); chosen among Warehouse records
+  - label: Incoming Rate
+    control: number
+    binds: SerialNo.purchase_rate
+    validation: read only (computed or filled by the program)
+  - label: Customer
+    control: lookup
+    binds: SerialNo.customer
+    validation: read only (computed or filled by the program); chosen among Customer records
+  - label: Status
+    control: select
+    binds: SerialNo.status
+    validation: read only (computed or filled by the program)
+  - label: Item Name
+    control: text
+    binds: SerialNo.item_name
+    validation: read only (computed or filled by the program)
+  - label: Description
+    control: text
+    binds: SerialNo.description
+    validation: read only (computed or filled by the program)
+  - label: Item Group
+    control: lookup
+    binds: SerialNo.item_group
+    validation: read only (computed or filled by the program); chosen among Item Group records
+  - label: Brand
+    control: lookup
+    binds: SerialNo.brand
+    validation: read only (computed or filled by the program); chosen among Brand records
+  - label: Asset
+    control: lookup
+    binds: SerialNo.asset
+    validation: read only (computed or filled by the program); chosen among Asset records
+  - label: Asset Status
+    control: select
+    binds: SerialNo.asset_status
+    validation: read only (computed or filled by the program); shown only when asset
+  - label: Location
+    control: lookup
+    binds: SerialNo.location
+    validation: read only (computed or filled by the program); chosen among Location records
+  - label: Employee
+    control: lookup
+    binds: SerialNo.employee
+    validation: read only (computed or filled by the program); chosen among Employee records
+  - label: Warranty Expiry Date
+    control: date
+    binds: SerialNo.warranty_expiry_date
+  - label: AMC Expiry Date
+    control: date
+    binds: SerialNo.amc_expiry_date
+  - label: Maintenance Status
+    control: select
+    binds: SerialNo.maintenance_status
+    validation: read only (computed or filled by the program)
+  - label: Warranty Period (Days)
+    control: number
+    binds: SerialNo.warranty_period
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: SerialNo.company
+    required: true
+    validation: chosen among Company records
+  - label: Work Order
+    control: lookup
+    binds: SerialNo.work_order
+    validation: chosen among Work Order records
+  - label: Source Document Type
+    control: lookup
+    binds: SerialNo.reference_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Posting Date
+    control: date
+    binds: SerialNo.posting_date
+    validation: read only (computed or filled by the program)
+  - label: Source Document Name
+    control: lookup
+    binds: SerialNo.reference_name
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-412
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Serial No
+    note: declared by the program

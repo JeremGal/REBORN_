@@ -1,0 +1,382 @@
+id: S-349
+title: Quotation
+purpose: create, view and edit Quotation records
+kind: form
+layout: "tabs: Address & Contact, Terms, More Info, Connections; sections: Currency and Price List, Taxes and Charges, Totals, Additional Discount, Tax Breakup, Bundle Items, Pricing Rules, Billing Address, Shipping Address, Company Address, Payment Terms, Terms and Conditions, Auto Repeat, Print Settings, Lost Reasons, UTM Analytics, Additional Info; 86 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Quotation.naming_series
+    required: true
+  - label: Quotation To
+    control: lookup
+    binds: Quotation.quotation_to
+    required: true
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: Quotation.party_name
+  - label: Customer Name
+    control: text
+    binds: Quotation.customer_name
+    validation: read only (computed or filled by the program)
+  - label: Date
+    control: date
+    binds: Quotation.transaction_date
+    required: true
+  - label: Valid Till
+    control: date
+    binds: Quotation.valid_till
+  - label: Order Type
+    control: select
+    binds: Quotation.order_type
+    required: true
+  - label: Company
+    control: lookup
+    binds: Quotation.company
+    required: true
+    validation: chosen among Company records
+  - label: Has Unit Price Items
+    control: checkbox
+    binds: Quotation.has_unit_price_items
+  - label: Amended From
+    control: lookup
+    binds: Quotation.amended_from
+    validation: read only (computed or filled by the program); chosen among Quotation records
+  - label: Currency
+    control: lookup
+    binds: Quotation.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: Quotation.conversion_rate
+    required: true
+  - label: Price List
+    control: lookup
+    binds: Quotation.selling_price_list
+    required: true
+    validation: chosen among Price List records
+  - label: Price List Currency
+    control: lookup
+    binds: Quotation.price_list_currency
+    required: true
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Price List Exchange Rate
+    control: number
+    binds: Quotation.plc_conversion_rate
+    required: true
+  - label: Ignore Pricing Rule
+    control: checkbox
+    binds: Quotation.ignore_pricing_rule
+  - label: Scan Barcode
+    control: text
+    binds: Quotation.scan_barcode
+  - label: Last Scanned Warehouse
+    control: text
+    binds: Quotation.last_scanned_warehouse
+    validation: "shown only when eval: doc.last_scanned_warehouse"
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Quantity
+      - Rate
+      - Amount
+  - label: Total Quantity
+    control: number
+    binds: Quotation.total_qty
+    validation: read only (computed or filled by the program)
+  - label: Total Net Weight
+    control: number
+    binds: Quotation.total_net_weight
+    validation: read only (computed or filled by the program); shown only when total_net_weight
+  - label: Total (Company Currency)
+    control: money
+    binds: Quotation.base_total
+    validation: read only (computed or filled by the program)
+  - label: Net Total (Company Currency)
+    control: money
+    binds: Quotation.base_net_total
+    validation: read only (computed or filled by the program)
+  - label: Total
+    control: money
+    binds: Quotation.total
+    validation: read only (computed or filled by the program)
+  - label: Net Total
+    control: money
+    binds: Quotation.net_total
+    validation: read only (computed or filled by the program)
+  - label: Tax Category
+    control: lookup
+    binds: Quotation.tax_category
+    validation: chosen among Tax Category records
+  - label: Sales Taxes and Charges Template
+    control: lookup
+    binds: Quotation.taxes_and_charges
+    validation: chosen among Sales Taxes and Charges Template records
+  - label: Shipping Rule
+    control: lookup
+    binds: Quotation.shipping_rule
+    validation: chosen among Shipping Rule records
+  - label: Incoterm
+    control: lookup
+    binds: Quotation.incoterm
+    validation: chosen among Incoterm records
+  - label: Named Place
+    control: text
+    binds: Quotation.named_place
+    validation: shown only when incoterm
+  - label: Sales Taxes and Charges
+    control: grid
+    columns:
+      - Type
+      - Account Head
+      - Tax Rate
+      - Net Amount
+      - Amount
+      - Total
+  - label: Total Taxes and Charges (Company Currency)
+    control: money
+    binds: Quotation.base_total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Total Taxes and Charges
+    control: money
+    binds: Quotation.total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Grand Total (Company Currency)
+    control: money
+    binds: Quotation.base_grand_total
+    validation: read only (computed or filled by the program)
+  - label: Rounding Adjustment (Company Currency)
+    control: money
+    binds: Quotation.base_rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total (Company Currency)
+    control: money
+    binds: Quotation.base_rounded_total
+    validation: read only (computed or filled by the program)
+  - label: In Words (Company Currency)
+    control: text
+    binds: Quotation.base_in_words
+    validation: read only (computed or filled by the program)
+  - label: Grand Total
+    control: money
+    binds: Quotation.grand_total
+    validation: read only (computed or filled by the program)
+  - label: Rounding Adjustment
+    control: money
+    binds: Quotation.rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total
+    control: money
+    binds: Quotation.rounded_total
+    validation: read only (computed or filled by the program)
+  - label: Disable Rounded Total
+    control: checkbox
+    binds: Quotation.disable_rounded_total
+  - label: In Words
+    control: text
+    binds: Quotation.in_words
+    validation: read only (computed or filled by the program)
+  - label: Apply Additional Discount On
+    control: select
+    binds: Quotation.apply_discount_on
+  - label: Additional Discount Amount (Company Currency)
+    control: money
+    binds: Quotation.base_discount_amount
+    validation: read only (computed or filled by the program)
+  - label: Coupon Code
+    control: lookup
+    binds: Quotation.coupon_code
+    validation: chosen among Coupon Code records
+  - label: Additional Discount Percentage
+    control: number
+    binds: Quotation.additional_discount_percentage
+  - label: Additional Discount Amount
+    control: money
+    binds: Quotation.discount_amount
+  - label: Referral Sales Partner
+    control: lookup
+    binds: Quotation.referral_sales_partner
+    validation: chosen among Sales Partner records
+  - label: Taxes and Charges Calculation
+    control: text
+    binds: Quotation.other_charges_calculation
+    validation: read only (computed or filled by the program)
+  - label: Item Wise Tax Details
+    control: grid
+    columns:
+      - Item Row
+      - Tax Row
+      - Tax Rate
+      - Tax Amount
+      - Taxable Amount
+  - label: Bundle Items
+    control: grid
+    columns:
+      - Parent Item
+      - Item Code
+      - Description
+      - Qty
+      - Rate
+  - label: Pricing Rule Detail
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Pricing Rule
+      - Item Code
+  - label: Customer Address
+    control: lookup
+    binds: Quotation.customer_address
+    validation: chosen among Address records
+  - label: Address
+    control: text
+    binds: Quotation.address_display
+    validation: read only (computed or filled by the program)
+  - label: Contact Person
+    control: lookup
+    binds: Quotation.contact_person
+    validation: chosen among Contact records
+  - label: Contact
+    control: text
+    binds: Quotation.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: Quotation.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: Quotation.contact_email
+    validation: read only (computed or filled by the program)
+  - label: Shipping Address
+    control: lookup
+    binds: Quotation.shipping_address_name
+    validation: chosen among Address records
+  - label: Shipping Address
+    control: text
+    binds: Quotation.shipping_address
+    validation: read only (computed or filled by the program)
+  - label: Company Address Name
+    control: lookup
+    binds: Quotation.company_address
+    validation: chosen among Address records
+  - label: Company Address
+    control: text
+    binds: Quotation.company_address_display
+    validation: read only (computed or filled by the program)
+  - label: Company Contact Person
+    control: lookup
+    binds: Quotation.company_contact_person
+    validation: chosen among Contact records
+  - label: Payment Terms Template
+    control: lookup
+    binds: Quotation.payment_terms_template
+    validation: chosen among Payment Terms Template records
+  - label: Payment Schedule
+    control: grid
+    columns:
+      - Payment Term
+      - Description
+      - Due Date
+      - Invoice Portion
+      - Payment Amount
+  - label: Terms
+    control: lookup
+    binds: Quotation.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Term Details
+    control: text
+    binds: Quotation.terms
+  - label: Auto Repeat
+    control: lookup
+    binds: Quotation.auto_repeat
+    validation: read only (computed or filled by the program); chosen among Auto Repeat records
+  - label: Letter Head
+    control: lookup
+    binds: Quotation.letter_head
+    validation: chosen among Letter Head records
+  - label: Group same items
+    control: checkbox
+    binds: Quotation.group_same_items
+  - label: Print Heading
+    control: lookup
+    binds: Quotation.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Print Language
+    control: lookup
+    binds: Quotation.language
+    validation: read only (computed or filled by the program); chosen among Language records
+  - label: Lost Reasons
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Quotation Lost Reason
+  - label: Competitors
+    control: grid
+    columns:
+      - Competitor
+  - label: Detailed Reason
+    control: text
+    binds: Quotation.order_lost_reason
+    validation: shown only when eval:doc.status=='Lost'
+  - label: Source
+    control: lookup
+    binds: Quotation.utm_source
+    validation: chosen among UTM Source records
+  - label: Medium
+    control: lookup
+    binds: Quotation.utm_medium
+    validation: chosen among UTM Medium records
+  - label: Campaign
+    control: lookup
+    binds: Quotation.utm_campaign
+    validation: chosen among UTM Campaign records
+  - label: Content
+    control: text
+    binds: Quotation.utm_content
+  - label: Status
+    control: select
+    binds: Quotation.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Customer Group
+    control: lookup
+    binds: Quotation.customer_group
+    validation: shown only when eval:(doc.quotation_to=='Customer' && doc.party_name); chosen among Customer Group records
+  - label: Territory
+    control: lookup
+    binds: Quotation.territory
+    validation: chosen among Territory records
+  - label: Title
+    control: text
+    binds: Quotation.title
+  - label: Opportunity
+    control: lookup
+    binds: Quotation.opportunity
+    validation: read only (computed or filled by the program); chosen among Opportunity records
+  - label: Opportunity Item
+    control: text
+    binds: Quotation.enq_det
+    validation: read only (computed or filled by the program)
+  - label: Supplier Quotation
+    control: lookup
+    binds: Quotation.supplier_quotation
+    validation: chosen among Supplier Quotation records
+actions:
+  - label: Save
+    triggers: F-350
+  - label: Submit
+    triggers: F-350
+  - label: Cancel
+    triggers: F-350
+  - label: Amend
+    triggers: F-350
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quotation
+    note: declared by the program

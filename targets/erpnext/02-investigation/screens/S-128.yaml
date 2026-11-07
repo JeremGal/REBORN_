@@ -1,0 +1,33 @@
+id: S-128
+title: Supplier Scorecard Variable
+purpose: create, view and edit Supplier Scorecard Variable records
+kind: form
+layout: 5 fields
+fields:
+  - label: Variable Name
+    control: text
+    binds: SupplierScorecardVariable.variable_label
+    required: true
+  - label: Custom?
+    control: checkbox
+    binds: SupplierScorecardVariable.is_custom
+  - label: Parameter Name
+    control: text
+    binds: SupplierScorecardVariable.param_name
+    required: true
+  - label: Path
+    control: text
+    binds: SupplierScorecardVariable.path
+    required: true
+  - label: Description
+    control: text
+    binds: SupplierScorecardVariable.description
+actions:
+  - label: Save
+    triggers: F-129
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Supplier Scorecard Variable
+    note: declared by the program

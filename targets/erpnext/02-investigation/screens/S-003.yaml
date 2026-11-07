@@ -1,0 +1,70 @@
+id: S-003
+title: Account Closing Balance
+purpose: create, view and edit Account Closing Balance records
+kind: form
+layout: 16 fields
+fields:
+  - label: Closing Date
+    control: date
+    binds: AccountClosingBalance.closing_date
+  - label: Account
+    control: lookup
+    binds: AccountClosingBalance.account
+    validation: chosen among Account records
+  - label: Cost Center
+    control: lookup
+    binds: AccountClosingBalance.cost_center
+    validation: chosen among Cost Center records
+  - label: Debit Amount
+    control: money
+    binds: AccountClosingBalance.debit
+  - label: Credit Amount
+    control: money
+    binds: AccountClosingBalance.credit
+  - label: Reporting Currency Exchange Rate
+    control: number
+    binds: AccountClosingBalance.reporting_currency_exchange_rate
+  - label: Debit Amount in Reporting Currency
+    control: money
+    binds: AccountClosingBalance.debit_in_reporting_currency
+  - label: Credit Amount in Reporting Currency
+    control: money
+    binds: AccountClosingBalance.credit_in_reporting_currency
+  - label: Account Currency
+    control: lookup
+    binds: AccountClosingBalance.account_currency
+    validation: chosen among Currency records
+  - label: Debit Amount in Account Currency
+    control: money
+    binds: AccountClosingBalance.debit_in_account_currency
+  - label: Credit Amount in Account Currency
+    control: money
+    binds: AccountClosingBalance.credit_in_account_currency
+  - label: Project
+    control: lookup
+    binds: AccountClosingBalance.project
+    validation: chosen among Project records
+  - label: Company
+    control: lookup
+    binds: AccountClosingBalance.company
+    validation: chosen among Company records
+  - label: Finance Book
+    control: lookup
+    binds: AccountClosingBalance.finance_book
+    validation: chosen among Finance Book records
+  - label: Period Closing Voucher
+    control: lookup
+    binds: AccountClosingBalance.period_closing_voucher
+    validation: chosen among Period Closing Voucher records
+  - label: Is Period Closing Voucher Entry
+    control: checkbox
+    binds: AccountClosingBalance.is_period_closing_voucher_entry
+actions:
+  - label: Save
+    triggers: F-004
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Account Closing Balance
+    note: declared by the program

@@ -1,0 +1,20 @@
+id: M-004
+title: Save a draft of every business document with only its mandatory fields
+goal: >-
+  For every business document type (accounting, selling, buying, stock, CRM, projects, manufacturing, assets, quality,
+  support, maintenance, subcontracting, setup), save a draft with only the mandatory fields filled with fictitious
+  values, and record what the program does: stored, or refused with its message. Never submit. Never touch documents
+  that change the configuration of the site.
+persona: power user
+priority: must
+start_state: Alan's own site with fictitious TEST- data
+steps_hint:
+  - drafts only; list everything created so it can be deleted
+capture:
+  screenshots: key-steps
+  read_values: [stored or refused, message shown]
+  network: false
+success_criteria:
+  - every business document type has a recorded outcome
+requested_by: block 2 (behaviour coverage)
+status: todo

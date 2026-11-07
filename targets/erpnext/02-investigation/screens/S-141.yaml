@@ -1,0 +1,82 @@
+id: S-141
+title: Custom DocPerm
+purpose: create, view and edit Custom DocPerm records
+kind: form
+layout: "sections: Role and Level, Permissions, Additional Permissions; 20 fields"
+fields:
+  - label: Reference Document Type
+    control: text
+    binds: CustomDocPerm.parent
+    validation: read only (computed or filled by the program)
+  - label: Role
+    control: lookup
+    binds: CustomDocPerm.role
+    required: true
+    validation: chosen among Role records
+  - label: If user is the owner
+    control: checkbox
+    binds: CustomDocPerm.if_owner
+  - label: Level
+    control: number
+    binds: CustomDocPerm.permlevel
+  - label: Select
+    control: checkbox
+    binds: CustomDocPerm.select
+  - label: Read
+    control: checkbox
+    binds: CustomDocPerm.read
+  - label: Write
+    control: checkbox
+    binds: CustomDocPerm.write
+  - label: Create
+    control: checkbox
+    binds: CustomDocPerm.create
+  - label: Delete
+    control: checkbox
+    binds: CustomDocPerm.delete
+  - label: Submit
+    control: checkbox
+    binds: CustomDocPerm.submit
+  - label: Cancel
+    control: checkbox
+    binds: CustomDocPerm.cancel
+  - label: Amend
+    control: checkbox
+    binds: CustomDocPerm.amend
+  - label: Mask
+    control: checkbox
+    binds: CustomDocPerm.mask
+  - label: Report
+    control: checkbox
+    binds: CustomDocPerm.report
+  - label: Export
+    control: checkbox
+    binds: CustomDocPerm.export
+  - label: Import
+    control: checkbox
+    binds: CustomDocPerm.import
+  - label: Share
+    control: checkbox
+    binds: CustomDocPerm.share
+  - label: Print
+    control: checkbox
+    binds: CustomDocPerm.print
+  - label: Email
+    control: checkbox
+    binds: CustomDocPerm.email
+  - label: Impersonate
+    control: checkbox
+    binds: CustomDocPerm.impersonate
+    validation: |-
+      shown only when eval:[
+       "User"
+      ].includes(doc.parent)
+actions:
+  - label: Save
+    triggers: F-142
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Custom DocPerm
+    note: declared by the program

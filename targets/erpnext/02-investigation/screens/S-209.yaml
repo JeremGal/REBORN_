@@ -1,0 +1,215 @@
+id: S-209
+title: Opportunity
+purpose: create, view and edit Opportunity records
+kind: form
+layout: "tabs: Contacts, Items, Activities, Comments, Connections; sections: Organization, Opportunity Value, Analytics, More Information, Lost Reasons, Primary Contact, Address & Contact, All Activities; 52 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Opportunity.naming_series
+    required: true
+  - label: Opportunity From
+    control: lookup
+    binds: Opportunity.opportunity_from
+    required: true
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: Opportunity.party_name
+    required: true
+  - label: Customer Name
+    control: text
+    binds: Opportunity.customer_name
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: Opportunity.status
+    required: true
+  - label: Opportunity Type
+    control: lookup
+    binds: Opportunity.opportunity_type
+    validation: chosen among Opportunity Type records
+  - label: Opportunity Owner
+    control: lookup
+    binds: Opportunity.opportunity_owner
+    validation: chosen among User records
+  - label: Sales Stage
+    control: lookup
+    binds: Opportunity.sales_stage
+    validation: chosen among Sales Stage records
+  - label: Expected Closing Date
+    control: date
+    binds: Opportunity.expected_closing
+  - label: Probability (%)
+    control: number
+    binds: Opportunity.probability
+  - label: No of Employees
+    control: select
+    binds: Opportunity.no_of_employees
+  - label: Annual Revenue
+    control: money
+    binds: Opportunity.annual_revenue
+  - label: Customer Group
+    control: lookup
+    binds: Opportunity.customer_group
+    validation: shown only when eval:doc.opportunity_from=='Customer' && doc.party_name; chosen among Customer Group records
+  - label: Industry
+    control: lookup
+    binds: Opportunity.industry
+    validation: chosen among Industry Type records
+  - label: Market Segment
+    control: lookup
+    binds: Opportunity.market_segment
+    validation: chosen among Market Segment records
+  - label: Website
+    control: text
+    binds: Opportunity.website
+  - label: City
+    control: text
+    binds: Opportunity.city
+  - label: State/Province
+    control: text
+    binds: Opportunity.state
+  - label: Country
+    control: lookup
+    binds: Opportunity.country
+    validation: chosen among Country records
+  - label: Territory
+    control: lookup
+    binds: Opportunity.territory
+    validation: chosen among Territory records
+  - label: Currency
+    control: lookup
+    binds: Opportunity.currency
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: Opportunity.conversion_rate
+  - label: Opportunity Amount
+    control: money
+    binds: Opportunity.opportunity_amount
+  - label: Opportunity Amount (Company Currency)
+    control: money
+    binds: Opportunity.base_opportunity_amount
+    validation: read only (computed or filled by the program)
+  - label: Source
+    control: lookup
+    binds: Opportunity.utm_source
+    validation: chosen among UTM Source records
+  - label: Medium
+    control: lookup
+    binds: Opportunity.utm_medium
+    validation: chosen among UTM Medium records
+  - label: Campaign
+    control: lookup
+    binds: Opportunity.utm_campaign
+    validation: chosen among UTM Campaign records
+  - label: Content
+    control: text
+    binds: Opportunity.utm_content
+  - label: Company
+    control: lookup
+    binds: Opportunity.company
+    required: true
+    validation: chosen among Company records
+  - label: Opportunity Date
+    control: date
+    binds: Opportunity.transaction_date
+    required: true
+  - label: Print Language
+    control: lookup
+    binds: Opportunity.language
+    validation: chosen among Language records
+  - label: Amended From
+    control: lookup
+    binds: Opportunity.amended_from
+    validation: read only (computed or filled by the program); chosen among Opportunity records
+  - label: Title
+    control: text
+    binds: Opportunity.title
+  - label: First Response Time
+    control: number
+    binds: Opportunity.first_response_time
+    validation: read only (computed or filled by the program)
+  - label: Lost Reasons
+    control: grid
+    validation: read only (computed or filled by the program); shown only when eval:doc.status==="Lost"
+    columns:
+      - Opportunity Lost Reason
+  - label: Detailed Reason
+    control: text
+    binds: Opportunity.order_lost_reason
+    validation: read only (computed or filled by the program)
+  - label: Lost On
+    control: date
+    binds: Opportunity.lost_on
+    validation: read only (computed or filled by the program)
+  - label: Competitors
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Competitor
+  - label: Contact Person
+    control: lookup
+    binds: Opportunity.contact_person
+    validation: shown only when eval:doc.party_name; chosen among Contact records
+  - label: Job Title
+    control: text
+    binds: Opportunity.job_title
+  - label: Contact Email
+    control: text
+    binds: Opportunity.contact_email
+  - label: Contact Mobile
+    control: text
+    binds: Opportunity.contact_mobile
+  - label: WhatsApp
+    control: text
+    binds: Opportunity.whatsapp
+  - label: Phone
+    control: text
+    binds: Opportunity.phone
+  - label: Phone Ext.
+    control: text
+    binds: Opportunity.phone_ext
+  - label: Customer / Lead Address
+    control: lookup
+    binds: Opportunity.customer_address
+    validation: shown only when eval:doc.party_name; chosen among Address records
+  - label: Address
+    control: text
+    binds: Opportunity.address_display
+    validation: read only (computed or filled by the program)
+  - label: Contact
+    control: text
+    binds: Opportunity.contact_display
+    validation: read only (computed or filled by the program); shown only when eval:doc.opportunity_from=='Customer' && doc.party_name
+  - label: Items
+    control: grid
+    columns:
+      - Item Code
+      - Qty
+      - Rate
+      - Amount
+  - label: Total (Company Currency)
+    control: money
+    binds: Opportunity.base_total
+    validation: read only (computed or filled by the program)
+  - label: Total
+    control: money
+    binds: Opportunity.total
+    validation: read only (computed or filled by the program)
+  - label: Notes
+    control: grid
+    columns:
+      - Note
+      - Added By
+      - Added On
+actions:
+  - label: Save
+    triggers: F-210
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Opportunity
+    note: declared by the program

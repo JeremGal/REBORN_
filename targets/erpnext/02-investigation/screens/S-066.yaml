@@ -1,0 +1,33 @@
+id: S-066
+title: POS Settings
+purpose: settings of POS Settings
+kind: settings
+layout: 4 fields
+fields:
+  - label: Invoice Type Created via POS Screen
+    control: select
+    binds: POSSettings.invoice_type
+  - label: Create Ledger Entries for Change Amount
+    control: checkbox
+    binds: POSSettings.post_change_gl_entries
+  - label: POS Additional Fields
+    control: grid
+    columns:
+      - Fieldname
+      - Label
+      - Fieldtype
+      - Options
+  - label: POS Search Fields
+    control: grid
+    columns:
+      - Field
+      - Fieldname
+actions:
+  - label: Save
+    triggers: F-067
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of POS Settings
+    note: declared by the program

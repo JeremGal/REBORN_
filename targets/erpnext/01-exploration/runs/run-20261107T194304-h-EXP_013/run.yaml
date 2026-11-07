@@ -1,0 +1,119 @@
+id: run-20261107T194304-h-EXP_013
+mission: M-003
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_013.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Accounts
+started_at: 2026-11-07T19:41:47.500Z
+ended_at: 2026-11-07T19:43:04.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+    screenshot: step_01.png
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.497, "y": 0.251, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+    screenshot: step_02.png
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.497, "y": 0.324, "element": "Continue button"})'
+    screenshot: step_03.png
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 600, "scroll_element": null})'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["end"]})'
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.497, "y": 0.555, "element": "Main content area of the sales invoice form"})'
+    screenshot: step_08.png
+  - n: 9
+    action:
+      type: other
+      target_desc: 'move_mouse_web({"x": 0.497, "y": 0.624, "element": "Main content area below the articles section"})'
+    screenshot: step_09.png
+  - n: 10
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.617, "y": 0.019, "element": "Aperçu button in the top toolbar"})'
+    screenshot: step_10.png
+  - n: 11
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+    screenshot: step_11.png
+  - n: 12
+    action:
+      type: other
+      target_desc: 'drag_and_drop_web({"x1": 0.497, "x2": 0.497, "y1": 0.937, "y2": 0.624, "description": "Scroll down the page by dragging from the bottom area upward"})'
+    screenshot: step_12.png
+  - n: 13
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.617, "y": 0.019, "element": "Aperçu button in the top navigation bar"})'
+    screenshot: step_13.png
+  - n: 14
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["esc"]})'
+    screenshot: step_14.png
+  - n: 15
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["ctrl", "end"]})'
+    screenshot: step_15.png
+  - n: 16
+    action:
+      type: key
+      target_desc: 'press_keys_web({"keys": ["pagedown"]})'
+    screenshot: step_16.png
+  - n: 17
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Taxes table: No. 1, Type: Sur le total..., Compte co.: 44587 - Ta..., Taux d'Imp.: 20, Montant Ne...: $ 30,00, Montant: $ 6,00. Total des Taxes et Frais (Devise Société) (USD): $ 6,00. Total TTC (USD): $ 36,00. En Toutes Lettres: USD Trente Six seulement. Total arrondi (USD): $ 36,"
+    screenshot: step_17.png
+  - n: 18
+    action:
+      type: read
+      target_desc: values shown by the application (Accounts)
+    screenshot: step_17.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Sales Invoice
+        path: /app/sales-invoice/ACC-SINV-2026-00001
+        kind: totals
+      document_name: null
+      net_total: $ 30,00
+      total_taxes_and_charges: $ 6,00
+      grand_total: $ 36,00
+      rounded_total: $ 36,00
+      line_amounts:
+        - "Item: TEST-ART-001: TEST Article, Quantité: 3, Prix: $ 10,00, Montant: $ 30"
+      notes: "Taxes table: No. 1, Type: Sur le total..., Compte co.: 44587 - Ta..., Taux d'Imp.: 20, Montant Ne...: $ 30,00, Montant: $ 6,00. Total des Taxes et Frais (Devise Société) (USD): $ 6,00. Total TTC (USD): $ 36,00. En Toutes Lettres: USD Trente Six seulement. Total arrondi (USD): $ 36,00. Arrondi (USD): $ 0,00. Montant dû (USD): $ 36,00. Total Avance (USD): $ 0,00."
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/ddde003a-29b1-4c3f-a8f9-69630bf3be56 attempts: 1"

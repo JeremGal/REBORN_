@@ -1,0 +1,22 @@
+id: S-202
+title: Competitor
+purpose: create, view and edit Competitor records
+kind: form
+layout: 2 fields
+fields:
+  - label: Competitor Name
+    control: text
+    binds: Competitor.competitor_name
+    required: true
+  - label: Website
+    control: text
+    binds: Competitor.website
+actions:
+  - label: Save
+    triggers: F-203
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Competitor
+    note: declared by the program

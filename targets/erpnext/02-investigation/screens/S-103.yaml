@@ -1,0 +1,50 @@
+id: S-103
+title: Asset Shift Allocation
+purpose: create, view and edit Asset Shift Allocation records
+kind: form
+layout: "sections: Depreciation Schedule; 6 fields"
+fields:
+  - label: Asset
+    control: lookup
+    binds: AssetShiftAllocation.asset
+    required: true
+    validation: chosen among Asset records
+  - label: Naming Series
+    control: select
+    binds: AssetShiftAllocation.naming_series
+    required: true
+  - label: Finance Book
+    control: lookup
+    binds: AssetShiftAllocation.finance_book
+    validation: chosen among Finance Book records
+  - label: Amended From
+    control: lookup
+    binds: AssetShiftAllocation.amended_from
+    validation: read only (computed or filled by the program); chosen among Asset Shift Allocation records
+  - label: Previous Depreciation Schedule
+    control: lookup
+    binds: AssetShiftAllocation.previous_depreciation_schedule
+    validation: read only (computed or filled by the program); chosen among Asset Depreciation Schedule records
+  - label: Depreciation Schedule
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Schedule Date
+      - Depreciation Amount
+      - Accumulated Depreciation Amount
+      - Journal Entry
+actions:
+  - label: Save
+    triggers: F-104
+  - label: Submit
+    triggers: F-104
+  - label: Cancel
+    triggers: F-104
+  - label: Amend
+    triggers: F-104
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Shift Allocation
+    note: declared by the program

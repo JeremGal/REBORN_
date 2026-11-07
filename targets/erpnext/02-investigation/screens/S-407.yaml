@@ -1,0 +1,28 @@
+id: S-407
+title: Quality Inspection Template
+purpose: create, view and edit Quality Inspection Template records
+kind: form
+layout: 2 fields
+fields:
+  - label: Quality Inspection Template Name
+    control: text
+    binds: QualityInspectionTemplate.quality_inspection_template_name
+    required: true
+  - label: Item Quality Inspection Parameter
+    control: grid
+    required: true
+    columns:
+      - Parameter
+      - Acceptance Criteria Value
+      - Numeric
+      - Minimum Value
+      - Maximum Value
+actions:
+  - label: Save
+    triggers: F-408
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quality Inspection Template
+    note: declared by the program

@@ -1,0 +1,317 @@
+id: S-051
+title: Payment Entry
+purpose: create, view and edit Payment Entry records
+kind: form
+layout: "sections: Type of Payment, Payment From / To, Accounts and Transaction Details, Amount, Reference, Writeoff, Taxes and Charges, Deductions or Loss, Tax Withholding Entry, Accounting Dimensions, More Information, Auto Repeat; 68 fields"
+fields:
+  - label: Series
+    control: select
+    binds: PaymentEntry.naming_series
+    required: true
+  - label: Payment Type
+    control: select
+    binds: PaymentEntry.payment_type
+    required: true
+  - label: Payment Order Status
+    control: select
+    binds: PaymentEntry.payment_order_status
+    validation: read only (computed or filled by the program)
+  - label: Posting Date
+    control: date
+    binds: PaymentEntry.posting_date
+    required: true
+  - label: Company
+    control: lookup
+    binds: PaymentEntry.company
+    required: true
+    validation: chosen among Company records
+  - label: Mode of Payment
+    control: lookup
+    binds: PaymentEntry.mode_of_payment
+    validation: chosen among Mode of Payment records
+  - label: Company Bank Account
+    control: lookup
+    binds: PaymentEntry.bank_account
+    validation: shown only when eval:in_list(["Receive", "Pay"], doc.payment_type); chosen among Bank Account records
+  - label: Party Type
+    control: lookup
+    binds: PaymentEntry.party_type
+    validation: shown only when eval:in_list(["Receive", "Pay"], doc.payment_type) && doc.docstatus==0; chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: PaymentEntry.party
+    validation: shown only when eval:in_list(["Receive", "Pay"], doc.payment_type) && doc.party_type
+  - label: Party Name
+    control: text
+    binds: PaymentEntry.party_name
+    validation: shown only when eval:in_list(["Receive", "Pay"], doc.payment_type) && doc.party_type
+  - label: Book Advance Payments in Separate Party Account
+    control: checkbox
+    binds: PaymentEntry.book_advance_payments_in_separate_party_account
+    validation: read only (computed or filled by the program)
+  - label: Reconcile on Advance Payment Date
+    control: checkbox
+    binds: PaymentEntry.reconcile_on_advance_payment_date
+    validation: read only (computed or filled by the program)
+  - label: Consider for Tax Withholding
+    control: checkbox
+    binds: PaymentEntry.apply_tds
+    validation: shown only when eval:doc.party_type == 'Supplier'
+  - label: Tax Withholding Category
+    control: lookup
+    binds: PaymentEntry.tax_withholding_category
+    validation: shown only when eval:doc.apply_tds; chosen among Tax Withholding Category records
+  - label: Party Bank Account
+    control: lookup
+    binds: PaymentEntry.party_bank_account
+    validation: shown only when party; chosen among Bank Account records
+  - label: Contact
+    control: lookup
+    binds: PaymentEntry.contact_person
+    validation: 'shown only when eval: doc.party && doc.party_type !== "Employee"; chosen among Contact records'
+  - label: Email
+    control: text
+    binds: PaymentEntry.contact_email
+    validation: 'read only (computed or filled by the program); shown only when eval: (doc.contact_person || doc.party_type === "Employee") && doc.contact_email'
+  - label: Account Paid From
+    control: lookup
+    binds: PaymentEntry.paid_from
+    required: true
+    validation: shown only when eval:(in_list(["Internal Transfer", "Pay"], doc.payment_type) || doc.party); chosen among Account records
+  - label: Paid From Account Type
+    control: text
+    binds: PaymentEntry.paid_from_account_type
+  - label: Account Currency (From)
+    control: lookup
+    binds: PaymentEntry.paid_from_account_currency
+    required: true
+    validation: read only (computed or filled by the program); shown only when paid_from; chosen among Currency records
+  - label: Cheque/Reference No
+    control: text
+    binds: PaymentEntry.reference_no
+    validation: shown only when eval:(doc.paid_from && doc.paid_to)
+  - label: Account Paid To
+    control: lookup
+    binds: PaymentEntry.paid_to
+    required: true
+    validation: shown only when eval:(in_list(["Internal Transfer", "Receive"], doc.payment_type) || doc.party); chosen among Account records
+  - label: Paid To Account Type
+    control: text
+    binds: PaymentEntry.paid_to_account_type
+  - label: Account Currency (To)
+    control: lookup
+    binds: PaymentEntry.paid_to_account_currency
+    required: true
+    validation: read only (computed or filled by the program); shown only when paid_to; chosen among Currency records
+  - label: Cheque/Reference Date
+    control: date
+    binds: PaymentEntry.reference_date
+    validation: shown only when eval:(doc.paid_from && doc.paid_to)
+  - label: Clearance Date
+    control: date
+    binds: PaymentEntry.clearance_date
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus==1
+  - label: Paid Amount
+    control: money
+    binds: PaymentEntry.paid_amount
+    required: true
+  - label: Paid Amount After Tax
+    control: money
+    binds: PaymentEntry.paid_amount_after_tax
+    validation: read only (computed or filled by the program)
+  - label: Source Exchange Rate
+    control: number
+    binds: PaymentEntry.source_exchange_rate
+    required: true
+  - label: Paid Amount (Company Currency)
+    control: money
+    binds: PaymentEntry.base_paid_amount
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Paid Amount After Tax (Company Currency)
+    control: money
+    binds: PaymentEntry.base_paid_amount_after_tax
+    validation: read only (computed or filled by the program)
+  - label: Received Amount
+    control: money
+    binds: PaymentEntry.received_amount
+    required: true
+  - label: Received Amount After Tax
+    control: money
+    binds: PaymentEntry.received_amount_after_tax
+    validation: read only (computed or filled by the program); shown only when eval:doc.received_amount && doc.payment_type != 'Internal Transfer'
+  - label: Target Exchange Rate
+    control: number
+    binds: PaymentEntry.target_exchange_rate
+    required: true
+  - label: Received Amount (Company Currency)
+    control: money
+    binds: PaymentEntry.base_received_amount
+    required: true
+    validation: read only (computed or filled by the program); shown only when eval:doc.received_amount;
+  - label: Received Amount After Tax (Company Currency)
+    control: money
+    binds: PaymentEntry.base_received_amount_after_tax
+    validation: read only (computed or filled by the program); shown only when doc.received_amount
+  - label: Payment References
+    control: grid
+    columns:
+      - Type
+      - Name
+      - Due Date
+      - Grand Total
+      - Outstanding
+      - Allocated
+  - label: Payment Term Discounts Calculated
+    control: checkbox
+    binds: PaymentEntry.payment_term_discounts_calculated
+    validation: read only (computed or filled by the program)
+  - label: Total Allocated Amount
+    control: money
+    binds: PaymentEntry.total_allocated_amount
+    validation: read only (computed or filled by the program); shown only when eval:(doc.paid_amount && doc.received_amount && doc.references)
+  - label: Total Allocated Amount (Company Currency)
+    control: money
+    binds: PaymentEntry.base_total_allocated_amount
+    validation: read only (computed or filled by the program)
+  - label: Unallocated Amount
+    control: money
+    binds: PaymentEntry.unallocated_amount
+    validation: shown only when eval:(doc.paid_amount && doc.received_amount && doc.references)
+  - label: Difference Amount (Company Currency)
+    control: money
+    binds: PaymentEntry.difference_amount
+    validation: read only (computed or filled by the program); shown only when eval:(doc.paid_amount && doc.received_amount)
+  - label: Purchase Taxes and Charges Template
+    control: lookup
+    binds: PaymentEntry.purchase_taxes_and_charges_template
+    validation: shown only when eval:doc.party_type == 'Supplier'; chosen among Purchase Taxes and Charges Template records
+  - label: Sales Taxes and Charges Template
+    control: lookup
+    binds: PaymentEntry.sales_taxes_and_charges_template
+    validation: "shown only when eval: doc.party_type == 'Customer'; chosen among Sales Taxes and Charges Template records"
+  - label: Advance Taxes and Charges
+    control: grid
+    validation: "shown only when eval: doc.party_type == 'Supplier' || doc.party_type == 'Customer'"
+    columns:
+      - Type
+      - Account Head
+      - Tax Rate
+      - Net Amount
+      - Amount
+      - Total
+  - label: Total Taxes and Charges (Company Currency)
+    control: money
+    binds: PaymentEntry.base_total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Total Taxes and Charges
+    control: money
+    binds: PaymentEntry.total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Payment Deductions or Loss
+    control: grid
+    columns:
+      - Account
+      - Cost Center
+      - Amount (Company Currency)
+  - label: Tax Withholding Group
+    control: lookup
+    binds: PaymentEntry.tax_withholding_group
+    validation: chosen among Tax Withholding Group records
+  - label: Ignore Tax Withholding Threshold
+    control: checkbox
+    binds: PaymentEntry.ignore_tax_withholding_threshold
+  - label: Edit Tax Withholding Entries
+    control: checkbox
+    binds: PaymentEntry.override_tax_withholding_entries
+  - label: Tax Withholding Entries
+    control: grid
+    columns:
+      - Tax Withholding Category
+      - Tax Withholding Group
+      - Base Taxable Amount
+      - Tax Rate
+      - Base Tax Withheld
+      - Taxable Document Name
+  - label: Project
+    control: lookup
+    binds: PaymentEntry.project
+    validation: chosen among Project records
+  - label: Cost Center
+    control: lookup
+    binds: PaymentEntry.cost_center
+    validation: chosen among Cost Center records
+  - label: Status
+    control: select
+    binds: PaymentEntry.status
+    validation: read only (computed or filled by the program)
+  - label: Custom Remarks
+    control: checkbox
+    binds: PaymentEntry.custom_remarks
+  - label: Remarks
+    control: text
+    binds: PaymentEntry.remarks
+  - label: In Words (Company Currency)
+    control: text
+    binds: PaymentEntry.base_in_words
+    validation: read only (computed or filled by the program)
+  - label: Is Opening
+    control: select
+    binds: PaymentEntry.is_opening
+    validation: "shown only when eval: doc.book_advance_payments_in_separate_party_account == 1"
+  - label: Title
+    control: text
+    binds: PaymentEntry.title
+    validation: read only (computed or filled by the program)
+  - label: Letter Head
+    control: lookup
+    binds: PaymentEntry.letter_head
+    validation: chosen among Letter Head records
+  - label: Print Heading
+    control: lookup
+    binds: PaymentEntry.print_heading
+    validation: chosen among Print Heading records
+  - label: Bank
+    control: display
+    binds: PaymentEntry.bank
+  - label: Bank Account No
+    control: display
+    binds: PaymentEntry.bank_account_no
+  - label: Payment Order
+    control: lookup
+    binds: PaymentEntry.payment_order
+    validation: read only (computed or filled by the program); chosen among Payment Order records
+  - label: In Words
+    control: text
+    binds: PaymentEntry.in_words
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: PaymentEntry.amended_from
+    validation: read only (computed or filled by the program); chosen among Payment Entry records
+  - label: Auto Repeat
+    control: lookup
+    binds: PaymentEntry.auto_repeat
+    validation: read only (computed or filled by the program); chosen among Auto Repeat records
+actions:
+  - label: Save
+    triggers: F-052
+  - label: Submit
+    triggers: F-052
+  - label: Cancel
+    triggers: F-052
+  - label: Amend
+    triggers: F-052
+status: confirmed
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Payment Entry
+    note: declared by the program
+  - ref: run-20261107T193709-h-EXP_003
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 16/23 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T193709-h-EXP_003/step_07.png
+  - 01-exploration/runs/run-20261107T193709-h-EXP_003/step_07.png

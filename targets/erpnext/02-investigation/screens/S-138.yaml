@@ -1,0 +1,30 @@
+id: S-138
+title: Audit Trail
+purpose: settings of Audit Trail
+kind: settings
+layout: "sections: Date Range, Rows Added, Rows Removed; 4 fields"
+fields:
+  - label: DocType
+    control: lookup
+    binds: AuditTrail.doctype_name
+    required: true
+    validation: chosen among DocType records
+  - label: Document
+    control: lookup
+    binds: AuditTrail.document
+    required: true
+  - label: Start Date
+    control: date
+    binds: AuditTrail.start_date
+  - label: End Date
+    control: date
+    binds: AuditTrail.end_date
+actions:
+  - label: Save
+    triggers: F-139
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Audit Trail
+    note: declared by the program

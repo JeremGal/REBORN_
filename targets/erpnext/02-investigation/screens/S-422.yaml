@@ -1,0 +1,180 @@
+id: S-422
+title: Stock Settings
+purpose: settings of Stock Settings
+kind: settings
+layout: "tabs: Defaults, Stock Validations, Serial & Batch Item, Stock Reservation, Quality, Stock Planning, Stock Closing, Document Naming; sections: Item Defaults, Price List Defaults, UOM Defaults, Negative Stock, Quantity Tolerance, Display & Data Formatting, Internal Transfer Rules, Serial Item settings, Batch Item settings, Serial and Batch Bundle, Serial and Batch Reservation, Auto Material Request, Control Historical Stock Transactions; 49 fields"
+fields:
+  - label: Item Naming By
+    control: select
+    binds: StockSettings.item_naming_by
+  - label: Naming Series options
+    control: text
+    binds: StockSettings.naming_series_details
+    validation: read only (computed or filled by the program)
+  - label: Default Item Group
+    control: lookup
+    binds: StockSettings.item_group
+    validation: chosen among Item Group records
+  - label: Default Valuation Method
+    control: select
+    binds: StockSettings.valuation_method
+  - label: Auto insert Item Price if missing
+    control: checkbox
+    binds: StockSettings.auto_insert_price_list_rate_if_missing
+  - label: Update existing Price List Rate
+    control: checkbox
+    binds: StockSettings.update_existing_price_list_rate
+    validation: shown only when auto_insert_price_list_rate_if_missing
+  - label: Update Price List based on
+    control: select
+    binds: StockSettings.update_price_list_based_on
+    validation: "shown only when eval: doc.auto_insert_price_list_rate_if_missing"
+  - label: Default Stock UOM
+    control: lookup
+    binds: StockSettings.stock_uom
+    validation: chosen among UOM records
+  - label: Allow to edit stock UOM qty for Sales documents
+    control: checkbox
+    binds: StockSettings.allow_to_edit_stock_uom_qty_for_sales
+  - label: Allow to edit stock UOM qty for Purchase documents
+    control: checkbox
+    binds: StockSettings.allow_to_edit_stock_uom_qty_for_purchase
+  - label: Allow to edit stock UOM qty for Stock Entry
+    control: checkbox
+    binds: StockSettings.allow_to_edit_stock_uom_qty_for_stock_entry
+  - label: Allow UOM with conversion rate defined in Item
+    control: checkbox
+    binds: StockSettings.allow_uom_with_conversion_rate_defined_in_item
+  - label: Allow negative stock
+    control: checkbox
+    binds: StockSettings.allow_negative_stock
+  - label: Over Delivery/Receipt Allowance (%)
+    control: number
+    binds: StockSettings.over_delivery_receipt_allowance
+  - label: Over Transfer Allowance (%)
+    control: number
+    binds: StockSettings.mr_qty_allowance
+  - label: Over Picking Allowance (%)
+    control: number
+    binds: StockSettings.over_picking_allowance
+  - label: Role Allowed to Over Deliver/Receive
+    control: lookup
+    binds: StockSettings.role_allowed_to_over_deliver_receive
+    validation: chosen among Role records
+  - label: Show barcode field in stock transactions
+    control: checkbox
+    binds: StockSettings.show_barcode_field
+  - label: Convert Item description to clean HTML in transactions
+    control: checkbox
+    binds: StockSettings.clean_description_html
+  - label: Allow internal transfers at user-defined rate
+    control: checkbox
+    binds: StockSettings.allow_internal_transfer_at_arms_length_price
+  - label: Validate Material Transfer warehouses
+    control: checkbox
+    binds: StockSettings.validate_material_transfer_warehouses
+  - label: Activate Serial / Batch No for Item
+    control: checkbox
+    binds: StockSettings.enable_serial_and_batch_no_for_item
+  - label: Pick Serial / Batch Based On
+    control: select
+    binds: StockSettings.pick_serial_and_batch_based_on
+    validation: "shown only when eval: doc.enable_serial_and_batch_no_for_item && doc.auto_create_serial_and_batc"
+  - label: Allow existing Serial No to be Manufactured/Received again
+    control: checkbox
+    binds: StockSettings.allow_existing_serial_no
+  - label: Use Serial / Batch fields
+    control: checkbox
+    binds: StockSettings.use_serial_batch_fields
+  - label: Disable Serial No and Batch selector
+    control: checkbox
+    binds: StockSettings.disable_serial_no_and_batch_selector
+  - label: Allow negative stock for Batch
+    control: checkbox
+    binds: StockSettings.allow_negative_stock_for_batch
+  - label: Do not use Batch-wise Valuation
+    control: checkbox
+    binds: StockSettings.do_not_use_batchwise_valuation
+  - label: Have default Naming Series for Batch ID?
+    control: checkbox
+    binds: StockSettings.use_naming_series
+  - label: Naming Series Prefix
+    control: text
+    binds: StockSettings.naming_series_prefix
+    validation: shown only when eval:doc.use_naming_series==1
+  - label: Auto create Serial and Batch Bundle for outward
+    control: checkbox
+    binds: StockSettings.auto_create_serial_and_batch_bundle_for_outward
+    validation: shown only when enable_serial_and_batch_no_for_item
+  - label: Do not update Serial / Batch on creation of auto bundle
+    control: checkbox
+    binds: StockSettings.do_not_update_serial_batch_on_creation_of_auto_bundle
+    validation: shown only when enable_serial_and_batch_no_for_item
+  - label: Auto Map Raw Materials to Finished Goods
+    control: checkbox
+    binds: StockSettings.auto_map_raw_materials_to_finished_goods
+    validation: shown only when enable_serial_and_batch_no_for_item
+  - label: Set Serial and Batch Bundle Naming Based on Naming Series
+    control: checkbox
+    binds: StockSettings.set_serial_and_batch_bundle_naming_based_on_naming_series
+    validation: shown only when enable_serial_and_batch_no_for_item
+  - label: Naming Series options
+    control: text
+    binds: StockSettings.naming_series_preview
+    validation: read only (computed or filled by the program)
+  - label: Enable stock reservation
+    control: checkbox
+    binds: StockSettings.enable_stock_reservation
+  - label: Auto reserve stock
+    control: checkbox
+    binds: StockSettings.auto_reserve_stock
+  - label: Allow partial reservation
+    control: checkbox
+    binds: StockSettings.allow_partial_reservation
+    validation: "shown only when eval: doc.enable_stock_reservation"
+  - label: Auto reserve Stock for Sales Order on Purchase
+    control: checkbox
+    binds: StockSettings.auto_reserve_stock_for_sales_order_on_purchase
+    validation: "shown only when eval: doc.enable_stock_reservation"
+  - label: Auto reserve Serial and Batch Nos
+    control: checkbox
+    binds: StockSettings.auto_reserve_serial_and_batch
+    validation: "shown only when eval: doc.enable_stock_reservation"
+  - label: Allow to make Quality Inspection after Purchase / Delivery
+    control: checkbox
+    binds: StockSettings.allow_to_make_quality_inspection_after_purchase_or_delivery
+  - label: Action if Quality Inspection is rejected
+    control: select
+    binds: StockSettings.action_if_quality_inspection_is_rejected
+  - label: Action if Quality Inspection is not submitted
+    control: select
+    binds: StockSettings.action_if_quality_inspection_is_not_submitted
+  - label: Raise Material Request when stock reaches re-order level
+    control: checkbox
+    binds: StockSettings.auto_indent
+  - label: Notify by email on creation of automatic Material Request
+    control: checkbox
+    binds: StockSettings.reorder_email_notify
+  - label: Freeze stocks older than (days)
+    control: number
+    binds: StockSettings.stock_frozen_upto_days
+  - label: Stock frozen up to
+    control: date
+    binds: StockSettings.stock_frozen_upto
+  - label: Role allowed to edit frozen stock
+    control: lookup
+    binds: StockSettings.stock_auth_role
+    validation: shown only when eval:(doc.stock_frozen_upto || doc.stock_frozen_upto_days); chosen among Role records
+  - label: Role allowed to create/edit back-dated transactions
+    control: lookup
+    binds: StockSettings.role_allowed_to_create_edit_back_dated_transactions
+    validation: chosen among Role records
+actions:
+  - label: Save
+    triggers: F-423
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Stock Settings
+    note: declared by the program

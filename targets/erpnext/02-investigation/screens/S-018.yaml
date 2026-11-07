@@ -1,0 +1,93 @@
+id: S-018
+title: Bank Statement Import Log
+purpose: create, view and edit Bank Statement Import Log records
+kind: form
+layout: "sections: Statement Format; 19 fields"
+fields:
+  - label: Bank Account
+    control: lookup
+    binds: BankStatementImportLog.bank_account
+    required: true
+    validation: chosen among Bank Account records
+  - label: File
+    control: other
+    binds: BankStatementImportLog.file
+    required: true
+  - label: Status
+    control: select
+    binds: BankStatementImportLog.status
+    validation: read only (computed or filled by the program)
+  - label: Currency
+    control: lookup
+    binds: BankStatementImportLog.currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Number of Transactions
+    control: number
+    binds: BankStatementImportLog.number_of_transactions
+    validation: read only (computed or filled by the program)
+  - label: Start Date
+    control: date
+    binds: BankStatementImportLog.start_date
+    validation: read only (computed or filled by the program)
+  - label: End Date
+    control: date
+    binds: BankStatementImportLog.end_date
+    validation: read only (computed or filled by the program)
+  - label: Closing Balance
+    control: money
+    binds: BankStatementImportLog.closing_balance
+  - label: Total Debits
+    control: money
+    binds: BankStatementImportLog.total_debits
+    validation: read only (computed or filled by the program)
+  - label: Total Credits
+    control: money
+    binds: BankStatementImportLog.total_credits
+    validation: read only (computed or filled by the program)
+  - label: Total Debit Transactions
+    control: number
+    binds: BankStatementImportLog.total_debit_transactions
+    validation: read only (computed or filled by the program)
+  - label: Total Credit Transactions
+    control: number
+    binds: BankStatementImportLog.total_credit_transactions
+    validation: read only (computed or filled by the program)
+  - label: Detected Date Format
+    control: text
+    binds: BankStatementImportLog.detected_date_format
+    validation: read only (computed or filled by the program)
+  - label: Detected Amount Format
+    control: select
+    binds: BankStatementImportLog.detected_amount_format
+    validation: read only (computed or filled by the program)
+  - label: Detected Header Index
+    control: number
+    binds: BankStatementImportLog.detected_header_index
+    validation: read only (computed or filled by the program)
+  - label: Detected Transaction Starting Index
+    control: number
+    binds: BankStatementImportLog.detected_transaction_starting_index
+    validation: read only (computed or filled by the program)
+  - label: Detected Transaction Ending Index
+    control: number
+    binds: BankStatementImportLog.detected_transaction_ending_index
+    validation: read only (computed or filled by the program)
+  - label: Column Mapping
+    control: grid
+    columns:
+      - Header Text
+      - Index
+      - Maps To
+  - label: PDF Tables
+    control: other
+    binds: BankStatementImportLog.pdf_tables
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-019
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bank Statement Import Log
+    note: declared by the program

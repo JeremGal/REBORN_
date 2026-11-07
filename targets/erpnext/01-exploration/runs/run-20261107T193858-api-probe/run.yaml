@@ -1,0 +1,1845 @@
+id: run-20261107T193858-api-probe
+mission: M-004
+subject: original
+agent:
+  provider: api
+  product: frappe-rest
+  version: Frappe 16.55.2 / ERPNext 16.51.2
+target:
+  id: erpnext
+  version: 16.51.2
+  environment: Alan's own Frappe Cloud site, fictitious data
+started_at: 2026-11-07T19:38:58.704Z
+ended_at: 2026-11-07T19:39:12.186Z
+outcome: partial
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: save a draft Account Category with only its mandatory fields
+      value: '{"doctype":"Account Category","account_category_name":"TEST Account Category Name"}'
+    observation: stored as a draft (TEST Account Category Name)
+    extracted:
+      doctype: Account Category
+      result: stored
+      name: TEST Account Category Name
+      docstatus: 0
+  - n: 2
+    action:
+      type: other
+      target_desc: save a draft Account Closing Balance with only its mandatory fields
+      value: '{"doctype":"Account Closing Balance"}'
+    observation: "refused by the program: [\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Solde de clôture du compte.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+    extracted:
+      doctype: Account Closing Balance
+      result: refused
+      message: "[\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Solde de clôture du compte.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+  - n: 3
+    action:
+      type: other
+      target_desc: save a draft Activity Cost with only its mandatory fields
+      value: '{"doctype":"Activity Cost","activity_type":"Planning"}'
+    observation: stored as a draft (PROJ-ACC-00001)
+    extracted:
+      doctype: Activity Cost
+      result: stored
+      name: PROJ-ACC-00001
+      docstatus: 0
+  - n: 4
+    action:
+      type: other
+      target_desc: save a draft Activity Type with only its mandatory fields
+      value: '{"doctype":"Activity Type","activity_type":"TEST Activity Type"}'
+    observation: stored as a draft (TEST Activity Type)
+    extracted:
+      doctype: Activity Type
+      result: stored
+      name: TEST Activity Type
+      docstatus: 0
+  - n: 5
+    action:
+      type: other
+      target_desc: save a draft Advance Payment Ledger Entry with only its mandatory fields
+      value: '{"doctype":"Advance Payment Ledger Entry"}'
+    observation: "refused by the program: [\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Écriture du grand livre des paiements anticipés.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+    extracted:
+      doctype: Advance Payment Ledger Entry
+      result: refused
+      message: "[\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Écriture du grand livre des paiements anticipés.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+  - n: 6
+    action:
+      type: other
+      target_desc: save a draft Appointment with only its mandatory fields
+      value: '{"doctype":"Appointment","scheduled_time":"2026-11-07 09:00:00","status":"Open","customer_name":"TEST Name","customer_email":"TEST Email"}'
+    observation: "refused by the program: frappe.exceptions.InvalidEmailAddressError: TEST n’est pas une Adresse Email valide"
+    extracted:
+      doctype: Appointment
+      result: refused
+      message: "frappe.exceptions.InvalidEmailAddressError: TEST n’est pas une Adresse Email valide"
+  - n: 7
+    action:
+      type: other
+      target_desc: prepare a draft Asset
+    observation: "not attempted: no Location record to fill location"
+    extracted:
+      doctype: Asset
+      result: not attempted
+      reason: no Location record to fill location
+  - n: 8
+    action:
+      type: other
+      target_desc: save a draft Asset Activity with only its mandatory fields
+      value: '{"doctype":"Asset Activity"}'
+    observation: "refused by the program: [\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Activité des immobilisations.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+    extracted:
+      doctype: Asset Activity
+      result: refused
+      message: "[\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Activité des immobilisations.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+  - n: 9
+    action:
+      type: other
+      target_desc: prepare a draft Asset Capitalization
+    observation: "not attempted: no Asset record to fill target_asset"
+    extracted:
+      doctype: Asset Capitalization
+      result: not attempted
+      reason: no Asset record to fill target_asset
+  - n: 10
+    action:
+      type: other
+      target_desc: save a draft Asset Category with only its mandatory fields
+      value: '{"doctype":"Asset Category","asset_category_name":"TEST Asset Category Name","accounts":[{"company_name":"Digital Solution Service","fixed_asset_account":"1 - Comptes de Capitaux - DSS"}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Ligne n°1 : Account Type de 1 - Comptes de Capitaux - DSS devrait être Fixed Asset. Veuillez mettre à jour Account Type ou sélectionner un autre compte."
+    extracted:
+      doctype: Asset Category
+      result: refused
+      message: "frappe.exceptions.ValidationError: Ligne n°1 : Account Type de 1 - Comptes de Capitaux - DSS devrait être Fixed Asset. Veuillez mettre à jour Account Type ou sélectionner un autre compte."
+  - n: 11
+    action:
+      type: other
+      target_desc: prepare a draft Asset Depreciation Schedule
+    observation: "not attempted: no Asset record to fill asset"
+    extracted:
+      doctype: Asset Depreciation Schedule
+      result: not attempted
+      reason: no Asset record to fill asset
+  - n: 12
+    action:
+      type: other
+      target_desc: prepare a draft Asset Maintenance
+    observation: "not attempted: no Asset record to fill asset_name"
+    extracted:
+      doctype: Asset Maintenance
+      result: not attempted
+      reason: no Asset record to fill asset_name
+  - n: 13
+    action:
+      type: other
+      target_desc: save a draft Asset Maintenance Log with only its mandatory fields
+      value: '{"doctype":"Asset Maintenance Log","naming_series":"ACC-AML-.YYYY.-","maintenance_status":"Planned"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Please select a Task"
+    extracted:
+      doctype: Asset Maintenance Log
+      result: refused
+      message: "frappe.exceptions.ValidationError: Please select a Task"
+  - n: 14
+    action:
+      type: other
+      target_desc: save a draft Asset Maintenance Team with only its mandatory fields
+      value: '{"doctype":"Asset Maintenance Team","maintenance_team_name":"TEST Maintenance Team Name","company":"Digital Solution Service","maintenance_team_members":[{"team_member":"reborn.agent.test@example.com","maintenance_role":"Guest"}]}'
+    observation: stored as a draft (TEST Maintenance Team Name)
+    extracted:
+      doctype: Asset Maintenance Team
+      result: stored
+      name: TEST Maintenance Team Name
+      docstatus: 0
+  - n: 15
+    action:
+      type: other
+      target_desc: prepare a draft Asset Movement
+    observation: "not attempted: no Asset record for Asset Movement Item.asset"
+    extracted:
+      doctype: Asset Movement
+      result: not attempted
+      reason: no Asset record for Asset Movement Item.asset
+  - n: 16
+    action:
+      type: other
+      target_desc: prepare a draft Asset Repair
+    observation: "not attempted: no Asset record to fill asset"
+    extracted:
+      doctype: Asset Repair
+      result: not attempted
+      reason: no Asset record to fill asset
+  - n: 17
+    action:
+      type: other
+      target_desc: prepare a draft Asset Shift Allocation
+    observation: "not attempted: no Asset record to fill asset"
+    extracted:
+      doctype: Asset Shift Allocation
+      result: not attempted
+      reason: no Asset record to fill asset
+  - n: 18
+    action:
+      type: other
+      target_desc: save a draft Asset Shift Factor with only its mandatory fields
+      value: '{"doctype":"Asset Shift Factor","shift_name":"TEST Shift Name","shift_factor":1}'
+    observation: stored as a draft (TEST Shift Name)
+    extracted:
+      doctype: Asset Shift Factor
+      result: stored
+      name: TEST Shift Name
+      docstatus: 0
+  - n: 19
+    action:
+      type: other
+      target_desc: prepare a draft Asset Value Adjustment
+    observation: "not attempted: no Asset record to fill asset"
+    extracted:
+      doctype: Asset Value Adjustment
+      result: not attempted
+      reason: no Asset record to fill asset
+  - n: 20
+    action:
+      type: other
+      target_desc: save a draft Bank with only its mandatory fields
+      value: '{"doctype":"Bank","bank_name":"TEST Bank Name"}'
+    observation: stored as a draft (TEST Bank Name)
+    extracted:
+      doctype: Bank
+      result: stored
+      name: TEST Bank Name
+      docstatus: 0
+  - n: 21
+    action:
+      type: other
+      target_desc: prepare a draft Bank Account
+    observation: "not attempted: no Bank record to fill bank"
+    extracted:
+      doctype: Bank Account
+      result: not attempted
+      reason: no Bank record to fill bank
+  - n: 22
+    action:
+      type: other
+      target_desc: prepare a draft Bank Account Balance
+    observation: "not attempted: no Bank Account record to fill bank_account"
+    extracted:
+      doctype: Bank Account Balance
+      result: not attempted
+      reason: no Bank Account record to fill bank_account
+  - n: 23
+    action:
+      type: other
+      target_desc: save a draft Bank Account Subtype with only its mandatory fields
+      value: '{"doctype":"Bank Account Subtype"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Account Subtype est requis"
+    extracted:
+      doctype: Bank Account Subtype
+      result: refused
+      message: "frappe.exceptions.ValidationError: Account Subtype est requis"
+  - n: 24
+    action:
+      type: other
+      target_desc: save a draft Bank Account Type with only its mandatory fields
+      value: '{"doctype":"Bank Account Type"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Account Type est requis"
+    extracted:
+      doctype: Bank Account Type
+      result: refused
+      message: "frappe.exceptions.ValidationError: Account Type est requis"
+  - n: 25
+    action:
+      type: other
+      target_desc: save a draft Bank Guarantee with only its mandatory fields
+      value: '{"doctype":"Bank Guarantee","bg_type":"Receiving","amount":1,"start_date":"2026-11-07"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez sélectionner le client ou le fournisseur."
+    extracted:
+      doctype: Bank Guarantee
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez sélectionner le client ou le fournisseur."
+  - n: 26
+    action:
+      type: other
+      target_desc: save a draft Bank Transaction with only its mandatory fields
+      value: '{"doctype":"Bank Transaction"}'
+    observation: stored as a draft (ACC-BTN-2026-00001)
+    extracted:
+      doctype: Bank Transaction
+      result: stored
+      name: ACC-BTN-2026-00001
+      docstatus: 0
+  - n: 27
+    action:
+      type: other
+      target_desc: save a draft Bank Transaction Rule with only its mandatory fields
+      value: '{"doctype":"Bank Transaction Rule","rule_name":"TEST Rule Name","priority":1,"company":"Digital Solution Service","description_rules":[{"check":"Contains","value":"TEST Value"}],"classify_as":"Bank Entry"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez ajouter un compte pour la règle d'écriture bancaire."
+    extracted:
+      doctype: Bank Transaction Rule
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez ajouter un compte pour la règle d'écriture bancaire."
+  - n: 28
+    action:
+      type: other
+      target_desc: save a draft Batch with only its mandatory fields
+      value: '{"doctype":"Batch","batch_id":"TEST Batch ID","item":"TEST-ART-001"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: L’article sélectionné ne peut pas avoir de Lot"
+    extracted:
+      doctype: Batch
+      result: refused
+      message: "frappe.exceptions.ValidationError: L’article sélectionné ne peut pas avoir de Lot"
+  - n: 29
+    action:
+      type: other
+      target_desc: save a draft Bin with only its mandatory fields
+      value: '{"doctype":"Bin"}'
+    observation: "refused by the program: [\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Boîte.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+    extracted:
+      doctype: Bin
+      result: refused
+      message: "[\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Boîte.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+  - n: 30
+    action:
+      type: other
+      target_desc: save a draft Blanket Order with only its mandatory fields
+      value: '{"doctype":"Blanket Order","naming_series":"MFG-BLR-.YYYY.-","blanket_order_type":"Selling","from_date":"2026-11-07","to_date":"2026-11-07","company":"Digital Solution Service","currency":"AFN","conversion_rate":1,"items":[{"item_code":"TEST-ART-001","rate":1}]}'
+    observation: "refused by the program: frappe.exceptions.MandatoryError: Client is mandatory for a Vente Blanket Order"
+    extracted:
+      doctype: Blanket Order
+      result: refused
+      message: "frappe.exceptions.MandatoryError: Client is mandatory for a Vente Blanket Order"
+  - n: 31
+    action:
+      type: other
+      target_desc: save a draft BOM with only its mandatory fields
+      value: '{"doctype":"BOM","company":"Digital Solution Service","item":"TEST-ART-001","items":[{"item_code":"TEST-ART-001","qty":1,"uom":"Abampere","rate":1}],"currency":"AFN"}'
+    observation: stored as a draft (BOM-TEST-ART-001-001)
+    extracted:
+      doctype: BOM
+      result: stored
+      name: BOM-TEST-ART-001-001
+      docstatus: 0
+  - n: 32
+    action:
+      type: other
+      target_desc: save a draft BOM Creator with only its mandatory fields
+      value: '{"doctype":"BOM Creator","item_code":"TEST-ART-001","company":"Digital Solution Service","currency":"AFN"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Une nomenclature non fantôme ne peut pas être créée pour l'article non stocké TEST-ART-001."
+    extracted:
+      doctype: BOM Creator
+      result: refused
+      message: "frappe.exceptions.ValidationError: Une nomenclature non fantôme ne peut pas être créée pour l'article non stocké TEST-ART-001."
+  - n: 33
+    action:
+      type: other
+      target_desc: save a draft BOM Update Log with only its mandatory fields
+      value: '{"doctype":"BOM Update Log"}'
+    observation: "refused by the program: erpnext.manufacturing.doctype.bom_update_log.bom_update_log.BOMMissingError: Veuillez indiquer la nomenclature actuelle et la nouvelle nomenclature pour le remplacement."
+    extracted:
+      doctype: BOM Update Log
+      result: refused
+      message: "erpnext.manufacturing.doctype.bom_update_log.bom_update_log.BOMMissingError: Veuillez indiquer la nomenclature actuelle et la nouvelle nomenclature pour le remplacement."
+  - n: 34
+    action:
+      type: other
+      target_desc: save a draft Brand with only its mandatory fields
+      value: '{"doctype":"Brand","brand":"TEST Brand Name"}'
+    observation: stored as a draft (TEST Brand Name)
+    extracted:
+      doctype: Brand
+      result: stored
+      name: TEST Brand Name
+      docstatus: 0
+  - n: 35
+    action:
+      type: other
+      target_desc: save a draft Campaign with only its mandatory fields
+      value: '{"doctype":"Campaign","campaign_name":"TEST Campaign Name"}'
+    observation: stored as a draft (TEST Campaign Name)
+    extracted:
+      doctype: Campaign
+      result: stored
+      name: TEST Campaign Name
+      docstatus: 0
+  - n: 36
+    action:
+      type: other
+      target_desc: save a draft Cashier Closing with only its mandatory fields
+      value: '{"doctype":"Cashier Closing","from_time":"09:00:00","time":"09:00:00"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Du temps devrait être moins que du temps"
+    extracted:
+      doctype: Cashier Closing
+      result: refused
+      message: "frappe.exceptions.ValidationError: Du temps devrait être moins que du temps"
+  - n: 37
+    action:
+      type: other
+      target_desc: save a draft Cheque Print Template with only its mandatory fields
+      value: '{"doctype":"Cheque Print Template","bank_name":"TEST Bank Name"}'
+    observation: stored as a draft (TEST Bank Name)
+    extracted:
+      doctype: Cheque Print Template
+      result: stored
+      name: TEST Bank Name
+      docstatus: 0
+  - n: 38
+    action:
+      type: other
+      target_desc: save a draft Competitor with only its mandatory fields
+      value: '{"doctype":"Competitor","competitor_name":"TEST Competitor Name"}'
+    observation: stored as a draft (TEST Competitor Name)
+    extracted:
+      doctype: Competitor
+      result: stored
+      name: TEST Competitor Name
+      docstatus: 0
+  - n: 39
+    action:
+      type: other
+      target_desc: prepare a draft Contract
+    observation: "not attempted: no party_type record to fill party_name"
+    extracted:
+      doctype: Contract
+      result: not attempted
+      reason: no party_type record to fill party_name
+  - n: 40
+    action:
+      type: other
+      target_desc: save a draft Contract Template with only its mandatory fields
+      value: '{"doctype":"Contract Template"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Title est requis"
+    extracted:
+      doctype: Contract Template
+      result: refused
+      message: "frappe.exceptions.ValidationError: Title est requis"
+  - n: 41
+    action:
+      type: other
+      target_desc: save a draft Cost Center Allocation with only its mandatory fields
+      value: '{"doctype":"Cost Center Allocation","main_cost_center":"Digital Solution Service - DSS","company":"Digital Solution Service","allocation_percentages":[{"cost_center":"Digital Solution Service - DSS","percentage":1}]}'
+    observation: "refused by the program: erpnext.accounts.doctype.cost_center_allocation.cost_center_allocation.WrongPercentageAllocation: Le pourcentage total contre les centres de coûts doit être de 100"
+    extracted:
+      doctype: Cost Center Allocation
+      result: refused
+      message: "erpnext.accounts.doctype.cost_center_allocation.cost_center_allocation.WrongPercentageAllocation: Le pourcentage total contre les centres de coûts doit être de 100"
+  - n: 42
+    action:
+      type: other
+      target_desc: save a draft Coupon Code with only its mandatory fields
+      value: '{"doctype":"Coupon Code","coupon_name":"TEST Coupon Name","coupon_type":"Promotional"}'
+    observation: stored as a draft (TEST Coupon Name)
+    extracted:
+      doctype: Coupon Code
+      result: stored
+      name: TEST Coupon Name
+      docstatus: 0
+  - n: 43
+    action:
+      type: other
+      target_desc: save a draft Customer with only its mandatory fields
+      value: '{"doctype":"Customer","customer_name":"TEST Customer Name"}'
+    observation: stored as a draft (TEST Customer Name)
+    extracted:
+      doctype: Customer
+      result: stored
+      name: TEST Customer Name
+      docstatus: 0
+  - n: 44
+    action:
+      type: other
+      target_desc: save a draft Customer Group with only its mandatory fields
+      value: '{"doctype":"Customer Group","customer_group_name":"TEST Customer Group Name"}'
+    observation: stored as a draft (TEST Customer Group Name)
+    extracted:
+      doctype: Customer Group
+      result: stored
+      name: TEST Customer Group Name
+      docstatus: 0
+  - n: 45
+    action:
+      type: other
+      target_desc: save a draft Customs Tariff Number with only its mandatory fields
+      value: '{"doctype":"Customs Tariff Number","tariff_number":"TEST Tariff Number"}'
+    observation: stored as a draft (TEST Tariff Number)
+    extracted:
+      doctype: Customs Tariff Number
+      result: stored
+      name: TEST Tariff Number
+      docstatus: 0
+  - n: 46
+    action:
+      type: other
+      target_desc: save a draft Delivery Note with only its mandatory fields
+      value: '{"doctype":"Delivery Note","naming_series":"MAT-DN-.YYYY.-","customer":"TEST-Client Alpha","company":"Digital Solution Service","currency":"AFN","conversion_rate":1,"selling_price_list":"Standard Buying","plc_conversion_rate":1,"items":[{"item_code":"TEST-ART-001","item_name":"TEST Item Name","qty":1,"uom":"Abampere"}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: La liste de prix Standard Buying ne peut pas être utilisée pour une transaction de vente"
+    extracted:
+      doctype: Delivery Note
+      result: refused
+      message: "frappe.exceptions.ValidationError: La liste de prix Standard Buying ne peut pas être utilisée pour une transaction de vente"
+  - n: 47
+    action:
+      type: other
+      target_desc: save a draft Delivery Schedule Item with only its mandatory fields
+      value: '{"doctype":"Delivery Schedule Item"}'
+    observation: "refused by the program: [\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Article du planning de livraison.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+    extracted:
+      doctype: Delivery Schedule Item
+      result: refused
+      message: "[\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Article du planning de livraison.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+  - n: 48
+    action:
+      type: other
+      target_desc: prepare a draft Delivery Trip
+    observation: "not attempted: no Vehicle record to fill vehicle"
+    extracted:
+      doctype: Delivery Trip
+      result: not attempted
+      reason: no Vehicle record to fill vehicle
+  - n: 49
+    action:
+      type: other
+      target_desc: prepare a draft Downtime Entry
+    observation: "not attempted: no Workstation record to fill workstation"
+    extracted:
+      doctype: Downtime Entry
+      result: not attempted
+      reason: no Workstation record to fill workstation
+  - n: 50
+    action:
+      type: other
+      target_desc: save a draft Driver with only its mandatory fields
+      value: '{"doctype":"Driver","full_name":"TEST Full Name","status":"Active"}'
+    observation: stored as a draft (HR-DRI-2026-00001)
+    extracted:
+      doctype: Driver
+      result: stored
+      name: HR-DRI-2026-00001
+      docstatus: 0
+  - n: 51
+    action:
+      type: other
+      target_desc: save a draft Dunning with only its mandatory fields
+      value: '{"doctype":"Dunning","customer":"TEST-Client Alpha","company":"Digital Solution Service"}'
+    observation: stored as a draft (DUNN-11-26-00001)
+    extracted:
+      doctype: Dunning
+      result: stored
+      name: DUNN-11-26-00001
+      docstatus: 0
+  - n: 52
+    action:
+      type: other
+      target_desc: prepare a draft Email Campaign
+    observation: "not attempted: no Campaign record to fill campaign_name"
+    extracted:
+      doctype: Email Campaign
+      result: not attempted
+      reason: no Campaign record to fill campaign_name
+  - n: 53
+    action:
+      type: other
+      target_desc: save a draft Employee Group with only its mandatory fields
+      value: '{"doctype":"Employee Group","employee_group_name":"TEST Name"}'
+    observation: stored as a draft (TEST Name)
+    extracted:
+      doctype: Employee Group
+      result: stored
+      name: TEST Name
+      docstatus: 0
+  - n: 54
+    action:
+      type: other
+      target_desc: save a draft Financial Report Template with only its mandatory fields
+      value: '{"doctype":"Financial Report Template","template_name":"TEST Template Name","report_type":"Profit and Loss Statement"}'
+    observation: stored as a draft (TEST Template Name)
+    extracted:
+      doctype: Financial Report Template
+      result: stored
+      name: TEST Template Name
+      docstatus: 0
+  - n: 55
+    action:
+      type: other
+      target_desc: save a draft GL Entry with only its mandatory fields
+      value: '{"doctype":"GL Entry"}'
+    observation: "refused by the program: [\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Écriture GL.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+    extracted:
+      doctype: GL Entry
+      result: refused
+      message: "[\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Écriture GL.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+  - n: 56
+    action:
+      type: other
+      target_desc: save a draft Incoterm with only its mandatory fields
+      value: '{"doctype":"Incoterm","code":"TES","title":"TEST Title"}'
+    observation: stored as a draft (TES)
+    extracted:
+      doctype: Incoterm
+      result: stored
+      name: TES
+      docstatus: 0
+  - n: 57
+    action:
+      type: other
+      target_desc: save a draft Industry Type with only its mandatory fields
+      value: '{"doctype":"Industry Type","industry":"TEST Industry"}'
+    observation: stored as a draft (TEST Industry)
+    extracted:
+      doctype: Industry Type
+      result: stored
+      name: TEST Industry
+      docstatus: 0
+  - n: 58
+    action:
+      type: other
+      target_desc: save a draft Installation Note with only its mandatory fields
+      value: '{"doctype":"Installation Note","naming_series":"MAT-INS-.YYYY.-","customer":"TEST-Client Alpha","territory":"All Territories","inst_date":"2026-11-07","company":"Digital Solution Service","items":[{"item_code":"TEST-ART-001","qty":1}]}'
+    observation: stored as a draft (MAT-INS-2026-00001)
+    extracted:
+      doctype: Installation Note
+      result: stored
+      name: MAT-INS-2026-00001
+      docstatus: 0
+  - n: 59
+    action:
+      type: other
+      target_desc: save a draft Invoice Discounting with only its mandatory fields
+      value: '{"doctype":"Invoice Discounting","company":"Digital Solution Service","invoices":[{"sales_invoice":"ACC-SINV-2026-00001"}],"short_term_loan":"1 - Comptes de Capitaux - DSS","bank_account":"1 - Comptes de Capitaux - DSS","bank_charges_account":"1 - Comptes de Capitaux - DSS","accounts_receivable_credit":"1 - Comptes de Capitaux - DSS","accounts_receivable_discounted":"1 - Comptes de Capitaux - DSS"'
+    observation: stored as a draft (ACC-INV-DISC-2026-00001)
+    extracted:
+      doctype: Invoice Discounting
+      result: stored
+      name: ACC-INV-DISC-2026-00001
+      docstatus: 0
+  - n: 60
+    action:
+      type: other
+      target_desc: save a draft Issue with only its mandatory fields
+      value: '{"doctype":"Issue","subject":"TEST Subject"}'
+    observation: stored as a draft (ISS-2026-00001)
+    extracted:
+      doctype: Issue
+      result: stored
+      name: ISS-2026-00001
+      docstatus: 0
+  - n: 61
+    action:
+      type: other
+      target_desc: save a draft Issue Priority with only its mandatory fields
+      value: '{"doctype":"Issue Priority"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+    extracted:
+      doctype: Issue Priority
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+  - n: 62
+    action:
+      type: other
+      target_desc: save a draft Issue Type with only its mandatory fields
+      value: '{"doctype":"Issue Type"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+    extracted:
+      doctype: Issue Type
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+  - n: 63
+    action:
+      type: other
+      target_desc: save a draft Item with only its mandatory fields
+      value: '{"doctype":"Item","item_code":"TEST Item Code","item_group":"All Item Groups","stock_uom":"Abampere"}'
+    observation: stored as a draft (TEST Item Code)
+    extracted:
+      doctype: Item
+      result: stored
+      name: TEST Item Code
+      docstatus: 0
+  - n: 64
+    action:
+      type: other
+      target_desc: save a draft Item Alternative with only its mandatory fields
+      value: '{"doctype":"Item Alternative","item_code":"TEST-ART-001","alternative_item_code":"TEST-ART-001"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Il n'est pas autorisé de définir un article alternatif pour l'article TEST-ART-001"
+    extracted:
+      doctype: Item Alternative
+      result: refused
+      message: "frappe.exceptions.ValidationError: Il n'est pas autorisé de définir un article alternatif pour l'article TEST-ART-001"
+  - n: 65
+    action:
+      type: other
+      target_desc: save a draft Item Attribute with only its mandatory fields
+      value: '{"doctype":"Item Attribute","attribute_name":"TEST Attribute Name"}'
+    observation: stored as a draft (TEST Attribute Name)
+    extracted:
+      doctype: Item Attribute
+      result: stored
+      name: TEST Attribute Name
+      docstatus: 0
+  - n: 66
+    action:
+      type: other
+      target_desc: save a draft Item Group with only its mandatory fields
+      value: '{"doctype":"Item Group","item_group_name":"TEST Item Group Name"}'
+    observation: stored as a draft (TEST Item Group Name)
+    extracted:
+      doctype: Item Group
+      result: stored
+      name: TEST Item Group Name
+      docstatus: 0
+  - n: 67
+    action:
+      type: other
+      target_desc: save a draft Item Lead Time with only its mandatory fields
+      value: '{"doctype":"Item Lead Time"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Item Code est requis"
+    extracted:
+      doctype: Item Lead Time
+      result: refused
+      message: "frappe.exceptions.ValidationError: Item Code est requis"
+  - n: 68
+    action:
+      type: other
+      target_desc: prepare a draft Item Manufacturer
+    observation: "not attempted: no Manufacturer record to fill manufacturer"
+    extracted:
+      doctype: Item Manufacturer
+      result: not attempted
+      reason: no Manufacturer record to fill manufacturer
+  - n: 69
+    action:
+      type: other
+      target_desc: save a draft Item Price with only its mandatory fields
+      value: '{"doctype":"Item Price","item_code":"TEST-ART-001","uom":"Abampere","price_list":"Standard Buying","price_list_rate":1}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: UdM Abampere introuvable dans l'article TEST-ART-001"
+    extracted:
+      doctype: Item Price
+      result: refused
+      message: "frappe.exceptions.ValidationError: UdM Abampere introuvable dans l'article TEST-ART-001"
+  - n: 70
+    action:
+      type: other
+      target_desc: save a draft Item Tax Template with only its mandatory fields
+      value: '{"doctype":"Item Tax Template","title":"TEST Title","company":"Digital Solution Service","taxes":[{"tax_type":"1 - Comptes de Capitaux - DSS"}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Item Tax Row 1: Account 1 - Comptes de Capitaux - DSS is a group account"
+    extracted:
+      doctype: Item Tax Template
+      result: refused
+      message: "frappe.exceptions.ValidationError: Item Tax Row 1: Account 1 - Comptes de Capitaux - DSS is a group account"
+  - n: 71
+    action:
+      type: other
+      target_desc: prepare a draft Job Card
+    observation: "not attempted: no Work Order record to fill work_order"
+    extracted:
+      doctype: Job Card
+      result: not attempted
+      reason: no Work Order record to fill work_order
+  - n: 72
+    action:
+      type: other
+      target_desc: save a draft Journal Entry with only its mandatory fields
+      value: '{"doctype":"Journal Entry","company":"Digital Solution Service","naming_series":"ACC-JV-.YYYY.-","posting_date":"2026-11-07","accounts":[{"account":"1 - Comptes de Capitaux - DSS"}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Vous avez sélectionné le groupe de comptes 1 - Comptes de Capitaux - DSS comme compte Écriture de Journal à la ligne 1. Veuillez sélectionner un seul compte."
+    extracted:
+      doctype: Journal Entry
+      result: refused
+      message: "frappe.exceptions.ValidationError: Vous avez sélectionné le groupe de comptes 1 - Comptes de Capitaux - DSS comme compte Écriture de Journal à la ligne 1. Veuillez sélectionner un seul compte."
+  - n: 73
+    action:
+      type: other
+      target_desc: prepare a draft Journal Entry Template
+    observation: "not attempted: no Select record to fill naming_series"
+    extracted:
+      doctype: Journal Entry Template
+      result: not attempted
+      reason: no Select record to fill naming_series
+  - n: 74
+    action:
+      type: other
+      target_desc: prepare a draft Landed Cost Voucher
+    observation: "not attempted: no receipt_document_type record for Landed Cost Purchase Receipt.receipt_document"
+    extracted:
+      doctype: Landed Cost Voucher
+      result: not attempted
+      reason: no receipt_document_type record for Landed Cost Purchase Receipt.receipt_document
+  - n: 75
+    action:
+      type: other
+      target_desc: save a draft Lead with only its mandatory fields
+      value: '{"doctype":"Lead"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Un responsable requiert le nom d'une personne ou le nom d'une organisation"
+    extracted:
+      doctype: Lead
+      result: refused
+      message: "frappe.exceptions.ValidationError: Un responsable requiert le nom d'une personne ou le nom d'une organisation"
+  - n: 76
+    action:
+      type: other
+      target_desc: save a draft Location with only its mandatory fields
+      value: '{"doctype":"Location","location_name":"TEST Location Name"}'
+    observation: stored as a draft (TEST Location Name)
+    extracted:
+      doctype: Location
+      result: stored
+      name: TEST Location Name
+      docstatus: 0
+  - n: 77
+    action:
+      type: other
+      target_desc: prepare a draft Loyalty Point Entry
+    observation: "not attempted: no Loyalty Program record to fill loyalty_program"
+    extracted:
+      doctype: Loyalty Point Entry
+      result: not attempted
+      reason: no Loyalty Program record to fill loyalty_program
+  - n: 78
+    action:
+      type: other
+      target_desc: save a draft Loyalty Program with only its mandatory fields
+      value: '{"doctype":"Loyalty Program","loyalty_program_name":"TEST Loyalty Program Name","from_date":"2026-11-07","collection_rules":[{"tier_name":"TEST Tier Name","collection_factor":1}]}'
+    observation: stored as a draft (TEST Loyalty Program Name)
+    extracted:
+      doctype: Loyalty Program
+      result: stored
+      name: TEST Loyalty Program Name
+      docstatus: 0
+  - n: 79
+    action:
+      type: other
+      target_desc: save a draft Maintenance Schedule with only its mandatory fields
+      value: '{"doctype":"Maintenance Schedule","naming_series":"MAT-MSH-.YYYY.-","transaction_date":"2026-11-07","items":[{"item_code":"TEST-ART-001","start_date":"2026-11-07","end_date":"2026-11-07","no_of_visits":1}],"company":"Digital Solution Service"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: La date de début doit être antérieure à la date de fin pour l'Article TEST-ART-001"
+    extracted:
+      doctype: Maintenance Schedule
+      result: refused
+      message: "frappe.exceptions.ValidationError: La date de début doit être antérieure à la date de fin pour l'Article TEST-ART-001"
+  - n: 80
+    action:
+      type: other
+      target_desc: save a draft Maintenance Visit with only its mandatory fields
+      value: '{"doctype":"Maintenance Visit","naming_series":"MAT-MVS-.YYYY.-","customer":"TEST-Client Alpha","completion_status":"Partially Completed","company":"Digital Solution Service"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Ajouter des éléments dans le tableau des objectifs"
+    extracted:
+      doctype: Maintenance Visit
+      result: refused
+      message: "frappe.exceptions.ValidationError: Ajouter des éléments dans le tableau des objectifs"
+  - n: 81
+    action:
+      type: other
+      target_desc: save a draft Manufacturer with only its mandatory fields
+      value: '{"doctype":"Manufacturer","short_name":"TEST Short Name"}'
+    observation: stored as a draft (TEST Short Name)
+    extracted:
+      doctype: Manufacturer
+      result: stored
+      name: TEST Short Name
+      docstatus: 0
+  - n: 82
+    action:
+      type: other
+      target_desc: save a draft Market Segment with only its mandatory fields
+      value: '{"doctype":"Market Segment"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Market Segment est requis"
+    extracted:
+      doctype: Market Segment
+      result: refused
+      message: "frappe.exceptions.ValidationError: Market Segment est requis"
+  - n: 83
+    action:
+      type: other
+      target_desc: save a draft Master Production Schedule with only its mandatory fields
+      value: '{"doctype":"Master Production Schedule","company":"Digital Solution Service","from_date":"2026-11-07"}'
+    observation: stored as a draft (MPS26-000001)
+    extracted:
+      doctype: Master Production Schedule
+      result: stored
+      name: MPS26-000001
+      docstatus: 0
+  - n: 84
+    action:
+      type: other
+      target_desc: save a draft Material Request with only its mandatory fields
+      value: '{"doctype":"Material Request","naming_series":"MAT-MR-.YYYY.-","material_request_type":"Purchase","company":"Digital Solution Service","items":[{"item_code":"TEST-ART-001","schedule_date":"2026-11-07","qty":1,"uom":"Abampere","conversion_factor":1}]}'
+    observation: stored as a draft (MAT-MR-2026-00001)
+    extracted:
+      doctype: Material Request
+      result: stored
+      name: MAT-MR-2026-00001
+      docstatus: 0
+  - n: 85
+    action:
+      type: other
+      target_desc: prepare a draft Non Conformance
+    observation: "not attempted: no Quality Procedure record to fill procedure"
+    extracted:
+      doctype: Non Conformance
+      result: not attempted
+      reason: no Quality Procedure record to fill procedure
+  - n: 86
+    action:
+      type: other
+      target_desc: save a draft Operation with only its mandatory fields
+      value: '{"doctype":"Operation"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+    extracted:
+      doctype: Operation
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+  - n: 87
+    action:
+      type: other
+      target_desc: prepare a draft Opportunity
+    observation: "not attempted: no opportunity_from record to fill party_name"
+    extracted:
+      doctype: Opportunity
+      result: not attempted
+      reason: no opportunity_from record to fill party_name
+  - n: 88
+    action:
+      type: other
+      target_desc: save a draft Opportunity Lost Reason with only its mandatory fields
+      value: '{"doctype":"Opportunity Lost Reason"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Lost Reason est requis"
+    extracted:
+      doctype: Opportunity Lost Reason
+      result: refused
+      message: "frappe.exceptions.ValidationError: Lost Reason est requis"
+  - n: 89
+    action:
+      type: other
+      target_desc: save a draft Opportunity Type with only its mandatory fields
+      value: '{"doctype":"Opportunity Type"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+    extracted:
+      doctype: Opportunity Type
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+  - n: 90
+    action:
+      type: other
+      target_desc: prepare a draft Packing Slip
+    observation: "not attempted: no Delivery Note record to fill delivery_note"
+    extracted:
+      doctype: Packing Slip
+      result: not attempted
+      reason: no Delivery Note record to fill delivery_note
+  - n: 91
+    action:
+      type: other
+      target_desc: save a draft Party Link with only its mandatory fields
+      value: '{"doctype":"Party Link","primary_role":"Account"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Les rôles principaux autorisés sont 'Client' et 'Fournisseur'. Veuillez sélectionner uniquement l'un de ces rôles."
+    extracted:
+      doctype: Party Link
+      result: refused
+      message: "frappe.exceptions.ValidationError: Les rôles principaux autorisés sont 'Client' et 'Fournisseur'. Veuillez sélectionner uniquement l'un de ces rôles."
+  - n: 92
+    action:
+      type: other
+      target_desc: prepare a draft Party Specific Item
+    observation: "not attempted: no party_type record to fill party"
+    extracted:
+      doctype: Party Specific Item
+      result: not attempted
+      reason: no party_type record to fill party
+  - n: 93
+    action:
+      type: other
+      target_desc: save a draft Payment Entry with only its mandatory fields
+      value: '{"doctype":"Payment Entry","naming_series":"ACC-PAY-.YYYY.-","payment_type":"Receive","company":"Digital Solution Service","paid_from":"1 - Comptes de Capitaux - DSS","paid_to":"1 - Comptes de Capitaux - DSS","paid_amount":1,"source_exchange_rate":1,"received_amount":1,"target_exchange_rate":1}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Type de Tiers Obligatoire"
+    extracted:
+      doctype: Payment Entry
+      result: refused
+      message: "frappe.exceptions.ValidationError: Type de Tiers Obligatoire"
+  - n: 94
+    action:
+      type: other
+      target_desc: save a draft Payment Ledger Entry with only its mandatory fields
+      value: '{"doctype":"Payment Ledger Entry"}'
+    observation: "refused by the program: [\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Écriture du grand livre des paiements.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+    extracted:
+      doctype: Payment Ledger Entry
+      result: refused
+      message: "[\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Écriture du grand livre des paiements.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+  - n: 95
+    action:
+      type: other
+      target_desc: prepare a draft Payment Order
+    observation: "not attempted: no Bank Account record to fill company_bank_account"
+    extracted:
+      doctype: Payment Order
+      result: not attempted
+      reason: no Bank Account record to fill company_bank_account
+  - n: 96
+    action:
+      type: other
+      target_desc: save a draft Payment Request with only its mandatory fields
+      value: '{"doctype":"Payment Request","naming_series":"ACC-PRQ-.YYYY.-","grand_total":1}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Pour créer une Demande de Paiement, un document de référence est requis"
+    extracted:
+      doctype: Payment Request
+      result: refused
+      message: "frappe.exceptions.ValidationError: Pour créer une Demande de Paiement, un document de référence est requis"
+  - n: 97
+    action:
+      type: other
+      target_desc: save a draft Payment Term with only its mandatory fields
+      value: '{"doctype":"Payment Term"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Payment Term Name est requis"
+    extracted:
+      doctype: Payment Term
+      result: refused
+      message: "frappe.exceptions.ValidationError: Payment Term Name est requis"
+  - n: 98
+    action:
+      type: other
+      target_desc: save a draft Payment Terms Template with only its mandatory fields
+      value: '{"doctype":"Payment Terms Template","terms":[{"invoice_portion":1,"due_date_based_on":"Day(s) after invoice date"}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Template Name est requis"
+    extracted:
+      doctype: Payment Terms Template
+      result: refused
+      message: "frappe.exceptions.ValidationError: Template Name est requis"
+  - n: 99
+    action:
+      type: other
+      target_desc: save a draft Pick List with only its mandatory fields
+      value: '{"doctype":"Pick List","company":"Digital Solution Service","naming_series":"STO-PICK-.YYYY.-"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: La quantité de l'article Produit fini doit être supérieure à 0."
+    extracted:
+      doctype: Pick List
+      result: refused
+      message: "frappe.exceptions.ValidationError: La quantité de l'article Produit fini doit être supérieure à 0."
+  - n: 100
+    action:
+      type: other
+      target_desc: save a draft Plant Floor with only its mandatory fields
+      value: '{"doctype":"Plant Floor"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Floor Name est requis"
+    extracted:
+      doctype: Plant Floor
+      result: refused
+      message: "frappe.exceptions.ValidationError: Floor Name est requis"
+  - n: 101
+    action:
+      type: other
+      target_desc: prepare a draft POS Closing Entry
+    observation: "not attempted: no POS Opening Entry record to fill pos_opening_entry"
+    extracted:
+      doctype: POS Closing Entry
+      result: not attempted
+      reason: no POS Opening Entry record to fill pos_opening_entry
+  - n: 102
+    action:
+      type: other
+      target_desc: save a draft POS Invoice with only its mandatory fields
+      value: '{"doctype":"POS Invoice","naming_series":"ACC-PSINV-.YYYY.-","company":"Digital Solution Service","currency":"AFN","conversion_rate":1,"selling_price_list":"Standard Buying","plc_conversion_rate":1,"items":[{"item_name":"TEST Item Name","uom":"Abampere","conversion_factor":1,"rate":1,"income_account":"1 - Comptes de Capitaux - DSS"}],"debit_to":"1 - Comptes de Capitaux - DSS"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: S'il vous plaît sélectionnez d'abord le client"
+    extracted:
+      doctype: POS Invoice
+      result: refused
+      message: "frappe.exceptions.ValidationError: S'il vous plaît sélectionnez d'abord le client"
+  - n: 103
+    action:
+      type: other
+      target_desc: prepare a draft POS Invoice Merge Log
+    observation: "not attempted: no POS Invoice record for POS Invoice Reference.pos_invoice"
+    extracted:
+      doctype: POS Invoice Merge Log
+      result: not attempted
+      reason: no POS Invoice record for POS Invoice Reference.pos_invoice
+  - n: 104
+    action:
+      type: other
+      target_desc: prepare a draft POS Opening Entry
+    observation: "not attempted: no POS Profile record to fill pos_profile"
+    extracted:
+      doctype: POS Opening Entry
+      result: not attempted
+      reason: no POS Profile record to fill pos_profile
+  - n: 105
+    action:
+      type: other
+      target_desc: save a draft POS Profile with only its mandatory fields
+      value: '{"doctype":"POS Profile","company":"Digital Solution Service","warehouse":"Tous les entrepôts - DSS","payments":[{"mode_of_payment":"Cheque"}],"currency":"AFN","write_off_account":"1 - Comptes de Capitaux - DSS","write_off_cost_center":"Digital Solution Service - DSS"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+    extracted:
+      doctype: POS Profile
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+  - n: 106
+    action:
+      type: other
+      target_desc: save a draft Price List with only its mandatory fields
+      value: '{"doctype":"Price List","price_list_name":"TEST Price List Name","currency":"AFN"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: La Liste de Prix doit être applicable pour les Achats et les Ventes"
+    extracted:
+      doctype: Price List
+      result: refused
+      message: "frappe.exceptions.ValidationError: La Liste de Prix doit être applicable pour les Achats et les Ventes"
+  - n: 107
+    action:
+      type: other
+      target_desc: save a draft Product Bundle with only its mandatory fields
+      value: '{"doctype":"Product Bundle","new_item_code":"TEST-ART-001","items":[{"item_code":"TEST-ART-001","qty":1}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Row #1: A Product Bundle cannot contain its own parent Item TEST-ART-001."
+    extracted:
+      doctype: Product Bundle
+      result: refused
+      message: "frappe.exceptions.ValidationError: Row #1: A Product Bundle cannot contain its own parent Item TEST-ART-001."
+  - n: 108
+    action:
+      type: other
+      target_desc: prepare a draft Production Plan
+    observation: "not attempted: no BOM record for Production Plan Item.bom_no"
+    extracted:
+      doctype: Production Plan
+      result: not attempted
+      reason: no BOM record for Production Plan Item.bom_no
+  - n: 109
+    action:
+      type: other
+      target_desc: save a draft Proforma Invoice with only its mandatory fields
+      value: '{"doctype":"Proforma Invoice","naming_series":"PRO-.YYYY.-","items":[{"item_code":"TEST-ART-001","qty":1}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: La facture proforma n'est pas activée dans les Paramètres de Vente."
+    extracted:
+      doctype: Proforma Invoice
+      result: refused
+      message: "frappe.exceptions.ValidationError: La facture proforma n'est pas activée dans les Paramètres de Vente."
+  - n: 110
+    action:
+      type: other
+      target_desc: save a draft Project with only its mandatory fields
+      value: '{"doctype":"Project","naming_series":"PROJ-.####","project_name":"TEST Project Name","company":"Digital Solution Service"}'
+    observation: stored as a draft (PROJ-0001)
+    extracted:
+      doctype: Project
+      result: stored
+      name: PROJ-0001
+      docstatus: 0
+  - n: 111
+    action:
+      type: other
+      target_desc: prepare a draft Project Template
+    observation: "not attempted: no Task record for Project Template Task.task"
+    extracted:
+      doctype: Project Template
+      result: not attempted
+      reason: no Task record for Project Template Task.task
+  - n: 112
+    action:
+      type: other
+      target_desc: save a draft Project Type with only its mandatory fields
+      value: '{"doctype":"Project Type","project_type":"TEST Project Type"}'
+    observation: stored as a draft (TEST Project Type)
+    extracted:
+      doctype: Project Type
+      result: stored
+      name: TEST Project Type
+      docstatus: 0
+  - n: 113
+    action:
+      type: other
+      target_desc: prepare a draft Project Update
+    observation: "not attempted: no Project record to fill project"
+    extracted:
+      doctype: Project Update
+      result: not attempted
+      reason: no Project record to fill project
+  - n: 114
+    action:
+      type: other
+      target_desc: save a draft Prospect with only its mandatory fields
+      value: '{"doctype":"Prospect","company":"Digital Solution Service"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Company Name est requis"
+    extracted:
+      doctype: Prospect
+      result: refused
+      message: "frappe.exceptions.ValidationError: Company Name est requis"
+  - n: 115
+    action:
+      type: other
+      target_desc: prepare a draft Purchase Invoice
+    observation: "not attempted: no Supplier record to fill supplier"
+    extracted:
+      doctype: Purchase Invoice
+      result: not attempted
+      reason: no Supplier record to fill supplier
+  - n: 116
+    action:
+      type: other
+      target_desc: prepare a draft Purchase Order
+    observation: "not attempted: no Supplier record to fill supplier"
+    extracted:
+      doctype: Purchase Order
+      result: not attempted
+      reason: no Supplier record to fill supplier
+  - n: 117
+    action:
+      type: other
+      target_desc: prepare a draft Purchase Receipt
+    observation: "not attempted: no Supplier record to fill supplier"
+    extracted:
+      doctype: Purchase Receipt
+      result: not attempted
+      reason: no Supplier record to fill supplier
+  - n: 118
+    action:
+      type: other
+      target_desc: save a draft Purchase Taxes and Charges Template with only its mandatory fields
+      value: '{"doctype":"Purchase Taxes and Charges Template","title":"TEST Title","company":"Digital Solution Service"}'
+    observation: stored as a draft (TEST Title - DSS)
+    extracted:
+      doctype: Purchase Taxes and Charges Template
+      result: stored
+      name: TEST Title - DSS
+      docstatus: 0
+  - n: 119
+    action:
+      type: other
+      target_desc: save a draft Quality Action with only its mandatory fields
+      value: '{"doctype":"Quality Action"}'
+    observation: stored as a draft (QA-ACT-00001)
+    extracted:
+      doctype: Quality Action
+      result: stored
+      name: QA-ACT-00001
+      docstatus: 0
+  - n: 120
+    action:
+      type: other
+      target_desc: prepare a draft Quality Feedback
+    observation: "not attempted: no Quality Feedback Template record to fill template"
+    extracted:
+      doctype: Quality Feedback
+      result: not attempted
+      reason: no Quality Feedback Template record to fill template
+  - n: 121
+    action:
+      type: other
+      target_desc: save a draft Quality Feedback Template with only its mandatory fields
+      value: '{"doctype":"Quality Feedback Template","template":"TEST Template Name","parameters":[{"parameter":"TEST Parameter"}]}'
+    observation: stored as a draft (TEST Template Name)
+    extracted:
+      doctype: Quality Feedback Template
+      result: stored
+      name: TEST Template Name
+      docstatus: 0
+  - n: 122
+    action:
+      type: other
+      target_desc: save a draft Quality Goal with only its mandatory fields
+      value: '{"doctype":"Quality Goal","goal":"TEST Goal"}'
+    observation: stored as a draft (TEST Goal)
+    extracted:
+      doctype: Quality Goal
+      result: stored
+      name: TEST Goal
+      docstatus: 0
+  - n: 123
+    action:
+      type: other
+      target_desc: prepare a draft Quality Inspection
+    observation: "not attempted: no reference_type record to fill reference_name"
+    extracted:
+      doctype: Quality Inspection
+      result: not attempted
+      reason: no reference_type record to fill reference_name
+  - n: 124
+    action:
+      type: other
+      target_desc: save a draft Quality Inspection Parameter with only its mandatory fields
+      value: '{"doctype":"Quality Inspection Parameter","parameter":"TEST Parameter"}'
+    observation: stored as a draft (TEST Parameter)
+    extracted:
+      doctype: Quality Inspection Parameter
+      result: stored
+      name: TEST Parameter
+      docstatus: 0
+  - n: 125
+    action:
+      type: other
+      target_desc: save a draft Quality Inspection Parameter Group with only its mandatory fields
+      value: '{"doctype":"Quality Inspection Parameter Group","group_name":"TEST Parameter Group Name"}'
+    observation: stored as a draft (TEST Parameter Group Name)
+    extracted:
+      doctype: Quality Inspection Parameter Group
+      result: stored
+      name: TEST Parameter Group Name
+      docstatus: 0
+  - n: 126
+    action:
+      type: other
+      target_desc: save a draft Quality Meeting with only its mandatory fields
+      value: '{"doctype":"Quality Meeting"}'
+    observation: stored as a draft (QA-MEET-26-11-07-001)
+    extracted:
+      doctype: Quality Meeting
+      result: stored
+      name: QA-MEET-26-11-07-001
+      docstatus: 0
+  - n: 127
+    action:
+      type: other
+      target_desc: save a draft Quality Procedure with only its mandatory fields
+      value: '{"doctype":"Quality Procedure","quality_procedure_name":"TEST Quality Procedure"}'
+    observation: stored as a draft (TEST Quality Procedure)
+    extracted:
+      doctype: Quality Procedure
+      result: stored
+      name: TEST Quality Procedure
+      docstatus: 0
+  - n: 128
+    action:
+      type: other
+      target_desc: prepare a draft Quality Review
+    observation: "not attempted: no Quality Goal record to fill goal"
+    extracted:
+      doctype: Quality Review
+      result: not attempted
+      reason: no Quality Goal record to fill goal
+  - n: 129
+    action:
+      type: other
+      target_desc: save a draft Quotation with only its mandatory fields
+      value: '{"doctype":"Quotation","naming_series":"SAL-QTN-.YYYY.-","company":"Digital Solution Service","currency":"AFN","conversion_rate":1,"selling_price_list":"Standard Buying","plc_conversion_rate":1,"items":[{"item_name":"TEST Item Name","qty":1,"uom":"Abampere"}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: La liste de prix Standard Buying ne peut pas être utilisée pour une transaction de vente"
+    extracted:
+      doctype: Quotation
+      result: refused
+      message: "frappe.exceptions.ValidationError: La liste de prix Standard Buying ne peut pas être utilisée pour une transaction de vente"
+  - n: 130
+    action:
+      type: other
+      target_desc: save a draft Quotation Lost Reason with only its mandatory fields
+      value: '{"doctype":"Quotation Lost Reason","order_lost_reason":"TEST Quotation Lost Reason"}'
+    observation: stored as a draft (TEST Quotation Lost Reason)
+    extracted:
+      doctype: Quotation Lost Reason
+      result: stored
+      name: TEST Quotation Lost Reason
+      docstatus: 0
+  - n: 131
+    action:
+      type: other
+      target_desc: prepare a draft Request for Quotation
+    observation: "not attempted: no Supplier record for Request for Quotation Supplier.supplier"
+    extracted:
+      doctype: Request for Quotation
+      result: not attempted
+      reason: no Supplier record for Request for Quotation Supplier.supplier
+  - n: 132
+    action:
+      type: other
+      target_desc: save a draft Routing with only its mandatory fields
+      value: '{"doctype":"Routing"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Routing Name est requis"
+    extracted:
+      doctype: Routing
+      result: refused
+      message: "frappe.exceptions.ValidationError: Routing Name est requis"
+  - n: 133
+    action:
+      type: other
+      target_desc: save a draft Sales Forecast with only its mandatory fields
+      value: '{"doctype":"Sales Forecast","company":"Digital Solution Service","selected_items":[{}],"parent_warehouse":"Tous les entrepôts - DSS"}'
+    observation: "refused by the program: frappe.exceptions.MandatoryError: [Sales Forecast, SF26-000001]: item_code"
+    extracted:
+      doctype: Sales Forecast
+      result: refused
+      message: "frappe.exceptions.MandatoryError: [Sales Forecast, SF26-000001]: item_code"
+  - n: 134
+    action:
+      type: other
+      target_desc: save a draft Sales Invoice with only its mandatory fields
+      value: '{"doctype":"Sales Invoice","company":"Digital Solution Service","naming_series":"ACC-SINV-.YYYY.-","customer":"TEST-Client Alpha","currency":"AFN","conversion_rate":1,"selling_price_list":"Standard Buying","plc_conversion_rate":1,"items":[{"item_name":"TEST Item Name","uom":"Abampere","conversion_factor":1,"rate":1,"income_account":"1 - Comptes de Capitaux - DSS"}],"debit_to":"1 - Comptes de Capit'
+    observation: "refused by the program: erpnext.controllers.accounts_controller.InvalidQtyError: Ligne n° 1: La quantité de l'article None ne peut être nulle"
+    extracted:
+      doctype: Sales Invoice
+      result: refused
+      message: "erpnext.controllers.accounts_controller.InvalidQtyError: Ligne n° 1: La quantité de l'article None ne peut être nulle"
+  - n: 135
+    action:
+      type: other
+      target_desc: save a draft Sales Order with only its mandatory fields
+      value: '{"doctype":"Sales Order","company":"Digital Solution Service","naming_series":"SAL-ORD-.YYYY.-","customer":"TEST-Client Alpha","currency":"AFN","conversion_rate":1,"selling_price_list":"Standard Buying","plc_conversion_rate":1,"items":[{"item_code":"TEST-ART-001","item_name":"TEST Item Name","qty":1,"uom":"Abampere"}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: La liste de prix Standard Buying ne peut pas être utilisée pour une transaction de vente"
+    extracted:
+      doctype: Sales Order
+      result: refused
+      message: "frappe.exceptions.ValidationError: La liste de prix Standard Buying ne peut pas être utilisée pour une transaction de vente"
+  - n: 136
+    action:
+      type: other
+      target_desc: save a draft Sales Partner with only its mandatory fields
+      value: '{"doctype":"Sales Partner","partner_name":"TEST Sales Partner Name","territory":"All Territories","commission_rate":1}'
+    observation: stored as a draft (TEST Sales Partner Name)
+    extracted:
+      doctype: Sales Partner
+      result: stored
+      name: TEST Sales Partner Name
+      docstatus: 0
+  - n: 137
+    action:
+      type: other
+      target_desc: save a draft Sales Partner Type with only its mandatory fields
+      value: '{"doctype":"Sales Partner Type","sales_partner_type":"TEST Sales Partner Type"}'
+    observation: stored as a draft (TEST Sales Partner Type)
+    extracted:
+      doctype: Sales Partner Type
+      result: stored
+      name: TEST Sales Partner Type
+      docstatus: 0
+  - n: 138
+    action:
+      type: other
+      target_desc: save a draft Sales Person with only its mandatory fields
+      value: '{"doctype":"Sales Person","sales_person_name":"TEST Sales Person Name"}'
+    observation: stored as a draft (TEST Sales Person Name)
+    extracted:
+      doctype: Sales Person
+      result: stored
+      name: TEST Sales Person Name
+      docstatus: 0
+  - n: 139
+    action:
+      type: other
+      target_desc: save a draft Sales Stage with only its mandatory fields
+      value: '{"doctype":"Sales Stage"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Stage Name est requis"
+    extracted:
+      doctype: Sales Stage
+      result: refused
+      message: "frappe.exceptions.ValidationError: Stage Name est requis"
+  - n: 140
+    action:
+      type: other
+      target_desc: save a draft Sales Taxes and Charges Template with only its mandatory fields
+      value: '{"doctype":"Sales Taxes and Charges Template","title":"TEST Title","company":"Digital Solution Service"}'
+    observation: stored as a draft (TEST Title - DSS)
+    extracted:
+      doctype: Sales Taxes and Charges Template
+      result: stored
+      name: TEST Title - DSS
+      docstatus: 0
+  - n: 141
+    action:
+      type: other
+      target_desc: save a draft Serial No with only its mandatory fields
+      value: '{"doctype":"Serial No","serial_no":"TEST Serial No","item_code":"TEST-ART-001","company":"Digital Solution Service"}'
+    observation: stored as a draft (TEST Serial No)
+    extracted:
+      doctype: Serial No
+      result: stored
+      name: TEST Serial No
+      docstatus: 0
+  - n: 142
+    action:
+      type: other
+      target_desc: prepare a draft Service Level Agreement
+    observation: "not attempted: no Select record for SLA Fulfilled On Status.status"
+    extracted:
+      doctype: Service Level Agreement
+      result: not attempted
+      reason: no Select record for SLA Fulfilled On Status.status
+  - n: 143
+    action:
+      type: other
+      target_desc: prepare a draft Shipment
+    observation: "not attempted: no Address record to fill pickup_address_name"
+    extracted:
+      doctype: Shipment
+      result: not attempted
+      reason: no Address record to fill pickup_address_name
+  - n: 144
+    action:
+      type: other
+      target_desc: save a draft Shipment Parcel Template with only its mandatory fields
+      value: '{"doctype":"Shipment Parcel Template","parcel_template_name":"TEST Parcel Template Name","length":1,"width":1,"height":1,"weight":1}'
+    observation: stored as a draft (TEST Parcel Template Name)
+    extracted:
+      doctype: Shipment Parcel Template
+      result: stored
+      name: TEST Parcel Template Name
+      docstatus: 0
+  - n: 145
+    action:
+      type: other
+      target_desc: save a draft Shipping Rule with only its mandatory fields
+      value: '{"doctype":"Shipping Rule","label":"TEST Shipping Rule Label","company":"Digital Solution Service","account":"1 - Comptes de Capitaux - DSS"}'
+    observation: stored as a draft (TEST Shipping Rule Label)
+    extracted:
+      doctype: Shipping Rule
+      result: stored
+      name: TEST Shipping Rule Label
+      docstatus: 0
+  - n: 146
+    action:
+      type: other
+      target_desc: save a draft Stock Entry with only its mandatory fields
+      value: '{"doctype":"Stock Entry","company":"Digital Solution Service","naming_series":"MAT-STE-.YYYY.-","stock_entry_type":"Material Issue","items":[{"item_code":"TEST-ART-001","qty":1,"uom":"Abampere","conversion_factor":1}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: TEST-ART-001 n'est pas un Article de stock"
+    extracted:
+      doctype: Stock Entry
+      result: refused
+      message: "frappe.exceptions.ValidationError: TEST-ART-001 n'est pas un Article de stock"
+  - n: 147
+    action:
+      type: other
+      target_desc: save a draft Stock Entry Type with only its mandatory fields
+      value: '{"doctype":"Stock Entry Type"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+    extracted:
+      doctype: Stock Entry Type
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+  - n: 148
+    action:
+      type: other
+      target_desc: save a draft Stock Ledger Entry with only its mandatory fields
+      value: '{"doctype":"Stock Ledger Entry"}'
+    observation: "refused by the program: [\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Écriture du Livre d'Inventaire.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+    extracted:
+      doctype: Stock Ledger Entry
+      result: refused
+      message: "[\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Écriture du Livre d'Inventaire.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"
+  - n: 149
+    action:
+      type: other
+      target_desc: save a draft Stock Reconciliation with only its mandatory fields
+      value: '{"doctype":"Stock Reconciliation","naming_series":"MAT-RECO-.YYYY.-","company":"Digital Solution Service","purpose":"Opening Stock","items":[{"item_code":"TEST-ART-001","warehouse":"Tous les entrepôts - DSS"}]}'
+    observation: "refused by the program: erpnext.stock.doctype.stock_reconciliation.stock_reconciliation.EmptyStockReconciliationItemsError: Aucun des Articles n’a de changement en quantité ou en valeur."
+    extracted:
+      doctype: Stock Reconciliation
+      result: refused
+      message: "erpnext.stock.doctype.stock_reconciliation.stock_reconciliation.EmptyStockReconciliationItemsError: Aucun des Articles n’a de changement en quantité ou en valeur."
+  - n: 150
+    action:
+      type: other
+      target_desc: save a draft Stock Reservation Entry with only its mandatory fields
+      value: '{"doctype":"Stock Reservation Entry"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Code de l'Article est requis"
+    extracted:
+      doctype: Stock Reservation Entry
+      result: refused
+      message: "frappe.exceptions.ValidationError: Code de l'Article est requis"
+  - n: 151
+    action:
+      type: other
+      target_desc: prepare a draft Subcontracting BOM
+    observation: "not attempted: no BOM record to fill finished_good_bom"
+    extracted:
+      doctype: Subcontracting BOM
+      result: not attempted
+      reason: no BOM record to fill finished_good_bom
+  - n: 152
+    action:
+      type: other
+      target_desc: prepare a draft Subcontracting Inward Order
+    observation: "not attempted: no Sales Order record to fill sales_order"
+    extracted:
+      doctype: Subcontracting Inward Order
+      result: not attempted
+      reason: no Sales Order record to fill sales_order
+  - n: 153
+    action:
+      type: other
+      target_desc: prepare a draft Subcontracting Order
+    observation: "not attempted: no Purchase Order record to fill purchase_order"
+    extracted:
+      doctype: Subcontracting Order
+      result: not attempted
+      reason: no Purchase Order record to fill purchase_order
+  - n: 154
+    action:
+      type: other
+      target_desc: prepare a draft Subcontracting Receipt
+    observation: "not attempted: no Supplier record to fill supplier"
+    extracted:
+      doctype: Subcontracting Receipt
+      result: not attempted
+      reason: no Supplier record to fill supplier
+  - n: 155
+    action:
+      type: other
+      target_desc: prepare a draft Subscription
+    observation: "not attempted: no party_type record to fill party"
+    extracted:
+      doctype: Subscription
+      result: not attempted
+      reason: no party_type record to fill party
+  - n: 156
+    action:
+      type: other
+      target_desc: save a draft Subscription Plan with only its mandatory fields
+      value: '{"doctype":"Subscription Plan","plan_name":"TEST Plan Name","currency":"AFN","item":"TEST-ART-001","price_determination":"Fixed Rate"}'
+    observation: stored as a draft (TEST Plan Name)
+    extracted:
+      doctype: Subscription Plan
+      result: stored
+      name: TEST Plan Name
+      docstatus: 0
+  - n: 157
+    action:
+      type: other
+      target_desc: save a draft Supplier with only its mandatory fields
+      value: '{"doctype":"Supplier","supplier_name":"TEST Supplier Name"}'
+    observation: stored as a draft (TEST Supplier Name)
+    extracted:
+      doctype: Supplier
+      result: stored
+      name: TEST Supplier Name
+      docstatus: 0
+  - n: 158
+    action:
+      type: other
+      target_desc: save a draft Supplier Group with only its mandatory fields
+      value: '{"doctype":"Supplier Group","supplier_group_name":"TEST Supplier Group Name"}'
+    observation: stored as a draft (TEST Supplier Group Name)
+    extracted:
+      doctype: Supplier Group
+      result: stored
+      name: TEST Supplier Group Name
+      docstatus: 0
+  - n: 159
+    action:
+      type: other
+      target_desc: prepare a draft Supplier Quotation
+    observation: "not attempted: no Supplier record to fill supplier"
+    extracted:
+      doctype: Supplier Quotation
+      result: not attempted
+      reason: no Supplier record to fill supplier
+  - n: 160
+    action:
+      type: other
+      target_desc: prepare a draft Supplier Scorecard
+    observation: "not attempted: no Supplier Scorecard Criteria record for Supplier Scorecard Scoring Criteria.criteria_name"
+    extracted:
+      doctype: Supplier Scorecard
+      result: not attempted
+      reason: no Supplier Scorecard Criteria record for Supplier Scorecard Scoring Criteria.criteria_name
+  - n: 161
+    action:
+      type: other
+      target_desc: save a draft Supplier Scorecard Criteria with only its mandatory fields
+      value: '{"doctype":"Supplier Scorecard Criteria","criteria_name":"TEST Criteria Name","formula":"TEST Criteria Formula"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: The criteria formula fails when every variable is 0.0. Check its syntax and guard divisions by a variable, for example: {a} / {b} if {b} else 0"
+    extracted:
+      doctype: Supplier Scorecard Criteria
+      result: refused
+      message: "frappe.exceptions.ValidationError: The criteria formula fails when every variable is 0.0. Check its syntax and guard divisions by a variable, for example: {a} / {b} if {b} else 0"
+  - n: 162
+    action:
+      type: other
+      target_desc: prepare a draft Supplier Scorecard Period
+    observation: "not attempted: no Supplier Scorecard Criteria record for Supplier Scorecard Scoring Criteria.criteria_name"
+    extracted:
+      doctype: Supplier Scorecard Period
+      result: not attempted
+      reason: no Supplier Scorecard Criteria record for Supplier Scorecard Scoring Criteria.criteria_name
+  - n: 163
+    action:
+      type: other
+      target_desc: save a draft Supplier Scorecard Standing with only its mandatory fields
+      value: '{"doctype":"Supplier Scorecard Standing"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Standing Name est requis"
+    extracted:
+      doctype: Supplier Scorecard Standing
+      result: refused
+      message: "frappe.exceptions.ValidationError: Standing Name est requis"
+  - n: 164
+    action:
+      type: other
+      target_desc: save a draft Supplier Scorecard Variable with only its mandatory fields
+      value: '{"doctype":"Supplier Scorecard Variable","variable_label":"TEST Variable Name","param_name":"TEST Parameter Name","path":"TEST Path"}'
+    observation: "refused by the program: erpnext.buying.doctype.supplier_scorecard_variable.supplier_scorecard_variable.VariablePathNotFound: Could not find path for TEST Path"
+    extracted:
+      doctype: Supplier Scorecard Variable
+      result: refused
+      message: "erpnext.buying.doctype.supplier_scorecard_variable.supplier_scorecard_variable.VariablePathNotFound: Could not find path for TEST Path"
+  - n: 165
+    action:
+      type: other
+      target_desc: save a draft Task with only its mandatory fields
+      value: '{"doctype":"Task","subject":"TEST Subject"}'
+    observation: stored as a draft (TASK-2026-00001)
+    extracted:
+      doctype: Task
+      result: stored
+      name: TASK-2026-00001
+      docstatus: 0
+  - n: 166
+    action:
+      type: other
+      target_desc: save a draft Task Type with only its mandatory fields
+      value: '{"doctype":"Task Type"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+    extracted:
+      doctype: Task Type
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+  - n: 167
+    action:
+      type: other
+      target_desc: save a draft Tax Category with only its mandatory fields
+      value: '{"doctype":"Tax Category","title":"TEST Title"}'
+    observation: stored as a draft (TEST Title)
+    extracted:
+      doctype: Tax Category
+      result: stored
+      name: TEST Title
+      docstatus: 0
+  - n: 168
+    action:
+      type: other
+      target_desc: save a draft Tax Withholding Category with only its mandatory fields
+      value: '{"doctype":"Tax Withholding Category","rates":[{"from_date":"2026-11-07","to_date":"2026-11-07","tax_withholding_rate":1}],"accounts":[{"company":"Digital Solution Service","account":"1 - Comptes de Capitaux - DSS"}]}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+    extracted:
+      doctype: Tax Withholding Category
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+  - n: 169
+    action:
+      type: other
+      target_desc: save a draft Tax Withholding Group with only its mandatory fields
+      value: '{"doctype":"Tax Withholding Group","group_name":"TEST Group Name"}'
+    observation: stored as a draft (TEST Group Name)
+    extracted:
+      doctype: Tax Withholding Group
+      result: stored
+      name: TEST Group Name
+      docstatus: 0
+  - n: 170
+    action:
+      type: other
+      target_desc: save a draft Territory with only its mandatory fields
+      value: '{"doctype":"Territory","territory_name":"TEST Territory Name"}'
+    observation: stored as a draft (TEST Territory Name)
+    extracted:
+      doctype: Territory
+      result: stored
+      name: TEST Territory Name
+      docstatus: 0
+  - n: 171
+    action:
+      type: other
+      target_desc: save a draft Timesheet with only its mandatory fields
+      value: '{"doctype":"Timesheet","naming_series":"TS-.YYYY.-","time_logs":[{}]}'
+    observation: stored as a draft (TS-2026-00001)
+    extracted:
+      doctype: Timesheet
+      result: stored
+      name: TS-2026-00001
+      docstatus: 0
+  - n: 172
+    action:
+      type: other
+      target_desc: save a draft UOM with only its mandatory fields
+      value: '{"doctype":"UOM","uom_name":"TEST UOM Name"}'
+    observation: stored as a draft (TEST UOM Name)
+    extracted:
+      doctype: UOM
+      result: stored
+      name: TEST UOM Name
+      docstatus: 0
+  - n: 173
+    action:
+      type: other
+      target_desc: save a draft UOM Category with only its mandatory fields
+      value: '{"doctype":"UOM Category","category_name":"TEST Category Name"}'
+    observation: stored as a draft (TEST Category Name)
+    extracted:
+      doctype: UOM Category
+      result: stored
+      name: TEST Category Name
+      docstatus: 0
+  - n: 174
+    action:
+      type: other
+      target_desc: save a draft Vehicle with only its mandatory fields
+      value: '{"doctype":"Vehicle","license_plate":"TEST License Plate","make":"TEST Make","model":"TEST Model","last_odometer":1,"fuel_type":"Petrol","uom":"Abampere"}'
+    observation: stored as a draft (TEST License Plate)
+    extracted:
+      doctype: Vehicle
+      result: stored
+      name: TEST License Plate
+      docstatus: 0
+  - n: 175
+    action:
+      type: other
+      target_desc: save a draft Warehouse with only its mandatory fields
+      value: '{"doctype":"Warehouse","warehouse_name":"TEST Warehouse Name","company":"Digital Solution Service"}'
+    observation: stored as a draft (TEST Warehouse Name - DSS)
+    extracted:
+      doctype: Warehouse
+      result: stored
+      name: TEST Warehouse Name - DSS
+      docstatus: 0
+  - n: 176
+    action:
+      type: other
+      target_desc: save a draft Warehouse Type with only its mandatory fields
+      value: '{"doctype":"Warehouse Type"}'
+    observation: "refused by the program: frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+    extracted:
+      doctype: Warehouse Type
+      result: refused
+      message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"
+  - n: 177
+    action:
+      type: other
+      target_desc: save a draft Warranty Claim with only its mandatory fields
+      value: '{"doctype":"Warranty Claim","naming_series":"SER-WRN-.YYYY.-","customer":"TEST-Client Alpha","complaint":"TEST Issue","company":"Digital Solution Service"}'
+    observation: stored as a draft (SER-WRN-2026-00001)
+    extracted:
+      doctype: Warranty Claim
+      result: stored
+      name: SER-WRN-2026-00001
+      docstatus: 0
+  - n: 178
+    action:
+      type: other
+      target_desc: prepare a draft Work Order
+    observation: "not attempted: no BOM record to fill bom_no"
+    extracted:
+      doctype: Work Order
+      result: not attempted
+      reason: no BOM record to fill bom_no
+  - n: 179
+    action:
+      type: other
+      target_desc: save a draft Workstation with only its mandatory fields
+      value: '{"doctype":"Workstation","workstation_name":"TEST Workstation Name"}'
+    observation: stored as a draft (TEST Workstation Name)
+    extracted:
+      doctype: Workstation
+      result: stored
+      name: TEST Workstation Name
+      docstatus: 0
+  - n: 180
+    action:
+      type: other
+      target_desc: save a draft Workstation Operating Component with only its mandatory fields
+      value: '{"doctype":"Workstation Operating Component","component_name":"TEST Component Name"}'
+    observation: stored as a draft (TEST Component Name)
+    extracted:
+      doctype: Workstation Operating Component
+      result: stored
+      name: TEST Component Name
+      docstatus: 0
+  - n: 181
+    action:
+      type: other
+      target_desc: save a draft Workstation Type with only its mandatory fields
+      value: '{"doctype":"Workstation Type","workstation_type":"TEST Workstation Type"}'
+    observation: stored as a draft (TEST Workstation Type)
+    extracted:
+      doctype: Workstation Type
+      result: stored
+      name: TEST Workstation Type
+      docstatus: 0
+notes: Drafts only, never submitted. 67 stored, 66 refused, 48 not attempted. Created records are listed in the local evidence store for 'frappe cleanup'.

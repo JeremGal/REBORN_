@@ -1,0 +1,28 @@
+id: S-335
+title: Quality Meeting
+purpose: create, view and edit Quality Meeting records
+kind: form
+layout: 3 fields
+fields:
+  - label: Status
+    control: select
+    binds: QualityMeeting.status
+  - label: Agenda
+    control: grid
+    columns:
+      - Agenda
+  - label: Minutes
+    control: grid
+    columns:
+      - Document Type
+      - Document Name
+      - Minute
+actions:
+  - label: Save
+    triggers: F-336
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quality Meeting
+    note: declared by the program

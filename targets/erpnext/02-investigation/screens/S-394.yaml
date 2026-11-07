@@ -1,0 +1,88 @@
+id: S-394
+title: Item Price
+purpose: create, view and edit Item Price records
+kind: form
+layout: "sections: Price List; 19 fields"
+fields:
+  - label: Item Code
+    control: lookup
+    binds: ItemPrice.item_code
+    required: true
+    validation: chosen among Item records
+  - label: UOM
+    control: lookup
+    binds: ItemPrice.uom
+    required: true
+    validation: chosen among UOM records
+  - label: Packing Unit
+    control: number
+    binds: ItemPrice.packing_unit
+  - label: Item Name
+    control: text
+    binds: ItemPrice.item_name
+    validation: read only (computed or filled by the program)
+  - label: Brand
+    control: lookup
+    binds: ItemPrice.brand
+    validation: read only (computed or filled by the program); chosen among Brand records
+  - label: Item Description
+    control: text
+    binds: ItemPrice.item_description
+    validation: read only (computed or filled by the program)
+  - label: Price List
+    control: lookup
+    binds: ItemPrice.price_list
+    required: true
+    validation: chosen among Price List records
+  - label: Customer
+    control: lookup
+    binds: ItemPrice.customer
+    validation: shown only when eval:doc.selling == 1; chosen among Customer records
+  - label: Supplier
+    control: lookup
+    binds: ItemPrice.supplier
+    validation: shown only when eval:doc.buying == 1; chosen among Supplier records
+  - label: Batch No
+    control: lookup
+    binds: ItemPrice.batch_no
+    validation: chosen among Batch records
+  - label: Buying
+    control: checkbox
+    binds: ItemPrice.buying
+    validation: read only (computed or filled by the program)
+  - label: Selling
+    control: checkbox
+    binds: ItemPrice.selling
+    validation: read only (computed or filled by the program)
+  - label: Currency
+    control: lookup
+    binds: ItemPrice.currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Rate
+    control: money
+    binds: ItemPrice.price_list_rate
+    required: true
+  - label: Valid From
+    control: date
+    binds: ItemPrice.valid_from
+  - label: Lead Time in days
+    control: number
+    binds: ItemPrice.lead_time_days
+  - label: Valid Up To
+    control: date
+    binds: ItemPrice.valid_upto
+  - label: Note
+    control: text
+    binds: ItemPrice.note
+  - label: Reference
+    control: text
+    binds: ItemPrice.reference
+actions:
+  - label: Save
+    triggers: F-395
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Item Price
+    note: declared by the program

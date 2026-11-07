@@ -1,0 +1,32 @@
+id: S-272
+title: Country
+purpose: create, view and edit Country records
+kind: form
+layout: 5 fields
+fields:
+  - label: Country Name
+    control: text
+    binds: Country.country_name
+    required: true
+  - label: Code
+    control: text
+    binds: Country.code
+    required: true
+  - label: Date Format
+    control: text
+    binds: Country.date_format
+  - label: Time format
+    control: text
+    binds: Country.time_format
+  - label: Time Zones
+    control: text
+    binds: Country.time_zones
+actions:
+  - label: Save
+    triggers: F-273
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Country
+    note: declared by the program

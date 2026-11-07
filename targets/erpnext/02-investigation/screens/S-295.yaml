@@ -1,0 +1,264 @@
+id: S-295
+title: BOM
+purpose: create, view and edit BOM records
+kind: form
+layout: "tabs: Production Item, BOM Configuration, Costing, More Info, Exploded Items, Website, Connections; sections: Cost Allocation / Process Loss, Operations, Finished Goods Based Operating Cost, Steps, Quality Inspection, Default Warehouse, Consume Components, Cost Configuration, Production Item Info, Website Specifications, Reference; 57 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: BOM.company
+    required: true
+    validation: chosen among Company records
+  - label: Item to Manufacture
+    control: lookup
+    binds: BOM.item
+    required: true
+    validation: chosen among Item records
+  - label: Quantity (Output Qty)
+    control: number
+    binds: BOM.quantity
+    required: true
+    validation: shown only when item
+  - label: Unit Of Measure
+    control: lookup
+    binds: BOM.uom
+    validation: read only (computed or filled by the program); shown only when item; chosen among UOM records
+  - label: "% Cost Allocation"
+    control: number
+    binds: BOM.cost_allocation_per
+  - label: Cost Allocation
+    control: money
+    binds: BOM.cost_allocation
+    validation: read only (computed or filled by the program)
+  - label: "% Process Loss"
+    control: number
+    binds: BOM.process_loss_percentage
+  - label: Process Loss Qty
+    control: number
+    binds: BOM.process_loss_qty
+    validation: read only (computed or filled by the program)
+  - label: With Operations
+    control: checkbox
+    binds: BOM.with_operations
+  - label: Produce Item per Operation
+    control: checkbox
+    binds: BOM.track_semi_finished_goods
+    validation: shown only when with_operations
+  - label: Transfer Material Against
+    control: select
+    binds: BOM.transfer_material_against
+    validation: "shown only when eval: doc.with_operations === 1 && doc.track_semi_finished_goods === 0"
+  - label: Routing
+    control: lookup
+    binds: BOM.routing
+    validation: shown only when with_operations; chosen among Routing records
+  - label: Finished Goods based Operating Cost
+    control: checkbox
+    binds: BOM.fg_based_operating_cost
+  - label: Operating Cost Per BOM Quantity
+    control: money
+    binds: BOM.operating_cost_per_bom_quantity
+    validation: shown only when fg_based_operating_cost
+  - label: Operations
+    control: grid
+    validation: shown only when with_operations
+    columns:
+      - Operation
+      - Sequence ID
+      - Output Item
+      - Output Qty
+      - Output Item BOM
+      - Workstation Type
+      - Workstation
+      - Operation Time
+  - label: Components
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Qty
+      - UOM
+      - Rate
+      - Amount
+  - label: Secondary Items
+    control: grid
+    columns:
+      - Item Code
+      - Item Name
+      - Type
+      - UOM
+      - Qty
+  - label: Is Active
+    control: checkbox
+    binds: BOM.is_active
+  - label: Is Default
+    control: checkbox
+    binds: BOM.is_default
+  - label: Set rate of sub-assembly item based on BOM
+    control: checkbox
+    binds: BOM.set_rate_of_sub_assembly_item_based_on_bom
+  - label: Is Phantom BOM
+    control: checkbox
+    binds: BOM.is_phantom_bom
+  - label: Allow Alternative Item
+    control: checkbox
+    binds: BOM.allow_alternative_item
+  - label: Quality Inspection Required
+    control: checkbox
+    binds: BOM.inspection_required
+  - label: Quality Inspection Template
+    control: lookup
+    binds: BOM.quality_inspection_template
+    validation: shown only when inspection_required; chosen among Quality Inspection Template records
+  - label: Default Source Warehouse
+    control: lookup
+    binds: BOM.default_source_warehouse
+    validation: chosen among Warehouse records
+  - label: Default Target Warehouse
+    control: lookup
+    binds: BOM.default_target_warehouse
+    validation: chosen among Warehouse records
+  - label: Based On
+    control: select
+    binds: BOM.backflush_based_on
+  - label: Operating Cost
+    control: money
+    binds: BOM.operating_cost
+    validation: read only (computed or filled by the program); shown only when eval:!doc.is_phantom_bom
+  - label: Raw Material Cost
+    control: money
+    binds: BOM.raw_material_cost
+    validation: read only (computed or filled by the program)
+  - label: Secondary Items Cost
+    control: money
+    binds: BOM.secondary_items_cost
+    validation: read only (computed or filled by the program); shown only when eval:!doc.is_phantom_bom
+  - label: Operating Cost (Company Currency)
+    control: money
+    binds: BOM.base_operating_cost
+    validation: read only (computed or filled by the program); shown only when eval:!doc.is_phantom_bom
+  - label: Raw Material Cost (Company Currency)
+    control: money
+    binds: BOM.base_raw_material_cost
+    validation: read only (computed or filled by the program)
+  - label: Secondary Items Cost (Company Currency)
+    control: money
+    binds: BOM.base_secondary_items_cost
+    validation: read only (computed or filled by the program); shown only when eval:!doc.is_phantom_bom
+  - label: Total Cost
+    control: money
+    binds: BOM.total_cost
+    validation: read only (computed or filled by the program)
+  - label: Total Cost (Company Currency)
+    control: money
+    binds: BOM.base_total_cost
+    validation: read only (computed or filled by the program)
+  - label: Rate Of Materials Based On
+    control: select
+    binds: BOM.rm_cost_as_per
+  - label: Price List
+    control: lookup
+    binds: BOM.buying_price_list
+    validation: shown only when eval:doc.rm_cost_as_per==="Price List"; chosen among Price List records
+  - label: Price List Currency
+    control: lookup
+    binds: BOM.price_list_currency
+    validation: read only (computed or filled by the program); shown only when eval:doc.rm_cost_as_per=='Price List'; chosen among Currency records
+  - label: Price List Exchange Rate
+    control: number
+    binds: BOM.plc_conversion_rate
+    validation: shown only when eval:doc.rm_cost_as_per=='Price List'
+  - label: Currency
+    control: lookup
+    binds: BOM.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Conversion Rate
+    control: number
+    binds: BOM.conversion_rate
+    required: true
+  - label: Item Name
+    control: text
+    binds: BOM.item_name
+    validation: read only (computed or filled by the program)
+  - label: Image
+    control: other
+    binds: BOM.image
+    validation: read only (computed or filled by the program)
+  - label: Item Description
+    control: text
+    binds: BOM.description
+    validation: read only (computed or filled by the program)
+  - label: Has Variants
+    control: checkbox
+    binds: BOM.has_variants
+    validation: read only (computed or filled by the program)
+  - label: Project
+    control: lookup
+    binds: BOM.project
+    validation: shown only when eval:!doc.is_phantom_bom; chosen among Project records
+  - label: Exploded Items
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Item Code
+      - Item Name
+      - Description
+      - Stock Qty
+      - Rate
+      - Qty Consumed Per Unit
+      - Amount
+  - label: Show in Website
+    control: checkbox
+    binds: BOM.show_in_website
+  - label: Route
+    control: text
+    binds: BOM.route
+    validation: read only (computed or filled by the program)
+  - label: Website Image
+    control: other
+    binds: BOM.website_image
+    validation: shown only when show_in_website
+  - label: Thumbnail
+    control: text
+    binds: BOM.thumbnail
+    validation: read only (computed or filled by the program)
+  - label: Show Items
+    control: checkbox
+    binds: BOM.show_items
+    validation: shown only when show_in_website
+  - label: Show Operations
+    control: checkbox
+    binds: BOM.show_operations
+    validation: shown only when eval:(doc.show_in_website && doc.with_operations)
+  - label: Website Description
+    control: text
+    binds: BOM.web_long_description
+    validation: shown only when show_in_website
+  - label: BOM Creator
+    control: lookup
+    binds: BOM.bom_creator
+    validation: read only (computed or filled by the program); chosen among BOM Creator records
+  - label: BOM Creator Item
+    control: text
+    binds: BOM.bom_creator_item
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: BOM.amended_from
+    validation: read only (computed or filled by the program); chosen among BOM records
+actions:
+  - label: Save
+    triggers: F-296
+  - label: Submit
+    triggers: F-296
+  - label: Cancel
+    triggers: F-296
+  - label: Amend
+    triggers: F-296
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of BOM
+    note: declared by the program

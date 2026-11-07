@@ -1,0 +1,42 @@
+id: S-225
+title: Dashboard
+purpose: create, view and edit Dashboard records
+kind: form
+layout: 7 fields
+fields:
+  - label: Dashboard Name
+    control: text
+    binds: Dashboard.dashboard_name
+    required: true
+  - label: Is Default
+    control: checkbox
+    binds: Dashboard.is_default
+  - label: Is Standard
+    control: checkbox
+    binds: Dashboard.is_standard
+  - label: Module
+    control: lookup
+    binds: Dashboard.module
+    validation: "shown only when eval: doc.is_standard; chosen among Module Def records"
+  - label: Charts
+    control: grid
+    required: true
+    columns:
+      - Chart
+      - Width
+  - label: Chart Options
+    control: text
+    binds: Dashboard.chart_options
+  - label: Cards
+    control: grid
+    columns:
+      - Card
+actions:
+  - label: Save
+    triggers: F-226
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Dashboard
+    note: declared by the program

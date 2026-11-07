@@ -1,0 +1,297 @@
+id: S-192
+title: User
+purpose: create, view and edit User records
+kind: form
+layout: "tabs: User Details, Roles & Permissions, More Information, Settings, Connections, Sessions; sections: Basic Info, Roles, Allow Modules, Desk Settings, Navigation Settings, List Settings, Form Settings, Report Settings, Change Password, Document Follow, Email, Workspace, App, Defaults, Security Settings, Third Party Authentication, API Access; 79 fields"
+fields:
+  - label: Enabled
+    control: checkbox
+    binds: User.enabled
+    validation: read only (computed or filled by the program)
+  - label: Email
+    control: text
+    binds: User.email
+    required: true
+  - label: First Name
+    control: text
+    binds: User.first_name
+    required: true
+  - label: Middle Name
+    control: text
+    binds: User.middle_name
+  - label: Last Name
+    control: text
+    binds: User.last_name
+  - label: Full Name
+    control: text
+    binds: User.full_name
+    validation: read only (computed or filled by the program)
+  - label: Username
+    control: text
+    binds: User.username
+  - label: Language
+    control: lookup
+    binds: User.language
+    validation: chosen among Language records
+  - label: Time Zone
+    control: text
+    binds: User.time_zone
+  - label: Send Welcome Email
+    control: checkbox
+    binds: User.send_welcome_email
+    validation: shown only when eval:doc.__islocal
+  - label: Unsubscribed
+    control: checkbox
+    binds: User.unsubscribed
+  - label: User Image
+    control: other
+    binds: User.user_image
+  - label: Role Profile
+    control: lookup
+    binds: User.role_profile_name
+    validation: chosen among Role Profile records
+  - label: Role Profiles
+    control: grid
+    columns:
+      - Role Profile
+  - label: Roles Assigned
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Role
+  - label: Module Profile
+    control: lookup
+    binds: User.module_profile
+    validation: chosen among Module Profile records
+  - label: Block Modules
+    control: grid
+    columns:
+      - Module
+  - label: Home Settings
+    control: text
+    binds: User.home_settings
+  - label: Gender
+    control: lookup
+    binds: User.gender
+    validation: chosen among Gender records
+  - label: Birth Date
+    control: date
+    binds: User.birth_date
+  - label: Interests
+    control: text
+    binds: User.interest
+  - label: Phone
+    control: text
+    binds: User.phone
+  - label: Location
+    control: text
+    binds: User.location
+  - label: Bio
+    control: text
+    binds: User.bio
+  - label: Mobile No
+    control: text
+    binds: User.mobile_no
+  - label: Mute Sounds
+    control: checkbox
+    binds: User.mute_sounds
+  - label: Desk Theme
+    control: select
+    binds: User.desk_theme
+  - label: Code Editor Type
+    control: select
+    binds: User.code_editor_type
+  - label: Banner Image
+    control: other
+    binds: User.banner_image
+  - label: Search Bar
+    control: checkbox
+    binds: User.search_bar
+  - label: Notifications
+    control: checkbox
+    binds: User.notifications
+  - label: Show My Space
+    control: checkbox
+    binds: User.show_my_space
+  - label: Dock
+    control: select
+    binds: User.dock_mode
+  - label: Sidebar
+    control: checkbox
+    binds: User.list_sidebar
+  - label: Bulk Actions
+    control: checkbox
+    binds: User.bulk_actions
+  - label: View Switcher
+    control: checkbox
+    binds: User.view_switcher
+  - label: Sidebar
+    control: checkbox
+    binds: User.form_sidebar
+  - label: Show navigation buttons
+    control: checkbox
+    binds: User.form_navigation_buttons
+  - label: Timeline
+    control: checkbox
+    binds: User.timeline
+  - label: Dashboard
+    control: checkbox
+    binds: User.dashboard
+  - label: Show Absolute Datetime in Timeline
+    control: checkbox
+    binds: User.show_absolute_datetime_in_timeline
+  - label: Split view in reports
+    control: checkbox
+    binds: User.report_split_view
+  - label: Set New Password
+    control: text
+    binds: User.new_password
+  - label: Logout From All Devices After Changing Password
+    control: checkbox
+    binds: User.logout_all_sessions
+  - label: Reset Password Key
+    control: text
+    binds: User.reset_password_key
+    validation: read only (computed or filled by the program)
+  - label: Last Reset Password Key Generated On
+    control: date
+    binds: User.last_reset_password_key_generated_on
+    validation: read only (computed or filled by the program)
+  - label: Last Password Reset Date
+    control: date
+    binds: User.last_password_reset_date
+    validation: read only (computed or filled by the program)
+  - label: Redirect URL
+    control: text
+    binds: User.redirect_url
+  - label: Send Notifications For Documents Followed By Me
+    control: checkbox
+    binds: User.document_follow_notify
+  - label: Frequency
+    control: select
+    binds: User.document_follow_frequency
+    validation: shown only when eval:(doc.document_follow_notify== 1)
+  - label: Auto follow documents that you create
+    control: checkbox
+    binds: User.follow_created_documents
+    validation: shown only when eval:(doc.document_follow_notify== 1)
+  - label: Auto follow documents that you comment on
+    control: checkbox
+    binds: User.follow_commented_documents
+    validation: shown only when eval:(doc.document_follow_notify== 1)
+  - label: Auto follow documents that you Like
+    control: checkbox
+    binds: User.follow_liked_documents
+    validation: shown only when eval:(doc.document_follow_notify== 1)
+  - label: Auto follow documents that are assigned to you
+    control: checkbox
+    binds: User.follow_assigned_documents
+    validation: shown only when eval:(doc.document_follow_notify== 1)
+  - label: Auto follow documents that are shared with you
+    control: checkbox
+    binds: User.follow_shared_documents
+    validation: shown only when eval:(doc.document_follow_notify== 1)
+  - label: Email Signature
+    control: text
+    binds: User.email_signature
+  - label: Send Notifications For Email Threads
+    control: checkbox
+    binds: User.thread_notify
+  - label: Send Me A Copy of Outgoing Emails
+    control: checkbox
+    binds: User.send_me_a_copy
+  - label: Send Read Receipt
+    control: checkbox
+    binds: User.send_read_receipt
+  - label: Allowed In Mentions
+    control: checkbox
+    binds: User.allowed_in_mentions
+  - label: User Emails
+    control: grid
+    columns:
+      - Email Account
+      - Awaiting Password
+      - Used OAuth
+  - label: Default Workspace
+    control: lookup
+    binds: User.default_workspace
+    validation: chosen among Workspace records
+  - label: Default App
+    control: select
+    binds: User.default_app
+  - label: User Defaults
+    control: grid
+    columns:
+      - Key
+      - Value
+  - label: Simultaneous Sessions
+    control: number
+    binds: User.simultaneous_sessions
+  - label: Restrict IP
+    control: text
+    binds: User.restrict_ip
+  - label: Last IP
+    control: display
+    binds: User.last_ip
+    validation: read only (computed or filled by the program)
+  - label: Login After
+    control: number
+    binds: User.login_after
+  - label: User Type
+    control: lookup
+    binds: User.user_type
+    validation: chosen among User Type records
+  - label: Last Active
+    control: date
+    binds: User.last_active
+    validation: read only (computed or filled by the program)
+  - label: Login Before
+    control: number
+    binds: User.login_before
+  - label: Bypass Restricted IP Address Check If Two Factor Auth Enabled
+    control: checkbox
+    binds: User.bypass_restrict_ip_check_if_2fa_enabled
+    validation: shown only when eval:doc.restrict_ip && doc.restrict_ip.length
+  - label: Last Login
+    control: display
+    binds: User.last_login
+    validation: read only (computed or filled by the program)
+  - label: Last Known Versions
+    control: text
+    binds: User.last_known_versions
+    validation: read only (computed or filled by the program)
+  - label: Social Logins
+    control: grid
+    columns:
+      - Provider
+      - Username
+      - User ID
+  - label: API Key
+    control: text
+    binds: User.api_key
+    validation: read only (computed or filled by the program)
+  - label: API Secret
+    control: text
+    binds: User.api_secret
+    validation: read only (computed or filled by the program)
+  - label: Onboarding Status
+    control: text
+    binds: User.onboarding_status
+  - label: Active Sessions
+    control: grid
+    validation: shown only when eval:doc.name == frappe.session.user
+    columns:
+      - ID
+      - Is Current
+      - IP Address
+      - Session Created
+      - Last Updated
+actions:
+  - label: Save
+    triggers: F-193
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of User
+    note: declared by the program

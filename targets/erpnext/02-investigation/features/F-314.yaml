@@ -1,0 +1,54 @@
+id: F-314
+title: Create and edit a Network Printer Settings
+module: Printing
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Network Printer Settings records.
+entry_points:
+  - screen: S-313
+    action: open the form
+inputs:
+  - label: Server IP
+    field: NetworkPrinterSettings.server_ip
+    type: string
+    required: true
+  - label: Port
+    field: NetworkPrinterSettings.port
+    type: integer
+    required: true
+  - label: Printer Name
+    field: NetworkPrinterSettings.printer_name
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Network Printer Settings form
+    screen: S-313
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Server IP, Port, Printer Name"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Network Printer Settings record stored
+    entities:
+      - NetworkPrinterSettings
+entities:
+  - NetworkPrinterSettings
+screens:
+  - S-313
+acceptance:
+  - id: AC-315
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Network Printer Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

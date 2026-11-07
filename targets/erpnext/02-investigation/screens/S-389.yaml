@@ -1,0 +1,341 @@
+id: S-389
+title: Item
+purpose: create, view and edit Item records
+kind: form
+layout: "tabs: Details, Accounting, UOM, Tax, Inventory, Variants, Purchasing, Sales, Manufacturing, Quality, Pricing, Connections; sections: Item Attributes, Company Restrictions, Description, Deferred Accounting, Stock Levels, Inventory Valuation, Inventory Settings, Barcodes, Auto re-order, Serial Nos / Batches, Supplier Details, Foreign Trade Details, Customer Details; 81 fields; observed labels differ from the declared form (20/89 match; not declared: type de stock, sélectionner une catégorie, sélectionner un groupe d'articles, sélectionner une unité de mesure, sélectionner un attribut, sélectionner une famille d'articles, sélectionner un stockage actif, sélectionner un stockage passif)"
+fields:
+  - label: Series
+    control: select
+    binds: Item.naming_series
+  - label: Item Code
+    control: text
+    binds: Item.item_code
+    required: true
+  - label: Item Name
+    control: text
+    binds: Item.item_name
+  - label: Item Group
+    control: lookup
+    binds: Item.item_group
+    required: true
+    validation: chosen among Item Group records
+  - label: Default Unit of Measure
+    control: lookup
+    binds: Item.stock_uom
+    required: true
+    validation: chosen among UOM records
+  - label: Image
+    control: other
+    binds: Item.image
+  - label: Disabled
+    control: checkbox
+    binds: Item.disabled
+  - label: Maintain Stock
+    control: checkbox
+    binds: Item.is_stock_item
+  - label: Is Fixed Asset
+    control: checkbox
+    binds: Item.is_fixed_asset
+  - label: Auto create assets on purchase
+    control: checkbox
+    binds: Item.auto_create_assets
+    validation: shown only when is_fixed_asset
+  - label: Create Grouped Asset
+    control: checkbox
+    binds: Item.is_grouped_asset
+    validation: "shown only when eval: doc.is_fixed_asset && doc.auto_create_assets"
+  - label: Asset Category
+    control: lookup
+    binds: Item.asset_category
+    validation: shown only when is_fixed_asset; chosen among Asset Category records
+  - label: Asset Naming Series
+    control: select
+    binds: Item.asset_naming_series
+    validation: shown only when is_fixed_asset
+  - label: Allow Sales
+    control: checkbox
+    binds: Item.is_sales_item
+  - label: Allow Alternative Item
+    control: checkbox
+    binds: Item.allow_alternative_item
+  - label: Has Variants
+    control: checkbox
+    binds: Item.has_variants
+    validation: shown only when eval:!doc.variant_of
+  - label: Allow Purchase
+    control: checkbox
+    binds: Item.is_purchase_item
+  - label: Is Customer Provided Item
+    control: checkbox
+    binds: Item.is_customer_provided_item
+  - label: Standard Selling Rate
+    control: money
+    binds: Item.standard_rate
+    validation: shown only when eval:doc.__islocal && doc.is_sales_item
+  - label: Opening Stock
+    control: number
+    binds: Item.opening_stock
+  - label: Over Delivery/Receipt Allowance (%)
+    control: number
+    binds: Item.over_delivery_receipt_allowance
+    validation: shown only when eval:!doc.__islocal && !doc.is_fixed_asset
+  - label: Over Billing Allowance (%)
+    control: number
+    binds: Item.over_billing_allowance
+    validation: shown only when eval:!doc.__islocal && !doc.is_fixed_asset
+  - label: Restrict to Companies
+    control: checkbox
+    binds: Item.restrict_to_companies
+  - label: Allowed Companies
+    control: grid
+    validation: shown only when eval:doc.restrict_to_companies
+    columns:
+      - Company
+  - label: Brand
+    control: lookup
+    binds: Item.brand
+    validation: chosen among Brand records
+  - label: Description
+    control: text
+    binds: Item.description
+  - label: Item Defaults
+    control: grid
+    columns:
+      - Company
+      - Default Warehouse
+      - Default Price List
+  - label: Enable Deferred Expense
+    control: checkbox
+    binds: Item.enable_deferred_expense
+  - label: No of Months (Expense)
+    control: number
+    binds: Item.no_of_months_exp
+    validation: shown only when enable_deferred_expense
+  - label: Enable Deferred Revenue
+    control: checkbox
+    binds: Item.enable_deferred_revenue
+  - label: No of Months (Revenue)
+    control: number
+    binds: Item.no_of_months
+    validation: shown only when enable_deferred_revenue
+  - label: uoms
+    control: grid
+    columns:
+      - UOM
+      - Conversion Factor
+  - label: Taxes
+    control: grid
+    columns:
+      - Item Tax Template
+      - Tax Category
+      - Valid From
+      - Minimum Net Rate
+      - Maximum Net Rate
+  - label: Purchase Tax Withholding Category
+    control: lookup
+    binds: Item.purchase_tax_withholding_category
+    validation: shown only when is_purchase_item; chosen among Tax Withholding Category records
+  - label: Sales Tax Withholding Category
+    control: lookup
+    binds: Item.sales_tax_withholding_category
+    validation: shown only when is_sales_item; chosen among Tax Withholding Category records
+  - label: Valuation Method
+    control: select
+    binds: Item.valuation_method
+    validation: shown only when is_stock_item
+  - label: Valuation Rate
+    control: money
+    binds: Item.valuation_rate
+    validation: shown only when is_stock_item
+  - label: End of Life
+    control: date
+    binds: Item.end_of_life
+    validation: shown only when is_stock_item
+  - label: Default Material Request Type
+    control: select
+    binds: Item.default_material_request_type
+  - label: Warranty Period (in days)
+    control: text
+    binds: Item.warranty_period
+    validation: shown only when eval:doc.is_stock_item
+  - label: Weight Per Unit
+    control: number
+    binds: Item.weight_per_unit
+    validation: shown only when is_stock_item
+  - label: Weight UOM
+    control: lookup
+    binds: Item.weight_uom
+    validation: shown only when eval:doc.is_stock_item; chosen among UOM records
+  - label: Allow Negative Stock
+    control: checkbox
+    binds: Item.allow_negative_stock
+  - label: Barcodes
+    control: grid
+    columns:
+      - Barcode
+      - Barcode Type
+      - UOM
+  - label: Reorder level based on Warehouse
+    control: grid
+    columns:
+      - Request for
+      - Check Availability in Warehouse
+      - Re-order Level
+      - Re-order Qty
+      - Material Request Type
+  - label: Has Batch No
+    control: checkbox
+    binds: Item.has_batch_no
+    validation: shown only when eval:doc.is_stock_item
+  - label: Automatically Create New Batch
+    control: checkbox
+    binds: Item.create_new_batch
+    validation: shown only when has_batch_no
+  - label: Batch Number Series
+    control: text
+    binds: Item.batch_number_series
+    validation: shown only when eval:doc.has_batch_no==1 && doc.create_new_batch==1
+  - label: Has Expiry Date
+    control: checkbox
+    binds: Item.has_expiry_date
+    validation: shown only when has_batch_no
+  - label: Shelf Life In Days
+    control: number
+    binds: Item.shelf_life_in_days
+    validation: shown only when has_expiry_date
+  - label: Retain Sample
+    control: checkbox
+    binds: Item.retain_sample
+    validation: shown only when has_batch_no
+  - label: Max Sample Quantity
+    control: number
+    binds: Item.sample_quantity
+    validation: "shown only when eval: (doc.retain_sample && doc.has_batch_no)"
+  - label: Has Serial No
+    control: checkbox
+    binds: Item.has_serial_no
+    validation: shown only when eval:doc.is_stock_item
+  - label: Serial Number Series
+    control: text
+    binds: Item.serial_no_series
+    validation: shown only when has_serial_no
+  - label: Use Serial No Wise Valuation
+    control: checkbox
+    binds: Item.use_serial_no_wise_valuation
+    validation: shown only when eval:doc.is_stock_item && doc.has_serial_no
+  - label: Variant Of
+    control: lookup
+    binds: Item.variant_of
+    validation: read only (computed or filled by the program); shown only when variant_of; chosen among Item records
+  - label: Variant Based On
+    control: select
+    binds: Item.variant_based_on
+    validation: shown only when has_variants
+  - label: Variant Attributes
+    control: grid
+    validation: shown only when eval:(doc.has_variants || doc.variant_of) && doc.variant_based_on==='Item Attrib
+    columns:
+      - Attribute
+      - Attribute Value
+  - label: Default Purchase Unit of Measure
+    control: lookup
+    binds: Item.purchase_uom
+    validation: "shown only when eval: doc.is_purchase_item; chosen among UOM records"
+  - label: Minimum Order Qty
+    control: number
+    binds: Item.min_order_qty
+    validation: shown only when is_stock_item
+  - label: Safety Stock
+    control: number
+    binds: Item.safety_stock
+  - label: Lead Time in days
+    control: number
+    binds: Item.lead_time_days
+  - label: Last Purchase Rate
+    control: number
+    binds: Item.last_purchase_rate
+    validation: read only (computed or filled by the program)
+  - label: Delivered by Supplier (Drop Ship)
+    control: checkbox
+    binds: Item.delivered_by_supplier
+  - label: Item Supplier
+    control: grid
+    columns:
+      - Supplier
+      - Supplier Part Number
+  - label: Country of Origin
+    control: lookup
+    binds: Item.country_of_origin
+    validation: chosen among Country records
+  - label: Customs Tariff Number
+    control: lookup
+    binds: Item.customs_tariff_number
+    validation: chosen among Customs Tariff Number records
+  - label: Default Sales Unit of Measure
+    control: lookup
+    binds: Item.sales_uom
+    validation: "shown only when eval: doc.is_sales_item; chosen among UOM records"
+  - label: Grant Commission
+    control: checkbox
+    binds: Item.grant_commission
+  - label: Max Discount (%)
+    control: number
+    binds: Item.max_discount
+  - label: Customer Items
+    control: grid
+    columns:
+      - Customer Name
+      - Customer Group
+      - Ref Code
+  - label: Include Item In Manufacturing
+    control: checkbox
+    binds: Item.include_item_in_manufacturing
+    validation: shown only when eval:!doc.is_fixed_asset
+  - label: Is Subcontracted Item
+    control: checkbox
+    binds: Item.is_sub_contracted_item
+  - label: Default BOM
+    control: lookup
+    binds: Item.default_bom
+    validation: read only (computed or filled by the program); chosen among BOM records
+  - label: Total Projected Qty
+    control: number
+    binds: Item.total_projected_qty
+    validation: read only (computed or filled by the program)
+  - label: Default Manufacturer Part No
+    control: text
+    binds: Item.default_manufacturer_part_no
+    validation: read only (computed or filled by the program)
+  - label: Default Item Manufacturer
+    control: lookup
+    binds: Item.default_item_manufacturer
+    validation: read only (computed or filled by the program); chosen among Manufacturer records
+  - label: Customer Code
+    control: text
+    binds: Item.customer_code
+  - label: Inspection Required before Purchase
+    control: checkbox
+    binds: Item.inspection_required_before_purchase
+  - label: Inspection Required before Delivery
+    control: checkbox
+    binds: Item.inspection_required_before_delivery
+  - label: Quality Inspection Template
+    control: lookup
+    binds: Item.quality_inspection_template
+    validation: chosen among Quality Inspection Template records
+actions:
+  - label: Save
+    triggers: F-390
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Item
+    note: declared by the program
+  - ref: run-20261107T193839-h-EXP_009
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 20/89 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T193839-h-EXP_009/step_14.png
+  - 01-exploration/runs/run-20261107T193839-h-EXP_009/step_14.png

@@ -1,0 +1,32 @@
+id: S-319
+title: Print Style
+purpose: create, view and edit Print Style records
+kind: form
+layout: 5 fields
+fields:
+  - label: Print Style Name
+    control: text
+    binds: PrintStyle.print_style_name
+    required: true
+  - label: Disabled
+    control: checkbox
+    binds: PrintStyle.disabled
+  - label: Standard
+    control: checkbox
+    binds: PrintStyle.standard
+  - label: CSS
+    control: text
+    binds: PrintStyle.css
+    required: true
+  - label: Preview
+    control: other
+    binds: PrintStyle.preview
+actions:
+  - label: Save
+    triggers: F-320
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Print Style
+    note: declared by the program

@@ -1,0 +1,30 @@
+id: S-058
+title: Payment Terms Template
+purpose: create, view and edit Payment Terms Template records
+kind: form
+layout: 3 fields
+fields:
+  - label: Template Name
+    control: text
+    binds: PaymentTermsTemplate.template_name
+  - label: Allocate Payment Based On Payment Terms
+    control: checkbox
+    binds: PaymentTermsTemplate.allocate_payment_based_on_payment_terms
+  - label: Payment Terms
+    control: grid
+    required: true
+    columns:
+      - Payment Term
+      - Description
+      - Invoice Portion (%)
+      - Due Date Based On
+      - Credit Days
+actions:
+  - label: Save
+    triggers: F-059
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Payment Terms Template
+    note: declared by the program

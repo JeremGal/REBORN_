@@ -1,0 +1,19 @@
+id: S-351
+title: Sales Partner Type
+purpose: create, view and edit Sales Partner Type records
+kind: form
+layout: 1 fields
+fields:
+  - label: Sales Partner Type
+    control: text
+    binds: SalesPartnerType.sales_partner_type
+    required: true
+actions:
+  - label: Save
+    triggers: F-352
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Sales Partner Type
+    note: declared by the program

@@ -1,0 +1,49 @@
+id: F-009
+title: Create and edit a Advance Payment Ledger Entry
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Advance Payment Ledger Entry records.
+entry_points:
+  - screen: S-008
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Advance Payment Ledger Entry form
+    screen: S-008
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Advance Payment Ledger Entry record stored
+    entities:
+      - AdvancePaymentLedgerEntry
+entities:
+  - AdvancePaymentLedgerEntry
+screens:
+  - S-008
+acceptance:
+  - id: AC-010
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Advance Payment Ledger Entry
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 5
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "[\"{\\\"message\\\":\\\"L'utilisateur alan.lateb@gmail.com n'a pas d'accès au type de document via l'autorisation de rôle pour le document Écriture du grand livre des paiements anticipés.\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\"}\"]"

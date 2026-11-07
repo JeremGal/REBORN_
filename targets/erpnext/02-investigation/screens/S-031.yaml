@@ -1,0 +1,160 @@
+id: S-031
+title: Dunning
+purpose: create, view and edit Dunning records
+kind: form
+layout: "tabs: Address & Contact; sections: Currency, Printing Settings, Accounting Details; 35 fields"
+fields:
+  - label: Series
+    control: select
+    binds: Dunning.naming_series
+  - label: Customer
+    control: lookup
+    binds: Dunning.customer
+    required: true
+    validation: chosen among Customer records
+  - label: Customer Name
+    control: text
+    binds: Dunning.customer_name
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: Dunning.company
+    required: true
+    validation: chosen among Company records
+  - label: Date
+    control: date
+    binds: Dunning.posting_date
+    required: true
+  - label: Posting Time
+    control: date
+    binds: Dunning.posting_time
+  - label: Status
+    control: select
+    binds: Dunning.status
+    validation: read only (computed or filled by the program)
+  - label: Superseded By
+    control: lookup
+    binds: Dunning.superseded_by
+    validation: read only (computed or filled by the program); chosen among Dunning records
+  - label: Currency
+    control: lookup
+    binds: Dunning.currency
+    validation: chosen among Currency records
+  - label: Conversion Rate
+    control: number
+    binds: Dunning.conversion_rate
+  - label: Dunning Type
+    control: lookup
+    binds: Dunning.dunning_type
+    validation: chosen among Dunning Type records
+  - label: Rate of Interest (%) Yearly
+    control: number
+    binds: Dunning.rate_of_interest
+  - label: Overdue Payments
+    control: grid
+    columns:
+      - Sales Invoice
+      - Dunning Level
+      - Overdue Days
+      - Outstanding
+      - Interest
+  - label: Total Interest
+    control: money
+    binds: Dunning.total_interest
+    validation: read only (computed or filled by the program)
+  - label: Dunning Fee
+    control: money
+    binds: Dunning.dunning_fee
+  - label: Dunning Amount
+    control: money
+    binds: Dunning.dunning_amount
+    validation: read only (computed or filled by the program)
+  - label: Dunning Amount (Company Currency)
+    control: money
+    binds: Dunning.base_dunning_amount
+    validation: read only (computed or filled by the program)
+  - label: Spacer
+    control: text
+    binds: Dunning.spacer
+    validation: read only (computed or filled by the program)
+  - label: Total Outstanding
+    control: money
+    binds: Dunning.total_outstanding
+    validation: read only (computed or filled by the program)
+  - label: Grand Total
+    control: money
+    binds: Dunning.grand_total
+    validation: read only (computed or filled by the program)
+  - label: Print Language
+    control: lookup
+    binds: Dunning.language
+    validation: chosen among Language records
+  - label: Body Text
+    control: text
+    binds: Dunning.body_text
+  - label: Letter Head
+    control: lookup
+    binds: Dunning.letter_head
+    validation: chosen among Letter Head records
+  - label: Closing Text
+    control: text
+    binds: Dunning.closing_text
+  - label: Income Account
+    control: lookup
+    binds: Dunning.income_account
+    validation: chosen among Account records
+  - label: Cost Center
+    control: lookup
+    binds: Dunning.cost_center
+    validation: chosen among Cost Center records
+  - label: Amended From
+    control: lookup
+    binds: Dunning.amended_from
+    validation: read only (computed or filled by the program); chosen among Dunning records
+  - label: Customer Address
+    control: lookup
+    binds: Dunning.customer_address
+    validation: chosen among Address records
+  - label: Address
+    control: text
+    binds: Dunning.address_display
+    validation: read only (computed or filled by the program)
+  - label: Contact Person
+    control: lookup
+    binds: Dunning.contact_person
+    validation: chosen among Contact records
+  - label: Contact
+    control: text
+    binds: Dunning.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: Dunning.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: Dunning.contact_email
+    validation: read only (computed or filled by the program)
+  - label: Company Address
+    control: lookup
+    binds: Dunning.company_address
+    validation: chosen among Address records
+  - label: Company Address Display
+    control: text
+    binds: Dunning.company_address_display
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-032
+  - label: Submit
+    triggers: F-032
+  - label: Cancel
+    triggers: F-032
+  - label: Amend
+    triggers: F-032
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Dunning
+    note: declared by the program

@@ -1,0 +1,21 @@
+id: S-266
+title: Email Rule
+purpose: create, view and edit Email Rule records
+kind: form
+layout: 2 fields
+fields:
+  - label: Email ID
+    control: text
+    binds: EmailRule.email_id
+  - label: Is Spam
+    control: checkbox
+    binds: EmailRule.is_spam
+actions:
+  - label: Save
+    triggers: F-267
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Email Rule
+    note: declared by the program

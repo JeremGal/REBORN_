@@ -1,0 +1,58 @@
+id: S-033
+title: Exchange Rate Revaluation
+purpose: create, view and edit Exchange Rate Revaluation records
+kind: form
+layout: 8 fields
+fields:
+  - label: Posting Date
+    control: date
+    binds: ExchangeRateRevaluation.posting_date
+    required: true
+  - label: Rounding Loss Allowance
+    control: number
+    binds: ExchangeRateRevaluation.rounding_loss_allowance
+  - label: Company
+    control: lookup
+    binds: ExchangeRateRevaluation.company
+    required: true
+    validation: chosen among Company records
+  - label: Exchange Rate Revaluation Account
+    control: grid
+    required: true
+    columns:
+      - Account
+      - New Exchange Rate
+      - Balance In Base Currency
+      - New Balance In Base Currency
+      - Gain/Loss
+  - label: Gain/Loss from Revaluation
+    control: money
+    binds: ExchangeRateRevaluation.gain_loss_unbooked
+    validation: read only (computed or filled by the program)
+  - label: Gain/Loss already booked
+    control: money
+    binds: ExchangeRateRevaluation.gain_loss_booked
+    validation: read only (computed or filled by the program)
+  - label: Total Gain/Loss
+    control: money
+    binds: ExchangeRateRevaluation.total_gain_loss
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: ExchangeRateRevaluation.amended_from
+    validation: read only (computed or filled by the program); chosen among Exchange Rate Revaluation records
+actions:
+  - label: Save
+    triggers: F-034
+  - label: Submit
+    triggers: F-034
+  - label: Cancel
+    triggers: F-034
+  - label: Amend
+    triggers: F-034
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Exchange Rate Revaluation
+    note: declared by the program

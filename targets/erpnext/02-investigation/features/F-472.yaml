@@ -1,0 +1,45 @@
+id: F-472
+title: Create and edit a Workflow Transition Tasks
+module: Workflow
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Workflow Transition Tasks records.
+entry_points:
+  - screen: S-471
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Workflow Transition Tasks form
+    screen: S-471
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Tasks"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Workflow Transition Tasks record stored
+    entities:
+      - WorkflowTransitionTasks
+entities:
+  - WorkflowTransitionTasks
+  - WorkflowTransitionTask
+screens:
+  - S-471
+acceptance:
+  - id: AC-473
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Workflow Transition Tasks
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"workflow-transition-tasks\")."

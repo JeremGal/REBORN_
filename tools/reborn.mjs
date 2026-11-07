@@ -17,8 +17,10 @@ import { buildHandoff, computeCoverage, inputsDigest, parityScore } from "./lib/
 import { assertNoLeak } from "./lib/guard.mjs";
 import { inventory as manualInventory, parseHeadings, parseHhc } from "./lib/manual.mjs";
 import { implicitRelations } from "./lib/relations.mjs";
-import { docMeta, getDoc as frappeGet, insertDoc as frappeInsert, list as frappeList, frappe as frappeApi } from "./lib/frappe.mjs";
+import { docMeta, frappeConfig, getDoc as frappeGet, insertDoc as frappeInsert, list as frappeList, frappe as frappeApi } from "./lib/frappe.mjs";
 import { metaToEntity } from "./lib/frappe-model.mjs";
+import { GENERATED, featuresFromMetas } from "./lib/frappe-features.mjs";
+import { minimalDoc, probeable } from "./lib/frappe-probe.mjs";
 import { experimentToRun } from "./lib/h-import.mjs";
 import { schemaToEntities } from "./lib/sql-schema.mjs";
 import { ReaSession, collectStrings } from "./lib/rea-session.mjs";
@@ -70,7 +72,7 @@ const cmd = argv.shift();
 // Options may come before or after the positional arguments: move them to the end so commands can read positionals by
 // index (`js gnucash --max-kb 300 dir` used to read "--max-kb" as the folder). rea/craft pass their arguments through.
 // Every option read with opt() takes a value; keep this list in step with them (a test checks it).
-const VALUE_OPTS = new Set(["name", "kind", "max-kb", "only", "table", "cdp", "engine", "find", "decompile", "max", "timeout-min", "query", "contains", "class", "method", "app", "module", "mission", "root"]);
+const VALUE_OPTS = new Set(["name", "kind", "max-kb", "only", "table", "cdp", "engine", "find", "decompile", "max", "timeout-min", "query", "contains", "class", "method", "app", "module", "mission", "root", "skip", "lang"]);
 if (!["rea", "craft"].includes(cmd)) {
   const pos = [], opts = [];
   for (let i = 0; i < argv.length; i++) {
@@ -526,7 +528,7 @@ function coverage(target) {
   if (asJson) return console.log(JSON.stringify({ target, ...c }, null, 2));
   console.log(`coverage of ${target} (denominators are what the evidence found, a lower bound, not a guarantee of completeness)`);
   for (const [k, v] of Object.entries(c)) {
-    console.log(`  ${k.padEnd(9)} ${String(v.carded).padStart(3)} carded / ${v.inventoried ?? "?"} found${v.ratio != null ? ` (${v.ratio}%)` : ""}${v.note ? `   ${v.note}` : ""}`);
+    console.log(`  ${k.padEnd(9)} ${String(v.carded).padStart(3)} carded / ${v.inventoried ?? "?"} found${v.ratio != null ? ` (${v.ratio}%)` : ""}${v.observed !== undefined ? `, behaviour observed for ${v.observed}` : ""}${v.note ? `   ${v.note}` : ""}`);
   }
 }
 
@@ -1017,6 +1019,10 @@ function identify(target, input) {
 async function frappeCmd(target, sub) {
   needTarget(target);
   if (sub === "observe") return frappeObserve(target, argv[1]);
+  if (sub === "features") return frappeFeatures(target);
+  if (sub === "probe") return frappeProbe(target);
+  if (sub === "translations") return frappeTranslations(target);
+  if (sub === "cleanup") return frappeCleanup(target, argv[1]);
   if (sub !== "model") die("usage: frappe <target> model [--app all|erpnext|frappe] [--module M,N] [--force] | frappe <target> observe <scenarios.json>");
   const app = opt("app", "all");
   const modules = (opt("module") || "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -1038,10 +1044,10 @@ async function frappeCmd(target, sub) {
   const dir = path.join(evidenceDir(target), "frappe");
   fs.mkdirSync(dir, { recursive: true });
   const file = path.join(dir, uniqueName("doctype-metadata"));
-  fs.writeFileSync(file, JSON.stringify({ app, modules, count: metas.length, failed, doctypes: metas }, null, 1), { flag: "wx" });
+  fs.writeFileSync(file, JSON.stringify({ app, modules, count: metas.length, forms: types.filter((d) => !d.istable).length, failed, doctypes: metas }, null, 1), { flag: "wx" });
   const sha = sha256File(file);
   const sourceRef = `rb_${sha}`;
-  register(target, { id: sourceRef, kind: "rea", tool: "frappe-api", operation: "doctype-metadata", subject: { label: `${app} document types` }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), file).split(path.sep).join("/"), bytes: fs.statSync(file).size, sha256: sha, summary: `${metas.length} document type definitions (${failed.length} unreadable)`, counts: { tables: types.length } });
+  register(target, { id: sourceRef, kind: "rea", tool: "frappe-api", operation: "doctype-metadata", subject: { label: `${app} document types` }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), file).split(path.sep).join("/"), bytes: fs.statSync(file).size, sha256: sha, summary: `${metas.length} document type definitions (${failed.length} unreadable)`, counts: { tables: types.length, windows: types.filter((d) => !d.istable).length } });
   let entities = metas.map((m) => metaToEntity(m, { sourceRef }));
   // A link to a type outside the scope cannot be checked: keep the column, drop the link, say so.
   const known = new Set([...entities.map((e) => e.name), ...loadTarget(target).entities.map((e) => e.name)]);
@@ -1056,6 +1062,170 @@ async function frappeCmd(target, sub) {
   failed.slice(0, 10).forEach((f) => console.log(`  unreadable: ${f}`));
 }
 
+// Behaviour probe: a draft with only the mandatory fields, for every business document type; what the program does is
+// recorded as a run (stored, or refused with its message). Drafts only. Everything created is listed for `frappe cleanup`.
+async function frappeProbe(target) {
+  const t = loadTarget(target);
+  const metaEntry = t.evidence.filter((e) => e.tool === "frappe-api" && e.operation === "doctype-metadata").sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))[0];
+  if (!metaEntry) die(`no document type definitions yet: node tools/reborn.mjs frappe ${target} model`);
+  const metas = JSON.parse(fs.readFileSync(path.join(evidenceDir(target), metaEntry.file), "utf8")).doctypes;
+  const byName = new Map(metas.map((m) => [m.name, m]));
+  const only = (opt("module") || "").split(",").map((s) => s.trim()).filter(Boolean);
+  const todo = metas.filter(probeable).filter((m) => !only.length || only.includes(m.module));
+  const started = new Date();
+  const today = started.toISOString().slice(0, 10);
+  const linkCache = new Map();
+  for (const name of new Set(todo.flatMap((m) => [m, ...(m.fields || []).filter((f) => f.fieldtype === "Table").map((f) => byName.get(f.options)).filter(Boolean)]).flatMap((m) => (m.fields || []).filter((f) => f.reqd && f.fieldtype === "Link").map((f) => f.options)))) {
+    try {
+      const rows = await frappeList(name, { fields: ["name"], limit: 50 });
+      linkCache.set(name, (rows.find((r) => /^TEST/i.test(r.name)) ?? rows[0])?.name);
+    } catch { linkCache.set(name, undefined); }
+  }
+  const ctx = { today, linkValue: (dt) => linkCache.get(dt) };
+  const steps = [], created = [];
+  let stored = 0, refused = 0, skipped = 0;
+  for (const m of todo) {
+    const built = minimalDoc(m, byName, ctx);
+    const n = steps.length + 1;
+    if (built.skip) {
+      skipped++;
+      steps.push({ n, action: { type: "other", target_desc: `prepare a draft ${m.name}` }, observation: `not attempted: ${built.skip}`, extracted: { doctype: m.name, result: "not attempted", reason: built.skip } });
+      continue;
+    }
+    try {
+      const saved = await frappeInsert(built.doc);
+      stored++;
+      created.push({ doctype: m.name, name: saved.name });
+      steps.push({ n, action: { type: "other", target_desc: `save a draft ${m.name} with only its mandatory fields`, value: JSON.stringify(built.doc).slice(0, 400) }, observation: `stored as a draft (${saved.name})`, extracted: { doctype: m.name, result: "stored", name: saved.name, docstatus: saved.docstatus ?? 0 } });
+    } catch (e) {
+      refused++;
+      const msg = String(e.message).replace(/^POST \S+: \d+ /, "").replace(/<[^>]+>/g, "").slice(0, 300);
+      steps.push({ n, action: { type: "other", target_desc: `save a draft ${m.name} with only its mandatory fields`, value: JSON.stringify(built.doc).slice(0, 400) }, observation: `refused by the program: ${msg}`, extracted: { doctype: m.name, result: "refused", message: msg } });
+    }
+  }
+  const versions = (await frappeApi("/api/method/frappe.utils.change_log.get_versions")).message ?? {};
+  const stamp = started.toISOString().replace(/[-:]/g, "").replace(/\..+/, "");
+  const runId = `run-${stamp}-api-probe`;
+  const runDir = path.join(targetDir(target), "01-exploration", "runs", runId);
+  fs.mkdirSync(runDir, { recursive: true });
+  fs.writeFileSync(path.join(runDir, "run.yaml"), new YAML.Document({
+    id: runId, mission: opt("mission", "M-004"), subject: "original",
+    agent: { provider: "api", product: "frappe-rest", version: `Frappe ${versions.frappe?.version ?? "?"} / ERPNext ${versions.erpnext?.version ?? "?"}` },
+    target: { id: target, version: versions.erpnext?.version ?? "", environment: "Alan's own Frappe Cloud site, fictitious data" },
+    started_at: started.toISOString(), ended_at: new Date().toISOString(),
+    outcome: steps.length ? "partial" : "failed",
+    steps: steps.length ? steps : [{ n: 1, action: { type: "other", target_desc: "nothing to probe" } }],
+    notes: `Drafts only, never submitted. ${stored} stored, ${refused} refused, ${skipped} not attempted. Created records are listed in the local evidence store for 'frappe cleanup'.`,
+  }).toString({ lineWidth: 0 }));
+  const dir = path.join(evidenceDir(target), "frappe");
+  fs.mkdirSync(dir, { recursive: true });
+  const ev = path.join(dir, uniqueName("observe-probe"));
+  fs.writeFileSync(ev, JSON.stringify({ run: runId, created, steps }, null, 1), { flag: "wx" });
+  const sha = sha256File(ev);
+  register(target, { id: `rb_${sha}`, kind: "rea", tool: "frappe-api", operation: "observe probe", subject: { label: `${todo.length} business document types` }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), ev).split(path.sep).join("/"), bytes: fs.statSync(ev).size, sha256: sha, summary: `${stored} stored, ${refused} refused, ${skipped} not attempted (run ${runId})` });
+  console.log(`OK  frappe probe  ${todo.length} business document type(s): ${stored} stored as drafts, ${refused} refused by the program, ${skipped} not attempted  run: ${path.relative(ROOT, runDir)}`);
+}
+
+// The site shows its forms translated (French here) while definitions declare English labels. The official translation
+// files of the installed version (frappe and erpnext, locale/<lang>.po on GitHub) map one to the other.
+async function frappeTranslations(target) {
+  const lang = opt("lang", "fr");
+  const versions = (await frappeApi("/api/method/frappe.utils.change_log.get_versions")).message ?? {};
+  const map = {};
+  const sources = [];
+  for (const app of ["frappe", "erpnext"]) {
+    const major = String(versions[app]?.version ?? "").split(".")[0];
+    if (!major) continue;
+    const url = `https://raw.githubusercontent.com/frappe/${app}/version-${major}/${app}/locale/${lang}.po`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(120000) });
+    if (!res.ok) { console.log(`  ${app}: no ${lang}.po on branch version-${major} (${res.status})`); continue; }
+    const text = await res.text();
+    let n = 0;
+    for (const m of text.matchAll(/^msgid "((?:[^"\\]|\\.)+)"\r?\nmsgstr "((?:[^"\\]|\\.)+)"/gm)) { map[m[1].replace(/\\"/g, '"')] = m[2].replace(/\\"/g, '"'); n++; }
+    sources.push({ app, url, strings: n });
+    console.log(`  ${app} ${versions[app].version}: ${n} translated strings`);
+  }
+  const dir = path.join(evidenceDir(target), "frappe");
+  fs.mkdirSync(dir, { recursive: true });
+  const file = path.join(dir, uniqueName(`translations-${lang}`));
+  fs.writeFileSync(file, JSON.stringify({ lang, sources, map }, null, 0), { flag: "wx" });
+  const sha = sha256File(file);
+  register(target, { id: `rb_${sha}`, kind: "rea", tool: "frappe-locale", operation: `translations ${lang}`, subject: { label: `${lang} translation files of the installed version` }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), file).split(path.sep).join("/"), bytes: fs.statSync(file).size, sha256: sha, summary: `${Object.keys(map).length} ${lang} translations (${sources.map((s) => s.app).join(", ")})`, basis: "shipped-data" });
+  console.log(`OK  frappe translations  ${Object.keys(map).length} ${lang} strings  (rb_${sha.slice(0, 16)}...)`);
+}
+
+// Deletes the drafts a probe created (newest first), from the list kept in the local evidence store.
+async function frappeCleanup(target, runId) {
+  if (!runId) die("usage: frappe <target> cleanup <run-id of a probe>");
+  const t = loadTarget(target);
+  const entry = t.evidence.find((e) => e.tool === "frappe-api" && String(e.summary ?? "").includes(`(run ${runId})`));
+  if (!entry) die(`no probe evidence for ${runId}`);
+  const { created } = JSON.parse(fs.readFileSync(path.join(evidenceDir(target), entry.file), "utf8"));
+  let done = 0, failed = 0;
+  for (const c of [...(created || [])].reverse()) {
+    try { await frappeApi(`/api/resource/${encodeURIComponent(c.doctype)}/${encodeURIComponent(c.name)}`, { method: "DELETE" }); done++; }
+    catch (e) { failed++; console.log(`  could not delete ${c.doctype} ${c.name}: ${String(e.message).slice(0, 120)}`); }
+  }
+  console.log(`OK  frappe cleanup  ${done} draft(s) deleted, ${failed} left`);
+}
+
+// One feature card and one screen card per form, from the definitions already read by `frappe model` (no new call).
+// Hand-written cards are kept; generated ones (marked in rebuild_notes / screen evidence) are rewritten on each run.
+function frappeFeatures(target) {
+  const t = loadTarget(target);
+  const metaEntry = t.evidence.filter((e) => e.tool === "frappe-api" && e.operation === "doctype-metadata").sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))[0];
+  if (!metaEntry) die(`no document type definitions yet: node tools/reborn.mjs frappe ${target} model`);
+  const metas = JSON.parse(fs.readFileSync(path.join(evidenceDir(target), metaEntry.file), "utf8")).doctypes;
+  const manualInv = t.evidence.filter((e) => e.tool === "reborn-manual").sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))[0];
+  const docSlugs = new Set(manualInv ? (JSON.parse(fs.readFileSync(path.join(evidenceDir(target), manualInv.file), "utf8")).titles || []).map((s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")) : []);
+  const inv = path.join(targetDir(target), "02-investigation");
+  const isGenFeature = (f) => String(f.rebuild_notes ?? "").startsWith(GENERATED);
+  const isGenScreen = (s) => (s.evidence || []).some((e) => String(e.locator ?? "").startsWith("form layout of "));
+  for (const [dir, gen] of [["features", isGenFeature], ["screens", isGenScreen]]) {
+    const d = path.join(inv, dir);
+    if (!fs.existsSync(d)) continue;
+    for (const f of fs.readdirSync(d).filter((x) => x.endsWith(".yaml"))) { const c = YAML.parse(fs.readFileSync(path.join(d, f), "utf8")); if (gen(c)) fs.rmSync(path.join(d, f)); }
+  }
+  const num = (arr, re) => arr.reduce((m, x) => Math.max(m, Number(re.exec(x)?.[1] ?? 0)), 0);
+  const kept = loadTarget(target);
+  const firstFeature = num(kept.features.map((f) => f.id), /F-(\d+)/) + 1;
+  const firstScreen = num(kept.screens.map((s) => s.id), /S-(\d+)/) + 1;
+  const firstAcceptance = num(kept.features.flatMap((f) => (f.acceptance || []).map((a) => a.id)), /AC-(\d+)/) + 1;
+  // Forms the H Company agent opened (runs imported with import-run): labels read on screen and screenshots.
+  const observations = new Map();
+  for (const r of kept.runs.filter((x) => x.agent?.provider === "h-company" && x.outcome !== "failed")) {
+    const last = (r.steps || []).at(-1)?.extracted;
+    if (!last?.inputs?.doctype || last.inputs.kind !== "form") continue;
+    const runDir = path.join("01-exploration", "runs", r.id);
+    const screenshots = (r.steps || []).map((s) => s.screenshot).filter(Boolean).map((s) => path.join(runDir, s).split(path.sep).join("/")).filter((s) => fs.existsSync(path.join(targetDir(target), s))).slice(-2);
+    const labels = [...(last.field_labels || []), ...(last.section_labels || [])];
+    observations.set(last.inputs.doctype, [...(observations.get(last.inputs.doctype) || []), { run: r.id, labels, screenshots }]);
+  }
+  // Drafts saved through the API (probe and computation runs): stored or refused, per document type. A stored draft wins.
+  const apiObservations = new Map();
+  for (const r of kept.runs.filter((x) => x.agent?.provider === "api" && x.subject !== "rebuild" && !["failed", "aborted"].includes(x.outcome))) {
+    for (const s of r.steps || []) {
+      const doctype = s.extracted?.doctype ?? /^create draft (.+?) \(/.exec(s.action?.target_desc ?? "")?.[1];
+      if (!doctype) continue;
+      const result = s.extracted?.result ?? (s.extracted ? "stored" : /^refused/.test(s.observation ?? "") ? "refused" : undefined);
+      if (!["stored", "refused"].includes(result)) continue;
+      const prev = apiObservations.get(doctype);
+      if (prev?.result === "stored") continue;
+      apiObservations.set(doctype, { run: r.id, step: s.n, result, message: s.extracted?.message ?? String(s.observation ?? "").replace(/^refused by the program: /, "").slice(0, 300) });
+    }
+  }
+  const trEntry = kept.evidence.filter((e) => e.tool === "frappe-locale").sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)))[0];
+  const translations = trEntry ? JSON.parse(fs.readFileSync(path.join(evidenceDir(target), trEntry.file), "utf8")).map : {};
+  const { features, screens, documented } = featuresFromMetas(metas, { sourceRef: metaEntry.id, firstFeature, firstScreen, firstAcceptance, docSlugs, observations, apiObservations, translations });
+  for (const [dir, cards] of [["features", features], ["screens", screens]]) {
+    fs.mkdirSync(path.join(inv, dir), { recursive: true });
+    for (const c of cards) fs.writeFileSync(path.join(inv, dir, `${c.id}.yaml`), new YAML.Document(c).toString({ lineWidth: 0 }));
+  }
+  const observedScreens = screens.filter((s) => s.evidence.some((e) => e.kind === "h-run"));
+  console.log(`OK  frappe features  ${features.length} feature card(s) and ${screens.length} screen card(s) generated (graded partial: structure declared, behaviour not observed); ${documented} match a page of the vendor manual`);
+  if (observedScreens.length) console.log(`    ${observedScreens.length} screen(s) observed by the H agent, ${observedScreens.filter((s) => s.status === "confirmed").length} confirmed (observed labels match the declared form)`);
+}
+
 // Block 1 -> block 2: experiments recorded by the H Company explorer (h-explorer/, EXP_xxx.json) become ReBorn runs.
 // Screenshots are copied next to run.yaml when found (under --root, the explorer's folder); the raw JSON goes to the
 // local evidence store.
@@ -1063,10 +1233,16 @@ function importRun(target, input) {
   needTarget(target);
   const mission = opt("mission");
   const root = opt("root");
-  if (!input || !mission) die("usage: import-run <target> <EXP_xxx.json | folder of them> --mission M-xxx [--root <h-explorer folder>]");
+  const skip = new Set((opt("skip") || "").split(",").map((s) => s.trim()).filter(Boolean));
+  if (!input || !mission) die("usage: import-run <target> <EXP_xxx.json | folder of them> --mission M-xxx [--root <h-explorer folder>] [--skip EXP_011,EXP_012]");
   const p = absolute(input);
   if (!fs.existsSync(p)) die(`not found: ${p}`);
-  const files = fs.statSync(p).isDirectory() ? fs.readdirSync(p).filter((f) => /^EXP_.*\.json$/i.test(f)).map((f) => path.join(p, f)) : [p];
+  const files = (fs.statSync(p).isDirectory() ? fs.readdirSync(p).filter((f) => /^EXP_.*\.json$/i.test(f)).map((f) => path.join(p, f)) : [p]).filter((f) => !skip.has(path.basename(f, ".json")));
+  // Values of the application login given to the agent are masked wherever they appear in what gets written.
+  const agentFile = process.env.REBORN_AGENT_SECRETS || localConfig().agentSecretsFile;
+  const secrets = agentFile && fs.existsSync(agentFile) ? fs.readFileSync(agentFile, "utf8").split(/\r?\n/).map((l) => l.split("=").slice(1).join("=").trim()).filter(Boolean) : [];
+  // The address of the studied site stays out of git too (it is in the secrets file, not in the repository).
+  try { const host = new URL(frappeConfig().url).host; if (host) secrets.push(host); } catch { /* not a Frappe target */ }
   if (!files.length) die(`no EXP_*.json in ${p}`);
   const base = root ? absolute(root) : path.dirname(fs.statSync(p).isDirectory() ? p : path.dirname(p));
   const rawDir = path.join(evidenceDir(target), "h-explorer");
@@ -1074,7 +1250,7 @@ function importRun(target, input) {
   let ok = 0;
   for (const f of files) {
     const exp = JSON.parse(fs.readFileSync(f, "utf8"));
-    const run = experimentToRun(exp, { target, mission, rawName: path.basename(f) });
+    const run = experimentToRun(exp, { target, mission, rawName: path.basename(f), secrets });
     const runDir = path.join(targetDir(target), "01-exploration", "runs", run.id);
     fs.mkdirSync(runDir, { recursive: true });
     const wanted = [...(exp.evidence?.screenshots ?? []), exp.evidence?.final_screenshot].filter(Boolean);

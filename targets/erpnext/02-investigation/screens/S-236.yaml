@@ -1,0 +1,91 @@
+id: S-236
+title: Kanban Board
+purpose: create, view and edit Kanban Board records
+kind: form
+layout: "sections: New Kanban, Card and Preview Fields; 19 fields"
+fields:
+  - label: Kanban Board Name
+    control: text
+    binds: KanbanBoard.kanban_board_name
+    required: true
+  - label: Reference Document Type
+    control: lookup
+    binds: KanbanBoard.reference_doctype
+    required: true
+    validation: chosen among DocType records
+  - label: Field Name
+    control: select
+    binds: KanbanBoard.field_name
+    required: true
+  - label: Is Standard
+    control: select
+    binds: KanbanBoard.is_standard
+  - label: Module
+    control: lookup
+    binds: KanbanBoard.module
+    validation: 'shown only when eval: doc.is_standard == "Yes"; chosen among Module Def records'
+  - label: Private
+    control: checkbox
+    binds: KanbanBoard.private
+  - label: Show Labels
+    control: checkbox
+    binds: KanbanBoard.show_labels
+    validation: read only (computed or filled by the program)
+  - label: Use Kanban v2 (New Experience)
+    control: checkbox
+    binds: KanbanBoard.use_kanban_v2
+  - label: Columns
+    control: grid
+    columns:
+      - Column Name
+      - Status
+      - Indicator
+  - label: Filters
+    control: text
+    binds: KanbanBoard.filters
+    validation: read only (computed or filled by the program)
+  - label: Fields
+    control: text
+    binds: KanbanBoard.fields
+    validation: read only (computed or filled by the program)
+  - label: Title Field
+    control: text
+    binds: KanbanBoard.title_field
+  - label: Show Assigned To
+    control: checkbox
+    binds: KanbanBoard.show_assigned_to
+  - label: Show Tags on Cards
+    control: checkbox
+    binds: KanbanBoard.show_tags_on_card
+  - label: Image Field
+    control: text
+    binds: KanbanBoard.image_field
+  - label: Footer Date
+    control: select
+    binds: KanbanBoard.footer_date_field
+  - label: Card Fields
+    control: grid
+    columns:
+      - Field
+      - Icon
+      - Label
+  - label: Preview Fields
+    control: grid
+    columns:
+      - Field
+      - Icon
+      - Label
+  - label: Swimlanes
+    control: grid
+    columns:
+      - Field
+      - Label
+actions:
+  - label: Save
+    triggers: F-237
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Kanban Board
+    note: declared by the program

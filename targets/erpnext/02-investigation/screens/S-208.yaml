@@ -1,0 +1,18 @@
+id: S-208
+title: Market Segment
+purpose: create, view and edit Market Segment records
+kind: form
+layout: 1 fields
+fields:
+  - label: Market Segment
+    control: text
+    binds: MarketSegment.market_segment
+actions:
+  - label: Save
+    triggers: F-209
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Market Segment
+    note: declared by the program

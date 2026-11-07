@@ -1,0 +1,248 @@
+id: S-067
+title: Pricing Rule
+purpose: create, view and edit Pricing Rule records
+kind: form
+layout: "tabs: Dynamic Condition, Advanced Settings, Help Article; sections: Discount on Other Item, Party Information, Quantity and Amount, Product Discount Scheme, Period Settings, Margin, Price Discount Scheme, Validate Pricing Rule, Priority, Reference; 62 fields"
+fields:
+  - label: Naming Series
+    control: select
+    binds: PricingRule.naming_series
+  - label: Title
+    control: text
+    binds: PricingRule.title
+    required: true
+  - label: Disable
+    control: checkbox
+    binds: PricingRule.disable
+  - label: Apply On
+    control: select
+    binds: PricingRule.apply_on
+    required: true
+  - label: Price or Product Discount
+    control: select
+    binds: PricingRule.price_or_product_discount
+    required: true
+  - label: Warehouse
+    control: lookup
+    binds: PricingRule.warehouse
+    validation: shown only when eval:doc.apply_on != 'Transaction'; chosen among Warehouse records
+  - label: Apply Rule On Item Code
+    control: grid
+    validation: shown only when eval:doc.apply_on == 'Item Code'
+    columns:
+      - Item Code
+      - UOM
+  - label: Apply Rule On Item Group
+    control: grid
+    validation: shown only when eval:doc.apply_on == 'Item Group'
+    columns:
+      - Item Group
+      - UOM
+  - label: Apply Rule On Brand
+    control: grid
+    validation: shown only when eval:doc.apply_on == 'Brand'
+    columns:
+      - Brand
+      - UOM
+  - label: Mixed Conditions
+    control: checkbox
+    binds: PricingRule.mixed_conditions
+    validation: shown only when eval:doc.apply_on != 'Transaction'
+  - label: Is Cumulative
+    control: checkbox
+    binds: PricingRule.is_cumulative
+    validation: shown only when eval:doc.apply_on != 'Transaction'
+  - label: Coupon Code Based
+    control: checkbox
+    binds: PricingRule.coupon_code_based
+  - label: Apply Rule On Other
+    control: select
+    binds: PricingRule.apply_rule_on_other
+  - label: Item Code
+    control: lookup
+    binds: PricingRule.other_item_code
+    validation: shown only when eval:doc.apply_rule_on_other == 'Item Code'; chosen among Item records
+  - label: Item Group
+    control: lookup
+    binds: PricingRule.other_item_group
+    validation: shown only when eval:doc.apply_rule_on_other == 'Item Group'; chosen among Item Group records
+  - label: Brand
+    control: lookup
+    binds: PricingRule.other_brand
+    validation: shown only when eval:doc.apply_rule_on_other == 'Brand'; chosen among Brand records
+  - label: Selling
+    control: checkbox
+    binds: PricingRule.selling
+  - label: Buying
+    control: checkbox
+    binds: PricingRule.buying
+  - label: Applicable For
+    control: select
+    binds: PricingRule.applicable_for
+    validation: "shown only when eval: doc.buying || doc.selling"
+  - label: Customer
+    control: lookup
+    binds: PricingRule.customer
+    validation: shown only when eval:doc.applicable_for=="Customer"; chosen among Customer records
+  - label: Customer Group
+    control: lookup
+    binds: PricingRule.customer_group
+    validation: shown only when eval:doc.applicable_for=="Customer Group"; chosen among Customer Group records
+  - label: Territory
+    control: lookup
+    binds: PricingRule.territory
+    validation: shown only when eval:doc.applicable_for=="Territory"; chosen among Territory records
+  - label: Sales Partner
+    control: lookup
+    binds: PricingRule.sales_partner
+    validation: shown only when eval:doc.applicable_for=="Sales Partner"; chosen among Sales Partner records
+  - label: Campaign
+    control: lookup
+    binds: PricingRule.campaign
+    validation: shown only when eval:doc.applicable_for=="Campaign"; chosen among UTM Campaign records
+  - label: Supplier
+    control: lookup
+    binds: PricingRule.supplier
+    validation: shown only when eval:doc.applicable_for=="Supplier"; chosen among Supplier records
+  - label: Supplier Group
+    control: lookup
+    binds: PricingRule.supplier_group
+    validation: shown only when eval:doc.applicable_for=="Supplier Group"; chosen among Supplier Group records
+  - label: Min Qty (As Per Stock UOM)
+    control: number
+    binds: PricingRule.min_qty
+  - label: Max Qty (As Per Stock UOM)
+    control: number
+    binds: PricingRule.max_qty
+  - label: Min Amt
+    control: money
+    binds: PricingRule.min_amt
+  - label: Max Amt
+    control: money
+    binds: PricingRule.max_amt
+  - label: Same Item
+    control: checkbox
+    binds: PricingRule.same_item
+    validation: shown only when eval:!doc.mixed_conditions && doc.apply_on != 'Transaction'
+  - label: Free Item
+    control: lookup
+    binds: PricingRule.free_item
+    validation: shown only when eval:(!doc.same_item || doc.apply_on == 'Transaction') || doc.mixed_conditions; chosen among Item records
+  - label: Qty
+    control: number
+    binds: PricingRule.free_qty
+  - label: Free Item Rate
+    control: money
+    binds: PricingRule.free_item_rate
+  - label: UOM
+    control: lookup
+    binds: PricingRule.free_item_uom
+    validation: chosen among UOM records
+  - label: Round Free Qty
+    control: checkbox
+    binds: PricingRule.round_free_qty
+  - label: Don't Enforce Free Item Qty
+    control: checkbox
+    binds: PricingRule.dont_enforce_free_item_qty
+    validation: shown only when eval:doc.price_or_product_discount == 'Product'
+  - label: Is Recursive
+    control: checkbox
+    binds: PricingRule.is_recursive
+  - label: Recurse Every (As Per Transaction UOM)
+    control: number
+    binds: PricingRule.recurse_for
+    validation: shown only when is_recursive
+  - label: Apply Recursion Over (As Per Transaction UOM)
+    control: number
+    binds: PricingRule.apply_recursion_over
+    validation: shown only when is_recursive
+  - label: Valid From
+    control: date
+    binds: PricingRule.valid_from
+  - label: Valid Up To
+    control: date
+    binds: PricingRule.valid_upto
+  - label: Company
+    control: lookup
+    binds: PricingRule.company
+    validation: chosen among Company records
+  - label: Currency
+    control: lookup
+    binds: PricingRule.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Margin Type
+    control: select
+    binds: PricingRule.margin_type
+  - label: Margin Rate or Amount
+    control: number
+    binds: PricingRule.margin_rate_or_amount
+    validation: shown only when eval:doc.margin_type
+  - label: Rate or Discount
+    control: select
+    binds: PricingRule.rate_or_discount
+  - label: Apply Discount On
+    control: select
+    binds: PricingRule.apply_discount_on
+    validation: shown only when eval:doc.apply_on == 'Transaction' && doc.rate_or_discount != 'Rate'
+  - label: Rate
+    control: money
+    binds: PricingRule.rate
+    validation: shown only when eval:doc.rate_or_discount=="Rate"
+  - label: Discount Amount
+    control: money
+    binds: PricingRule.discount_amount
+    validation: shown only when eval:doc.rate_or_discount=="Discount Amount"
+  - label: Discount Percentage
+    control: number
+    binds: PricingRule.discount_percentage
+    validation: shown only when eval:doc.rate_or_discount=="Discount Percentage"
+  - label: For Price List
+    control: lookup
+    binds: PricingRule.for_price_list
+    validation: shown only when eval:doc.rate_or_discount!="Rate"; chosen among Price List records
+  - label: Condition
+    control: text
+    binds: PricingRule.condition
+  - label: Apply Multiple Pricing Rules
+    control: checkbox
+    binds: PricingRule.apply_multiple_pricing_rules
+  - label: Apply Discount on Discounted Rate
+    control: checkbox
+    binds: PricingRule.apply_discount_on_rate
+    validation: shown only when eval:in_list(['Discount Percentage'], doc.rate_or_discount) && doc.apply_multipl
+  - label: Threshold for Suggestion (In Percentage)
+    control: number
+    binds: PricingRule.threshold_percentage
+  - label: Validate Applied Rule
+    control: checkbox
+    binds: PricingRule.validate_applied_rule
+    validation: shown only when eval:doc.price_or_product_discount == 'Price'
+  - label: Rule Description
+    control: text
+    binds: PricingRule.rule_description
+    validation: shown only when validate_applied_rule
+  - label: Has Priority
+    control: checkbox
+    binds: PricingRule.has_priority
+  - label: Priority
+    control: select
+    binds: PricingRule.priority
+    validation: shown only when has_priority
+  - label: Promotional Scheme Id
+    control: text
+    binds: PricingRule.promotional_scheme_id
+    validation: read only (computed or filled by the program)
+  - label: Promotional Scheme
+    control: lookup
+    binds: PricingRule.promotional_scheme
+    validation: read only (computed or filled by the program); chosen among Promotional Scheme records
+actions:
+  - label: Save
+    triggers: F-068
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Pricing Rule
+    note: declared by the program

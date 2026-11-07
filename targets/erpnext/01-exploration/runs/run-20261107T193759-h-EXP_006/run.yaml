@@ -1,0 +1,116 @@
+id: run-20261107T193759-h-EXP_006
+mission: M-003
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_006.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Buying
+started_at: 2026-11-07T19:37:18.300Z
+ended_at: 2026-11-07T19:37:59.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+    screenshot: step_01.png
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.5, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+    screenshot: step_02.png
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.5, "y": 0.325, "element": "Continue button"})'
+    screenshot: step_03.png
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: scroll
+      target_desc: 'scroll_web({"direction": "down", "num_pixels": 500, "scroll_element": null})'
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: other
+      target_desc: 'ctrl_f_web({"query": "Arrondi"})'
+    screenshot: step_06.png
+  - n: 7
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page loaded successfully in French. The form is for creating a new Purchase Order (Commande d'Achat). The page was not fully scrolled, so some bottom fields may be truncated.\", \"buttons\": [\"Obtenir les articles de\", \"Tools\", \"Enregistrer\"], \"page_title\": \"Nouveau(elle) Commande d'A"
+    screenshot: step_07.png
+  - n: 8
+    action:
+      type: read
+      target_desc: values shown by the application (Buying)
+    screenshot: step_07.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Purchase Order
+        path: /app/purchase-order/new
+        kind: form
+      page_title: Nouveau(elle) Commande d'Achat - new-purchase-order-qnubyoyeac
+      section_labels:
+        - Détails
+        - Adresse & Contact
+        - Termes
+        - Plus d'info
+      field_labels:
+        - Séries
+        - Date
+        - Est sous-traité
+        - Fournisseur
+        - Requis pour le
+        - Devise et liste de prix
+        - Scan Code Barre
+        - Définir le magasin cible
+        - Articles
+        - No.
+        - Code de l'Art...
+        - Requis pour l...
+        - Quantit...
+        - UdM
+        - Prix (USD)
+        - Montant (USD)
+        - Entrepôt cible
+        - Ajouter une ligne
+        - Ajouter plusieurs
+        - Télécharger
+        - Charger
+        - Quantité totale
+        - Total (USD)
+        - Taxes et Frais
+        - Catégorie de taxe
+        - Règle de Livraison
+        - Incoterm
+        - Modèle de Taxe et Frais d'Achat
+        - Taxes et Frais d'Achats
+        - No.
+        - Type
+        - Compte compt...
+        - Taux d'Impositi...
+        - Montant Net (U...
+        - Montant (USD)
+        - Total (USD)
+        - Aucune ligne
+        - Ajouter une ligne
+        - Total des Taxes et Frais (USD)
+        - Totaux (USD)
+        - Total TTC (USD)
+        - Désactiver le total arrondi
+        - Arrondi (USD)
+      buttons:
+        - Obtenir les articles de
+        - Tools
+        - Enregistrer
+      notes: Page loaded successfully in French. The form is for creating a new Purchase Order (Commande d'Achat). The page was not fully scrolled, so some bottom fields may be truncated.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/d2a12569-475f-41e4-8cfb-23c7894e425f attempts: 1"

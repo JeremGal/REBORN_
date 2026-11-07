@@ -1,0 +1,66 @@
+id: S-136
+title: Activity Log
+purpose: create, view and edit Activity Log records
+kind: form
+layout: "sections: More Information, Reference; 15 fields"
+fields:
+  - label: Subject
+    control: text
+    binds: ActivityLog.subject
+    required: true
+  - label: Message
+    control: text
+    binds: ActivityLog.content
+  - label: Date
+    control: date
+    binds: ActivityLog.communication_date
+  - label: IP Address
+    control: text
+    binds: ActivityLog.ip_address
+  - label: Operation
+    control: select
+    binds: ActivityLog.operation
+  - label: Status
+    control: select
+    binds: ActivityLog.status
+  - label: Reference Document Type
+    control: lookup
+    binds: ActivityLog.reference_doctype
+    validation: chosen among DocType records
+  - label: Reference Name
+    control: lookup
+    binds: ActivityLog.reference_name
+  - label: Reference Owner
+    control: display
+    binds: ActivityLog.reference_owner
+  - label: Timeline DocType
+    control: lookup
+    binds: ActivityLog.timeline_doctype
+    validation: chosen among DocType records
+  - label: Timeline Name
+    control: lookup
+    binds: ActivityLog.timeline_name
+  - label: Link DocType
+    control: lookup
+    binds: ActivityLog.link_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Link Name
+    control: lookup
+    binds: ActivityLog.link_name
+    validation: read only (computed or filled by the program)
+  - label: User
+    control: lookup
+    binds: ActivityLog.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Full Name
+    control: text
+    binds: ActivityLog.full_name
+actions:
+  - label: Save
+    triggers: F-137
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Activity Log
+    note: declared by the program

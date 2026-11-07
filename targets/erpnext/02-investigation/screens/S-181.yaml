@@ -1,0 +1,52 @@
+id: S-181
+title: Scheduled Job Type
+purpose: create, view and edit Scheduled Job Type records
+kind: form
+layout: "sections: Status; 9 fields"
+fields:
+  - label: Stopped
+    control: checkbox
+    binds: ScheduledJobType.stopped
+  - label: Method
+    control: text
+    binds: ScheduledJobType.method
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Server Script
+    control: lookup
+    binds: ScheduledJobType.server_script
+    validation: read only (computed or filled by the program); chosen among Server Script records
+  - label: Scheduler Event
+    control: lookup
+    binds: ScheduledJobType.scheduler_event
+    validation: read only (computed or filled by the program); chosen among Scheduler Event records
+  - label: Frequency
+    control: select
+    binds: ScheduledJobType.frequency
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Cron Format
+    control: text
+    binds: ScheduledJobType.cron_format
+    validation: read only (computed or filled by the program); shown only when eval:doc.frequency==='Cron'
+  - label: Create Log
+    control: checkbox
+    binds: ScheduledJobType.create_log
+    validation: shown only when eval:(["All", "Cron"].includes(doc.frequency) || doc.server_script)
+  - label: Last Execution
+    control: date
+    binds: ScheduledJobType.last_execution
+    validation: read only (computed or filled by the program)
+  - label: Next Execution
+    control: date
+    binds: ScheduledJobType.next_execution
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-182
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Scheduled Job Type
+    note: declared by the program

@@ -1,0 +1,151 @@
+id: S-140
+title: Communication
+purpose: create, view and edit Communication records
+kind: form
+layout: "sections: To and CC, Status, More Information, Reference, Timeline Links, Email Inbox; 36 fields"
+fields:
+  - label: Subject
+    control: text
+    binds: Communication.subject
+    required: true
+  - label: Type
+    control: select
+    binds: Communication.communication_medium
+  - label: From
+    control: text
+    binds: Communication.sender
+    validation: shown only when eval:doc.communication_medium==="Email"
+  - label: To
+    control: text
+    binds: Communication.recipients
+  - label: CC
+    control: text
+    binds: Communication.cc
+    validation: shown only when eval:doc.communication_medium==="Email"
+  - label: BCC
+    control: text
+    binds: Communication.bcc
+    validation: shown only when eval:doc.communication_medium==="Email"
+  - label: Phone No.
+    control: text
+    binds: Communication.phone_no
+    validation: shown only when eval:in_list(["Phone","SMS"],doc.communication_medium)
+  - label: Delivery Status
+    control: select
+    binds: Communication.delivery_status
+  - label: Message
+    control: text
+    binds: Communication.content
+  - label: Text Content
+    control: text
+    binds: Communication.text_content
+  - label: Communication Type
+    control: select
+    binds: Communication.communication_type
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: Communication.status
+    required: true
+    validation: shown only when eval:doc.communication_type==="Communication"
+  - label: Sent or Received
+    control: select
+    binds: Communication.sent_or_received
+    required: true
+    validation: shown only when eval:doc.communication_type==="Communication"
+  - label: Date
+    control: date
+    binds: Communication.communication_date
+  - label: Sent Read Receipt
+    control: checkbox
+    binds: Communication.read_receipt
+    validation: read only (computed or filled by the program)
+  - label: Send After
+    control: date
+    binds: Communication.send_after
+  - label: From Full Name
+    control: text
+    binds: Communication.sender_full_name
+    validation: read only (computed or filled by the program)
+  - label: Read by Recipient
+    control: checkbox
+    binds: Communication.read_by_recipient
+    validation: read only (computed or filled by the program)
+  - label: Read by Recipient On
+    control: date
+    binds: Communication.read_by_recipient_on
+    validation: read only (computed or filled by the program)
+  - label: Reference Document Type
+    control: lookup
+    binds: Communication.reference_doctype
+    validation: chosen among DocType records
+  - label: Reference Name
+    control: lookup
+    binds: Communication.reference_name
+  - label: Reference Owner
+    control: display
+    binds: Communication.reference_owner
+  - label: Email Account
+    control: lookup
+    binds: Communication.email_account
+    validation: read only (computed or filled by the program); shown only when eval:doc.communication_medium==="Email"; chosen among Email Account records
+  - label: Company
+    control: lookup
+    binds: Communication.company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: In Reply To
+    control: lookup
+    binds: Communication.in_reply_to
+    validation: read only (computed or filled by the program); chosen among Communication records
+  - label: User
+    control: lookup
+    binds: Communication.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Email Template
+    control: lookup
+    binds: Communication.email_template
+    validation: read only (computed or filled by the program); chosen among Email Template records
+  - label: Unread Notification Sent
+    control: checkbox
+    binds: Communication.unread_notification_sent
+    validation: read only (computed or filled by the program)
+  - label: Seen
+    control: checkbox
+    binds: Communication.seen
+    validation: read only (computed or filled by the program)
+  - label: User Tags
+    control: text
+    binds: Communication._user_tags
+  - label: Timeline Links
+    control: grid
+    columns:
+      - Link DocType
+      - Link Name
+      - Link Title
+  - label: Message ID
+    control: text
+    binds: Communication.message_id
+    validation: read only (computed or filled by the program)
+  - label: UID
+    control: number
+    binds: Communication.uid
+  - label: IMAP Folder
+    control: text
+    binds: Communication.imap_folder
+    validation: read only (computed or filled by the program)
+  - label: Email Status
+    control: select
+    binds: Communication.email_status
+  - label: Has  Attachment
+    control: checkbox
+    binds: Communication.has_attachment
+actions:
+  - label: Save
+    triggers: F-141
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Communication
+    note: declared by the program

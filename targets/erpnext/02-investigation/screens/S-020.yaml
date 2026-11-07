@@ -1,0 +1,69 @@
+id: S-020
+title: Bank Transaction Rule
+purpose: create, view and edit Bank Transaction Rule records
+kind: form
+layout: "sections: Action; 14 fields"
+fields:
+  - label: Rule Name
+    control: text
+    binds: BankTransactionRule.rule_name
+    required: true
+  - label: Transaction Type
+    control: select
+    binds: BankTransactionRule.transaction_type
+    required: true
+  - label: Priority
+    control: number
+    binds: BankTransactionRule.priority
+    required: true
+  - label: Min Amount
+    control: money
+    binds: BankTransactionRule.min_amount
+  - label: Max Amount
+    control: money
+    binds: BankTransactionRule.max_amount
+  - label: Rule Description
+    control: text
+    binds: BankTransactionRule.rule_description
+  - label: Company
+    control: lookup
+    binds: BankTransactionRule.company
+    required: true
+    validation: chosen among Company records
+  - label: Description Rules
+    control: grid
+    required: true
+    columns:
+      - Check
+      - Value
+  - label: Classify As
+    control: select
+    binds: BankTransactionRule.classify_as
+    required: true
+  - label: Account
+    control: lookup
+    binds: BankTransactionRule.account
+    validation: chosen among Account records
+  - label: Bank Entry Type
+    control: select
+    binds: BankTransactionRule.bank_entry_type
+  - label: Party Type
+    control: lookup
+    binds: BankTransactionRule.party_type
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: BankTransactionRule.party
+  - label: Accounts
+    control: grid
+    columns:
+      - Account
+actions:
+  - label: Save
+    triggers: F-021
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bank Transaction Rule
+    note: declared by the program

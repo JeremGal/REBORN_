@@ -1,0 +1,32 @@
+id: S-050
+title: Party Link
+purpose: create, view and edit Party Link records
+kind: form
+layout: 4 fields
+fields:
+  - label: Primary Role
+    control: lookup
+    binds: PartyLink.primary_role
+    required: true
+    validation: chosen among DocType records
+  - label: Secondary Role
+    control: lookup
+    binds: PartyLink.secondary_role
+    validation: shown only when primary_role; chosen among DocType records
+  - label: Primary Party
+    control: lookup
+    binds: PartyLink.primary_party
+    validation: shown only when primary_role
+  - label: Secondary Party
+    control: lookup
+    binds: PartyLink.secondary_party
+    validation: shown only when secondary_role
+actions:
+  - label: Save
+    triggers: F-051
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Party Link
+    note: declared by the program

@@ -1,0 +1,55 @@
+id: S-420
+title: Stock Reposting Settings
+purpose: settings of Stock Reposting Settings
+kind: settings
+layout: "sections: Scheduling, Errors Notification, Auto Reposting of Incorrect Valuation; 11 fields"
+fields:
+  - label: Limit timeslot for Stock Reposting
+    control: checkbox
+    binds: StockRepostingSettings.limit_reposting_timeslot
+  - label: Start Time
+    control: date
+    binds: StockRepostingSettings.start_time
+    validation: shown only when limit_reposting_timeslot
+  - label: End Time
+    control: date
+    binds: StockRepostingSettings.end_time
+    validation: shown only when limit_reposting_timeslot
+  - label: Limits don't apply on
+    control: select
+    binds: StockRepostingSettings.limits_dont_apply_on
+    validation: shown only when limit_reposting_timeslot
+  - label: Use Item based reposting
+    control: checkbox
+    binds: StockRepostingSettings.item_based_reposting
+  - label: Do not fetch incoming rate from Serial No
+    control: checkbox
+    binds: StockRepostingSettings.do_not_fetch_incoming_rate_from_serial_no
+  - label: Enable Parallel Reposting
+    control: checkbox
+    binds: StockRepostingSettings.enable_parallel_reposting
+    validation: "shown only when eval: doc.item_based_reposting"
+  - label: No of Parallel Reposting (Per Item)
+    control: number
+    binds: StockRepostingSettings.no_of_parallel_reposting
+    validation: "shown only when eval: doc.item_based_reposting === 1 && doc.enable_parallel_reposting === 1"
+  - label: Enable Separate Reposting for GL
+    control: checkbox
+    binds: StockRepostingSettings.enable_separate_reposting_for_gl
+    validation: shown only when item_based_reposting
+  - label: Notify Reposting Error to Role
+    control: lookup
+    binds: StockRepostingSettings.notify_reposting_error_to_role
+    validation: chosen among Role records
+  - label: Auto Repost Incorrect Valuation Entries (Weekly)
+    control: checkbox
+    binds: StockRepostingSettings.repost_incorrect_valuation_entries
+actions:
+  - label: Save
+    triggers: F-421
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Stock Reposting Settings
+    note: declared by the program

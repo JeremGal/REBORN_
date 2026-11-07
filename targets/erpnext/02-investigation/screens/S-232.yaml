@@ -1,0 +1,37 @@
+id: S-232
+title: Dock
+purpose: create, view and edit Dock records
+kind: form
+layout: "sections: Dock Items; 5 fields"
+fields:
+  - label: App
+    control: text
+    binds: Dock.app
+    required: true
+  - label: User
+    control: lookup
+    binds: Dock.user
+    validation: chosen among User records
+  - label: Standard
+    control: checkbox
+    binds: Dock.standard
+  - label: Mount On
+    control: text
+    binds: Dock.mount_on
+    validation: shown only when eval:doc.standard == 1
+  - label: Dock Items
+    control: grid
+    columns:
+      - Link Type
+      - Link To
+      - Title
+      - Hidden
+actions:
+  - label: Save
+    triggers: F-233
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Dock
+    note: declared by the program

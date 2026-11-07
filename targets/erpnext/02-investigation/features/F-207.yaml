@@ -1,0 +1,58 @@
+id: F-207
+title: Create and edit a Email Campaign
+module: CRM
+priority: should
+status: partial
+confidence: medium
+user_goal: A series of emails sent to leads or contacts on a schedule.
+entry_points:
+  - screen: S-206
+    action: open the form
+inputs:
+  - label: Campaign
+    field: EmailCampaign.campaign_name
+    type: ref
+    required: true
+  - label: "Email Campaign For "
+    field: EmailCampaign.email_campaign_for
+    type: enum
+    required: true
+  - label: Recipient
+    field: EmailCampaign.recipient
+    type: string
+    required: true
+  - label: Start Date
+    field: EmailCampaign.start_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Email Campaign form
+    screen: S-206
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Campaign, Email Campaign For , Recipient, Start Date"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Email Campaign record stored
+    entities:
+      - EmailCampaign
+entities:
+  - EmailCampaign
+screens:
+  - S-206
+acceptance:
+  - id: AC-208
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Email Campaign
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"email-campaign\")."

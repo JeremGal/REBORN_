@@ -1,0 +1,48 @@
+id: S-027
+title: Cost Center
+purpose: create, view and edit Cost Center records
+kind: form
+layout: 9 fields
+fields:
+  - label: Cost Center Name
+    control: text
+    binds: CostCenter.cost_center_name
+    required: true
+  - label: Cost Center Number
+    control: text
+    binds: CostCenter.cost_center_number
+  - label: Parent Cost Center
+    control: lookup
+    binds: CostCenter.parent_cost_center
+    required: true
+    validation: chosen among Cost Center records
+  - label: Company
+    control: lookup
+    binds: CostCenter.company
+    required: true
+    validation: chosen among Company records
+  - label: Is Group
+    control: checkbox
+    binds: CostCenter.is_group
+  - label: Disabled
+    control: checkbox
+    binds: CostCenter.disabled
+  - label: lft
+    control: number
+    binds: CostCenter.lft
+  - label: rgt
+    control: number
+    binds: CostCenter.rgt
+  - label: old_parent
+    control: lookup
+    binds: CostCenter.old_parent
+    validation: chosen among Cost Center records
+actions:
+  - label: Save
+    triggers: F-028
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Cost Center
+    note: declared by the program

@@ -1,0 +1,50 @@
+id: S-077
+title: Repost Accounting Ledger
+purpose: create, view and edit Repost Accounting Ledger records
+kind: form
+layout: "sections: Error, Miscellaneous; 7 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: RepostAccountingLedger.company
+    validation: chosen among Company records
+  - label: Delete Cancelled Ledger Entries
+    control: checkbox
+    binds: RepostAccountingLedger.delete_cancelled_entries
+  - label: Status
+    control: select
+    binds: RepostAccountingLedger.status
+    validation: read only (computed or filled by the program); shown only when eval:doc.docstatus >= 1;
+  - label: Vouchers
+    control: grid
+    columns:
+      - Voucher Type
+      - Voucher No
+      - Status
+  - label: Error Log
+    control: text
+    binds: RepostAccountingLedger.error_log
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: RepostAccountingLedger.amended_from
+    validation: read only (computed or filled by the program); chosen among Repost Accounting Ledger records
+  - label: Scheduled Job
+    control: lookup
+    binds: RepostAccountingLedger.scheduled_job
+    validation: read only (computed or filled by the program); chosen among RQ Job records
+actions:
+  - label: Save
+    triggers: F-078
+  - label: Submit
+    triggers: F-078
+  - label: Cancel
+    triggers: F-078
+  - label: Amend
+    triggers: F-078
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Repost Accounting Ledger
+    note: declared by the program

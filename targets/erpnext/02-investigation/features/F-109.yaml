@@ -1,0 +1,63 @@
+id: F-109
+title: Create and edit a Auto Repeat
+module: Automation
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Auto Repeat records.
+entry_points:
+  - screen: S-108
+    action: open the form
+inputs:
+  - label: Reference Document Type
+    field: AutoRepeat.reference_doctype
+    type: ref
+    required: true
+  - label: Reference Document
+    field: AutoRepeat.reference_document
+    type: string
+    required: true
+  - label: Start Date
+    field: AutoRepeat.start_date
+    type: date
+    required: true
+  - label: Frequency
+    field: AutoRepeat.frequency
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Auto Repeat form
+    screen: S-108
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Reference Document Type, Reference Document, Start Date, Frequency"
+  - n: 3
+    actor: user
+    does: "adds lines in: Assignee, Repeat on Days"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Auto Repeat record stored
+    entities:
+      - AutoRepeat
+entities:
+  - AutoRepeat
+  - AutoRepeatUser
+  - AutoRepeatDay
+screens:
+  - S-108
+acceptance:
+  - id: AC-110
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Auto Repeat
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"auto-repeat\")."

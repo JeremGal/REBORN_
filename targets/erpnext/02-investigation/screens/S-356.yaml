@@ -1,0 +1,19 @@
+id: S-356
+title: Branch
+purpose: create, view and edit Branch records
+kind: form
+layout: 1 fields
+fields:
+  - label: Branch
+    control: text
+    binds: Branch.branch
+    required: true
+actions:
+  - label: Save
+    triggers: F-357
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Branch
+    note: declared by the program

@@ -1,0 +1,58 @@
+id: F-391
+title: Create and edit a Item Alternative
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: An item you can use in place of another.
+entry_points:
+  - screen: S-390
+    action: open the form
+inputs:
+  - label: Item Code
+    field: ItemAlternative.item_code
+    type: ref
+    required: true
+  - label: Alternative Item Code
+    field: ItemAlternative.alternative_item_code
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Item Alternative form
+    screen: S-390
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Item Code, Alternative Item Code"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Item Alternative record stored
+    entities:
+      - ItemAlternative
+entities:
+  - ItemAlternative
+screens:
+  - S-390
+acceptance:
+  - id: AC-392
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Item Alternative
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 64
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"item-alternative\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Il n'est pas autorisé de définir un article alternatif pour l'article TEST-ART-001"

@@ -1,0 +1,99 @@
+id: F-351
+title: Create, submit and cancel a Sales Order
+module: Selling
+priority: must
+status: partial
+confidence: medium
+user_goal: A customer's confirmed order.
+entry_points:
+  - screen: S-350
+    action: open the form
+inputs:
+  - label: Company
+    field: SalesOrder.company
+    type: ref
+    required: true
+  - label: Series
+    field: SalesOrder.naming_series
+    type: enum
+    required: true
+  - label: Customer
+    field: SalesOrder.customer
+    type: ref
+    required: true
+  - label: Order Type
+    field: SalesOrder.order_type
+    type: enum
+    required: true
+  - label: Date
+    field: SalesOrder.transaction_date
+    type: date
+    required: true
+  - label: Currency
+    field: SalesOrder.currency
+    type: ref
+    required: true
+  - label: Exchange Rate
+    field: SalesOrder.conversion_rate
+    type: decimal
+    required: true
+  - label: Price List
+    field: SalesOrder.selling_price_list
+    type: ref
+    required: true
+  - label: Price List Exchange Rate
+    field: SalesOrder.plc_conversion_rate
+    type: decimal
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Sales Order form
+    screen: S-350
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Series, Customer, Order Type, Date, Currency, Exchange Rate, Price List, Price List Exchange Rate"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items, Sales Taxes and Charges, Item Wise Tax Details, Packed Items, Pricing Rule Detail, Payment Schedule, Sales Team"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Sales Order record stored
+    entities:
+      - SalesOrder
+entities:
+  - SalesOrder
+  - SalesOrderItem
+  - SalesTaxesAndCharges
+  - ItemWiseTaxDetail
+  - PackedItem
+  - PricingRuleDetail
+  - PaymentSchedule
+  - SalesTeam
+screens:
+  - S-350
+acceptance:
+  - id: AC-352
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Sales Order
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 135
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"sales-order\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: La liste de prix Standard Buying ne peut pas être utilisée pour une transaction de vente"

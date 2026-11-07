@@ -1,0 +1,42 @@
+id: S-096
+title: Asset Category
+purpose: create, view and edit Asset Category records
+kind: form
+layout: "sections: Depreciation Options, Finance Book Detail, Accounts; 5 fields"
+fields:
+  - label: Asset Category Name
+    control: text
+    binds: AssetCategory.asset_category_name
+    required: true
+  - label: Enable Capital Work in Progress Accounting
+    control: checkbox
+    binds: AssetCategory.enable_cwip_accounting
+  - label: Non Depreciable Category
+    control: checkbox
+    binds: AssetCategory.non_depreciable_category
+  - label: Finance Books
+    control: grid
+    columns:
+      - Finance Book
+      - Depreciation Method
+      - Frequency of Depreciation (Months)
+      - Total Number of Depreciations
+      - Depreciation Posting Date
+  - label: Accounts
+    control: grid
+    required: true
+    columns:
+      - Company
+      - Fixed Asset Account
+      - Accumulated Depreciation Account
+      - Depreciation Expense Account
+      - Capital Work In Progress Account
+actions:
+  - label: Save
+    triggers: F-097
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Category
+    note: declared by the program

@@ -1,0 +1,58 @@
+id: F-045
+title: Create and edit a Ledger Merge
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: Combine two or more accounts into one.
+entry_points:
+  - screen: S-044
+    action: open the form
+inputs:
+  - label: Root Type
+    field: LedgerMerge.root_type
+    type: enum
+    required: true
+  - label: Account
+    field: LedgerMerge.account
+    type: ref
+    required: true
+  - label: Company
+    field: LedgerMerge.company
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Ledger Merge form
+    screen: S-044
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Root Type, Account, Company"
+  - n: 3
+    actor: user
+    does: "adds lines in: Accounts to Merge"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Ledger Merge record stored
+    entities:
+      - LedgerMerge
+entities:
+  - LedgerMerge
+  - LedgerMergeAccounts
+screens:
+  - S-044
+acceptance:
+  - id: AC-046
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Ledger Merge
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

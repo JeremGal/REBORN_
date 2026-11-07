@@ -1,0 +1,21 @@
+id: S-328
+title: Task Type
+purpose: create, view and edit Task Type records
+kind: form
+layout: 2 fields
+fields:
+  - label: Weight
+    control: number
+    binds: TaskType.weight
+  - label: Description
+    control: text
+    binds: TaskType.description
+actions:
+  - label: Save
+    triggers: F-329
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Task Type
+    note: declared by the program

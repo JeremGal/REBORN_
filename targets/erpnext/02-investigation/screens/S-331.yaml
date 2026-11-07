@@ -1,0 +1,51 @@
+id: S-331
+title: Quality Action
+purpose: create, view and edit Quality Action records
+kind: form
+layout: "sections: Resolution; 8 fields"
+fields:
+  - label: Corrective/Preventive
+    control: select
+    binds: QualityAction.corrective_preventive
+    required: true
+  - label: Review
+    control: lookup
+    binds: QualityAction.review
+    validation: chosen among Quality Review records
+  - label: Feedback
+    control: lookup
+    binds: QualityAction.feedback
+    validation: chosen among Quality Feedback records
+  - label: Status
+    control: select
+    binds: QualityAction.status
+    validation: read only (computed or filled by the program)
+  - label: Date
+    control: date
+    binds: QualityAction.date
+    validation: read only (computed or filled by the program)
+  - label: Goal
+    control: lookup
+    binds: QualityAction.goal
+    validation: chosen among Quality Goal records
+  - label: Procedure
+    control: lookup
+    binds: QualityAction.procedure
+    validation: chosen among Quality Procedure records
+  - label: Resolutions
+    control: grid
+    columns:
+      - Problem
+      - Resolution
+      - Status
+      - Responsible
+      - Completion By
+actions:
+  - label: Save
+    triggers: F-332
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quality Action
+    note: declared by the program

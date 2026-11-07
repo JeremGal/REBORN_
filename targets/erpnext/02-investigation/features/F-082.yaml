@@ -1,0 +1,81 @@
+id: F-082
+title: Create, submit and cancel a Share Transfer
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: A record of shares issued, bought back or moved between shareholders.
+entry_points:
+  - screen: S-081
+    action: open the form
+inputs:
+  - label: Transfer Type
+    field: ShareTransfer.transfer_type
+    type: enum
+    required: true
+  - label: Date
+    field: ShareTransfer.date
+    type: date
+    required: true
+  - label: Equity/Liability Account
+    field: ShareTransfer.equity_or_liability_account
+    type: ref
+    required: true
+  - label: Share Type
+    field: ShareTransfer.share_type
+    type: ref
+    required: true
+  - label: From No
+    field: ShareTransfer.from_no
+    type: integer
+    required: true
+  - label: Rate
+    field: ShareTransfer.rate
+    type: money
+    required: true
+  - label: No of Shares
+    field: ShareTransfer.no_of_shares
+    type: integer
+    required: true
+  - label: To No
+    field: ShareTransfer.to_no
+    type: integer
+    required: true
+  - label: Company
+    field: ShareTransfer.company
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Share Transfer form
+    screen: S-081
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Transfer Type, Date, Equity/Liability Account, Share Type, From No, Rate, No of Shares, To No, Company"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 4
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Share Transfer record stored
+    entities:
+      - ShareTransfer
+entities:
+  - ShareTransfer
+screens:
+  - S-081
+acceptance:
+  - id: AC-083
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Share Transfer
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"share-transfer\")."

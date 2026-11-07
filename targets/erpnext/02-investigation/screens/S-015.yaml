@@ -1,0 +1,109 @@
+id: S-015
+title: Bank Guarantee
+purpose: create, view and edit Bank Guarantee records
+kind: form
+layout: "sections: Bank Account Info, Other Details; 24 fields"
+fields:
+  - label: Bank Guarantee Type
+    control: select
+    binds: BankGuarantee.bg_type
+    required: true
+  - label: Reference Document Type
+    control: lookup
+    binds: BankGuarantee.reference_doctype
+    validation: chosen among DocType records
+  - label: Reference Document Name
+    control: lookup
+    binds: BankGuarantee.reference_docname
+  - label: Customer
+    control: lookup
+    binds: BankGuarantee.customer
+    validation: 'shown only when eval: doc.reference_doctype == "Sales Order"; chosen among Customer records'
+  - label: Supplier
+    control: lookup
+    binds: BankGuarantee.supplier
+    validation: 'shown only when eval: doc.reference_doctype == "Purchase Order"; chosen among Supplier records'
+  - label: Project
+    control: lookup
+    binds: BankGuarantee.project
+    validation: chosen among Project records
+  - label: Amount
+    control: money
+    binds: BankGuarantee.amount
+    required: true
+  - label: Start Date
+    control: date
+    binds: BankGuarantee.start_date
+    required: true
+  - label: Validity in Days
+    control: number
+    binds: BankGuarantee.validity
+  - label: End Date
+    control: date
+    binds: BankGuarantee.end_date
+    validation: read only (computed or filled by the program)
+  - label: Bank
+    control: lookup
+    binds: BankGuarantee.bank
+    validation: chosen among Bank records
+  - label: Bank Account
+    control: lookup
+    binds: BankGuarantee.bank_account
+    validation: chosen among Bank Account records
+  - label: Account
+    control: lookup
+    binds: BankGuarantee.account
+    validation: read only (computed or filled by the program); chosen among Account records
+  - label: Bank Account No
+    control: text
+    binds: BankGuarantee.bank_account_no
+    validation: read only (computed or filled by the program)
+  - label: IBAN
+    control: text
+    binds: BankGuarantee.iban
+    validation: read only (computed or filled by the program)
+  - label: Branch Code
+    control: text
+    binds: BankGuarantee.branch_code
+    validation: read only (computed or filled by the program)
+  - label: SWIFT number
+    control: text
+    binds: BankGuarantee.swift_number
+    validation: read only (computed or filled by the program)
+  - label: Clauses and Conditions
+    control: text
+    binds: BankGuarantee.more_information
+  - label: Bank Guarantee Number
+    control: text
+    binds: BankGuarantee.bank_guarantee_number
+  - label: Name of Beneficiary
+    control: text
+    binds: BankGuarantee.name_of_beneficiary
+  - label: Margin Money
+    control: money
+    binds: BankGuarantee.margin_money
+  - label: Charges Incurred
+    control: money
+    binds: BankGuarantee.charges
+  - label: Fixed Deposit Number
+    control: text
+    binds: BankGuarantee.fixed_deposit_number
+  - label: Amended From
+    control: lookup
+    binds: BankGuarantee.amended_from
+    validation: read only (computed or filled by the program); chosen among Bank Guarantee records
+actions:
+  - label: Save
+    triggers: F-016
+  - label: Submit
+    triggers: F-016
+  - label: Cancel
+    triggers: F-016
+  - label: Amend
+    triggers: F-016
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bank Guarantee
+    note: declared by the program

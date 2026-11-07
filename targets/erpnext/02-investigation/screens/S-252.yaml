@@ -1,0 +1,31 @@
+id: S-252
+title: Tag Link
+purpose: create, view and edit Tag Link records
+kind: form
+layout: 4 fields
+fields:
+  - label: Document Type
+    control: lookup
+    binds: TagLink.document_type
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Document Name
+    control: lookup
+    binds: TagLink.document_name
+    validation: read only (computed or filled by the program)
+  - label: Document Tag
+    control: lookup
+    binds: TagLink.tag
+    validation: read only (computed or filled by the program); chosen among Tag records
+  - label: Document Title
+    control: text
+    binds: TagLink.title
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-253
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Tag Link
+    note: declared by the program

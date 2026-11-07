@@ -1,0 +1,65 @@
+id: F-374
+title: Create and edit a Sales Partner
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: A distributor, dealer or reseller who sells for you on commission.
+entry_points:
+  - screen: S-373
+    action: open the form
+inputs:
+  - label: Sales Partner Name
+    field: SalesPartner.partner_name
+    type: string
+    required: true
+  - label: Territory
+    field: SalesPartner.territory
+    type: ref
+    required: true
+  - label: Commission Rate
+    field: SalesPartner.commission_rate
+    type: decimal
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Sales Partner form
+    screen: S-373
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Sales Partner Name, Territory, Commission Rate"
+  - n: 3
+    actor: user
+    does: "adds lines in: Targets"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Sales Partner record stored
+    entities:
+      - SalesPartner
+entities:
+  - SalesPartner
+  - TargetDetail
+screens:
+  - S-373
+acceptance:
+  - id: AC-375
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Sales Partner
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 136
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"sales-partner\")."

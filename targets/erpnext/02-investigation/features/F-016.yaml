@@ -1,0 +1,65 @@
+id: F-016
+title: Create, submit and cancel a Bank Guarantee
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: A guarantee a bank gives on your behalf, or on a customer's or supplier's.
+entry_points:
+  - screen: S-015
+    action: open the form
+inputs:
+  - label: Bank Guarantee Type
+    field: BankGuarantee.bg_type
+    type: enum
+    required: true
+  - label: Amount
+    field: BankGuarantee.amount
+    type: money
+    required: true
+  - label: Start Date
+    field: BankGuarantee.start_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Bank Guarantee form
+    screen: S-015
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Bank Guarantee Type, Amount, Start Date"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 4
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Bank Guarantee record stored
+    entities:
+      - BankGuarantee
+entities:
+  - BankGuarantee
+screens:
+  - S-015
+acceptance:
+  - id: AC-017
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Bank Guarantee
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 25
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"bank-guarantee\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Veuillez sélectionner le client ou le fournisseur."

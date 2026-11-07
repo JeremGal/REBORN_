@@ -1,0 +1,80 @@
+id: S-157
+title: File
+purpose: create, view and edit File records
+kind: form
+layout: "sections: Preview; 17 fields"
+fields:
+  - label: File Name
+    control: text
+    binds: File.file_name
+    validation: read only (computed or filled by the program)
+  - label: Is Private
+    control: checkbox
+    binds: File.is_private
+    validation: shown only when eval:!doc.is_folder
+  - label: File Type
+    control: text
+    binds: File.file_type
+    validation: read only (computed or filled by the program)
+  - label: Is Home Folder
+    control: checkbox
+    binds: File.is_home_folder
+  - label: Is Attachments Folder
+    control: checkbox
+    binds: File.is_attachments_folder
+  - label: File Size
+    control: number
+    binds: File.file_size
+    validation: read only (computed or filled by the program)
+  - label: File URL
+    control: text
+    binds: File.file_url
+    validation: read only (computed or filled by the program); shown only when eval:!doc.is_folder
+  - label: Thumbnail URL
+    control: text
+    binds: File.thumbnail_url
+    validation: read only (computed or filled by the program)
+  - label: Folder
+    control: lookup
+    binds: File.folder
+    validation: read only (computed or filled by the program); chosen among File records
+  - label: Is Folder
+    control: checkbox
+    binds: File.is_folder
+    validation: read only (computed or filled by the program)
+  - label: Attached To DocType
+    control: lookup
+    binds: File.attached_to_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Attached To Name
+    control: text
+    binds: File.attached_to_name
+    validation: read only (computed or filled by the program)
+  - label: Attached To Field
+    control: text
+    binds: File.attached_to_field
+    validation: read only (computed or filled by the program)
+  - label: old_parent
+    control: text
+    binds: File.old_parent
+  - label: Content Hash
+    control: text
+    binds: File.content_hash
+    validation: read only (computed or filled by the program)
+  - label: Uploaded To Dropbox
+    control: checkbox
+    binds: File.uploaded_to_dropbox
+    validation: read only (computed or filled by the program)
+  - label: Uploaded To Google Drive
+    control: checkbox
+    binds: File.uploaded_to_google_drive
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-158
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of File
+    note: declared by the program

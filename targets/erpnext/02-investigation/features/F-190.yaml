@@ -1,0 +1,54 @@
+id: F-190
+title: Create and edit a Success Action
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Success Action records.
+entry_points:
+  - screen: S-189
+    action: open the form
+inputs:
+  - label: Reference Document Type
+    field: SuccessAction.ref_doctype
+    type: ref
+    required: true
+  - label: First Success Message
+    field: SuccessAction.first_success_message
+    type: string
+    required: true
+  - label: Message
+    field: SuccessAction.message
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Success Action form
+    screen: S-189
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Reference Document Type, First Success Message, Message"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Success Action record stored
+    entities:
+      - SuccessAction
+entities:
+  - SuccessAction
+screens:
+  - S-189
+acceptance:
+  - id: AC-191
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Success Action
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

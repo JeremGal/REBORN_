@@ -1,0 +1,51 @@
+id: F-226
+title: Create and edit a Dashboard
+module: Desk
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Dashboard records.
+entry_points:
+  - screen: S-225
+    action: open the form
+inputs:
+  - label: Dashboard Name
+    field: Dashboard.dashboard_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Dashboard form
+    screen: S-225
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Dashboard Name"
+  - n: 3
+    actor: user
+    does: "adds lines in: Charts, Cards"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Dashboard record stored
+    entities:
+      - Dashboard
+entities:
+  - Dashboard
+  - DashboardChartLink
+  - NumberCardLink
+screens:
+  - S-225
+acceptance:
+  - id: AC-227
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Dashboard
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

@@ -1,0 +1,111 @@
+id: S-364
+title: Email Digest
+purpose: create, view and edit Email Digest records
+kind: form
+layout: "sections: Email Digest Settings, Accounts, Operations, Other; 30 fields"
+fields:
+  - label: Enabled
+    control: checkbox
+    binds: EmailDigest.enabled
+  - label: For Company
+    control: lookup
+    binds: EmailDigest.company
+    required: true
+    validation: chosen among Company records
+  - label: How frequently?
+    control: select
+    binds: EmailDigest.frequency
+    required: true
+  - label: "Next email will be sent on:"
+    control: text
+    binds: EmailDigest.next_send
+    validation: read only (computed or filled by the program); shown only when eval:doc.enabled
+  - label: Recipients
+    control: grid
+    required: true
+    columns:
+      - Recipient
+  - label: New Income
+    control: checkbox
+    binds: EmailDigest.income
+  - label: New Expenses
+    control: checkbox
+    binds: EmailDigest.expenses_booked
+  - label: Annual Income
+    control: checkbox
+    binds: EmailDigest.income_year_to_date
+  - label: Annual Expenses
+    control: checkbox
+    binds: EmailDigest.expense_year_to_date
+  - label: Bank Balance
+    control: checkbox
+    binds: EmailDigest.bank_balance
+  - label: Bank Credit Balance
+    control: checkbox
+    binds: EmailDigest.credit_balance
+  - label: Receivables
+    control: checkbox
+    binds: EmailDigest.invoiced_amount
+  - label: Payables
+    control: checkbox
+    binds: EmailDigest.payables
+  - label: Sales Orders to Bill
+    control: checkbox
+    binds: EmailDigest.sales_orders_to_bill
+  - label: Purchase Orders to Bill
+    control: checkbox
+    binds: EmailDigest.purchase_orders_to_bill
+  - label: New Sales Orders
+    control: checkbox
+    binds: EmailDigest.sales_order
+  - label: New Purchase Orders
+    control: checkbox
+    binds: EmailDigest.purchase_order
+  - label: Sales Orders to Deliver
+    control: checkbox
+    binds: EmailDigest.sales_orders_to_deliver
+  - label: Purchase Orders to Receive
+    control: checkbox
+    binds: EmailDigest.purchase_orders_to_receive
+  - label: New Sales Invoice
+    control: checkbox
+    binds: EmailDigest.sales_invoice
+  - label: New Purchase Invoice
+    control: checkbox
+    binds: EmailDigest.purchase_invoice
+  - label: New Quotations
+    control: checkbox
+    binds: EmailDigest.new_quotations
+  - label: Open Quotations
+    control: checkbox
+    binds: EmailDigest.pending_quotations
+  - label: Open Issues
+    control: checkbox
+    binds: EmailDigest.issue
+  - label: Open Projects
+    control: checkbox
+    binds: EmailDigest.project
+  - label: Purchase Orders Items Overdue
+    control: checkbox
+    binds: EmailDigest.purchase_orders_items_overdue
+  - label: Upcoming Calendar Events
+    control: checkbox
+    binds: EmailDigest.calendar_events
+  - label: Open To Do
+    control: checkbox
+    binds: EmailDigest.todo_list
+  - label: Open Notifications
+    control: checkbox
+    binds: EmailDigest.notifications
+  - label: Add Quote
+    control: checkbox
+    binds: EmailDigest.add_quote
+actions:
+  - label: Save
+    triggers: F-365
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Email Digest
+    note: declared by the program

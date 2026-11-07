@@ -1,0 +1,18 @@
+id: S-432
+title: Issue Type
+purpose: create, view and edit Issue Type records
+kind: form
+layout: 1 fields
+fields:
+  - label: Description
+    control: text
+    binds: IssueType.description
+actions:
+  - label: Save
+    triggers: F-433
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Issue Type
+    note: declared by the program

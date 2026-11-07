@@ -1,0 +1,41 @@
+id: F-286
+title: Configure OAuth Settings
+module: Integrations
+priority: could
+status: partial
+confidence: medium
+user_goal: A Frappe Framework instance can function as an OAuth Client, Resource, or Authorization server. This DocType contains settings related to all three.
+entry_points:
+  - screen: S-285
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the OAuth Settings form
+    screen: S-285
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - OAuthSettings
+entities:
+  - OAuthSettings
+screens:
+  - S-285
+acceptance:
+  - id: AC-287
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of OAuth Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

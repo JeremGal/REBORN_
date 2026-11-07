@@ -1,0 +1,262 @@
+id: S-416
+title: Stock Entry
+purpose: create, view and edit Stock Entry records
+kind: form
+layout: "tabs: Details, Additional Costs, Supplier Info, Accounting Dimensions, Other Info, Connections; sections: BOM Info, Process Loss, Default Warehouse, Items, Supplier Details, Printing Settings, Reference, More Information; 58 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: StockEntry.company
+    required: true
+    validation: chosen among Company records
+  - label: Series
+    control: select
+    binds: StockEntry.naming_series
+    required: true
+  - label: Stock Entry Type
+    control: lookup
+    binds: StockEntry.stock_entry_type
+    required: true
+    validation: chosen among Stock Entry Type records
+  - label: Purpose
+    control: select
+    binds: StockEntry.purpose
+    validation: read only (computed or filled by the program)
+  - label: Edit Posting Date and Time
+    control: checkbox
+    binds: StockEntry.set_posting_time
+    validation: shown only when eval:doc.docstatus==0
+  - label: Posting Date
+    control: date
+    binds: StockEntry.posting_date
+  - label: Posting Time
+    control: date
+    binds: StockEntry.posting_time
+  - label: Add to Transit
+    control: checkbox
+    binds: StockEntry.add_to_transit
+    validation: "shown only when eval: doc.purpose=='Material Transfer' && !doc.outgoing_stock_entry"
+  - label: Apply Putaway Rule
+    control: checkbox
+    binds: StockEntry.apply_putaway_rule
+    validation: shown only when eval:in_list(["Material Transfer", "Material Receipt"], doc.purpose)
+  - label: Inspection Required
+    control: checkbox
+    binds: StockEntry.inspection_required
+  - label: Work Order
+    control: lookup
+    binds: StockEntry.work_order
+    validation: shown only when eval:in_list(["Material Transfer for Manufacture", "Manufacture", "Material Cons; chosen among Work Order records
+  - label: Subcontracting Order
+    control: lookup
+    binds: StockEntry.subcontracting_order
+    validation: "read only (computed or filled by the program); shown only when eval: erpnext.stock.is_subcontracting_or_return_transfer(doc); chosen among Subcontracting Order records"
+  - label: Stock Entry (Outward GIT)
+    control: lookup
+    binds: StockEntry.outgoing_stock_entry
+    validation: read only (computed or filled by the program); shown only when eval:doc.purpose == 'Material Transfer'; chosen among Stock Entry records
+  - label: Source Stock Entry (Manufacture)
+    control: lookup
+    binds: StockEntry.source_stock_entry
+    validation: shown only when eval:doc.purpose == 'Disassemble'; chosen among Stock Entry records
+  - label: From BOM
+    control: checkbox
+    binds: StockEntry.from_bom
+    validation: shown only when eval:in_list(["Material Issue", "Manufacture", "Repack", "Send to Subcontractor"
+  - label: Use Multi-Level BOM
+    control: checkbox
+    binds: StockEntry.use_multi_level_bom
+    validation: shown only when from_bom
+  - label: BOM No
+    control: lookup
+    binds: StockEntry.bom_no
+    validation: shown only when from_bom; chosen among BOM records
+  - label: "Finished Good Quantity "
+    control: number
+    binds: StockEntry.fg_completed_qty
+    validation: shown only when from_bom
+  - label: "% Process Loss"
+    control: number
+    binds: StockEntry.process_loss_percentage
+    validation: shown only when eval:doc.from_bom && doc.fg_completed_qty
+  - label: Process Loss Qty
+    control: number
+    binds: StockEntry.process_loss_qty
+    validation: 'shown only when eval: doc.fg_completed_qty > 0 && in_list(["Manufacture", "Repack"], doc.purpose'
+  - label: Default Source Warehouse
+    control: lookup
+    binds: StockEntry.from_warehouse
+    validation: chosen among Warehouse records
+  - label: Source Warehouse Address Link
+    control: lookup
+    binds: StockEntry.source_warehouse_address
+    validation: shown only when from_warehouse; chosen among Address records
+  - label: Source Warehouse Address
+    control: text
+    binds: StockEntry.source_address_display
+    validation: read only (computed or filled by the program)
+  - label: Default Target Warehouse
+    control: lookup
+    binds: StockEntry.to_warehouse
+    validation: chosen among Warehouse records
+  - label: Target Warehouse Address Link
+    control: lookup
+    binds: StockEntry.target_warehouse_address
+    validation: shown only when to_warehouse; chosen among Address records
+  - label: Target Warehouse Address
+    control: text
+    binds: StockEntry.target_address_display
+    validation: read only (computed or filled by the program)
+  - label: Scan Barcode
+    control: text
+    binds: StockEntry.scan_barcode
+  - label: Last Scanned Warehouse
+    control: text
+    binds: StockEntry.last_scanned_warehouse
+    validation: "shown only when eval: doc.last_scanned_warehouse"
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Source Warehouse
+      - Target Warehouse
+      - Item Code
+      - Qty
+      - Basic Rate (as per Stock UOM)
+  - label: Total Outgoing Value (Consumption)
+    control: money
+    binds: StockEntry.total_outgoing_value
+    validation: read only (computed or filled by the program)
+  - label: Total Incoming Value (Receipt)
+    control: money
+    binds: StockEntry.total_incoming_value
+    validation: read only (computed or filled by the program)
+  - label: Total Value Difference (Incoming - Outgoing)
+    control: money
+    binds: StockEntry.value_difference
+    validation: read only (computed or filled by the program)
+  - label: Additional Costs
+    control: grid
+    columns:
+      - Expense Account
+      - Description
+      - Amount
+  - label: Total Additional Costs
+    control: money
+    binds: StockEntry.total_additional_costs
+    validation: read only (computed or filled by the program)
+  - label: Supplier
+    control: lookup
+    binds: StockEntry.supplier
+    validation: "shown only when eval: erpnext.stock.is_subcontracting_or_return_transfer(doc); chosen among Supplier records"
+  - label: Supplier Name
+    control: text
+    binds: StockEntry.supplier_name
+    validation: "read only (computed or filled by the program); shown only when eval: erpnext.stock.is_subcontracting_or_return_transfer(doc)"
+  - label: Supplier Address
+    control: lookup
+    binds: StockEntry.supplier_address
+    validation: "shown only when eval: erpnext.stock.is_subcontracting_or_return_transfer(doc); chosen among Address records"
+  - label: Address
+    control: text
+    binds: StockEntry.address_display
+  - label: Project
+    control: lookup
+    binds: StockEntry.project
+    validation: chosen among Project records
+  - label: Cost Center
+    control: lookup
+    binds: StockEntry.cost_center
+    validation: chosen among Cost Center records
+  - label: Print Heading
+    control: lookup
+    binds: StockEntry.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Letter Head
+    control: lookup
+    binds: StockEntry.letter_head
+    validation: chosen among Letter Head records
+  - label: Delivery Note No
+    control: lookup
+    binds: StockEntry.delivery_note_no
+    validation: read only (computed or filled by the program); shown only when eval:doc.purpose=="Sales Return"; chosen among Delivery Note records
+  - label: Sales Invoice No
+    control: lookup
+    binds: StockEntry.sales_invoice_no
+    validation: read only (computed or filled by the program); shown only when eval:doc.purpose=="Sales Return"; chosen among Sales Invoice records
+  - label: Job Card
+    control: lookup
+    binds: StockEntry.job_card
+    validation: read only (computed or filled by the program); chosen among Job Card records
+  - label: Pick List
+    control: lookup
+    binds: StockEntry.pick_list
+    validation: read only (computed or filled by the program); chosen among Pick List records
+  - label: Asset Repair
+    control: lookup
+    binds: StockEntry.asset_repair
+    validation: read only (computed or filled by the program); shown only when eval:doc.asset_repair; chosen among Asset Repair records
+  - label: Purchase Receipt No
+    control: lookup
+    binds: StockEntry.purchase_receipt_no
+    validation: read only (computed or filled by the program); shown only when eval:doc.purpose=="Purchase Return"; chosen among Purchase Receipt records
+  - label: Purchase Order
+    control: lookup
+    binds: StockEntry.purchase_order
+    validation: "shown only when eval: erpnext.stock.is_subcontracting_or_return_transfer(doc); chosen among Purchase Order records"
+  - label: Subcontracting Inward Order
+    control: lookup
+    binds: StockEntry.subcontracting_inward_order
+    validation: read only (computed or filled by the program); shown only when subcontracting_inward_order; chosen among Subcontracting Inward Order records
+  - label: Is Additional Transfer Entry
+    control: checkbox
+    binds: StockEntry.is_additional_transfer_entry
+    validation: read only (computed or filled by the program)
+  - label: Is Opening
+    control: select
+    binds: StockEntry.is_opening
+  - label: Remarks
+    control: text
+    binds: StockEntry.remarks
+  - label: Per Transferred
+    control: number
+    binds: StockEntry.per_transferred
+    validation: read only (computed or filled by the program)
+  - label: Total Amount
+    control: money
+    binds: StockEntry.total_amount
+    validation: read only (computed or filled by the program); shown only when total_amount
+  - label: Amended From
+    control: lookup
+    binds: StockEntry.amended_from
+    validation: read only (computed or filled by the program); chosen among Stock Entry records
+  - label: Credit Note
+    control: lookup
+    binds: StockEntry.credit_note
+    validation: chosen among Journal Entry records
+  - label: Is Return
+    control: checkbox
+    binds: StockEntry.is_return
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-417
+  - label: Submit
+    triggers: F-417
+  - label: Cancel
+    triggers: F-417
+  - label: Amend
+    triggers: F-417
+status: confirmed
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Stock Entry
+    note: declared by the program
+  - ref: run-20261107T193833-h-EXP_008
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 12/17 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T193833-h-EXP_008/step_06.png
+  - 01-exploration/runs/run-20261107T193833-h-EXP_008/step_06.png

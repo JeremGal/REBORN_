@@ -1,0 +1,51 @@
+id: F-261
+title: Create and edit a Email Account
+module: Email
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Email Account records.
+entry_points:
+  - screen: S-260
+    action: open the form
+inputs:
+  - label: Email Address
+    field: EmailAccount.email_id
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Email Account form
+    screen: S-260
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Email Address"
+  - n: 3
+    actor: user
+    does: "adds lines in: IMAP Folder, Reply-To Addresses"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Email Account record stored
+    entities:
+      - EmailAccount
+entities:
+  - EmailAccount
+  - IMAPFolder
+  - ReplyToAddress
+screens:
+  - S-260
+acceptance:
+  - id: AC-262
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Email Account
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"email-account\")."

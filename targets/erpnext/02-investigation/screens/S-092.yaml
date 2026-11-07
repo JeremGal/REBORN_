@@ -1,0 +1,43 @@
+id: S-092
+title: Unreconcile Payment
+purpose: create, view and edit Unreconcile Payment records
+kind: form
+layout: 5 fields
+fields:
+  - label: Company
+    control: lookup
+    binds: UnreconcilePayment.company
+    validation: chosen among Company records
+  - label: Voucher Type
+    control: lookup
+    binds: UnreconcilePayment.voucher_type
+    validation: chosen among DocType records
+  - label: Voucher No
+    control: lookup
+    binds: UnreconcilePayment.voucher_no
+  - label: Allocations
+    control: grid
+    columns:
+      - Reference Type
+      - Reference Name
+      - Allocated Amount
+      - Unlinked
+  - label: Amended From
+    control: lookup
+    binds: UnreconcilePayment.amended_from
+    validation: read only (computed or filled by the program); chosen among Unreconcile Payment records
+actions:
+  - label: Save
+    triggers: F-093
+  - label: Submit
+    triggers: F-093
+  - label: Cancel
+    triggers: F-093
+  - label: Amend
+    triggers: F-093
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Unreconcile Payment
+    note: declared by the program

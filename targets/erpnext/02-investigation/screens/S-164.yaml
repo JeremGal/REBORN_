@@ -1,0 +1,28 @@
+id: S-164
+title: Package
+purpose: create, view and edit Package records
+kind: form
+layout: 4 fields
+fields:
+  - label: Package Name
+    control: text
+    binds: Package.package_name
+    required: true
+  - label: Readme
+    control: text
+    binds: Package.readme
+  - label: License Type
+    control: select
+    binds: Package.license_type
+  - label: License
+    control: text
+    binds: Package.license
+actions:
+  - label: Save
+    triggers: F-165
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Package
+    note: declared by the program

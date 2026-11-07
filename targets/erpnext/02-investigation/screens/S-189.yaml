@@ -1,0 +1,34 @@
+id: S-189
+title: Success Action
+purpose: create, view and edit Success Action records
+kind: form
+layout: 5 fields
+fields:
+  - label: Reference Document Type
+    control: lookup
+    binds: SuccessAction.ref_doctype
+    required: true
+    validation: chosen among DocType records
+  - label: First Success Message
+    control: text
+    binds: SuccessAction.first_success_message
+    required: true
+  - label: Message
+    control: text
+    binds: SuccessAction.message
+    required: true
+  - label: next_actions
+    control: text
+    binds: SuccessAction.next_actions
+  - label: Action Timeout (Seconds)
+    control: number
+    binds: SuccessAction.action_timeout
+actions:
+  - label: Save
+    triggers: F-190
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Success Action
+    note: declared by the program

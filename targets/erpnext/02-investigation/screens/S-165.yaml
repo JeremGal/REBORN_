@@ -1,0 +1,28 @@
+id: S-165
+title: Package Import
+purpose: create, view and edit Package Import records
+kind: form
+layout: 4 fields
+fields:
+  - label: Attach Package
+    control: other
+    binds: PackageImport.attach_package
+  - label: Activate
+    control: checkbox
+    binds: PackageImport.activate
+  - label: Force
+    control: checkbox
+    binds: PackageImport.force
+  - label: Log
+    control: text
+    binds: PackageImport.log
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-166
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Package Import
+    note: declared by the program

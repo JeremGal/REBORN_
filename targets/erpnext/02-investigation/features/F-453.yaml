@@ -1,0 +1,45 @@
+id: F-453
+title: Configure Portal Settings
+module: Website
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Portal Settings settings.
+entry_points:
+  - screen: S-452
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Portal Settings form
+    screen: S-452
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Portal Menu, Custom Menu Items"
+  - n: 4
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - PortalSettings
+entities:
+  - PortalSettings
+  - PortalMenuItem
+screens:
+  - S-452
+acceptance:
+  - id: AC-454
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Portal Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

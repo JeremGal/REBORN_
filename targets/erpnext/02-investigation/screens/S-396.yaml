@@ -1,0 +1,80 @@
+id: S-396
+title: Landed Cost Voucher
+purpose: create, view and edit Landed Cost Voucher records
+kind: form
+layout: "sections: Items, Applicable Charges; 11 fields"
+fields:
+  - label: Series
+    control: select
+    binds: LandedCostVoucher.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: LandedCostVoucher.company
+    required: true
+    validation: chosen among Company records
+  - label: Posting Date
+    control: date
+    binds: LandedCostVoucher.posting_date
+    required: true
+  - label: Vouchers
+    control: grid
+    required: true
+    columns:
+      - Receipt Document Type
+      - Receipt Document
+      - Supplier
+      - Grand Total
+  - label: Receipt Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Description
+      - Qty
+      - Amount
+      - Applicable Charges
+  - label: Vendor Invoices
+    control: grid
+    columns:
+      - Vendor Invoice
+      - Amount (Company Currency)
+  - label: Landed Cost
+    control: grid
+    required: true
+    columns:
+      - Expense Account
+      - Description
+      - Amount
+  - label: Total Vendor Invoices Cost (Company Currency)
+    control: money
+    binds: LandedCostVoucher.total_vendor_invoices_cost
+    validation: read only (computed or filled by the program)
+  - label: Total Landed Cost (Company Currency)
+    control: money
+    binds: LandedCostVoucher.total_taxes_and_charges
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Distribute Charges Based On
+    control: select
+    binds: LandedCostVoucher.distribute_charges_based_on
+    required: true
+  - label: Amended From
+    control: lookup
+    binds: LandedCostVoucher.amended_from
+    validation: read only (computed or filled by the program); chosen among Landed Cost Voucher records
+actions:
+  - label: Save
+    triggers: F-397
+  - label: Submit
+    triggers: F-397
+  - label: Cancel
+    triggers: F-397
+  - label: Amend
+    triggers: F-397
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Landed Cost Voucher
+    note: declared by the program

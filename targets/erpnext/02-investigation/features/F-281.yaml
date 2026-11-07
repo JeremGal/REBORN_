@@ -1,0 +1,94 @@
+id: F-281
+title: Configure LDAP Settings
+module: Integrations
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain LDAP Settings settings.
+entry_points:
+  - screen: S-280
+    action: open the form
+inputs:
+  - label: Directory Server
+    field: LDAPSettings.ldap_directory_server
+    type: enum
+    required: true
+  - label: LDAP Server Url
+    field: LDAPSettings.ldap_server_url
+    type: string
+    required: true
+  - label: Base Distinguished Name (DN)
+    field: LDAPSettings.base_dn
+    type: string
+    required: true
+  - label: Password for Base DN
+    field: LDAPSettings.password
+    type: string
+    required: true
+  - label: LDAP search path for Users
+    field: LDAPSettings.ldap_search_path_user
+    type: string
+    required: true
+  - label: LDAP Search String
+    field: LDAPSettings.ldap_search_string
+    type: string
+    required: true
+  - label: LDAP search path for Groups
+    field: LDAPSettings.ldap_search_path_group
+    type: string
+    required: true
+  - label: LDAP Email Field
+    field: LDAPSettings.ldap_email_field
+    type: string
+    required: true
+  - label: LDAP Username Field
+    field: LDAPSettings.ldap_username_field
+    type: string
+    required: true
+  - label: LDAP First Name Field
+    field: LDAPSettings.ldap_first_name_field
+    type: string
+    required: true
+  - label: Require Trusted Certificate
+    field: LDAPSettings.require_trusted_certificate
+    type: enum
+    required: true
+  - label: Default User Type
+    field: LDAPSettings.default_user_type
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the LDAP Settings form
+    screen: S-280
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Directory Server, LDAP Server Url, Base Distinguished Name (DN), Password for Base DN, LDAP search path for Users, LDAP Search String, LDAP search path for Groups, LDAP Email Field, LDAP Username Field, LDAP First Name Field, Require Trusted Certificate, Default User Type"
+  - n: 3
+    actor: user
+    does: "adds lines in: LDAP Group Mappings"
+  - n: 4
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - LDAPSettings
+entities:
+  - LDAPSettings
+  - LDAPGroupMapping
+screens:
+  - S-280
+acceptance:
+  - id: AC-282
+    given: every mandatory field filled with a valid value
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of LDAP Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

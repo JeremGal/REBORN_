@@ -1,0 +1,28 @@
+id: S-451
+title: Personal Data Download Request
+purpose: create, view and edit Personal Data Download Request records
+kind: form
+layout: 3 fields
+fields:
+  - label: User
+    control: lookup
+    binds: PersonalDataDownloadRequest.user
+    required: true
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: User Name
+    control: text
+    binds: PersonalDataDownloadRequest.user_name
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: PersonalDataDownloadRequest.amended_from
+    validation: read only (computed or filled by the program); chosen among Personal Data Download Request records
+actions:
+  - label: Save
+    triggers: F-452
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Personal Data Download Request
+    note: declared by the program

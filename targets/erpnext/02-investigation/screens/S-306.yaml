@@ -1,0 +1,33 @@
+id: S-306
+title: Routing
+purpose: create, view and edit Routing records
+kind: form
+layout: 3 fields
+fields:
+  - label: Routing Name
+    control: text
+    binds: Routing.routing_name
+  - label: Disabled
+    control: checkbox
+    binds: Routing.disabled
+    validation: shown only when eval:!doc.__islocal
+  - label: BOM Operation
+    control: grid
+    columns:
+      - Operation
+      - Sequence ID
+      - Output Item
+      - Output Qty
+      - Output Item BOM
+      - Workstation Type
+      - Workstation
+      - Operation Time
+actions:
+  - label: Save
+    triggers: F-307
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Routing
+    note: declared by the program

@@ -1,0 +1,53 @@
+id: S-353
+title: SMS Center
+purpose: settings of SMS Center
+kind: settings
+layout: 10 fields
+fields:
+  - label: Send To
+    control: select
+    binds: SMSCenter.send_to
+  - label: Customer
+    control: lookup
+    binds: SMSCenter.customer
+    validation: shown only when eval:doc.send_to=='All Customer Contact'; chosen among Customer records
+  - label: Supplier
+    control: lookup
+    binds: SMSCenter.supplier
+    validation: shown only when eval:doc.send_to=='All Supplier Contact'; chosen among Supplier records
+  - label: Sales Partner
+    control: lookup
+    binds: SMSCenter.sales_partner
+    validation: shown only when eval:doc.send_to=='All Sales Partner Contact'; chosen among Sales Partner records
+  - label: Department
+    control: lookup
+    binds: SMSCenter.department
+    validation: shown only when eval:doc.send_to=='All Employee (Active)'; chosen among Department records
+  - label: Branch
+    control: lookup
+    binds: SMSCenter.branch
+    validation: shown only when eval:doc.send_to=='All Employee (Active)'; chosen among Branch records
+  - label: Receiver List
+    control: text
+    binds: SMSCenter.receiver_list
+  - label: Message
+    control: text
+    binds: SMSCenter.message
+    required: true
+  - label: Total Characters
+    control: number
+    binds: SMSCenter.total_characters
+    validation: read only (computed or filled by the program)
+  - label: Total Message(s)
+    control: number
+    binds: SMSCenter.total_messages
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-354
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of SMS Center
+    note: declared by the program

@@ -1,0 +1,63 @@
+id: S-434
+title: Support Settings
+purpose: settings of Support Settings
+kind: settings
+layout: "sections: Service Level Agreements, Issues, Support Portal, Forum Posts, Greetings Section, Search APIs; 15 fields"
+fields:
+  - label: Track Service Level Agreement
+    control: checkbox
+    binds: SupportSettings.track_service_level_agreement
+  - label: Allow Resetting Service Level Agreement
+    control: checkbox
+    binds: SupportSettings.allow_resetting_service_level_agreement
+    validation: shown only when eval:doc.track_service_level_agreement;
+  - label: Close Issue After Days
+    control: number
+    binds: SupportSettings.close_issue_after_days
+  - label: Get Started Sections
+    control: text
+    binds: SupportSettings.get_started_sections
+  - label: Show Latest Forum Posts
+    control: checkbox
+    binds: SupportSettings.show_latest_forum_posts
+  - label: Forum URL
+    control: text
+    binds: SupportSettings.forum_url
+  - label: Get Latest Query
+    control: text
+    binds: SupportSettings.get_latest_query
+  - label: Response Key List
+    control: text
+    binds: SupportSettings.response_key_list
+  - label: Post Title Key
+    control: text
+    binds: SupportSettings.post_title_key
+  - label: Post Description Key
+    control: text
+    binds: SupportSettings.post_description_key
+  - label: Post Route Key
+    control: text
+    binds: SupportSettings.post_route_key
+  - label: Post Route String
+    control: text
+    binds: SupportSettings.post_route_string
+  - label: Greeting Title
+    control: text
+    binds: SupportSettings.greeting_title
+  - label: Greeting Subtitle
+    control: text
+    binds: SupportSettings.greeting_subtitle
+  - label: Search APIs
+    control: grid
+    columns:
+      - Source Name
+      - Source Type
+actions:
+  - label: Save
+    triggers: F-435
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Support Settings
+    note: declared by the program

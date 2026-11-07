@@ -1,0 +1,34 @@
+id: S-219
+title: Bulk Update
+purpose: settings of Bulk Update
+kind: settings
+layout: 5 fields
+fields:
+  - label: Document Type
+    control: lookup
+    binds: BulkUpdate.document_type
+    required: true
+    validation: chosen among DocType records
+  - label: Field
+    control: select
+    binds: BulkUpdate.field
+    required: true
+  - label: Update Value
+    control: text
+    binds: BulkUpdate.update_value
+    required: true
+  - label: Condition
+    control: text
+    binds: BulkUpdate.condition
+  - label: Limit
+    control: number
+    binds: BulkUpdate.limit
+actions:
+  - label: Save
+    triggers: F-220
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bulk Update
+    note: declared by the program

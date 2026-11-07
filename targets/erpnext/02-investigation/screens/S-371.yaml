@@ -1,0 +1,24 @@
+id: S-371
+title: Party Type
+purpose: create, view and edit Party Type records
+kind: form
+layout: 2 fields
+fields:
+  - label: Party Type
+    control: lookup
+    binds: PartyType.party_type
+    required: true
+    validation: chosen among DocType records
+  - label: Account Type
+    control: select
+    binds: PartyType.account_type
+    required: true
+actions:
+  - label: Save
+    triggers: F-372
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Party Type
+    note: declared by the program

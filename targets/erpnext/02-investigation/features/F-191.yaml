@@ -1,0 +1,58 @@
+id: F-191
+title: Configure System Settings
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain System Settings settings.
+entry_points:
+  - screen: S-190
+    action: open the form
+inputs:
+  - label: Language
+    field: SystemSettings.language
+    type: ref
+    required: true
+  - label: Date Format
+    field: SystemSettings.date_format
+    type: enum
+    required: true
+  - label: Time Format
+    field: SystemSettings.time_format
+    type: enum
+    required: true
+  - label: Number Format
+    field: SystemSettings.number_format
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the System Settings form
+    screen: S-190
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Language, Date Format, Time Format, Number Format"
+  - n: 3
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - SystemSettings
+entities:
+  - SystemSettings
+screens:
+  - S-190
+acceptance:
+  - id: AC-192
+    given: every mandatory field filled with a valid value
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of System Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"system-settings\")."

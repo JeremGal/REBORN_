@@ -1,0 +1,54 @@
+id: S-016
+title: Bank Reconciliation Tool
+purpose: settings of Bank Reconciliation Tool
+kind: settings
+layout: "sections: Reconcile; 10 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: BankReconciliationTool.company
+    validation: chosen among Company records
+  - label: Bank Account
+    control: lookup
+    binds: BankReconciliationTool.bank_account
+    validation: chosen among Bank Account records
+  - label: From Date
+    control: date
+    binds: BankReconciliationTool.bank_statement_from_date
+    validation: "shown only when eval: doc.bank_account && !doc.filter_by_reference_date"
+  - label: To Date
+    control: date
+    binds: BankReconciliationTool.bank_statement_to_date
+    validation: "shown only when eval: doc.bank_account && !doc.filter_by_reference_date"
+  - label: From Reference Date
+    control: date
+    binds: BankReconciliationTool.from_reference_date
+    validation: shown only when eval:doc.filter_by_reference_date
+  - label: To Reference Date
+    control: date
+    binds: BankReconciliationTool.to_reference_date
+    validation: shown only when eval:doc.filter_by_reference_date
+  - label: Filter by Reference Date
+    control: checkbox
+    binds: BankReconciliationTool.filter_by_reference_date
+  - label: Account Currency
+    control: lookup
+    binds: BankReconciliationTool.account_currency
+    validation: chosen among Currency records
+  - label: Account Opening Balance
+    control: money
+    binds: BankReconciliationTool.account_opening_balance
+    validation: "read only (computed or filled by the program); shown only when eval: doc.bank_statement_from_date"
+  - label: Closing Balance
+    control: money
+    binds: BankReconciliationTool.bank_statement_closing_balance
+    validation: "shown only when eval: doc.bank_statement_to_date"
+actions:
+  - label: Save
+    triggers: F-017
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bank Reconciliation Tool
+    note: declared by the program

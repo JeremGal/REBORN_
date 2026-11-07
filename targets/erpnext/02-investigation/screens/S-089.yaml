@@ -1,0 +1,102 @@
+id: S-089
+title: Tax Rule
+purpose: create, view and edit Tax Rule records
+kind: form
+layout: "sections: Filters, Validity; 25 fields"
+fields:
+  - label: Tax Type
+    control: select
+    binds: TaxRule.tax_type
+  - label: Use for Shopping Cart
+    control: checkbox
+    binds: TaxRule.use_for_shopping_cart
+  - label: Sales Tax Template
+    control: lookup
+    binds: TaxRule.sales_tax_template
+    validation: shown only when eval:doc.tax_type=="Sales"; chosen among Sales Taxes and Charges Template records
+  - label: Purchase Tax Template
+    control: lookup
+    binds: TaxRule.purchase_tax_template
+    validation: shown only when eval:doc.tax_type=="Purchase"; chosen among Purchase Taxes and Charges Template records
+  - label: Customer
+    control: lookup
+    binds: TaxRule.customer
+    validation: shown only when eval:doc.tax_type=="Sales"; chosen among Customer records
+  - label: Supplier
+    control: lookup
+    binds: TaxRule.supplier
+    validation: shown only when eval:doc.tax_type=="Purchase"; chosen among Supplier records
+  - label: Item
+    control: lookup
+    binds: TaxRule.item
+    validation: chosen among Item records
+  - label: Billing City
+    control: text
+    binds: TaxRule.billing_city
+  - label: Billing County
+    control: text
+    binds: TaxRule.billing_county
+  - label: Billing State
+    control: text
+    binds: TaxRule.billing_state
+  - label: Billing Zipcode
+    control: text
+    binds: TaxRule.billing_zipcode
+  - label: Billing Country
+    control: lookup
+    binds: TaxRule.billing_country
+    validation: chosen among Country records
+  - label: Tax Category
+    control: lookup
+    binds: TaxRule.tax_category
+    validation: chosen among Tax Category records
+  - label: Customer Group
+    control: lookup
+    binds: TaxRule.customer_group
+    validation: shown only when eval:doc.tax_type=="Sales"; chosen among Customer Group records
+  - label: Supplier Group
+    control: lookup
+    binds: TaxRule.supplier_group
+    validation: shown only when eval:doc.tax_type=="Purchase"; chosen among Supplier Group records
+  - label: Item Group
+    control: lookup
+    binds: TaxRule.item_group
+    validation: chosen among Item Group records
+  - label: Shipping City
+    control: text
+    binds: TaxRule.shipping_city
+  - label: Shipping County
+    control: text
+    binds: TaxRule.shipping_county
+  - label: Shipping State
+    control: text
+    binds: TaxRule.shipping_state
+  - label: Shipping Zipcode
+    control: text
+    binds: TaxRule.shipping_zipcode
+  - label: Shipping Country
+    control: lookup
+    binds: TaxRule.shipping_country
+    validation: chosen among Country records
+  - label: From Date
+    control: date
+    binds: TaxRule.from_date
+  - label: To Date
+    control: date
+    binds: TaxRule.to_date
+  - label: Priority
+    control: number
+    binds: TaxRule.priority
+  - label: Company
+    control: lookup
+    binds: TaxRule.company
+    validation: chosen among Company records
+actions:
+  - label: Save
+    triggers: F-090
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Tax Rule
+    note: declared by the program

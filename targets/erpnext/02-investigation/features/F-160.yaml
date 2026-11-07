@@ -1,0 +1,50 @@
+id: F-160
+title: Create and edit a Language
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Language records.
+entry_points:
+  - screen: S-159
+    action: open the form
+inputs:
+  - label: Language Code
+    field: Language.language_code
+    type: string
+    required: true
+  - label: Language Name
+    field: Language.language_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Language form
+    screen: S-159
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Language Code, Language Name"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Language record stored
+    entities:
+      - Language
+entities:
+  - Language
+screens:
+  - S-159
+acceptance:
+  - id: AC-161
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Language
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

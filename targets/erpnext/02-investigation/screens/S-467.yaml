@@ -1,0 +1,59 @@
+id: S-467
+title: Workflow
+purpose: create, view and edit Workflow records
+kind: form
+layout: "sections: States, Transition Rules; 10 fields"
+fields:
+  - label: Workflow Name
+    control: text
+    binds: Workflow.workflow_name
+    required: true
+  - label: Document Type
+    control: lookup
+    binds: Workflow.document_type
+    required: true
+    validation: chosen among DocType records
+  - label: Is Active
+    control: checkbox
+    binds: Workflow.is_active
+  - label: Don't Override Status
+    control: checkbox
+    binds: Workflow.override_status
+  - label: Send Email Alert
+    control: checkbox
+    binds: Workflow.send_email_alert
+  - label: Enable Action Confirmation
+    control: checkbox
+    binds: Workflow.enable_action_confirmation
+  - label: Document States
+    control: grid
+    columns:
+      - State
+      - Doc Status
+      - Update Field
+      - Update Value
+      - Only Allow Edit For
+      - Message
+  - label: Transitions
+    control: grid
+    columns:
+      - State
+      - Action
+      - Next State
+      - Allowed
+  - label: Workflow State Field
+    control: text
+    binds: Workflow.workflow_state_field
+    required: true
+  - label: Workflow Data
+    control: other
+    binds: Workflow.workflow_data
+actions:
+  - label: Save
+    triggers: F-468
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Workflow
+    note: declared by the program

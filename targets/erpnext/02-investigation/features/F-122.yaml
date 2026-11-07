@@ -1,0 +1,66 @@
+id: F-122
+title: Create, submit and cancel a Request for Quotation
+module: Buying
+priority: must
+status: partial
+confidence: medium
+user_goal: Ask suppliers for prices on the items you need.
+entry_points:
+  - screen: S-121
+    action: open the form
+inputs:
+  - label: Series
+    field: RequestForQuotation.naming_series
+    type: enum
+    required: true
+  - label: Company
+    field: RequestForQuotation.company
+    type: ref
+    required: true
+  - label: Date
+    field: RequestForQuotation.transaction_date
+    type: date
+    required: true
+  - label: Subject
+    field: RequestForQuotation.subject
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Request for Quotation form
+    screen: S-121
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Company, Date, Subject"
+  - n: 3
+    actor: user
+    does: "adds lines in: Suppliers, Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Request for Quotation record stored
+    entities:
+      - RequestForQuotation
+entities:
+  - RequestForQuotation
+  - RequestForQuotationSupplier
+  - RequestForQuotationItem
+screens:
+  - S-121
+acceptance:
+  - id: AC-123
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Request for Quotation
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"request-for-quotation\")."

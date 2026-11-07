@@ -1,0 +1,80 @@
+id: S-312
+title: Letter Head
+purpose: create, view and edit Letter Head records
+kind: form
+layout: "sections: Letter Head Image, Header, Footer, Footer Image, Scripts; 18 fields"
+fields:
+  - label: Letter Head Name
+    control: text
+    binds: LetterHead.letter_head_name
+    required: true
+  - label: Letter Head Based On
+    control: select
+    binds: LetterHead.source
+    validation: shown only when letter_head_name
+  - label: Footer Based On
+    control: select
+    binds: LetterHead.footer_source
+    validation: shown only when letter_head_name
+  - label: Disabled
+    control: checkbox
+    binds: LetterHead.disabled
+    validation: shown only when letter_head_name
+  - label: Default Letter Head
+    control: checkbox
+    binds: LetterHead.is_default
+    validation: shown only when letter_head_name
+  - label: Image
+    control: other
+    binds: LetterHead.image
+    validation: shown only when eval:doc.letter_head_name && doc.source === 'Image'
+  - label: Image Height (px)
+    control: number
+    binds: LetterHead.image_height
+  - label: Image Width (px)
+    control: number
+    binds: LetterHead.image_width
+  - label: Align
+    control: select
+    binds: LetterHead.align
+  - label: Header HTML
+    control: other
+    binds: LetterHead.content
+    validation: shown only when eval:!doc.__islocal && doc.source==='HTML'
+  - label: Custom CSS
+    control: text
+    binds: LetterHead.custom_css
+    validation: shown only when eval:doc.source === 'HTML'
+  - label: Footer HTML
+    control: other
+    binds: LetterHead.footer
+    validation: shown only when eval:!doc.__islocal
+  - label: Image
+    control: other
+    binds: LetterHead.footer_image
+  - label: Image Height (px)
+    control: number
+    binds: LetterHead.footer_image_height
+  - label: Image Width (px)
+    control: number
+    binds: LetterHead.footer_image_width
+  - label: Align
+    control: select
+    binds: LetterHead.footer_align
+  - label: Header Script
+    control: text
+    binds: LetterHead.header_script
+    validation: shown only when eval:!doc.__islocal && doc.source==='HTML'
+  - label: Footer Script
+    control: text
+    binds: LetterHead.footer_script
+    validation: shown only when eval:!doc.__islocal && doc.footer_source==='HTML'
+actions:
+  - label: Save
+    triggers: F-313
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Letter Head
+    note: declared by the program

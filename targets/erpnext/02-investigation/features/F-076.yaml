@@ -1,0 +1,72 @@
+id: F-076
+title: Create, submit and cancel a Purchase Invoice
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: A bill from a supplier for what you bought.
+entry_points:
+  - screen: S-075
+    action: open the form
+inputs:
+  - label: Series
+    field: PurchaseInvoice.naming_series
+    type: enum
+    required: true
+  - label: Supplier
+    field: PurchaseInvoice.supplier
+    type: ref
+    required: true
+  - label: Posting Date
+    field: PurchaseInvoice.posting_date
+    type: date
+    required: true
+  - label: Credit To
+    field: PurchaseInvoice.credit_to
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Purchase Invoice form
+    screen: S-075
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Supplier, Posting Date, Credit To"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items, Purchase Taxes and Charges, Tax Withholding Entries, Item Wise Tax Details, Pricing Rule Detail, Supplied Items, Advances, Payment Schedule"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Purchase Invoice record stored
+    entities:
+      - PurchaseInvoice
+entities:
+  - PurchaseInvoice
+  - PurchaseInvoiceItem
+  - PurchaseTaxesAndCharges
+  - TaxWithholdingEntry
+  - ItemWiseTaxDetail
+  - PricingRuleDetail
+  - PurchaseReceiptItemSupplied
+  - PurchaseInvoiceAdvance
+  - PaymentSchedule
+screens:
+  - S-075
+acceptance:
+  - id: AC-077
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Purchase Invoice
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"purchase-invoice\")."

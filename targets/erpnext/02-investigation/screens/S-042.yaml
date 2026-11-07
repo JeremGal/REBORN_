@@ -1,0 +1,30 @@
+id: S-042
+title: Ledger Health
+purpose: create, view and edit Ledger Health records
+kind: form
+layout: 5 fields
+fields:
+  - label: Voucher Type
+    control: text
+    binds: LedgerHealth.voucher_type
+  - label: Voucher No
+    control: text
+    binds: LedgerHealth.voucher_no
+  - label: Checked On
+    control: date
+    binds: LedgerHealth.checked_on
+  - label: Debit-Credit mismatch
+    control: checkbox
+    binds: LedgerHealth.debit_credit_mismatch
+  - label: General and Payment Ledger mismatch
+    control: checkbox
+    binds: LedgerHealth.general_and_payment_ledger_mismatch
+actions:
+  - label: Save
+    triggers: F-043
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Ledger Health
+    note: declared by the program

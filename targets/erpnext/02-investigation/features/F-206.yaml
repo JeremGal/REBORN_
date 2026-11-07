@@ -1,0 +1,45 @@
+id: F-206
+title: Configure CRM Settings
+module: CRM
+priority: should
+status: partial
+confidence: medium
+user_goal: How leads, opportunities and appointments work.
+entry_points:
+  - screen: S-205
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the CRM Settings form
+    screen: S-205
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Allowed Users"
+  - n: 4
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - CRMSettings
+entities:
+  - CRMSettings
+  - FrappeCRMAllowedUser
+screens:
+  - S-205
+acceptance:
+  - id: AC-207
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of CRM Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"crm-settings\")."

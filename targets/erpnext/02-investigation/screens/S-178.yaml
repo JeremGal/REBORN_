@@ -1,0 +1,45 @@
+id: S-178
+title: RQ Job
+purpose: create, view and edit RQ Job records
+kind: form
+layout: "sections: Job Info, Job Status; 10 fields"
+fields:
+  - label: Job ID
+    control: text
+    binds: RQJob.job_id
+  - label: Job Name
+    control: text
+    binds: RQJob.job_name
+  - label: Queue
+    control: select
+    binds: RQJob.queue
+  - label: Timeout
+    control: number
+    binds: RQJob.timeout
+  - label: Arguments
+    control: text
+    binds: RQJob.arguments
+  - label: Status
+    control: select
+    binds: RQJob.status
+  - label: Time Taken
+    control: number
+    binds: RQJob.time_taken
+  - label: Started At
+    control: date
+    binds: RQJob.started_at
+  - label: Ended At
+    control: date
+    binds: RQJob.ended_at
+  - label: Exception
+    control: text
+    binds: RQJob.exc_info
+actions:
+  - label: Save
+    triggers: F-179
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of RQ Job
+    note: declared by the program

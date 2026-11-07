@@ -1,0 +1,26 @@
+id: S-131
+title: Address Template
+purpose: create, view and edit Address Template records
+kind: form
+layout: 3 fields
+fields:
+  - label: Country
+    control: lookup
+    binds: AddressTemplate.country
+    required: true
+    validation: chosen among Country records
+  - label: Is Default
+    control: checkbox
+    binds: AddressTemplate.is_default
+  - label: Template
+    control: text
+    binds: AddressTemplate.template
+actions:
+  - label: Save
+    triggers: F-132
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Address Template
+    note: declared by the program

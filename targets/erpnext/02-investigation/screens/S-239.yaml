@@ -1,0 +1,39 @@
+id: S-239
+title: Module Onboarding
+purpose: create, view and edit Module Onboarding records
+kind: form
+layout: 5 fields
+fields:
+  - label: Title
+    control: text
+    binds: ModuleOnboarding.title
+    required: true
+  - label: Module
+    control: lookup
+    binds: ModuleOnboarding.module
+    required: true
+    validation: chosen among Module Def records
+  - label: Allow Roles
+    control: grid
+    required: true
+    columns:
+      - Role
+  - label: Is Complete
+    control: checkbox
+    binds: ModuleOnboarding.is_complete
+    validation: read only (computed or filled by the program)
+  - label: Steps
+    control: grid
+    required: true
+    columns:
+      - Step
+      - Is Optional
+actions:
+  - label: Save
+    triggers: F-240
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Module Onboarding
+    note: declared by the program

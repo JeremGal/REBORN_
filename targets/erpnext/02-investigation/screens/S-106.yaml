@@ -1,0 +1,58 @@
+id: S-106
+title: Location
+purpose: create, view and edit Location records
+kind: form
+layout: "sections: Location Details, Tree Details; 12 fields"
+fields:
+  - label: Location Name
+    control: text
+    binds: Location.location_name
+    required: true
+  - label: Parent Location
+    control: lookup
+    binds: Location.parent_location
+    validation: chosen among Location records
+  - label: Is Container
+    control: checkbox
+    binds: Location.is_container
+  - label: Is Group
+    control: checkbox
+    binds: Location.is_group
+  - label: Latitude
+    control: number
+    binds: Location.latitude
+  - label: Longitude
+    control: number
+    binds: Location.longitude
+  - label: Area
+    control: number
+    binds: Location.area
+    validation: read only (computed or filled by the program)
+  - label: Area UOM
+    control: lookup
+    binds: Location.area_uom
+    validation: shown only when eval:doc.area; chosen among UOM records
+  - label: Location
+    control: other
+    binds: Location.location
+  - label: lft
+    control: number
+    binds: Location.lft
+    validation: read only (computed or filled by the program)
+  - label: rgt
+    control: number
+    binds: Location.rgt
+    validation: read only (computed or filled by the program)
+  - label: Old Parent
+    control: text
+    binds: Location.old_parent
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-107
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Location
+    note: declared by the program

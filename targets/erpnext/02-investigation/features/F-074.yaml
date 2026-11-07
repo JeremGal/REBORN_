@@ -1,0 +1,49 @@
+id: F-074
+title: Create, submit and cancel a Process Subscription
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Process Subscription records.
+entry_points:
+  - screen: S-073
+    action: open the form
+inputs:
+  - label: Posting Date
+    field: ProcessSubscription.posting_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Process Subscription form
+    screen: S-073
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Posting Date"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 4
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Process Subscription record stored
+    entities:
+      - ProcessSubscription
+entities:
+  - ProcessSubscription
+screens:
+  - S-073
+acceptance:
+  - id: AC-075
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Process Subscription
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

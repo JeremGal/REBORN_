@@ -1,0 +1,73 @@
+id: F-301
+title: Create, submit and cancel a Job Card
+module: Manufacturing
+priority: must
+status: partial
+confidence: medium
+user_goal: The work done for one operation of a work order.
+entry_points:
+  - screen: S-300
+    action: open the form
+inputs:
+  - label: Work Order
+    field: JobCard.work_order
+    type: ref
+    required: true
+  - label: Operation
+    field: JobCard.operation
+    type: ref
+    required: true
+  - label: Workstation
+    field: JobCard.workstation
+    type: ref
+    required: true
+  - label: Company
+    field: JobCard.company
+    type: ref
+    required: true
+  - label: Naming Series
+    field: JobCard.naming_series
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Job Card form
+    screen: S-300
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Work Order, Operation, Workstation, Company, Naming Series"
+  - n: 3
+    actor: user
+    does: "adds lines in: Employee, Items, Scheduled Time Logs, Time Logs, Sub Operations, Secondary Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Job Card record stored
+    entities:
+      - JobCard
+entities:
+  - JobCard
+  - JobCardTimeLog
+  - JobCardItem
+  - JobCardScheduledTime
+  - JobCardOperation
+  - JobCardSecondaryItem
+screens:
+  - S-300
+acceptance:
+  - id: AC-302
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Job Card
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"job-card\")."

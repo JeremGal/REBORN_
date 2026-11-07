@@ -1,0 +1,50 @@
+id: F-458
+title: Create and edit a Web Form Request
+module: Website
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Web Form Request records.
+entry_points:
+  - screen: S-457
+    action: open the form
+inputs:
+  - label: Web Form
+    field: WebFormRequest.web_form
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Web Form Request form
+    screen: S-457
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Web Form"
+  - n: 3
+    actor: user
+    does: "adds lines in: References"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Web Form Request record stored
+    entities:
+      - WebFormRequest
+entities:
+  - WebFormRequest
+  - DynamicLink
+screens:
+  - S-457
+acceptance:
+  - id: AC-459
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Web Form Request
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

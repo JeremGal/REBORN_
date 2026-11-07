@@ -1,0 +1,144 @@
+id: S-269
+title: Notification
+purpose: create, view and edit Notification records
+kind: form
+layout: "sections: Filters, Set Property After Alert, Recipients, Message, Attachment Settings; 33 fields"
+fields:
+  - label: Enabled
+    control: checkbox
+    binds: Notification.enabled
+  - label: Is Standard
+    control: checkbox
+    binds: Notification.is_standard
+  - label: Module
+    control: lookup
+    binds: Notification.module
+    validation: shown only when is_standard; chosen among Module Def records
+  - label: Channel
+    control: select
+    binds: Notification.channel
+    required: true
+    validation: "shown only when eval: !doc.disable_channel"
+  - label: Slack Channel
+    control: lookup
+    binds: Notification.slack_webhook_url
+    validation: shown only when eval:doc.channel=='Slack'; chosen among Slack Webhook URL records
+  - label: Subject
+    control: text
+    binds: Notification.subject
+    validation: "shown only when eval: in_list(['Email', 'Slack', 'System Notification'], doc.channel) && !doc.em"
+  - label: Send Alert On
+    control: select
+    binds: Notification.event
+    required: true
+  - label: Document Type
+    control: lookup
+    binds: Notification.document_type
+    required: true
+    validation: chosen among DocType records
+  - label: Trigger Method
+    control: text
+    binds: Notification.method
+    validation: shown only when eval:doc.event=='Method'
+  - label: Reference Date
+    control: select
+    binds: Notification.date_changed
+    validation: shown only when eval:doc.document_type && (doc.event=="Days After" || doc.event=="Days Before")
+  - label: Reference Datetime
+    control: select
+    binds: Notification.datetime_changed
+    validation: shown only when eval:doc.document_type && (doc.event=="Minutes After" || doc.event=="Minutes Bef
+  - label: Days Before or After
+    control: number
+    binds: Notification.days_in_advance
+    validation: shown only when eval:doc.document_type && (doc.event=="Days After" || doc.event=="Days Before")
+  - label: Minutes Offset
+    control: number
+    binds: Notification.minutes_offset
+    validation: shown only when eval:doc.document_type && (doc.event=="Minutes After" || doc.event=="Minutes Bef
+  - label: Last Run
+    control: date
+    binds: Notification.datetime_last_run
+    validation: read only (computed or filled by the program); shown only when eval:doc.document_type && (doc.event=="Minutes After" || doc.event=="Minutes Bef
+  - label: Value Changed
+    control: select
+    binds: Notification.value_changed
+    validation: shown only when eval:doc.document_type && doc.event=="Value Change"
+  - label: Sender
+    control: lookup
+    binds: Notification.sender
+    validation: "shown only when eval: doc.channel == 'Email'; chosen among Email Account records"
+  - label: Send System Notification
+    control: checkbox
+    binds: Notification.send_system_notification
+    validation: "shown only when eval: doc.channel !== 'System Notification'"
+  - label: Notification Type
+    control: lookup
+    binds: Notification.notification_type
+    validation: "shown only when eval: doc.channel === 'System Notification' || doc.send_system_notification; chosen among Notification Type records"
+  - label: Sender Email
+    control: text
+    binds: Notification.sender_email
+    validation: read only (computed or filled by the program)
+  - label: Condition Type
+    control: select
+    binds: Notification.condition_type
+  - label: Condition
+    control: text
+    binds: Notification.condition
+    validation: shown only when eval:doc.condition_type==="Python"
+  - label: Filters
+    control: text
+    binds: Notification.filters
+    validation: read only (computed or filled by the program)
+  - label: Set Property After Alert
+    control: select
+    binds: Notification.set_property_after_alert
+  - label: Value To Be Set
+    control: text
+    binds: Notification.property_value
+  - label: Send To All Assignees
+    control: checkbox
+    binds: Notification.send_to_all_assignees
+    validation: shown only when eval:doc.channel == 'Email'
+  - label: Recipients
+    control: grid
+    columns:
+      - Receiver By Document Field
+      - Receiver By Role
+      - Condition
+  - label: Email Template
+    control: lookup
+    binds: Notification.email_template
+    validation: "shown only when eval: doc.channel == 'Email'; chosen among Email Template records"
+  - label: Message Type
+    control: select
+    binds: Notification.message_type
+    validation: shown only when is_standard
+  - label: Message
+    control: text
+    binds: Notification.message
+    validation: "shown only when eval: !doc.email_template"
+  - label: Attach Print
+    control: checkbox
+    binds: Notification.attach_print
+  - label: Print Format
+    control: lookup
+    binds: Notification.print_format
+    validation: shown only when attach_print; chosen among Print Format records
+  - label: Attach Files
+    control: select
+    binds: Notification.attach_files
+  - label: From Attach Field
+    control: select
+    binds: Notification.from_attach_field
+    validation: shown only when eval:doc.attach_files === "From Field"
+actions:
+  - label: Save
+    triggers: F-270
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Notification
+    note: declared by the program

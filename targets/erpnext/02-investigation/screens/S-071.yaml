@@ -1,0 +1,53 @@
+id: S-071
+title: Process Period Closing Voucher
+purpose: create, view and edit Process Period Closing Voucher records
+kind: form
+layout: "tabs: Normal Balances, Opening Balances; 7 fields"
+fields:
+  - label: PCV
+    control: lookup
+    binds: ProcessPeriodClosingVoucher.parent_pcv
+    required: true
+    validation: chosen among Period Closing Voucher records
+  - label: Status
+    control: select
+    binds: ProcessPeriodClosingVoucher.status
+  - label: Amended From
+    control: lookup
+    binds: ProcessPeriodClosingVoucher.amended_from
+    validation: read only (computed or filled by the program); chosen among Process Period Closing Voucher records
+  - label: P&L Closing Balance
+    control: other
+    binds: ProcessPeriodClosingVoucher.p_l_closing_balance
+  - label: Balance Sheet Closing Balance
+    control: other
+    binds: ProcessPeriodClosingVoucher.bs_closing_balance
+  - label: Dates to Process
+    control: grid
+    columns:
+      - Processing Date
+      - Report Type
+      - Status
+      - Closing Balance
+  - label: Opening Balances
+    control: grid
+    columns:
+      - Processing Date
+      - Report Type
+      - Status
+      - Closing Balance
+actions:
+  - label: Save
+    triggers: F-072
+  - label: Submit
+    triggers: F-072
+  - label: Cancel
+    triggers: F-072
+  - label: Amend
+    triggers: F-072
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Process Period Closing Voucher
+    note: declared by the program

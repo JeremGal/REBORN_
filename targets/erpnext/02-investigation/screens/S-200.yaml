@@ -1,0 +1,62 @@
+id: S-200
+title: Appointment Booking Settings
+purpose: settings of Appointment Booking Settings
+kind: settings
+layout: "sections: Appointment Details, Appointment Scheduling, Appointment Booking Portal Settings; 12 fields"
+fields:
+  - label: Appointment Duration (In Minutes)
+    control: number
+    binds: AppointmentBookingSettings.appointment_duration
+    required: true
+  - label: Notify Via Email
+    control: checkbox
+    binds: AppointmentBookingSettings.email_reminders
+  - label: Agents
+    control: grid
+    columns:
+      - User
+      - Weight
+  - label: Number of Concurrent Appointments
+    control: number
+    binds: AppointmentBookingSettings.number_of_agents
+    validation: read only (computed or filled by the program)
+  - label: Enable Appointment Scheduling
+    control: checkbox
+    binds: AppointmentBookingSettings.enable_scheduling
+  - label: Availability Of Slots
+    control: grid
+    validation: shown only when eval:doc.enable_scheduling === 1;
+    columns:
+      - Day Of Week
+      - "From Time "
+      - To Time
+  - label: Number of days appointments can be booked in advance
+    control: number
+    binds: AppointmentBookingSettings.advance_booking_days
+    validation: shown only when eval:doc.enable_scheduling === 1;
+  - label: Holiday List
+    control: lookup
+    binds: AppointmentBookingSettings.holiday_list
+    validation: shown only when eval:doc.enable_scheduling === 1;; chosen among Holiday List records
+  - label: Enable Appointment Booking Through Portal
+    control: checkbox
+    binds: AppointmentBookingSettings.enable_appointment_portal
+  - label: Verification Link Expiry Duration
+    control: number
+    binds: AppointmentBookingSettings.verification_link_expiry_duration
+    validation: "shown only when eval: doc.enable_scheduling === 1;"
+  - label: Success Redirect URL
+    control: text
+    binds: AppointmentBookingSettings.success_redirect_url
+  - label: Action for Expired Unverified Appointments
+    control: select
+    binds: AppointmentBookingSettings.action_for_expired_unverified_appointments
+actions:
+  - label: Save
+    triggers: F-201
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Appointment Booking Settings
+    note: declared by the program

@@ -1,0 +1,66 @@
+id: S-054
+title: Payment Order
+purpose: create, view and edit Payment Order records
+kind: form
+layout: 10 fields
+fields:
+  - label: Series
+    control: select
+    binds: PaymentOrder.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: PaymentOrder.company
+    required: true
+    validation: chosen among Company records
+  - label: Payment Order Type
+    control: select
+    binds: PaymentOrder.payment_order_type
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Supplier
+    control: lookup
+    binds: PaymentOrder.party
+    validation: "shown only when eval: doc.payment_order_type=='Payment Request';; chosen among Supplier records"
+  - label: Posting Date
+    control: date
+    binds: PaymentOrder.posting_date
+  - label: Bank
+    control: lookup
+    binds: PaymentOrder.company_bank
+    validation: shown only when company_bank_account; chosen among Bank records
+  - label: Company Bank Account
+    control: lookup
+    binds: PaymentOrder.company_bank_account
+    required: true
+    validation: chosen among Bank Account records
+  - label: Account
+    control: text
+    binds: PaymentOrder.account
+    validation: shown only when company_bank_account
+  - label: Payment Order Reference
+    control: grid
+    required: true
+    columns:
+      - Type
+      - Name
+      - Amount
+  - label: Amended From
+    control: lookup
+    binds: PaymentOrder.amended_from
+    validation: read only (computed or filled by the program); chosen among Payment Order records
+actions:
+  - label: Save
+    triggers: F-055
+  - label: Submit
+    triggers: F-055
+  - label: Cancel
+    triggers: F-055
+  - label: Amend
+    triggers: F-055
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Payment Order
+    note: declared by the program

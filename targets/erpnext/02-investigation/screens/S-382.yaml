@@ -1,0 +1,84 @@
+id: S-382
+title: Batch
+purpose: create, view and edit Batch records
+kind: form
+layout: "sections: Batch Details, Source, Manufacturing; 18 fields"
+fields:
+  - label: Batch ID
+    control: text
+    binds: Batch.batch_id
+    required: true
+    validation: shown only when eval:doc.__islocal
+  - label: Item
+    control: lookup
+    binds: Batch.item
+    required: true
+    validation: chosen among Item records
+  - label: Item Name
+    control: text
+    binds: Batch.item_name
+    validation: read only (computed or filled by the program)
+  - label: Image
+    control: other
+    binds: Batch.image
+  - label: Parent Batch
+    control: lookup
+    binds: Batch.parent_batch
+    validation: read only (computed or filled by the program); shown only when eval:doc.parent_batch; chosen among Batch records
+  - label: Manufacturing Date
+    control: date
+    binds: Batch.manufacturing_date
+  - label: Batch Quantity
+    control: number
+    binds: Batch.batch_qty
+    validation: read only (computed or filled by the program)
+  - label: Batch UOM
+    control: lookup
+    binds: Batch.stock_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Expiry Date
+    control: date
+    binds: Batch.expiry_date
+  - label: Use Batch-wise Valuation
+    control: checkbox
+    binds: Batch.use_batchwise_valuation
+    validation: read only (computed or filled by the program)
+  - label: Allow Negative Stock for Batch
+    control: checkbox
+    binds: Batch.allow_negative_stock_for_batch
+  - label: Disabled
+    control: checkbox
+    binds: Batch.disabled
+    validation: shown only when eval:!doc.__islocal
+  - label: Source Document Type
+    control: lookup
+    binds: Batch.reference_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Source Document Name
+    control: lookup
+    binds: Batch.reference_name
+    validation: read only (computed or filled by the program)
+  - label: Supplier
+    control: lookup
+    binds: Batch.supplier
+    validation: read only (computed or filled by the program); chosen among Supplier records
+  - label: Batch Description
+    control: text
+    binds: Batch.description
+  - label: Qty To Produce
+    control: number
+    binds: Batch.qty_to_produce
+    validation: read only (computed or filled by the program)
+  - label: Produced Qty
+    control: number
+    binds: Batch.produced_qty
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-383
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Batch
+    note: declared by the program

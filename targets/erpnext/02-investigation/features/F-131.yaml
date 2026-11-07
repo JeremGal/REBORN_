@@ -1,0 +1,62 @@
+id: F-131
+title: Create and edit a Address
+module: Contacts
+priority: could
+status: partial
+confidence: medium
+user_goal: A postal address of a customer, supplier, company or contact.
+entry_points:
+  - screen: S-130
+    action: open the form
+inputs:
+  - label: Address Type
+    field: Address.address_type
+    type: enum
+    required: true
+  - label: Address Line 1
+    field: Address.address_line1
+    type: string
+    required: true
+  - label: City/Town
+    field: Address.city
+    type: string
+    required: true
+  - label: Country
+    field: Address.country
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Address form
+    screen: S-130
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Address Type, Address Line 1, City/Town, Country"
+  - n: 3
+    actor: user
+    does: "adds lines in: Links"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Address record stored
+    entities:
+      - Address
+entities:
+  - Address
+  - DynamicLink
+screens:
+  - S-130
+acceptance:
+  - id: AC-132
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Address
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"address\")."

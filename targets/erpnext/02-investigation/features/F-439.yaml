@@ -1,0 +1,49 @@
+id: F-439
+title: Create, submit and cancel a Telephony Call Type
+module: Telephony
+priority: could
+status: partial
+confidence: medium
+user_goal: A grouping of calls, like sales or support.
+entry_points:
+  - screen: S-438
+    action: open the form
+inputs:
+  - label: Call Type
+    field: TelephonyCallType.call_type
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Telephony Call Type form
+    screen: S-438
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Call Type"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 4
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Telephony Call Type record stored
+    entities:
+      - TelephonyCallType
+entities:
+  - TelephonyCallType
+screens:
+  - S-438
+acceptance:
+  - id: AC-440
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Telephony Call Type
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

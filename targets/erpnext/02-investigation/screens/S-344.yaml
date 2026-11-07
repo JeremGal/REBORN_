@@ -1,0 +1,19 @@
+id: S-344
+title: Industry Type
+purpose: create, view and edit Industry Type records
+kind: form
+layout: 1 fields
+fields:
+  - label: Industry
+    control: text
+    binds: IndustryType.industry
+    required: true
+actions:
+  - label: Save
+    triggers: F-345
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Industry Type
+    note: declared by the program

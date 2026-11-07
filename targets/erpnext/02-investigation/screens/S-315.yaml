@@ -1,0 +1,38 @@
+id: S-315
+title: Print Format Field Template
+purpose: create, view and edit Print Format Field Template records
+kind: form
+layout: 6 fields
+fields:
+  - label: Document Type
+    control: lookup
+    binds: PrintFormatFieldTemplate.document_type
+    validation: chosen among DocType records
+  - label: Default Template For Field
+    control: text
+    binds: PrintFormatFieldTemplate.field
+  - label: Standard
+    control: checkbox
+    binds: PrintFormatFieldTemplate.standard
+    validation: shown only when eval:frappe.boot.developer_mode
+  - label: Module
+    control: lookup
+    binds: PrintFormatFieldTemplate.module
+    validation: shown only when eval:doc.standard; chosen among Module Def records
+  - label: Template File
+    control: text
+    binds: PrintFormatFieldTemplate.template_file
+    validation: shown only when eval:doc.standard
+  - label: Template
+    control: text
+    binds: PrintFormatFieldTemplate.template
+    validation: shown only when eval:!doc.standard
+actions:
+  - label: Save
+    triggers: F-316
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Print Format Field Template
+    note: declared by the program

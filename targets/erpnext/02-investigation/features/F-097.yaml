@@ -1,0 +1,59 @@
+id: F-097
+title: Create and edit a Asset Category
+module: Assets
+priority: should
+status: partial
+confidence: medium
+user_goal: Groups assets that share accounts and depreciation rules.
+entry_points:
+  - screen: S-096
+    action: open the form
+inputs:
+  - label: Asset Category Name
+    field: AssetCategory.asset_category_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Asset Category form
+    screen: S-096
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Asset Category Name"
+  - n: 3
+    actor: user
+    does: "adds lines in: Finance Books, Accounts"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Asset Category record stored
+    entities:
+      - AssetCategory
+entities:
+  - AssetCategory
+  - AssetFinanceBook
+  - AssetCategoryAccount
+screens:
+  - S-096
+acceptance:
+  - id: AC-098
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Asset Category
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 10
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"asset-category\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Ligne n°1 : Account Type de 1 - Comptes de Capitaux - DSS devrait être Fixed Asset. Veuillez mettre à jour Account Type ou sélectionner un autre compte."

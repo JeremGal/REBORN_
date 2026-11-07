@@ -1,0 +1,26 @@
+id: S-304
+title: Plant Floor
+purpose: create, view and edit Plant Floor records
+kind: form
+layout: "tabs: Workstations, Stock Summary, Floor; 3 fields"
+fields:
+  - label: Floor Name
+    control: text
+    binds: PlantFloor.floor_name
+  - label: Company
+    control: lookup
+    binds: PlantFloor.company
+    validation: chosen among Company records
+  - label: Warehouse
+    control: lookup
+    binds: PlantFloor.warehouse
+    validation: chosen among Warehouse records
+actions:
+  - label: Save
+    triggers: F-305
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Plant Floor
+    note: declared by the program

@@ -1,0 +1,52 @@
+id: S-179
+title: RQ Worker
+purpose: create, view and edit RQ Worker records
+kind: form
+layout: "sections: Worker Information, Statistics; 12 fields"
+fields:
+  - label: Queue(s)
+    control: text
+    binds: RQWorker.queue
+  - label: Queue Type(s)
+    control: select
+    binds: RQWorker.queue_type
+  - label: Worker Name
+    control: text
+    binds: RQWorker.worker_name
+  - label: Status
+    control: text
+    binds: RQWorker.status
+  - label: PID
+    control: text
+    binds: RQWorker.pid
+  - label: Current Job ID
+    control: lookup
+    binds: RQWorker.current_job_id
+    validation: chosen among RQ Job records
+  - label: Successful Job Count
+    control: number
+    binds: RQWorker.successful_job_count
+  - label: Failed Job Count
+    control: number
+    binds: RQWorker.failed_job_count
+  - label: Start Time
+    control: date
+    binds: RQWorker.birth_date
+  - label: Last Heartbeat
+    control: date
+    binds: RQWorker.last_heartbeat
+  - label: Total Working Time
+    control: number
+    binds: RQWorker.total_working_time
+  - label: Utilization %
+    control: number
+    binds: RQWorker.utilization_percent
+actions:
+  - label: Save
+    triggers: F-180
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of RQ Worker
+    note: declared by the program

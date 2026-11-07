@@ -1,0 +1,21 @@
+id: S-461
+title: Website Route Meta
+purpose: create, view and edit Website Route Meta records
+kind: form
+layout: 1 fields
+fields:
+  - label: Meta Tags
+    control: grid
+    required: true
+    columns:
+      - Key
+      - Value
+actions:
+  - label: Save
+    triggers: F-462
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Website Route Meta
+    note: declared by the program

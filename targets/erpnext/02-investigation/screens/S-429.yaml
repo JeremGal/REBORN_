@@ -1,0 +1,228 @@
+id: S-429
+title: Subcontracting Receipt
+purpose: create, view and edit Subcontracting Receipt records
+kind: form
+layout: "tabs: Address and Contact, Additional Costs, Other Info, Connections; sections: Accounting Dimensions , Raw Materials Actions, Raw Materials Consumed, More Information, Order Status, Auto Repeat Detail, Printing Settings, Transporter Details; 50 fields"
+fields:
+  - label: Series
+    control: select
+    binds: SubcontractingReceipt.naming_series
+    required: true
+  - label: Job Worker
+    control: lookup
+    binds: SubcontractingReceipt.supplier
+    required: true
+    validation: chosen among Supplier records
+  - label: Job Worker Name
+    control: text
+    binds: SubcontractingReceipt.supplier_name
+    validation: read only (computed or filled by the program); shown only when supplier
+  - label: Job Worker Delivery Note
+    control: text
+    binds: SubcontractingReceipt.supplier_delivery_note
+  - label: Company
+    control: lookup
+    binds: SubcontractingReceipt.company
+    required: true
+    validation: chosen among Company records
+  - label: Date
+    control: date
+    binds: SubcontractingReceipt.posting_date
+    required: true
+  - label: Posting Time
+    control: date
+    binds: SubcontractingReceipt.posting_time
+    required: true
+  - label: Edit Posting Date and Time
+    control: checkbox
+    binds: SubcontractingReceipt.set_posting_time
+    validation: shown only when eval:doc.docstatus==0
+  - label: Is Return
+    control: checkbox
+    binds: SubcontractingReceipt.is_return
+    validation: read only (computed or filled by the program)
+  - label: Return Against Subcontracting Receipt
+    control: lookup
+    binds: SubcontractingReceipt.return_against
+    validation: read only (computed or filled by the program); shown only when is_return; chosen among Subcontracting Receipt records
+  - label: Cost Center
+    control: lookup
+    binds: SubcontractingReceipt.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: SubcontractingReceipt.project
+    validation: chosen among Project records
+  - label: Accepted Warehouse
+    control: lookup
+    binds: SubcontractingReceipt.set_warehouse
+    validation: chosen among Warehouse records
+  - label: Rejected Warehouse
+    control: lookup
+    binds: SubcontractingReceipt.rejected_warehouse
+    validation: "shown only when eval: !doc.is_return; chosen among Warehouse records"
+  - label: Job Worker Warehouse
+    control: lookup
+    binds: SubcontractingReceipt.supplier_warehouse
+    validation: chosen among Warehouse records
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Accepted Qty
+      - Rejected Qty
+      - Rate
+      - Amount
+      - Accepted Warehouse
+  - label: Total Quantity
+    control: number
+    binds: SubcontractingReceipt.total_qty
+    validation: read only (computed or filled by the program)
+  - label: Total
+    control: money
+    binds: SubcontractingReceipt.total
+    validation: read only (computed or filled by the program)
+  - label: Consumed Items
+    control: grid
+    columns:
+      - Item Code
+      - Raw Material Item Code
+      - BOM Detail No
+      - Reference Name
+      - Rate
+      - Required Qty
+      - Consumed Qty
+      - Serial / Batch Bundle
+  - label: In Words
+    control: text
+    binds: SubcontractingReceipt.in_words
+    validation: read only (computed or filled by the program)
+  - label: Bill No
+    control: text
+    binds: SubcontractingReceipt.bill_no
+  - label: Bill Date
+    control: date
+    binds: SubcontractingReceipt.bill_date
+  - label: Select Job Worker Address
+    control: lookup
+    binds: SubcontractingReceipt.supplier_address
+    validation: chosen among Address records
+  - label: Contact Person
+    control: lookup
+    binds: SubcontractingReceipt.contact_person
+    validation: chosen among Contact records
+  - label: Address
+    control: text
+    binds: SubcontractingReceipt.address_display
+    validation: read only (computed or filled by the program)
+  - label: Contact
+    control: text
+    binds: SubcontractingReceipt.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: SubcontractingReceipt.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: SubcontractingReceipt.contact_email
+    validation: read only (computed or filled by the program)
+  - label: Select Shipping Address
+    control: lookup
+    binds: SubcontractingReceipt.shipping_address
+    validation: chosen among Address records
+  - label: Shipping Address
+    control: text
+    binds: SubcontractingReceipt.shipping_address_display
+    validation: read only (computed or filled by the program)
+  - label: Select Billing Address
+    control: lookup
+    binds: SubcontractingReceipt.billing_address
+    validation: chosen among Address records
+  - label: Billing Address
+    control: text
+    binds: SubcontractingReceipt.billing_address_display
+    validation: read only (computed or filled by the program)
+  - label: "Distribute Additional Costs Based On "
+    control: select
+    binds: SubcontractingReceipt.distribute_additional_costs_based_on
+  - label: Additional Costs
+    control: grid
+    columns:
+      - Expense Account
+      - Description
+      - Amount
+  - label: Total Additional Costs
+    control: money
+    binds: SubcontractingReceipt.total_additional_costs
+    validation: read only (computed or filled by the program)
+  - label: Title
+    control: text
+    binds: SubcontractingReceipt.title
+  - label: Amended From
+    control: lookup
+    binds: SubcontractingReceipt.amended_from
+    validation: read only (computed or filled by the program); chosen among Subcontracting Receipt records
+  - label: Range
+    control: text
+    binds: SubcontractingReceipt.range
+  - label: Represents Company
+    control: lookup
+    binds: SubcontractingReceipt.represents_company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Status
+    control: select
+    binds: SubcontractingReceipt.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: "% Returned"
+    control: number
+    binds: SubcontractingReceipt.per_returned
+    validation: read only (computed or filled by the program); shown only when eval:(!doc.__islocal && doc.is_return==0)
+  - label: Auto Repeat
+    control: lookup
+    binds: SubcontractingReceipt.auto_repeat
+    validation: read only (computed or filled by the program); chosen among Auto Repeat records
+  - label: Letter Head
+    control: lookup
+    binds: SubcontractingReceipt.letter_head
+    validation: chosen among Letter Head records
+  - label: Print Language
+    control: text
+    binds: SubcontractingReceipt.language
+    validation: read only (computed or filled by the program)
+  - label: Instructions
+    control: text
+    binds: SubcontractingReceipt.instructions
+  - label: Print Heading
+    control: lookup
+    binds: SubcontractingReceipt.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Remarks
+    control: text
+    binds: SubcontractingReceipt.remarks
+  - label: Transporter Name
+    control: text
+    binds: SubcontractingReceipt.transporter_name
+  - label: Vehicle Number
+    control: text
+    binds: SubcontractingReceipt.lr_no
+  - label: Vehicle Date
+    control: date
+    binds: SubcontractingReceipt.lr_date
+actions:
+  - label: Save
+    triggers: F-430
+  - label: Submit
+    triggers: F-430
+  - label: Cancel
+    triggers: F-430
+  - label: Amend
+    triggers: F-430
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Subcontracting Receipt
+    note: declared by the program

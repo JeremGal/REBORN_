@@ -1,0 +1,62 @@
+id: F-126
+title: Create and edit a Supplier Scorecard Criteria
+module: Buying
+priority: should
+status: partial
+confidence: medium
+user_goal: Something a supplier is scored on, like on-time delivery.
+entry_points:
+  - screen: S-125
+    action: open the form
+inputs:
+  - label: Criteria Name
+    field: SupplierScorecardCriteria.criteria_name
+    type: string
+    required: true
+  - label: Max Score
+    field: SupplierScorecardCriteria.max_score
+    type: decimal
+    required: true
+  - label: Criteria Formula
+    field: SupplierScorecardCriteria.formula
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Supplier Scorecard Criteria form
+    screen: S-125
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Criteria Name, Max Score, Criteria Formula"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Supplier Scorecard Criteria record stored
+    entities:
+      - SupplierScorecardCriteria
+entities:
+  - SupplierScorecardCriteria
+screens:
+  - S-125
+acceptance:
+  - id: AC-127
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Supplier Scorecard Criteria
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 161
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: The criteria formula fails when every variable is 0.0. Check its syntax and guard divisions by a variable, for example: {a} / {b} if {b} else 0"

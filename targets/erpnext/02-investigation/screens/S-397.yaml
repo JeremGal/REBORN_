@@ -1,0 +1,35 @@
+id: S-397
+title: Manufacturer
+purpose: create, view and edit Manufacturer records
+kind: form
+layout: "sections: Address and Contacts; 6 fields"
+fields:
+  - label: Short Name
+    control: text
+    binds: Manufacturer.short_name
+    required: true
+  - label: Full Name
+    control: text
+    binds: Manufacturer.full_name
+  - label: Website
+    control: text
+    binds: Manufacturer.website
+  - label: Country
+    control: lookup
+    binds: Manufacturer.country
+    validation: chosen among Country records
+  - label: Logo
+    control: other
+    binds: Manufacturer.logo
+  - label: Notes
+    control: text
+    binds: Manufacturer.notes
+actions:
+  - label: Save
+    triggers: F-398
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Manufacturer
+    note: declared by the program

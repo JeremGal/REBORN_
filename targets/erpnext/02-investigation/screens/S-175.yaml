@@ -1,0 +1,38 @@
+id: S-175
+title: Role
+purpose: create, view and edit Role records
+kind: form
+layout: "tabs: Users, Documents, Reports, Pages, Workspaces; sections: Role Profiles; 7 fields"
+fields:
+  - label: Role Name
+    control: text
+    binds: Role.role_name
+    required: true
+  - label: Home Page
+    control: text
+    binds: Role.home_page
+  - label: Restrict To Domain
+    control: lookup
+    binds: Role.restrict_to_domain
+    validation: chosen among Domain records
+  - label: Disabled
+    control: checkbox
+    binds: Role.disabled
+  - label: Is Custom
+    control: checkbox
+    binds: Role.is_custom
+  - label: Desk Access
+    control: checkbox
+    binds: Role.desk_access
+  - label: Two Factor Authentication
+    control: checkbox
+    binds: Role.two_factor_auth
+actions:
+  - label: Save
+    triggers: F-176
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Role
+    note: declared by the program

@@ -1,0 +1,82 @@
+id: F-340
+title: Create and edit a Lower Deduction Certificate
+module: Regional
+priority: could
+status: partial
+confidence: medium
+user_goal: A certificate that lets you withhold less tax from a supplier.
+entry_points:
+  - screen: S-339
+    action: open the form
+inputs:
+  - label: Tax Withholding Category
+    field: LowerDeductionCertificate.tax_withholding_category
+    type: ref
+    required: true
+  - label: Fiscal Year
+    field: LowerDeductionCertificate.fiscal_year
+    type: ref
+    required: true
+  - label: Company
+    field: LowerDeductionCertificate.company
+    type: ref
+    required: true
+  - label: Certificate No
+    field: LowerDeductionCertificate.certificate_no
+    type: string
+    required: true
+  - label: Supplier
+    field: LowerDeductionCertificate.supplier
+    type: ref
+    required: true
+  - label: PAN No
+    field: LowerDeductionCertificate.pan_no
+    type: string
+    required: true
+  - label: Valid From
+    field: LowerDeductionCertificate.valid_from
+    type: date
+    required: true
+  - label: Valid Up To
+    field: LowerDeductionCertificate.valid_upto
+    type: date
+    required: true
+  - label: Rate Of TDS As Per Certificate
+    field: LowerDeductionCertificate.rate
+    type: percent
+    required: true
+  - label: Certificate Limit
+    field: LowerDeductionCertificate.certificate_limit
+    type: money
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Lower Deduction Certificate form
+    screen: S-339
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Tax Withholding Category, Fiscal Year, Company, Certificate No, Supplier, PAN No, Valid From, Valid Up To, Rate Of TDS As Per Certificate, Certificate Limit"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Lower Deduction Certificate record stored
+    entities:
+      - LowerDeductionCertificate
+entities:
+  - LowerDeductionCertificate
+screens:
+  - S-339
+acceptance:
+  - id: AC-341
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Lower Deduction Certificate
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"lower-deduction-certificate\")."

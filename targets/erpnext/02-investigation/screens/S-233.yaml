@@ -1,0 +1,150 @@
+id: S-233
+title: Event
+purpose: create, view and edit Event records
+kind: form
+layout: "tabs: Participants, Links, Notifications; sections: Details, Google Calendar; 35 fields"
+fields:
+  - label: Subject
+    control: text
+    binds: Event.subject
+    required: true
+  - label: Event Category
+    control: select
+    binds: Event.event_category
+  - label: Event Type
+    control: select
+    binds: Event.event_type
+    required: true
+  - label: Color
+    control: other
+    binds: Event.color
+  - label: Repeat this Event
+    control: checkbox
+    binds: Event.repeat_this_event
+  - label: Location
+    control: text
+    binds: Event.location
+  - label: Starts on
+    control: date
+    binds: Event.starts_on
+    required: true
+  - label: Ends on
+    control: date
+    binds: Event.ends_on
+  - label: Status
+    control: select
+    binds: Event.status
+  - label: Sender
+    control: text
+    binds: Event.sender
+    validation: read only (computed or filled by the program)
+  - label: Attending
+    control: select
+    binds: Event.attending
+  - label: All Day
+    control: checkbox
+    binds: Event.all_day
+  - label: Sync with Google Calendar
+    control: checkbox
+    binds: Event.sync_with_google_calendar
+  - label: Add Video Conferencing
+    control: checkbox
+    binds: Event.add_video_conferencing
+    validation: shown only when eval:doc.sync_with_google_calendar
+  - label: Google Calendar
+    control: lookup
+    binds: Event.google_calendar
+    validation: chosen among Google Calendar records
+  - label: Google Calendar ID
+    control: text
+    binds: Event.google_calendar_id
+    validation: read only (computed or filled by the program)
+  - label: Google Calendar Event ID
+    control: text
+    binds: Event.google_calendar_event_id
+    validation: read only (computed or filled by the program)
+  - label: Google Meet Link
+    control: text
+    binds: Event.google_meet_link
+    validation: read only (computed or filled by the program)
+  - label: Pulled from Google Calendar
+    control: checkbox
+    binds: Event.pulled_from_google_calendar
+    validation: read only (computed or filled by the program)
+  - label: Repeat On
+    control: select
+    binds: Event.repeat_on
+    validation: shown only when repeat_this_event
+  - label: Repeat Till
+    control: date
+    binds: Event.repeat_till
+    validation: shown only when repeat_this_event
+  - label: Monday
+    control: checkbox
+    binds: Event.monday
+    validation: shown only when eval:doc.repeat_this_event && doc.repeat_on==="Weekly"
+  - label: Tuesday
+    control: checkbox
+    binds: Event.tuesday
+    validation: shown only when eval:doc.repeat_this_event && doc.repeat_on==="Weekly"
+  - label: Wednesday
+    control: checkbox
+    binds: Event.wednesday
+    validation: shown only when eval:doc.repeat_this_event && doc.repeat_on==="Weekly"
+  - label: Thursday
+    control: checkbox
+    binds: Event.thursday
+    validation: shown only when eval:doc.repeat_this_event && doc.repeat_on==="Weekly"
+  - label: Friday
+    control: checkbox
+    binds: Event.friday
+    validation: shown only when eval:doc.repeat_this_event && doc.repeat_on==="Weekly"
+  - label: Saturday
+    control: checkbox
+    binds: Event.saturday
+    validation: shown only when eval:doc.repeat_this_event && doc.repeat_on==="Weekly"
+  - label: Sunday
+    control: checkbox
+    binds: Event.sunday
+    validation: shown only when eval:doc.repeat_this_event && doc.repeat_on==="Weekly"
+  - label: Description
+    control: text
+    binds: Event.description
+  - label: Event Participants
+    control: grid
+    columns:
+      - Reference Document Type
+      - Reference Name
+      - Attending
+  - label: Reference Document Type
+    control: lookup
+    binds: Event.reference_doctype
+    validation: chosen among DocType records
+  - label: Reference Doc
+    control: lookup
+    binds: Event.reference_docname
+  - label: Links
+    control: grid
+    columns:
+      - Link Document Type
+      - Link Name
+      - Link Title
+  - label: Send an email reminder in the morning
+    control: checkbox
+    binds: Event.send_reminder
+  - label: Notifications
+    control: grid
+    columns:
+      - Type
+      - Before
+      - Interval
+      - Time
+actions:
+  - label: Save
+    triggers: F-234
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Event
+    note: declared by the program

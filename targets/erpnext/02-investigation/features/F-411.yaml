@@ -1,0 +1,65 @@
+id: F-411
+title: Create, submit and cancel a Serial and Batch Bundle
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: The serial numbers and batches moved in a transaction.
+entry_points:
+  - screen: S-410
+    action: open the form
+inputs:
+  - label: Company
+    field: SerialAndBatchBundle.company
+    type: ref
+    required: true
+  - label: Item Code
+    field: SerialAndBatchBundle.item_code
+    type: ref
+    required: true
+  - label: Type of Transaction
+    field: SerialAndBatchBundle.type_of_transaction
+    type: enum
+    required: true
+  - label: Voucher Type
+    field: SerialAndBatchBundle.voucher_type
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Serial and Batch Bundle form
+    screen: S-410
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Item Code, Type of Transaction, Voucher Type"
+  - n: 3
+    actor: user
+    does: "adds lines in: entries"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Serial and Batch Bundle record stored
+    entities:
+      - SerialAndBatchBundle
+entities:
+  - SerialAndBatchBundle
+  - SerialAndBatchEntry
+screens:
+  - S-410
+acceptance:
+  - id: AC-412
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Serial and Batch Bundle
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"serial-and-batch-bundle\")."

@@ -1,0 +1,81 @@
+id: F-294
+title: Create, submit and cancel a Maintenance Visit
+module: Maintenance
+priority: could
+status: partial
+confidence: medium
+user_goal: A visit to service or repair what a customer bought.
+entry_points:
+  - screen: S-293
+    action: open the form
+inputs:
+  - label: Series
+    field: MaintenanceVisit.naming_series
+    type: enum
+    required: true
+  - label: Customer
+    field: MaintenanceVisit.customer
+    type: ref
+    required: true
+  - label: Maintenance Date
+    field: MaintenanceVisit.mntc_date
+    type: date
+    required: true
+  - label: Completion Status
+    field: MaintenanceVisit.completion_status
+    type: enum
+    required: true
+  - label: Maintenance Type
+    field: MaintenanceVisit.maintenance_type
+    type: enum
+    required: true
+  - label: Company
+    field: MaintenanceVisit.company
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Maintenance Visit form
+    screen: S-293
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Customer, Maintenance Date, Completion Status, Maintenance Type, Company"
+  - n: 3
+    actor: user
+    does: "adds lines in: Purposes"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Maintenance Visit record stored
+    entities:
+      - MaintenanceVisit
+entities:
+  - MaintenanceVisit
+  - MaintenanceVisitPurpose
+screens:
+  - S-293
+acceptance:
+  - id: AC-295
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Maintenance Visit
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 80
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"maintenance-visit\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Ajouter des éléments dans le tableau des objectifs"

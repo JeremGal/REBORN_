@@ -1,0 +1,125 @@
+id: S-254
+title: Workspace
+purpose: create, view and edit Workspace records
+kind: form
+layout: "tabs: Number Cards, Dashboards, Shortcuts, Link Cards, Quick Lists, Custom Blocks, Roles; 26 fields"
+fields:
+  - label: Name
+    control: text
+    binds: Workspace.label
+    required: true
+  - label: Icon
+    control: other
+    binds: Workspace.icon
+  - label: Title
+    control: text
+    binds: Workspace.title
+    required: true
+  - label: Sequence Id
+    control: number
+    binds: Workspace.sequence_id
+  - label: For User
+    control: text
+    binds: Workspace.for_user
+  - label: Parent Page
+    control: lookup
+    binds: Workspace.parent_page
+    validation: chosen among Workspace records
+  - label: Module
+    control: lookup
+    binds: Workspace.module
+    required: true
+    validation: chosen among Module Def records
+  - label: Type
+    control: select
+    binds: Workspace.type
+    required: true
+  - label: Link Type
+    control: select
+    binds: Workspace.link_type
+    validation: shown only when eval:doc.type=="Link"
+  - label: Link To
+    control: lookup
+    binds: Workspace.link_to
+    validation: shown only when eval:doc.type=="Link"
+  - label: External Link
+    control: text
+    binds: Workspace.external_link
+    validation: shown only when eval:doc.type=="URL"
+  - label: Standard
+    control: checkbox
+    binds: Workspace.standard
+  - label: Indicator Color
+    control: select
+    binds: Workspace.indicator_color
+    validation: shown only when doc.icon
+  - label: Restrict to Domain
+    control: lookup
+    binds: Workspace.restrict_to_domain
+    validation: chosen among Domain records
+  - label: Hide Custom DocTypes and Reports
+    control: checkbox
+    binds: Workspace.hide_custom
+  - label: Public
+    control: checkbox
+    binds: Workspace.public
+    validation: read only (computed or filled by the program)
+  - label: Is Hidden
+    control: checkbox
+    binds: Workspace.is_hidden
+  - label: Content
+    control: text
+    binds: Workspace.content
+  - label: Module Onboarding
+    control: lookup
+    binds: Workspace.module_onboarding
+    validation: chosen among Module Onboarding records
+  - label: Number Cards
+    control: grid
+    columns:
+      - Number Card Name
+      - Label
+  - label: Charts
+    control: grid
+    columns:
+      - Chart Name
+      - Label
+  - label: Shortcuts
+    control: grid
+    columns:
+      - Type
+      - Link To
+      - URL
+      - DocType View
+      - Label
+  - label: Links
+    control: grid
+    columns:
+      - Type
+      - Label
+      - Link Type
+      - Link To
+  - label: Quick Lists
+    control: grid
+    columns:
+      - DocType
+      - Label
+      - Quick List Filter
+  - label: Custom Blocks
+    control: grid
+    columns:
+      - Custom Block Name
+      - Label
+  - label: Roles
+    control: grid
+    columns:
+      - Role
+actions:
+  - label: Save
+    triggers: F-255
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Workspace
+    note: declared by the program

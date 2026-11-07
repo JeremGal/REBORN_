@@ -1,0 +1,45 @@
+id: S-156
+title: Error Log
+purpose: create, view and edit Error Log records
+kind: form
+layout: 8 fields
+fields:
+  - label: Seen
+    control: checkbox
+    binds: ErrorLog.seen
+  - label: Reference DocType
+    control: lookup
+    binds: ErrorLog.reference_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Reference Name
+    control: text
+    binds: ErrorLog.reference_name
+    validation: read only (computed or filled by the program)
+  - label: Title
+    control: text
+    binds: ErrorLog.method
+    validation: read only (computed or filled by the program)
+  - label: Error
+    control: text
+    binds: ErrorLog.error
+    validation: read only (computed or filled by the program)
+  - label: Trace ID
+    control: text
+    binds: ErrorLog.trace_id
+    validation: read only (computed or filled by the program)
+  - label: Fingerprint
+    control: text
+    binds: ErrorLog.fingerprint
+  - label: Metadata
+    control: text
+    binds: ErrorLog.metadata
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-157
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Error Log
+    note: declared by the program

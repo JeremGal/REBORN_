@@ -1,0 +1,57 @@
+id: F-376
+title: Create and edit a Supplier Group
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: Groups suppliers, for terms and reporting.
+entry_points:
+  - screen: S-375
+    action: open the form
+inputs:
+  - label: Supplier Group Name
+    field: SupplierGroup.supplier_group_name
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Supplier Group form
+    screen: S-375
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Supplier Group Name"
+  - n: 3
+    actor: user
+    does: "adds lines in: Accounts"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Supplier Group record stored
+    entities:
+      - SupplierGroup
+entities:
+  - SupplierGroup
+  - PartyAccount
+screens:
+  - S-375
+acceptance:
+  - id: AC-377
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Supplier Group
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 158
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"supplier-group\")."

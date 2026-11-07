@@ -1,0 +1,46 @@
+id: F-318
+title: Create and edit a Print Heading
+module: Printing
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Print Heading records.
+entry_points:
+  - screen: S-317
+    action: open the form
+inputs:
+  - label: Print Heading
+    field: PrintHeading.print_heading
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Print Heading form
+    screen: S-317
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Print Heading"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Print Heading record stored
+    entities:
+      - PrintHeading
+entities:
+  - PrintHeading
+screens:
+  - S-317
+acceptance:
+  - id: AC-319
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Print Heading
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

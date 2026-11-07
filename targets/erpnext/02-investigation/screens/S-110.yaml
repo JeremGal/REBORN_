@@ -1,0 +1,99 @@
+id: S-110
+title: Automation Flow
+purpose: create, view and edit Automation Flow records
+kind: form
+layout: "sections: Trigger, Conditions, Advanced Condition, Actions, Settings; 22 fields"
+fields:
+  - label: Title
+    control: text
+    binds: AutomationFlow.title
+    required: true
+  - label: Document Type
+    control: lookup
+    binds: AutomationFlow.document_type
+    validation: chosen among DocType records
+  - label: Enabled
+    control: checkbox
+    binds: AutomationFlow.enabled
+  - label: Disabled Reason
+    control: text
+    binds: AutomationFlow.disabled_reason
+    validation: read only (computed or filled by the program); shown only when disabled_reason
+  - label: Trigger Type
+    control: select
+    binds: AutomationFlow.trigger_type
+    required: true
+  - label: Trigger Field
+    control: select
+    binds: AutomationFlow.trigger_field
+    validation: shown only when eval:doc.trigger_type=='Field Value Changed'
+  - label: From Value
+    control: text
+    binds: AutomationFlow.from_value
+    validation: shown only when eval:doc.trigger_type=='Field Value Changed'
+  - label: To Value
+    control: text
+    binds: AutomationFlow.to_value
+    validation: shown only when eval:doc.trigger_type=='Field Value Changed'
+  - label: Custom Event
+    control: text
+    binds: AutomationFlow.custom_event
+    validation: shown only when eval:doc.trigger_type=='Custom Event'
+  - label: Date Field
+    control: select
+    binds: AutomationFlow.date_field
+    validation: shown only when eval:doc.trigger_type=='Date Based'
+  - label: Date Offset (Days)
+    control: number
+    binds: AutomationFlow.date_offset
+    validation: shown only when eval:doc.trigger_type=='Date Based'
+  - label: Date Direction
+    control: select
+    binds: AutomationFlow.date_direction
+    validation: shown only when eval:doc.trigger_type=='Date Based'
+  - label: Cron Expression
+    control: text
+    binds: AutomationFlow.cron_expression
+    validation: shown only when eval:doc.trigger_type=='Scheduled'
+  - label: Next Run
+    control: date
+    binds: AutomationFlow.next_run
+    validation: read only (computed or filled by the program); shown only when eval:doc.trigger_type=='Scheduled'
+  - label: Filters
+    control: text
+    binds: AutomationFlow.filters
+    validation: read only (computed or filled by the program)
+  - label: Advanced Expression using Python
+    control: text
+    binds: AutomationFlow.condition
+  - label: Relationships
+    control: other
+    binds: AutomationFlow.relationships
+  - label: Revalidate on Run
+    control: checkbox
+    binds: AutomationFlow.revalidate_on_run
+  - label: Actions
+    control: grid
+    columns:
+      - Step Type
+      - Action Type
+      - Parameters
+  - label: Run As
+    control: select
+    binds: AutomationFlow.run_as
+  - label: Automation User
+    control: lookup
+    binds: AutomationFlow.automation_user
+    validation: shown only when eval:doc.run_as=='Automation User'; chosen among User records
+  - label: Stop on Error
+    control: checkbox
+    binds: AutomationFlow.stop_on_error
+actions:
+  - label: Save
+    triggers: F-111
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Automation Flow
+    note: declared by the program

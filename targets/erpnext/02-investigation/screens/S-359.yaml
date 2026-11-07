@@ -1,0 +1,39 @@
+id: S-359
+title: Currency Exchange
+purpose: create, view and edit Currency Exchange records
+kind: form
+layout: 6 fields
+fields:
+  - label: Date
+    control: date
+    binds: CurrencyExchange.date
+    required: true
+  - label: From Currency
+    control: lookup
+    binds: CurrencyExchange.from_currency
+    required: true
+    validation: chosen among Currency records
+  - label: To Currency
+    control: lookup
+    binds: CurrencyExchange.to_currency
+    required: true
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: CurrencyExchange.exchange_rate
+    required: true
+  - label: For Buying
+    control: checkbox
+    binds: CurrencyExchange.for_buying
+  - label: For Selling
+    control: checkbox
+    binds: CurrencyExchange.for_selling
+actions:
+  - label: Save
+    triggers: F-360
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Currency Exchange
+    note: declared by the program

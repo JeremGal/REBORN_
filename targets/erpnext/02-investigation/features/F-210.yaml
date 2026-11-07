@@ -1,0 +1,73 @@
+id: F-210
+title: Create and edit a Opportunity
+module: CRM
+priority: should
+status: partial
+confidence: medium
+user_goal: A potential sale to a lead or customer.
+entry_points:
+  - screen: S-209
+    action: open the form
+inputs:
+  - label: Series
+    field: Opportunity.naming_series
+    type: enum
+    required: true
+  - label: Opportunity From
+    field: Opportunity.opportunity_from
+    type: ref
+    required: true
+  - label: Party
+    field: Opportunity.party_name
+    type: string
+    required: true
+  - label: Status
+    field: Opportunity.status
+    type: enum
+    required: true
+  - label: Company
+    field: Opportunity.company
+    type: ref
+    required: true
+  - label: Opportunity Date
+    field: Opportunity.transaction_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Opportunity form
+    screen: S-209
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Opportunity From, Party, Status, Company, Opportunity Date"
+  - n: 3
+    actor: user
+    does: "adds lines in: Lost Reasons, Competitors, Items, Notes"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Opportunity record stored
+    entities:
+      - Opportunity
+entities:
+  - Opportunity
+  - OpportunityLostReasonDetail
+  - CompetitorDetail
+  - OpportunityItem
+  - CRMNote
+screens:
+  - S-209
+acceptance:
+  - id: AC-211
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Opportunity
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"opportunity\")."

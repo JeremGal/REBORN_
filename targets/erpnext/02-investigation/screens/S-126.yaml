@@ -1,0 +1,63 @@
+id: S-126
+title: Supplier Scorecard Period
+purpose: create, view and edit Supplier Scorecard Period records
+kind: form
+layout: "sections: Calculations, Reference; 9 fields"
+fields:
+  - label: Supplier
+    control: lookup
+    binds: SupplierScorecardPeriod.supplier
+    required: true
+    validation: read only (computed or filled by the program); chosen among Supplier records
+  - label: Naming Series
+    control: select
+    binds: SupplierScorecardPeriod.naming_series
+    required: true
+  - label: Period Score
+    control: number
+    binds: SupplierScorecardPeriod.total_score
+    validation: read only (computed or filled by the program)
+  - label: Start Date
+    control: date
+    binds: SupplierScorecardPeriod.start_date
+    required: true
+  - label: End Date
+    control: date
+    binds: SupplierScorecardPeriod.end_date
+    required: true
+  - label: Criteria
+    control: grid
+    required: true
+    columns:
+      - Criteria Name
+      - Score
+      - Criteria Weight
+  - label: Variables
+    control: grid
+    columns:
+      - Variable Name
+      - Value
+  - label: Supplier Scorecard Setup
+    control: lookup
+    binds: SupplierScorecardPeriod.scorecard
+    required: true
+    validation: chosen among Supplier Scorecard records
+  - label: Amended From
+    control: lookup
+    binds: SupplierScorecardPeriod.amended_from
+    validation: read only (computed or filled by the program); chosen among Supplier Scorecard Period records
+actions:
+  - label: Save
+    triggers: F-127
+  - label: Submit
+    triggers: F-127
+  - label: Cancel
+    triggers: F-127
+  - label: Amend
+    triggers: F-127
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Supplier Scorecard Period
+    note: declared by the program

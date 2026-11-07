@@ -141,7 +141,7 @@ storage:
   observed_table: tabNumber Card
 status: confirmed
 evidence:
-  - ref: rb_8c499662e4b337ccdf0b1c0daf2a475eb783203bf872fb96553bf7f678f8e871
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
     kind: rea
     locator: definition of Number Card
     note: declared by the program and served by its API

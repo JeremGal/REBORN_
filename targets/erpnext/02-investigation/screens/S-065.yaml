@@ -1,0 +1,181 @@
+id: S-065
+title: POS Profile
+purpose: create, view and edit POS Profile records
+kind: form
+layout: "tabs: Accounting, POS Configurations, More Info; sections: Payment Methods, Price List & Currency, Write Off, Income and Expense, Taxes, Miscellaneous, Accounting Dimensions, POS Item Selector, POS Item Details, Applicable for Users, Filters, Print Settings, Campaign; 43 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: POSProfile.company
+    required: true
+    validation: chosen among Company records
+  - label: Customer
+    control: lookup
+    binds: POSProfile.customer
+    validation: chosen among Customer records
+  - label: Country
+    control: display
+    binds: POSProfile.country
+  - label: Disabled
+    control: checkbox
+    binds: POSProfile.disabled
+  - label: Warehouse
+    control: lookup
+    binds: POSProfile.warehouse
+    required: true
+    validation: shown only when update_stock; chosen among Warehouse records
+  - label: Company Address
+    control: lookup
+    binds: POSProfile.company_address
+    validation: chosen among Address records
+  - label: Payment Methods
+    control: grid
+    required: true
+    columns:
+      - Default
+      - Allow In Returns
+      - Mode of Payment
+  - label: Set Grand Total to Default Payment Method
+    control: checkbox
+    binds: POSProfile.set_grand_total_to_default_mop
+  - label: Currency
+    control: lookup
+    binds: POSProfile.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Price List
+    control: lookup
+    binds: POSProfile.selling_price_list
+    validation: chosen among Price List records
+  - label: Write Off Account
+    control: lookup
+    binds: POSProfile.write_off_account
+    required: true
+    validation: chosen among Account records
+  - label: Write Off Cost Center
+    control: lookup
+    binds: POSProfile.write_off_cost_center
+    required: true
+    validation: chosen among Cost Center records
+  - label: Write Off Limit
+    control: money
+    binds: POSProfile.write_off_limit
+    required: true
+  - label: Income Account
+    control: lookup
+    binds: POSProfile.income_account
+    validation: chosen among Account records
+  - label: Expense Account
+    control: lookup
+    binds: POSProfile.expense_account
+    validation: chosen among Account records
+  - label: Taxes and Charges
+    control: lookup
+    binds: POSProfile.taxes_and_charges
+    validation: chosen among Sales Taxes and Charges Template records
+  - label: Tax Category
+    control: lookup
+    binds: POSProfile.tax_category
+    validation: chosen among Tax Category records
+  - label: Account for Change Amount
+    control: lookup
+    binds: POSProfile.account_for_change_amount
+    validation: chosen among Account records
+  - label: Disable Rounded Total
+    control: checkbox
+    binds: POSProfile.disable_rounded_total
+  - label: Apply Discount On
+    control: select
+    binds: POSProfile.apply_discount_on
+  - label: Allow Partial Payment
+    control: checkbox
+    binds: POSProfile.allow_partial_payment
+  - label: Cost Center
+    control: lookup
+    binds: POSProfile.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: POSProfile.project
+    validation: chosen among Project records
+  - label: Action on New Invoice
+    control: select
+    binds: POSProfile.action_on_new_invoice
+  - label: Validate Stock on Save
+    control: checkbox
+    binds: POSProfile.validate_stock_on_save
+  - label: Update Stock
+    control: checkbox
+    binds: POSProfile.update_stock
+    validation: read only (computed or filled by the program)
+  - label: Ignore Pricing Rule
+    control: checkbox
+    binds: POSProfile.ignore_pricing_rule
+  - label: Print Receipt on Order Complete
+    control: checkbox
+    binds: POSProfile.print_receipt_on_order_complete
+  - label: Hide Images
+    control: checkbox
+    binds: POSProfile.hide_images
+  - label: Hide Unavailable Items
+    control: checkbox
+    binds: POSProfile.hide_unavailable_items
+  - label: Automatically Add Filtered Item To Cart
+    control: checkbox
+    binds: POSProfile.auto_add_item_to_cart
+  - label: Allow User to Edit Rate
+    control: checkbox
+    binds: POSProfile.allow_rate_change
+  - label: Allow User to Edit Discount
+    control: checkbox
+    binds: POSProfile.allow_discount_change
+  - label: Applicable for Users
+    control: grid
+    columns:
+      - Default
+      - User
+  - label: Item Groups
+    control: grid
+    columns:
+      - Item Group
+  - label: Customer Groups
+    control: grid
+    columns:
+      - Customer Group
+  - label: Print Format
+    control: lookup
+    binds: POSProfile.print_format
+    validation: chosen among Print Format records
+  - label: Letter Head
+    control: lookup
+    binds: POSProfile.letter_head
+    validation: chosen among Letter Head records
+  - label: Terms and Conditions
+    control: lookup
+    binds: POSProfile.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Print Heading
+    control: lookup
+    binds: POSProfile.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Source
+    control: lookup
+    binds: POSProfile.utm_source
+    validation: chosen among UTM Source records
+  - label: Campaign
+    control: lookup
+    binds: POSProfile.utm_campaign
+    validation: chosen among UTM Campaign records
+  - label: Medium
+    control: lookup
+    binds: POSProfile.utm_medium
+    validation: chosen among UTM Campaign records
+actions:
+  - label: Save
+    triggers: F-066
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of POS Profile
+    note: declared by the program

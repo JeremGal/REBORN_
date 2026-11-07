@@ -1,0 +1,33 @@
+id: S-073
+title: Process Subscription
+purpose: create, view and edit Process Subscription records
+kind: form
+layout: 3 fields
+fields:
+  - label: Posting Date
+    control: date
+    binds: ProcessSubscription.posting_date
+    required: true
+  - label: Subscription
+    control: lookup
+    binds: ProcessSubscription.subscription
+    validation: chosen among Subscription records
+  - label: Amended From
+    control: lookup
+    binds: ProcessSubscription.amended_from
+    validation: read only (computed or filled by the program); chosen among Process Subscription records
+actions:
+  - label: Save
+    triggers: F-074
+  - label: Submit
+    triggers: F-074
+  - label: Cancel
+    triggers: F-074
+  - label: Amend
+    triggers: F-074
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Process Subscription
+    note: declared by the program

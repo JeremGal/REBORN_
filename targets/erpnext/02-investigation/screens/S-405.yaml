@@ -1,0 +1,26 @@
+id: S-405
+title: Quality Inspection Parameter
+purpose: create, view and edit Quality Inspection Parameter records
+kind: form
+layout: 3 fields
+fields:
+  - label: Parameter
+    control: text
+    binds: QualityInspectionParameter.parameter
+    required: true
+  - label: Parameter Group
+    control: lookup
+    binds: QualityInspectionParameter.parameter_group
+    validation: chosen among Quality Inspection Parameter Group records
+  - label: Description
+    control: text
+    binds: QualityInspectionParameter.description
+actions:
+  - label: Save
+    triggers: F-406
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quality Inspection Parameter
+    note: declared by the program

@@ -1,0 +1,81 @@
+id: F-066
+title: Create and edit a POS Profile
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: Settings for a point of sale, like its warehouse, price list and payment methods.
+entry_points:
+  - screen: S-065
+    action: open the form
+inputs:
+  - label: Company
+    field: POSProfile.company
+    type: ref
+    required: true
+  - label: Warehouse
+    field: POSProfile.warehouse
+    type: ref
+    required: true
+  - label: Currency
+    field: POSProfile.currency
+    type: ref
+    required: true
+  - label: Write Off Account
+    field: POSProfile.write_off_account
+    type: ref
+    required: true
+  - label: Write Off Cost Center
+    field: POSProfile.write_off_cost_center
+    type: ref
+    required: true
+  - label: Write Off Limit
+    field: POSProfile.write_off_limit
+    type: money
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the POS Profile form
+    screen: S-065
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Warehouse, Currency, Write Off Account, Write Off Cost Center, Write Off Limit"
+  - n: 3
+    actor: user
+    does: "adds lines in: Payment Methods, Applicable for Users, Item Groups, Customer Groups"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a POS Profile record stored
+    entities:
+      - POSProfile
+entities:
+  - POSProfile
+  - POSPaymentMethod
+  - POSProfileUser
+  - POSItemGroup
+  - POSCustomerGroup
+screens:
+  - S-065
+acceptance:
+  - id: AC-067
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of POS Profile
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 105
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"pos-profile\")."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "frappe.exceptions.ValidationError: Veuillez définir le nom du document"

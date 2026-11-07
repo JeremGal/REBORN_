@@ -1,0 +1,60 @@
+id: S-253
+title: ToDo
+purpose: create, view and edit ToDo records
+kind: form
+layout: "sections: Reference; 13 fields"
+fields:
+  - label: Status
+    control: select
+    binds: ToDo.status
+  - label: Priority
+    control: select
+    binds: ToDo.priority
+  - label: Color
+    control: other
+    binds: ToDo.color
+  - label: Due Date
+    control: date
+    binds: ToDo.date
+  - label: Allocated To
+    control: lookup
+    binds: ToDo.allocated_to
+    validation: chosen among User records
+  - label: Description
+    control: text
+    binds: ToDo.description
+    required: true
+  - label: Reference Type
+    control: lookup
+    binds: ToDo.reference_type
+    validation: chosen among DocType records
+  - label: Reference Name
+    control: lookup
+    binds: ToDo.reference_name
+  - label: Role
+    control: lookup
+    binds: ToDo.role
+    validation: chosen among Role records
+  - label: Assigned By
+    control: lookup
+    binds: ToDo.assigned_by
+    validation: chosen among User records
+  - label: Assigned By Full Name
+    control: display
+    binds: ToDo.assigned_by_full_name
+  - label: Sender
+    control: text
+    binds: ToDo.sender
+  - label: Assignment Rule
+    control: lookup
+    binds: ToDo.assignment_rule
+    validation: read only (computed or filled by the program); chosen among Assignment Rule records
+actions:
+  - label: Save
+    triggers: F-254
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of ToDo
+    note: declared by the program

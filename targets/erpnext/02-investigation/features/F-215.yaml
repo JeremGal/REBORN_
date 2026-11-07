@@ -1,0 +1,46 @@
+id: F-215
+title: Create and edit a Client Script
+module: Custom
+priority: could
+status: partial
+confidence: medium
+user_goal: Adds a custom client script to a DocType
+entry_points:
+  - screen: S-214
+    action: open the form
+inputs:
+  - label: DocType
+    field: ClientScript.dt
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Client Script form
+    screen: S-214
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: DocType"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Client Script record stored
+    entities:
+      - ClientScript
+entities:
+  - ClientScript
+screens:
+  - S-214
+acceptance:
+  - id: AC-216
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Client Script
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

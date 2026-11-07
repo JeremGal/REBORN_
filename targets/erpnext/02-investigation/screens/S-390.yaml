@@ -1,0 +1,34 @@
+id: S-390
+title: Item Alternative
+purpose: create, view and edit Item Alternative records
+kind: form
+layout: 5 fields
+fields:
+  - label: Item Code
+    control: lookup
+    binds: ItemAlternative.item_code
+    required: true
+    validation: chosen among Item records
+  - label: Alternative Item Code
+    control: lookup
+    binds: ItemAlternative.alternative_item_code
+    required: true
+    validation: chosen among Item records
+  - label: Two-way
+    control: checkbox
+    binds: ItemAlternative.two_way
+  - label: Item Name
+    control: display
+    binds: ItemAlternative.item_name
+  - label: Alternative Item Name
+    control: display
+    binds: ItemAlternative.alternative_item_name
+actions:
+  - label: Save
+    triggers: F-391
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Item Alternative
+    note: declared by the program

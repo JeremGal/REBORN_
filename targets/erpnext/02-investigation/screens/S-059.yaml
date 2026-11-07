@@ -1,0 +1,21 @@
+id: S-059
+title: Pegged Currencies
+purpose: settings of Pegged Currencies
+kind: settings
+layout: 1 fields
+fields:
+  - label: pegged_currency_item
+    control: grid
+    columns:
+      - Currency
+      - Pegged Against
+      - Exchange Rate
+actions:
+  - label: Save
+    triggers: F-060
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Pegged Currencies
+    note: declared by the program

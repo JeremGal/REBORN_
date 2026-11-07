@@ -1,0 +1,217 @@
+id: S-215
+title: Custom Field
+purpose: create, view and edit Custom Field records
+kind: form
+layout: 58 fields
+fields:
+  - label: Is System Generated
+    control: checkbox
+    binds: CustomField.is_system_generated
+    validation: read only (computed or filled by the program)
+  - label: DocType
+    control: lookup
+    binds: CustomField.dt
+    required: true
+    validation: chosen among DocType records
+  - label: Module (for export)
+    control: lookup
+    binds: CustomField.module
+    validation: chosen among Module Def records
+  - label: Label
+    control: text
+    binds: CustomField.label
+  - label: Placeholder
+    control: text
+    binds: CustomField.placeholder
+  - label: Fieldname
+    control: text
+    binds: CustomField.fieldname
+    validation: read only (computed or filled by the program)
+  - label: Insert After
+    control: select
+    binds: CustomField.insert_after
+  - label: Length
+    control: number
+    binds: CustomField.length
+    validation: shown only when eval:in_list(['Data', 'Link', 'Dynamic Link', 'Password', 'Select', 'Read Only',
+  - label: Filters
+    control: other
+    binds: CustomField.link_filters
+    validation: shown only when eval:["Attachment Gallery", "Link"].includes(doc.fieldtype)
+  - label: Field Type
+    control: select
+    binds: CustomField.fieldtype
+    required: true
+  - label: Button Color
+    control: select
+    binds: CustomField.button_color
+    validation: shown only when eval:doc.fieldtype==="Button"
+  - label: Precision
+    control: select
+    binds: CustomField.precision
+    validation: shown only when eval:in_list(["Float", "Currency", "Percent"], doc.fieldtype)
+  - label: Hide Seconds
+    control: checkbox
+    binds: CustomField.hide_seconds
+    validation: shown only when eval:doc.fieldtype=='Duration'
+  - label: Hide Days
+    control: checkbox
+    binds: CustomField.hide_days
+    validation: shown only when eval:doc.fieldtype=='Duration'
+  - label: Options
+    control: text
+    binds: CustomField.options
+  - label: Sort Options
+    control: checkbox
+    binds: CustomField.sort_options
+    validation: "shown only when eval: doc.fieldtype === 'Select'"
+  - label: Fetch From
+    control: text
+    binds: CustomField.fetch_from
+  - label: Fetch on Save if Empty
+    control: checkbox
+    binds: CustomField.fetch_if_empty
+  - label: Collapsible
+    control: checkbox
+    binds: CustomField.collapsible
+    validation: shown only when eval:doc.fieldtype=="Section Break"
+  - label: Collapsible Depends On
+    control: text
+    binds: CustomField.collapsible_depends_on
+    validation: shown only when eval:doc.fieldtype=="Section Break"
+  - label: Default Value
+    control: text
+    binds: CustomField.default
+  - label: Depends On
+    control: text
+    binds: CustomField.depends_on
+  - label: Mandatory Depends On
+    control: text
+    binds: CustomField.mandatory_depends_on
+  - label: Read Only Depends On
+    control: text
+    binds: CustomField.read_only_depends_on
+  - label: Non Negative
+    control: checkbox
+    binds: CustomField.non_negative
+    validation: shown only when eval:in_list(["Int", "Float", "Currency"], doc.fieldtype)
+  - label: Is Mandatory Field
+    control: checkbox
+    binds: CustomField.reqd
+  - label: Unique
+    control: checkbox
+    binds: CustomField.unique
+  - label: Is Virtual
+    control: checkbox
+    binds: CustomField.is_virtual
+    validation: shown only when eval:doc.fieldtype !== 'Link'
+  - label: Read Only
+    control: checkbox
+    binds: CustomField.read_only
+  - label: Mask
+    control: checkbox
+    binds: CustomField.mask
+    validation: shown only when eval:["Select", "Read Only", "Phone", "Percent", "Password", "Link", "Int", "Flo
+  - label: Ignore User Permissions
+    control: checkbox
+    binds: CustomField.ignore_user_permissions
+    validation: shown only when eval:doc.fieldtype==="Link"
+  - label: Hidden
+    control: checkbox
+    binds: CustomField.hidden
+  - label: Print Hide
+    control: checkbox
+    binds: CustomField.print_hide
+  - label: Print Hide If No Value
+    control: checkbox
+    binds: CustomField.print_hide_if_no_value
+    validation: shown only when eval:["Int", "Float", "Currency", "Percent"].indexOf(doc.fieldtype)!==-1
+  - label: Print Width
+    control: text
+    binds: CustomField.print_width
+  - label: Alignment
+    control: select
+    binds: CustomField.alignment
+    validation: shown only when eval:['Data', 'Int', 'Float', 'Currency', 'Percent'].includes(doc.fieldtype)
+  - label: No Copy
+    control: checkbox
+    binds: CustomField.no_copy
+  - label: Set only once
+    control: checkbox
+    binds: CustomField.set_only_once
+  - label: Remember Last Selected Value
+    control: checkbox
+    binds: CustomField.remember_last_selected_value
+    validation: shown only when eval:(doc.fieldtype == 'Link')
+  - label: Allow on Submit
+    control: checkbox
+    binds: CustomField.allow_on_submit
+  - label: In List View
+    control: checkbox
+    binds: CustomField.in_list_view
+  - label: In Standard Filter
+    control: checkbox
+    binds: CustomField.in_standard_filter
+  - label: In Global Search
+    control: checkbox
+    binds: CustomField.in_global_search
+    validation: shown only when eval:(["Data", "Select", "Table", "Text", "Text Editor", "Link", "Small Text", "
+  - label: In Preview
+    control: checkbox
+    binds: CustomField.in_preview
+    validation: shown only when eval:!in_list(['Table', 'Table MultiSelect'], doc.fieldtype);
+  - label: Bold
+    control: checkbox
+    binds: CustomField.bold
+  - label: Report Hide
+    control: checkbox
+    binds: CustomField.report_hide
+  - label: Include in Import Template
+    control: checkbox
+    binds: CustomField.in_import_template
+    validation: shown only when eval:doc.fieldtype !== 'Attachment Gallery'
+  - label: Index
+    control: checkbox
+    binds: CustomField.search_index
+  - label: Allow in Quick Entry
+    control: checkbox
+    binds: CustomField.allow_in_quick_entry
+  - label: Allow Bulk Edit
+    control: checkbox
+    binds: CustomField.allow_bulk_edit
+    validation: 'shown only when eval: doc.fieldtype == "Table"'
+  - label: Ignore XSS Filter
+    control: checkbox
+    binds: CustomField.ignore_xss_filter
+  - label: Translatable
+    control: checkbox
+    binds: CustomField.translatable
+    validation: shown only when eval:['Data', 'Select', 'Text', 'Small Text', 'Text Editor'].includes(doc.fieldt
+  - label: Hide Border
+    control: checkbox
+    binds: CustomField.hide_border
+    validation: shown only when eval:doc.fieldtype=='Section Break'
+  - label: Show Dashboard
+    control: checkbox
+    binds: CustomField.show_dashboard
+  - label: Field Description
+    control: text
+    binds: CustomField.description
+  - label: Permission Level
+    control: number
+    binds: CustomField.permlevel
+  - label: Width
+    control: text
+    binds: CustomField.width
+  - label: Columns
+    control: number
+    binds: CustomField.columns
+actions:
+  - label: Save
+    triggers: F-216
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Custom Field
+    note: declared by the program

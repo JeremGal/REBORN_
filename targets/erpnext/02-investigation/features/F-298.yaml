@@ -1,0 +1,56 @@
+id: F-298
+title: Create, submit and cancel a BOM Update Log
+module: Manufacturing
+priority: must
+status: partial
+confidence: medium
+user_goal: The progress of a BOM replacement or cost update.
+entry_points:
+  - screen: S-297
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the BOM Update Log form
+    screen: S-297
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: bom_batches"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a BOM Update Log record stored
+    entities:
+      - BOMUpdateLog
+entities:
+  - BOMUpdateLog
+  - BOMUpdateBatch
+screens:
+  - S-297
+acceptance:
+  - id: AC-299
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of BOM Update Log
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 33
+    note: save refused by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."
+errors:
+  - when: only the mandatory fields are filled with test values
+    behaviour: the program refuses to save the draft
+    message: "erpnext.manufacturing.doctype.bom_update_log.bom_update_log.BOMMissingError: Veuillez indiquer la nomenclature actuelle et la nouvelle nomenclature pour le remplacement."

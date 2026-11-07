@@ -1,0 +1,36 @@
+id: S-176
+title: Role Permission for Page and Report
+purpose: settings of Role Permission for Page and Report
+kind: settings
+layout: "sections: Allow Roles; 5 fields"
+fields:
+  - label: Set Role For
+    control: select
+    binds: RolePermissionForPageAndReport.set_role_for
+    required: true
+  - label: Page
+    control: lookup
+    binds: RolePermissionForPageAndReport.page
+    validation: shown only when eval:doc.set_role_for == 'Page'; chosen among Page records
+  - label: Report
+    control: lookup
+    binds: RolePermissionForPageAndReport.report
+    validation: shown only when eval:doc.set_role_for == 'Report'; chosen among Report records
+  - label: Enable Prepared Report
+    control: checkbox
+    binds: RolePermissionForPageAndReport.enable_prepared_report
+    validation: shown only when report
+  - label: Roles
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Role
+actions:
+  - label: Save
+    triggers: F-177
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Role Permission for Page and Report
+    note: declared by the program

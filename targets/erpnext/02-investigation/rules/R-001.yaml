@@ -17,4 +17,5 @@ status: confirmed
 confidence: high
 evidence:
   - { ref: run-20261107T191450-api-sales-invoice, kind: h-run, locator: "steps 1-2", note: "drafts created and read back on the running site" }
+  - { ref: run-20261107T194304-h-EXP_013, kind: h-run, locator: "last step", note: "the H agent read the same line amount and total on screen" }
 contradictions: []

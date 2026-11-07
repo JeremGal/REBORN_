@@ -1,0 +1,53 @@
+id: S-070
+title: Process Payment Reconciliation Log
+purpose: create, view and edit Process Payment Reconciliation Log records
+kind: form
+layout: "sections: Status, Tasks, Allocations; 8 fields"
+fields:
+  - label: Parent Document
+    control: lookup
+    binds: ProcessPaymentReconciliationLog.process_pr
+    required: true
+    validation: read only (computed or filled by the program); chosen among Process Payment Reconciliation records
+  - label: Status
+    control: select
+    binds: ProcessPaymentReconciliationLog.status
+    validation: read only (computed or filled by the program)
+  - label: Allocated
+    control: checkbox
+    binds: ProcessPaymentReconciliationLog.allocated
+    validation: read only (computed or filled by the program)
+  - label: Reconciled
+    control: checkbox
+    binds: ProcessPaymentReconciliationLog.reconciled
+    validation: read only (computed or filled by the program)
+  - label: Total Allocations
+    control: number
+    binds: ProcessPaymentReconciliationLog.total_allocations
+    validation: read only (computed or filled by the program)
+  - label: Reconciled Entries
+    control: number
+    binds: ProcessPaymentReconciliationLog.reconciled_entries
+    validation: read only (computed or filled by the program)
+  - label: Reconciliation Error Log
+    control: text
+    binds: ProcessPaymentReconciliationLog.error_log
+    validation: read only (computed or filled by the program); shown only when eval:doc.error_log
+  - label: Allocations
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Reference Name
+      - Invoice Number
+      - Allocated Amount
+      - Difference Amount
+      - Reconciled
+actions:
+  - label: Save
+    triggers: F-071
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Process Payment Reconciliation Log
+    note: declared by the program

@@ -1,0 +1,70 @@
+id: F-110
+title: Create and edit a Automation Event Subscription
+module: Automation
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Automation Event Subscription records.
+entry_points:
+  - screen: S-109
+    action: open the form
+inputs:
+  - label: Event Name
+    field: AutomationEventSubscription.event_name
+    type: string
+    required: true
+  - label: Correlation Key
+    field: AutomationEventSubscription.correlation_key
+    type: string
+    required: true
+  - label: Status
+    field: AutomationEventSubscription.status
+    type: enum
+    required: true
+  - label: Expires At
+    field: AutomationEventSubscription.expires_at
+    type: datetime
+    required: true
+  - label: Run
+    field: AutomationEventSubscription.run
+    type: ref
+    required: true
+  - label: Step Key
+    field: AutomationEventSubscription.step_key
+    type: string
+    required: true
+  - label: Resume Queue
+    field: AutomationEventSubscription.resume_queue
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Automation Event Subscription form
+    screen: S-109
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Event Name, Correlation Key, Status, Expires At, Run, Step Key, Resume Queue"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Automation Event Subscription record stored
+    entities:
+      - AutomationEventSubscription
+entities:
+  - AutomationEventSubscription
+screens:
+  - S-109
+acceptance:
+  - id: AC-111
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Automation Event Subscription
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

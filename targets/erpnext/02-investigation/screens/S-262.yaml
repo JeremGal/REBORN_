@@ -1,0 +1,31 @@
+id: S-262
+title: Email Flag Queue
+purpose: create, view and edit Email Flag Queue records
+kind: form
+layout: 5 fields
+fields:
+  - label: Is Completed
+    control: checkbox
+    binds: EmailFlagQueue.is_completed
+    validation: read only (computed or filled by the program)
+  - label: Communication
+    control: text
+    binds: EmailFlagQueue.communication
+  - label: Action
+    control: select
+    binds: EmailFlagQueue.action
+  - label: Email Account
+    control: text
+    binds: EmailFlagQueue.email_account
+  - label: UID
+    control: text
+    binds: EmailFlagQueue.uid
+actions:
+  - label: Save
+    triggers: F-263
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Email Flag Queue
+    note: declared by the program

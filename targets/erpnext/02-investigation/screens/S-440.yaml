@@ -1,0 +1,22 @@
+id: S-440
+title: Rename Tool
+purpose: settings of Rename Tool
+kind: settings
+layout: 2 fields
+fields:
+  - label: Select DocType
+    control: lookup
+    binds: RenameTool.select_doctype
+    validation: chosen among DocType records
+  - label: File to Rename
+    control: other
+    binds: RenameTool.file_to_rename
+actions:
+  - label: Save
+    triggers: F-441
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Rename Tool
+    note: declared by the program

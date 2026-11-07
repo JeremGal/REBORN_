@@ -1,0 +1,46 @@
+id: F-083
+title: Create and edit a Share Type
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: A class of shares, like equity or preference.
+entry_points:
+  - screen: S-082
+    action: open the form
+inputs:
+  - label: Title
+    field: ShareType.title
+    type: string
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Share Type form
+    screen: S-082
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Title"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Share Type record stored
+    entities:
+      - ShareType
+entities:
+  - ShareType
+screens:
+  - S-082
+acceptance:
+  - id: AC-084
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Share Type
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

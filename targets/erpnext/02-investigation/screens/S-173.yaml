@@ -1,0 +1,82 @@
+id: S-173
+title: Recorder
+purpose: create, view and edit Recorder records
+kind: form
+layout: "sections: Timeline; 16 fields"
+fields:
+  - label: Path
+    control: text
+    binds: Recorder.path
+  - label: Number of Queries
+    control: number
+    binds: Recorder.number_of_queries
+  - label: Time in Queries
+    control: number
+    binds: Recorder.time_in_queries
+  - label: Number of Events
+    control: number
+    binds: Recorder.number_of_events
+  - label: Method
+    control: select
+    binds: Recorder.method
+    validation: shown only when eval:doc.event_type=="HTTP Request"
+  - label: CMD
+    control: text
+    binds: Recorder.cmd
+    validation: shown only when eval:doc.event_type=="HTTP Request"
+  - label: Time
+    control: date
+    binds: Recorder.time
+  - label: Duration
+    control: number
+    binds: Recorder.duration
+  - label: Event Type
+    control: text
+    binds: Recorder.event_type
+  - label: Apps Involved
+    control: text
+    binds: Recorder.apps_involved
+    validation: read only (computed or filled by the program)
+  - label: Timeline
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Method
+      - DocType
+      - Apps
+      - Queries
+      - Duration (ms)
+  - label: Request Headers
+    control: text
+    binds: Recorder.request_headers
+    validation: shown only when eval:doc.event_type=="HTTP Request"
+  - label: Form Dict
+    control: text
+    binds: Recorder.form_dict
+    validation: shown only when eval:doc.event_type=="HTTP Request"
+  - label: Suggested Indexes
+    control: grid
+    columns:
+      - Table
+      - Column
+  - label: SQL Queries
+    control: grid
+    columns:
+      - Index
+      - Query
+      - Duration
+      - Exact Copies
+      - Normalized Copies
+  - label: cProfile Output
+    control: text
+    binds: Recorder.profile
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-174
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Recorder
+    note: declared by the program

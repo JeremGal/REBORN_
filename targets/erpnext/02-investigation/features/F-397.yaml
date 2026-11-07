@@ -1,0 +1,68 @@
+id: F-397
+title: Create, submit and cancel a Landed Cost Voucher
+module: Stock
+priority: must
+status: partial
+confidence: medium
+user_goal: Adds freight, duty and other charges to the cost of received items.
+entry_points:
+  - screen: S-396
+    action: open the form
+inputs:
+  - label: Series
+    field: LandedCostVoucher.naming_series
+    type: enum
+    required: true
+  - label: Company
+    field: LandedCostVoucher.company
+    type: ref
+    required: true
+  - label: Posting Date
+    field: LandedCostVoucher.posting_date
+    type: date
+    required: true
+  - label: Distribute Charges Based On
+    field: LandedCostVoucher.distribute_charges_based_on
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Landed Cost Voucher form
+    screen: S-396
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Series, Company, Posting Date, Distribute Charges Based On"
+  - n: 3
+    actor: user
+    does: "adds lines in: Vouchers, Receipt Items, Vendor Invoices, Landed Cost"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Landed Cost Voucher record stored
+    entities:
+      - LandedCostVoucher
+entities:
+  - LandedCostVoucher
+  - LandedCostPurchaseReceipt
+  - LandedCostItem
+  - LandedCostVendorInvoice
+  - LandedCostTaxesAndCharges
+screens:
+  - S-396
+acceptance:
+  - id: AC-398
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Landed Cost Voucher
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"landed-cost-voucher\")."

@@ -1,0 +1,55 @@
+id: S-281
+title: OAuth Authorization Code
+purpose: create, view and edit OAuth Authorization Code records
+kind: form
+layout: 10 fields
+fields:
+  - label: OAuth Client
+    control: lookup
+    binds: OAuthAuthorizationCode.client
+    validation: read only (computed or filled by the program); chosen among OAuth Client records
+  - label: User
+    control: lookup
+    binds: OAuthAuthorizationCode.user
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Scopes
+    control: text
+    binds: OAuthAuthorizationCode.scopes
+    validation: read only (computed or filled by the program)
+  - label: Authorization Code
+    control: text
+    binds: OAuthAuthorizationCode.authorization_code
+    validation: read only (computed or filled by the program)
+  - label: Expiration time
+    control: date
+    binds: OAuthAuthorizationCode.expiration_time
+    validation: read only (computed or filled by the program)
+  - label: Redirect URI Bound To Auth Code
+    control: text
+    binds: OAuthAuthorizationCode.redirect_uri_bound_to_authorization_code
+    validation: read only (computed or filled by the program)
+  - label: Validity
+    control: select
+    binds: OAuthAuthorizationCode.validity
+    validation: read only (computed or filled by the program)
+  - label: nonce
+    control: text
+    binds: OAuthAuthorizationCode.nonce
+    validation: read only (computed or filled by the program)
+  - label: Code Challenge
+    control: text
+    binds: OAuthAuthorizationCode.code_challenge
+    validation: read only (computed or filled by the program)
+  - label: Code challenge method
+    control: select
+    binds: OAuthAuthorizationCode.code_challenge_method
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-282
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of OAuth Authorization Code
+    note: declared by the program

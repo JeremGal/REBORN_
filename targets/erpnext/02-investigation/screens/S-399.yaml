@@ -1,0 +1,70 @@
+id: S-399
+title: Packing Slip
+purpose: create, view and edit Packing Slip records
+kind: form
+layout: "sections: Package Weight Details, Letter Head; 11 fields"
+fields:
+  - label: Delivery Note
+    control: lookup
+    binds: PackingSlip.delivery_note
+    required: true
+    validation: chosen among Delivery Note records
+  - label: Series
+    control: select
+    binds: PackingSlip.naming_series
+    required: true
+  - label: From Package No.
+    control: number
+    binds: PackingSlip.from_case_no
+    required: true
+  - label: To Package No.
+    control: number
+    binds: PackingSlip.to_case_no
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Item Name
+      - Quantity
+      - Net Weight
+      - Page Break
+      - Delivery Note Item
+  - label: Net Weight
+    control: number
+    binds: PackingSlip.net_weight_pkg
+    validation: read only (computed or filled by the program)
+  - label: Net Weight UOM
+    control: lookup
+    binds: PackingSlip.net_weight_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Gross Weight
+    control: number
+    binds: PackingSlip.gross_weight_pkg
+  - label: Gross Weight UOM
+    control: lookup
+    binds: PackingSlip.gross_weight_uom
+    validation: chosen among UOM records
+  - label: Letter Head
+    control: lookup
+    binds: PackingSlip.letter_head
+    validation: chosen among Letter Head records
+  - label: Amended From
+    control: lookup
+    binds: PackingSlip.amended_from
+    validation: read only (computed or filled by the program); chosen among Packing Slip records
+actions:
+  - label: Save
+    triggers: F-400
+  - label: Submit
+    triggers: F-400
+  - label: Cancel
+    triggers: F-400
+  - label: Amend
+    triggers: F-400
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Packing Slip
+    note: declared by the program

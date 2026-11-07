@@ -1,0 +1,100 @@
+id: S-026
+title: Cheque Print Template
+purpose: create, view and edit Cheque Print Template records
+kind: form
+layout: "sections: Primary Settings, Preview; 26 fields"
+fields:
+  - label: Has Print Format
+    control: checkbox
+    binds: ChequePrintTemplate.has_print_format
+    validation: read only (computed or filled by the program)
+  - label: Print Format Creation
+    control: date
+    binds: ChequePrintTemplate.print_format_creation
+    validation: read only (computed or filled by the program)
+  - label: Bank Name
+    control: text
+    binds: ChequePrintTemplate.bank_name
+    required: true
+  - label: Cheque Size
+    control: select
+    binds: ChequePrintTemplate.cheque_size
+  - label: Starting position from top edge
+    control: number
+    binds: ChequePrintTemplate.starting_position_from_top_edge
+    validation: shown only when eval:doc.cheque_size=="A4"
+  - label: Cheque Width
+    control: number
+    binds: ChequePrintTemplate.cheque_width
+  - label: Cheque Height
+    control: number
+    binds: ChequePrintTemplate.cheque_height
+  - label: Scanned Cheque
+    control: other
+    binds: ChequePrintTemplate.scanned_cheque
+  - label: Is Account Payable
+    control: checkbox
+    binds: ChequePrintTemplate.is_account_payable
+  - label: Distance from top edge
+    control: number
+    binds: ChequePrintTemplate.acc_pay_dist_from_top_edge
+    validation: shown only when eval:doc.is_account_payable
+  - label: Distance from left edge
+    control: number
+    binds: ChequePrintTemplate.acc_pay_dist_from_left_edge
+    validation: shown only when eval:doc.is_account_payable
+  - label: Message to show
+    control: text
+    binds: ChequePrintTemplate.message_to_show
+    validation: shown only when eval:doc.is_account_payable
+  - label: Distance from top edge
+    control: number
+    binds: ChequePrintTemplate.date_dist_from_top_edge
+  - label: Starting location from left edge
+    control: number
+    binds: ChequePrintTemplate.date_dist_from_left_edge
+  - label: Distance from top edge
+    control: number
+    binds: ChequePrintTemplate.payer_name_from_top_edge
+  - label: Starting location from left edge
+    control: number
+    binds: ChequePrintTemplate.payer_name_from_left_edge
+  - label: Distance from top edge
+    control: number
+    binds: ChequePrintTemplate.amt_in_words_from_top_edge
+  - label: Starting location from left edge
+    control: number
+    binds: ChequePrintTemplate.amt_in_words_from_left_edge
+  - label: Width of amount in word
+    control: number
+    binds: ChequePrintTemplate.amt_in_word_width
+  - label: Line spacing for amount in words
+    control: number
+    binds: ChequePrintTemplate.amt_in_words_line_spacing
+  - label: Distance from top edge
+    control: number
+    binds: ChequePrintTemplate.amt_in_figures_from_top_edge
+  - label: Starting location from left edge
+    control: number
+    binds: ChequePrintTemplate.amt_in_figures_from_left_edge
+  - label: Distance from top edge
+    control: number
+    binds: ChequePrintTemplate.acc_no_dist_from_top_edge
+  - label: Starting location from left edge
+    control: number
+    binds: ChequePrintTemplate.acc_no_dist_from_left_edge
+  - label: Distance from top edge
+    control: number
+    binds: ChequePrintTemplate.signatory_from_top_edge
+  - label: Starting location from left edge
+    control: number
+    binds: ChequePrintTemplate.signatory_from_left_edge
+actions:
+  - label: Save
+    triggers: F-027
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Cheque Print Template
+    note: declared by the program

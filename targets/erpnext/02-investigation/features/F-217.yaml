@@ -1,0 +1,48 @@
+id: F-217
+title: Configure Customize Form
+module: Custom
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Customize Form settings.
+entry_points:
+  - screen: S-216
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Customize Form form
+    screen: S-216
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Actions, Links, States, Fields"
+  - n: 4
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - CustomizeForm
+entities:
+  - CustomizeForm
+  - DocTypeAction
+  - DocTypeLink
+  - DocTypeState
+  - CustomizeFormField
+screens:
+  - S-216
+acceptance:
+  - id: AC-218
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Customize Form
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"customize-form\")."

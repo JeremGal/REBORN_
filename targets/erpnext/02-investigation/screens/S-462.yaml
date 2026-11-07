@@ -1,0 +1,18 @@
+id: S-462
+title: Website Script
+purpose: settings of Website Script
+kind: settings
+layout: 1 fields
+fields:
+  - label: Javascript
+    control: text
+    binds: WebsiteScript.javascript
+actions:
+  - label: Save
+    triggers: F-463
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Website Script
+    note: declared by the program

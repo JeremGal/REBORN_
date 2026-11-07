@@ -1,0 +1,58 @@
+id: F-369
+title: Create and edit a Holiday List
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: The holidays and weekly offs of a company or employee.
+entry_points:
+  - screen: S-368
+    action: open the form
+inputs:
+  - label: Holiday List Name
+    field: HolidayList.holiday_list_name
+    type: string
+    required: true
+  - label: From Date
+    field: HolidayList.from_date
+    type: date
+    required: true
+  - label: To Date
+    field: HolidayList.to_date
+    type: date
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Holiday List form
+    screen: S-368
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Holiday List Name, From Date, To Date"
+  - n: 3
+    actor: user
+    does: "adds lines in: Holidays"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Holiday List record stored
+    entities:
+      - HolidayList
+entities:
+  - HolidayList
+  - Holiday
+screens:
+  - S-368
+acceptance:
+  - id: AC-370
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Holiday List
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

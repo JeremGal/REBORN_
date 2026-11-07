@@ -1,0 +1,73 @@
+id: F-087
+title: Create and edit a Subscription Plan
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: What a subscription bills for, and at what price.
+entry_points:
+  - screen: S-086
+    action: open the form
+inputs:
+  - label: Plan Name
+    field: SubscriptionPlan.plan_name
+    type: string
+    required: true
+  - label: Currency
+    field: SubscriptionPlan.currency
+    type: ref
+    required: true
+  - label: Item
+    field: SubscriptionPlan.item
+    type: ref
+    required: true
+  - label: Subscription Price Based On
+    field: SubscriptionPlan.price_determination
+    type: enum
+    required: true
+  - label: Billing Interval
+    field: SubscriptionPlan.billing_interval
+    type: enum
+    required: true
+  - label: Billing Interval Count
+    field: SubscriptionPlan.billing_interval_count
+    type: integer
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Subscription Plan form
+    screen: S-086
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Plan Name, Currency, Item, Subscription Price Based On, Billing Interval, Billing Interval Count"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Subscription Plan record stored
+    entities:
+      - SubscriptionPlan
+entities:
+  - SubscriptionPlan
+screens:
+  - S-086
+acceptance:
+  - id: AC-088
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Subscription Plan
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 156
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"subscription-plan\")."

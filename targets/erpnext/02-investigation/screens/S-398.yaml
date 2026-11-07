@@ -1,0 +1,123 @@
+id: S-398
+title: Material Request
+purpose: create, view and edit Material Request records
+kind: form
+layout: "tabs: Terms, More Info, Connections; sections: Items, Status, Printing Details, Reference; 25 fields"
+fields:
+  - label: Series
+    control: select
+    binds: MaterialRequest.naming_series
+    required: true
+  - label: Title
+    control: text
+    binds: MaterialRequest.title
+  - label: Purpose
+    control: select
+    binds: MaterialRequest.material_request_type
+    required: true
+  - label: Customer
+    control: lookup
+    binds: MaterialRequest.customer
+    validation: shown only when eval:doc.material_request_type=="Customer Provided"; chosen among Customer records
+  - label: Company
+    control: lookup
+    binds: MaterialRequest.company
+    required: true
+    validation: chosen among Company records
+  - label: Auto Created (Reorder)
+    control: checkbox
+    binds: MaterialRequest.auto_created_via_reorder
+    validation: read only (computed or filled by the program); shown only when auto_created_via_reorder
+  - label: Transaction Date
+    control: date
+    binds: MaterialRequest.transaction_date
+    required: true
+  - label: Required By
+    control: date
+    binds: MaterialRequest.schedule_date
+  - label: Price List
+    control: lookup
+    binds: MaterialRequest.buying_price_list
+    validation: chosen among Price List records
+  - label: Amended From
+    control: lookup
+    binds: MaterialRequest.amended_from
+    validation: read only (computed or filled by the program); chosen among Material Request records
+  - label: Scan Barcode
+    control: text
+    binds: MaterialRequest.scan_barcode
+  - label: Last Scanned Warehouse
+    control: text
+    binds: MaterialRequest.last_scanned_warehouse
+    validation: "shown only when eval: doc.last_scanned_warehouse"
+  - label: Set Source Warehouse
+    control: lookup
+    binds: MaterialRequest.set_from_warehouse
+    validation: shown only when eval:doc.material_request_type == 'Material Transfer'; chosen among Warehouse records
+  - label: Set Target Warehouse
+    control: lookup
+    binds: MaterialRequest.set_warehouse
+    validation: chosen among Warehouse records
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Required By
+      - Quantity
+      - Target Warehouse
+      - UOM
+  - label: Terms
+    control: lookup
+    binds: MaterialRequest.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Terms and Conditions Content
+    control: text
+    binds: MaterialRequest.terms
+  - label: Status
+    control: select
+    binds: MaterialRequest.status
+    validation: read only (computed or filled by the program)
+  - label: "% Ordered"
+    control: number
+    binds: MaterialRequest.per_ordered
+    validation: read only (computed or filled by the program); shown only when eval:doc.per_ordered > 0
+  - label: Transfer Status
+    control: select
+    binds: MaterialRequest.transfer_status
+    validation: read only (computed or filled by the program); shown only when eval:doc.add_to_transit == 1
+  - label: "% Received"
+    control: number
+    binds: MaterialRequest.per_received
+    validation: read only (computed or filled by the program); shown only when eval:doc.per_received > 0
+  - label: Letter Head
+    control: lookup
+    binds: MaterialRequest.letter_head
+    validation: chosen among Letter Head records
+  - label: Print Heading
+    control: lookup
+    binds: MaterialRequest.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Job Card
+    control: lookup
+    binds: MaterialRequest.job_card
+    validation: read only (computed or filled by the program); chosen among Job Card records
+  - label: Work Order
+    control: lookup
+    binds: MaterialRequest.work_order
+    validation: read only (computed or filled by the program); chosen among Work Order records
+actions:
+  - label: Save
+    triggers: F-399
+  - label: Submit
+    triggers: F-399
+  - label: Cancel
+    triggers: F-399
+  - label: Amend
+    triggers: F-399
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Material Request
+    note: declared by the program

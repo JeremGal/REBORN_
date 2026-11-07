@@ -1,0 +1,196 @@
+id: S-412
+title: Shipment
+purpose: create, view and edit Shipment records
+kind: form
+layout: "sections: Parcels, Shipment details, Shipment Information; 45 fields"
+fields:
+  - label: Pickup from
+    control: select
+    binds: Shipment.pickup_from_type
+  - label: Company
+    control: lookup
+    binds: Shipment.pickup_company
+    validation: shown only when eval:doc.pickup_from_type == 'Company'; chosen among Company records
+  - label: Customer
+    control: lookup
+    binds: Shipment.pickup_customer
+    validation: shown only when eval:doc.pickup_from_type == 'Customer'; chosen among Customer records
+  - label: Supplier
+    control: lookup
+    binds: Shipment.pickup_supplier
+    validation: shown only when eval:doc.pickup_from_type == 'Supplier'; chosen among Supplier records
+  - label: Pickup From
+    control: text
+    binds: Shipment.pickup
+    validation: read only (computed or filled by the program)
+  - label: Address
+    control: lookup
+    binds: Shipment.pickup_address_name
+    required: true
+    validation: 'shown only when eval: doc.pickup_customer || doc.pickup_supplier || doc.pickup_from_type == "Com; chosen among Address records'
+  - label: pickup_address
+    control: text
+    binds: Shipment.pickup_address
+    validation: read only (computed or filled by the program)
+  - label: Pickup Contact Person
+    control: lookup
+    binds: Shipment.pickup_contact_person
+    validation: shown only when eval:doc.pickup_from_type === 'Company'; chosen among User records
+  - label: Contact
+    control: lookup
+    binds: Shipment.pickup_contact_name
+    validation: 'shown only when eval: doc.pickup_customer || doc.pickup_supplier || doc.pickup_from_type !== "Co; chosen among Contact records'
+  - label: Contact Email
+    control: text
+    binds: Shipment.pickup_contact_email
+    validation: read only (computed or filled by the program)
+  - label: pickup_contact
+    control: text
+    binds: Shipment.pickup_contact
+    validation: read only (computed or filled by the program)
+  - label: Delivery to
+    control: select
+    binds: Shipment.delivery_to_type
+  - label: Company
+    control: lookup
+    binds: Shipment.delivery_company
+    validation: shown only when eval:doc.delivery_to_type == 'Company'; chosen among Company records
+  - label: Customer
+    control: lookup
+    binds: Shipment.delivery_customer
+    validation: shown only when eval:doc.delivery_to_type == 'Customer'; chosen among Customer records
+  - label: Supplier
+    control: lookup
+    binds: Shipment.delivery_supplier
+    validation: shown only when eval:doc.delivery_to_type == 'Supplier'; chosen among Supplier records
+  - label: Delivery To
+    control: text
+    binds: Shipment.delivery_to
+    validation: read only (computed or filled by the program)
+  - label: Address
+    control: lookup
+    binds: Shipment.delivery_address_name
+    required: true
+    validation: "shown only when eval: doc.delivery_customer || doc.delivery_supplier || doc.delivery_to_type == ; chosen among Address records"
+  - label: delivery_address
+    control: text
+    binds: Shipment.delivery_address
+    validation: read only (computed or filled by the program)
+  - label: Contact
+    control: lookup
+    binds: Shipment.delivery_contact_name
+    validation: "shown only when eval: doc.delivery_customer || doc.delivery_supplier || doc.delivery_to_type == ; chosen among Contact records"
+  - label: Contact Email
+    control: text
+    binds: Shipment.delivery_contact_email
+    validation: read only (computed or filled by the program)
+  - label: delivery_contact
+    control: text
+    binds: Shipment.delivery_contact
+    validation: read only (computed or filled by the program); shown only when eval:doc.delivery_contact_name
+  - label: Shipment Parcel
+    control: grid
+    columns:
+      - Length (cm)
+      - Width (cm)
+      - Height (cm)
+      - Weight (kg)
+      - Count
+  - label: Parcel Template
+    control: lookup
+    binds: Shipment.parcel_template
+    validation: chosen among Shipment Parcel Template records
+  - label: Total Weight (kg)
+    control: number
+    binds: Shipment.total_weight
+    validation: read only (computed or filled by the program)
+  - label: Shipment Delivery Note
+    control: grid
+    columns:
+      - Delivery Note
+      - Value
+  - label: Pallets
+    control: select
+    binds: Shipment.pallets
+  - label: Value of Goods
+    control: money
+    binds: Shipment.value_of_goods
+    required: true
+  - label: Pickup Date
+    control: date
+    binds: Shipment.pickup_date
+    required: true
+  - label: Pickup from
+    control: date
+    binds: Shipment.pickup_from
+    required: true
+  - label: Pickup to
+    control: date
+    binds: Shipment.pickup_to
+    required: true
+  - label: Shipment Type
+    control: select
+    binds: Shipment.shipment_type
+  - label: Pickup Type
+    control: select
+    binds: Shipment.pickup_type
+  - label: Incoterm
+    control: lookup
+    binds: Shipment.incoterm
+    validation: chosen among Incoterm records
+  - label: Description of Content
+    control: text
+    binds: Shipment.description_of_content
+    required: true
+  - label: Service Provider
+    control: text
+    binds: Shipment.service_provider
+  - label: Shipment ID
+    control: text
+    binds: Shipment.shipment_id
+  - label: Shipment Amount
+    control: money
+    binds: Shipment.shipment_amount
+  - label: Status
+    control: select
+    binds: Shipment.status
+    validation: read only (computed or filled by the program)
+  - label: Tracking URL
+    control: text
+    binds: Shipment.tracking_url
+    validation: read only (computed or filled by the program)
+  - label: Carrier
+    control: text
+    binds: Shipment.carrier
+  - label: Carrier Service
+    control: text
+    binds: Shipment.carrier_service
+  - label: AWB Number
+    control: text
+    binds: Shipment.awb_number
+  - label: Tracking Status
+    control: select
+    binds: Shipment.tracking_status
+  - label: Tracking Status Info
+    control: text
+    binds: Shipment.tracking_status_info
+    validation: read only (computed or filled by the program)
+  - label: Amended From
+    control: lookup
+    binds: Shipment.amended_from
+    validation: read only (computed or filled by the program); chosen among Shipment records
+actions:
+  - label: Save
+    triggers: F-413
+  - label: Submit
+    triggers: F-413
+  - label: Cancel
+    triggers: F-413
+  - label: Amend
+    triggers: F-413
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Shipment
+    note: declared by the program

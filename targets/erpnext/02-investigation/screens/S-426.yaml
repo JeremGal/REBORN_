@@ -1,0 +1,54 @@
+id: S-426
+title: Subcontracting BOM
+purpose: create, view and edit Subcontracting BOM records
+kind: form
+layout: 9 fields
+fields:
+  - label: Is Active
+    control: checkbox
+    binds: SubcontractingBOM.is_active
+  - label: Finished Good
+    control: lookup
+    binds: SubcontractingBOM.finished_good
+    required: true
+    validation: chosen among Item records
+  - label: Finished Good Qty
+    control: number
+    binds: SubcontractingBOM.finished_good_qty
+    required: true
+  - label: Finished Good UOM
+    control: lookup
+    binds: SubcontractingBOM.finished_good_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Finished Good BOM
+    control: lookup
+    binds: SubcontractingBOM.finished_good_bom
+    required: true
+    validation: chosen among BOM records
+  - label: Service Item
+    control: lookup
+    binds: SubcontractingBOM.service_item
+    required: true
+    validation: chosen among Item records
+  - label: Service Item Qty
+    control: number
+    binds: SubcontractingBOM.service_item_qty
+    required: true
+  - label: Service Item UOM
+    control: lookup
+    binds: SubcontractingBOM.service_item_uom
+    required: true
+    validation: chosen among UOM records
+  - label: Conversion Factor
+    control: number
+    binds: SubcontractingBOM.conversion_factor
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-427
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Subcontracting BOM
+    note: declared by the program

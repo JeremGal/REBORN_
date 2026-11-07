@@ -1,0 +1,476 @@
+id: S-385
+title: Delivery Note
+purpose: create, view and edit Delivery Note records
+kind: form
+layout: "tabs: Address & Contact, Terms, More Info, Connections; sections: Accounting Dimensions, Currency and Price List, Items, Taxes and Charges, Totals, Totals (Company Currency), Additional Discount, Tax Breakup, Packing List, Pricing Rules, Billing Address, Shipping Address, Company Address, Status, Transporter Info, Customer PO Details, Commission, Sales Team, Auto Repeat, Print Settings, UTM Analytics, Additional Info; 109 fields; observed labels differ from the declared form (20/41 match; not declared: no., code de l'article, quantité, udm, prix usd, montant u..., entrepôt, ajouter une ligne)"
+fields:
+  - label: Series
+    control: select
+    binds: DeliveryNote.naming_series
+    required: true
+  - label: Customer
+    control: lookup
+    binds: DeliveryNote.customer
+    required: true
+    validation: chosen among Customer records
+  - label: Tax Id
+    control: text
+    binds: DeliveryNote.tax_id
+    validation: read only (computed or filled by the program)
+  - label: Customer Name
+    control: text
+    binds: DeliveryNote.customer_name
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Date
+    control: date
+    binds: DeliveryNote.posting_date
+    required: true
+  - label: Posting Time
+    control: date
+    binds: DeliveryNote.posting_time
+    required: true
+  - label: Edit Posting Date and Time
+    control: checkbox
+    binds: DeliveryNote.set_posting_time
+    validation: shown only when eval:doc.docstatus==0
+  - label: Company
+    control: lookup
+    binds: DeliveryNote.company
+    required: true
+    validation: chosen among Company records
+  - label: Amended From
+    control: lookup
+    binds: DeliveryNote.amended_from
+    validation: read only (computed or filled by the program); chosen among Delivery Note records
+  - label: Is Return
+    control: checkbox
+    binds: DeliveryNote.is_return
+    validation: read only (computed or filled by the program)
+  - label: Issue Credit Note
+    control: checkbox
+    binds: DeliveryNote.issue_credit_note
+    validation: shown only when is_return
+  - label: Return Against Delivery Note
+    control: lookup
+    binds: DeliveryNote.return_against
+    validation: read only (computed or filled by the program); shown only when is_return; chosen among Delivery Note records
+  - label: Cost Center
+    control: lookup
+    binds: DeliveryNote.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: DeliveryNote.project
+    validation: chosen among Project records
+  - label: Currency
+    control: lookup
+    binds: DeliveryNote.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: DeliveryNote.conversion_rate
+    required: true
+  - label: Price List
+    control: lookup
+    binds: DeliveryNote.selling_price_list
+    required: true
+    validation: chosen among Price List records
+  - label: Price List Currency
+    control: lookup
+    binds: DeliveryNote.price_list_currency
+    required: true
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Price List Exchange Rate
+    control: number
+    binds: DeliveryNote.plc_conversion_rate
+    required: true
+  - label: Ignore Pricing Rule
+    control: checkbox
+    binds: DeliveryNote.ignore_pricing_rule
+  - label: Scan Barcode
+    control: text
+    binds: DeliveryNote.scan_barcode
+  - label: Last Scanned Warehouse
+    control: text
+    binds: DeliveryNote.last_scanned_warehouse
+    validation: "shown only when eval: doc.last_scanned_warehouse"
+  - label: Set Source Warehouse
+    control: lookup
+    binds: DeliveryNote.set_warehouse
+    validation: chosen among Warehouse records
+  - label: Set Target Warehouse
+    control: lookup
+    binds: DeliveryNote.set_target_warehouse
+    validation: "shown only when eval: doc.is_internal_customer; chosen among Warehouse records"
+  - label: Delivery Note Item
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Quantity
+      - UOM
+      - Rate
+      - Amount
+      - Warehouse
+  - label: Total Quantity
+    control: number
+    binds: DeliveryNote.total_qty
+    validation: read only (computed or filled by the program)
+  - label: Total Net Weight
+    control: number
+    binds: DeliveryNote.total_net_weight
+    validation: read only (computed or filled by the program); shown only when total_net_weight
+  - label: Total (Company Currency)
+    control: money
+    binds: DeliveryNote.base_total
+    validation: read only (computed or filled by the program)
+  - label: Net Total (Company Currency)
+    control: money
+    binds: DeliveryNote.base_net_total
+    validation: read only (computed or filled by the program)
+  - label: Total
+    control: money
+    binds: DeliveryNote.total
+    validation: read only (computed or filled by the program)
+  - label: Net Total
+    control: money
+    binds: DeliveryNote.net_total
+    validation: read only (computed or filled by the program)
+  - label: Tax Category
+    control: lookup
+    binds: DeliveryNote.tax_category
+    validation: chosen among Tax Category records
+  - label: Sales Taxes and Charges Template
+    control: lookup
+    binds: DeliveryNote.taxes_and_charges
+    validation: chosen among Sales Taxes and Charges Template records
+  - label: Shipping Rule
+    control: lookup
+    binds: DeliveryNote.shipping_rule
+    validation: chosen among Shipping Rule records
+  - label: Incoterm
+    control: lookup
+    binds: DeliveryNote.incoterm
+    validation: chosen among Incoterm records
+  - label: Named Place
+    control: text
+    binds: DeliveryNote.named_place
+    validation: shown only when incoterm
+  - label: Sales Taxes and Charges
+    control: grid
+    columns:
+      - Type
+      - Account Head
+      - Tax Rate
+      - Net Amount
+      - Amount
+      - Total
+  - label: Total Taxes and Charges (Company Currency)
+    control: money
+    binds: DeliveryNote.base_total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Total Taxes and Charges
+    control: money
+    binds: DeliveryNote.total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Grand Total
+    control: money
+    binds: DeliveryNote.grand_total
+    validation: read only (computed or filled by the program)
+  - label: In Words
+    control: text
+    binds: DeliveryNote.in_words
+    validation: read only (computed or filled by the program)
+  - label: Disable Rounded Total
+    control: checkbox
+    binds: DeliveryNote.disable_rounded_total
+    validation: shown only when grand_total
+  - label: Rounding Adjustment
+    control: money
+    binds: DeliveryNote.rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total
+    control: money
+    binds: DeliveryNote.rounded_total
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Grand Total
+    control: money
+    binds: DeliveryNote.base_grand_total
+    validation: read only (computed or filled by the program)
+  - label: In Words
+    control: text
+    binds: DeliveryNote.base_in_words
+    validation: read only (computed or filled by the program)
+  - label: Rounding Adjustment
+    control: money
+    binds: DeliveryNote.base_rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total
+    control: money
+    binds: DeliveryNote.base_rounded_total
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Apply Additional Discount On
+    control: select
+    binds: DeliveryNote.apply_discount_on
+  - label: Additional Discount Amount (Company Currency)
+    control: money
+    binds: DeliveryNote.base_discount_amount
+    validation: read only (computed or filled by the program)
+  - label: Additional Discount Percentage
+    control: number
+    binds: DeliveryNote.additional_discount_percentage
+  - label: Additional Discount Amount
+    control: money
+    binds: DeliveryNote.discount_amount
+  - label: Taxes and Charges Calculation
+    control: text
+    binds: DeliveryNote.other_charges_calculation
+    validation: read only (computed or filled by the program)
+  - label: Item Wise Tax Details
+    control: grid
+    columns:
+      - Item Row
+      - Tax Row
+      - Tax Rate
+      - Tax Amount
+      - Taxable Amount
+  - label: Packed Items
+    control: grid
+    validation: shown only when packed_items
+    columns:
+      - Parent Item
+      - Item Code
+      - Description
+      - Qty
+      - Rate
+  - label: Pricing Rule Detail
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Pricing Rule
+      - Item Code
+  - label: Billing Address Name
+    control: lookup
+    binds: DeliveryNote.customer_address
+    validation: shown only when customer; chosen among Address records
+  - label: Billing Address
+    control: text
+    binds: DeliveryNote.address_display
+    validation: read only (computed or filled by the program)
+  - label: Contact Person
+    control: lookup
+    binds: DeliveryNote.contact_person
+    validation: chosen among Contact records
+  - label: Contact
+    control: text
+    binds: DeliveryNote.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: DeliveryNote.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: DeliveryNote.contact_email
+    validation: read only (computed or filled by the program)
+  - label: Shipping Address
+    control: lookup
+    binds: DeliveryNote.shipping_address_name
+    validation: chosen among Address records
+  - label: Shipping Address
+    control: text
+    binds: DeliveryNote.shipping_address
+    validation: read only (computed or filled by the program)
+  - label: Dispatch Address Name
+    control: lookup
+    binds: DeliveryNote.dispatch_address_name
+    validation: chosen among Address records
+  - label: Dispatch Address
+    control: text
+    binds: DeliveryNote.dispatch_address
+    validation: read only (computed or filled by the program); shown only when dispatch_address_name
+  - label: Company Address Name
+    control: lookup
+    binds: DeliveryNote.company_address
+    validation: chosen among Address records
+  - label: Company Address
+    control: text
+    binds: DeliveryNote.company_address_display
+    validation: read only (computed or filled by the program)
+  - label: Company Contact Person
+    control: lookup
+    binds: DeliveryNote.company_contact_person
+    validation: chosen among Contact records
+  - label: Terms
+    control: lookup
+    binds: DeliveryNote.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Terms and Conditions Details
+    control: text
+    binds: DeliveryNote.terms
+  - label: "% Amount Billed"
+    control: number
+    binds: DeliveryNote.per_billed
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: DeliveryNote.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: "% Installed"
+    control: number
+    binds: DeliveryNote.per_installed
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: Installation Status
+    control: select
+    binds: DeliveryNote.installation_status
+  - label: "% Returned"
+    control: number
+    binds: DeliveryNote.per_returned
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: Transporter
+    control: lookup
+    binds: DeliveryNote.transporter
+    validation: chosen among Supplier records
+  - label: Transport Receipt No
+    control: text
+    binds: DeliveryNote.lr_no
+  - label: Delivery Trip
+    control: lookup
+    binds: DeliveryNote.delivery_trip
+    validation: chosen among Delivery Trip records
+  - label: Driver
+    control: lookup
+    binds: DeliveryNote.driver
+    validation: chosen among Driver records
+  - label: Transporter Name
+    control: text
+    binds: DeliveryNote.transporter_name
+    validation: read only (computed or filled by the program)
+  - label: Transport Receipt Date
+    control: date
+    binds: DeliveryNote.lr_date
+  - label: Vehicle No
+    control: text
+    binds: DeliveryNote.vehicle_no
+  - label: Driver Name
+    control: text
+    binds: DeliveryNote.driver_name
+  - label: Customer's Purchase Order No
+    control: text
+    binds: DeliveryNote.po_no
+  - label: Customer's Purchase Order Date
+    control: date
+    binds: DeliveryNote.po_date
+  - label: Sales Partner
+    control: lookup
+    binds: DeliveryNote.sales_partner
+    validation: chosen among Sales Partner records
+  - label: Amount Eligible for Commission
+    control: money
+    binds: DeliveryNote.amount_eligible_for_commission
+    validation: read only (computed or filled by the program)
+  - label: Commission Rate (%)
+    control: number
+    binds: DeliveryNote.commission_rate
+  - label: Total Commission
+    control: money
+    binds: DeliveryNote.total_commission
+  - label: Sales Team
+    control: grid
+    columns:
+      - Sales Person
+      - Contact No.
+      - Contribution (%)
+      - Contribution to Net Total
+      - Commission Rate
+      - Incentives
+  - label: Auto Repeat
+    control: lookup
+    binds: DeliveryNote.auto_repeat
+    validation: read only (computed or filled by the program); chosen among Auto Repeat records
+  - label: Letter Head
+    control: lookup
+    binds: DeliveryNote.letter_head
+    validation: chosen among Letter Head records
+  - label: Print Without Amount
+    control: checkbox
+    binds: DeliveryNote.print_without_amount
+  - label: Group same items
+    control: checkbox
+    binds: DeliveryNote.group_same_items
+  - label: Print Heading
+    control: lookup
+    binds: DeliveryNote.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Print Language
+    control: lookup
+    binds: DeliveryNote.language
+    validation: read only (computed or filled by the program); chosen among Language records
+  - label: Source
+    control: lookup
+    binds: DeliveryNote.utm_source
+    validation: chosen among UTM Source records
+  - label: Medium
+    control: lookup
+    binds: DeliveryNote.utm_medium
+    validation: chosen among UTM Medium records
+  - label: Campaign
+    control: lookup
+    binds: DeliveryNote.utm_campaign
+    validation: chosen among UTM Campaign records
+  - label: Content
+    control: text
+    binds: DeliveryNote.utm_content
+  - label: Is Internal Customer
+    control: checkbox
+    binds: DeliveryNote.is_internal_customer
+    validation: read only (computed or filled by the program)
+  - label: Represents Company
+    control: lookup
+    binds: DeliveryNote.represents_company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Inter Company Reference
+    control: lookup
+    binds: DeliveryNote.inter_company_reference
+    validation: chosen among Purchase Receipt records
+  - label: Customer Group
+    control: lookup
+    binds: DeliveryNote.customer_group
+    validation: chosen among Customer Group records
+  - label: Territory
+    control: lookup
+    binds: DeliveryNote.territory
+    validation: chosen among Territory records
+  - label: Title
+    control: text
+    binds: DeliveryNote.title
+  - label: Excise Page Number
+    control: text
+    binds: DeliveryNote.excise_page
+  - label: Instructions
+    control: text
+    binds: DeliveryNote.instructions
+actions:
+  - label: Save
+    triggers: F-386
+  - label: Submit
+    triggers: F-386
+  - label: Cancel
+    triggers: F-386
+  - label: Amend
+    triggers: F-386
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Delivery Note
+    note: declared by the program
+  - ref: run-20261107T193833-h-EXP_007
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 20/41 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T193833-h-EXP_007/step_07.png
+  - 01-exploration/runs/run-20261107T193833-h-EXP_007/step_07.png

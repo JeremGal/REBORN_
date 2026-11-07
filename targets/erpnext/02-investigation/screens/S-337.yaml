@@ -1,0 +1,43 @@
+id: S-337
+title: Quality Review
+purpose: create, view and edit Quality Review records
+kind: form
+layout: "sections: Review, Notes; 6 fields"
+fields:
+  - label: Goal
+    control: lookup
+    binds: QualityReview.goal
+    required: true
+    validation: chosen among Quality Goal records
+  - label: Date
+    control: date
+    binds: QualityReview.date
+    validation: read only (computed or filled by the program)
+  - label: Procedure
+    control: lookup
+    binds: QualityReview.procedure
+    validation: read only (computed or filled by the program); chosen among Quality Procedure records
+  - label: Status
+    control: select
+    binds: QualityReview.status
+    validation: read only (computed or filled by the program)
+  - label: Reviews
+    control: grid
+    columns:
+      - Objective
+      - Target
+      - UOM
+      - Status
+      - Review
+  - label: Additional Information
+    control: text
+    binds: QualityReview.additional_information
+actions:
+  - label: Save
+    triggers: F-338
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Quality Review
+    note: declared by the program

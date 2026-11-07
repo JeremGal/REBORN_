@@ -1,0 +1,93 @@
+id: S-038
+title: Invoice Discounting
+purpose: create, view and edit Invoice Discounting records
+kind: form
+layout: 16 fields
+fields:
+  - label: Posting Date
+    control: date
+    binds: InvoiceDiscounting.posting_date
+    required: true
+  - label: Loan Start Date
+    control: date
+    binds: InvoiceDiscounting.loan_start_date
+  - label: Loan Period (Days)
+    control: number
+    binds: InvoiceDiscounting.loan_period
+  - label: Loan End Date
+    control: date
+    binds: InvoiceDiscounting.loan_end_date
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: InvoiceDiscounting.status
+    validation: read only (computed or filled by the program)
+  - label: Company
+    control: lookup
+    binds: InvoiceDiscounting.company
+    required: true
+    validation: chosen among Company records
+  - label: Invoices
+    control: grid
+    required: true
+    columns:
+      - Invoice
+      - Customer
+      - Date
+      - Outstanding Amount
+  - label: Total Amount
+    control: money
+    binds: InvoiceDiscounting.total_amount
+    validation: read only (computed or filled by the program)
+  - label: Bank Charges
+    control: money
+    binds: InvoiceDiscounting.bank_charges
+  - label: Short Term Loan Account
+    control: lookup
+    binds: InvoiceDiscounting.short_term_loan
+    required: true
+    validation: chosen among Account records
+  - label: Bank Account
+    control: lookup
+    binds: InvoiceDiscounting.bank_account
+    required: true
+    validation: chosen among Account records
+  - label: Bank Charges Account
+    control: lookup
+    binds: InvoiceDiscounting.bank_charges_account
+    required: true
+    validation: chosen among Account records
+  - label: Accounts Receivable Credit Account
+    control: lookup
+    binds: InvoiceDiscounting.accounts_receivable_credit
+    required: true
+    validation: chosen among Account records
+  - label: Accounts Receivable Discounted Account
+    control: lookup
+    binds: InvoiceDiscounting.accounts_receivable_discounted
+    required: true
+    validation: chosen among Account records
+  - label: Accounts Receivable Unpaid Account
+    control: lookup
+    binds: InvoiceDiscounting.accounts_receivable_unpaid
+    required: true
+    validation: chosen among Account records
+  - label: Amended From
+    control: lookup
+    binds: InvoiceDiscounting.amended_from
+    validation: read only (computed or filled by the program); chosen among Invoice Discounting records
+actions:
+  - label: Save
+    triggers: F-039
+  - label: Submit
+    triggers: F-039
+  - label: Cancel
+    triggers: F-039
+  - label: Amend
+    triggers: F-039
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Invoice Discounting
+    note: declared by the program

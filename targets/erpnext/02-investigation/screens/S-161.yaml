@@ -1,0 +1,33 @@
+id: S-161
+title: Module Def
+purpose: create, view and edit Module Def records
+kind: form
+layout: "tabs: Connections, Details; 5 fields"
+fields:
+  - label: Module Name
+    control: text
+    binds: ModuleDef.module_name
+    required: true
+  - label: App Name
+    control: select
+    binds: ModuleDef.app_name
+  - label: Restrict To Domain
+    control: lookup
+    binds: ModuleDef.restrict_to_domain
+    validation: chosen among Domain records
+  - label: Package
+    control: lookup
+    binds: ModuleDef.package
+    validation: shown only when custom; chosen among Package records
+  - label: Custom
+    control: checkbox
+    binds: ModuleDef.custom
+actions:
+  - label: Save
+    triggers: F-162
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Module Def
+    note: declared by the program

@@ -1,0 +1,493 @@
+id: S-350
+title: Sales Order
+purpose: create, view and edit Sales Order records
+kind: form
+layout: "tabs: Address & Contact, Terms, More Info, Proforma, Connections; sections: Accounting Dimensions, Currency and Price List, Items, Taxes, Totals, Totals (Company Currency), Additional Discount, Tax Breakup, Packing List, Pricing Rules, Billing Address, Shipping Address, Company Address, Payment Terms, Terms & Conditions, Status, Commission, Sales Team, Loyalty Points, Auto Repeat, Print Settings, UTM Analytics, Additional Info; 112 fields; observed labels differ from the declared form (19/32 match; not declared: no., code de l'article, quantité, prix usd, montant usd, total usd, type, compte compt...)"
+fields:
+  - label: Company
+    control: lookup
+    binds: SalesOrder.company
+    required: true
+    validation: chosen among Company records
+  - label: Series
+    control: select
+    binds: SalesOrder.naming_series
+    required: true
+  - label: Customer
+    control: lookup
+    binds: SalesOrder.customer
+    required: true
+    validation: chosen among Customer records
+  - label: Customer Name
+    control: text
+    binds: SalesOrder.customer_name
+    validation: read only (computed or filled by the program)
+  - label: Order Type
+    control: select
+    binds: SalesOrder.order_type
+    required: true
+  - label: Date
+    control: date
+    binds: SalesOrder.transaction_date
+    required: true
+  - label: Time
+    control: date
+    binds: SalesOrder.transaction_time
+    validation: shown only when is_internal_customer
+  - label: Delivery Date
+    control: date
+    binds: SalesOrder.delivery_date
+    validation: shown only when eval:!doc.skip_delivery_note
+  - label: Tax Id
+    control: text
+    binds: SalesOrder.tax_id
+    validation: read only (computed or filled by the program)
+  - label: Skip Delivery Note
+    control: checkbox
+    binds: SalesOrder.skip_delivery_note
+    validation: shown only when eval:doc.order_type == 'Maintenance';
+  - label: Has Unit Price Items
+    control: checkbox
+    binds: SalesOrder.has_unit_price_items
+  - label: Is Subcontracted
+    control: checkbox
+    binds: SalesOrder.is_subcontracted
+  - label: Amended From
+    control: lookup
+    binds: SalesOrder.amended_from
+    validation: read only (computed or filled by the program); chosen among Sales Order records
+  - label: Cost Center
+    control: lookup
+    binds: SalesOrder.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: SalesOrder.project
+    validation: chosen among Project records
+  - label: Currency
+    control: lookup
+    binds: SalesOrder.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: SalesOrder.conversion_rate
+    required: true
+  - label: Price List
+    control: lookup
+    binds: SalesOrder.selling_price_list
+    required: true
+    validation: chosen among Price List records
+  - label: Price List Currency
+    control: lookup
+    binds: SalesOrder.price_list_currency
+    required: true
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Price List Exchange Rate
+    control: number
+    binds: SalesOrder.plc_conversion_rate
+    required: true
+  - label: Ignore Pricing Rule
+    control: checkbox
+    binds: SalesOrder.ignore_pricing_rule
+  - label: Scan Barcode
+    control: text
+    binds: SalesOrder.scan_barcode
+  - label: Last Scanned Warehouse
+    control: text
+    binds: SalesOrder.last_scanned_warehouse
+    validation: "shown only when eval: doc.last_scanned_warehouse"
+  - label: Set Source Warehouse
+    control: lookup
+    binds: SalesOrder.set_warehouse
+    validation: chosen among Warehouse records
+  - label: Reserve Stock
+    control: checkbox
+    binds: SalesOrder.reserve_stock
+    validation: "shown only when eval: ((doc.docstatus == 0 || doc.reserve_stock) && !doc.is_subcontracted)"
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Delivery Date
+      - Quantity
+      - Rate
+      - Amount
+  - label: Total Quantity
+    control: number
+    binds: SalesOrder.total_qty
+    validation: read only (computed or filled by the program)
+  - label: Total Net Weight
+    control: number
+    binds: SalesOrder.total_net_weight
+    validation: read only (computed or filled by the program); shown only when total_net_weight
+  - label: Total (Company Currency)
+    control: money
+    binds: SalesOrder.base_total
+    validation: read only (computed or filled by the program)
+  - label: Net Total (Company Currency)
+    control: money
+    binds: SalesOrder.base_net_total
+    validation: read only (computed or filled by the program)
+  - label: Total
+    control: money
+    binds: SalesOrder.total
+    validation: read only (computed or filled by the program)
+  - label: Net Total
+    control: money
+    binds: SalesOrder.net_total
+    validation: read only (computed or filled by the program)
+  - label: Tax Category
+    control: lookup
+    binds: SalesOrder.tax_category
+    validation: chosen among Tax Category records
+  - label: Sales Taxes and Charges Template
+    control: lookup
+    binds: SalesOrder.taxes_and_charges
+    validation: chosen among Sales Taxes and Charges Template records
+  - label: Shipping Rule
+    control: lookup
+    binds: SalesOrder.shipping_rule
+    validation: chosen among Shipping Rule records
+  - label: Incoterm
+    control: lookup
+    binds: SalesOrder.incoterm
+    validation: chosen among Incoterm records
+  - label: Named Place
+    control: text
+    binds: SalesOrder.named_place
+    validation: shown only when incoterm
+  - label: Sales Taxes and Charges
+    control: grid
+    columns:
+      - Type
+      - Account Head
+      - Tax Rate
+      - Net Amount
+      - Amount
+      - Total
+  - label: Total Taxes and Charges (Company Currency)
+    control: money
+    binds: SalesOrder.base_total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Total Taxes and Charges
+    control: money
+    binds: SalesOrder.total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Grand Total
+    control: money
+    binds: SalesOrder.grand_total
+    validation: read only (computed or filled by the program)
+  - label: In Words
+    control: text
+    binds: SalesOrder.in_words
+    validation: read only (computed or filled by the program)
+  - label: Disable Rounded Total
+    control: checkbox
+    binds: SalesOrder.disable_rounded_total
+    validation: shown only when grand_total
+  - label: Rounding Adjustment
+    control: money
+    binds: SalesOrder.rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total
+    control: money
+    binds: SalesOrder.rounded_total
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Grand Total
+    control: money
+    binds: SalesOrder.base_grand_total
+    validation: read only (computed or filled by the program)
+  - label: In Words
+    control: text
+    binds: SalesOrder.base_in_words
+    validation: read only (computed or filled by the program)
+  - label: Rounding Adjustment
+    control: money
+    binds: SalesOrder.base_rounding_adjustment
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Rounded Total
+    control: money
+    binds: SalesOrder.base_rounded_total
+    validation: read only (computed or filled by the program); shown only when eval:!doc.disable_rounded_total
+  - label: Advance Paid
+    control: money
+    binds: SalesOrder.advance_paid
+    validation: read only (computed or filled by the program)
+  - label: Apply Additional Discount On
+    control: select
+    binds: SalesOrder.apply_discount_on
+  - label: Additional Discount Amount
+    control: money
+    binds: SalesOrder.base_discount_amount
+    validation: read only (computed or filled by the program)
+  - label: Coupon Code
+    control: lookup
+    binds: SalesOrder.coupon_code
+    validation: chosen among Coupon Code records
+  - label: Additional Discount Percentage
+    control: number
+    binds: SalesOrder.additional_discount_percentage
+  - label: Additional Discount Amount
+    control: money
+    binds: SalesOrder.discount_amount
+  - label: Taxes and Charges Calculation
+    control: text
+    binds: SalesOrder.other_charges_calculation
+    validation: read only (computed or filled by the program)
+  - label: Item Wise Tax Details
+    control: grid
+    columns:
+      - Item Row
+      - Tax Row
+      - Tax Rate
+      - Tax Amount
+      - Taxable Amount
+  - label: Packed Items
+    control: grid
+    validation: shown only when packed_items
+    columns:
+      - Parent Item
+      - Item Code
+      - Description
+      - Qty
+      - Rate
+  - label: Pricing Rule Detail
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Pricing Rule
+      - Item Code
+  - label: Customer Address
+    control: lookup
+    binds: SalesOrder.customer_address
+    validation: chosen among Address records
+  - label: Address
+    control: text
+    binds: SalesOrder.address_display
+    validation: read only (computed or filled by the program)
+  - label: Customer Group
+    control: lookup
+    binds: SalesOrder.customer_group
+    validation: chosen among Customer Group records
+  - label: Territory
+    control: lookup
+    binds: SalesOrder.territory
+    validation: chosen among Territory records
+  - label: Contact Person
+    control: lookup
+    binds: SalesOrder.contact_person
+    validation: chosen among Contact records
+  - label: Contact
+    control: text
+    binds: SalesOrder.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Phone
+    control: text
+    binds: SalesOrder.contact_phone
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: SalesOrder.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: SalesOrder.contact_email
+    validation: read only (computed or filled by the program)
+  - label: Shipping Address Name
+    control: lookup
+    binds: SalesOrder.shipping_address_name
+    validation: chosen among Address records
+  - label: Shipping Address
+    control: text
+    binds: SalesOrder.shipping_address
+    validation: read only (computed or filled by the program)
+  - label: Dispatch Address Name
+    control: lookup
+    binds: SalesOrder.dispatch_address_name
+    validation: chosen among Address records
+  - label: Dispatch Address
+    control: text
+    binds: SalesOrder.dispatch_address
+    validation: read only (computed or filled by the program); shown only when dispatch_address_name
+  - label: Company Address Name
+    control: lookup
+    binds: SalesOrder.company_address
+    validation: chosen among Address records
+  - label: Company Address
+    control: text
+    binds: SalesOrder.company_address_display
+    validation: read only (computed or filled by the program)
+  - label: Company Contact Person
+    control: lookup
+    binds: SalesOrder.company_contact_person
+    validation: chosen among Contact records
+  - label: Ignore Default Payment Terms Template
+    control: checkbox
+    binds: SalesOrder.ignore_default_payment_terms_template
+    validation: read only (computed or filled by the program)
+  - label: Payment Terms Template
+    control: lookup
+    binds: SalesOrder.payment_terms_template
+    validation: chosen among Payment Terms Template records
+  - label: Payment Schedule
+    control: grid
+    columns:
+      - Payment Term
+      - Description
+      - Due Date
+      - Invoice Portion
+      - Payment Amount
+  - label: Terms
+    control: lookup
+    binds: SalesOrder.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Terms and Conditions Details
+    control: text
+    binds: SalesOrder.terms
+  - label: Status
+    control: select
+    binds: SalesOrder.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Delivery Status
+    control: select
+    binds: SalesOrder.delivery_status
+  - label: "%  Delivered"
+    control: number
+    binds: SalesOrder.per_delivered
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal && !doc.skip_delivery_note_creation
+  - label: "% Amount Billed"
+    control: number
+    binds: SalesOrder.per_billed
+    validation: read only (computed or filled by the program); shown only when eval:!doc.__islocal
+  - label: "% Picked"
+    control: number
+    binds: SalesOrder.per_picked
+    validation: read only (computed or filled by the program)
+  - label: Billing Status
+    control: select
+    binds: SalesOrder.billing_status
+  - label: Advance Payment Status
+    control: select
+    binds: SalesOrder.advance_payment_status
+  - label: Sales Partner
+    control: lookup
+    binds: SalesOrder.sales_partner
+    validation: chosen among Sales Partner records
+  - label: Amount Eligible for Commission
+    control: money
+    binds: SalesOrder.amount_eligible_for_commission
+    validation: read only (computed or filled by the program)
+  - label: Commission Rate
+    control: number
+    binds: SalesOrder.commission_rate
+  - label: Total Commission
+    control: money
+    binds: SalesOrder.total_commission
+  - label: Sales Team
+    control: grid
+    columns:
+      - Sales Person
+      - Contact No.
+      - Contribution (%)
+      - Contribution to Net Total
+      - Commission Rate
+      - Incentives
+  - label: Loyalty Points
+    control: number
+    binds: SalesOrder.loyalty_points
+    validation: read only (computed or filled by the program)
+  - label: Loyalty Amount
+    control: money
+    binds: SalesOrder.loyalty_amount
+    validation: read only (computed or filled by the program)
+  - label: From Date
+    control: date
+    binds: SalesOrder.from_date
+  - label: To Date
+    control: date
+    binds: SalesOrder.to_date
+  - label: Auto Repeat
+    control: lookup
+    binds: SalesOrder.auto_repeat
+    validation: chosen among Auto Repeat records
+  - label: Letter Head
+    control: lookup
+    binds: SalesOrder.letter_head
+    validation: chosen among Letter Head records
+  - label: Group same items
+    control: checkbox
+    binds: SalesOrder.group_same_items
+  - label: Print Heading
+    control: lookup
+    binds: SalesOrder.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Print Language
+    control: lookup
+    binds: SalesOrder.language
+    validation: read only (computed or filled by the program); chosen among Language records
+  - label: Source
+    control: lookup
+    binds: SalesOrder.utm_source
+    validation: chosen among UTM Source records
+  - label: Medium
+    control: lookup
+    binds: SalesOrder.utm_medium
+    validation: chosen among UTM Medium records
+  - label: Campaign
+    control: lookup
+    binds: SalesOrder.utm_campaign
+    validation: chosen among UTM Campaign records
+  - label: Content
+    control: text
+    binds: SalesOrder.utm_content
+  - label: Is Internal Customer
+    control: checkbox
+    binds: SalesOrder.is_internal_customer
+    validation: read only (computed or filled by the program)
+  - label: Customer's Purchase Order
+    control: text
+    binds: SalesOrder.po_no
+  - label: Customer's Purchase Order Date
+    control: date
+    binds: SalesOrder.po_date
+    validation: shown only when eval:doc.po_no
+  - label: Represents Company
+    control: lookup
+    binds: SalesOrder.represents_company
+    validation: read only (computed or filled by the program); chosen among Company records
+  - label: Title
+    control: text
+    binds: SalesOrder.title
+  - label: Inter Company Order Reference
+    control: lookup
+    binds: SalesOrder.inter_company_order_reference
+    validation: read only (computed or filled by the program); chosen among Purchase Order records
+  - label: Party Account Currency
+    control: lookup
+    binds: SalesOrder.party_account_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+actions:
+  - label: Save
+    triggers: F-351
+  - label: Submit
+    triggers: F-351
+  - label: Cancel
+    triggers: F-351
+  - label: Amend
+    triggers: F-351
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Sales Order
+    note: declared by the program
+  - ref: run-20261107T193755-h-EXP_005
+    kind: h-run
+    locator: form opened by the H Company agent
+    note: 19/32 labels read on screen match the declared form
+screenshots:
+  - 01-exploration/runs/run-20261107T193755-h-EXP_005/step_07.png
+  - 01-exploration/runs/run-20261107T193755-h-EXP_005/step_07.png

@@ -1,0 +1,57 @@
+id: S-392
+title: Item Lead Time
+purpose: create, view and edit Item Lead Time records
+kind: form
+layout: "tabs: Manufacturing Time, Purchase Time, Item Details; sections: Workstation, Manufacturing, Purchase; 13 fields"
+fields:
+  - label: Item Code
+    control: lookup
+    binds: ItemLeadTime.item_code
+    validation: chosen among Item records
+  - label: Shift Time (In Hours)
+    control: number
+    binds: ItemLeadTime.shift_time_in_hours
+  - label: No of Workstations
+    control: number
+    binds: ItemLeadTime.no_of_workstations
+  - label: No of Shift
+    control: number
+    binds: ItemLeadTime.no_of_shift
+  - label: Total Workstation Time (In Hours)
+    control: number
+    binds: ItemLeadTime.total_workstation_time
+  - label: Manufacturing Time
+    control: number
+    binds: ItemLeadTime.manufacturing_time_in_mins
+  - label: No of Units Produced
+    control: number
+    binds: ItemLeadTime.no_of_units_produced
+  - label: Daily Yield (%)
+    control: number
+    binds: ItemLeadTime.daily_yield
+  - label: Capacity
+    control: number
+    binds: ItemLeadTime.capacity_per_day
+  - label: Purchase Time
+    control: number
+    binds: ItemLeadTime.purchase_time
+  - label: Buffer Time
+    control: number
+    binds: ItemLeadTime.buffer_time
+  - label: Item Name
+    control: text
+    binds: ItemLeadTime.item_name
+    validation: read only (computed or filled by the program)
+  - label: Stock UOM
+    control: lookup
+    binds: ItemLeadTime.stock_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+actions:
+  - label: Save
+    triggers: F-393
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Item Lead Time
+    note: declared by the program

@@ -1,0 +1,86 @@
+id: S-466
+title: Website Theme
+purpose: create, view and edit Website Theme records
+kind: form
+layout: "tabs: Theme Configuration, Stylesheet, Script; 20 fields"
+fields:
+  - label: Theme
+    control: text
+    binds: WebsiteTheme.theme
+    required: true
+  - label: Module
+    control: lookup
+    binds: WebsiteTheme.module
+    required: true
+    validation: chosen among Module Def records
+  - label: Custom?
+    control: checkbox
+    binds: WebsiteTheme.custom
+  - label: Google Font
+    control: text
+    binds: WebsiteTheme.google_font
+  - label: Font Size
+    control: text
+    binds: WebsiteTheme.font_size
+  - label: Font Properties
+    control: text
+    binds: WebsiteTheme.font_properties
+  - label: Button Rounded Corners
+    control: checkbox
+    binds: WebsiteTheme.button_rounded_corners
+  - label: Button Shadows
+    control: checkbox
+    binds: WebsiteTheme.button_shadows
+  - label: Button Gradients
+    control: checkbox
+    binds: WebsiteTheme.button_gradients
+  - label: Primary Color
+    control: lookup
+    binds: WebsiteTheme.primary_color
+    validation: chosen among Color records
+  - label: Text Color
+    control: lookup
+    binds: WebsiteTheme.text_color
+    validation: chosen among Color records
+  - label: Light Color
+    control: lookup
+    binds: WebsiteTheme.light_color
+    validation: chosen among Color records
+  - label: Dark Color
+    control: lookup
+    binds: WebsiteTheme.dark_color
+    validation: chosen among Color records
+  - label: Background Color
+    control: lookup
+    binds: WebsiteTheme.background_color
+    validation: chosen among Color records
+  - label: Custom Overrides
+    control: text
+    binds: WebsiteTheme.custom_overrides
+  - label: Custom SCSS
+    control: text
+    binds: WebsiteTheme.custom_scss
+  - label: Ignored Apps
+    control: grid
+    columns:
+      - App
+  - label: Theme
+    control: text
+    binds: WebsiteTheme.theme_scss
+    validation: read only (computed or filled by the program)
+  - label: Theme URL
+    control: text
+    binds: WebsiteTheme.theme_url
+    validation: read only (computed or filled by the program)
+  - label: JavaScript
+    control: text
+    binds: WebsiteTheme.js
+actions:
+  - label: Save
+    triggers: F-467
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Website Theme
+    note: declared by the program

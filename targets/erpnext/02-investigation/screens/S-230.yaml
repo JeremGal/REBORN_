@@ -1,0 +1,22 @@
+id: S-230
+title: Desktop Layout
+purpose: create, view and edit Desktop Layout records
+kind: form
+layout: 2 fields
+fields:
+  - label: User
+    control: lookup
+    binds: DesktopLayout.user
+    validation: chosen among User records
+  - label: Layout
+    control: text
+    binds: DesktopLayout.layout
+actions:
+  - label: Save
+    triggers: F-231
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Desktop Layout
+    note: declared by the program

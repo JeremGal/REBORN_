@@ -1,0 +1,46 @@
+id: S-205
+title: CRM Settings
+purpose: settings of CRM Settings
+kind: settings
+layout: "sections: Lead, Opportunity, Quotation, Activity, Frappe CRM; 10 fields"
+fields:
+  - label: Campaign Naming By
+    control: select
+    binds: CRMSettings.campaign_naming_by
+  - label: Allow Lead Duplication based on Emails
+    control: checkbox
+    binds: CRMSettings.allow_lead_duplication_based_on_emails
+  - label: Auto Creation of Contact
+    control: checkbox
+    binds: CRMSettings.auto_creation_of_contact
+  - label: Close Replied Opportunity After Days
+    control: number
+    binds: CRMSettings.close_opportunity_after_days
+  - label: Enable Opportunity Creation from Contact Us
+    control: checkbox
+    binds: CRMSettings.enable_opportunity_creation_from_contact_us
+  - label: Default Quotation Validity Days
+    control: text
+    binds: CRMSettings.default_valid_till
+  - label: Carry Forward Communication and Comments
+    control: checkbox
+    binds: CRMSettings.carry_forward_communication_and_comments
+  - label: Update timestamp on new communication
+    control: checkbox
+    binds: CRMSettings.update_timestamp_on_new_communication
+  - label: Enable Frappe CRM Data Synchronization
+    control: checkbox
+    binds: CRMSettings.enable_frappe_crm_data_synchronization
+  - label: Allowed Users
+    control: grid
+    columns:
+      - User
+actions:
+  - label: Save
+    triggers: F-206
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of CRM Settings
+    note: declared by the program

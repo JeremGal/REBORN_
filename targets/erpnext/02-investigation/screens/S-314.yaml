@@ -1,0 +1,139 @@
+id: S-314
+title: Print Format
+purpose: create, view and edit Print Format records
+kind: form
+layout: "sections: Style Settings; 35 fields"
+fields:
+  - label: Print Format For
+    control: select
+    binds: PrintFormat.print_format_for
+  - label: DocType
+    control: lookup
+    binds: PrintFormat.doc_type
+    validation: shown only when eval:doc.print_format_for == "DocType"; chosen among DocType records
+  - label: Report
+    control: lookup
+    binds: PrintFormat.report
+    validation: shown only when eval:doc.print_format_for == "Report"; chosen among Report records
+  - label: Module
+    control: lookup
+    binds: PrintFormat.module
+    validation: chosen among Module Def records
+  - label: Default Print Language
+    control: lookup
+    binds: PrintFormat.default_print_language
+    validation: chosen among Language records
+  - label: Preview Image
+    control: other
+    binds: PrintFormat.preview_image
+  - label: Standard
+    control: select
+    binds: PrintFormat.standard
+    required: true
+  - label: Custom Format
+    control: checkbox
+    binds: PrintFormat.custom_format
+  - label: Disabled
+    control: checkbox
+    binds: PrintFormat.disabled
+  - label: PDF Generator
+    control: select
+    binds: PrintFormat.pdf_generator
+  - label: Paper Size
+    control: select
+    binds: PrintFormat.paper_size
+    validation: shown only when eval:!doc.print_format_builder_beta && !doc.raw_printing && ['chrome', 'PlutoPri
+  - label: Print Format Type
+    control: select
+    binds: PrintFormat.print_format_type
+    validation: shown only when custom_format
+  - label: Raw Printing
+    control: checkbox
+    binds: PrintFormat.raw_printing
+    validation: shown only when custom_format
+  - label: HTML
+    control: text
+    binds: PrintFormat.html
+    validation: shown only when eval:!doc.raw_printing
+  - label: Raw Commands
+    control: text
+    binds: PrintFormat.raw_commands
+    validation: shown only when raw_printing
+  - label: Margin Top
+    control: number
+    binds: PrintFormat.margin_top
+  - label: Margin Bottom
+    control: number
+    binds: PrintFormat.margin_bottom
+  - label: Margin Left
+    control: number
+    binds: PrintFormat.margin_left
+  - label: Margin Right
+    control: number
+    binds: PrintFormat.margin_right
+  - label: Align Labels to the Right
+    control: checkbox
+    binds: PrintFormat.align_labels_right
+    validation: shown only when eval:!doc.print_format_builder_beta
+  - label: Show Section Headings
+    control: checkbox
+    binds: PrintFormat.show_section_headings
+    validation: shown only when eval:!doc.print_format_builder_beta
+  - label: Show Line Breaks after Sections
+    control: checkbox
+    binds: PrintFormat.line_breaks
+    validation: shown only when eval:!doc.print_format_builder_beta
+  - label: Show Absolute Values
+    control: checkbox
+    binds: PrintFormat.absolute_value
+    validation: shown only when doc_type
+  - label: Font Size
+    control: number
+    binds: PrintFormat.font_size
+  - label: Google Font
+    control: text
+    binds: PrintFormat.font
+    validation: shown only when eval:!doc.custom_format
+  - label: Label Color
+    control: other
+    binds: PrintFormat.label_color
+    validation: shown only when eval:!doc.custom_format
+  - label: Value Color
+    control: other
+    binds: PrintFormat.value_color
+    validation: shown only when eval:!doc.custom_format
+  - label: Page Number
+    control: select
+    binds: PrintFormat.page_number
+  - label: Show Colon After Field Labels
+    control: checkbox
+    binds: PrintFormat.show_label_colon
+  - label: Custom CSS
+    control: text
+    binds: PrintFormat.css
+  - label: Format Data
+    control: text
+    binds: PrintFormat.format_data
+  - label: Draft Data
+    control: text
+    binds: PrintFormat.draft_data
+    validation: read only (computed or filled by the program)
+  - label: Classic Format Data
+    control: text
+    binds: PrintFormat.classic_format_data
+    validation: read only (computed or filled by the program)
+  - label: Print Format Builder
+    control: checkbox
+    binds: PrintFormat.print_format_builder
+  - label: Print Format Editor
+    control: checkbox
+    binds: PrintFormat.print_format_builder_beta
+actions:
+  - label: Save
+    triggers: F-315
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Print Format
+    note: declared by the program

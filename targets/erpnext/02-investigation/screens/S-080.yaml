@@ -1,0 +1,43 @@
+id: S-080
+title: Sales Taxes and Charges Template
+purpose: create, view and edit Sales Taxes and Charges Template records
+kind: form
+layout: 6 fields
+fields:
+  - label: Title
+    control: text
+    binds: SalesTaxesAndChargesTemplate.title
+    required: true
+  - label: Default
+    control: checkbox
+    binds: SalesTaxesAndChargesTemplate.is_default
+  - label: Disabled
+    control: checkbox
+    binds: SalesTaxesAndChargesTemplate.disabled
+  - label: Company
+    control: lookup
+    binds: SalesTaxesAndChargesTemplate.company
+    required: true
+    validation: chosen among Company records
+  - label: Tax Category
+    control: lookup
+    binds: SalesTaxesAndChargesTemplate.tax_category
+    validation: chosen among Tax Category records
+  - label: Sales Taxes and Charges
+    control: grid
+    columns:
+      - Type
+      - Account Head
+      - Tax Rate
+      - Net Amount
+      - Amount
+      - Total
+actions:
+  - label: Save
+    triggers: F-081
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Sales Taxes and Charges Template
+    note: declared by the program

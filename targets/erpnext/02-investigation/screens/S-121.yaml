@@ -1,0 +1,141 @@
+id: S-121
+title: Request for Quotation
+purpose: create, view and edit Request for Quotation records
+kind: form
+layout: "tabs: Address & Contact; sections: Email Details, Terms and Conditions, Printing Settings, More Information; 29 fields"
+fields:
+  - label: Series
+    control: select
+    binds: RequestForQuotation.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: RequestForQuotation.company
+    required: true
+    validation: chosen among Company records
+  - label: Supplier
+    control: lookup
+    binds: RequestForQuotation.vendor
+    validation: read only (computed or filled by the program); chosen among Supplier records
+  - label: Date
+    control: date
+    binds: RequestForQuotation.transaction_date
+    required: true
+  - label: Required Date
+    control: date
+    binds: RequestForQuotation.schedule_date
+  - label: Status
+    control: select
+    binds: RequestForQuotation.status
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Has Unit Price Items
+    control: checkbox
+    binds: RequestForQuotation.has_unit_price_items
+  - label: Amended From
+    control: lookup
+    binds: RequestForQuotation.amended_from
+    validation: read only (computed or filled by the program); chosen among Request for Quotation records
+  - label: Suppliers
+    control: grid
+    required: true
+    columns:
+      - Supplier
+      - Contact
+      - Email ID
+      - Send Email
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Required Date
+      - Quantity
+      - UOM
+      - Warehouse
+  - label: Email Template
+    control: lookup
+    binds: RequestForQuotation.email_template
+    validation: chosen among Email Template records
+  - label: Send Attached Files
+    control: checkbox
+    binds: RequestForQuotation.send_attached_files
+  - label: Send Document Print
+    control: checkbox
+    binds: RequestForQuotation.send_document_print
+  - label: Subject
+    control: text
+    binds: RequestForQuotation.subject
+    required: true
+  - label: Use HTML
+    control: checkbox
+    binds: RequestForQuotation.use_html
+  - label: Message for Supplier
+    control: text
+    binds: RequestForQuotation.message_for_supplier
+    validation: shown only when eval:doc.use_html == 0
+  - label: Message for Supplier
+    control: text
+    binds: RequestForQuotation.mfs_html
+    validation: shown only when eval:doc.use_html == 1
+  - label: Incoterm
+    control: lookup
+    binds: RequestForQuotation.incoterm
+    validation: chosen among Incoterm records
+  - label: Named Place
+    control: text
+    binds: RequestForQuotation.named_place
+    validation: shown only when incoterm
+  - label: Terms
+    control: lookup
+    binds: RequestForQuotation.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Terms and Conditions
+    control: text
+    binds: RequestForQuotation.terms
+  - label: Print Heading
+    control: lookup
+    binds: RequestForQuotation.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Letter Head
+    control: lookup
+    binds: RequestForQuotation.letter_head
+    validation: chosen among Letter Head records
+  - label: Opportunity
+    control: lookup
+    binds: RequestForQuotation.opportunity
+    validation: read only (computed or filled by the program); chosen among Opportunity records
+  - label: Title
+    control: text
+    binds: RequestForQuotation.title
+  - label: Company Billing Address
+    control: lookup
+    binds: RequestForQuotation.billing_address
+    validation: chosen among Address records
+  - label: Billing Address Details
+    control: text
+    binds: RequestForQuotation.billing_address_display
+    validation: read only (computed or filled by the program)
+  - label: Company Shipping Address
+    control: lookup
+    binds: RequestForQuotation.shipping_address
+    validation: chosen among Address records
+  - label: Shipping Address Details
+    control: text
+    binds: RequestForQuotation.shipping_address_display
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-122
+  - label: Submit
+    triggers: F-122
+  - label: Cancel
+    triggers: F-122
+  - label: Amend
+    triggers: F-122
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Request for Quotation
+    note: declared by the program

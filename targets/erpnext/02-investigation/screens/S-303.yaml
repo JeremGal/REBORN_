@@ -1,0 +1,45 @@
+id: S-303
+title: Operation
+purpose: create, view and edit Operation records
+kind: form
+layout: "sections: Job Card, Sub Operations, Operation Description; 8 fields"
+fields:
+  - label: Default Workstation
+    control: lookup
+    binds: Operation.workstation
+    validation: chosen among Workstation records
+  - label: Is Corrective Operation
+    control: checkbox
+    binds: Operation.is_corrective_operation
+  - label: Create Job Card based on Batch Size
+    control: checkbox
+    binds: Operation.create_job_card_based_on_batch_size
+  - label: Quality Inspection Template
+    control: lookup
+    binds: Operation.quality_inspection_template
+    validation: chosen among Quality Inspection Template records
+  - label: Batch Size
+    control: number
+    binds: Operation.batch_size
+    validation: shown only when create_job_card_based_on_batch_size
+  - label: sub_operations
+    control: grid
+    columns:
+      - Operation
+      - Operation Time
+  - label: Total Operation Time
+    control: number
+    binds: Operation.total_operation_time
+    validation: read only (computed or filled by the program)
+  - label: Description
+    control: text
+    binds: Operation.description
+actions:
+  - label: Save
+    triggers: F-304
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Operation
+    note: declared by the program

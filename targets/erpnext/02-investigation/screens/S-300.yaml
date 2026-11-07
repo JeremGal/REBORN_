@@ -1,0 +1,268 @@
+id: S-300
+title: Job Card
+purpose: create, view and edit Job Card records
+kind: form
+layout: "tabs: Raw Materials, Time logs, Sub Operations, Secondary Items, Corrective Operation, More Info, Connections; sections: Semi Finished Good / Finished Good, Warehouse, Progress, Quality Inspection, Scheduled Time, Actual Time, Status and Reference, Serial / Batch; 57 fields"
+fields:
+  - label: Work Order
+    control: lookup
+    binds: JobCard.work_order
+    required: true
+    validation: chosen among Work Order records
+  - label: Operation
+    control: lookup
+    binds: JobCard.operation
+    required: true
+    validation: chosen among Operation records
+  - label: Qty to Manufacture
+    control: number
+    binds: JobCard.for_quantity
+  - label: Workstation
+    control: lookup
+    binds: JobCard.workstation
+    required: true
+    validation: chosen among Workstation records
+  - label: Stock UOM
+    control: lookup
+    binds: JobCard.stock_uom
+    validation: read only (computed or filled by the program); chosen among UOM records
+  - label: Final Product
+    control: lookup
+    binds: JobCard.production_item
+    validation: read only (computed or filled by the program); shown only when eval:!doc.finished_good; chosen among Item records
+  - label: Final BOM
+    control: lookup
+    binds: JobCard.bom_no
+    validation: read only (computed or filled by the program); shown only when eval:!doc.finished_good; chosen among BOM records
+  - label: Employee
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Employee
+      - From Time
+      - To Time
+      - Time In Mins
+      - Completed Qty
+      - Sub Operation
+  - label: Company
+    control: lookup
+    binds: JobCard.company
+    required: true
+    validation: chosen among Company records
+  - label: Naming Series
+    control: select
+    binds: JobCard.naming_series
+    required: true
+  - label: Posting Date
+    control: date
+    binds: JobCard.posting_date
+  - label: Item to Manufacture
+    control: lookup
+    binds: JobCard.finished_good
+    validation: read only (computed or filled by the program); chosen among Item records
+  - label: Manufacturing BOM
+    control: lookup
+    binds: JobCard.semi_fg_bom
+    validation: read only (computed or filled by the program); chosen among BOM records
+  - label: Workstation Type
+    control: lookup
+    binds: JobCard.workstation_type
+    validation: chosen among Workstation Type records
+  - label: Source Warehouse
+    control: lookup
+    binds: JobCard.source_warehouse
+    validation: chosen among Warehouse records
+  - label: Skip Material Transfer to WIP
+    control: checkbox
+    binds: JobCard.skip_material_transfer
+    validation: shown only when eval:doc.finished_good
+  - label: Backflush Materials from WIP Warehouse
+    control: checkbox
+    binds: JobCard.backflush_from_wip_warehouse
+    validation: shown only when eval:doc.finished_good && doc.skip_material_transfer === 1
+  - label: Produce Item per Operation
+    control: checkbox
+    binds: JobCard.track_semi_finished_goods
+    validation: read only (computed or filled by the program); shown only when eval:!doc.is_corrective_job_card
+  - label: WIP Warehouse
+    control: lookup
+    binds: JobCard.wip_warehouse
+    validation: chosen among Warehouse records
+  - label: Target Warehouse
+    control: lookup
+    binds: JobCard.target_warehouse
+    validation: shown only when eval:doc.track_semi_finished_goods; chosen among Warehouse records
+  - label: Pending qty
+    control: number
+    binds: JobCard.pending_qty
+  - label: Process Loss qty
+    control: number
+    binds: JobCard.process_loss_qty
+    validation: read only (computed or filled by the program); shown only when process_loss_qty
+  - label: Total Completed qty
+    control: number
+    binds: JobCard.total_completed_qty
+    validation: read only (computed or filled by the program); shown only when eval:doc.is_subcontracted===0
+  - label: Manufactured Qty
+    control: number
+    binds: JobCard.manufactured_qty
+    validation: read only (computed or filled by the program); shown only when finished_good
+  - label: Transferred Raw Materials
+    control: number
+    binds: JobCard.transferred_qty
+    validation: read only (computed or filled by the program); shown only when items
+  - label: Items
+    control: grid
+    columns:
+      - Item Code
+      - Source Warehouse
+      - Required Qty
+  - label: Quality Inspection Template
+    control: lookup
+    binds: JobCard.quality_inspection_template
+    validation: chosen among Quality Inspection Template records
+  - label: Quality Inspection
+    control: lookup
+    binds: JobCard.quality_inspection
+    validation: shown only when eval:!doc.__islocal;; chosen among Quality Inspection records
+  - label: Expected Start Date
+    control: date
+    binds: JobCard.expected_start_date
+  - label: Expected Time Required (In Mins)
+    control: number
+    binds: JobCard.time_required
+  - label: Expected End Date
+    control: date
+    binds: JobCard.expected_end_date
+  - label: Scheduled Time Logs
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - From Time
+      - To Time
+      - Time (In Mins)
+  - label: Actual Start Date
+    control: date
+    binds: JobCard.actual_start_date
+    validation: read only (computed or filled by the program)
+  - label: Total Time in Mins
+    control: number
+    binds: JobCard.total_time_in_mins
+    validation: read only (computed or filled by the program)
+  - label: Actual End Date
+    control: date
+    binds: JobCard.actual_end_date
+    validation: read only (computed or filled by the program)
+  - label: Time Logs
+    control: grid
+    columns:
+      - Employee
+      - From Time
+      - To Time
+      - Time In Mins
+      - Completed Qty
+      - Sub Operation
+  - label: Sub Operations
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Operation
+      - Completed Qty
+      - Completed Time
+      - Status
+  - label: Secondary Items
+    control: grid
+    columns:
+      - Type
+      - Secondary Item Code
+      - Secondary Item Name
+      - Qty
+  - label: For Job Card
+    control: lookup
+    binds: JobCard.for_job_card
+    validation: read only (computed or filled by the program); chosen among Job Card records
+  - label: Is Corrective Job Card
+    control: checkbox
+    binds: JobCard.is_corrective_job_card
+    validation: read only (computed or filled by the program)
+  - label: Hour Rate
+    control: money
+    binds: JobCard.hour_rate
+    validation: shown only when is_corrective_job_card
+  - label: For Operation
+    control: lookup
+    binds: JobCard.for_operation
+    validation: chosen among Operation records
+  - label: Item Name
+    control: display
+    binds: JobCard.item_name
+    validation: read only (computed or filled by the program)
+  - label: Requested Qty
+    control: number
+    binds: JobCard.requested_qty
+    validation: read only (computed or filled by the program); shown only when eval:!doc.is_corrective_job_card
+  - label: Is Paused
+    control: checkbox
+    binds: JobCard.is_paused
+    validation: read only (computed or filled by the program)
+  - label: Is Subcontracted
+    control: checkbox
+    binds: JobCard.is_subcontracted
+    validation: read only (computed or filled by the program); shown only when eval:!doc.is_corrective_job_card
+  - label: Project
+    control: lookup
+    binds: JobCard.project
+    validation: chosen among Project records
+  - label: Remarks
+    control: text
+    binds: JobCard.remarks
+  - label: Status
+    control: select
+    binds: JobCard.status
+    validation: read only (computed or filled by the program)
+  - label: Operation Row ID
+    control: number
+    binds: JobCard.operation_row_id
+  - label: Amended From
+    control: lookup
+    binds: JobCard.amended_from
+    validation: read only (computed or filled by the program); chosen among Job Card records
+  - label: Operation ID
+    control: text
+    binds: JobCard.operation_id
+    validation: read only (computed or filled by the program)
+  - label: Sequence Id
+    control: number
+    binds: JobCard.sequence_id
+    validation: read only (computed or filled by the program)
+  - label: Serial No
+    control: text
+    binds: JobCard.serial_no
+    validation: read only (computed or filled by the program)
+  - label: Serial and Batch Bundle
+    control: lookup
+    binds: JobCard.serial_and_batch_bundle
+    validation: read only (computed or filled by the program); chosen among Serial and Batch Bundle records
+  - label: Barcode
+    control: other
+    binds: JobCard.barcode
+    validation: read only (computed or filled by the program)
+  - label: Batch No
+    control: lookup
+    binds: JobCard.batch_no
+    validation: read only (computed or filled by the program); chosen among Batch records
+actions:
+  - label: Save
+    triggers: F-301
+  - label: Submit
+    triggers: F-301
+  - label: Cancel
+    triggers: F-301
+  - label: Amend
+    triggers: F-301
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Job Card
+    note: declared by the program

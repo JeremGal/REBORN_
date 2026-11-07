@@ -1,0 +1,77 @@
+id: S-307
+title: Sales Forecast
+purpose: create, view and edit Sales Forecast records
+kind: form
+layout: "tabs: Connections; sections: Item and Warehouse; 11 fields"
+fields:
+  - label: Naming Series
+    control: select
+    binds: SalesForecast.naming_series
+    required: true
+  - label: Company
+    control: lookup
+    binds: SalesForecast.company
+    required: true
+    validation: chosen among Company records
+  - label: Posting Date
+    control: date
+    binds: SalesForecast.posting_date
+  - label: From Date
+    control: date
+    binds: SalesForecast.from_date
+    required: true
+  - label: Frequency
+    control: select
+    binds: SalesForecast.frequency
+    required: true
+  - label: Number of Weeks / Months
+    control: number
+    binds: SalesForecast.demand_number
+    required: true
+  - label: Select Items
+    control: grid
+    required: true
+    columns:
+      - Item Code
+      - Item Name
+      - UOM
+      - Delivery Date
+      - Demand Qty
+      - Warehouse
+  - label: Parent Warehouse
+    control: lookup
+    binds: SalesForecast.parent_warehouse
+    required: true
+    validation: chosen among Warehouse records
+  - label: Items
+    control: grid
+    columns:
+      - Item Code
+      - Item Name
+      - UOM
+      - Delivery Date
+      - Demand Qty
+      - Warehouse
+  - label: Amended From
+    control: lookup
+    binds: SalesForecast.amended_from
+    validation: read only (computed or filled by the program); chosen among Sales Forecast records
+  - label: Status
+    control: select
+    binds: SalesForecast.status
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-308
+  - label: Submit
+    triggers: F-308
+  - label: Cancel
+    triggers: F-308
+  - label: Amend
+    triggers: F-308
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Sales Forecast
+    note: declared by the program

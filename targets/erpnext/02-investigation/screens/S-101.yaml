@@ -1,0 +1,54 @@
+id: S-101
+title: Asset Movement
+purpose: create, view and edit Asset Movement records
+kind: form
+layout: "sections: Reference; 7 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: AssetMovement.company
+    required: true
+    validation: chosen among Company records
+  - label: Purpose
+    control: select
+    binds: AssetMovement.purpose
+    required: true
+  - label: Transaction Date
+    control: date
+    binds: AssetMovement.transaction_date
+    required: true
+  - label: Assets
+    control: grid
+    required: true
+    columns:
+      - Asset
+      - Source Location
+      - From Employee
+      - Target Location
+      - To Employee
+  - label: Reference Document Type
+    control: lookup
+    binds: AssetMovement.reference_doctype
+    validation: chosen among DocType records
+  - label: Reference Document Name
+    control: lookup
+    binds: AssetMovement.reference_name
+  - label: Amended From
+    control: lookup
+    binds: AssetMovement.amended_from
+    validation: read only (computed or filled by the program); chosen among Asset Movement records
+actions:
+  - label: Save
+    triggers: F-102
+  - label: Submit
+    triggers: F-102
+  - label: Cancel
+    triggers: F-102
+  - label: Amend
+    triggers: F-102
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Movement
+    note: declared by the program

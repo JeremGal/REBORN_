@@ -1,0 +1,268 @@
+id: S-365
+title: Employee
+purpose: create, view and edit Employee records
+kind: form
+layout: "tabs: Overview, Address & Contacts, Attendance & Leaves, Salary, Personal Details, Profile, Joining, Exit, Connections; sections: User Details, Company Details, Address, Emergency Contact, Bank Details, Passport Details, Educational Qualification, Previous Work Experience, History In Company, Feedback; 70 fields"
+fields:
+  - label: Employee
+    control: text
+    binds: Employee.employee
+  - label: Series
+    control: select
+    binds: Employee.naming_series
+  - label: First Name
+    control: text
+    binds: Employee.first_name
+    required: true
+  - label: Middle Name
+    control: text
+    binds: Employee.middle_name
+  - label: Last Name
+    control: text
+    binds: Employee.last_name
+  - label: Full Name
+    control: text
+    binds: Employee.employee_name
+    validation: read only (computed or filled by the program)
+  - label: Gender
+    control: lookup
+    binds: Employee.gender
+    required: true
+    validation: chosen among Gender records
+  - label: Date of Birth
+    control: date
+    binds: Employee.date_of_birth
+    required: true
+  - label: Salutation
+    control: lookup
+    binds: Employee.salutation
+    validation: chosen among Salutation records
+  - label: Date of Joining
+    control: date
+    binds: Employee.date_of_joining
+    required: true
+  - label: Image
+    control: other
+    binds: Employee.image
+  - label: Status
+    control: select
+    binds: Employee.status
+    required: true
+  - label: User ID
+    control: lookup
+    binds: Employee.user_id
+    validation: chosen among User records
+  - label: Create User Permission
+    control: checkbox
+    binds: Employee.create_user_permission
+    validation: shown only when eval:doc.user_id || doc.create_user_automatically
+  - label: Create User Automatically
+    control: checkbox
+    binds: Employee.create_user_automatically
+    validation: shown only when eval:doc.__islocal && !doc.user_id
+  - label: Company
+    control: lookup
+    binds: Employee.company
+    required: true
+    validation: chosen among Company records
+  - label: Department
+    control: lookup
+    binds: Employee.department
+    validation: chosen among Department records
+  - label: Employee Number
+    control: text
+    binds: Employee.employee_number
+  - label: Designation
+    control: lookup
+    binds: Employee.designation
+    validation: chosen among Designation records
+  - label: Reports to
+    control: lookup
+    binds: Employee.reports_to
+    validation: chosen among Employee records
+  - label: Branch
+    control: lookup
+    binds: Employee.branch
+    validation: chosen among Branch records
+  - label: Mobile
+    control: text
+    binds: Employee.cell_number
+  - label: Company Email
+    control: text
+    binds: Employee.company_email
+  - label: Personal Email
+    control: text
+    binds: Employee.personal_email
+  - label: Preferred Contact Email
+    control: select
+    binds: Employee.prefered_contact_email
+  - label: Preferred Email
+    control: text
+    binds: Employee.prefered_email
+    validation: read only (computed or filled by the program)
+  - label: Unsubscribed
+    control: checkbox
+    binds: Employee.unsubscribed
+  - label: Current Address
+    control: text
+    binds: Employee.current_address
+  - label: Current Address Is
+    control: select
+    binds: Employee.current_accommodation_type
+  - label: Permanent Address
+    control: text
+    binds: Employee.permanent_address
+  - label: Permanent Address Is
+    control: select
+    binds: Employee.permanent_accommodation_type
+  - label: Emergency Contact Name
+    control: text
+    binds: Employee.person_to_be_contacted
+  - label: Emergency Phone
+    control: text
+    binds: Employee.emergency_phone_number
+  - label: Relation
+    control: text
+    binds: Employee.relation
+  - label: Attendance Device ID (Biometric/RF tag ID)
+    control: text
+    binds: Employee.attendance_device_id
+  - label: Holiday List
+    control: lookup
+    binds: Employee.holiday_list
+    validation: chosen among Holiday List records
+  - label: Cost to Company (CTC)
+    control: money
+    binds: Employee.ctc
+  - label: Salary Currency
+    control: lookup
+    binds: Employee.salary_currency
+    validation: chosen among Currency records
+  - label: Salary Mode
+    control: select
+    binds: Employee.salary_mode
+  - label: Bank Name
+    control: text
+    binds: Employee.bank_name
+    validation: shown only when eval:doc.salary_mode == 'Bank'
+  - label: Bank A/C No.
+    control: text
+    binds: Employee.bank_ac_no
+    validation: shown only when eval:doc.salary_mode == 'Bank'
+  - label: IBAN
+    control: text
+    binds: Employee.iban
+    validation: shown only when eval:doc.salary_mode == 'Bank'
+  - label: Marital Status
+    control: select
+    binds: Employee.marital_status
+  - label: Family Background
+    control: text
+    binds: Employee.family_background
+  - label: Blood Group
+    control: select
+    binds: Employee.blood_group
+  - label: Health Details
+    control: text
+    binds: Employee.health_details
+  - label: Passport Number
+    control: text
+    binds: Employee.passport_number
+  - label: Valid Up To
+    control: date
+    binds: Employee.valid_upto
+  - label: Date of Issue
+    control: date
+    binds: Employee.date_of_issue
+  - label: Place of Issue
+    control: text
+    binds: Employee.place_of_issue
+  - label: Bio / Cover Letter
+    control: text
+    binds: Employee.bio
+  - label: Education
+    control: grid
+    columns:
+      - School/University
+      - Qualification
+      - Level
+      - Year of Passing
+      - Class / Percentage
+      - Major/Optional Subjects
+  - label: External Work History
+    control: grid
+    columns:
+      - Company
+      - Designation
+      - Salary
+      - Address
+      - Contact
+      - Total Experience
+  - label: Internal Work History
+    control: grid
+    columns:
+      - Branch
+      - Department
+      - Designation
+      - From Date
+      - To Date
+  - label: Offer Date
+    control: date
+    binds: Employee.scheduled_confirmation_date
+  - label: Confirmation Date
+    control: date
+    binds: Employee.final_confirmation_date
+  - label: Contract End Date
+    control: date
+    binds: Employee.contract_end_date
+  - label: Notice (days)
+    control: number
+    binds: Employee.notice_number_of_days
+  - label: Date Of Retirement
+    control: date
+    binds: Employee.date_of_retirement
+  - label: Resignation Letter Date
+    control: date
+    binds: Employee.resignation_letter_date
+  - label: Relieving Date
+    control: date
+    binds: Employee.relieving_date
+  - label: Exit Interview Held On
+    control: date
+    binds: Employee.held_on
+  - label: New Workplace
+    control: text
+    binds: Employee.new_workplace
+  - label: Leave Encashed?
+    control: select
+    binds: Employee.leave_encashed
+  - label: Encashment Date
+    control: date
+    binds: Employee.encashment_date
+    validation: shown only when eval:doc.leave_encashed =="Yes"
+  - label: Reason for Leaving
+    control: text
+    binds: Employee.reason_for_leaving
+  - label: Feedback
+    control: text
+    binds: Employee.feedback
+  - label: lft
+    control: number
+    binds: Employee.lft
+    validation: read only (computed or filled by the program)
+  - label: rgt
+    control: number
+    binds: Employee.rgt
+    validation: read only (computed or filled by the program)
+  - label: Old Parent
+    control: text
+    binds: Employee.old_parent
+actions:
+  - label: Save
+    triggers: F-366
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Employee
+    note: declared by the program

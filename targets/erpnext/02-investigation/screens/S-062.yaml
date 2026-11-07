@@ -1,0 +1,552 @@
+id: S-062
+title: POS Invoice
+purpose: create, view and edit POS Invoice records
+kind: form
+layout: "tabs: Payments, Address & Contact, Terms, More Info; sections: Accounting Dimensions, Currency and Price List, Warehouse, Items, Pricing Rules, Packing List, Time Sheet List, Tax Breakup, Additional Discount, Payments, Changes, Advance Payments, Write Off, Loyalty Points Redemption, Address and Contact, Payment Terms, Terms and Conditions, Customer PO Details, Printing Settings, UTM Analytics, More Information, Accounting Details, Commission, Sales Team, Subscription, ...; 126 fields"
+fields:
+  - label: Series
+    control: select
+    binds: POSInvoice.naming_series
+    required: true
+  - label: Customer
+    control: lookup
+    binds: POSInvoice.customer
+    validation: chosen among Customer records
+  - label: Customer Name
+    control: text
+    binds: POSInvoice.customer_name
+    validation: read only (computed or filled by the program); shown only when customer
+  - label: Tax Id
+    control: text
+    binds: POSInvoice.tax_id
+    validation: read only (computed or filled by the program)
+  - label: POS Profile
+    control: lookup
+    binds: POSInvoice.pos_profile
+    validation: shown only when is_pos; chosen among POS Profile records
+  - label: Consolidated Sales Invoice
+    control: lookup
+    binds: POSInvoice.consolidated_invoice
+    validation: read only (computed or filled by the program); chosen among Sales Invoice records
+  - label: Include Payment (POS)
+    control: checkbox
+    binds: POSInvoice.is_pos
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Is Return (Credit Note)
+    control: checkbox
+    binds: POSInvoice.is_return
+  - label: Update Billed Amount in Sales Order
+    control: checkbox
+    binds: POSInvoice.update_billed_amount_in_sales_order
+    validation: "shown only when eval: doc.is_return && doc.return_against"
+  - label: Update Billed Amount in Delivery Note
+    control: checkbox
+    binds: POSInvoice.update_billed_amount_in_delivery_note
+    validation: "shown only when eval: doc.is_return && doc.return_against"
+  - label: Company
+    control: lookup
+    binds: POSInvoice.company
+    required: true
+    validation: chosen among Company records
+  - label: Date
+    control: date
+    binds: POSInvoice.posting_date
+    required: true
+  - label: Posting Time
+    control: date
+    binds: POSInvoice.posting_time
+  - label: Edit Posting Date and Time
+    control: checkbox
+    binds: POSInvoice.set_posting_time
+    validation: shown only when eval:doc.docstatus==0
+  - label: Payment Due Date
+    control: date
+    binds: POSInvoice.due_date
+  - label: Amended From
+    control: lookup
+    binds: POSInvoice.amended_from
+    validation: read only (computed or filled by the program); chosen among POS Invoice records
+  - label: Return Against
+    control: lookup
+    binds: POSInvoice.return_against
+    validation: read only (computed or filled by the program); shown only when return_against; chosen among POS Invoice records
+  - label: Project
+    control: lookup
+    binds: POSInvoice.project
+    validation: chosen among Project records
+  - label: Cost Center
+    control: lookup
+    binds: POSInvoice.cost_center
+    validation: chosen among Cost Center records
+  - label: Currency
+    control: lookup
+    binds: POSInvoice.currency
+    required: true
+    validation: chosen among Currency records
+  - label: Exchange Rate
+    control: number
+    binds: POSInvoice.conversion_rate
+    required: true
+  - label: Price List
+    control: lookup
+    binds: POSInvoice.selling_price_list
+    required: true
+    validation: chosen among Price List records
+  - label: Price List Currency
+    control: lookup
+    binds: POSInvoice.price_list_currency
+    required: true
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Price List Exchange Rate
+    control: number
+    binds: POSInvoice.plc_conversion_rate
+    required: true
+  - label: Ignore Pricing Rule
+    control: checkbox
+    binds: POSInvoice.ignore_pricing_rule
+  - label: Source Warehouse
+    control: lookup
+    binds: POSInvoice.set_warehouse
+    validation: shown only when update_stock; chosen among Warehouse records
+  - label: Update Stock
+    control: checkbox
+    binds: POSInvoice.update_stock
+  - label: Scan Barcode
+    control: text
+    binds: POSInvoice.scan_barcode
+  - label: Last Scanned Warehouse
+    control: text
+    binds: POSInvoice.last_scanned_warehouse
+    validation: "shown only when eval: doc.last_scanned_warehouse"
+  - label: Items
+    control: grid
+    required: true
+    columns:
+      - Item
+      - Quantity
+      - Rate
+      - Amount
+      - Warehouse
+      - Serial No
+  - label: Pricing Rule Detail
+    control: grid
+    validation: read only (computed or filled by the program)
+    columns:
+      - Pricing Rule
+      - Item Code
+  - label: Packed Items
+    control: grid
+    validation: shown only when packed_items
+    columns:
+      - Parent Item
+      - Item Code
+      - Description
+      - Qty
+      - Rate
+  - label: Time Sheets
+    control: grid
+    columns:
+      - Activity Type
+      - Description
+      - Billing Hours
+      - Billing Amount
+      - Time Sheet
+  - label: Total Billing Amount
+    control: money
+    binds: POSInvoice.total_billing_amount
+    validation: read only (computed or filled by the program)
+  - label: Total Quantity
+    control: number
+    binds: POSInvoice.total_qty
+    validation: read only (computed or filled by the program)
+  - label: Total (Company Currency)
+    control: money
+    binds: POSInvoice.base_total
+    validation: read only (computed or filled by the program)
+  - label: Net Total (Company Currency)
+    control: money
+    binds: POSInvoice.base_net_total
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Total
+    control: money
+    binds: POSInvoice.total
+    validation: read only (computed or filled by the program)
+  - label: Net Total
+    control: money
+    binds: POSInvoice.net_total
+    validation: read only (computed or filled by the program)
+  - label: Total Net Weight
+    control: number
+    binds: POSInvoice.total_net_weight
+    validation: read only (computed or filled by the program)
+  - label: Sales Taxes and Charges Template
+    control: lookup
+    binds: POSInvoice.taxes_and_charges
+    validation: chosen among Sales Taxes and Charges Template records
+  - label: Shipping Rule
+    control: lookup
+    binds: POSInvoice.shipping_rule
+    validation: chosen among Shipping Rule records
+  - label: Tax Category
+    control: lookup
+    binds: POSInvoice.tax_category
+    validation: chosen among Tax Category records
+  - label: Sales Taxes and Charges
+    control: grid
+    columns:
+      - Type
+      - Account Head
+      - Tax Rate
+      - Net Amount
+      - Amount
+      - Total
+  - label: Taxes and Charges Calculation
+    control: text
+    binds: POSInvoice.other_charges_calculation
+    validation: read only (computed or filled by the program)
+  - label: Item Wise Tax Details
+    control: grid
+    columns:
+      - Item Row
+      - Tax Row
+      - Tax Rate
+      - Tax Amount
+      - Taxable Amount
+  - label: Total Taxes and Charges (Company Currency)
+    control: money
+    binds: POSInvoice.base_total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Total Taxes and Charges
+    control: money
+    binds: POSInvoice.total_taxes_and_charges
+    validation: read only (computed or filled by the program)
+  - label: Coupon Code
+    control: lookup
+    binds: POSInvoice.coupon_code
+    validation: shown only when coupon_code; chosen among Coupon Code records
+  - label: Apply Additional Discount On
+    control: select
+    binds: POSInvoice.apply_discount_on
+  - label: Additional Discount Amount (Company Currency)
+    control: money
+    binds: POSInvoice.base_discount_amount
+    validation: read only (computed or filled by the program)
+  - label: Additional Discount Percentage
+    control: number
+    binds: POSInvoice.additional_discount_percentage
+  - label: Additional Discount Amount
+    control: money
+    binds: POSInvoice.discount_amount
+  - label: Grand Total (Company Currency)
+    control: money
+    binds: POSInvoice.base_grand_total
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Rounding Adjustment (Company Currency)
+    control: money
+    binds: POSInvoice.base_rounding_adjustment
+    validation: read only (computed or filled by the program)
+  - label: Rounded Total (Company Currency)
+    control: money
+    binds: POSInvoice.base_rounded_total
+    validation: read only (computed or filled by the program)
+  - label: In Words (Company Currency)
+    control: text
+    binds: POSInvoice.base_in_words
+    validation: read only (computed or filled by the program)
+  - label: Grand Total
+    control: money
+    binds: POSInvoice.grand_total
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: Rounding Adjustment
+    control: money
+    binds: POSInvoice.rounding_adjustment
+    validation: read only (computed or filled by the program)
+  - label: Rounded Total
+    control: money
+    binds: POSInvoice.rounded_total
+    validation: read only (computed or filled by the program)
+  - label: In Words
+    control: text
+    binds: POSInvoice.in_words
+    validation: read only (computed or filled by the program)
+  - label: Total Advance
+    control: money
+    binds: POSInvoice.total_advance
+    validation: read only (computed or filled by the program)
+  - label: Outstanding Amount
+    control: money
+    binds: POSInvoice.outstanding_amount
+    validation: read only (computed or filled by the program)
+  - label: Cash/Bank Account
+    control: lookup
+    binds: POSInvoice.cash_bank_account
+    validation: shown only when is_pos; chosen among Account records
+  - label: Sales Invoice Payment
+    control: grid
+    validation: shown only when eval:doc.is_pos===1
+    columns:
+      - Mode of Payment
+      - Amount
+  - label: Paid Amount (Company Currency)
+    control: money
+    binds: POSInvoice.base_paid_amount
+    validation: read only (computed or filled by the program)
+  - label: Paid Amount
+    control: money
+    binds: POSInvoice.paid_amount
+    validation: "read only (computed or filled by the program); shown only when eval: doc.is_pos || doc.redeem_loyalty_points"
+  - label: Base Change Amount (Company Currency)
+    control: money
+    binds: POSInvoice.base_change_amount
+    validation: read only (computed or filled by the program); shown only when is_pos
+  - label: Change Amount
+    control: money
+    binds: POSInvoice.change_amount
+    validation: shown only when is_pos
+  - label: Account for Change Amount
+    control: lookup
+    binds: POSInvoice.account_for_change_amount
+    validation: shown only when is_pos; chosen among Account records
+  - label: Allocate Advances Automatically (FIFO)
+    control: checkbox
+    binds: POSInvoice.allocate_advances_automatically
+  - label: Advances
+    control: grid
+    columns:
+      - Reference Name
+      - Remarks
+      - Advance amount
+      - Allocated amount
+      - Difference Posting Date
+  - label: Write Off Amount
+    control: money
+    binds: POSInvoice.write_off_amount
+  - label: Write Off Amount (Company Currency)
+    control: money
+    binds: POSInvoice.base_write_off_amount
+    validation: read only (computed or filled by the program)
+  - label: Write Off Outstanding Amount
+    control: checkbox
+    binds: POSInvoice.write_off_outstanding_amount_automatically
+    validation: shown only when is_pos
+  - label: Write Off Account
+    control: lookup
+    binds: POSInvoice.write_off_account
+    validation: chosen among Account records
+  - label: Write Off Cost Center
+    control: lookup
+    binds: POSInvoice.write_off_cost_center
+    validation: chosen among Cost Center records
+  - label: Loyalty Points
+    control: number
+    binds: POSInvoice.loyalty_points
+    validation: shown only when redeem_loyalty_points
+  - label: Loyalty Amount
+    control: money
+    binds: POSInvoice.loyalty_amount
+    validation: read only (computed or filled by the program); shown only when redeem_loyalty_points
+  - label: Redeem Loyalty Points
+    control: checkbox
+    binds: POSInvoice.redeem_loyalty_points
+  - label: Loyalty Program
+    control: lookup
+    binds: POSInvoice.loyalty_program
+    validation: read only (computed or filled by the program); chosen among Loyalty Program records
+  - label: Redemption Account
+    control: lookup
+    binds: POSInvoice.loyalty_redemption_account
+    validation: shown only when redeem_loyalty_points; chosen among Account records
+  - label: Redemption Cost Center
+    control: lookup
+    binds: POSInvoice.loyalty_redemption_cost_center
+    validation: shown only when redeem_loyalty_points; chosen among Cost Center records
+  - label: Customer Address
+    control: lookup
+    binds: POSInvoice.customer_address
+    validation: chosen among Address records
+  - label: Address
+    control: text
+    binds: POSInvoice.address_display
+    validation: read only (computed or filled by the program)
+  - label: Contact Person
+    control: lookup
+    binds: POSInvoice.contact_person
+    validation: chosen among Contact records
+  - label: Contact
+    control: text
+    binds: POSInvoice.contact_display
+    validation: read only (computed or filled by the program)
+  - label: Mobile No
+    control: text
+    binds: POSInvoice.contact_mobile
+    validation: read only (computed or filled by the program)
+  - label: Contact Email
+    control: text
+    binds: POSInvoice.contact_email
+    validation: read only (computed or filled by the program)
+  - label: Territory
+    control: lookup
+    binds: POSInvoice.territory
+    validation: chosen among Territory records
+  - label: Shipping Address Name
+    control: lookup
+    binds: POSInvoice.shipping_address_name
+    validation: chosen among Address records
+  - label: Shipping Address
+    control: text
+    binds: POSInvoice.shipping_address
+    validation: read only (computed or filled by the program)
+  - label: Company Address Name
+    control: lookup
+    binds: POSInvoice.company_address
+    validation: chosen among Address records
+  - label: Company Address
+    control: text
+    binds: POSInvoice.company_address_display
+    validation: read only (computed or filled by the program)
+  - label: Company Contact Person
+    control: lookup
+    binds: POSInvoice.company_contact_person
+    validation: chosen among Contact records
+  - label: Payment Terms Template
+    control: lookup
+    binds: POSInvoice.payment_terms_template
+    validation: shown only when eval:(!doc.is_pos && !doc.is_return); chosen among Payment Terms Template records
+  - label: Payment Schedule
+    control: grid
+    validation: shown only when eval:(!doc.is_pos && !doc.is_return)
+    columns:
+      - Payment Term
+      - Description
+      - Due Date
+      - Invoice Portion
+      - Payment Amount
+  - label: Terms
+    control: lookup
+    binds: POSInvoice.tc_name
+    validation: chosen among Terms and Conditions records
+  - label: Terms and Conditions Details
+    control: text
+    binds: POSInvoice.terms
+  - label: Customer's Purchase Order
+    control: text
+    binds: POSInvoice.po_no
+  - label: Customer's Purchase Order Date
+    control: date
+    binds: POSInvoice.po_date
+  - label: Letter Head
+    control: lookup
+    binds: POSInvoice.letter_head
+    validation: chosen among Letter Head records
+  - label: Group same items
+    control: checkbox
+    binds: POSInvoice.group_same_items
+  - label: Print Language
+    control: text
+    binds: POSInvoice.language
+    validation: read only (computed or filled by the program)
+  - label: Print Heading
+    control: lookup
+    binds: POSInvoice.select_print_heading
+    validation: chosen among Print Heading records
+  - label: Source
+    control: lookup
+    binds: POSInvoice.utm_source
+    validation: chosen among UTM Source records
+  - label: Medium
+    control: lookup
+    binds: POSInvoice.utm_medium
+    validation: chosen among UTM Medium records
+  - label: Campaign
+    control: lookup
+    binds: POSInvoice.utm_campaign
+    validation: chosen among UTM Campaign records
+  - label: Inter Company Invoice Reference
+    control: lookup
+    binds: POSInvoice.inter_company_invoice_reference
+    validation: read only (computed or filled by the program); chosen among Purchase Invoice records
+  - label: Customer Group
+    control: lookup
+    binds: POSInvoice.customer_group
+    validation: chosen among Customer Group records
+  - label: Is Discounted
+    control: checkbox
+    binds: POSInvoice.is_discounted
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: select
+    binds: POSInvoice.status
+    validation: read only (computed or filled by the program)
+  - label: Title
+    control: text
+    binds: POSInvoice.title
+  - label: Debit To
+    control: lookup
+    binds: POSInvoice.debit_to
+    required: true
+    validation: chosen among Account records
+  - label: Party Account Currency
+    control: lookup
+    binds: POSInvoice.party_account_currency
+    validation: read only (computed or filled by the program); chosen among Currency records
+  - label: Is Opening Entry
+    control: select
+    binds: POSInvoice.is_opening
+  - label: Remarks
+    control: text
+    binds: POSInvoice.remarks
+  - label: Sales Partner
+    control: lookup
+    binds: POSInvoice.sales_partner
+    validation: chosen among Sales Partner records
+  - label: Amount Eligible for Commission
+    control: money
+    binds: POSInvoice.amount_eligible_for_commission
+    validation: read only (computed or filled by the program)
+  - label: Commission Rate (%)
+    control: number
+    binds: POSInvoice.commission_rate
+  - label: Total Commission
+    control: money
+    binds: POSInvoice.total_commission
+  - label: Sales Team
+    control: grid
+    columns:
+      - Sales Person
+      - Contact No.
+      - Contribution (%)
+      - Contribution to Net Total
+      - Commission Rate
+      - Incentives
+  - label: From Date
+    control: date
+    binds: POSInvoice.from_date
+  - label: To Date
+    control: date
+    binds: POSInvoice.to_date
+  - label: Auto Repeat
+    control: lookup
+    binds: POSInvoice.auto_repeat
+    validation: read only (computed or filled by the program); chosen among Auto Repeat records
+  - label: Against Income Account
+    control: text
+    binds: POSInvoice.against_income_account
+actions:
+  - label: Save
+    triggers: F-063
+  - label: Submit
+    triggers: F-063
+  - label: Cancel
+    triggers: F-063
+  - label: Amend
+    triggers: F-063
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of POS Invoice
+    note: declared by the program

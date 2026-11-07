@@ -1,0 +1,101 @@
+id: S-203
+title: Contract
+purpose: create, view and edit Contract records
+kind: form
+layout: "sections: Contract Period, Signee Details, Contract Details, Fulfilment Details, Authorised By, References; 22 fields"
+fields:
+  - label: Party Type
+    control: select
+    binds: Contract.party_type
+    required: true
+  - label: Signed
+    control: checkbox
+    binds: Contract.is_signed
+  - label: Party Name
+    control: lookup
+    binds: Contract.party_name
+    required: true
+  - label: Party User
+    control: lookup
+    binds: Contract.party_user
+    validation: chosen among User records
+  - label: Status
+    control: select
+    binds: Contract.status
+  - label: Fulfilment Status
+    control: select
+    binds: Contract.fulfilment_status
+  - label: Party Full Name
+    control: text
+    binds: Contract.party_full_name
+    validation: read only (computed or filled by the program)
+  - label: Start Date
+    control: date
+    binds: Contract.start_date
+  - label: End Date
+    control: date
+    binds: Contract.end_date
+  - label: Signee
+    control: text
+    binds: Contract.signee
+  - label: Signed On
+    control: date
+    binds: Contract.signed_on
+  - label: IP Address
+    control: text
+    binds: Contract.ip_address
+    validation: read only (computed or filled by the program)
+  - label: Contract Template
+    control: lookup
+    binds: Contract.contract_template
+    validation: chosen among Contract Template records
+  - label: Contract Terms
+    control: text
+    binds: Contract.contract_terms
+    required: true
+  - label: Requires Fulfilment
+    control: checkbox
+    binds: Contract.requires_fulfilment
+  - label: Fulfilment Deadline
+    control: date
+    binds: Contract.fulfilment_deadline
+    validation: shown only when eval:doc.requires_fulfilment==1
+  - label: Fulfilment Terms
+    control: grid
+    validation: shown only when eval:doc.requires_fulfilment==1
+    columns:
+      - Fulfilled
+      - Requirement
+      - Notes
+  - label: Signee (Company)
+    control: other
+    binds: Contract.signee_company
+  - label: Signed By (Company)
+    control: lookup
+    binds: Contract.signed_by_company
+    validation: read only (computed or filled by the program); chosen among User records
+  - label: Document Type
+    control: select
+    binds: Contract.document_type
+  - label: Document Name
+    control: lookup
+    binds: Contract.document_name
+  - label: Amended From
+    control: lookup
+    binds: Contract.amended_from
+    validation: read only (computed or filled by the program); chosen among Contract records
+actions:
+  - label: Save
+    triggers: F-204
+  - label: Submit
+    triggers: F-204
+  - label: Cancel
+    triggers: F-204
+  - label: Amend
+    triggers: F-204
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Contract
+    note: declared by the program

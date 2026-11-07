@@ -1,0 +1,50 @@
+id: F-389
+title: Create and edit a Inventory Dimension
+module: Stock
+priority: should
+status: partial
+confidence: medium
+user_goal: An extra way to tag stock, like a rack or bin.
+entry_points:
+  - screen: S-388
+    action: open the form
+inputs:
+  - label: Dimension Name
+    field: InventoryDimension.dimension_name
+    type: string
+    required: true
+  - label: Reference Document
+    field: InventoryDimension.reference_document
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Inventory Dimension form
+    screen: S-388
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Dimension Name, Reference Document"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Inventory Dimension record stored
+    entities:
+      - InventoryDimension
+entities:
+  - InventoryDimension
+screens:
+  - S-388
+acceptance:
+  - id: AC-390
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Inventory Dimension
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"inventory-dimension\")."

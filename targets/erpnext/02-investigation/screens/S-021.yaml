@@ -1,0 +1,52 @@
+id: S-021
+title: Bisect Accounting Statements
+purpose: settings of Bisect Accounting Statements
+kind: settings
+layout: 10 fields
+fields:
+  - label: Company
+    control: lookup
+    binds: BisectAccountingStatements.company
+    validation: chosen among Company records
+  - label: From Date
+    control: date
+    binds: BisectAccountingStatements.from_date
+  - label: To Date
+    control: date
+    binds: BisectAccountingStatements.to_date
+  - label: Algorithm
+    control: select
+    binds: BisectAccountingStatements.algorithm
+  - label: Current Node
+    control: lookup
+    binds: BisectAccountingStatements.current_node
+    validation: chosen among Bisect Nodes records
+  - label: current_from_date
+    control: date
+    binds: BisectAccountingStatements.current_from_date
+    validation: read only (computed or filled by the program)
+  - label: current_to_date
+    control: date
+    binds: BisectAccountingStatements.current_to_date
+    validation: read only (computed or filled by the program)
+  - label: p_l_summary
+    control: number
+    binds: BisectAccountingStatements.p_l_summary
+    validation: read only (computed or filled by the program)
+  - label: b_s_summary
+    control: number
+    binds: BisectAccountingStatements.b_s_summary
+    validation: read only (computed or filled by the program)
+  - label: difference
+    control: number
+    binds: BisectAccountingStatements.difference
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-022
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bisect Accounting Statements
+    note: declared by the program

@@ -1,0 +1,45 @@
+id: F-461
+title: Create and edit a Web Template
+module: Website
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Web Template records.
+entry_points:
+  - screen: S-460
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Web Template form
+    screen: S-460
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Fields"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Web Template record stored
+    entities:
+      - WebTemplate
+entities:
+  - WebTemplate
+  - WebTemplateField
+screens:
+  - S-460
+acceptance:
+  - id: AC-462
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Web Template
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

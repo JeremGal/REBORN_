@@ -1,0 +1,71 @@
+id: S-105
+title: Asset Value Adjustment
+purpose: create, view and edit Asset Value Adjustment records
+kind: form
+layout: "sections: Value Details, Accounting Dimensions; 12 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: AssetValueAdjustment.company
+    validation: chosen among Company records
+  - label: Asset
+    control: lookup
+    binds: AssetValueAdjustment.asset
+    required: true
+    validation: chosen among Asset records
+  - label: Asset Category
+    control: display
+    binds: AssetValueAdjustment.asset_category
+  - label: Date
+    control: date
+    binds: AssetValueAdjustment.date
+    required: true
+  - label: Finance Book
+    control: lookup
+    binds: AssetValueAdjustment.finance_book
+    validation: chosen among Finance Book records
+  - label: Amended From
+    control: lookup
+    binds: AssetValueAdjustment.amended_from
+    validation: read only (computed or filled by the program); chosen among Asset Value Adjustment records
+  - label: Current Asset Value
+    control: money
+    binds: AssetValueAdjustment.current_asset_value
+    required: true
+    validation: read only (computed or filled by the program)
+  - label: New Asset Value
+    control: money
+    binds: AssetValueAdjustment.new_asset_value
+    required: true
+  - label: Difference Amount
+    control: money
+    binds: AssetValueAdjustment.difference_amount
+    validation: read only (computed or filled by the program)
+  - label: Difference Account
+    control: lookup
+    binds: AssetValueAdjustment.difference_account
+    required: true
+    validation: chosen among Account records
+  - label: Journal Entry
+    control: lookup
+    binds: AssetValueAdjustment.journal_entry
+    validation: read only (computed or filled by the program); chosen among Journal Entry records
+  - label: Cost Center
+    control: lookup
+    binds: AssetValueAdjustment.cost_center
+    validation: chosen among Cost Center records
+actions:
+  - label: Save
+    triggers: F-106
+  - label: Submit
+    triggers: F-106
+  - label: Cancel
+    triggers: F-106
+  - label: Amend
+    triggers: F-106
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Value Adjustment
+    note: declared by the program

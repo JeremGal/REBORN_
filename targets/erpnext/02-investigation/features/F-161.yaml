@@ -1,0 +1,45 @@
+id: F-161
+title: Configure Log Settings
+module: Core
+priority: could
+status: partial
+confidence: medium
+user_goal: As a user, I record and maintain Log Settings settings.
+entry_points:
+  - screen: S-160
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Log Settings form
+    screen: S-160
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: user
+    does: "adds lines in: Logs to Clear"
+  - n: 4
+    actor: system
+    does: saves the settings
+outputs:
+  - kind: data-change
+    description: settings stored
+    entities:
+      - LogSettings
+entities:
+  - LogSettings
+  - LogsToClear
+screens:
+  - S-160
+acceptance:
+  - id: AC-162
+    given: the form opened
+    when: the settings are saved
+    then: the settings are stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Log Settings
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

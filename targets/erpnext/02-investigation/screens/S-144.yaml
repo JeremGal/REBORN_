@@ -1,0 +1,82 @@
+id: S-144
+title: Data Import
+purpose: create, view and edit Data Import records
+kind: form
+layout: "sections: Import File Errors and Warnings, Value Mappings, Skipped Rows, Tree Preview, Preview; 16 fields"
+fields:
+  - label: Document Type
+    control: lookup
+    binds: DataImport.reference_doctype
+    required: true
+    validation: chosen among DocType records
+  - label: Import Type
+    control: select
+    binds: DataImport.import_type
+    required: true
+  - label: Import File
+    control: other
+    binds: DataImport.import_file
+    validation: shown only when eval:doc.reference_doctype && doc.import_type
+  - label: Payload Count
+    control: number
+    binds: DataImport.payload_count
+    validation: read only (computed or filled by the program)
+  - label: Import from Google Sheets
+    control: text
+    binds: DataImport.google_sheets_url
+    validation: shown only when eval:doc.reference_doctype && doc.import_type && !doc.import_file
+  - label: Detect CSV type
+    control: checkbox
+    binds: DataImport.use_csv_sniffer
+    validation: shown only when eval:doc.google_sheets_url || (doc.import_file && doc.import_file.split('.').pop
+  - label: Custom Delimiters
+    control: checkbox
+    binds: DataImport.custom_delimiters
+    validation: shown only when eval:doc.google_sheets_url || (doc.import_file && doc.import_file.split('.').pop
+  - label: Delimiter Options
+    control: text
+    binds: DataImport.delimiter_options
+    validation: shown only when eval:doc.custom_delimiters && (doc.google_sheets_url || (doc.import_file && doc.
+  - label: Status
+    control: select
+    binds: DataImport.status
+    validation: read only (computed or filled by the program)
+  - label: Submit After Import
+    control: checkbox
+    binds: DataImport.submit_after_import
+  - label: Don't Send Emails
+    control: checkbox
+    binds: DataImport.mute_emails
+  - label: Template Options
+    control: text
+    binds: DataImport.template_options
+    validation: read only (computed or filled by the program)
+  - label: Tree Parent Overrides
+    control: text
+    binds: DataImport.tree_parent_overrides
+    validation: read only (computed or filled by the program)
+  - label: Template Warnings
+    control: text
+    binds: DataImport.template_warnings
+  - label: value_mappings
+    control: grid
+    validation: shown only when eval:!doc.__islocal && (doc.import_file || doc.google_sheets_url)
+    columns:
+      - Column
+      - Value in File
+      - No. of Rows
+      - Map To
+  - label: skipped_rows
+    control: grid
+    validation: shown only when eval:!doc.__islocal && (doc.import_file || doc.google_sheets_url)
+    columns:
+      - Row Number
+actions:
+  - label: Save
+    triggers: F-145
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Data Import
+    note: declared by the program

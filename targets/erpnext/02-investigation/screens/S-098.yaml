@@ -1,0 +1,57 @@
+id: S-098
+title: Asset Maintenance
+purpose: create, view and edit Asset Maintenance records
+kind: form
+layout: "sections: Tasks; 9 fields"
+fields:
+  - label: Asset Name
+    control: lookup
+    binds: AssetMaintenance.asset_name
+    required: true
+    validation: chosen among Asset records
+  - label: Asset Category
+    control: lookup
+    binds: AssetMaintenance.asset_category
+    validation: read only (computed or filled by the program); chosen among Asset Category records
+  - label: Company
+    control: lookup
+    binds: AssetMaintenance.company
+    required: true
+    validation: chosen among Company records
+  - label: Item Code
+    control: display
+    binds: AssetMaintenance.item_code
+  - label: Item Name
+    control: display
+    binds: AssetMaintenance.item_name
+  - label: Maintenance Team
+    control: lookup
+    binds: AssetMaintenance.maintenance_team
+    required: true
+    validation: chosen among Asset Maintenance Team records
+  - label: Maintenance Manager
+    control: text
+    binds: AssetMaintenance.maintenance_manager
+    validation: read only (computed or filled by the program)
+  - label: Maintenance Manager Name
+    control: display
+    binds: AssetMaintenance.maintenance_manager_name
+  - label: Maintenance Tasks
+    control: grid
+    required: true
+    columns:
+      - Maintenance Task
+      - Maintenance Status
+      - Periodicity
+      - Assign To
+      - Next Due Date
+      - Last Completion Date
+actions:
+  - label: Save
+    triggers: F-099
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Asset Maintenance
+    note: declared by the program

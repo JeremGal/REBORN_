@@ -1,0 +1,29 @@
+id: S-386
+title: Delivery Settings
+purpose: settings of Delivery Settings
+kind: settings
+layout: "sections: Dispatch Settings; 4 fields"
+fields:
+  - label: Dispatch Notification Template
+    control: lookup
+    binds: DeliverySettings.dispatch_template
+    validation: chosen among Email Template records
+  - label: Dispatch Notification Attachment
+    control: lookup
+    binds: DeliverySettings.dispatch_attachment
+    validation: shown only when send_with_attachment; chosen among Print Format records
+  - label: Send with Attachment
+    control: checkbox
+    binds: DeliverySettings.send_with_attachment
+  - label: Delay between Delivery Stops
+    control: number
+    binds: DeliverySettings.stop_delay
+actions:
+  - label: Save
+    triggers: F-387
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Delivery Settings
+    note: declared by the program

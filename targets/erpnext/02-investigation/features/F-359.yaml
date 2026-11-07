@@ -1,0 +1,62 @@
+id: F-359
+title: Create and edit a Company
+module: Setup
+priority: should
+status: partial
+confidence: medium
+user_goal: A legal entity with its own books, like your business or a subsidiary.
+entry_points:
+  - screen: S-358
+    action: open the form
+inputs:
+  - label: Company
+    field: Company.company_name
+    type: string
+    required: true
+  - label: Abbr
+    field: Company.abbr
+    type: string
+    required: true
+  - label: Default Currency
+    field: Company.default_currency
+    type: ref
+    required: true
+  - label: Country
+    field: Company.country
+    type: ref
+    required: true
+  - label: Default Stock Valuation Method
+    field: Company.valuation_method
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Company form
+    screen: S-358
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Abbr, Default Currency, Country, Default Stock Valuation Method"
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Company record stored
+    entities:
+      - Company
+entities:
+  - Company
+screens:
+  - S-358
+acceptance:
+  - id: AC-360
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Company
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

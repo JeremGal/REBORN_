@@ -1,0 +1,58 @@
+id: S-374
+title: Sales Person
+purpose: create, view and edit Sales Person records
+kind: form
+layout: "sections: Name and Employee ID, Sales Person Targets; 11 fields"
+fields:
+  - label: Sales Person Name
+    control: text
+    binds: SalesPerson.sales_person_name
+    required: true
+  - label: Parent Sales Person
+    control: lookup
+    binds: SalesPerson.parent_sales_person
+    validation: chosen among Sales Person records
+  - label: Commission Rate
+    control: text
+    binds: SalesPerson.commission_rate
+  - label: Is Group
+    control: checkbox
+    binds: SalesPerson.is_group
+    required: true
+  - label: Enabled
+    control: checkbox
+    binds: SalesPerson.enabled
+  - label: Employee
+    control: lookup
+    binds: SalesPerson.employee
+    validation: chosen among Employee records
+  - label: Department
+    control: lookup
+    binds: SalesPerson.department
+    validation: read only (computed or filled by the program); chosen among Department records
+  - label: lft
+    control: number
+    binds: SalesPerson.lft
+  - label: rgt
+    control: number
+    binds: SalesPerson.rgt
+  - label: old_parent
+    control: text
+    binds: SalesPerson.old_parent
+  - label: Targets
+    control: grid
+    columns:
+      - Item Group
+      - Fiscal Year
+      - Target Qty
+      - Target  Amount
+      - Target Distribution
+actions:
+  - label: Save
+    triggers: F-375
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Sales Person
+    note: declared by the program

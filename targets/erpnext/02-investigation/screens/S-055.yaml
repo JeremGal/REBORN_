@@ -1,0 +1,107 @@
+id: S-055
+title: Payment Reconciliation
+purpose: settings of Payment Reconciliation
+kind: settings
+layout: "sections: Filters, Accounting Dimensions Filter, Unreconciled Entries, Allocated Entries; 23 fields"
+fields:
+  - label: Company
+    control: lookup
+    binds: PaymentReconciliation.company
+    required: true
+    validation: chosen among Company records
+  - label: Party Type
+    control: lookup
+    binds: PaymentReconciliation.party_type
+    required: true
+    validation: chosen among DocType records
+  - label: Party
+    control: lookup
+    binds: PaymentReconciliation.party
+    required: true
+    validation: shown only when eval:doc.party_type
+  - label: Receivable / Payable Account
+    control: lookup
+    binds: PaymentReconciliation.receivable_payable_account
+    required: true
+    validation: shown only when eval:doc.company && doc.party; chosen among Account records
+  - label: Default Advance Account
+    control: lookup
+    binds: PaymentReconciliation.default_advance_account
+    validation: shown only when eval:doc.party; chosen among Account records
+  - label: From Invoice Date
+    control: date
+    binds: PaymentReconciliation.from_invoice_date
+  - label: From Payment Date
+    control: date
+    binds: PaymentReconciliation.from_payment_date
+  - label: Minimum Invoice Amount
+    control: money
+    binds: PaymentReconciliation.minimum_invoice_amount
+  - label: Minimum Payment Amount
+    control: money
+    binds: PaymentReconciliation.minimum_payment_amount
+  - label: To Invoice Date
+    control: date
+    binds: PaymentReconciliation.to_invoice_date
+  - label: To Payment Date
+    control: date
+    binds: PaymentReconciliation.to_payment_date
+  - label: Maximum Invoice Amount
+    control: money
+    binds: PaymentReconciliation.maximum_invoice_amount
+  - label: Maximum Payment Amount
+    control: money
+    binds: PaymentReconciliation.maximum_payment_amount
+  - label: Invoice Limit
+    control: number
+    binds: PaymentReconciliation.invoice_limit
+  - label: Payment Limit
+    control: number
+    binds: PaymentReconciliation.payment_limit
+  - label: Bank / Cash Account
+    control: lookup
+    binds: PaymentReconciliation.bank_cash_account
+    validation: chosen among Account records
+  - label: Cost Center
+    control: lookup
+    binds: PaymentReconciliation.cost_center
+    validation: chosen among Cost Center records
+  - label: Project
+    control: lookup
+    binds: PaymentReconciliation.project
+    validation: chosen among Project records
+  - label: Filter on Invoice
+    control: text
+    binds: PaymentReconciliation.invoice_name
+  - label: Invoices
+    control: grid
+    columns:
+      - Invoice Type
+      - Invoice Number
+      - Invoice Date
+      - Outstanding Amount
+  - label: Filter on Payment
+    control: text
+    binds: PaymentReconciliation.payment_name
+  - label: Payments
+    control: grid
+    columns:
+      - Reference Name
+      - Posting Date
+      - Amount
+  - label: Allocation
+    control: grid
+    columns:
+      - Reference Name
+      - Invoice Number
+      - Allocated Amount
+      - Difference Amount
+actions:
+  - label: Save
+    triggers: F-056
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Payment Reconciliation
+    note: declared by the program

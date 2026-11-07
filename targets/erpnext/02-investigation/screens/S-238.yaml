@@ -1,0 +1,43 @@
+id: S-238
+title: List View Settings
+purpose: create, view and edit List View Settings records
+kind: form
+layout: 9 fields
+fields:
+  - label: Disable Count
+    control: checkbox
+    binds: ListViewSettings.disable_count
+  - label: Disable Auto Refresh
+    control: checkbox
+    binds: ListViewSettings.disable_auto_refresh
+  - label: Disable Sidebar Stats
+    control: checkbox
+    binds: ListViewSettings.disable_sidebar_stats
+  - label: Disable Automatic Recency Filters
+    control: checkbox
+    binds: ListViewSettings.disable_automatic_recency_filters
+  - label: Show Tags
+    control: checkbox
+    binds: ListViewSettings.show_tags
+  - label: Disable Comment Count
+    control: checkbox
+    binds: ListViewSettings.disable_comment_count
+  - label: Disable Scrolling
+    control: checkbox
+    binds: ListViewSettings.disable_scrolling
+  - label: Allow Bulk Editing
+    control: checkbox
+    binds: ListViewSettings.allow_edit
+  - label: Fields
+    control: text
+    binds: ListViewSettings.fields
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-239
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of List View Settings
+    note: declared by the program

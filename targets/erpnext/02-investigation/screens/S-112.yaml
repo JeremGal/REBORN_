@@ -1,0 +1,48 @@
+id: S-112
+title: Automation Settings
+purpose: settings of Automation Settings
+kind: settings
+layout: "sections: General, Reliability, Retention, Limits; 11 fields"
+fields:
+  - label: Disable Automations
+    control: checkbox
+    binds: AutomationSettings.disable_automations
+  - label: Maximum Recursion Depth
+    control: number
+    binds: AutomationSettings.max_depth
+  - label: Failure Threshold
+    control: number
+    binds: AutomationSettings.failure_threshold
+  - label: Stale Running Minutes
+    control: number
+    binds: AutomationSettings.stale_running_minutes
+  - label: Maximum Attempts
+    control: number
+    binds: AutomationSettings.max_attempts
+  - label: Drain Seconds
+    control: number
+    binds: AutomationSettings.drain_seconds
+  - label: Commit Every
+    control: number
+    binds: AutomationSettings.commit_every
+  - label: Queue Retention Days
+    control: number
+    binds: AutomationSettings.queue_retention_days
+  - label: Step Output Limit
+    control: number
+    binds: AutomationSettings.step_output_limit
+  - label: Event Payload Limit
+    control: number
+    binds: AutomationSettings.event_payload_limit
+  - label: Allow Unregistered Events
+    control: checkbox
+    binds: AutomationSettings.allow_unregistered_events
+actions:
+  - label: Save
+    triggers: F-113
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Automation Settings
+    note: declared by the program

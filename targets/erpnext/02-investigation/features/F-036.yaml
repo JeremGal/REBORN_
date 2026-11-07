@@ -1,0 +1,61 @@
+id: F-036
+title: Create and edit a Financial Report Template
+module: Accounts
+priority: should
+status: partial
+confidence: medium
+user_goal: The rows and formulas of a custom financial statement.
+entry_points:
+  - screen: S-035
+    action: open the form
+inputs:
+  - label: Template Name
+    field: FinancialReportTemplate.template_name
+    type: string
+    required: true
+  - label: Report Type
+    field: FinancialReportTemplate.report_type
+    type: enum
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Financial Report Template form
+    screen: S-035
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Template Name, Report Type"
+  - n: 3
+    actor: user
+    does: "adds lines in: Report Line Items"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Financial Report Template record stored
+    entities:
+      - FinancialReportTemplate
+entities:
+  - FinancialReportTemplate
+  - FinancialReportRow
+screens:
+  - S-035
+acceptance:
+  - id: AC-037
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T193858-api-probe
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Financial Report Template
+    note: declared by the program
+  - ref: run-20261107T193858-api-probe
+    kind: h-run
+    locator: step 54
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"financial-report-template\")."

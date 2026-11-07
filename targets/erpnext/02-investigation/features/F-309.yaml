@@ -1,0 +1,75 @@
+id: F-309
+title: Create, submit and cancel a Work Order
+module: Manufacturing
+priority: must
+status: partial
+confidence: medium
+user_goal: An order to make a quantity of an item.
+entry_points:
+  - screen: S-308
+    action: open the form
+inputs:
+  - label: Company
+    field: WorkOrder.company
+    type: ref
+    required: true
+  - label: Series
+    field: WorkOrder.naming_series
+    type: enum
+    required: true
+  - label: Item To Manufacture
+    field: WorkOrder.production_item
+    type: ref
+    required: true
+  - label: BOM No
+    field: WorkOrder.bom_no
+    type: ref
+    required: true
+  - label: Qty To Manufacture
+    field: WorkOrder.qty
+    type: decimal
+    required: true
+  - label: Planned Start Date
+    field: WorkOrder.planned_start_date
+    type: datetime
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Work Order form
+    screen: S-308
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Series, Item To Manufacture, BOM No, Qty To Manufacture, Planned Start Date"
+  - n: 3
+    actor: user
+    does: "adds lines in: Operations, required_items, Additional Costs (as per BOM), Secondary Items (as per BOM)"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Work Order record stored
+    entities:
+      - WorkOrder
+entities:
+  - WorkOrder
+  - WorkOrderOperation
+  - WorkOrderItem
+  - WorkOrderAdditionalItem
+screens:
+  - S-308
+acceptance:
+  - id: AC-310
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Work Order
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"work-order\")."

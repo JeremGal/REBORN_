@@ -1,0 +1,51 @@
+id: S-325
+title: Project Update
+purpose: create, view and edit Project Update records
+kind: form
+layout: 7 fields
+fields:
+  - label: Series
+    control: text
+    binds: ProjectUpdate.naming_series
+  - label: Project
+    control: lookup
+    binds: ProjectUpdate.project
+    required: true
+    validation: chosen among Project records
+  - label: Sent
+    control: checkbox
+    binds: ProjectUpdate.sent
+    validation: read only (computed or filled by the program)
+  - label: Date
+    control: date
+    binds: ProjectUpdate.date
+    validation: read only (computed or filled by the program)
+  - label: Time
+    control: date
+    binds: ProjectUpdate.time
+    validation: read only (computed or filled by the program)
+  - label: Users
+    control: grid
+    columns:
+      - User
+      - Full Name
+      - View attachments
+  - label: Amended From
+    control: lookup
+    binds: ProjectUpdate.amended_from
+    validation: read only (computed or filled by the program); chosen among Project Update records
+actions:
+  - label: Save
+    triggers: F-326
+  - label: Submit
+    triggers: F-326
+  - label: Cancel
+    triggers: F-326
+  - label: Amend
+    triggers: F-326
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Project Update
+    note: declared by the program

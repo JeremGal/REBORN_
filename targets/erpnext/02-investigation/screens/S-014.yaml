@@ -1,0 +1,51 @@
+id: S-014
+title: Bank Clearance
+purpose: settings of Bank Clearance
+kind: settings
+layout: 8 fields
+fields:
+  - label: Account
+    control: lookup
+    binds: BankClearance.account
+    required: true
+    validation: chosen among Account records
+  - label: Account Currency
+    control: lookup
+    binds: BankClearance.account_currency
+    validation: chosen among Currency records
+  - label: From Date
+    control: date
+    binds: BankClearance.from_date
+    required: true
+  - label: To Date
+    control: date
+    binds: BankClearance.to_date
+    required: true
+  - label: Bank Account
+    control: lookup
+    binds: BankClearance.bank_account
+    validation: chosen among Bank Account records
+  - label: Include Reconciled Entries
+    control: checkbox
+    binds: BankClearance.include_reconciled_entries
+  - label: Include POS Transactions
+    control: checkbox
+    binds: BankClearance.include_pos_transactions
+  - label: Payment Entries
+    control: grid
+    columns:
+      - Payment Entry
+      - Against Account
+      - Amount
+      - Cheque Number
+      - Cheque Date
+      - Clearance Date
+actions:
+  - label: Save
+    triggers: F-015
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bank Clearance
+    note: declared by the program

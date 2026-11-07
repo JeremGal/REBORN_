@@ -1,0 +1,47 @@
+id: S-118
+title: Bulk Transaction Log Detail
+purpose: create, view and edit Bulk Transaction Log Detail records
+kind: form
+layout: 8 fields
+fields:
+  - label: From Doctype
+    control: lookup
+    binds: BulkTransactionLogDetail.from_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Name
+    control: lookup
+    binds: BulkTransactionLogDetail.transaction_name
+    validation: read only (computed or filled by the program)
+  - label: "Date "
+    control: date
+    binds: BulkTransactionLogDetail.date
+    validation: read only (computed or filled by the program)
+  - label: Time
+    control: date
+    binds: BulkTransactionLogDetail.time
+    validation: read only (computed or filled by the program)
+  - label: Status
+    control: text
+    binds: BulkTransactionLogDetail.transaction_status
+    validation: read only (computed or filled by the program)
+  - label: Error Description
+    control: text
+    binds: BulkTransactionLogDetail.error_description
+    validation: read only (computed or filled by the program)
+  - label: To Doctype
+    control: lookup
+    binds: BulkTransactionLogDetail.to_doctype
+    validation: read only (computed or filled by the program); chosen among DocType records
+  - label: Retried
+    control: number
+    binds: BulkTransactionLogDetail.retried
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-119
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Bulk Transaction Log Detail
+    note: declared by the program

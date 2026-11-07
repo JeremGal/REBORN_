@@ -1,0 +1,102 @@
+id: F-080
+title: Create, submit and cancel a Sales Invoice
+module: Accounts
+priority: must
+status: partial
+confidence: medium
+user_goal: A bill to a customer for what you sold.
+entry_points:
+  - screen: S-079
+    action: open the form
+inputs:
+  - label: Company
+    field: SalesInvoice.company
+    type: ref
+    required: true
+  - label: Series
+    field: SalesInvoice.naming_series
+    type: enum
+    required: true
+  - label: Customer
+    field: SalesInvoice.customer
+    type: ref
+    required: true
+  - label: Posting Date
+    field: SalesInvoice.posting_date
+    type: date
+    required: true
+  - label: Currency
+    field: SalesInvoice.currency
+    type: ref
+    required: true
+  - label: Exchange Rate
+    field: SalesInvoice.conversion_rate
+    type: decimal
+    required: true
+  - label: Price List
+    field: SalesInvoice.selling_price_list
+    type: ref
+    required: true
+  - label: Price List Exchange Rate
+    field: SalesInvoice.plc_conversion_rate
+    type: decimal
+    required: true
+  - label: Debit To
+    field: SalesInvoice.debit_to
+    type: ref
+    required: true
+steps:
+  - n: 1
+    actor: user
+    does: opens the Sales Invoice form
+    screen: S-079
+  - n: 2
+    actor: user
+    does: "fills the mandatory fields: Company, Series, Customer, Posting Date, Currency, Exchange Rate, Price List, Price List Exchange Rate, Debit To"
+  - n: 3
+    actor: user
+    does: "adds lines in: Items, Sales Taxes and Charges, Tax Withholding Entries, Item Wise Tax Details, Pricing Rule Detail, Packed Items, Time Sheets, Sales Invoice Payment, Advances, Payment Schedule, Sales Contributions and Incentives"
+  - n: 4
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+  - n: 5
+    actor: user
+    does: "submits it: it becomes read only; it can then only be cancelled, and a cancelled one amended into a new draft"
+outputs:
+  - kind: data-change
+    description: a Sales Invoice record stored
+    entities:
+      - SalesInvoice
+entities:
+  - SalesInvoice
+  - SalesInvoiceItem
+  - SalesTaxesAndCharges
+  - TaxWithholdingEntry
+  - ItemWiseTaxDetail
+  - PricingRuleDetail
+  - PackedItem
+  - SalesInvoiceTimesheet
+  - SalesInvoicePayment
+  - SalesInvoiceAdvance
+  - PaymentSchedule
+  - SalesTeam
+screens:
+  - S-079
+acceptance:
+  - id: AC-081
+    given: every mandatory field filled with a valid value
+    when: the record is saved
+    then: a draft record is stored
+    expected_values:
+      saved_as_draft: true
+    source_run: run-20261107T191450-api-sales-invoice
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Sales Invoice
+    note: declared by the program
+  - ref: run-20261107T191450-api-sales-invoice
+    kind: h-run
+    locator: step 1
+    note: draft stored by the running program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet. Documented in the vendor manual (page \"sales-invoice\")."

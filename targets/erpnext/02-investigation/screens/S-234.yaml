@@ -1,0 +1,90 @@
+id: S-234
+title: Form Tour
+purpose: create, view and edit Form Tour records
+kind: form
+layout: 18 fields
+fields:
+  - label: Title
+    control: text
+    binds: FormTour.title
+    required: true
+  - label: View
+    control: select
+    binds: FormTour.view_name
+    validation: shown only when ui_tour
+  - label: Select Workspace
+    control: lookup
+    binds: FormTour.workspace_name
+    validation: shown only when eval:(doc.ui_tour && doc.view_name == "Workspaces"); chosen among Workspace records
+  - label: Select List View
+    control: select
+    binds: FormTour.list_name
+    validation: shown only when eval:(doc.ui_tour && doc.view_name == "List")
+  - label: Select Report
+    control: lookup
+    binds: FormTour.report_name
+    validation: shown only when eval:(doc.ui_tour && doc.view_name == "List" && doc.list_name == "Report"); chosen among Report records
+  - label: Select Dashboard
+    control: lookup
+    binds: FormTour.dashboard_name
+    validation: shown only when eval:(doc.ui_tour && doc.view_name == "List" && doc.list_name == "Dashboard"); chosen among Dashboard records
+  - label: New Document Form
+    control: checkbox
+    binds: FormTour.new_document_form
+    validation: 'shown only when eval: (doc.ui_tour && doc.view_name == "Form")'
+  - label: Select Page
+    control: lookup
+    binds: FormTour.page_name
+    validation: shown only when eval:(doc.ui_tour && doc.view_name == "Page"); chosen among Page records
+  - label: Reference Document
+    control: lookup
+    binds: FormTour.reference_doctype
+    validation: shown only when eval:(!doc.ui_tour || doc.ui_tour && ["Workspaces", "Page", "Tree"].indexOf(doc.; chosen among DocType records
+  - label: Module
+    control: lookup
+    binds: FormTour.module
+    validation: "shown only when eval: doc.ui_tour && doc.is_standard; chosen among Module Def records"
+  - label: UI Tour
+    control: checkbox
+    binds: FormTour.ui_tour
+  - label: Track Steps
+    control: checkbox
+    binds: FormTour.track_steps
+    validation: shown only when ui_tour
+  - label: Is Standard
+    control: checkbox
+    binds: FormTour.is_standard
+  - label: Save on Completion
+    control: checkbox
+    binds: FormTour.save_on_complete
+    validation: shown only when eval:(!doc.ui_tour)
+  - label: Show First Document Tour
+    control: checkbox
+    binds: FormTour.first_document
+    validation: shown only when eval:(!doc.ui_tour)
+  - label: Include Name Field
+    control: checkbox
+    binds: FormTour.include_name_field
+    validation: shown only when eval:(!doc.ui_tour && !doc.first_document)
+  - label: Page Route
+    control: text
+    binds: FormTour.page_route
+  - label: Steps
+    control: grid
+    required: true
+    validation: shown only when eval:(doc.ui_tour || doc.reference_doctype)
+    columns:
+      - UI Tour
+      - Title
+      - Description
+      - Popover or Modal Description
+      - Label
+actions:
+  - label: Save
+    triggers: F-235
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Form Tour
+    note: declared by the program

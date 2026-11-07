@@ -1,0 +1,38 @@
+id: S-379
+title: UOM
+purpose: create, view and edit UOM records
+kind: form
+layout: 7 fields
+fields:
+  - label: UOM Name
+    control: text
+    binds: UOM.uom_name
+    required: true
+  - label: Symbol
+    control: text
+    binds: UOM.symbol
+  - label: Common Code
+    control: text
+    binds: UOM.common_code
+  - label: Description
+    control: text
+    binds: UOM.description
+  - label: Category
+    control: lookup
+    binds: UOM.category
+    validation: chosen among UOM Category records
+  - label: Enabled
+    control: checkbox
+    binds: UOM.enabled
+  - label: Must be Whole Number
+    control: checkbox
+    binds: UOM.must_be_whole_number
+actions:
+  - label: Save
+    triggers: F-380
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of UOM
+    note: declared by the program

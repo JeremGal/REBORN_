@@ -1,0 +1,41 @@
+id: F-257
+title: Create and edit a Code List
+module: EDI
+priority: could
+status: partial
+confidence: medium
+user_goal: A published list of codes, like units or tax categories, used in e-invoicing.
+entry_points:
+  - screen: S-256
+    action: open the form
+steps:
+  - n: 1
+    actor: user
+    does: opens the Code List form
+    screen: S-256
+  - n: 2
+    actor: user
+    does: fills the fields it needs (none is mandatory)
+  - n: 3
+    actor: system
+    does: saves the record as a draft after checking mandatory fields and links
+outputs:
+  - kind: data-change
+    description: a Code List record stored
+    entities:
+      - CodeList
+entities:
+  - CodeList
+screens:
+  - S-256
+acceptance:
+  - id: AC-258
+    given: the form opened
+    when: the record is saved
+    then: a draft record is stored
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: definition of Code List
+    note: declared by the program
+rebuild_notes: "Generated from the program's declared definition: form, mandatory fields, lines and life cycle are certain; behaviour beyond that is not observed yet."

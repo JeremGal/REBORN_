@@ -1,0 +1,30 @@
+id: S-125
+title: Supplier Scorecard Criteria
+purpose: create, view and edit Supplier Scorecard Criteria records
+kind: form
+layout: 4 fields
+fields:
+  - label: Criteria Name
+    control: text
+    binds: SupplierScorecardCriteria.criteria_name
+    required: true
+  - label: Max Score
+    control: number
+    binds: SupplierScorecardCriteria.max_score
+    required: true
+  - label: Criteria Formula
+    control: text
+    binds: SupplierScorecardCriteria.formula
+    required: true
+  - label: Criteria Weight
+    control: number
+    binds: SupplierScorecardCriteria.weight
+actions:
+  - label: Save
+    triggers: F-126
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Supplier Scorecard Criteria
+    note: declared by the program

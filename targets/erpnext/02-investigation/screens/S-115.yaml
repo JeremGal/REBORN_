@@ -1,0 +1,27 @@
+id: S-115
+title: Milestone Tracker
+purpose: create, view and edit Milestone Tracker records
+kind: form
+layout: 3 fields
+fields:
+  - label: Document Type to Track
+    control: lookup
+    binds: MilestoneTracker.document_type
+    required: true
+    validation: chosen among DocType records
+  - label: Field to Track
+    control: select
+    binds: MilestoneTracker.track_field
+    required: true
+  - label: Disabled
+    control: checkbox
+    binds: MilestoneTracker.disabled
+actions:
+  - label: Save
+    triggers: F-116
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Milestone Tracker
+    note: declared by the program

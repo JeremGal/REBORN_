@@ -1,0 +1,74 @@
+id: run-20261107T193911-h-EXP_010
+mission: M-003
+subject: original
+agent:
+  provider: h-company
+  product: agents-api
+  raw_output: EXP_010.json
+target:
+  id: erpnext
+  environment: ERPNext (fictitious data) / Selling
+started_at: 2026-11-07T19:38:35.500Z
+ended_at: 2026-11-07T19:39:11.000Z
+outcome: success
+steps:
+  - n: 1
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.198, "text": "***", "enter": false, "element": "Email input field", "overwrite": true})'
+    screenshot: step_01.png
+  - n: 2
+    action:
+      type: other
+      target_desc: 'write({"x": 0.499, "y": 0.254, "text": "***", "enter": false, "element": "Password input field", "overwrite": true})'
+    screenshot: step_02.png
+  - n: 3
+    action:
+      type: click
+      target_desc: 'click_web({"x": 0.499, "y": 0.324, "element": "Continue button"})'
+    screenshot: step_03.png
+  - n: 4
+    action:
+      type: wait
+      target_desc: 'wait_web({"seconds": 3})'
+    screenshot: step_04.png
+  - n: 5
+    action:
+      type: other
+      target_desc: "answer({\"notes\": \"Page is in French. The form is on the 'Détails' tab. 'Points de fidélité' appears to be a collapsible section with a '>' arrow. The page appears to have no more content below. The form title is 'Nouveau(elle) Client' with a 'Non Sauvegardé' badge. The URL redirected to /desk/sellin"
+    screenshot: step_05.png
+  - n: 6
+    action:
+      type: read
+      target_desc: values shown by the application (Selling)
+    screenshot: step_05.png
+    observation: values read on screen
+    extracted:
+      inputs:
+        doctype: Customer
+        path: /app/customer/new
+        kind: form
+      page_title: Nouveau(elle) Client - new-customer-yysmfwjfnm
+      section_labels:
+        - Détails
+        - Comptabilité
+        - Taxe
+        - Paramètres
+        - Équipe des Ventes
+        - Utilisateurs du portail
+        - Plus d'info
+      field_labels:
+        - Nom du client
+        - Type de client
+        - Alias
+        - Groupe de clients
+        - Région
+        - Devise de Facturation
+        - Liste de prix
+        - Compte bancaire de l'entreprise
+        - Modèle de termes de paiement
+        - Points de fidélité
+      buttons:
+        - Enregistrer
+      notes: Page is in French. The form is on the 'Détails' tab. 'Points de fidélité' appears to be a collapsible section with a '>' arrow. The page appears to have no more content below. The form title is 'Nouveau(elle) Client' with a 'Non Sauvegardé' badge. The URL redirected to /desk/selling/customer/new-customer-yysmfwjfnm instead of /app/customer/new.
+notes: "Agent view: https://platform.hcompany.ai/agents/sessions/29a2d79f-28b5-4b09-b67a-058f6eb65cdc attempts: 1"

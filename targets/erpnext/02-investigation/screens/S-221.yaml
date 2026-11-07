@@ -1,0 +1,27 @@
+id: S-221
+title: Console Log
+purpose: create, view and edit Console Log records
+kind: form
+layout: 3 fields
+fields:
+  - label: Script
+    control: text
+    binds: ConsoleLog.script
+    validation: read only (computed or filled by the program)
+  - label: Type
+    control: text
+    binds: ConsoleLog.type
+    validation: read only (computed or filled by the program)
+  - label: Committed
+    control: checkbox
+    binds: ConsoleLog.committed
+    validation: read only (computed or filled by the program)
+actions:
+  - label: Save
+    triggers: F-222
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Console Log
+    note: declared by the program

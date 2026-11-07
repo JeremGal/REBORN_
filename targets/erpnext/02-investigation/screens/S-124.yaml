@@ -1,0 +1,79 @@
+id: S-124
+title: Supplier Scorecard
+purpose: create, view and edit Supplier Scorecard records
+kind: form
+layout: "sections: Scoring Setup, Criteria Setup, Scorecard Actions; 15 fields"
+fields:
+  - label: Supplier
+    control: lookup
+    binds: SupplierScorecard.supplier
+    validation: chosen among Supplier records
+  - label: Supplier Score
+    control: text
+    binds: SupplierScorecard.supplier_score
+    validation: read only (computed or filled by the program)
+  - label: Indicator Color
+    control: text
+    binds: SupplierScorecard.indicator_color
+  - label: Status
+    control: text
+    binds: SupplierScorecard.status
+  - label: Evaluation Period
+    control: select
+    binds: SupplierScorecard.period
+    required: true
+  - label: Weighting Function
+    control: text
+    binds: SupplierScorecard.weighting_function
+    required: true
+  - label: Scoring Standings
+    control: grid
+    required: true
+    columns:
+      - Standing Name
+      - Min Grade
+      - Max Grade
+  - label: Scoring Criteria
+    control: grid
+    required: true
+    columns:
+      - Criteria Name
+      - Score
+      - Criteria Weight
+  - label: Warn for new Request for Quotations
+    control: checkbox
+    binds: SupplierScorecard.warn_rfqs
+    validation: read only (computed or filled by the program)
+  - label: Warn for new Purchase Orders
+    control: checkbox
+    binds: SupplierScorecard.warn_pos
+    validation: read only (computed or filled by the program)
+  - label: Prevent RFQs
+    control: checkbox
+    binds: SupplierScorecard.prevent_rfqs
+    validation: read only (computed or filled by the program)
+  - label: Prevent POs
+    control: checkbox
+    binds: SupplierScorecard.prevent_pos
+    validation: read only (computed or filled by the program)
+  - label: Notify Supplier
+    control: checkbox
+    binds: SupplierScorecard.notify_supplier
+    validation: read only (computed or filled by the program)
+  - label: Notify Employee
+    control: checkbox
+    binds: SupplierScorecard.notify_employee
+    validation: read only (computed or filled by the program)
+  - label: Employee
+    control: lookup
+    binds: SupplierScorecard.employee
+    validation: read only (computed or filled by the program); chosen among Employee records
+actions:
+  - label: Save
+    triggers: F-125
+status: partial
+evidence:
+  - ref: rb_c973157dea4f00b30694d174ba60bd8e1c0dd2943e41724155e07f10833e4cd8
+    kind: rea
+    locator: form layout of Supplier Scorecard
+    note: declared by the program
