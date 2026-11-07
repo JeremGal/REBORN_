@@ -51,6 +51,18 @@ export function reaCommand() {
   return { cmd: npx, args: ["-y", `rea-agents@${REA_VERSION}`], via: "npx", shell: process.platform === "win32" };
 }
 
+// Environment REA's native providers need (Ghidra + JDK 21). Values come from the real environment first,
+// then from reborn.local.json (ghidraInstallDir, javaHome, ghidraStartupTimeoutMs). Never overrides an explicit variable.
+export function reaEnv() {
+  const cfg = localConfig();
+  const env = {};
+  const set = (k, v) => { if (v && !process.env[k]) env[k] = String(v); };
+  set("GHIDRA_INSTALL_DIR", cfg.ghidraInstallDir);
+  set("JAVA_HOME", cfg.javaHome);
+  set("REA_GHIDRA_STARTUP_TIMEOUT_MS", cfg.ghidraStartupTimeoutMs);
+  return env;
+}
+
 export function craftCommand() {
   return process.env.REBORN_CRAFT_CLI || localConfig().craftCli || "craft-anything-cli";
 }

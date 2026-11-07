@@ -52,7 +52,7 @@ Tools on the investigator's machine: Node (REA needs ^22.23.4 or ^24.22.1), Chro
    - names in the program: `reborn craft <id> native-strings-find ...`;
    - documentation: `reborn doc <id> <url>`.
 3. Screens: `reborn ui <id> <folder>` when UI definition files ship with the app, otherwise block 1 screenshots.
-4. Rules: from runs (exact values), documentation, or `reborn find <id> <exe> "<label seen on screen>"` (only when the legal basis allows reading the program).
+4. Rules: from runs (exact values), documentation, or `reborn find <id> <exe> "<label seen on screen>"` (only when the legal basis allows reading the program). For native code with named functions, `reborn native <id> <dll> --engine ghidra-mcp --find "<regex>"` decompiles the functions behind a rule (Ghidra, see `docs/SETUP.md` §2b). Decompiled output is raw evidence: describe the behaviour in the card, grade it "the code declares", never paste the code.
 5. Write cards in `02-investigation/` (formats in `contracts/`, examples in `docs/REBUILD-DOSSIER.md`).
 6. `reborn validate <id>`, `reborn ask <id>`, `reborn dossier <id>`, `reborn handoff <id>`.
 
@@ -105,8 +105,11 @@ node tools/reborn.mjs web <id> <url>
 node tools/reborn.mjs har <id> <file.har>
 node tools/reborn.mjs js <id> <dir|app.asar> [--max-kb 300]
 node tools/reborn.mjs find <id> <exe> "<label>"
+node tools/reborn.mjs native <id> <binary> [--engine ghidra-mcp|rea] [--find RE] [--decompile a,b] [--max 3]
 node tools/reborn.mjs rea <id> <command> [args]
 node tools/reborn.mjs craft <id> <command> [args]
+node tools/reborn.mjs coverage <id>
+powershell -File tools/ghidra-mcp.ps1 -Root <samples>   # headless Ghidra server for --engine ghidra-mcp
 node tools/reborn.mjs ask <id>
 node tools/reborn.mjs validate [id]
 node tools/reborn.mjs dossier <id>

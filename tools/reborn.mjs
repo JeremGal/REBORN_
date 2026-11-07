@@ -6,7 +6,7 @@ import path from "node:path";
 import http from "node:http";
 import { spawn, spawnSync } from "node:child_process";
 import YAML from "yaml";
-import { ROOT, chromePath, craftCommand, evidenceDir, localConfig, reaCommand, targetDir, nodeVersionOk } from "./lib/config.mjs";
+import { ROOT, chromePath, craftCommand, evidenceDir, localConfig, reaCommand, reaEnv, targetDir, nodeVersionOk } from "./lib/config.mjs";
 import { blockStyle, readJson, register, runRea, sha256File } from "./lib/evidence.mjs";
 import { listTargets, loadTarget } from "./lib/load.mjs";
 import { validateTarget } from "./lib/validate.mjs";
@@ -14,6 +14,8 @@ import { renderDossier } from "./lib/dossier.mjs";
 import { inventoryUi } from "./lib/ui-extract.mjs";
 import { buildHandoff, computeCoverage } from "./lib/handoff.mjs";
 import { schemaToEntities } from "./lib/sql-schema.mjs";
+import { ReaSession, collectStrings } from "./lib/rea-session.mjs";
+import { gm, ghidraMcpUrl, q } from "./lib/ghidra-http.mjs";
 
 const HELP = `ReBorn CLI
 
@@ -34,6 +36,9 @@ Investigation (block 2): evidence goes to .evidence/<target>/ (gitignored) and i
   har <target> <session.har>                           API surface from a recorded browser session
   sqlite <target> <file> [--table <name>]              schema (or one table) of a SQLite database
   schema <target> <create.sql> [--only T,T]            a shipped SQL create script -> entity cards (types, keys), graded confirmed
+  native <target> <binary> [--engine rea|ghidra-mcp] [--find RE] [--decompile a,b] [--max 3]
+                                                       Ghidra: find functions by name, decompile them (gated by legal basis).
+                                                       ghidra-mcp = fast, needs tools/ghidra-mcp.ps1 running; rea = self-contained, slower
   rea <target> <rea-command> [args...]                 any REA CLI command (rea --help lists 175)
   doc <target> <url>                                   public documentation page -> markdown evidence (Crawl4AI in Docker)
   ui <target> <folder|file>                            shipped UI definition files (GtkBuilder .ui/.glade) -> screen candidates
@@ -556,9 +561,134 @@ function ui(target, input) {
   for (const s of inv.screens.filter((s) => s.title).slice(0, 40)) console.log(`  - ${s.title.padEnd(42)} ${s.class.padEnd(14)} inputs ${String(s.inputs.length).padStart(2)} | checks ${String(s.checks.length).padStart(2)} | buttons ${String(s.buttons.length).padStart(2)}  (${s.file})`);
 }
 
+// Native analysis through one REA + Ghidra session: open once, find procedures by name, decompile them.
+// Decompiled output is raw evidence: it stays in the local evidence store and never goes into cards or git.
+async function native(target) {
+  needTarget(target);
+  const engine = opt("engine", "rea");
+  const find = opt("find");
+  const wanted = (opt("decompile") || "").split(",").map((s) => s.trim()).filter(Boolean);
+  const max = Number(opt("max", 3));
+  const tmin = Number(opt("timeout-min", 40));
+  const input = argv[0];
+  if (!input) die('usage: native <target> <binary> [--engine rea|ghidra-mcp] [--find <regex>] [--decompile a,b] [--max 3] [--timeout-min 40]');
+  const bin = absolute(input);
+  if (!fs.existsSync(bin)) die(`not found: ${bin}`);
+  const d = deepAllowed(target);
+  if (!d.ok) die(`native analysis reads the program's code. targets/${target}/target.yaml access.method is "${d.method}"; it needs one of: ${DEEP_OK.join(", ")} (docs/CLEAN-ROOM.md).`);
+  const t0 = Date.now();
+  const lap = () => `${Math.round((Date.now() - t0) / 1000)} s`;
+  const out = { binary: path.basename(bin), sha256: sha256File(bin), tool: engine === "ghidra-mcp" ? "ghidra-mcp" : "rea-agents", provider: "ghidra", started_at: new Date().toISOString(), steps: [], procedures: [] };
+  if (engine === "ghidra-mcp") await nativeGhidraMcp(bin, { find, wanted, max, tmin, out, lap });
+  else if (engine === "rea") await nativeRea(bin, { find, wanted, max, tmin, out, lap, t0 });
+  else die(`unknown engine "${engine}" (rea | ghidra-mcp)`);
+  out.finished_at = new Date().toISOString();
+  const dir = path.join(evidenceDir(target), "rea");
+  fs.mkdirSync(dir, { recursive: true });
+  const file = path.join(dir, `${new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z")}-native-${engine}-${path.basename(bin)}.json`);
+  fs.writeFileSync(file, JSON.stringify(out, null, 1));
+  const sha = sha256File(file);
+  const okCount = out.procedures.filter((p) => p.ok).length;
+  register(target, { id: `ev_${sha}`, kind: "rea", tool: out.tool, tool_version: engine === "ghidra-mcp" ? out.server_version || "7.0.0" : "6.8.0", operation: `native-session (${engine}, ghidra)`, subject: { label: path.basename(bin), sha256: out.sha256 }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), file).split(path.sep).join("/"), bytes: fs.statSync(file).size, sha256: sha, summary: out.error ? `FAILED: ${out.error}`.slice(0, 280) : `ghidra session: ${okCount} procedure(s) decompiled, ${out.matches?.length ?? 0} name match(es), in ${lap()}`, ...(out.counts && Object.keys(out.counts).length ? { counts: out.counts } : {}) });
+  console.log(`\nevidence: ${path.relative(ROOT, file)}  ev_${sha.slice(0, 16)}…  (raw decompiled output: local only, never paste it into cards)`);
+}
+
+// Engine "ghidra-mcp": talks to the headless server started by tools/ghidra-mcp.ps1 (it keeps the program loaded between calls).
+async function nativeGhidraMcp(bin, { find, wanted, max, tmin, out, lap }) {
+  try {
+    const hello = await gm("/check_connection", { timeoutMs: 10000 }).catch(() => null);
+    if (!hello) throw new Error(`no ghidra-mcp server at ${ghidraMcpUrl()}. Start it: powershell -File tools\\ghidra-mcp.ps1 -Root <samples folder>`);
+    out.server_version = hello.version;
+    const name = path.basename(bin);
+    const open = await gm("/list_open_programs").catch(() => ({ programs: [] }));
+    if (!(open.programs || []).some((p) => p.name === name)) {
+      const imp = await gm("/import_file", { method: "POST", body: { file_path: bin }, timeoutMs: tmin * 60000 });
+      console.log(`import_file (${lap()}): ${imp.reused_existing ? "reused" : "imported"}`);
+      out.steps.push({ step: "import_file", at: lap() });
+    }
+    const program = name;
+    let meta = await gm(`/get_metadata?${q({ program })}`);
+    const named = await gm(`/find_functions?${q({ program, has_custom_name: true, limit: 1 })}`);
+    if (!named.total || named.total < 10) {
+      const a = await gm(`/run_analysis?${q({ program })}`, { method: "POST", timeoutMs: tmin * 60000 });
+      console.log(`run_analysis (${lap()}): ${a.total_functions} functions (${a.new_functions} new)`);
+      out.steps.push({ step: "run_analysis", at: lap(), total_functions: a.total_functions });
+      meta = await gm(`/get_metadata?${q({ program })}`);
+    }
+    out.counts = { functions: meta.function_count, symbols: meta.symbol_count };
+    console.log(`${program}: ${meta.architecture} ${meta.address_size_bits}-bit, ${meta.function_count} functions, ${meta.symbol_count} symbols`);
+    let names = [...wanted];
+    if (find) {
+      const hits = await gm(`/find_functions?${q({ program, name_pattern: find, regex: true, is_thunk: false, is_external: false, sort_by: "xref_count", limit: 200 })}`);
+      const list = (hits.functions || []).map((f) => f.name);
+      console.log(`functions matching /${find}/: ${hits.total}${list.length ? " e.g. " + list.slice(0, 6).join(", ") : ""}`);
+      out.matches = list;
+      names = names.concat(list.slice(0, max));
+    }
+    names = [...new Set(names)];
+    for (let i = 0; i < names.length; i += 20) {
+      const batch = names.slice(i, i + 20);
+      const r = await gm(`/get_functions?${q({ program, functions: batch.join(","), fields: "signature,decompiled_code,callers,callees", include_call_context: false })}`, { timeoutMs: 600000 });
+      for (const n of batch) {
+        const f = r.functions?.[n];
+        const code = f?.decompiled_code || "";
+        out.procedures.push({ name: n, ok: !!code, signature: f?.signature, callers: (f?.callers || []).map((c) => c.name), callees: (f?.callees || []).map((c) => c.name), pseudo_code: code, error: f?.error });
+        console.log(`\n--- ${n} (${lap()}) ${code ? `${f.signature}  | ${code.split(/\r?\n/).length} lines, ${f.caller_count ?? 0} caller(s), ${f.callee_count ?? 0} callee(s)` : "ERROR " + (f?.error || "not found")}`);
+      }
+    }
+  } catch (e) {
+    out.error = String(e.message || e);
+    console.log(`ERR native: ${out.error}`);
+  }
+}
+
+async function nativeRea(bin, { find, wanted, max, tmin, out, lap, t0 }) {
+  const s = new ReaSession();
+  try {
+    await s.start({ REA_GHIDRA_STARTUP_TIMEOUT_MS: String(tmin * 60000) });
+    const open = await s.call("open_binary", { path: bin, provider_id: "ghidra" }, tmin * 60000);
+    console.log(`open_binary (${lap()}): ${open.isError ? "ERROR " + open.text.slice(0, 400) : "ok"}`);
+    out.steps.push({ step: "open_binary", seconds: Math.round((Date.now() - t0) / 1000), ok: !open.isError, detail: open.isError ? open.text.slice(0, 400) : undefined });
+    if (open.isError) throw new Error("open_binary failed");
+    const sum = await s.call("list_procedures", { detail: "summary" }, 600000);
+    const counts = {};
+    for (const k of ["procedure_count", "string_count", "procedures", "strings"]) { const m = new RegExp(`"${k}"\\s*:\\s*(\\d+)`).exec(sum.text); if (m) counts[k.replace(/_count$/, "")] = Number(m[1]); }
+    console.log(`list_procedures summary (${lap()}): ${Object.keys(counts).length ? JSON.stringify(counts) : sum.text.slice(0, 200)}`);
+    out.counts = counts;
+    let names = [...wanted];
+    if (find) {
+      const all = await s.call("list_procedures", { detail: "complete" }, 600000);
+      const re = new RegExp(find);
+      const hits = [...new Set(collectStrings(all.data ?? all.text).filter((x) => x.length < 120 && /^[A-Za-z_@$?.][\w@$?.<>:~]*$/.test(x) && re.test(x)))];
+      console.log(`procedures matching /${find}/: ${hits.length}${hits.length ? " e.g. " + hits.slice(0, 6).join(", ") : ""}`);
+      out.matches = hits.slice(0, 200);
+      names = names.concat(hits.slice(0, max));
+    }
+    for (const name of [...new Set(names)]) {
+      const p = await s.call("procedure_pseudo_code", { procedure: name }, 600000);
+      const code = p.isError ? "" : (collectStrings(p.data ?? p.text).sort((a, b) => b.length - a.length)[0] ?? p.text);
+      out.procedures.push({ name, ok: !p.isError, pseudo_code: code, error: p.isError ? p.text.slice(0, 300) : undefined });
+      console.log(`\n--- ${name} (${lap()}) ${p.isError ? "ERROR " + p.text.slice(0, 200) : `${code.split(/\r?\n/).length} lines of pseudo-code`}`);
+      if (code) console.log(code.split(/\r?\n/).slice(0, 14).join("\n"));
+    }
+    await s.call("close_binary", {}, 120000).catch(() => {});
+  } catch (e) {
+    out.error = String(e.message || e);
+    console.log(`ERR native: ${out.error}`);
+  } finally { s.close(); }
+}
+
 function rea(target, args) {
   needTarget(target);
   if (!args.length) die("missing REA command, e.g. inspect-pe-resources <path>");
+  // Reading a program's code (decompile, xrefs, native providers) follows the same legal gate as Craft's Deep mode:
+  // only for open-source, licensed or organizer-provided targets. Resource, import and web inspection stay open.
+  const NATIVE = new Set(["decompile", "decompile-all", "instructions", "xrefs", "function", "trace", "search", "annotate-native-function", "address-to-file-offset", "debug-with-gdb", "debug-with-rizin", "execute-rizin-command", "capture-process", "capture-native-ui-scenario"]);
+  const readsCode = NATIVE.has(args[0]) || args.includes("--provider") || (["analyze", "inspect"].includes(args[0]) && ["pe", "elf"].includes(detectKind(args[1] ? absolute(args[1]) : "")));
+  if (readsCode) {
+    const d = deepAllowed(target);
+    if (!d.ok) die(`"${args[0]}" reads the program's code. targets/${target}/target.yaml access.method is "${d.method}"; it needs one of: ${DEEP_OK.join(", ")}. Stay on resources, documentation and observation (docs/CLEAN-ROOM.md).`);
+  }
   const r = runRea(target, args, { label: args[1] ? path.basename(args[1]) : "" });
   if (r.file) console.log(`  evidence file: ${path.relative(ROOT, r.file)}`);
   process.exit(r.ok ? 0 : 1);
@@ -649,6 +779,7 @@ switch (cmd) {
   case "sqlite": sqlite(t, argv[0]); break;
   case "har": har(t, argv[0]); break;
   case "web": await web(t, argv[0]); break;
+  case "native": await native(t); break;
   case "rea": rea(t, argv); break;
   case "craft": craft(t, argv); break;
   case "find": find(t, argv[0], argv[1]); break;
@@ -660,6 +791,13 @@ switch (cmd) {
     console.log(`REA via: ${r.via}`);
     if (!r.shell) { const v = nodeVersionOk(r.cmd); console.log(`REA node: ${v.version} ${v.ok ? "OK" : "TOO OLD (needs ^22.23.4, ^24.22.1 or >=26.12.1)"}`); }
     console.log(`Chrome: ${chromePath() ?? "not found"}`);
+    const gd = process.env.GHIDRA_INSTALL_DIR || reaEnv().GHIDRA_INSTALL_DIR;
+    const jh = process.env.JAVA_HOME || reaEnv().JAVA_HOME;
+    console.log(`Ghidra (REA native analysis): ${gd && fs.existsSync(gd) ? gd : "not configured (REA reads PE resources/imports only)"}`);
+    console.log(`JDK for Ghidra: ${jh && fs.existsSync(jh) ? jh : "not configured (Ghidra 12.1 needs JDK 21+)"}`);
+    const jar = process.env.GHIDRA_MCP_JAR || localConfig().ghidraMcpJar;
+    const live = await gm("/check_connection", { timeoutMs: 3000 }).catch(() => null);
+    console.log(`ghidra-mcp: jar ${jar && fs.existsSync(jar) ? "OK" : "not configured"}, server ${live ? `up at ${ghidraMcpUrl()} (v${live.version}, program: ${live.program ?? "none"})` : "not running (tools/ghidra-mcp.ps1)"}`);
     const c = spawnSync(craftCommand(), ["--version"], { encoding: "utf8" });
     console.log(`Craft Anything: ${c.error ? "not installed" : (c.stdout || c.stderr).trim()}`);
     console.log(`Evidence store: ${path.join(evidenceDir("<target>"), "..")}`);

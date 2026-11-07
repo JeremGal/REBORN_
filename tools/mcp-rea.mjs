@@ -2,7 +2,7 @@
 // Starts REA's MCP server with the right Node and package, on any OS (no shell, no .cmd shim).
 // Machine-specific paths: reborn.local.json { "reaNode": "...", "reaJs": ".../rea-agents/scripts/rea.mjs" }.
 import { spawn } from "node:child_process";
-import { nodeVersionOk, reaCommand } from "./lib/config.mjs";
+import { nodeVersionOk, reaCommand, reaEnv } from "./lib/config.mjs";
 
 const rea = reaCommand();
 if (!rea.shell) {
@@ -15,7 +15,7 @@ if (!rea.shell) {
 const child = spawn(rea.cmd, [...rea.args, "mcp"], {
   stdio: "inherit",
   shell: rea.shell || false,
-  env: { REA_MCP_OUTPUT_SCHEMA_PROFILE: "off", ...process.env },
+  env: { REA_MCP_OUTPUT_SCHEMA_PROFILE: "off", ...reaEnv(), ...process.env },
 });
 child.on("exit", (code) => process.exit(code ?? 0));
 for (const sig of ["SIGINT", "SIGTERM"]) process.on(sig, () => child.kill(sig));

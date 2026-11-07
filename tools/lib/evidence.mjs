@@ -4,7 +4,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { spawnSync } from "node:child_process";
 import YAML from "yaml";
-import { REA_VERSION, evidenceDir, nodeVersionOk, reaCommand, targetDir } from "./config.mjs";
+import { REA_VERSION, evidenceDir, nodeVersionOk, reaCommand, reaEnv, targetDir } from "./config.mjs";
 
 export function sha256File(file) {
   const h = crypto.createHash("sha256");
@@ -74,6 +74,7 @@ export function runRea(target, reaArgs, { label = "", extraFiles = [], quiet = f
   const r = spawnSync(rea.cmd, args, {
     stdio: ["ignore", fd, "pipe"],
     shell: rea.shell || false,
+    env: { ...process.env, ...reaEnv() },
     maxBuffer: 64 * 1024 * 1024,
     windowsHide: true,
   });

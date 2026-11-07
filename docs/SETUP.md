@@ -18,7 +18,12 @@ Machine-specific paths go in `reborn.local.json` (gitignored):
   "reaJs": "C:\\path\\to\\node_modules\\rea-agents\\scripts\\rea.mjs",
   "craftCli": "C:\\Users\\<you>\\.cargo\\bin\\craft-anything-cli.exe",
   "chrome": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-  "evidenceDir": "D:\\reborn-evidence"
+  "evidenceDir": "D:\\reborn-evidence",
+  "ghidraInstallDir": "C:\\path\\to\\ghidra_12.1.4_PUBLIC",
+  "javaHome": "C:\\path\\to\\jdk-21.0.13+9",
+  "ghidraStartupTimeoutMs": 600000,
+  "ghidraMcpJar": "C:\\path\\to\\ghidra-mcp\\GhidraMCP-7.0.0.jar",
+  "ghidraMcpUrl": "http://127.0.0.1:8089"
 }
 ```
 
@@ -29,7 +34,23 @@ All keys are optional: by default the CLI uses the current Node, finds a globall
 - Needs **Node ^22.23.4, ^24.22.1 or >=26.12.1**. If your system Node is older, use a portable Node just for REA (no admin needed) and point `reaNode` to it.
 - `npm install --global rea-agents@6.8.0 --omit=optional` (`--omit=optional` skips Frida, which instruments running targets and is not needed).
 - Check: `rea --version`, `rea mcp doctor --json` (expects 229 tools, 6 prompts).
-- Native engines (Ghidra, Hopper, IDA, JADX) are **optional**: JavaScript/Electron, .NET, web pages, HAR, SQLite, PE resources/imports work without them.
+- Native engines (Ghidra, Hopper, IDA, JADX) are **optional**: JavaScript/Electron, .NET, web pages, HAR, SQLite, PE resources/imports work without them. Without one, REA sees only the resources and imports of a native `.exe`/`.dll`.
+
+## 2b. Ghidra for native code (block 2, optional but recommended)
+
+Tested on 07/11/2026, no admin rights:
+
+- **JDK 21**: Eclipse Temurin 21 zip (we used 21.0.13+9), extracted anywhere. Verify the SHA-256 published with the release.
+- **Ghidra 12.1.x**: `ghidra_12.1.4_PUBLIC_*.zip` from the NationalSecurityAgency/ghidra GitHub release, extracted anywhere. Verify the SHA-256 GitHub shows for the asset.
+- Point `ghidraInstallDir` and `javaHome` in `reborn.local.json` at them (or set `GHIDRA_INSTALL_DIR` / `JAVA_HOME`). The CLI and `tools/mcp-rea.mjs` pass them to REA.
+- Check: `node tools/reborn.mjs doctor`, then `node tools/reborn.mjs rea <target> doctor --provider ghidra` (expects `healthy: true`). The first native call of a binary takes minutes: Ghidra imports and analyses it.
+
+**ghidra-mcp** (github.com/bethington/ghidra-mcp, Apache-2.0) keeps the program loaded in a headless Ghidra server, so after the first analysis each decompilation takes about a second instead of minutes:
+
+- Download `GhidraMCP-7.0.0.zip` from its GitHub release (verify the SHA-256) and extract `GhidraMCP-7.0.0.jar`. Version 7.0.0 is built for Ghidra 12.1.4 (see `extension.properties`), so the same Ghidra serves REA and ghidra-mcp. Set `ghidraMcpJar` in `reborn.local.json`.
+- Start: `powershell -ExecutionPolicy Bypass -File tools\ghidra-mcp.ps1 -Root <samples folder>`. It binds `127.0.0.1:8089`, leaves script execution off, and `-Root` limits which files can be imported.
+- Use: `node tools/reborn.mjs native <target> <binary> --engine ghidra-mcp --find "<regex>"`. Raw output stays in `.evidence/`.
+- Optional MCP bridge for a block-2 Claude Code session: `pip install ghidra_mcp_bridge-7.0.0-py3-none-any.whl` in a venv, then run `bridge-mcp-ghidra` with `GHIDRA_MCP_URL=http://127.0.0.1:8089`. It is deliberately **not** in the repository's `.mcp.json`: block 3 works in this repository and must not have a decompiler.
 
 ## 3. Craft Anything (block 2, and block 3 in clean room)
 

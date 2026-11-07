@@ -1,6 +1,6 @@
 # ReBorn: instructions for Claude Code
 
-ReBorn rebuilds legacy business software in three blocks. Read `README.md`, then `docs/GUIDE.md` (operating manual), then the skill of the block you are working on:
+ReBorn rebuilds legacy business software in three blocks. Read `context.md` (state of the project, tools, pitfalls, next steps), `README.md`, then `docs/GUIDE.md` (operating manual), then the skill of the block you are working on:
 
 | Block | Skill | Writes to |
 |---|---|---|
@@ -18,7 +18,7 @@ If you do not know which block you serve, ask.
 - **Clean room.** Block 3 reads only `targets/<id>/02-investigation/` (YAML + `dossier.md`) and the screenshots of `01-exploration/`. Never paste decompiled or original code, original assets or brand names into the dossier or the rebuild. `rebuild_notes` describe behaviour and a suggested approach.
 - **Secrets and data.** No API key, token, password, cookie or real customer data in git. HAR files, raw evidence and binaries are gitignored on purpose. Test data is fake.
 - **Targets.** Only software we may study: open source, free demo, our own licence, or provided by the organizers. Never bypass DRM, licence checks, anti-cheat or authentication.
-- **Tools.** REA: `node tools/reborn.mjs rea <target> <command>` (or the `rea` MCP server). Prefer summary-first REA calls, cite `evidence_id`s, keep coverage limits visible.
+- **Tools.** REA: `node tools/reborn.mjs rea <target> <command>` (or the `rea` MCP server). Prefer summary-first REA calls, cite `evidence_id`s, keep coverage limits visible. Native code: `node tools/reborn.mjs native <target> <binary> --engine ghidra-mcp` (block 2 only; block 3 never gets a decompiler).
 
 ## Useful commands
 
