@@ -1,0 +1,61 @@
+{
+  "id": "quote",
+  "title": "Scénario A — Configurateur de devis",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "description": "Configurateur de devis industriel : articles, quantités, catégories client, remises, frais de livraison et exception métier.",
+  "steps": [
+    {
+      "id": "baseline",
+      "label": "1. Investigation initiale + modèle v1",
+      "description": "Écran analysé, 23 observations, modèle métier publié.",
+      "actions": [
+        {
+          "do": "reset"
+        },
+        {
+          "do": "investigation",
+          "kind": "initial"
+        },
+        {
+          "do": "schema",
+          "file": "schema.json"
+        },
+        {
+          "do": "observations",
+          "file": "observations.v1.json"
+        },
+        {
+          "do": "rules",
+          "file": "rules.v1.json"
+        }
+      ]
+    },
+    {
+      "id": "change",
+      "label": "2. Règle cachée modifiée : réinvestigation",
+      "description": "Nouvelles observations après passage de la remise volume à 15 %. Le modèle v1 décroche.",
+      "actions": [
+        {
+          "do": "investigation",
+          "kind": "blind_challenge"
+        },
+        {
+          "do": "observations",
+          "file": "observations.v2.json"
+        }
+      ]
+    },
+    {
+      "id": "update",
+      "label": "3. Modèle v2 publié",
+      "description": "L'analyse corrige RULE_005 ; l'application se met à jour sans code.",
+      "actions": [
+        {
+          "do": "rules",
+          "file": "rules.v2.json"
+        }
+      ]
+    }
+  ]
+}

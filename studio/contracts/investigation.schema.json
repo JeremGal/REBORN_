@@ -1,0 +1,46 @@
+{
+  "title": "investigation",
+  "x-contract-version": "1.1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "application": {
+      "default": "Quotix 98",
+      "type": "string",
+      "minLength": 1
+    },
+    "module": {
+      "default": "Devis",
+      "type": "string",
+      "minLength": 1
+    },
+    "target_url": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "mode": {
+      "default": "live",
+      "type": "string",
+      "enum": [
+        "live",
+        "simulation",
+        "replay"
+      ]
+    },
+    "kind": {
+      "default": "initial",
+      "type": "string",
+      "enum": [
+        "initial",
+        "blind_challenge",
+        "verification"
+      ]
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^MIG_[a-f0-9]{8}$"
+    }
+  }
+}

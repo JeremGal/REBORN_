@@ -1,0 +1,620 @@
+{
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat application_spec 1.1.",
+  "title": "application_spec",
+  "description": "Spécification d'un logiciel reconstruit (app.json du logiciel livré) : entités, provenance, écrans, actions, règles, éléments non reconstruits.",
+  "x-contract-version": "1.1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "spec_version": {
+      "type": "string"
+    },
+    "app": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "tagline": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "locale": {
+          "type": "string"
+        },
+        "generated_at": {
+          "type": "string"
+        },
+        "generator": {
+          "type": "string"
+        },
+        "source_system": {
+          "type": "string"
+        },
+        "migration_run": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "company": {
+          "type": "string"
+        },
+        "branding": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "primary_color": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "logo_text": {
+              "type": "string",
+              "maxLength": 4
+            }
+          },
+          "required": [
+            "name",
+            "primary_color",
+            "logo_text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "tagline",
+        "currency",
+        "locale",
+        "generated_at",
+        "generator",
+        "migration_run",
+        "port"
+      ],
+      "additionalProperties": {}
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "label_singular": {
+            "type": "string"
+          },
+          "title_field": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "unique": {
+                  "type": "boolean"
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  }
+                },
+                "references": {
+                  "type": "string"
+                },
+                "accounting": {
+                  "type": "boolean"
+                },
+                "computed_by_rules": {
+                  "type": "boolean"
+                },
+                "provenance": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "observed",
+                        "deduced",
+                        "validated"
+                      ]
+                    },
+                    "observed": {
+                      "type": "boolean"
+                    },
+                    "source": {
+                      "type": "string"
+                    },
+                    "basis": {
+                      "type": "string"
+                    },
+                    "confidence": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "by": {
+                      "type": "string"
+                    },
+                    "at": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "name",
+                "label",
+                "type",
+                "required",
+                "unique",
+                "accounting"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "list_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "search_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entity": {
+                  "type": "string"
+                },
+                "via": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "entity",
+                "via",
+                "label"
+              ]
+            }
+          },
+          "computed": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "expr": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "field",
+                "expr"
+              ]
+            }
+          },
+          "aggregates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "children": {
+                  "type": "string"
+                },
+                "via": {
+                  "type": "string"
+                },
+                "expr": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "field",
+                "children",
+                "via",
+                "expr"
+              ]
+            }
+          },
+          "provenance": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "observed",
+                  "deduced",
+                  "validated"
+                ]
+              },
+              "observed": {
+                "type": "boolean"
+              },
+              "source": {
+                "type": "string"
+              },
+              "basis": {
+                "type": "string"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "by": {
+                "type": "string"
+              },
+              "at": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "status"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "name",
+          "label",
+          "label_singular",
+          "title_field",
+          "fields",
+          "list_fields",
+          "search_fields",
+          "children",
+          "computed",
+          "aggregates"
+        ],
+        "additionalProperties": {}
+      }
+    },
+    "navigation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "entity"
+        ]
+      }
+    },
+    "dashboard": {
+      "type": "object",
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "breakdowns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        }
+      },
+      "required": [
+        "cards",
+        "breakdowns"
+      ]
+    },
+    "ddl": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "screens": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "dashboard",
+              "list",
+              "detail",
+              "form",
+              "admin"
+            ]
+          },
+          "entity": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "update",
+              "delete",
+              "export",
+              "attach",
+              "reprice"
+            ]
+          },
+          "available": {
+            "type": "boolean"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "entity",
+          "action",
+          "available"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "rules": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "source": {
+                "type": "string"
+              },
+              "modules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "history_check": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "version",
+              "modules"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "entity": {
+                "type": "string"
+              },
+              "scope": {
+                "type": "string",
+                "enum": [
+                  "line",
+                  "document"
+                ]
+              },
+              "module": {
+                "type": "string"
+              },
+              "outputs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "id",
+              "entity",
+              "scope",
+              "module",
+              "outputs"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "versions",
+        "bindings"
+      ],
+      "additionalProperties": false
+    },
+    "workflows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "propertyNames": {
+          "type": "string"
+        },
+        "additionalProperties": {}
+      }
+    },
+    "not_rebuilt": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "table",
+              "field",
+              "entity",
+              "workflow",
+              "rule",
+              "attachment"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "name",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "mapping_version": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "mapping_origin": {
+          "type": "string"
+        },
+        "migration_run": {
+          "type": "string"
+        },
+        "business_model_versions": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "statement": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "mapping_version",
+        "mapping_origin",
+        "migration_run",
+        "business_model_versions",
+        "statement"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "spec_version",
+    "app",
+    "entities",
+    "navigation",
+    "dashboard",
+    "ddl"
+  ],
+  "additionalProperties": {}
+}

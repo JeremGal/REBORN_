@@ -1,0 +1,65 @@
+{
+  "id": "logistics",
+  "title": "Scénario B/C — Calculateur de frais logistiques",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "description": "Logiciel métier différent : zones, poids, options cochables, texte, délai calculé, exception croisée. La version 2 ajoute un champ et modifie une règle.",
+  "steps": [
+    {
+      "id": "baseline",
+      "label": "1. Investigation initiale + modèle v1",
+      "description": "Schéma de 6 champs (dont un non pris en charge), 25 observations, 11 règles.",
+      "actions": [
+        {
+          "do": "reset"
+        },
+        {
+          "do": "investigation",
+          "kind": "initial"
+        },
+        {
+          "do": "schema",
+          "file": "schema.v1.json"
+        },
+        {
+          "do": "observations",
+          "file": "observations.v1.json"
+        },
+        {
+          "do": "rules",
+          "file": "rules.v1.json"
+        }
+      ]
+    },
+    {
+      "id": "change",
+      "label": "2. Nouvelle version du logiciel : réinvestigation",
+      "description": "TransCalc ajoute une assurance et augmente l'express. Nouvel écran + nouvelles observations.",
+      "actions": [
+        {
+          "do": "investigation",
+          "kind": "blind_challenge"
+        },
+        {
+          "do": "schema",
+          "file": "schema.v2.json"
+        },
+        {
+          "do": "observations",
+          "file": "observations.v2.json"
+        }
+      ]
+    },
+    {
+      "id": "update",
+      "label": "3. Modèle v2 publié",
+      "description": "Express à 65 % et nouvelle règle d'assurance ; le champ apparaît dans l'application sans code.",
+      "actions": [
+        {
+          "do": "rules",
+          "file": "rules.v2.json"
+        }
+      ]
+    }
+  ]
+}

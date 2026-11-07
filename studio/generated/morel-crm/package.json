@@ -1,0 +1,12 @@
+{
+  "name": "morel-crm",
+  "private": true,
+  "type": "module",
+  "description": "Morel CRM",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node --no-warnings server.mjs"
+  }
+}

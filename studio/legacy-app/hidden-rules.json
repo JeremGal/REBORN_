@@ -1,0 +1,19 @@
+{
+  "_comment": "Règles CACHÉES du logiciel historique. REBORN ne lit jamais ce fichier : il ne voit que l'écran.",
+  "products": {
+    "A": { "label": "Vanne papillon DN50", "price": 100 },
+    "B": { "label": "Pompe centrifuge 2,2 kW", "price": 250 },
+    "C": { "label": "Capteur de pression 0-10 bar", "price": 40 }
+  },
+  "customer_types": {
+    "standard": { "label": "Standard", "discount": 0 },
+    "premium": { "label": "Premium", "discount": 10 },
+    "partenaire": { "label": "Partenaire / Distributeur", "discount": 20 }
+  },
+  "quantity_tiers": [
+    { "min": 50, "discount": 20 },
+    { "min": 10, "discount": 10 }
+  ],
+  "shipping": { "threshold": 500, "fee": 45 },
+  "max_quantity": 999
+}

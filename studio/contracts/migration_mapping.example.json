@@ -1,0 +1,287 @@
+{
+  "contract_version": "1.0",
+  "source_system": "Relatio 2004",
+  "target": { "id": "morel-crm", "name": "Morel CRM" },
+  "review_threshold": 0.9,
+  "notes": "Jeu de test au format du futur envoi de l'Analyste (Alan). Libellés des codes déduits des écrans de Relatio 2004.",
+  "entities": [
+    {
+      "name": "clients",
+      "label": "Clients",
+      "label_singular": "Client",
+      "source": { "table": "clients", "key": "ID_CLI" },
+      "title_field": "raison_sociale",
+      "confidence": 0.98,
+      "fields": [
+        { "name": "code", "label": "Code client", "source": "CODE_CLI", "type": "text", "required": true, "unique": true, "transforms": ["trim"], "confidence": 0.99 },
+        { "name": "raison_sociale", "label": "Raison sociale", "source": "RAISON_SOC", "type": "text", "required": true, "transforms": ["collapse_spaces"], "confidence": 0.99 },
+        { "name": "siret", "label": "SIRET", "source": "SIRET", "type": "text", "transforms": ["digits"], "confidence": 0.97 },
+        { "name": "adresse", "label": "Adresse", "source": "ADR1", "type": "text", "transforms": ["trim"] },
+        { "name": "code_postal", "label": "Code postal", "source": "CP", "type": "text", "transforms": ["trim"] },
+        { "name": "ville", "label": "Ville", "source": "VILLE", "type": "text", "transforms": ["trim"] },
+        { "name": "pays", "label": "Pays", "source": "PAYS", "type": "text", "transforms": ["trim"] },
+        { "name": "telephone", "label": "Téléphone", "source": "TEL", "type": "phone", "transforms": ["trim"] },
+        { "name": "email", "label": "E-mail", "source": "EMAIL", "type": "email", "transforms": ["trim", "lower"], "confidence": 0.97 },
+        {
+          "name": "categorie",
+          "label": "Catégorie",
+          "source": "CAT_CLI",
+          "type": "enum",
+          "transforms": ["trim", { "map": { "STD": "standard", "PRE": "premium", "PAR": "partenaire" } }],
+          "options": [{ "value": "standard", "label": "Standard" }, { "value": "premium", "label": "Premium" }, { "value": "partenaire", "label": "Partenaire" }],
+          "confidence": 0.8,
+          "note": "Codes STD/PRE/PAR interprétés d'après la fiche client de Relatio (libellés Standard, Premium, Partenaire)"
+        },
+        {
+          "name": "etat",
+          "label": "État",
+          "source": "ETAT",
+          "type": "enum",
+          "transforms": ["trim", { "map": { "AC": "actif", "SU": "suspendu", "RA": "radie" } }],
+          "options": [{ "value": "actif", "label": "Actif" }, { "value": "suspendu", "label": "Suspendu" }, { "value": "radie", "label": "Radié" }],
+          "confidence": 0.85,
+          "note": "Codes AC/SU/RA lus sur la fiche client (Actif, Suspendu, Radié)"
+        },
+        { "name": "date_creation", "label": "Client depuis", "source": "DATE_CREA", "type": "date", "transforms": [{ "date": "DD/MM/YYYY" }] },
+        { "name": "commercial", "label": "Commercial", "source": "COMMERCIAL", "type": "text", "transforms": ["trim"] },
+        { "name": "remarques", "label": "Remarques", "source": "REMARQUES", "type": "text" }
+      ],
+      "duplicates": [
+        { "fields": ["siret"], "label": "même SIRET" },
+        { "fields": ["email"], "label": "même e-mail" }
+      ],
+      "ui": { "list_fields": ["code", "raison_sociale", "ville", "categorie", "etat"], "search_fields": ["raison_sociale", "code", "ville", "email"], "breakdown": "categorie" }
+    },
+    {
+      "name": "prospects",
+      "label": "Prospects",
+      "label_singular": "Prospect",
+      "source": { "table": "prospects", "key": "ID_PROS" },
+      "title_field": "societe",
+      "confidence": 0.97,
+      "fields": [
+        { "name": "societe", "label": "Société", "source": "SOCIETE", "type": "text", "required": true, "transforms": ["collapse_spaces"] },
+        { "name": "nom", "label": "Nom du contact", "source": "CONTACT_NOM", "type": "text", "transforms": ["trim"] },
+        { "name": "prenom", "label": "Prénom", "source": "CONTACT_PRENOM", "type": "text", "transforms": ["trim"] },
+        { "name": "email", "label": "E-mail", "source": "EMAIL", "type": "email", "transforms": ["trim", "lower"] },
+        { "name": "telephone", "label": "Téléphone", "source": "TEL", "type": "phone", "transforms": ["trim"] },
+        {
+          "name": "origine",
+          "label": "Origine",
+          "source": "ORIGINE",
+          "type": "enum",
+          "transforms": ["trim", { "map": { "SALON": "salon", "WEB": "web", "TEL": "telephone", "RECO": "recommandation", "MAILING": "mailing" } }],
+          "options": [{ "value": "salon", "label": "Salon" }, { "value": "web", "label": "Site web" }, { "value": "telephone", "label": "Téléphone" }, { "value": "recommandation", "label": "Recommandation" }, { "value": "mailing", "label": "Mailing" }],
+          "confidence": 0.92
+        },
+        {
+          "name": "stade",
+          "label": "Stade",
+          "source": "STADE",
+          "type": "enum",
+          "transforms": ["trim", { "map": { "NOUV": "nouveau", "QUAL": "qualifie", "PROP": "proposition", "GAGN": "gagne", "PERDU": "perdu" } }],
+          "options": [{ "value": "nouveau", "label": "Nouveau" }, { "value": "qualifie", "label": "Qualifié" }, { "value": "proposition", "label": "Proposition" }, { "value": "gagne", "label": "Gagné" }, { "value": "perdu", "label": "Perdu" }],
+          "confidence": 0.93
+        },
+        { "name": "date_contact", "label": "Premier contact", "source": "DATE_CONTACT", "type": "date", "transforms": [{ "date": "DD/MM/YYYY" }] },
+        { "name": "client", "label": "Devenu client", "source": "ID_CLI_CONVERTI", "type": "reference", "references": "clients", "on_missing": "keep_unlinked", "confidence": 0.95 }
+      ],
+      "duplicates": [{ "fields": ["email"], "label": "même e-mail" }],
+      "ui": { "list_fields": ["societe", "nom", "prenom", "stade", "origine", "date_contact"], "breakdown": "stade" }
+    },
+    {
+      "name": "articles",
+      "label": "Articles",
+      "label_singular": "Article",
+      "source": { "table": "articles", "key": "ID_ART" },
+      "title_field": "designation",
+      "confidence": 0.98,
+      "fields": [
+        { "name": "reference", "label": "Référence", "source": "REF_ART", "type": "text", "required": true, "unique": true, "transforms": ["trim"] },
+        { "name": "designation", "label": "Désignation", "source": "LIBELLE", "type": "text", "required": true, "transforms": ["collapse_spaces"] },
+        { "name": "famille", "label": "Famille", "source": "FAMILLE", "type": "text", "transforms": ["trim"] },
+        { "name": "prix_ht", "label": "Prix HT", "source": "PRIX_HT", "type": "money" },
+        {
+          "name": "tva",
+          "label": "Régime de TVA",
+          "source": "CODE_TVA",
+          "type": "enum",
+          "transforms": ["trim", { "map": { "N": "normal" } }],
+          "options": [{ "value": "normal", "label": "Taux normal" }],
+          "confidence": 0.75,
+          "note": "Seul le code N est présent ; sa signification (taux normal) est déduite des factures"
+        },
+        { "name": "actif", "label": "En catalogue", "source": "ACTIF", "type": "boolean", "transforms": [{ "boolean": { "true": ["O"], "false": ["N"] } }] },
+        { "name": "stock", "label": "Stock", "source": "STOCK", "type": "integer" }
+      ],
+      "ui": { "list_fields": ["reference", "designation", "famille", "prix_ht", "stock", "actif"], "search_fields": ["reference", "designation", "famille"] }
+    },
+    {
+      "name": "devis",
+      "label": "Devis",
+      "label_singular": "Devis",
+      "source": { "table": "devis", "key": "ID_DEV" },
+      "title_field": "numero",
+      "confidence": 0.97,
+      "fields": [
+        { "name": "numero", "label": "Numéro", "source": "NUM_DEV", "type": "text", "required": true, "unique": true, "transforms": ["trim"] },
+        { "name": "client", "label": "Client", "source": "ID_CLI", "type": "reference", "references": "clients", "required": true },
+        { "name": "date", "label": "Date", "source": "DATE_DEV", "type": "date", "required": true, "transforms": [{ "date": "DD/MM/YYYY" }] },
+        {
+          "name": "statut",
+          "label": "Statut",
+          "source": "STATUT",
+          "type": "enum",
+          "transforms": ["trim", { "map": { "BR": "brouillon", "EN": "envoye", "AC": "accepte", "RE": "refuse", "EX": "expire" } }],
+          "options": [{ "value": "brouillon", "label": "Brouillon" }, { "value": "envoye", "label": "Envoyé" }, { "value": "accepte", "label": "Accepté" }, { "value": "refuse", "label": "Refusé" }, { "value": "expire", "label": "Expiré" }],
+          "confidence": 0.92
+        },
+        { "name": "remise_pct", "label": "Remise globale (%)", "source": "REMISE_PCT", "type": "percent", "transforms": [{ "decimal": "comma" }] },
+        { "name": "total_ht", "label": "Total HT", "source": "TOTAL_HT", "type": "money", "transforms": [{ "money": "comma" }] },
+        { "name": "total_tva", "label": "TVA", "source": "TOTAL_TVA", "type": "money", "transforms": [{ "money": "comma" }] },
+        { "name": "total_ttc", "label": "Total TTC", "source": "TOTAL_TTC", "type": "money", "transforms": [{ "money": "comma" }] }
+      ],
+      "checks": [{ "id": "ttc", "description": "Total TTC = HT + TVA", "expr": "total_ttc == total_ht + total_tva", "severity": "warning" }],
+      "aggregates": [
+        { "id": "ht_lignes", "description": "HT = somme des lignes (nouveaux devis)", "field": "total_ht", "children": "devis_lignes", "via": "devis", "expr": "quantite * prix_unitaire * (100 - remise_pct) / 100", "verify": false }
+      ],
+      "computed": [
+        { "field": "total_tva", "expr": "round(total_ht * 20 / 100)" },
+        { "field": "total_ttc", "expr": "total_ht + total_tva" }
+      ],
+      "ui": { "list_fields": ["numero", "date", "client", "statut", "total_ttc"], "search_fields": ["numero"], "breakdown": "statut", "indicators": [{ "label": "Devis", "kind": "count" }] }
+    },
+    {
+      "name": "devis_lignes",
+      "label": "Lignes de devis",
+      "label_singular": "Ligne de devis",
+      "source": { "table": "devis_lignes", "key": "ID_LIG" },
+      "confidence": 0.96,
+      "fields": [
+        { "name": "devis", "label": "Devis", "source": "ID_DEV", "type": "reference", "references": "devis", "required": true },
+        { "name": "article", "label": "Article", "source": "ID_ART", "type": "reference", "references": "articles", "on_missing": "keep_unlinked", "confidence": 0.88, "note": "Quelques lignes désignent un article supprimé de l'ancien catalogue : ligne conservée, sans lien vers l'article" },
+        { "name": "quantite", "label": "Quantité", "source": "QTE", "type": "integer", "required": true },
+        { "name": "prix_unitaire", "label": "Prix unitaire HT", "source": "PU_HT", "type": "money", "required": true, "transforms": [{ "money": "comma" }] },
+        { "name": "remise_pct", "label": "Remise (%)", "source": "REMISE_PCT", "type": "percent", "required": true, "transforms": [{ "decimal": "comma" }] }
+      ],
+      "ui": { "nav": false, "list_fields": ["devis", "article", "quantite", "prix_unitaire", "remise_pct"] }
+    },
+    {
+      "name": "factures",
+      "label": "Factures",
+      "label_singular": "Facture",
+      "source": { "table": "factures", "key": "ID_FAC" },
+      "title_field": "numero",
+      "confidence": 0.97,
+      "fields": [
+        { "name": "numero", "label": "Numéro", "source": "NUM_FAC", "type": "text", "required": true, "unique": true, "transforms": ["trim"], "accounting": true },
+        { "name": "client", "label": "Client", "source": "ID_CLI", "type": "reference", "references": "clients", "on_missing": "keep_unlinked", "confidence": 0.85, "note": "Des factures désignent un client supprimé de l'ancien logiciel : facture conservée intégralement, sans lien client, et signalée" },
+        { "name": "devis", "label": "Devis d'origine", "source": "ID_DEV", "type": "reference", "references": "devis", "on_missing": "keep_unlinked" },
+        { "name": "date", "label": "Date", "source": "DATE_FAC", "type": "date", "required": true, "transforms": [{ "date": "DD/MM/YYYY" }], "accounting": true },
+        { "name": "echeance", "label": "Échéance", "source": "DATE_ECH", "type": "date", "transforms": [{ "date": "DD/MM/YYYY" }] },
+        { "name": "taux_tva", "label": "Taux de TVA (%)", "source": "TAUX_TVA", "type": "percent", "required": true, "transforms": [{ "decimal": "comma" }], "accounting": true },
+        { "name": "total_ht", "label": "Total HT", "source": "TOTAL_HT", "type": "money", "required": true, "transforms": [{ "money": "comma" }], "accounting": true },
+        { "name": "total_tva", "label": "TVA", "source": "TOTAL_TVA", "type": "money", "required": true, "transforms": [{ "money": "comma" }], "accounting": true },
+        { "name": "total_ttc", "label": "Total TTC", "source": "TOTAL_TTC", "type": "money", "required": true, "transforms": [{ "money": "comma" }], "accounting": true },
+        {
+          "name": "statut_paiement",
+          "label": "Règlement",
+          "source": "STATUT_PAI",
+          "type": "enum",
+          "transforms": ["trim", { "map": { "NP": "non_payee", "PP": "partielle", "PA": "payee" } }],
+          "options": [{ "value": "non_payee", "label": "Non payée" }, { "value": "partielle", "label": "Partiellement payée" }, { "value": "payee", "label": "Payée" }],
+          "confidence": 0.95
+        }
+      ],
+      "checks": [
+        { "id": "ttc", "description": "Total TTC = HT + TVA", "expr": "total_ttc == total_ht + total_tva", "severity": "warning" },
+        { "id": "tva", "description": "TVA = HT × taux en vigueur à la date de la facture", "expr": "total_tva == round(total_ht * taux_tva / 100)", "severity": "warning" }
+      ],
+      "aggregates": [
+        { "id": "ht_lignes", "description": "Total HT = somme des lignes", "field": "total_ht", "children": "factures_lignes", "via": "facture", "expr": "quantite * prix_unitaire", "severity": "info" }
+      ],
+      "computed": [
+        { "field": "total_tva", "expr": "round(total_ht * taux_tva / 100)" },
+        { "field": "total_ttc", "expr": "total_ht + total_tva" }
+      ],
+      "ui": {
+        "list_fields": ["numero", "date", "client", "total_ttc", "statut_paiement"],
+        "search_fields": ["numero"],
+        "breakdown": "statut_paiement",
+        "indicators": [{ "label": "Factures", "kind": "count" }, { "label": "Chiffre d'affaires facturé (TTC)", "kind": "sum", "field": "total_ttc" }]
+      }
+    },
+    {
+      "name": "factures_lignes",
+      "label": "Lignes de facture",
+      "label_singular": "Ligne de facture",
+      "source": { "table": "factures_lignes", "key": "ID_LIG" },
+      "confidence": 0.96,
+      "fields": [
+        { "name": "facture", "label": "Facture", "source": "ID_FAC", "type": "reference", "references": "factures", "required": true },
+        { "name": "article", "label": "Article", "source": "ID_ART", "type": "reference", "references": "articles", "on_missing": "keep_unlinked" },
+        { "name": "quantite", "label": "Quantité", "source": "QTE", "type": "integer", "required": true, "accounting": true },
+        { "name": "prix_unitaire", "label": "Prix unitaire HT", "source": "PU_HT", "type": "money", "required": true, "transforms": [{ "money": "comma" }], "accounting": true }
+      ],
+      "ui": { "nav": false, "list_fields": ["facture", "article", "quantite", "prix_unitaire"] }
+    },
+    {
+      "name": "paiements",
+      "label": "Règlements",
+      "label_singular": "Règlement",
+      "source": { "table": "paiements", "key": "ID_PAI" },
+      "confidence": 0.95,
+      "fields": [
+        { "name": "facture", "label": "Facture", "source": "ID_FAC", "type": "reference", "references": "factures", "required": true },
+        { "name": "date", "label": "Date", "source": "DATE_PAI", "type": "date", "required": true, "transforms": [{ "date": "DD/MM/YYYY" }], "accounting": true },
+        { "name": "montant", "label": "Montant", "source": "MONTANT", "type": "money", "required": true, "accounting": true },
+        {
+          "name": "mode",
+          "label": "Mode de règlement",
+          "source": "MODE_PAI",
+          "type": "enum",
+          "transforms": ["trim", { "map": { "VIR": "virement", "CHQ": "cheque", "LCR": "lcr", "CB": "carte" } }],
+          "options": [{ "value": "virement", "label": "Virement" }, { "value": "cheque", "label": "Chèque" }, { "value": "lcr", "label": "LCR" }, { "value": "carte", "label": "Carte bancaire" }],
+          "confidence": 0.93
+        }
+      ],
+      "ui": { "list_fields": ["date", "facture", "montant", "mode"], "indicators": [{ "label": "Règlements encaissés", "kind": "sum", "field": "montant" }] }
+    },
+    {
+      "name": "activites",
+      "label": "Activités",
+      "label_singular": "Activité",
+      "source": { "table": "activites", "key": "ID_ACT" },
+      "title_field": "sujet",
+      "confidence": 0.95,
+      "fields": [
+        { "name": "client", "label": "Client", "source": "ID_CLI", "type": "reference", "references": "clients", "on_missing": "keep_unlinked" },
+        { "name": "prospect", "label": "Prospect", "source": "ID_PROS", "type": "reference", "references": "prospects", "on_missing": "keep_unlinked" },
+        { "name": "date", "label": "Date", "source": "DATE_ACT", "type": "date", "transforms": [{ "date": "DD/MM/YYYY" }], "note": "Date facultative : une date illisible est laissée vide et signalée, l'activité est conservée" },
+        {
+          "name": "type",
+          "label": "Type",
+          "source": "TYPE_ACT",
+          "type": "enum",
+          "transforms": ["trim", { "map": { "APPEL": "appel", "RDV": "rendez_vous", "MAIL": "email", "VISITE": "visite" } }],
+          "options": [{ "value": "appel", "label": "Appel" }, { "value": "rendez_vous", "label": "Rendez-vous" }, { "value": "email", "label": "E-mail" }, { "value": "visite", "label": "Visite" }],
+          "confidence": 0.94
+        },
+        { "name": "sujet", "label": "Sujet", "source": "SUJET", "type": "text", "transforms": ["trim"] },
+        { "name": "note", "label": "Note", "source": "NOTE", "type": "text" }
+      ],
+      "ui": { "list_fields": ["date", "type", "sujet", "client", "prospect"], "search_fields": ["sujet", "note"] }
+    }
+  ],
+  "attachments": [
+    {
+      "source": { "table": "documents", "key": "ID_DOC" },
+      "archive": "documents.zip",
+      "path": "CHEMIN",
+      "filename": "NOM_FICHIER",
+      "owner": { "type": "TYPE_LIEN", "id": "ID_LIEN", "map": { "CLI": "clients", "DEV": "devis", "FAC": "factures" } },
+      "confidence": 0.85,
+      "note": "Rattachement déduit des codes TYPE_LIEN (CLI, DEV, FAC) et de la fiche Documents"
+    }
+  ]
+}

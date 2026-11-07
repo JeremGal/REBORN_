@@ -1,0 +1,23 @@
+{
+  "contract_version": "1.0",
+  "system": "Relatio 2004",
+  "base_url": "http://127.0.0.1:4100",
+  "discovered_by": "Jeu de test REBORN (format du futur plan produit par l'Explorer de Mouss)",
+  "login": { "url": "/login", "username_field": "utilisateur", "password_field": "motdepasse", "session_cookie": "RELATIOSESSID" },
+  "manifest": "/exports/manifest.json",
+  "mechanisms": [
+    { "id": "clients", "label": "Fichier clients (CSV)", "kind": "export", "url": "/exports/clients.csv" },
+    { "id": "prospects", "label": "Prospects (CSV)", "kind": "export", "url": "/exports/prospects.csv" },
+    { "id": "articles", "label": "Catalogue articles (Excel)", "kind": "export", "url": "/exports/articles.xlsx" },
+    { "id": "devis", "label": "Devis — en-têtes (CSV)", "kind": "export", "url": "/exports/devis.csv" },
+    { "id": "devis_lignes", "label": "Devis — lignes (CSV)", "kind": "export", "url": "/exports/devis_lignes.csv" },
+    { "id": "factures", "label": "Factures — en-têtes (CSV)", "kind": "export", "url": "/exports/factures.csv" },
+    { "id": "factures_lignes", "label": "Factures — lignes (CSV)", "kind": "export", "url": "/exports/factures_lignes.csv" },
+    { "id": "paiements", "label": "Règlements (API v1, JSON)", "kind": "api", "url": "/exports/paiements.json" },
+    { "id": "activites", "label": "Historique d'activité (CSV)", "kind": "export", "url": "/exports/activites.csv" },
+    { "id": "documents", "label": "Index des documents (CSV)", "kind": "export", "url": "/exports/documents.csv" },
+    { "id": "documents_zip", "label": "Pièces jointes (archive ZIP)", "kind": "archive", "url": "/exports/documents.zip" },
+    { "id": "commissions", "label": "Commissions commerciales (CSV)", "kind": "export", "url": "/exports/commissions.csv", "requires": "direction", "note": "Vu sur l'écran Exports, signalé comme réservé à la direction" },
+    { "id": "sauvegarde", "label": "Sauvegarde complète (SQL)", "kind": "database", "url": "/exports/sauvegarde.sql", "requires": "admin", "note": "Vu sur l'écran Exports, réservé à l'administrateur" }
+  ]
+}

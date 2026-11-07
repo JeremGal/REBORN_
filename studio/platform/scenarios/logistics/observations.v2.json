@@ -1,0 +1,221 @@
+[
+ {
+  "experiment_id": "LOG_101",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 10,
+   "express": true,
+   "fragile": false,
+   "insurance_value": 0
+  },
+  "observed_output": {
+   "total_price": 24.8,
+   "transit_days": 1
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_102",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "EU",
+   "weight_kg": 10,
+   "express": true,
+   "fragile": false,
+   "insurance_value": 0
+  },
+  "observed_output": {
+   "total_price": 49.5,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_103",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 10,
+   "express": false,
+   "fragile": false,
+   "insurance_value": 1000
+  },
+  "observed_output": {
+   "total_price": 25,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_104",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 10,
+   "express": false,
+   "fragile": false,
+   "insurance_value": 200
+  },
+  "observed_output": {
+   "total_price": 20,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_105",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 1,
+   "express": false,
+   "fragile": false,
+   "insurance_value": 0
+  },
+  "observed_output": {
+   "total_price": 12,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_106",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "EU",
+   "weight_kg": 250,
+   "express": true,
+   "fragile": true,
+   "insurance_value": 0
+  },
+  "observed_output": {
+   "total_price": 640.5,
+   "transit_days": 2
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_107",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "INT",
+   "weight_kg": 120,
+   "express": true,
+   "fragile": false,
+   "insurance_value": 0
+  },
+  "observed_output": {
+   "total_price": 608.8,
+   "transit_days": 4
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_108",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 42.5,
+   "express": true,
+   "fragile": false,
+   "insurance_value": 3000
+  },
+  "observed_output": {
+   "total_price": 100.4,
+   "transit_days": 1
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_109",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "EU",
+   "weight_kg": 75,
+   "express": false,
+   "fragile": true,
+   "insurance_value": 50
+  },
+  "observed_output": {
+   "total_price": 151,
+   "transit_days": 4
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_110",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "INT",
+   "weight_kg": 800,
+   "express": false,
+   "fragile": false,
+   "insurance_value": 0
+  },
+  "observed_output": {
+   "total_price": 2132.7,
+   "transit_days": 7
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_111",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 100,
+   "express": true,
+   "fragile": false,
+   "insurance_value": 0
+  },
+  "observed_output": {
+   "total_price": 138.9,
+   "transit_days": 1
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "LOG_112",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "INT",
+   "weight_kg": 5,
+   "express": false,
+   "fragile": true,
+   "insurance_value": 0
+  },
+  "observed_output": {},
+  "status": "error",
+  "error": "ENVOI FRAGILE REFUSE A L'INTERNATIONAL"
+ },
+ {
+  "experiment_id": "LOG_113",
+  "application": "TransCalc 2003",
+  "module": "Tarification",
+  "inputs": {
+   "zone": "FR",
+   "weight_kg": 7,
+   "express": false,
+   "fragile": false,
+   "insurance_value": 0
+  },
+  "observed_output": {
+   "total_price": 12.5,
+   "transit_days": 2
+  },
+  "status": "success"
+ }
+]

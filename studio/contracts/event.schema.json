@@ -1,0 +1,60 @@
+{
+  "title": "event",
+  "x-contract-version": "1.1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "source": {
+      "default": "explorer",
+      "type": "string",
+      "enum": [
+        "explorer",
+        "analyst",
+        "platform",
+        "user"
+      ]
+    },
+    "type": {
+      "default": "log",
+      "type": "string",
+      "enum": [
+        "investigation_started",
+        "investigation_completed",
+        "action",
+        "observation",
+        "form_discovered",
+        "hypothesis",
+        "experiment_request",
+        "rules_updated",
+        "schema_updated",
+        "validation",
+        "drift",
+        "log",
+        "error",
+        "migration"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "detail": {
+      "type": "string",
+      "maxLength": 5000
+    },
+    "investigation_id": {
+      "type": "string"
+    },
+    "screenshot_url": {
+      "type": "string"
+    },
+    "data": {},
+    "ts": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

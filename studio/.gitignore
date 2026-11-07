@@ -1,0 +1,22 @@
+node_modules
+.next
+e2e-shots
+.DS_Store
+# Secrets locaux (jetons générés par scripts/secrets.mjs, variables d'environnement)
+.secrets/
+.env
+.env.*
+# Données d'exécution de la plateforme (état persistant, captures)
+platform/.data/
+platform/tsconfig.tsbuildinfo
+__pycache__
+*.log
+# Données du CRM historique de test (régénérables : npm run crm-source:seed)
+legacy-crm/data/
+# Logiciels livrés : le code et app.json peuvent être versionnés, JAMAIS les données clients
+generated/*/data/
+generated/*/files/
+generated/*/backups/
+generated/*/.secrets/
+generated/*/app.log
+generated/*/run/

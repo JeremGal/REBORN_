@@ -1,0 +1,69 @@
+{
+  "title": "observation",
+  "x-contract-version": "1.1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "experiment_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "application": {
+      "type": "string"
+    },
+    "module": {
+      "type": "string"
+    },
+    "inputs": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "observed_output": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "status": {
+      "default": "success",
+      "type": "string"
+    },
+    "error": {
+      "type": "string"
+    },
+    "investigation_id": {
+      "type": "string"
+    },
+    "screenshot_url": {
+      "type": "string"
+    },
+    "request_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "experiment_id",
+    "inputs"
+  ],
+  "additionalProperties": {}
+}

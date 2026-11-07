@@ -1,0 +1,323 @@
+[
+ {
+  "experiment_id": "EXP_001",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 1,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 145
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_002",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "B",
+   "quantity": 1,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 295
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_003",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "C",
+   "quantity": 1,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 85
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_004",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 5,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 500
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_005",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 9,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 900
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_006",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 10,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 900
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_007",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 20,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 1800
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_008",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 49,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 4410
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_009",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 50,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 4000
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_010",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 100,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 8000
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_011",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 1,
+   "customer_type": "premium"
+  },
+  "observed_output": {
+   "total_price": 135
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_012",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 1,
+   "customer_type": "partenaire"
+  },
+  "observed_output": {
+   "total_price": 125
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_013",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 10,
+   "customer_type": "premium"
+  },
+  "observed_output": {
+   "total_price": 810
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_014",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 10,
+   "customer_type": "partenaire"
+  },
+  "observed_output": {
+   "total_price": 720
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_015",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "C",
+   "quantity": 12,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 477
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_016",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "C",
+   "quantity": 13,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 513
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_017",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "B",
+   "quantity": 2,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 500
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_018",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "B",
+   "quantity": 12,
+   "customer_type": "premium"
+  },
+  "observed_output": {
+   "total_price": 2430
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_019",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "C",
+   "quantity": 55,
+   "customer_type": "partenaire"
+  },
+  "observed_output": {
+   "total_price": 1408
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_020",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "C",
+   "quantity": 7,
+   "customer_type": "premium"
+  },
+  "observed_output": {
+   "total_price": 297
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_021",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "B",
+   "quantity": 3,
+   "customer_type": "partenaire"
+  },
+  "observed_output": {
+   "total_price": 600
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_022",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 11,
+   "customer_type": "standard"
+  },
+  "observed_output": {
+   "total_price": 990
+  },
+  "status": "success"
+ },
+ {
+  "experiment_id": "EXP_023",
+  "application": "Quotix 98",
+  "module": "Devis",
+  "inputs": {
+   "product": "A",
+   "quantity": 0,
+   "customer_type": "standard"
+  },
+  "observed_output": {},
+  "status": "error",
+  "error": "ERREUR 0x17 : QUANTITE INVALIDE (1-999)"
+ }
+]

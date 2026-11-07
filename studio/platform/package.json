@@ -1,0 +1,30 @@
+{
+  "name": "reborn-platform",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "runtime": "node scripts/build-runtime.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "1.57.0",
+    "next": "16.4.2",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "24.19.2",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "tailwindcss": "4.3.3",
+    "typescript": "6.0.3",
+    "vitest": "4.1.12"
+  }
+}

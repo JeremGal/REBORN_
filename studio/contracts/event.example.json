@@ -1,0 +1,34 @@
+[
+  {
+    "source": "explorer",
+    "type": "action",
+    "title": "Clic sur « Calculer »",
+    "data": { "action": "click", "target": "Calculer" }
+  },
+  {
+    "source": "explorer",
+    "type": "form_discovered",
+    "title": "Écran « Devis » analysé : 3 champs",
+    "data": {
+      "fields": [
+        { "name": "product", "label": "Code article", "type": "enum", "options": [{ "value": "A", "label": "A - Vanne papillon DN50" }, { "value": "B", "label": "B - Pompe centrifuge 2,2 kW" }, { "value": "C", "label": "C - Capteur de pression 0-10 bar" }] },
+        { "name": "quantity", "label": "Quantité", "type": "number", "min": 1 },
+        { "name": "customer_type", "label": "Catégorie client", "type": "enum", "options": [{ "value": "standard", "label": "Standard" }, { "value": "premium", "label": "Premium" }, { "value": "partenaire", "label": "Partenaire / Distributeur" }] }
+      ]
+    }
+  },
+  {
+    "source": "analyst",
+    "type": "hypothesis",
+    "title": "Remise volume de 10 % à partir de 10 unités",
+    "detail": "EXP_005 (9 u. → 900 €) vs EXP_006 (10 u. → 900 €)",
+    "data": { "confidence": 0.8 }
+  },
+  {
+    "source": "analyst",
+    "type": "experiment_request",
+    "title": "Expérience demandée : A · 10 · standard",
+    "detail": "Confirmer le seuil exact de la remise volume",
+    "data": { "inputs": { "product": "A", "quantity": 10, "customer_type": "standard" } }
+  }
+]

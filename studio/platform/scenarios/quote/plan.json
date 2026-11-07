@@ -1,0 +1,209 @@
+[
+ {
+  "n": 1,
+  "phase": "Prix unitaires",
+  "inputs": {
+   "product": "A",
+   "quantity": 1,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 2,
+  "phase": "Prix unitaires",
+  "inputs": {
+   "product": "B",
+   "quantity": 1,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 3,
+  "phase": "Prix unitaires",
+  "inputs": {
+   "product": "C",
+   "quantity": 1,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 4,
+  "phase": "Seuils de quantité",
+  "inputs": {
+   "product": "A",
+   "quantity": 5,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 5,
+  "phase": "Seuils de quantité",
+  "inputs": {
+   "product": "A",
+   "quantity": 9,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 6,
+  "phase": "Seuils de quantité",
+  "inputs": {
+   "product": "A",
+   "quantity": 10,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 7,
+  "phase": "Seuils de quantité",
+  "inputs": {
+   "product": "A",
+   "quantity": 20,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 8,
+  "phase": "Seuils de quantité",
+  "inputs": {
+   "product": "A",
+   "quantity": 49,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 9,
+  "phase": "Seuils de quantité",
+  "inputs": {
+   "product": "A",
+   "quantity": 50,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 10,
+  "phase": "Seuils de quantité",
+  "inputs": {
+   "product": "A",
+   "quantity": 100,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 11,
+  "phase": "Catégorie client",
+  "inputs": {
+   "product": "A",
+   "quantity": 1,
+   "customer_type": "premium"
+  }
+ },
+ {
+  "n": 12,
+  "phase": "Catégorie client",
+  "inputs": {
+   "product": "A",
+   "quantity": 1,
+   "customer_type": "partenaire"
+  }
+ },
+ {
+  "n": 13,
+  "phase": "Catégorie client",
+  "inputs": {
+   "product": "A",
+   "quantity": 10,
+   "customer_type": "premium"
+  }
+ },
+ {
+  "n": 14,
+  "phase": "Catégorie client",
+  "inputs": {
+   "product": "A",
+   "quantity": 10,
+   "customer_type": "partenaire"
+  }
+ },
+ {
+  "n": 15,
+  "phase": "Frais de livraison",
+  "inputs": {
+   "product": "C",
+   "quantity": 12,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 16,
+  "phase": "Frais de livraison",
+  "inputs": {
+   "product": "C",
+   "quantity": 13,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 17,
+  "phase": "Frais de livraison",
+  "inputs": {
+   "product": "B",
+   "quantity": 2,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 18,
+  "phase": "Cas indépendants",
+  "inputs": {
+   "product": "B",
+   "quantity": 12,
+   "customer_type": "premium"
+  }
+ },
+ {
+  "n": 19,
+  "phase": "Cas indépendants",
+  "inputs": {
+   "product": "C",
+   "quantity": 55,
+   "customer_type": "partenaire"
+  }
+ },
+ {
+  "n": 20,
+  "phase": "Cas indépendants",
+  "inputs": {
+   "product": "C",
+   "quantity": 7,
+   "customer_type": "premium"
+  }
+ },
+ {
+  "n": 21,
+  "phase": "Cas indépendants",
+  "inputs": {
+   "product": "B",
+   "quantity": 3,
+   "customer_type": "partenaire"
+  }
+ },
+ {
+  "n": 22,
+  "phase": "Cas indépendants",
+  "inputs": {
+   "product": "A",
+   "quantity": 11,
+   "customer_type": "standard"
+  }
+ },
+ {
+  "n": 23,
+  "phase": "Exceptions",
+  "inputs": {
+   "product": "A",
+   "quantity": 0,
+   "customer_type": "standard"
+  }
+ }
+]

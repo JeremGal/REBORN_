@@ -1,0 +1,361 @@
+{
+ "v1": [
+  {
+   "id": "LOG_001",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 1,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_002",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 10,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_003",
+   "inputs": {
+    "zone": "EU",
+    "weight_kg": 1,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_004",
+   "inputs": {
+    "zone": "EU",
+    "weight_kg": 10,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_005",
+   "inputs": {
+    "zone": "INT",
+    "weight_kg": 1,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_006",
+   "inputs": {
+    "zone": "INT",
+    "weight_kg": 10,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_007",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 99,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_008",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 100,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_009",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 499,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_010",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 500,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_011",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 10,
+    "express": true,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_012",
+   "inputs": {
+    "zone": "EU",
+    "weight_kg": 10,
+    "express": true,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_013",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 10,
+    "express": false,
+    "fragile": true
+   }
+  },
+  {
+   "id": "LOG_014",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 5,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_015",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 7,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_016",
+   "inputs": {
+    "zone": "INT",
+    "weight_kg": 5,
+    "express": false,
+    "fragile": true
+   }
+  },
+  {
+   "id": "LOG_017",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 1500,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_018",
+   "inputs": {
+    "zone": "EU",
+    "weight_kg": 250,
+    "express": true,
+    "fragile": true
+   }
+  },
+  {
+   "id": "LOG_019",
+   "inputs": {
+    "zone": "INT",
+    "weight_kg": 120,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_020",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 42.5,
+    "express": true,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_021",
+   "inputs": {
+    "zone": "EU",
+    "weight_kg": 0.5,
+    "express": false,
+    "fragile": true
+   }
+  },
+  {
+   "id": "LOG_022",
+   "inputs": {
+    "zone": "INT",
+    "weight_kg": 800,
+    "express": true,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_023",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 1200,
+    "express": false,
+    "fragile": false
+   }
+  },
+  {
+   "id": "LOG_024",
+   "inputs": {
+    "zone": "EU",
+    "weight_kg": 75,
+    "express": true,
+    "fragile": true
+   }
+  },
+  {
+   "id": "LOG_025",
+   "inputs": {
+    "zone": "INT",
+    "weight_kg": 3,
+    "express": false,
+    "fragile": false
+   }
+  }
+ ],
+ "v2": [
+  {
+   "id": "LOG_101",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 10,
+    "express": true,
+    "fragile": false,
+    "insurance_value": 0
+   }
+  },
+  {
+   "id": "LOG_102",
+   "inputs": {
+    "zone": "EU",
+    "weight_kg": 10,
+    "express": true,
+    "fragile": false,
+    "insurance_value": 0
+   }
+  },
+  {
+   "id": "LOG_103",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 10,
+    "express": false,
+    "fragile": false,
+    "insurance_value": 1000
+   }
+  },
+  {
+   "id": "LOG_104",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 10,
+    "express": false,
+    "fragile": false,
+    "insurance_value": 200
+   }
+  },
+  {
+   "id": "LOG_105",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 1,
+    "express": false,
+    "fragile": false,
+    "insurance_value": 0
+   }
+  },
+  {
+   "id": "LOG_106",
+   "inputs": {
+    "zone": "EU",
+    "weight_kg": 250,
+    "express": true,
+    "fragile": true,
+    "insurance_value": 0
+   }
+  },
+  {
+   "id": "LOG_107",
+   "inputs": {
+    "zone": "INT",
+    "weight_kg": 120,
+    "express": true,
+    "fragile": false,
+    "insurance_value": 0
+   }
+  },
+  {
+   "id": "LOG_108",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 42.5,
+    "express": true,
+    "fragile": false,
+    "insurance_value": 3000
+   }
+  },
+  {
+   "id": "LOG_109",
+   "inputs": {
+    "zone": "EU",
+    "weight_kg": 75,
+    "express": false,
+    "fragile": true,
+    "insurance_value": 50
+   }
+  },
+  {
+   "id": "LOG_110",
+   "inputs": {
+    "zone": "INT",
+    "weight_kg": 800,
+    "express": false,
+    "fragile": false,
+    "insurance_value": 0
+   }
+  },
+  {
+   "id": "LOG_111",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 100,
+    "express": true,
+    "fragile": false,
+    "insurance_value": 0
+   }
+  },
+  {
+   "id": "LOG_112",
+   "inputs": {
+    "zone": "INT",
+    "weight_kg": 5,
+    "express": false,
+    "fragile": true,
+    "insurance_value": 0
+   }
+  },
+  {
+   "id": "LOG_113",
+   "inputs": {
+    "zone": "FR",
+    "weight_kg": 7,
+    "express": false,
+    "fragile": false,
+    "insurance_value": 0
+   }
+  }
+ ]
+}

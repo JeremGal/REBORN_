@@ -1,0 +1,232 @@
+{
+  "contract_version": "1.1",
+  "module": "Tarification",
+  "application": "TransCalc 2003",
+  "settings": {
+    "discount_stacking": "compound",
+    "rounding": {
+      "decimals": 1,
+      "mode": "ceil",
+      "at": "end"
+    },
+    "currency": "EUR",
+    "output_field": "total_price",
+    "tolerance": 0.01
+  },
+  "outputs": [
+    {
+      "name": "total_price",
+      "label": "Frais de transport HT",
+      "format": "currency",
+      "primary": true
+    },
+    {
+      "name": "transit_days",
+      "label": "Délai estimé",
+      "format": "integer",
+      "unit": "jours",
+      "unit_singular": "jour"
+    }
+  ],
+  "notes": "Tarif de zone (fixe + au kilo), remise au poids, puis majoration express sur le montant remisé, suppléments, minimum de perception et arrondi au dixième supérieur.",
+  "rules": [
+    {
+      "id": "TR_001",
+      "type": "exception",
+      "description": "Poids hors limites",
+      "condition": {
+        "any": [
+          {
+            "weight_kg_lt": 0.1
+          },
+          {
+            "weight_kg_gt": 1000
+          }
+        ]
+      },
+      "action": {
+        "error": "POIDS HORS LIMITES (0,1 - 1000 KG)"
+      },
+      "confidence": 0.9,
+      "validation_status": "tested",
+      "evidence": [
+        "LOG_017"
+      ]
+    },
+    {
+      "id": "TR_002",
+      "type": "exception",
+      "description": "Envoi fragile refusé à l'international",
+      "condition": {
+        "zone": "INT",
+        "fragile": true
+      },
+      "action": {
+        "error": "ENVOI FRAGILE REFUSE A L'INTERNATIONAL"
+      },
+      "confidence": 0.88,
+      "validation_status": "tested",
+      "evidence": [
+        "LOG_016"
+      ]
+    },
+    {
+      "id": "TR_010",
+      "type": "zone_rate",
+      "description": "Tarif France : 6,50 € + 0,85 €/kg",
+      "group": "zone_rate",
+      "condition": {
+        "zone": "FR"
+      },
+      "action": {
+        "base_total": "6.5 + 0.85 * weight_kg"
+      },
+      "confidence": 0.98,
+      "validation_status": "validated",
+      "evidence": [
+        "LOG_001",
+        "LOG_002"
+      ]
+    },
+    {
+      "id": "TR_011",
+      "type": "zone_rate",
+      "description": "Tarif UE : 14 € + 1,60 €/kg",
+      "group": "zone_rate",
+      "condition": {
+        "zone": "EU"
+      },
+      "action": {
+        "base_total": "14 + 1.6 * weight_kg"
+      },
+      "confidence": 0.98,
+      "validation_status": "validated",
+      "evidence": [
+        "LOG_003",
+        "LOG_004"
+      ]
+    },
+    {
+      "id": "TR_012",
+      "type": "zone_rate",
+      "description": "Tarif international : 29 € + 3,10 €/kg",
+      "group": "zone_rate",
+      "condition": {
+        "zone": "INT"
+      },
+      "action": {
+        "base_total": "29 + 3.1 * weight_kg"
+      },
+      "confidence": 0.97,
+      "validation_status": "validated",
+      "evidence": [
+        "LOG_005",
+        "LOG_006"
+      ]
+    },
+    {
+      "id": "TR_020",
+      "type": "volume_discount",
+      "description": "Remise poids ≥ 500 kg",
+      "group": "weight_tier",
+      "priority": 1,
+      "condition": {
+        "weight_kg_gte": 500
+      },
+      "action": {
+        "discount_percent": 15
+      },
+      "confidence": 0.9,
+      "validation_status": "tested",
+      "evidence": [
+        "LOG_010"
+      ]
+    },
+    {
+      "id": "TR_021",
+      "type": "volume_discount",
+      "description": "Remise poids ≥ 100 kg",
+      "group": "weight_tier",
+      "priority": 2,
+      "condition": {
+        "weight_kg_gte": 100
+      },
+      "action": {
+        "discount_percent": 8
+      },
+      "confidence": 0.93,
+      "validation_status": "tested",
+      "evidence": [
+        "LOG_007",
+        "LOG_008",
+        "LOG_009"
+      ]
+    },
+    {
+      "id": "TR_030",
+      "type": "express_surcharge",
+      "description": "Majoration express",
+      "condition": {
+        "express": true
+      },
+      "action": {
+        "surcharge_percent": 50
+      },
+      "confidence": 0.95,
+      "validation_status": "tested",
+      "evidence": [
+        "LOG_011",
+        "LOG_012"
+      ]
+    },
+    {
+      "id": "TR_031",
+      "type": "fragile_fee",
+      "description": "Supplément colis fragile",
+      "condition": {
+        "fragile": true
+      },
+      "action": {
+        "fee_amount": 12
+      },
+      "confidence": 0.95,
+      "validation_status": "tested",
+      "evidence": [
+        "LOG_013"
+      ]
+    },
+    {
+      "id": "TR_040",
+      "type": "minimum_charge",
+      "description": "Minimum de perception 12 €",
+      "action": {
+        "minimum_total": 12
+      },
+      "confidence": 0.92,
+      "validation_status": "tested",
+      "evidence": [
+        "LOG_014",
+        "LOG_015"
+      ]
+    },
+    {
+      "id": "TR_050",
+      "type": "transit_time",
+      "description": "Délai selon zone et service",
+      "action": {
+        "set": {
+          "transit_days": "zone == 'FR' ? (express ? 1 : 2) : zone == 'EU' ? (express ? 2 : 4) : (express ? 4 : 7)"
+        }
+      },
+      "confidence": 0.9,
+      "validation_status": "tested",
+      "evidence": [
+        "LOG_001",
+        "LOG_003",
+        "LOG_005",
+        "LOG_011",
+        "LOG_012"
+      ]
+    }
+  ]
+}
