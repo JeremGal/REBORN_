@@ -105,8 +105,11 @@ node tools\reborn.mjs native gnucash <chemin>\libgnc-core-utils.dll --engine ghi
 
 Mesuré sur `libgnc-core-utils.dll` : import + analyse automatique 129 s (2 596 fonctions), puis 3 fonctions décompilées en 2 s, avec types, noms de variables, appelants et appelés. Sans `--engine`, c'est REA qui travaille (autonome mais il rouvre le binaire à chaque appel, donc plusieurs minutes par appel).
 
+Mesuré sur `libgnc-engine.dll` (47 Mo, le moteur comptable) : import d'environ 6 min (18 637 fonctions), puis 7 fonctions de règles décompilées en 10 s (`xaccTransIsBalanced`, `xaccTransGetImbalanceValue`, `xaccTransScrubImbalance`, `xaccSplitSetValue`, `gnc_numeric_add`…). Résultat porté dans R-001 : le code déclare « équilibrée = somme exacte des valeurs égale à zéro, sans tolérance », avec une variante quand le livre utilise des comptes de négoce. R-001 passe en confiance `medium` mais reste `partial` : la décompilation et la recherche Craft lisent le même binaire, ce n'est pas une deuxième preuve indépendante. Les appelants et appelés sortent vides sur cette DLL : l'analyse automatique n'a pas été relancée après l'import (`POST /run_analysis` pour les avoir).
+
 Pièges :
 - `--file` au démarrage importe sans analyser ; la CLI lance `run_analysis` toute seule si elle trouve moins de 10 fonctions nommées.
+- Le client HTTP utilise `node:http` et pas `fetch` : `fetch` coupe toute réponse qui met plus de 5 min à arriver, et l'import d'une grosse DLL dure plus longtemps. Si un import est coupé quand même, le serveur continue : relance la même commande, elle retrouvera le programme déjà ouvert.
 - La sortie décompilée est une **preuve brute** : elle reste dans `.evidence/`, jamais dans une fiche, jamais dans git, jamais donnée au bloc 3.
 - La CLI refuse l'analyse native si `target.yaml` n'a pas `access.method` à `open-source`, `licence` ou `provided-by-organizers`.
 - Pont MCP pour Claude Code : `%USERPROFILE%\hackaton-work\tools\ghidra-mcp\bridge-venv\Scripts\bridge-mcp-ghidra.exe` (variable `GHIDRA_MCP_URL=http://127.0.0.1:8089`). Il n'est **pas** déclaré dans le `.mcp.json` du repo exprès : le bloc 3 travaille dans ce repo et ne doit pas avoir de décompilateur. Ne l'ajoute que pour une session du bloc 2.
@@ -146,5 +149,5 @@ Remove-Item Env:GIT_CONFIG_COUNT, Env:GIT_CONFIG_KEY_0, Env:GIT_CONFIG_VALUE_0
 
 1. Bloc 1 : écrire dans `tools/` l'adaptateur qui convertit la sortie de l'agent H Company en `run.yaml` (`contracts/run.schema.json`), puis faire tourner les 5 missions GnuCash.
 2. GnuCash : extraire le manuel `.chm` pour une liste de fonctionnalités indépendante, générer les fiches des 111 écrans, enregistrer les compteurs pour que `coverage` donne une vraie couverture.
-3. Utiliser `native --engine ghidra-mcp` sur `libgnc-engine.dll` pour appuyer les règles du moteur (équilibre, arrondis) par une deuxième preuve, puis les faire confirmer par un run.
+3. Faire passer R-001 en `confirmed` : soit un run (missions M-002 et M-005), soit le manuel `.chm` comme deuxième preuve indépendante du code. Même méthode ensuite pour R-002 (arrondis, `gnc_numeric_convert` déjà décompilée).
 4. Mettre à jour `docs/SETUP.md` et `docs/GUIDE.md` au fil des changements, et rejouer les tests de l'appli avant chaque démo.

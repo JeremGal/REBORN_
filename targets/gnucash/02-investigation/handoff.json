@@ -14,7 +14,7 @@
       ]
     }
   },
-  "generated_at": "2026-11-07T16:14:37.684Z",
+  "generated_at": "2026-11-07T17:07:20.006Z",
   "clean_room": true,
   "readiness": {
     "features": {
@@ -437,8 +437,8 @@
       "id": "R-001",
       "title": "A transaction must balance (double entry)",
       "kind": "validation",
-      "statement": "The splits of a transaction must sum to zero in the transaction currency. If they do not, the engine reports an imbalance and completes the entry with a balancing split to an \"Imbalance\" account rather than storing an unbalanced transaction.",
-      "formula": "sum(split.value_num / split.value_denom for split in transaction.splits) == 0\nif not balanced: add split to account \"Imbalance-<CUR>\" for the negated difference\n",
+      "statement": "The code declares a transaction balanced when the values of its splits, in the transaction currency, add up to exactly zero: exact fraction arithmetic, no rounding tolerance. When the book uses trading accounts (a book option), the code checks the non-trading splits and the trading splits separately, both must sum to zero, and each commodity must also balance. Repair code completes an unbalanced transaction with a balancing split; what the register does at entry time is still open (U-004).",
+      "formula": "balanced = sum(split.value for split in transaction.splits) == 0     # exact fractions, no tolerance\nwith trading accounts: sum(non-trading values) == 0 and sum(trading values) == 0 and every commodity balances\nrepair (not entry time): add a balancing split for the negated difference\n",
       "applies_to": [
         "Transaction",
         "Split.value_num",
@@ -449,19 +449,25 @@
       ],
       "examples": [],
       "status": "partial",
-      "confidence": "low",
+      "confidence": "medium",
       "evidence": [
         {
           "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
           "kind": "craft",
           "locator": "libgnc-engine.dll functions xaccTransGetImbalance, xaccTransGetImbalanceValue, xaccTransScrubImbalance, get_balance_split (uses string 'Imbalance')",
           "note": "core-feature-find on 'Imbalance'"
+        },
+        {
+          "ref": "ev_9d4d4cc0a72a2a6f848a1250d9d8d3cb4a4bf577dfd3232ca7d8e9f7070339e0",
+          "kind": "rea",
+          "locator": "libgnc-engine.dll: xaccTransIsBalanced, xaccTransGetImbalanceValue, xaccTransScrubImbalance (Ghidra decompilation)",
+          "note": "balance test = exact zero sum of split values; separate checks with trading accounts; scrub adds a balance split"
         }
       ],
       "contradictions": [
         "Public sources describe a Rebalance Transaction dialog shown at entry time (choices include balancing by hand or letting the software create a balancing split). The functions found (xaccTransScrubImbalance and related) show repair-time and import-time handling, so this statement may not match what the register does when the user saves an unbalanced entry. See U-004."
       ],
-      "notes": "Static evidence only (functions and strings in the engine). The exact rounding/currency behaviour is unconfirmed until a run is observed."
+      "notes": "Static evidence only: both sources read the same binary, so they do not count as two independent kinds of evidence and the rule stays partial. The decompilation raised confidence on the balance test itself (exact zero, trading-accounts variant). It needs a run (U-001, U-004) or the user manual to reach confirmed. The rebuild handles one currency without trading accounts."
     },
     {
       "id": "R-002",
