@@ -1,0 +1,11 @@
+name: Commodity
+description: A currency or security in which accounts and transactions are denominated (EUR, USD, a stock).
+fields:
+  - { name: guid, type: string, required: true, unique: true, observed_as: guid }
+relations:
+  - { to: Account, kind: one-to-many, via: commodity_guid }
+  - { to: Transaction, kind: one-to-many, via: currency_guid }
+storage: { engine: SQLite, observed_table: commodities }
+status: hypothesis
+evidence:
+  - { ref: ev_9dbde950c155b3a18a3025101337cf0d369506e9e056fb095af3378286abd75f, kind: craft, locator: "table name 'commodities'", note: "columns not searched yet (namespace, mnemonic, fraction expected): see U-002" }

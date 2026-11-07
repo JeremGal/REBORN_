@@ -1,0 +1,32 @@
+# Open questions. Everything here is from public docs only; block 1 must confirm by running the evaluation version.
+target: pc-compta
+unknowns:
+  - id: U-001
+    question: What does the entry screen look like and what is the exact field order and folio workflow?
+    why: no screen could be inventoried (proprietary binary, not analysed); the whole screen layer is missing.
+    blocks: [F-001]
+    probe:
+      kind: h-mission
+      suggestion: "On the official evaluation version, open a Sales journal, enter one balanced entry with an auxiliary, screenshot each step."
+    status: open
+    evidence:
+      - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "SAISIE DES ECRITURES (folios, functions available)" }
+  - id: U-002
+    question: How is data stored (file format, tables, types)?
+    why: the data model is inferred from the technical sheet; without the real files, types/keys are unknown and no migration can be written.
+    blocks: []
+    probe:
+      kind: manual
+      suggestion: "Observe the evaluation version's data folder structure (file names/extensions only, no decompilation)."
+    status: open
+    evidence:
+      - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "no storage detail in the public sheet" }
+  - id: U-003
+    question: Exact rounding and the maximum amounts behaviour.
+    why: the sheet gives caps (99 999 999 999,99 DA per entry) but not the rounding rule for tax/totals.
+    probe:
+      kind: h-mission
+      suggestion: "Enter amounts with centimes and read back totals and any tax line."
+    status: open
+    evidence:
+      - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "SAISIE: amount caps" }

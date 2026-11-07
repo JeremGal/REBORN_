@@ -11,6 +11,8 @@ import { blockStyle, readJson, register, runRea, sha256File } from "./lib/eviden
 import { listTargets, loadTarget } from "./lib/load.mjs";
 import { validateTarget } from "./lib/validate.mjs";
 import { renderDossier } from "./lib/dossier.mjs";
+import { inventoryUi } from "./lib/ui-extract.mjs";
+import { buildHandoff } from "./lib/handoff.mjs";
 
 const HELP = `ReBorn CLI
 
@@ -18,7 +20,8 @@ Project
   init <target> --name "<name>" --kind exe|saas|both   create targets/<target> from the template
   status [target]                                      what each block has produced so far
   validate [target]                                    contracts + cross references (run before every commit)
-  dossier <target>                                     render 02-investigation/dossier.md for block 3
+  dossier <target>                                     render 02-investigation/dossier.md (human read)
+  handoff <target>                                      build 02-investigation/handoff.json (machine kit for the rebuild block)
   ask <target>                                         turn open unknowns (probe h-mission) into block 1 missions
 
 Investigation (block 2): evidence goes to .evidence/<target>/ (gitignored) and is registered in evidence/index.yaml
@@ -28,6 +31,8 @@ Investigation (block 2): evidence goes to .evidence/<target>/ (gitignored) and i
   har <target> <session.har>                           API surface from a recorded browser session
   sqlite <target> <file> [--table <name>]              schema (or one table) of a SQLite database
   rea <target> <rea-command> [args...]                 any REA CLI command (rea --help lists 175)
+  doc <target> <url>                                   public documentation page -> markdown evidence (Crawl4AI in Docker)
+  ui <target> <folder|file>                            shipped UI definition files (GtkBuilder .ui/.glade) -> screen candidates
   find <target> <file.exe> "<label>"                   label seen on screen -> strings -> functions using them (Craft, Deep mode, gated by legal basis)
   craft <target> <command> [args...]                   any Craft Anything command (322); analysis output registered as evidence
 `;
@@ -395,6 +400,37 @@ async function web(target, url) {
   }
 }
 
+// Public documentation (vendor technical sheet, manual page) -> markdown via Crawl4AI in Docker, registered as evidence.
+function doc(target, url) {
+  needTarget(target);
+  if (!url || !/^https?:\/\//.test(url)) die("usage: doc <target> <https://public-doc-url>");
+  const dir = path.join(evidenceDir(target), "docs");
+  fs.mkdirSync(dir, { recursive: true });
+  const name = `${new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z")}-${new URL(url).hostname}${new URL(url).pathname.replace(/[^A-Za-z0-9]+/g, "-")}.md`.replace(/-+\.md$/, ".md");
+  const r = spawnSync("docker", ["run", "--rm", "-e", "CRAWL4AI_NO_CLOUD_NOTICE=1", "-v", `${dir}:/out`, "--entrypoint", "crwl", "unclecode/crawl4ai:latest", "crawl", url, "-o", "markdown", "-O", `/out/${name}`], { stdio: ["ignore", "ignore", "pipe"], windowsHide: true });
+  const out = path.join(dir, name);
+  if (r.status !== 0 || !fs.existsSync(out)) die(`crawl4ai failed (exit ${r.status}): is Docker running and the image unclecode/crawl4ai pulled?`);
+  const sha = sha256File(out);
+  register(target, { id: `doc:${sha.slice(0, 16)}`, kind: "manual", tool: "crawl4ai", operation: "public-documentation", subject: { label: url }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes: fs.statSync(out).size, sha256: sha, summary: `public page captured as markdown: ${url}` });
+  console.log(`OK  doc  ${(fs.statSync(out).size / 1024).toFixed(0)} KB  doc:${sha.slice(0, 16)}  ${url}`);
+}
+
+// Shipped UI definition files (resources, not code) -> screen candidates, registered as evidence.
+function ui(target, input) {
+  needTarget(target);
+  if (!input) die("missing <folder|file> containing .ui / .glade files");
+  const p = absolute(input);
+  const inv = inventoryUi(p);
+  const dir = path.join(evidenceDir(target), "ui");
+  fs.mkdirSync(dir, { recursive: true });
+  const out = path.join(dir, `${new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z")}-gtkbuilder-inventory.json`);
+  fs.writeFileSync(out, JSON.stringify(inv, null, 1));
+  const sha = sha256File(out);
+  register(target, { id: `ui:${sha.slice(0, 16)}`, kind: "manual", tool: "reborn-ui", operation: "gtkbuilder-inventory", subject: { label: path.basename(p) }, created_at: new Date().toISOString(), file: path.relative(evidenceDir(target), out).split(path.sep).join("/"), bytes: fs.statSync(out).size, sha256: sha, summary: `${inv.files} UI definition files, ${inv.screens.length} top-level windows / panels` });
+  console.log(`OK  ui inventory  ${inv.files} files, ${inv.screens.length} windows/panels  ui:${sha.slice(0, 16)}`);
+  for (const s of inv.screens.filter((s) => s.title).slice(0, 40)) console.log(`  - ${s.title.padEnd(42)} ${s.class.padEnd(14)} inputs ${String(s.inputs.length).padStart(2)} | checks ${String(s.checks.length).padStart(2)} | buttons ${String(s.buttons.length).padStart(2)}  (${s.file})`);
+}
+
 function rea(target, args) {
   needTarget(target);
   if (!args.length) die("missing REA command, e.g. inspect-pe-resources <path>");
@@ -479,6 +515,7 @@ switch (cmd) {
   case "status": status(t); break;
   case "validate": validate(t); break;
   case "dossier": { needTarget(t); console.log(`written ${path.relative(ROOT, renderDossier(t))}`); break; }
+  case "handoff": { needTarget(t); const { out, kit } = buildHandoff(t); console.log(`written ${path.relative(ROOT, out)}`); console.log(`  build order: ${kit.build_order.length} steps | migration rows: ${kit.migration_map.length} | test vectors: ${kit.test_vectors.from_rules.length + kit.test_vectors.from_acceptance.length} | observed values: ${kit.readiness.has_observed_values ? "yes" : "NO (block 1 pending)"}`); break; }
   case "ask": ask(t); break;
   case "triage": triage(t, argv[0]); break;
   case "js": js(t, argv[0]); break;
@@ -488,6 +525,8 @@ switch (cmd) {
   case "rea": rea(t, argv); break;
   case "craft": craft(t, argv); break;
   case "find": find(t, argv[0], argv[1]); break;
+  case "ui": ui(t, argv[0]); break;
+  case "doc": doc(t, argv[0]); break;
   case "doctor": {
     const r = reaCommand();
     console.log(`REA via: ${r.via}`);

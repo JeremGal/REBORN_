@@ -29,6 +29,7 @@ Every hand-off is a set of files with a fixed format (`contracts/`), so the thre
 
 | Path | What lives there |
 |---|---|
+| `methods/` | The reusable, software-agnostic reverse method (`METHOD.md`) and the per-trade profiles (`by-domain/`) that get sharper with every target of the same trade |
 | `contracts/` | JSON Schemas of every hand-off: target, mission, run, observations, feature, rule, screen, entity, unknowns, evidence index, parity report |
 | `targets/<id>/` | One folder per legacy software studied (see below). `targets/_template/` is copied by `reborn init` |
 | `tools/reborn.mjs` | The team CLI: drives REA and Craft Anything, stores evidence, validates files, renders the dossier |
@@ -78,12 +79,15 @@ node tools/reborn.mjs js       <target> <dir|app.asar>              # static Jav
 node tools/reborn.mjs web      <target> <url>                       # passive inspection of a SaaS page in a throwaway browser
 node tools/reborn.mjs har      <target> <session.har>               # API surface from a recorded session
 node tools/reborn.mjs sqlite   <target> <file.db>                   # schema and sample rows of a local database
+node tools/reborn.mjs doc      <target> <url>                       # public documentation page -> markdown evidence (Crawl4AI in Docker)
+node tools/reborn.mjs ui       <target> <folder|file>              # shipped UI files (GtkBuilder .ui/.glade) -> screen candidates
 node tools/reborn.mjs find     <target> <file.exe> "<label>"        # label seen on screen -> strings -> functions (Craft Anything, Deep mode if allowed)
 node tools/reborn.mjs rea      <target> <any rea command> [args]    # any of REA's 175 commands, evidence registered
 node tools/reborn.mjs craft    <target> <any craft command> [args]  # any of Craft Anything's 322 commands, evidence registered
 node tools/reborn.mjs ask      <target>                             # open questions -> new missions for block 1
 node tools/reborn.mjs validate <target>                             # contracts + cross references
 node tools/reborn.mjs dossier  <target>                             # render the rebuild dossier
+node tools/reborn.mjs handoff  <target>                             # build the machine-readable kit (handoff.json)
 ```
 
 ## Rules of the road

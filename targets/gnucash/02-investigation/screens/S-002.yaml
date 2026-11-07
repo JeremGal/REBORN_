@@ -1,0 +1,23 @@
+id: S-002
+title: Transaction register (account entry)
+purpose: Enter and view the transactions of an account, with the running balance.
+kind: master-detail
+screenshots: []
+layout: "A grid of transactions; each row expands into its splits (account, debit, credit); a running balance column. Built in code at runtime (no DIALOG resource), so the exact columns must be confirmed from a screenshot."
+fields:
+  - { label: Date, control: date, binds: Transaction.post_date }
+  - { label: "Num", control: text, binds: Transaction.num }
+  - { label: Description, control: text, binds: Transaction.description }
+  - { label: "Transfer (account)", control: lookup, binds: Split.account_guid }
+  - { label: Debit, control: money, binds: Split.value_num }
+  - { label: Credit, control: money, binds: Split.value_num }
+  - { label: Balance, control: display }
+  - { label: Reconcile, control: display, binds: Split.reconcile_state }
+actions:
+  - { label: Enter (save transaction) }
+  - { label: Cancel }
+  - { label: Split }
+states: [editing, saved]
+status: hypothesis
+evidence:
+  - { ref: ev_754bada57b24191e3a266067f73b8641b44a97e09cc6c176639fe7dc7df1724a, kind: rea, locator: "gnucash.exe imports libgnc-register-gnome.dll / libgnc-ledger-core (register UI)", note: "the register is a code-built UI; columns inferred from the data model, to confirm by a run" }

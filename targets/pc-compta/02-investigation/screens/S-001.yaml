@@ -1,0 +1,20 @@
+id: S-001
+title: Entry input (saisie des ecritures)
+purpose: Enter accounting lines into a folio of a journal.
+kind: form
+screenshots: []   # none: proprietary binary not run by block 2; block 1 must capture (U-001)
+layout: "Unknown from documentation. The sheet says entries are grouped into folios per journal; input offers on-the-fly creation of journal/account/auxiliary and inline consultation of accounts, journals and the general ledger."
+fields:
+  - { label: Journal, control: lookup, binds: Entry.journal_code }
+  - { label: Folio, control: number, binds: Entry.folio }
+  - { label: Date, control: date, binds: Entry.date }
+  - { label: Compte, control: lookup, binds: Entry.account_code }
+  - { label: Auxiliaire, control: lookup, binds: Entry.auxiliary_code }
+  - { label: Montant, control: money, binds: Entry.amount }
+actions:
+  - { label: "Creer un compte/journal/auxiliaire en cours de saisie" }
+  - { label: "Consulter compte / journal / grand livre" }
+states: []
+status: hypothesis
+evidence:
+  - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "SAISIE DES ECRITURES > LES FONCTIONS DISPONIBLES EN SAISIE" }

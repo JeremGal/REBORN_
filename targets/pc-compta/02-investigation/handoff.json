@@ -1,0 +1,761 @@
+{
+  "schema": "reborn/handoff@1",
+  "target": {
+    "id": "pc-compta",
+    "name": "PC Compta Windows (DLG)",
+    "domain": "general / auxiliary / analytical accounting (Algerian SCF)",
+    "kind": "exe",
+    "tech": null,
+    "legal": {
+      "basis": "Public vendor documentation (dlg-net.com) is freely readable. No reverse engineering of the binary; the protection is never bypassed.",
+      "clean_room": true,
+      "restrictions": [
+        "No binary analysis, no decompilation, no dongle circumvention.",
+        "Deep mode is forbidden for this target (access.method is not open-source/licence/organizer).",
+        "Do not reuse the PC Compta name or branding in a rebuild."
+      ]
+    }
+  },
+  "generated_at": "2026-11-07T14:54:55.851Z",
+  "clean_room": true,
+  "readiness": {
+    "features": {
+      "hypothesis": 1
+    },
+    "rules": {
+      "hypothesis": 3
+    },
+    "entities": {
+      "hypothesis": 4
+    },
+    "has_observed_values": false,
+    "open_questions": 3,
+    "note": "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values."
+  },
+  "build_order": [
+    {
+      "kind": "entity",
+      "id": "Account"
+    },
+    {
+      "kind": "entity",
+      "id": "Auxiliary"
+    },
+    {
+      "kind": "entity",
+      "id": "Journal"
+    },
+    {
+      "kind": "entity",
+      "id": "Entry"
+    },
+    {
+      "kind": "rule",
+      "id": "R-001"
+    },
+    {
+      "kind": "rule",
+      "id": "R-002"
+    },
+    {
+      "kind": "rule",
+      "id": "R-003"
+    },
+    {
+      "kind": "feature",
+      "id": "F-001",
+      "priority": "must"
+    }
+  ],
+  "entities": [
+    {
+      "name": "Account",
+      "description": "A general-ledger account from the chart of accounts. May be lettered (reconcilable) and/or subject to auxiliaries.",
+      "fields": [
+        {
+          "name": "code",
+          "label": "Compte",
+          "type": "string",
+          "max_length": 14,
+          "required": true
+        },
+        {
+          "name": "label",
+          "label": "Intitule",
+          "type": "string",
+          "max_length": 30
+        },
+        {
+          "name": "lettrable",
+          "label": "Lettrable",
+          "type": "boolean"
+        },
+        {
+          "name": "soumis_auxiliaires",
+          "label": "Soumis a auxiliaires",
+          "type": "boolean"
+        },
+        {
+          "name": "prefixe_auxiliaire",
+          "label": "Prefixe auxiliaire",
+          "type": "string"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Auxiliary",
+          "kind": "one-to-many",
+          "via": "account_code",
+          "description": "an auxiliary code can attach to several accounts (470, 471, 570)"
+        }
+      ],
+      "lifecycle": [],
+      "storage": {
+        "engine": "unknown (proprietary)"
+      },
+      "status": "hypothesis",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "section TABLES > 2. COMPTES (lettrable, soumis a auxiliaires, prefixe auxiliaire)",
+          "note": "vendor technical sheet"
+        }
+      ]
+    },
+    {
+      "name": "Auxiliary",
+      "description": "A third party or sub-ledger code (customer, supplier, employee, product family) for individual tracking under control accounts.",
+      "fields": [
+        {
+          "name": "code",
+          "label": "Numero auxiliaire",
+          "type": "string",
+          "max_length": 14,
+          "required": true
+        },
+        {
+          "name": "label",
+          "label": "Intitule",
+          "type": "string",
+          "max_length": 30
+        },
+        {
+          "name": "address",
+          "label": "Adresse",
+          "type": "text"
+        },
+        {
+          "name": "identifiant_fiscal",
+          "label": "Identifiant fiscal",
+          "type": "string"
+        },
+        {
+          "name": "nrc",
+          "label": "N RC",
+          "type": "string"
+        },
+        {
+          "name": "article_imposition",
+          "label": "Article d'imposition",
+          "type": "string"
+        },
+        {
+          "name": "telephone",
+          "label": "Telephone",
+          "type": "string"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Account",
+          "kind": "many-to-one",
+          "via": "account_code"
+        }
+      ],
+      "lifecycle": [],
+      "storage": {
+        "engine": "unknown (proprietary)"
+      },
+      "status": "hypothesis",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "section TABLES > 3. AUXILIAIRES (coordonnees completes, 14 car.)",
+          "note": "vendor technical sheet"
+        }
+      ]
+    },
+    {
+      "name": "Entry",
+      "description": "An accounting entry line inside a folio of a journal. Carries up to three extra analytical codes (Postes, Natures, Unites).",
+      "fields": [
+        {
+          "name": "journal_code",
+          "label": "Journal",
+          "type": "ref",
+          "ref": "Journal",
+          "required": true
+        },
+        {
+          "name": "folio",
+          "label": "Folio",
+          "type": "integer"
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date"
+        },
+        {
+          "name": "account_code",
+          "label": "Compte",
+          "type": "ref",
+          "ref": "Account",
+          "required": true
+        },
+        {
+          "name": "auxiliary_code",
+          "label": "Auxiliaire",
+          "type": "ref",
+          "ref": "Auxiliary"
+        },
+        {
+          "name": "amount",
+          "label": "Montant",
+          "type": "decimal",
+          "precision": 2
+        },
+        {
+          "name": "sens",
+          "label": "Sens",
+          "type": "enum",
+          "enum_values": [
+            "D",
+            "C"
+          ]
+        },
+        {
+          "name": "poste",
+          "label": "Poste",
+          "type": "string"
+        },
+        {
+          "name": "nature_analytique",
+          "label": "Nature",
+          "type": "string"
+        },
+        {
+          "name": "unite",
+          "label": "Unite",
+          "type": "string"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Journal",
+          "kind": "many-to-one",
+          "via": "journal_code"
+        },
+        {
+          "to": "Account",
+          "kind": "many-to-one",
+          "via": "account_code"
+        },
+        {
+          "to": "Auxiliary",
+          "kind": "many-to-one",
+          "via": "auxiliary_code"
+        }
+      ],
+      "lifecycle": [],
+      "storage": {
+        "engine": "unknown (proprietary)"
+      },
+      "status": "hypothesis",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "sections SAISIE DES ECRITURES, POSTES/NATURES/UNITES (3 extra codes per entry; amount up to 99 999 999 999,99 DA)",
+          "note": "vendor technical sheet"
+        }
+      ]
+    },
+    {
+      "name": "Journal",
+      "description": "A book of entries of one nature. Its nature drives where the entry lands (debit or credit) during input.",
+      "fields": [
+        {
+          "name": "code",
+          "label": "Code",
+          "type": "string",
+          "max_length": 14,
+          "required": true
+        },
+        {
+          "name": "label",
+          "label": "Intitule",
+          "type": "string",
+          "max_length": 30
+        },
+        {
+          "name": "nature",
+          "label": "Nature",
+          "type": "enum",
+          "enum_values": [
+            "Achats",
+            "Ventes",
+            "Tresorerie",
+            "Autre"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "to": "Entry",
+          "kind": "one-to-many",
+          "via": "journal_code"
+        }
+      ],
+      "lifecycle": [],
+      "storage": {
+        "engine": "unknown (proprietary)"
+      },
+      "status": "hypothesis",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "section TABLES > 1. JOURNAUX",
+          "note": "vendor technical sheet; confirm by observation (block 1)"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "R-001",
+      "title": "The journal nature decides the debit/credit side at input",
+      "kind": "workflow",
+      "statement": "During entry, the software uses the journal's nature (Purchases, Sales, Treasury, ...) to position the amount on the correct side (debit or credit) automatically.",
+      "applies_to": [
+        "Journal.nature",
+        "Entry.sens"
+      ],
+      "features": [
+        "F-001"
+      ],
+      "examples": [],
+      "status": "hypothesis",
+      "confidence": "low",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "1. JOURNAUX: 'La saisie des ecritures tient compte de la nature pour se positionner correctement au debit ou credit'"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "R-002",
+      "title": "An auxiliary prefix restricts which codes an account accepts",
+      "kind": "validation",
+      "statement": "An account \"subject to auxiliaries\" can be given a prefix; it then accepts only auxiliary codes that start with that prefix. Example: account 470 with prefix 47 accepts only codes beginning with 47.",
+      "formula": "if account.soumis_auxiliaires and account.prefixe_auxiliaire:\n    reject auxiliary_code unless auxiliary_code.startswith(account.prefixe_auxiliaire)\n",
+      "applies_to": [
+        "Account.prefixe_auxiliaire",
+        "Entry.auxiliary_code"
+      ],
+      "features": [
+        "F-001"
+      ],
+      "examples": [
+        {
+          "given": {
+            "account": "470",
+            "prefix": "47",
+            "auxiliary_code": "47001"
+          },
+          "expect": {
+            "accepted": true
+          }
+        },
+        {
+          "given": {
+            "account": "470",
+            "prefix": "47",
+            "auxiliary_code": "51001"
+          },
+          "expect": {
+            "accepted": false
+          }
+        }
+      ],
+      "status": "hypothesis",
+      "confidence": "low",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "2. COMPTES > Prefixe auxiliaire (example with 470 / 47)"
+        }
+      ],
+      "contradictions": [],
+      "notes": "Examples are derived from the documented example, not yet observed running."
+    },
+    {
+      "id": "R-003",
+      "title": "Reconcilable accounts carry forward unreconciled entries at period open",
+      "kind": "workflow",
+      "statement": "At the start of a fiscal year, a lettered (reconcilable) account receives, instead of a single opening balance, all the unreconciled entries that justify that balance, kept at their original dates.",
+      "applies_to": [
+        "Account.lettrable"
+      ],
+      "features": [],
+      "examples": [],
+      "status": "hypothesis",
+      "confidence": "low",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "2. COMPTES: 'au debut d'exercice, un compte lettrable recoit ... toutes les ecritures non lettrees'"
+        }
+      ],
+      "contradictions": []
+    }
+  ],
+  "screens": [
+    {
+      "id": "S-001",
+      "title": "Entry input (saisie des ecritures)",
+      "purpose": "Enter accounting lines into a folio of a journal.",
+      "kind": "form",
+      "screenshots": [],
+      "layout": "Unknown from documentation. The sheet says entries are grouped into folios per journal; input offers on-the-fly creation of journal/account/auxiliary and inline consultation of accounts, journals and the general ledger.",
+      "fields": [
+        {
+          "label": "Journal",
+          "control": "lookup",
+          "binds": "Entry.journal_code"
+        },
+        {
+          "label": "Folio",
+          "control": "number",
+          "binds": "Entry.folio"
+        },
+        {
+          "label": "Date",
+          "control": "date",
+          "binds": "Entry.date"
+        },
+        {
+          "label": "Compte",
+          "control": "lookup",
+          "binds": "Entry.account_code"
+        },
+        {
+          "label": "Auxiliaire",
+          "control": "lookup",
+          "binds": "Entry.auxiliary_code"
+        },
+        {
+          "label": "Montant",
+          "control": "money",
+          "binds": "Entry.amount"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Creer un compte/journal/auxiliaire en cours de saisie"
+        },
+        {
+          "label": "Consulter compte / journal / grand livre"
+        }
+      ],
+      "states": [],
+      "status": "hypothesis",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "SAISIE DES ECRITURES > LES FONCTIONS DISPONIBLES EN SAISIE"
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "id": "F-001",
+      "title": "Record an accounting entry in a journal folio",
+      "module": "Saisie",
+      "priority": "must",
+      "status": "hypothesis",
+      "confidence": "low",
+      "user_goal": "As an accountant, I record an entry in a journal so that the account and its auxiliary are updated, with the correct debit/credit side.",
+      "actors": [
+        "accountant"
+      ],
+      "entry_points": [
+        {
+          "screen": "S-001",
+          "action": "Open a journal, a folio, start a line"
+        }
+      ],
+      "preconditions": [
+        "the journal, account and auxiliary exist (or are created on the fly during input)"
+      ],
+      "inputs": [
+        {
+          "label": "Date",
+          "field": "Entry.date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "label": "Compte",
+          "field": "Entry.account_code",
+          "type": "ref",
+          "required": true
+        },
+        {
+          "label": "Auxiliaire",
+          "field": "Entry.auxiliary_code",
+          "type": "ref",
+          "validation": "if the account has a prefix, the code must start with it (R-002)"
+        },
+        {
+          "label": "Montant",
+          "field": "Entry.amount",
+          "type": "decimal"
+        }
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "actor": "user",
+          "does": "chooses journal and folio",
+          "screen": "S-001"
+        },
+        {
+          "n": 2,
+          "actor": "user",
+          "does": "enters date, account, optional auxiliary, amount"
+        },
+        {
+          "n": 3,
+          "actor": "system",
+          "does": "places the amount on debit or credit per the journal nature",
+          "rules": [
+            "R-001"
+          ]
+        },
+        {
+          "n": 4,
+          "actor": "system",
+          "does": "enforces the auxiliary prefix if set",
+          "rules": [
+            "R-002"
+          ]
+        }
+      ],
+      "rules": [
+        "R-001",
+        "R-002"
+      ],
+      "outputs": [
+        {
+          "kind": "data-change",
+          "description": "one entry stored in the folio",
+          "entities": [
+            "Entry"
+          ]
+        }
+      ],
+      "screens": [
+        "S-001"
+      ],
+      "entities": [
+        "Entry",
+        "Journal",
+        "Account",
+        "Auxiliary"
+      ],
+      "acceptance": [
+        {
+          "id": "AC-001",
+          "given": "a Sales journal, account 411 subject to auxiliaries with prefix 41",
+          "when": "the accountant enters a 1000,00 DA line with auxiliary 41001",
+          "then": "the amount lands on the expected side for a Sales journal and the auxiliary 41001 is accepted",
+          "expected_values": {}
+        }
+      ],
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "JOURNAUX, COMPTES, SAISIE DES ECRITURES"
+        }
+      ],
+      "unknowns": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "rebuild_notes": "Everything here is from the vendor's public sheet (status hypothesis). Do not build from this alone: block 1 must confirm the field order, the debit/credit behaviour and the prefix rule on the official evaluation version before this feature is implemented. Keep the 14-char code / 30-char label widths and the three analytical axes.",
+      "discovery_trace": {
+        "grade": "hypothesis",
+        "confidence": "low",
+        "evidence": [
+          {
+            "ref": "doc:f89df11c9fd39e7e",
+            "kind": "manual",
+            "locator": "JOURNAUX, COMPTES, SAISIE DES ECRITURES"
+          }
+        ],
+        "steps": [
+          {
+            "layer": "screen",
+            "ref": "S-001",
+            "from": "ui-inventory or run screenshot"
+          },
+          {
+            "layer": "data",
+            "ref": "Entry"
+          },
+          {
+            "layer": "data",
+            "ref": "Journal"
+          },
+          {
+            "layer": "data",
+            "ref": "Account"
+          },
+          {
+            "layer": "data",
+            "ref": "Auxiliary"
+          },
+          {
+            "layer": "rule",
+            "ref": "R-001",
+            "grade": "hypothesis",
+            "has_example": false
+          },
+          {
+            "layer": "rule",
+            "ref": "R-002",
+            "grade": "hypothesis",
+            "has_example": true
+          },
+          {
+            "layer": "observed-value",
+            "present": false,
+            "note": "MISSING: no observed run; rule grades stay below confirmed until block 1 supplies values"
+          }
+        ]
+      }
+    }
+  ],
+  "migration_map": [],
+  "test_vectors": {
+    "from_rules": [
+      {
+        "kind": "rule",
+        "id": "R-002#1",
+        "rule": "R-002",
+        "given": {
+          "account": "470",
+          "prefix": "47",
+          "auxiliary_code": "47001"
+        },
+        "expect": {
+          "accepted": true
+        }
+      },
+      {
+        "kind": "rule",
+        "id": "R-002#2",
+        "rule": "R-002",
+        "given": {
+          "account": "470",
+          "prefix": "47",
+          "auxiliary_code": "51001"
+        },
+        "expect": {
+          "accepted": false
+        }
+      }
+    ],
+    "from_acceptance": [
+      {
+        "kind": "acceptance",
+        "id": "AC-001",
+        "feature": "F-001",
+        "given": "a Sales journal, account 411 subject to auxiliaries with prefix 41",
+        "when": "the accountant enters a 1000,00 DA line with auxiliary 41001",
+        "then": "the amount lands on the expected side for a Sales journal and the auxiliary 41001 is accepted",
+        "expected": {}
+      }
+    ]
+  },
+  "open_questions": [
+    {
+      "id": "U-001",
+      "question": "What does the entry screen look like and what is the exact field order and folio workflow?",
+      "why": "no screen could be inventoried (proprietary binary, not analysed); the whole screen layer is missing.",
+      "blocks": [
+        "F-001"
+      ],
+      "probe": {
+        "kind": "h-mission",
+        "suggestion": "On the official evaluation version, open a Sales journal, enter one balanced entry with an auxiliary, screenshot each step."
+      },
+      "status": "open",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "SAISIE DES ECRITURES (folios, functions available)"
+        }
+      ]
+    },
+    {
+      "id": "U-002",
+      "question": "How is data stored (file format, tables, types)?",
+      "why": "the data model is inferred from the technical sheet; without the real files, types/keys are unknown and no migration can be written.",
+      "blocks": [],
+      "probe": {
+        "kind": "manual",
+        "suggestion": "Observe the evaluation version's data folder structure (file names/extensions only, no decompilation)."
+      },
+      "status": "open",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "no storage detail in the public sheet"
+        }
+      ]
+    },
+    {
+      "id": "U-003",
+      "question": "Exact rounding and the maximum amounts behaviour.",
+      "why": "the sheet gives caps (99 999 999 999,99 DA per entry) but not the rounding rule for tax/totals.",
+      "probe": {
+        "kind": "h-mission",
+        "suggestion": "Enter amounts with centimes and read back totals and any tax line."
+      },
+      "status": "open",
+      "evidence": [
+        {
+          "ref": "doc:f89df11c9fd39e7e",
+          "kind": "manual",
+          "locator": "SAISIE: amount caps"
+        }
+      ]
+    }
+  ]
+}

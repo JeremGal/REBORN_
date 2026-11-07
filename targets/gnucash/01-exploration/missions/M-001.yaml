@@ -1,0 +1,20 @@
+# First mission: a guided tour. Ask the computer-use agent to map the software before testing features.
+id: M-001
+title: Map the main menu and every first-level screen
+goal: >-
+  Open the application, list every menu and first-level screen, open each one without changing data,
+  and take a screenshot of each. Note the window or page title and the visible fields and buttons.
+persona: new user
+priority: must
+start_state: application freshly started, demo data loaded
+steps_hint:
+  - open each top-level menu in order
+  - open each entry, screenshot, close without saving
+capture:
+  screenshots: every-step
+  read_values: [window titles, menu labels, button labels, keyboard shortcuts shown]
+  network: false
+success_criteria:
+  - every top-level menu entry has been opened once and screenshotted
+requested_by: kickoff
+status: todo

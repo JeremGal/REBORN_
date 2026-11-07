@@ -1,0 +1,46 @@
+id: F-001
+title: Record a balanced transaction between two accounts
+module: Ledger
+priority: must
+status: partial
+confidence: medium
+user_goal: As a bookkeeper, I record a dated transaction that moves an amount from one account to another so that both accounts' balances update and the books stay balanced.
+actors: [bookkeeper]
+entry_points:
+  - { screen: S-002, action: "Open an account register, start a new line" }
+preconditions:
+  - at least two accounts exist
+  - a currency/commodity is set on the accounts
+inputs:
+  - { label: Date, field: Transaction.post_date, type: date, required: true }
+  - { label: Description, field: Transaction.description, type: string }
+  - { label: Transfer account, field: Split.account_guid, type: ref, required: true }
+  - { label: Amount (debit or credit), field: Split.value_num, type: money, required: true, validation: "the two splits must balance (R-001)" }
+steps:
+  - { n: 1, actor: user, does: "enters date, description, the other account and an amount", screen: S-002 }
+  - { n: 2, actor: system, does: "creates two splits (one per account) as num/denom fractions", rules: [R-002] }
+  - { n: 3, actor: system, does: "checks the splits sum to zero; if not, reports imbalance / adds an Imbalance split", rules: [R-001] }
+  - { n: 4, actor: system, does: "updates both account running balances" }
+rules: [R-001, R-002]
+outputs:
+  - { kind: data-change, description: "one transaction and two splits stored", entities: [Transaction, Split] }
+errors:
+  - { when: "the entry does not balance and no second account is given", behaviour: "the amount is posted to an Imbalance-<CUR> account so the books still balance", evidence: [ { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "get_balance_split uses string 'Imbalance'" } ] }
+screens: [S-002]
+entities: [Transaction, Split, Account]
+acceptance:
+  - id: AC-001
+    given: "two accounts 'Bank' and 'Groceries' in EUR"
+    when: "the user records 25.00 from Bank to Groceries on a given date"
+    then: "Bank decreases by 25.00, Groceries increases by 25.00, the transaction balances to zero"
+    expected_values: {}   # MISSING: block 1 must run GnuCash and read back the two balances; then this becomes a real test
+    # source_run: (none yet)
+evidence:
+  - { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "engine balance/imbalance functions", note: "core-feature-find 'Imbalance'" }
+  - { ref: ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf, kind: craft, locator: "transactions/splits tables and num/denom columns", note: "native-strings-find" }
+unknowns: [U-001, U-002]
+rebuild_notes: >-
+  Model Transaction with 2+ Split children; store amounts as integer minor units (or a decimal/rational type),
+  never a float (R-002). Enforce sum(splits)=0 on save; offer an Imbalance account as the fallback (R-001).
+  The register screen (S-002) is a code-built grid: confirm its exact columns and the debit/credit convention
+  from a run before finalising.

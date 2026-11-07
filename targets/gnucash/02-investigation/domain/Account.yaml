@@ -1,0 +1,25 @@
+name: Account
+description: A node in the chart of accounts. Accounts form a tree and carry the running balances; every split posts to one account.
+fields:
+  - { name: guid, label: "", type: string, required: true, unique: true, observed_as: guid }
+  - { name: name, label: Account name, type: string, required: true, observed_as: name }
+  - { name: account_type, label: Account Type, type: enum, observed_as: account_type }   # values NOT yet observed: see U-002
+  - { name: code, label: Account Code, type: string, observed_as: code }
+  - { name: description, label: Description, type: string, observed_as: description }
+  - { name: commodity_guid, label: Commodity/Currency, type: ref, ref: Commodity, observed_as: commodity_guid }
+  - { name: commodity_scu, type: integer, observed_as: commodity_scu }
+  - { name: parent_guid, label: Parent Account, type: ref, ref: Account, observed_as: parent_guid }
+  - { name: placeholder, label: Placeholder, type: boolean, observed_as: placeholder }
+  - { name: hidden, label: Hidden, type: boolean, observed_as: hidden }
+relations:
+  - { to: Account, kind: many-to-one, via: parent_guid, description: accounts form a tree }
+  - { to: Commodity, kind: many-to-one, via: commodity_guid }
+  - { to: Split, kind: one-to-many, via: account_guid }
+lifecycle: []
+storage:
+  engine: SQLite (one of several backends; XML is the other)
+  observed_table: accounts
+status: partial
+evidence:
+  - { ref: ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf, kind: craft, locator: "libgnc-backend-sql.dll: columns guid,name,account_type,code,description,commodity_guid,commodity_scu,non_std_scu,parent_guid,hidden,placeholder", note: "native-strings-find on the SQL backend DLL" }
+  - { ref: ev_9dbde950c155b3a18a3025101337cf0d369506e9e056fb095af3378286abd75f, kind: craft, locator: "table name 'accounts'", note: "SQL table inventory" }

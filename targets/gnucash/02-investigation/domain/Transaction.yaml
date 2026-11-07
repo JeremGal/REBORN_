@@ -1,0 +1,17 @@
+name: Transaction
+description: A dated accounting entry. It groups two or more splits that must balance to zero.
+fields:
+  - { name: guid, type: string, required: true, unique: true, observed_as: guid }
+  - { name: currency_guid, label: Currency, type: ref, ref: Commodity, observed_as: currency_guid }
+  - { name: num, label: "Number/Reference", type: string, observed_as: num }
+  - { name: post_date, label: Date, type: date, observed_as: post_date }
+  - { name: enter_date, label: Date entered, type: datetime, observed_as: enter_date }
+  - { name: description, label: Description, type: string, observed_as: description }
+relations:
+  - { to: Split, kind: one-to-many, via: tx_guid }
+  - { to: Commodity, kind: many-to-one, via: currency_guid }
+lifecycle: []
+storage: { engine: SQLite, observed_table: transactions }
+status: partial
+evidence:
+  - { ref: ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf, kind: craft, locator: "libgnc-backend-sql.dll: columns guid,currency_guid,num,post_date,enter_date,description", note: native-strings-find }

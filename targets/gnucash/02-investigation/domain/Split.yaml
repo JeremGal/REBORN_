@@ -1,0 +1,26 @@
+name: Split
+description: One leg of a transaction. It posts a signed amount to a single account; the splits of a transaction must sum to zero (double entry).
+fields:
+  - { name: guid, type: string, required: true, unique: true, observed_as: guid }
+  - { name: tx_guid, label: Transaction, type: ref, ref: Transaction, required: true, observed_as: tx_guid }
+  - { name: account_guid, label: Account, type: ref, ref: Account, required: true, observed_as: account_guid }
+  - { name: memo, label: Memo, type: string, observed_as: memo }
+  - { name: action, label: Action, type: string, observed_as: action }
+  - { name: reconcile_state, label: Reconciled, type: enum, observed_as: reconcile_state }   # values NOT yet observed: see U-002
+  - { name: reconcile_date, label: Reconcile date, type: datetime, observed_as: reconcile_date }
+  # Amount columns: the binary holds the templates "%s_num" / "%s_denom" (names built at runtime).
+  # The prefixes "value" and "quantity" are INFERRED, not observed: confirm on a real SQLite book (U-002).
+  - { name: value_num, label: Value (numerator), type: integer, computed_by: R-002 }
+  - { name: value_denom, label: Value (denominator), type: integer, computed_by: R-002 }
+  - { name: quantity_num, type: integer, computed_by: R-002 }
+  - { name: quantity_denom, type: integer, computed_by: R-002 }
+  - { name: lot_guid, label: Lot, type: string, observed_as: lot_guid }   # references table 'lots' (no Lot card yet)
+relations:
+  - { to: Transaction, kind: many-to-one, via: tx_guid }
+  - { to: Account, kind: many-to-one, via: account_guid }
+lifecycle: []
+storage: { engine: SQLite, observed_table: splits }
+status: partial
+evidence:
+  - { ref: ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf, kind: craft, locator: "libgnc-backend-sql.dll: literal columns tx_guid, account_guid, memo, action, reconcile_state, reconcile_date, lot_guid", note: native-strings-find }
+  - { ref: ev_cbf4056701a84d18acffbdb4d89393e12eaa59fa7ca5fd6c609a892d290cce3e, kind: craft, locator: "format strings '%s_num' and '%s_denom'; symbols gnc_numeric_num / gnc_numeric_denom", note: "amount columns are built as <prefix>_num / <prefix>_denom: fraction storage" }

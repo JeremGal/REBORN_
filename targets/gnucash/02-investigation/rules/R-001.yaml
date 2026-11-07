@@ -1,0 +1,19 @@
+id: R-001
+title: A transaction must balance (double entry)
+kind: validation
+statement: >-
+  The splits of a transaction must sum to zero in the transaction currency. If they do not, the engine
+  reports an imbalance and completes the entry with a balancing split to an "Imbalance" account rather than
+  storing an unbalanced transaction.
+formula: |
+  sum(split.value_num / split.value_denom for split in transaction.splits) == 0
+  if not balanced: add split to account "Imbalance-<CUR>" for the negated difference
+applies_to: [Transaction, Split.value_num, Split.value_denom]
+features: [F-001]
+examples: []   # MISSING: needs an observed run (e.g. a 100.00 debit vs 100.00 credit) to become a test; block 1 mission raised
+status: partial
+confidence: medium
+evidence:
+  - { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "libgnc-engine.dll functions xaccTransGetImbalance, xaccTransGetImbalanceValue, xaccTransScrubImbalance, get_balance_split (uses string 'Imbalance')", note: "core-feature-find on 'Imbalance'" }
+contradictions: []
+notes: Static evidence only (functions and strings in the engine). The exact rounding/currency behaviour is unconfirmed until a run is observed.

@@ -1,0 +1,22 @@
+id: S-001
+title: New Account
+purpose: Create or edit an account in the chart of accounts.
+kind: dialog
+screenshots: []
+layout: "Account name and description at top; type list and parent-account tree; commodity/currency; flags (placeholder, hidden) and opening options. (From the shipped GtkBuilder file; exact arrangement to confirm from a screenshot.)"
+fields:
+  - { label: Account name, control: text, binds: Account.name, required: true }
+  - { label: Account code, control: text, binds: Account.code }
+  - { label: Description, control: text, binds: Account.description }
+  - { label: Account Type, control: select, binds: Account.account_type }
+  - { label: Parent Account, control: lookup, binds: Account.parent_guid }
+  - { label: "Security/currency", control: lookup, binds: Account.commodity_guid }
+  - { label: Placeholder, control: checkbox, binds: Account.placeholder }
+  - { label: Hidden, control: checkbox, binds: Account.hidden }
+actions:
+  - { label: OK }
+  - { label: Cancel }
+states: [new, edit]
+status: partial
+evidence:
+  - { ref: "ui:02c4602aa307314d", kind: manual, locator: "gtkbuilder/dialog-account.glade window 'New Account': 6 inputs, 8 check boxes, 4 buttons", note: "reborn ui inventory of shipped GtkBuilder files" }

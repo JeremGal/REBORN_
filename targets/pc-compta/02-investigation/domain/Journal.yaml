@@ -1,0 +1,13 @@
+name: Journal
+description: A book of entries of one nature. Its nature drives where the entry lands (debit or credit) during input.
+fields:
+  - { name: code, label: Code, type: string, max_length: 14, required: true }
+  - { name: label, label: Intitule, type: string, max_length: 30 }
+  - { name: nature, label: Nature, type: enum, enum_values: [Achats, Ventes, Tresorerie, Autre] }
+relations:
+  - { to: Entry, kind: one-to-many, via: journal_code }
+lifecycle: []
+storage: { engine: "unknown (proprietary)" }
+status: hypothesis
+evidence:
+  - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "section TABLES > 1. JOURNAUX", note: "vendor technical sheet; confirm by observation (block 1)" }

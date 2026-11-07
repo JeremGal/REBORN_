@@ -1,0 +1,17 @@
+name: Auxiliary
+description: A third party or sub-ledger code (customer, supplier, employee, product family) for individual tracking under control accounts.
+fields:
+  - { name: code, label: Numero auxiliaire, type: string, max_length: 14, required: true }
+  - { name: label, label: Intitule, type: string, max_length: 30 }
+  - { name: address, label: Adresse, type: text }
+  - { name: identifiant_fiscal, label: Identifiant fiscal, type: string }
+  - { name: nrc, label: "N RC", type: string }
+  - { name: article_imposition, label: Article d'imposition, type: string }
+  - { name: telephone, label: Telephone, type: string }
+relations:
+  - { to: Account, kind: many-to-one, via: account_code }
+lifecycle: []
+storage: { engine: "unknown (proprietary)" }
+status: hypothesis
+evidence:
+  - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "section TABLES > 3. AUXILIAIRES (coordonnees completes, 14 car.)", note: "vendor technical sheet" }

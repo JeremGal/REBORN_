@@ -1,0 +1,17 @@
+id: R-002
+title: Amounts are stored as exact rational fractions (numerator / denominator)
+kind: rounding
+statement: >-
+  Monetary amounts are not floats. Each amount is a pair (numerator, denominator); the denominator is the
+  smallest currency unit (for example 100 for euros/cents). This avoids rounding drift across sums.
+formula: |
+  amount = value_num / value_denom          # e.g. 360.00 EUR -> value_num=36000, value_denom=100
+  a rebuild should store integer minor units (or a decimal/rational type), never a binary float
+applies_to: [Split.value_num, Split.value_denom, Split.quantity_num, Split.quantity_denom]
+features: [F-001]
+examples: []   # MISSING: confirm denom for a known currency from a real book created by the app
+status: partial
+confidence: medium
+evidence:
+  - { ref: ev_cbf4056701a84d18acffbdb4d89393e12eaa59fa7ca5fd6c609a892d290cce3e, kind: craft, locator: "libgnc-backend-sql.dll format strings '%s_num' / '%s_denom'; symbols gnc_numeric_num / gnc_numeric_denom", note: "fraction storage observed as a pattern; exact column prefixes inferred" }
+contradictions: []

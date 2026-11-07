@@ -1,0 +1,40 @@
+id: F-001
+title: Record an accounting entry in a journal folio
+module: Saisie
+priority: must
+status: hypothesis
+confidence: low
+user_goal: As an accountant, I record an entry in a journal so that the account and its auxiliary are updated, with the correct debit/credit side.
+actors: [accountant]
+entry_points:
+  - { screen: S-001, action: "Open a journal, a folio, start a line" }
+preconditions:
+  - the journal, account and auxiliary exist (or are created on the fly during input)
+inputs:
+  - { label: Date, field: Entry.date, type: date, required: true }
+  - { label: Compte, field: Entry.account_code, type: ref, required: true }
+  - { label: Auxiliaire, field: Entry.auxiliary_code, type: ref, validation: "if the account has a prefix, the code must start with it (R-002)" }
+  - { label: Montant, field: Entry.amount, type: decimal }
+steps:
+  - { n: 1, actor: user, does: "chooses journal and folio", screen: S-001 }
+  - { n: 2, actor: user, does: "enters date, account, optional auxiliary, amount" }
+  - { n: 3, actor: system, does: "places the amount on debit or credit per the journal nature", rules: [R-001] }
+  - { n: 4, actor: system, does: "enforces the auxiliary prefix if set", rules: [R-002] }
+rules: [R-001, R-002]
+outputs:
+  - { kind: data-change, description: "one entry stored in the folio", entities: [Entry] }
+screens: [S-001]
+entities: [Entry, Journal, Account, Auxiliary]
+acceptance:
+  - id: AC-001
+    given: "a Sales journal, account 411 subject to auxiliaries with prefix 41"
+    when: "the accountant enters a 1000,00 DA line with auxiliary 41001"
+    then: "the amount lands on the expected side for a Sales journal and the auxiliary 41001 is accepted"
+    expected_values: {}   # MISSING: block 1 must run the evaluation version and read back the side + acceptance
+evidence:
+  - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "JOURNAUX, COMPTES, SAISIE DES ECRITURES" }
+unknowns: [U-001, U-002, U-003]
+rebuild_notes: >-
+  Everything here is from the vendor's public sheet (status hypothesis). Do not build from this alone: block 1 must
+  confirm the field order, the debit/credit behaviour and the prefix rule on the official evaluation version before
+  this feature is implemented. Keep the 14-char code / 30-char label widths and the three analytical axes.

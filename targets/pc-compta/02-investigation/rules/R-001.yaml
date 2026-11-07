@@ -1,0 +1,14 @@
+id: R-001
+title: The journal nature decides the debit/credit side at input
+kind: workflow
+statement: >-
+  During entry, the software uses the journal's nature (Purchases, Sales, Treasury, ...) to position the amount
+  on the correct side (debit or credit) automatically.
+applies_to: [Journal.nature, Entry.sens]
+features: [F-001]
+examples: []   # confirm by observation: enter in a Sales vs a Purchases journal and see the default side
+status: hypothesis
+confidence: low
+evidence:
+  - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "1. JOURNAUX: 'La saisie des ecritures tient compte de la nature pour se positionner correctement au debit ou credit'" }
+contradictions: []

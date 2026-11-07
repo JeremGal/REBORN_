@@ -1,0 +1,36 @@
+# Filled automatically by tools/reborn.mjs. Raw files live in the local evidence store (.evidence/<target>/), never in git.
+target: pc-compta
+entries:
+  - id: doc:f89df11c9fd39e7e
+    kind: manual
+    tool: crawl4ai
+    operation: public-documentation
+    subject:
+      label: https://dlg-net.com/comptaw.php
+    created_at: 2026-11-07T14:52:19.335Z
+    file: docs/20261107T145153Z-dlg-net.com-comptaw-php.md
+    bytes: 14935
+    sha256: f89df11c9fd39e7e0d2c19ff0a3e99153b4cd5e79e0148e2061011834a4ff6cd
+    summary: "public page captured as markdown: https://dlg-net.com/comptaw.php"
+  - id: doc:48854eaf32eff660
+    kind: manual
+    tool: crawl4ai
+    operation: public-documentation
+    subject:
+      label: https://dlg-net.com/dl.php
+    created_at: 2026-11-07T14:52:28.951Z
+    file: docs/20261107T145219Z-dlg-net.com-dl-php.md
+    bytes: 7530
+    sha256: 48854eaf32eff6607369e48c06d9cb35ead0da97ab597f4e1543b03232769820
+    summary: "public page captured as markdown: https://dlg-net.com/dl.php"
+  - id: doc:693b2fd9504d3b67
+    kind: manual
+    tool: crawl4ai
+    operation: public-documentation
+    subject:
+      label: https://zoomalgerie.com/logiciel-comptabilite-algerie/
+    created_at: 2026-11-07T14:52:40.373Z
+    file: docs/20261107T145229Z-zoomalgerie.com-logiciel-comptabilite-algerie.md
+    bytes: 60918
+    sha256: 693b2fd9504d3b675795155e60281b0f50aa2bc577b0070e20fd17bc672a3162
+    summary: "public page captured as markdown: https://zoomalgerie.com/logiciel-comptabilite-algerie/"

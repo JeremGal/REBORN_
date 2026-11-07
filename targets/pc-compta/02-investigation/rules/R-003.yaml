@@ -1,0 +1,14 @@
+id: R-003
+title: Reconcilable accounts carry forward unreconciled entries at period open
+kind: workflow
+statement: >-
+  At the start of a fiscal year, a lettered (reconcilable) account receives, instead of a single opening balance,
+  all the unreconciled entries that justify that balance, kept at their original dates.
+applies_to: [Account.lettrable]
+features: []
+examples: []   # confirm by observation during a period open
+status: hypothesis
+confidence: low
+evidence:
+  - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "2. COMPTES: 'au debut d'exercice, un compte lettrable recoit ... toutes les ecritures non lettrees'" }
+contradictions: []

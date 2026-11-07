@@ -1,0 +1,20 @@
+id: R-002
+title: An auxiliary prefix restricts which codes an account accepts
+kind: validation
+statement: >-
+  An account "subject to auxiliaries" can be given a prefix; it then accepts only auxiliary codes that start with
+  that prefix. Example: account 470 with prefix 47 accepts only codes beginning with 47.
+formula: |
+  if account.soumis_auxiliaires and account.prefixe_auxiliaire:
+      reject auxiliary_code unless auxiliary_code.startswith(account.prefixe_auxiliaire)
+applies_to: [Account.prefixe_auxiliaire, Entry.auxiliary_code]
+features: [F-001]
+examples:
+  - { given: { account: "470", prefix: "47", auxiliary_code: "47001" }, expect: { accepted: true } }
+  - { given: { account: "470", prefix: "47", auxiliary_code: "51001" }, expect: { accepted: false } }
+status: hypothesis
+confidence: low
+evidence:
+  - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "2. COMPTES > Prefixe auxiliaire (example with 470 / 47)" }
+contradictions: []
+notes: Examples are derived from the documented example, not yet observed running.

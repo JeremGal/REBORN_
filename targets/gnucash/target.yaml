@@ -1,0 +1,32 @@
+# Identity of the software under study. Never commit the binary: only its name and SHA-256 (reborn triage adds them).
+id: gnucash
+name: GnuCash
+vendor: GnuCash community
+domain: double-entry accounting (small business and personal)
+description: >-
+  Desktop double-entry bookkeeping: chart of accounts, transactions split across accounts, invoices, reconciliation, reports. Stand-in for legacy accounting software such as PC Compta.
+kind: exe
+versions: [ "5.17" ]
+platforms: [ windows ]
+access:
+  method: open-source
+  notes: Official Windows installer gnucash-5.17.setup.exe from the GitHub release, SHA-256 matches GitHub's published digest. Extracted with innoextract (not installed), so nothing was written to the system.
+legal:
+  basis: GPL licence (GnuCash is free software under the GNU GPL) explicitly allows studying the program.
+  clean_room: true
+  restrictions:
+    - Do not reuse the name, logo or icons in the rebuild.
+artifacts:
+  - name: gnucash.exe
+    sha256: 2d1760f77d57610ac61127f80057b567946dfc8dae80d15074291989e87e00bf
+    bytes: 3453163
+    source: local copy (not in git)
+urls:
+  - label: project
+    url: https://github.com/Gnucash/gnucash
+  - label: release used
+    url: https://github.com/Gnucash/gnucash/releases/tag/5.17
+team:
+  explorer: ""
+  investigator: AlanECE
+  rebuilder: ""

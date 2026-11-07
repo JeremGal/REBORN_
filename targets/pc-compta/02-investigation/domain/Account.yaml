@@ -1,0 +1,15 @@
+name: Account
+description: A general-ledger account from the chart of accounts. May be lettered (reconcilable) and/or subject to auxiliaries.
+fields:
+  - { name: code, label: Compte, type: string, max_length: 14, required: true }
+  - { name: label, label: Intitule, type: string, max_length: 30 }
+  - { name: lettrable, label: Lettrable, type: boolean }
+  - { name: soumis_auxiliaires, label: Soumis a auxiliaires, type: boolean }
+  - { name: prefixe_auxiliaire, label: Prefixe auxiliaire, type: string }
+relations:
+  - { to: Auxiliary, kind: one-to-many, via: account_code, description: "an auxiliary code can attach to several accounts (470, 471, 570)" }
+lifecycle: []
+storage: { engine: "unknown (proprietary)" }
+status: hypothesis
+evidence:
+  - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "section TABLES > 2. COMPTES (lettrable, soumis a auxiliaires, prefixe auxiliaire)", note: "vendor technical sheet" }

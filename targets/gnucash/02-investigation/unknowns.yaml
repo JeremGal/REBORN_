@@ -1,0 +1,32 @@
+# Open questions. A probe of kind h-mission becomes a block 1 mission with: node tools/reborn.mjs ask <target>
+target: gnucash
+unknowns:
+  - id: U-001
+    question: What are the exact running balances after a known transaction, and how is the debit/credit side shown?
+    why: F-001's acceptance scenario has no expected values; the balance rule (R-001) stays below confirmed without an observed run.
+    blocks: [F-001]
+    probe:
+      kind: h-mission
+      suggestion: "Create a new book, two EUR accounts (Bank asset, Groceries expense), record 25.00 from Bank to Groceries, read back both balances and screenshot the register."
+    status: open
+    evidence:
+      - { ref: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8, kind: craft, locator: "balance functions only (static)", note: "no runtime value yet" }
+  - id: U-002
+    question: What is the real database schema (types, primary and foreign keys, the denominator per currency)?
+    why: the entity cards have column names from the binary but no types or keys; R-002 needs the denominator confirmed.
+    blocks: [F-001]
+    probe:
+      kind: h-mission
+      suggestion: "Save the book created above as an SQLite file (File > Save As, SQLite), then hand the .gnucash file to block 2 to run `reborn sqlite`."
+    status: open
+    evidence:
+      - { ref: ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf, kind: craft, locator: "column names only, no types", note: "native-strings-find" }
+  - id: U-003
+    question: Which screens exist for invoices, customers, taxes, and how do they flow?
+    why: the data model shows invoices/customers/taxtables tables and the UI files list 111 windows, but the business flows are not mapped.
+    probe:
+      kind: h-mission
+      suggestion: "Tour the Business menu (customers, invoices, process payment), screenshot each window."
+    status: open
+    evidence:
+      - { ref: "ui:02c4602aa307314d", kind: manual, locator: "111 windows inventoried (dialog-invoice, dialog-customer, dialog-tax-info ...)", note: "reborn ui" }

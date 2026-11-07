@@ -1,0 +1,1105 @@
+{
+  "schema": "reborn/handoff@1",
+  "target": {
+    "id": "gnucash",
+    "name": "GnuCash",
+    "domain": "double-entry accounting (small business and personal)",
+    "kind": "exe",
+    "tech": null,
+    "legal": {
+      "basis": "GPL licence (GnuCash is free software under the GNU GPL) explicitly allows studying the program.",
+      "clean_room": true,
+      "restrictions": [
+        "Do not reuse the name, logo or icons in the rebuild."
+      ]
+    }
+  },
+  "generated_at": "2026-11-07T14:51:09.991Z",
+  "clean_room": true,
+  "readiness": {
+    "features": {
+      "partial": 1
+    },
+    "rules": {
+      "partial": 2
+    },
+    "entities": {
+      "partial": 3,
+      "hypothesis": 1
+    },
+    "has_observed_values": false,
+    "open_questions": 3,
+    "note": "Rebuild-ready for a feature only when its grade is confirmed/partial and it has at least one acceptance scenario with expected values."
+  },
+  "build_order": [
+    {
+      "kind": "entity",
+      "id": "Commodity"
+    },
+    {
+      "kind": "entity",
+      "id": "Account"
+    },
+    {
+      "kind": "entity",
+      "id": "Transaction"
+    },
+    {
+      "kind": "entity",
+      "id": "Split"
+    },
+    {
+      "kind": "rule",
+      "id": "R-001"
+    },
+    {
+      "kind": "rule",
+      "id": "R-002"
+    },
+    {
+      "kind": "feature",
+      "id": "F-001",
+      "priority": "must"
+    }
+  ],
+  "entities": [
+    {
+      "name": "Account",
+      "description": "A node in the chart of accounts. Accounts form a tree and carry the running balances; every split posts to one account.",
+      "fields": [
+        {
+          "name": "guid",
+          "label": "",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "observed_as": "guid"
+        },
+        {
+          "name": "name",
+          "label": "Account name",
+          "type": "string",
+          "required": true,
+          "observed_as": "name"
+        },
+        {
+          "name": "account_type",
+          "label": "Account Type",
+          "type": "enum",
+          "observed_as": "account_type"
+        },
+        {
+          "name": "code",
+          "label": "Account Code",
+          "type": "string",
+          "observed_as": "code"
+        },
+        {
+          "name": "description",
+          "label": "Description",
+          "type": "string",
+          "observed_as": "description"
+        },
+        {
+          "name": "commodity_guid",
+          "label": "Commodity/Currency",
+          "type": "ref",
+          "ref": "Commodity",
+          "observed_as": "commodity_guid"
+        },
+        {
+          "name": "commodity_scu",
+          "type": "integer",
+          "observed_as": "commodity_scu"
+        },
+        {
+          "name": "parent_guid",
+          "label": "Parent Account",
+          "type": "ref",
+          "ref": "Account",
+          "observed_as": "parent_guid"
+        },
+        {
+          "name": "placeholder",
+          "label": "Placeholder",
+          "type": "boolean",
+          "observed_as": "placeholder"
+        },
+        {
+          "name": "hidden",
+          "label": "Hidden",
+          "type": "boolean",
+          "observed_as": "hidden"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Account",
+          "kind": "many-to-one",
+          "via": "parent_guid",
+          "description": "accounts form a tree"
+        },
+        {
+          "to": "Commodity",
+          "kind": "many-to-one",
+          "via": "commodity_guid"
+        },
+        {
+          "to": "Split",
+          "kind": "one-to-many",
+          "via": "account_guid"
+        }
+      ],
+      "lifecycle": [],
+      "storage": {
+        "engine": "SQLite (one of several backends; XML is the other)",
+        "observed_table": "accounts"
+      },
+      "status": "partial",
+      "evidence": [
+        {
+          "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
+          "kind": "craft",
+          "locator": "libgnc-backend-sql.dll: columns guid,name,account_type,code,description,commodity_guid,commodity_scu,non_std_scu,parent_guid,hidden,placeholder",
+          "note": "native-strings-find on the SQL backend DLL"
+        },
+        {
+          "ref": "ev_9dbde950c155b3a18a3025101337cf0d369506e9e056fb095af3378286abd75f",
+          "kind": "craft",
+          "locator": "table name 'accounts'",
+          "note": "SQL table inventory"
+        }
+      ]
+    },
+    {
+      "name": "Commodity",
+      "description": "A currency or security in which accounts and transactions are denominated (EUR, USD, a stock).",
+      "fields": [
+        {
+          "name": "guid",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "observed_as": "guid"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Account",
+          "kind": "one-to-many",
+          "via": "commodity_guid"
+        },
+        {
+          "to": "Transaction",
+          "kind": "one-to-many",
+          "via": "currency_guid"
+        }
+      ],
+      "storage": {
+        "engine": "SQLite",
+        "observed_table": "commodities"
+      },
+      "status": "hypothesis",
+      "evidence": [
+        {
+          "ref": "ev_9dbde950c155b3a18a3025101337cf0d369506e9e056fb095af3378286abd75f",
+          "kind": "craft",
+          "locator": "table name 'commodities'",
+          "note": "columns not searched yet (namespace, mnemonic, fraction expected): see U-002"
+        }
+      ]
+    },
+    {
+      "name": "Split",
+      "description": "One leg of a transaction. It posts a signed amount to a single account; the splits of a transaction must sum to zero (double entry).",
+      "fields": [
+        {
+          "name": "guid",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "observed_as": "guid"
+        },
+        {
+          "name": "tx_guid",
+          "label": "Transaction",
+          "type": "ref",
+          "ref": "Transaction",
+          "required": true,
+          "observed_as": "tx_guid"
+        },
+        {
+          "name": "account_guid",
+          "label": "Account",
+          "type": "ref",
+          "ref": "Account",
+          "required": true,
+          "observed_as": "account_guid"
+        },
+        {
+          "name": "memo",
+          "label": "Memo",
+          "type": "string",
+          "observed_as": "memo"
+        },
+        {
+          "name": "action",
+          "label": "Action",
+          "type": "string",
+          "observed_as": "action"
+        },
+        {
+          "name": "reconcile_state",
+          "label": "Reconciled",
+          "type": "enum",
+          "observed_as": "reconcile_state"
+        },
+        {
+          "name": "reconcile_date",
+          "label": "Reconcile date",
+          "type": "datetime",
+          "observed_as": "reconcile_date"
+        },
+        {
+          "name": "value_num",
+          "label": "Value (numerator)",
+          "type": "integer",
+          "computed_by": "R-002"
+        },
+        {
+          "name": "value_denom",
+          "label": "Value (denominator)",
+          "type": "integer",
+          "computed_by": "R-002"
+        },
+        {
+          "name": "quantity_num",
+          "type": "integer",
+          "computed_by": "R-002"
+        },
+        {
+          "name": "quantity_denom",
+          "type": "integer",
+          "computed_by": "R-002"
+        },
+        {
+          "name": "lot_guid",
+          "label": "Lot",
+          "type": "string",
+          "observed_as": "lot_guid"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Transaction",
+          "kind": "many-to-one",
+          "via": "tx_guid"
+        },
+        {
+          "to": "Account",
+          "kind": "many-to-one",
+          "via": "account_guid"
+        }
+      ],
+      "lifecycle": [],
+      "storage": {
+        "engine": "SQLite",
+        "observed_table": "splits"
+      },
+      "status": "partial",
+      "evidence": [
+        {
+          "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
+          "kind": "craft",
+          "locator": "libgnc-backend-sql.dll: literal columns tx_guid, account_guid, memo, action, reconcile_state, reconcile_date, lot_guid",
+          "note": "native-strings-find"
+        },
+        {
+          "ref": "ev_cbf4056701a84d18acffbdb4d89393e12eaa59fa7ca5fd6c609a892d290cce3e",
+          "kind": "craft",
+          "locator": "format strings '%s_num' and '%s_denom'; symbols gnc_numeric_num / gnc_numeric_denom",
+          "note": "amount columns are built as <prefix>_num / <prefix>_denom: fraction storage"
+        }
+      ]
+    },
+    {
+      "name": "Transaction",
+      "description": "A dated accounting entry. It groups two or more splits that must balance to zero.",
+      "fields": [
+        {
+          "name": "guid",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "observed_as": "guid"
+        },
+        {
+          "name": "currency_guid",
+          "label": "Currency",
+          "type": "ref",
+          "ref": "Commodity",
+          "observed_as": "currency_guid"
+        },
+        {
+          "name": "num",
+          "label": "Number/Reference",
+          "type": "string",
+          "observed_as": "num"
+        },
+        {
+          "name": "post_date",
+          "label": "Date",
+          "type": "date",
+          "observed_as": "post_date"
+        },
+        {
+          "name": "enter_date",
+          "label": "Date entered",
+          "type": "datetime",
+          "observed_as": "enter_date"
+        },
+        {
+          "name": "description",
+          "label": "Description",
+          "type": "string",
+          "observed_as": "description"
+        }
+      ],
+      "relations": [
+        {
+          "to": "Split",
+          "kind": "one-to-many",
+          "via": "tx_guid"
+        },
+        {
+          "to": "Commodity",
+          "kind": "many-to-one",
+          "via": "currency_guid"
+        }
+      ],
+      "lifecycle": [],
+      "storage": {
+        "engine": "SQLite",
+        "observed_table": "transactions"
+      },
+      "status": "partial",
+      "evidence": [
+        {
+          "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
+          "kind": "craft",
+          "locator": "libgnc-backend-sql.dll: columns guid,currency_guid,num,post_date,enter_date,description",
+          "note": "native-strings-find"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "R-001",
+      "title": "A transaction must balance (double entry)",
+      "kind": "validation",
+      "statement": "The splits of a transaction must sum to zero in the transaction currency. If they do not, the engine reports an imbalance and completes the entry with a balancing split to an \"Imbalance\" account rather than storing an unbalanced transaction.",
+      "formula": "sum(split.value_num / split.value_denom for split in transaction.splits) == 0\nif not balanced: add split to account \"Imbalance-<CUR>\" for the negated difference\n",
+      "applies_to": [
+        "Transaction",
+        "Split.value_num",
+        "Split.value_denom"
+      ],
+      "features": [
+        "F-001"
+      ],
+      "examples": [],
+      "status": "partial",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
+          "kind": "craft",
+          "locator": "libgnc-engine.dll functions xaccTransGetImbalance, xaccTransGetImbalanceValue, xaccTransScrubImbalance, get_balance_split (uses string 'Imbalance')",
+          "note": "core-feature-find on 'Imbalance'"
+        }
+      ],
+      "contradictions": [],
+      "notes": "Static evidence only (functions and strings in the engine). The exact rounding/currency behaviour is unconfirmed until a run is observed."
+    },
+    {
+      "id": "R-002",
+      "title": "Amounts are stored as exact rational fractions (numerator / denominator)",
+      "kind": "rounding",
+      "statement": "Monetary amounts are not floats. Each amount is a pair (numerator, denominator); the denominator is the smallest currency unit (for example 100 for euros/cents). This avoids rounding drift across sums.",
+      "formula": "amount = value_num / value_denom          # e.g. 360.00 EUR -> value_num=36000, value_denom=100\na rebuild should store integer minor units (or a decimal/rational type), never a binary float\n",
+      "applies_to": [
+        "Split.value_num",
+        "Split.value_denom",
+        "Split.quantity_num",
+        "Split.quantity_denom"
+      ],
+      "features": [
+        "F-001"
+      ],
+      "examples": [],
+      "status": "partial",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "ref": "ev_cbf4056701a84d18acffbdb4d89393e12eaa59fa7ca5fd6c609a892d290cce3e",
+          "kind": "craft",
+          "locator": "libgnc-backend-sql.dll format strings '%s_num' / '%s_denom'; symbols gnc_numeric_num / gnc_numeric_denom",
+          "note": "fraction storage observed as a pattern; exact column prefixes inferred"
+        }
+      ],
+      "contradictions": []
+    }
+  ],
+  "screens": [
+    {
+      "id": "S-001",
+      "title": "New Account",
+      "purpose": "Create or edit an account in the chart of accounts.",
+      "kind": "dialog",
+      "screenshots": [],
+      "layout": "Account name and description at top; type list and parent-account tree; commodity/currency; flags (placeholder, hidden) and opening options. (From the shipped GtkBuilder file; exact arrangement to confirm from a screenshot.)",
+      "fields": [
+        {
+          "label": "Account name",
+          "control": "text",
+          "binds": "Account.name",
+          "required": true
+        },
+        {
+          "label": "Account code",
+          "control": "text",
+          "binds": "Account.code"
+        },
+        {
+          "label": "Description",
+          "control": "text",
+          "binds": "Account.description"
+        },
+        {
+          "label": "Account Type",
+          "control": "select",
+          "binds": "Account.account_type"
+        },
+        {
+          "label": "Parent Account",
+          "control": "lookup",
+          "binds": "Account.parent_guid"
+        },
+        {
+          "label": "Security/currency",
+          "control": "lookup",
+          "binds": "Account.commodity_guid"
+        },
+        {
+          "label": "Placeholder",
+          "control": "checkbox",
+          "binds": "Account.placeholder"
+        },
+        {
+          "label": "Hidden",
+          "control": "checkbox",
+          "binds": "Account.hidden"
+        }
+      ],
+      "actions": [
+        {
+          "label": "OK"
+        },
+        {
+          "label": "Cancel"
+        }
+      ],
+      "states": [
+        "new",
+        "edit"
+      ],
+      "status": "partial",
+      "evidence": [
+        {
+          "ref": "ui:02c4602aa307314d",
+          "kind": "manual",
+          "locator": "gtkbuilder/dialog-account.glade window 'New Account': 6 inputs, 8 check boxes, 4 buttons",
+          "note": "reborn ui inventory of shipped GtkBuilder files"
+        }
+      ]
+    },
+    {
+      "id": "S-002",
+      "title": "Transaction register (account entry)",
+      "purpose": "Enter and view the transactions of an account, with the running balance.",
+      "kind": "master-detail",
+      "screenshots": [],
+      "layout": "A grid of transactions; each row expands into its splits (account, debit, credit); a running balance column. Built in code at runtime (no DIALOG resource), so the exact columns must be confirmed from a screenshot.",
+      "fields": [
+        {
+          "label": "Date",
+          "control": "date",
+          "binds": "Transaction.post_date"
+        },
+        {
+          "label": "Num",
+          "control": "text",
+          "binds": "Transaction.num"
+        },
+        {
+          "label": "Description",
+          "control": "text",
+          "binds": "Transaction.description"
+        },
+        {
+          "label": "Transfer (account)",
+          "control": "lookup",
+          "binds": "Split.account_guid"
+        },
+        {
+          "label": "Debit",
+          "control": "money",
+          "binds": "Split.value_num"
+        },
+        {
+          "label": "Credit",
+          "control": "money",
+          "binds": "Split.value_num"
+        },
+        {
+          "label": "Balance",
+          "control": "display"
+        },
+        {
+          "label": "Reconcile",
+          "control": "display",
+          "binds": "Split.reconcile_state"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Enter (save transaction)"
+        },
+        {
+          "label": "Cancel"
+        },
+        {
+          "label": "Split"
+        }
+      ],
+      "states": [
+        "editing",
+        "saved"
+      ],
+      "status": "hypothesis",
+      "evidence": [
+        {
+          "ref": "ev_754bada57b24191e3a266067f73b8641b44a97e09cc6c176639fe7dc7df1724a",
+          "kind": "rea",
+          "locator": "gnucash.exe imports libgnc-register-gnome.dll / libgnc-ledger-core (register UI)",
+          "note": "the register is a code-built UI; columns inferred from the data model, to confirm by a run"
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "id": "F-001",
+      "title": "Record a balanced transaction between two accounts",
+      "module": "Ledger",
+      "priority": "must",
+      "status": "partial",
+      "confidence": "medium",
+      "user_goal": "As a bookkeeper, I record a dated transaction that moves an amount from one account to another so that both accounts' balances update and the books stay balanced.",
+      "actors": [
+        "bookkeeper"
+      ],
+      "entry_points": [
+        {
+          "screen": "S-002",
+          "action": "Open an account register, start a new line"
+        }
+      ],
+      "preconditions": [
+        "at least two accounts exist",
+        "a currency/commodity is set on the accounts"
+      ],
+      "inputs": [
+        {
+          "label": "Date",
+          "field": "Transaction.post_date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "label": "Description",
+          "field": "Transaction.description",
+          "type": "string"
+        },
+        {
+          "label": "Transfer account",
+          "field": "Split.account_guid",
+          "type": "ref",
+          "required": true
+        },
+        {
+          "label": "Amount (debit or credit)",
+          "field": "Split.value_num",
+          "type": "money",
+          "required": true,
+          "validation": "the two splits must balance (R-001)"
+        }
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "actor": "user",
+          "does": "enters date, description, the other account and an amount",
+          "screen": "S-002"
+        },
+        {
+          "n": 2,
+          "actor": "system",
+          "does": "creates two splits (one per account) as num/denom fractions",
+          "rules": [
+            "R-002"
+          ]
+        },
+        {
+          "n": 3,
+          "actor": "system",
+          "does": "checks the splits sum to zero; if not, reports imbalance / adds an Imbalance split",
+          "rules": [
+            "R-001"
+          ]
+        },
+        {
+          "n": 4,
+          "actor": "system",
+          "does": "updates both account running balances"
+        }
+      ],
+      "rules": [
+        "R-001",
+        "R-002"
+      ],
+      "outputs": [
+        {
+          "kind": "data-change",
+          "description": "one transaction and two splits stored",
+          "entities": [
+            "Transaction",
+            "Split"
+          ]
+        }
+      ],
+      "errors": [
+        {
+          "when": "the entry does not balance and no second account is given",
+          "behaviour": "the amount is posted to an Imbalance-<CUR> account so the books still balance",
+          "evidence": [
+            {
+              "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
+              "kind": "craft",
+              "locator": "get_balance_split uses string 'Imbalance'"
+            }
+          ]
+        }
+      ],
+      "screens": [
+        "S-002"
+      ],
+      "entities": [
+        "Transaction",
+        "Split",
+        "Account"
+      ],
+      "acceptance": [
+        {
+          "id": "AC-001",
+          "given": "two accounts 'Bank' and 'Groceries' in EUR",
+          "when": "the user records 25.00 from Bank to Groceries on a given date",
+          "then": "Bank decreases by 25.00, Groceries increases by 25.00, the transaction balances to zero",
+          "expected_values": {}
+        }
+      ],
+      "evidence": [
+        {
+          "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
+          "kind": "craft",
+          "locator": "engine balance/imbalance functions",
+          "note": "core-feature-find 'Imbalance'"
+        },
+        {
+          "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
+          "kind": "craft",
+          "locator": "transactions/splits tables and num/denom columns",
+          "note": "native-strings-find"
+        }
+      ],
+      "unknowns": [
+        "U-001",
+        "U-002"
+      ],
+      "rebuild_notes": "Model Transaction with 2+ Split children; store amounts as integer minor units (or a decimal/rational type), never a float (R-002). Enforce sum(splits)=0 on save; offer an Imbalance account as the fallback (R-001). The register screen (S-002) is a code-built grid: confirm its exact columns and the debit/credit convention from a run before finalising.",
+      "discovery_trace": {
+        "grade": "partial",
+        "confidence": "medium",
+        "evidence": [
+          {
+            "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
+            "kind": "craft",
+            "locator": "engine balance/imbalance functions"
+          },
+          {
+            "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
+            "kind": "craft",
+            "locator": "transactions/splits tables and num/denom columns"
+          }
+        ],
+        "steps": [
+          {
+            "layer": "screen",
+            "ref": "S-002",
+            "from": "ui-inventory or run screenshot"
+          },
+          {
+            "layer": "data",
+            "ref": "Transaction"
+          },
+          {
+            "layer": "data",
+            "ref": "Split"
+          },
+          {
+            "layer": "data",
+            "ref": "Account"
+          },
+          {
+            "layer": "rule",
+            "ref": "R-001",
+            "grade": "partial",
+            "has_example": false
+          },
+          {
+            "layer": "rule",
+            "ref": "R-002",
+            "grade": "partial",
+            "has_example": false
+          },
+          {
+            "layer": "observed-value",
+            "present": false,
+            "note": "MISSING: no observed run; rule grades stay below confirmed until block 1 supplies values"
+          }
+        ]
+      }
+    }
+  ],
+  "migration_map": [
+    {
+      "entity": "Account",
+      "new_field": "guid",
+      "from_table": "accounts",
+      "from_column": "guid",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Account",
+      "new_field": "name",
+      "from_table": "accounts",
+      "from_column": "name",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Account",
+      "new_field": "account_type",
+      "from_table": "accounts",
+      "from_column": "account_type",
+      "type": "enum",
+      "grade": "partial"
+    },
+    {
+      "entity": "Account",
+      "new_field": "code",
+      "from_table": "accounts",
+      "from_column": "code",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Account",
+      "new_field": "description",
+      "from_table": "accounts",
+      "from_column": "description",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Account",
+      "new_field": "commodity_guid",
+      "from_table": "accounts",
+      "from_column": "commodity_guid",
+      "type": "ref",
+      "grade": "partial"
+    },
+    {
+      "entity": "Account",
+      "new_field": "commodity_scu",
+      "from_table": "accounts",
+      "from_column": "commodity_scu",
+      "type": "integer",
+      "grade": "partial"
+    },
+    {
+      "entity": "Account",
+      "new_field": "parent_guid",
+      "from_table": "accounts",
+      "from_column": "parent_guid",
+      "type": "ref",
+      "grade": "partial"
+    },
+    {
+      "entity": "Account",
+      "new_field": "placeholder",
+      "from_table": "accounts",
+      "from_column": "placeholder",
+      "type": "boolean",
+      "grade": "partial"
+    },
+    {
+      "entity": "Account",
+      "new_field": "hidden",
+      "from_table": "accounts",
+      "from_column": "hidden",
+      "type": "boolean",
+      "grade": "partial"
+    },
+    {
+      "entity": "Commodity",
+      "new_field": "guid",
+      "from_table": "commodities",
+      "from_column": "guid",
+      "type": "string",
+      "grade": "hypothesis"
+    },
+    {
+      "entity": "Split",
+      "new_field": "guid",
+      "from_table": "splits",
+      "from_column": "guid",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "tx_guid",
+      "from_table": "splits",
+      "from_column": "tx_guid",
+      "type": "ref",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "account_guid",
+      "from_table": "splits",
+      "from_column": "account_guid",
+      "type": "ref",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "memo",
+      "from_table": "splits",
+      "from_column": "memo",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "action",
+      "from_table": "splits",
+      "from_column": "action",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "reconcile_state",
+      "from_table": "splits",
+      "from_column": "reconcile_state",
+      "type": "enum",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "reconcile_date",
+      "from_table": "splits",
+      "from_column": "reconcile_date",
+      "type": "datetime",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "value_num",
+      "from_table": "splits",
+      "from_column": null,
+      "type": "integer",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "value_denom",
+      "from_table": "splits",
+      "from_column": null,
+      "type": "integer",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "quantity_num",
+      "from_table": "splits",
+      "from_column": null,
+      "type": "integer",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "quantity_denom",
+      "from_table": "splits",
+      "from_column": null,
+      "type": "integer",
+      "grade": "partial"
+    },
+    {
+      "entity": "Split",
+      "new_field": "lot_guid",
+      "from_table": "splits",
+      "from_column": "lot_guid",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Transaction",
+      "new_field": "guid",
+      "from_table": "transactions",
+      "from_column": "guid",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Transaction",
+      "new_field": "currency_guid",
+      "from_table": "transactions",
+      "from_column": "currency_guid",
+      "type": "ref",
+      "grade": "partial"
+    },
+    {
+      "entity": "Transaction",
+      "new_field": "num",
+      "from_table": "transactions",
+      "from_column": "num",
+      "type": "string",
+      "grade": "partial"
+    },
+    {
+      "entity": "Transaction",
+      "new_field": "post_date",
+      "from_table": "transactions",
+      "from_column": "post_date",
+      "type": "date",
+      "grade": "partial"
+    },
+    {
+      "entity": "Transaction",
+      "new_field": "enter_date",
+      "from_table": "transactions",
+      "from_column": "enter_date",
+      "type": "datetime",
+      "grade": "partial"
+    },
+    {
+      "entity": "Transaction",
+      "new_field": "description",
+      "from_table": "transactions",
+      "from_column": "description",
+      "type": "string",
+      "grade": "partial"
+    }
+  ],
+  "test_vectors": {
+    "from_rules": [],
+    "from_acceptance": [
+      {
+        "kind": "acceptance",
+        "id": "AC-001",
+        "feature": "F-001",
+        "given": "two accounts 'Bank' and 'Groceries' in EUR",
+        "when": "the user records 25.00 from Bank to Groceries on a given date",
+        "then": "Bank decreases by 25.00, Groceries increases by 25.00, the transaction balances to zero",
+        "expected": {}
+      }
+    ]
+  },
+  "open_questions": [
+    {
+      "id": "U-001",
+      "question": "What are the exact running balances after a known transaction, and how is the debit/credit side shown?",
+      "why": "F-001's acceptance scenario has no expected values; the balance rule (R-001) stays below confirmed without an observed run.",
+      "blocks": [
+        "F-001"
+      ],
+      "probe": {
+        "kind": "h-mission",
+        "suggestion": "Create a new book, two EUR accounts (Bank asset, Groceries expense), record 25.00 from Bank to Groceries, read back both balances and screenshot the register."
+      },
+      "status": "open",
+      "evidence": [
+        {
+          "ref": "ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8",
+          "kind": "craft",
+          "locator": "balance functions only (static)",
+          "note": "no runtime value yet"
+        }
+      ]
+    },
+    {
+      "id": "U-002",
+      "question": "What is the real database schema (types, primary and foreign keys, the denominator per currency)?",
+      "why": "the entity cards have column names from the binary but no types or keys; R-002 needs the denominator confirmed.",
+      "blocks": [
+        "F-001"
+      ],
+      "probe": {
+        "kind": "h-mission",
+        "suggestion": "Save the book created above as an SQLite file (File > Save As, SQLite), then hand the .gnucash file to block 2 to run `reborn sqlite`."
+      },
+      "status": "open",
+      "evidence": [
+        {
+          "ref": "ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf",
+          "kind": "craft",
+          "locator": "column names only, no types",
+          "note": "native-strings-find"
+        }
+      ]
+    },
+    {
+      "id": "U-003",
+      "question": "Which screens exist for invoices, customers, taxes, and how do they flow?",
+      "why": "the data model shows invoices/customers/taxtables tables and the UI files list 111 windows, but the business flows are not mapped.",
+      "probe": {
+        "kind": "h-mission",
+        "suggestion": "Tour the Business menu (customers, invoices, process payment), screenshot each window."
+      },
+      "status": "open",
+      "evidence": [
+        {
+          "ref": "ui:02c4602aa307314d",
+          "kind": "manual",
+          "locator": "111 windows inventoried (dialog-invoice, dialog-customer, dialog-tax-info ...)",
+          "note": "reborn ui"
+        }
+      ]
+    }
+  ]
+}

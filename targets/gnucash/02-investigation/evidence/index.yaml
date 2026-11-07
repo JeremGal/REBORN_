@@ -1,0 +1,337 @@
+# Filled automatically by tools/reborn.mjs. Raw files live in the local evidence store (.evidence/<target>/), never in git.
+target: gnucash
+entries:
+  - id: ev_690e25bf7c6670c5ace545751061113bc4ee5f2e1e44be6c919c9bb46f0da99a
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-native-exports
+    args:
+      - <path>/gnucash-5.17.setup.exe
+    subject:
+      label: gnucash-5.17.setup.exe
+    created_at: 2026-11-07T13:58:34.530Z
+    file: rea/20261107T135831Z-inspect-native-exports.json
+    bytes: 1992
+    sha256: bece53aaae032cca0ba8322dfd29b8db905078f02a6f0d149e1f166d58869b28
+  - id: ev_9353e52e7f84c81b8a6be382f4c1aba4dcaf9017c63ab25f3711c19d7ce6ae4f
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-go-binary
+    args:
+      - <path>/gnucash-5.17.setup.exe
+      - --detail
+      - summary
+      - --evidence_output
+      - <path>/20261107T135838Z-inspect-go-binary.complete.json
+    subject:
+      label: gnucash-5.17.setup.exe
+    created_at: 2026-11-07T13:58:41.704Z
+    file: rea/20261107T135838Z-inspect-go-binary.json
+    bytes: 3546
+    sha256: 6f5aa8e116412c38c74c6afde9138aa0cd8725e9d771ef6203b64d18f7159db7
+  - id: ev_4a5db77465a8e524554ec507e308e11755246978114985a63db6165d2fdb4d75
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-go-binary (complete evidence)
+    created_at: 2026-11-07T13:58:41.711Z
+    file: rea/20261107T135838Z-inspect-go-binary.complete.json
+    bytes: 2822
+    sha256: c05c110fcd9a8022942cc7ef51e87f69f5f3d616d989ca4224efa8a0568a1779
+  - id: ev_3c75f1ed8791afc911034429dfa41ad2a908eea810d1f8cc6bb1326b5fb0391c
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-rust-binary
+    args:
+      - <path>/gnucash-5.17.setup.exe
+      - --detail
+      - summary
+      - --evidence_output
+      - <path>/20261107T135841Z-inspect-rust-binary.complete.json
+    subject:
+      label: gnucash-5.17.setup.exe
+    created_at: 2026-11-07T13:58:45.273Z
+    file: rea/20261107T135841Z-inspect-rust-binary.json
+    bytes: 3965
+    sha256: 690eb1dd08fcc142827a28faddf1aab45cb0e384555e43302e097cb66c1c0a26
+  - id: ev_f842518c36e1139f822814ad1bdcece2e5ee05b28bbb02819e7d05376bc05bd4
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-rust-binary (complete evidence)
+    created_at: 2026-11-07T13:58:45.282Z
+    file: rea/20261107T135841Z-inspect-rust-binary.complete.json
+    bytes: 3158
+    sha256: 7432f4b0bcd53bfe038435365853ed8884f1f66973e76560f4022b05421249fe
+  - id: ev_26abf9eb1f65a018a8e2f5f96fc52376af0da3880082f73d3f718e1977992aa7
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-artifact
+    args:
+      - <path>/gnucash-5.17.setup.exe
+      - --detail
+      - summary
+      - --evidence_output
+      - <path>/20261107T135845Z-inspect-artifact.complete.json
+      - --integrity-policy
+      - record-and-continue
+    subject:
+      label: gnucash-5.17.setup.exe
+    created_at: 2026-11-07T13:58:50.286Z
+    file: rea/20261107T135845Z-inspect-artifact.json
+    bytes: 4433
+    sha256: af1ed233a013051c671b4f9bc3e5b48e97d9685112fbc80d7175bd956ecf5c42
+  - id: ev_3502b62969efa09b71f2ee7c4fd4e8f04e592ab4d4157845514a4e568cdad294
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-artifact (complete evidence)
+    created_at: 2026-11-07T13:58:50.297Z
+    file: rea/20261107T135845Z-inspect-artifact.complete.json
+    bytes: 9718
+    sha256: 95f0cd5a15694d68f2dc87a8bb27548c46a371186031fe06abab44bedc025363
+  - id: ev_754bada57b24191e3a266067f73b8641b44a97e09cc6c176639fe7dc7df1724a
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-pe-imports
+    args:
+      - <path>/gnucash.exe
+    subject:
+      label: gnucash.exe
+    created_at: 2026-11-07T14:01:48.565Z
+    file: rea/20261107T140146Z-inspect-pe-imports.json
+    bytes: 41097
+    sha256: c90865b41f12b567d9182a85892208473a440139d330ee0bfc2f54e08cdb3e6a
+  - id: ev_075c04ed30c3bd12090f21c3c8be03e9d4615afb254a036de86c58239c760059
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-pe-resources
+    args:
+      - <path>/gnucash.exe
+    subject:
+      label: gnucash.exe
+    created_at: 2026-11-07T14:01:51.214Z
+    file: rea/20261107T140148Z-inspect-pe-resources.json
+    bytes: 14155
+    sha256: 620c722c6053cf088fbfe4339759832e4086528dc706adfce44f845d00bda2e1
+  - id: ev_f617caa9a421f86e9861225d82859b33a0f8b7c49bd5200d23ef69284b51265a
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-pe-certificates
+    args:
+      - <path>/gnucash.exe
+    subject:
+      label: gnucash.exe
+    created_at: 2026-11-07T14:01:53.978Z
+    file: rea/20261107T140151Z-inspect-pe-certificates.json
+    bytes: 1795
+    sha256: 7231a6699a3f84aee487acb7c033fb3c0792eb39df751b98fcc45dcc207e98ea
+  - id: ev_d0cf75ea5cd9bc1823a4b49a11e891118176aa2c89135403808391e09d4698a5
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-pe-load-config
+    args:
+      - <path>/gnucash.exe
+    subject:
+      label: gnucash.exe
+    created_at: 2026-11-07T14:01:56.403Z
+    file: rea/20261107T140154Z-inspect-pe-load-config.json
+    bytes: 3913
+    sha256: 28cd1065b94e18839a9a871893868558ed9400f5f55dd4696539ad6d32a9b111
+  - id: ev_bc38687d4c128676ec1af0ee5f13d8b148f4acb059924209a7921f6ed95e992f
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-native-exports
+    args:
+      - <path>/gnucash.exe
+    subject:
+      label: gnucash.exe
+    created_at: 2026-11-07T14:01:59.208Z
+    file: rea/20261107T140156Z-inspect-native-exports.json
+    bytes: 2004
+    sha256: e6a2dd1f5725aa679f72b84289a8c8185fe57801065d8236d40e4e49cd169282
+  - id: ev_988b44c66dfd4a52d24c59c02fc5f3d8cdbfe3c78689589673bc11ca90ba7d62
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-managed-artifact
+    args:
+      - <path>/gnucash.exe
+    subject:
+      label: gnucash.exe
+    created_at: 2026-11-07T14:02:02.289Z
+    file: rea/20261107T140159Z-inspect-managed-artifact.json
+    bytes: 2030
+    sha256: d517e0e85b7f0c663cd11aec2fc28e830158ec707a1567e0092810357bfbd99c
+  - id: ev_5a1c2bcf52868669b407408a7747b5f78c5e08740df326cb36b87f98c086f9e0
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-go-binary
+    args:
+      - <path>/gnucash.exe
+      - --detail
+      - summary
+      - --evidence_output
+      - <path>/20261107T140202Z-inspect-go-binary.complete.json
+    subject:
+      label: gnucash.exe
+    created_at: 2026-11-07T14:02:04.536Z
+    file: rea/20261107T140202Z-inspect-go-binary.json
+    bytes: 3545
+    sha256: 222b1bb498d2a85a4cb966bd46e482ca27754a194c75be68d862814b0d593485
+  - id: ev_c4e55335d904eedbab81a321d0352210e6252154235f23c5434807ed9de00319
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-go-binary (complete evidence)
+    created_at: 2026-11-07T14:02:04.551Z
+    file: rea/20261107T140202Z-inspect-go-binary.complete.json
+    bytes: 2825
+    sha256: b5ddc8b7a8c81546f399801aca59bf26bca7c823c6bcd6e82df96a4be48933d4
+  - id: ev_e449e43fdc5d83ce15f99b05cbb2668c376f453616a372528f37a0dbcc523f5e
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-rust-binary
+    args:
+      - <path>/gnucash.exe
+      - --detail
+      - summary
+      - --evidence_output
+      - <path>/20261107T140204Z-inspect-rust-binary.complete.json
+    subject:
+      label: gnucash.exe
+    created_at: 2026-11-07T14:02:07.165Z
+    file: rea/20261107T140204Z-inspect-rust-binary.json
+    bytes: 3964
+    sha256: 4b9601bb43d7daab74374f7e9d755ba9c32295df4dbd755991ea66f4cd582c2f
+  - id: ev_3bd15e831629a9cc25a997ada80ea04036f7363750b4abaab5a4e80b50316d7a
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-rust-binary (complete evidence)
+    created_at: 2026-11-07T14:02:07.179Z
+    file: rea/20261107T140204Z-inspect-rust-binary.complete.json
+    bytes: 3161
+    sha256: 955a29456cc468612846cb868005738bf9db943cdc8959918e57fbf599f7e8c5
+  - id: ev_b8ce73ced93f9abd77e3928796db61edc04055eaeb984cc457f9d03f0dd3660a
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-artifact
+    args:
+      - <path>/gnucash.exe
+      - --detail
+      - summary
+      - --evidence_output
+      - <path>/20261107T140207Z-inspect-artifact.complete.json
+      - --integrity-policy
+      - record-and-continue
+    subject:
+      label: gnucash.exe
+    created_at: 2026-11-07T14:02:09.966Z
+    file: rea/20261107T140207Z-inspect-artifact.json
+    bytes: 4434
+    sha256: ffb0ac455ff19270b2cc1d6574f56578748cdeaf5d364279e0f16970ce51025d
+  - id: ev_0c0c8a385c3abbc8de482d083586853d3b6a0a97ac85dc0c8af4c318fd1d1133
+    kind: rea
+    tool: rea-agents
+    tool_version: 6.8.0
+    operation: inspect-artifact (complete evidence)
+    created_at: 2026-11-07T14:02:09.982Z
+    file: rea/20261107T140207Z-inspect-artifact.complete.json
+    bytes: 9697
+    sha256: 9b21b1c4cbda4aa8cd6b968ee1b8afdde00f67d806d42f7f9a3211b1d2bb26aa
+  - id: ev_9dbde950c155b3a18a3025101337cf0d369506e9e056fb095af3378286abd75f
+    kind: craft
+    tool: craft-anything
+    operation: native-strings-find
+    args:
+      - <path>/libgnc-backend-sql.dll
+      - --mode
+      - regex
+      - --pattern
+      - ^(accounts|books|budgets|budget_amounts|commodities|lots|prices|schedxactions|slots|splits|transactions|versions|billterms|customers|employees|entries|invoices|jobs|orders|taxtables|taxtable_entries|vendors|recurrences|gnclock)$
+      - --deep
+      - --limit
+      - "100"
+    subject:
+      label: libgnc-backend-sql.dll
+    created_at: 2026-11-07T14:10:34.485Z
+    file: craft/20261107T141033Z-native-strings-find.json
+    bytes: 14206
+    sha256: bed357108860776815524d1a8918f94fb9e726ae33e129bff29f8c8274caf026
+  - id: ev_1eba78691fc38891237c951760bafde3dce799377aaa4f3d92b52505765465e8
+    kind: craft
+    tool: craft-anything
+    operation: core-feature-find
+    args:
+      - <path>/libgnc-engine.dll
+      - --query
+      - Imbalance
+      - --deep
+    subject:
+      label: 'libgnc-engine.dll :: "Imbalance"'
+    created_at: 2026-11-07T14:10:38.964Z
+    file: craft/20261107T141034Z-core-feature-find.json
+    bytes: 6882
+    sha256: 2bdb5b880e0d17bac63df4bb4156a4c4d4499c06083f9f7eb356eac5251bcf1f
+  - id: ev_bc68474c465691f6490bb74254cd7c3d74b9d93b1aa7aa79527ba4d770174faf
+    kind: craft
+    tool: craft-anything
+    operation: native-strings-find
+    args:
+      - <path>/libgnc-backend-sql.dll
+      - --mode
+      - regex
+      - --pattern
+      - ^(guid|name|account_type|commodity_guid|commodity_scu|non_std_scu|parent_guid|code|description|hidden|placeholder|currency_guid|num|post_date|enter_date|tx_guid|account_guid|memo|action|reconcile_state|reconcile_date|value_num|value_denom|quantity_num|quantity_denom|lot_guid|date_opened|date_posted|due_date|notes|active|owner_type|owner_guid|terms|post_txn|post_lot|post_acc|billto_type|billto_guid|charge_amt_num|i_price_num|i_disc_type|i_taxable|i_taxincluded|quantity|amount_num|percentage|refcount)$
+      - --deep
+      - --limit
+      - "200"
+    subject:
+      label: libgnc-backend-sql.dll
+    created_at: 2026-11-07T14:11:32.584Z
+    file: craft/20261107T141131Z-native-strings-find.json
+    bytes: 23824
+    sha256: c78e1fb69d24f251a4def86fe6b2753389eddc693e3ecd67b9c37d283249be4e
+  - id: ui:02c4602aa307314d
+    kind: manual
+    tool: reborn-ui
+    operation: gtkbuilder-inventory
+    subject:
+      label: gnucash
+    created_at: 2026-11-07T14:12:51.829Z
+    file: ui/20261107T141251Z-gtkbuilder-inventory.json
+    bytes: 99803
+    sha256: 02c4602aa307314d8054e11bd3c20bf36594ae1432670ba4e189938a34d485a7
+    summary: 66 UI definition files, 111 top-level windows / panels
+  - id: ev_cbf4056701a84d18acffbdb4d89393e12eaa59fa7ca5fd6c609a892d290cce3e
+    kind: craft
+    tool: craft-anything
+    operation: native-strings-find
+    args:
+      - <path>/libgnc-backend-sql.dll
+      - --mode
+      - regex
+      - --pattern
+      - (_num|_denom)$
+      - --deep
+      - --limit
+      - "50"
+    subject:
+      label: libgnc-backend-sql.dll
+    created_at: 2026-11-07T14:12:53.056Z
+    file: craft/20261107T141252Z-native-strings-find.json
+    bytes: 3011
+    sha256: 666ee05b8a4a336458f68a32e66d81315e71b1cf11ddb48684ef9587b96e4b07

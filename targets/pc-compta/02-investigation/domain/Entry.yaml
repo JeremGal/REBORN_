@@ -1,0 +1,22 @@
+name: Entry
+description: An accounting entry line inside a folio of a journal. Carries up to three extra analytical codes (Postes, Natures, Unites).
+fields:
+  - { name: journal_code, label: Journal, type: ref, ref: Journal, required: true }
+  - { name: folio, label: Folio, type: integer }
+  - { name: date, label: Date, type: date }
+  - { name: account_code, label: Compte, type: ref, ref: Account, required: true }
+  - { name: auxiliary_code, label: Auxiliaire, type: ref, ref: Auxiliary }
+  - { name: amount, label: Montant, type: decimal, precision: 2 }
+  - { name: sens, label: Sens, type: enum, enum_values: [D, C] }
+  - { name: poste, label: Poste, type: string }
+  - { name: nature_analytique, label: Nature, type: string }
+  - { name: unite, label: Unite, type: string }
+relations:
+  - { to: Journal, kind: many-to-one, via: journal_code }
+  - { to: Account, kind: many-to-one, via: account_code }
+  - { to: Auxiliary, kind: many-to-one, via: auxiliary_code }
+lifecycle: []
+storage: { engine: "unknown (proprietary)" }
+status: hypothesis
+evidence:
+  - { ref: "doc:f89df11c9fd39e7e", kind: manual, locator: "sections SAISIE DES ECRITURES, POSTES/NATURES/UNITES (3 extra codes per entry; amount up to 99 999 999 999,99 DA)", note: "vendor technical sheet" }
