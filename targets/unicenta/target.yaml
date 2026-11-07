@@ -4,11 +4,10 @@ name: uniCenta oPOS
 vendor: uniCenta
 domain: point of sale (retail and restaurant till)
 description: >-
-  Java desktop point-of-sale: products, categories, taxes, tickets with lines, payments, cash sessions (Z report),
-  stock. The "caisse" target of the three.
+  Java desktop point-of-sale: products, categories, taxes, tickets with lines, payments, cash sessions (Z report), stock. The "caisse" target of the three.
 kind: exe
-versions: ["unicentaopos.jar (from the official SourceForge file)"]
-platforms: [windows, linux, macos]
+versions: [ "unicentaopos.jar (from the official SourceForge file)" ]
+platforms: [ windows, linux, macos ]
 access:
   method: open-source
   notes: unicentaopos.jar downloaded from the project's official SourceForge files by the user. It is a Java archive (a ZIP of class files and resources, including the database create scripts).
@@ -17,7 +16,11 @@ legal:
   clean_room: true
   restrictions:
     - Do not reuse the uniCenta/Openbravo name, logo or theme in a rebuild.
-artifacts: []
+artifacts:
+  - name: unicentaopos.jar
+    sha256: bb38c0e254d7fcc15a9dfd8932101749b045a33fa47ec01f1f29b65bfc8dea2f
+    bytes: 5890390
+    source: local copy (not in git)
 urls:
   - { label: project files, url: "https://sourceforge.net/projects/unicenta/files/" }
 team:

@@ -14,7 +14,6 @@ import { renderDossier } from "./lib/dossier.mjs";
 import { inventoryUi } from "./lib/ui-extract.mjs";
 import { buildHandoff } from "./lib/handoff.mjs";
 import { schemaToEntities } from "./lib/sql-schema.mjs";
-import YAML2 from "yaml";
 
 const HELP = `ReBorn CLI
 
@@ -27,6 +26,7 @@ Project
   ask <target>                                         turn open unknowns (probe h-mission) into block 1 missions
 
 Investigation (block 2): evidence goes to .evidence/<target>/ (gitignored) and is registered in evidence/index.yaml
+  analyze <target> <file|folder|url>                   detect the kind and run the right command (routes like REA/Craft)
   triage <target> <file|folder>                        first pass on a .exe/.dll, an install folder, an archive, an .asar or a database
   js <target> <dir|app.asar> [--max-kb 300]           static JavaScript / Electron analysis (optionally skip huge bundles)
   web <target> <url> [--cdp <endpoint>]                passive page inspection + script export + JS analysis
@@ -253,6 +253,48 @@ function scanFolder(dir, max = 4000) {
   return found;
 }
 
+// Route by target, the way REA and Craft Anything do: look at the thing, then pick the first tool.
+function detectKind(p) {
+  if (/^https?:\/\//i.test(p)) return "url";
+  if (!fs.existsSync(p)) return "missing";
+  if (fs.statSync(p).isDirectory()) return "dir";
+  if (/\.sql$/i.test(p)) return "sql";
+  if (/\.har$/i.test(p)) return "har";
+  const head = Buffer.alloc(16);
+  const fd = fs.openSync(p, "r"); fs.readSync(fd, head, 0, 16, 0); fs.closeSync(fd);
+  if (head.toString("latin1", 0, 15) === "SQLite format 3") return "sqlite";
+  if (/\.asar$/i.test(p)) return "asar";
+  if (head[0] === 0x4d && head[1] === 0x5a) return "pe";             // MZ: Windows executable/DLL
+  if (head[0] === 0x50 && head[1] === 0x4b) return /\.jar$/i.test(p) ? "jar" : "zip"; // PK: zip/jar/apk
+  if (head[0] === 0x7f && head.toString("latin1", 1, 4) === "ELF") return "elf";
+  return "unknown";
+}
+
+// One entry point that detects the input and runs the right sub-command (or says what to do next).
+function analyze(target, input) {
+  needTarget(target);
+  if (!input) die("usage: analyze <target> <file|folder|url>");
+  const p = /^https?:\/\//i.test(input) ? input : absolute(input);
+  const kind = detectKind(p);
+  console.log(`analyze: detected "${kind}"`);
+  switch (kind) {
+    case "url": return (p.includes("://") && /\/\/[^/]+\/?$/.test(p)) ? web(target, p) : doc(target, p);
+    case "dir": case "pe": case "sqlite": case "asar": return triage(target, p);
+    case "sql": return schema(target, p);
+    case "har": return har(target, p);
+    case "jar": case "zip": {
+      addArtifact(target, p);
+      console.log(`  archive (${kind}). Look inside for a shipped SQL schema or an app bundle:`);
+      console.log(`  - extract it, then: reborn schema ${target} <create.sql>  (if it ships one)`);
+      console.log(`  - or: reborn craft ${target} core-archive-show --path "${p}"`);
+      return;
+    }
+    case "elf": console.log("  ELF binary: reborn rea " + target + " inspect-binary-layout <path> (Linux tools needed for deep)"); return;
+    case "missing": die(`not found: ${p}`); break;
+    default: console.log("  unknown type. Try a specific command: triage / schema / sqlite / js / doc / web.");
+  }
+}
+
 function triage(target, input) {
   needTarget(target);
   if (!input) die("missing <file|folder>");
@@ -280,9 +322,12 @@ function triage(target, input) {
   if (/\.asar$/i.test(p)) return js(target, p);
 
   if (head[0] === 0x4d && head[1] === 0x5a) {
+    // REA PE readers default to a 64 MiB input budget; raise it for big executables (installers, bundled runtimes).
+    const big = fs.statSync(p).size;
+    const cap = big > 60 * 1024 * 1024 ? ["--max-file-bytes", String(big + 1024)] : [];
     const outputs = [];
     for (const op of ["inspect-pe-imports", "inspect-pe-resources", "inspect-pe-certificates", "inspect-pe-load-config", "inspect-native-exports"]) {
-      outputs.push(runRea(target, [op, p], { label }).file);
+      outputs.push(runRea(target, [op, p, ...cap], { label }).file);
     }
     // REA exits 0 on a negative answer too: read the classification, not the exit code.
     const managed = runRea(target, ["inspect-managed-artifact", p], { label, quiet: true });
@@ -441,7 +486,7 @@ function schema(target, input) {
   let written = 0;
   for (const e of entities) {
     if (only.length && !only.includes(e.name.toUpperCase()) && !only.includes((e.storage.observed_table || "").toUpperCase())) continue;
-    const doc = new YAML2.Document(e);
+    const doc = new YAML.Document(e);
     fs.writeFileSync(path.join(domainDir, `${e.name}.yaml`), doc.toString({ lineWidth: 0 }));
     written++;
   }
@@ -586,6 +631,7 @@ switch (cmd) {
   case "dossier": { needTarget(t); console.log(`written ${path.relative(ROOT, renderDossier(t))}`); break; }
   case "handoff": { needTarget(t); const { out, kit } = buildHandoff(t); console.log(`written ${path.relative(ROOT, out)}`); console.log(`  build order: ${kit.build_order.length} steps | migration rows: ${kit.migration_map.length} | test vectors: ${kit.test_vectors.from_rules.length + kit.test_vectors.from_acceptance.length} | observed values: ${kit.readiness.has_observed_values ? "yes" : "NO (block 1 pending)"}`); break; }
   case "ask": ask(t); break;
+  case "analyze": analyze(t, argv[0]); break;
   case "triage": triage(t, argv[0]); break;
   case "js": js(t, argv[0]); break;
   case "sqlite": sqlite(t, argv[0]); break;
