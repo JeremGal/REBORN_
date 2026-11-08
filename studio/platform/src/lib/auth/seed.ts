@@ -12,9 +12,35 @@
  *   rôle opérateur de l'adresse admin déclarée est reposé.
  * - Les mots de passe ne sont jamais journalisés : ils ne vivent que dans les variables de l'hébergeur.
  */
+import type { DatabaseSync } from "node:sqlite";
 import { getAuth, getAuthDb } from "./auth";
-import { outsideTransaction } from "./db";
+import { outsideTransaction, sha256Hex } from "./db";
 import { LEGAL_DOCUMENTS } from "../legal";
+
+/**
+ * Identifiant STABLE d'un compte de départ, déduit de son adresse : le même sur chaque instance d'un
+ * hébergement sans base partagée (Vercel), pour que session, consentements et rôle concordent partout.
+ */
+export const seedUserId = (email: string) => `seed${sha256Hex(`reborn-seed:${email.trim().toLowerCase()}`).slice(0, 28)}`;
+
+/** Renomme l'identifiant du compte (et ses lignes liées) vers l'identifiant stable, en une transaction. */
+function stabilizeId(db: DatabaseSync, email: string): void {
+  const target = seedUserId(email);
+  const u = db.prepare(`SELECT id FROM "user" WHERE email = ?`).get(email) as { id: string } | undefined;
+  if (!u || u.id === target) return;
+  db.exec("BEGIN");
+  try {
+    db.exec("PRAGMA defer_foreign_keys = ON");
+    db.prepare(`UPDATE account SET accountId = CASE WHEN accountId = ? THEN ? ELSE accountId END, userId = ? WHERE userId = ?`).run(u.id, target, target, u.id);
+    db.prepare(`UPDATE session SET userId = ? WHERE userId = ?`).run(target, u.id);
+    db.prepare(`UPDATE consents SET user_id = ? WHERE user_id = ?`).run(target, u.id);
+    db.prepare(`UPDATE "user" SET id = ? WHERE id = ?`).run(target, u.id);
+    db.exec("COMMIT");
+  } catch (e) {
+    db.exec("ROLLBACK");
+    throw e;
+  }
+}
 
 interface Seed {
   email?: string;
@@ -60,6 +86,7 @@ export async function seedAccounts(env: NodeJS.ProcessEnv = process.env): Promis
         });
         out.created.push(email);
       } else out.existing.push(email);
+      await outsideTransaction(db, () => stabilizeId(db, email));
       if (s.role === "operator") {
         await outsideTransaction(db, () => db.prepare(`UPDATE "user" SET role = 'operator', updatedAt = ? WHERE email = ?`).run(new Date().toISOString(), email));
       }

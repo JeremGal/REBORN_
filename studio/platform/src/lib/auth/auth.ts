@@ -232,7 +232,14 @@ function buildOptions(db: DatabaseSync, cfg: AuthConfig) {
         role: { type: "string", required: false, defaultValue: "client", input: false },
       },
     },
-    session: { expiresIn: 7 * DAY, updateAge: DAY },
+    session: {
+      expiresIn: 7 * DAY,
+      updateAge: DAY,
+      // Plusieurs instances sans base partagée (Vercel : /tmp propre à chaque instance) : copie signée de la
+      // session dans un cookie (clé REBORN_AUTH_SECRET commune), vérifiable par toute instance et rafraîchie
+      // sans base. Ailleurs, la session reste revérifiée en base à chaque requête.
+      ...(statelessSessions() ? { cookieCache: { enabled: true, maxAge: DAY, refreshCache: true } } : {}),
+    },
     verification: { storeIdentifier: "hashed" },
     rateLimit: {
       // Par adresse réelle seulement (proxy de confiance) ; sinon seau commun = blocage de tous (limits.ts).
@@ -379,8 +386,11 @@ function publicOrigin(): string | null {
   }
 }
 
+/** Sessions vérifiables sans la base : REBORN_STATELESS_SESSIONS=1, ou sur Vercel (sauf REBORN_STATELESS_SESSIONS=0). */
+export const statelessSessions = () => process.env.REBORN_STATELESS_SESSIONS === "1" || (!!process.env.VERCEL && process.env.REBORN_STATELESS_SESSIONS !== "0");
+
 function configKey(): string {
-  const parts = [authDataDir(), process.env.REBORN_AUTH_SECRET ?? "", process.env.REBORN_PUBLIC_URL ?? "", process.env.REBORN_DEV_ORIGINS ?? "", process.env.REBORN_TRUST_PROXY ?? "", process.env.REBORN_TRUSTED_PROXIES ?? ""];
+  const parts = [authDataDir(), process.env.REBORN_AUTH_SECRET ?? "", process.env.REBORN_PUBLIC_URL ?? "", process.env.REBORN_DEV_ORIGINS ?? "", process.env.REBORN_TRUST_PROXY ?? "", process.env.REBORN_TRUSTED_PROXIES ?? "", String(statelessSessions())];
   return createHash("sha256").update(parts.join("\u0000")).digest("hex");
 }
 
