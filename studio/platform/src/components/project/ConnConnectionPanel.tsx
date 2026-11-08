@@ -1,260 +1,235 @@
 "use client";
 
-import { useState } from "react";
-import { Bot, CircleCheck, CircleDashed, PlugZap, TestTubeDiagonal, TriangleAlert } from "lucide-react";
-import { Button, Panel, cx } from "@/components/ui";
-import { useProject } from "./ProjectProvider";
-import { CONN_STATE, CONN_WRAP_BTN, ConnFact, ConnLoading, ConnNotice, ConnTag, connByConnector, connDate, connExplain, useConnAction, type ConnTone } from "./ConnShared";
+import { useState, type FormEvent } from "react";
+import { Pencil, PlugZap } from "lucide-react";
+import { Alert, type AlertTone } from "@/components/ds/Alert";
+import { Button } from "@/components/ds/Button";
+import { ConfirmationDialog } from "@/components/ds/Dialog";
+import { Field, Input, RadioGroup } from "@/components/ds/Field";
+import { Facts, Section, TestBadge } from "./Step";
+import { useProject, type ProjectDetails, type ProjectSummary } from "./ProjectProvider";
+import { CONN_STATE, ConnResultCallout, connApi, connByConnector, connByTestPlan, connDate, connErrorText, connExplain, legacyUrlProblem, useConnAction } from "./ConnShared";
 
-const BLOCK: Record<ConnTone, { box: string; text: string }> = {
-  ok: { box: "bg-verdigris-soft", text: "text-[#0b6b5f]" },
-  warn: { box: "bg-ochre-soft", text: "text-ochre" },
-  bad: { box: "bg-rust-soft", text: "text-rust" },
-  info: { box: "bg-[#e7eef8]", text: "text-[#2457a6]" },
-  idle: { box: "bg-chalk", text: "text-ink" },
-};
-
-type Method = "agent" | "test";
+/** Logiciel visé par le projet s'il diffère du jeu de test : le plan de test ne décrit que Relatio 2004. */
+export function connOtherSoftware(summary: ProjectSummary | null): string | null {
+  return summary?.software && !/relatio/i.test(summary.software) ? summary.software : null;
+}
 
 /**
- * Étape 1 — état de connexion réel (details.connection) et préalables. Le test du connecteur HTTP
- * n'est proposé que si l'opérateur choisit explicitement le logiciel de test Relatio 2004.
+ * Le logiciel de test (jeu de test Relatio 2004) n'est proposé qu'à un projet qui le nomme : un nom de logiciel
+ * laissé vide (champ facultatif) ne fait jamais tester l'adresse d'un vrai client avec le plan de test.
  */
-export function ConnConnectionPanel() {
-  const { id, summary, details, post, refresh } = useProject();
-  const [method, setMethod] = useState<Method>("agent");
-  const { busy, result, run } = useConnAction();
+export const connTestApplies = (summary: ProjectSummary | null): boolean => /relatio/i.test(summary?.software ?? "");
 
-  if (!summary || !details) {
-    return (
-      <Panel eyebrow="Connexion à l'ancien logiciel" title="État de la connexion">
-        <ConnLoading label="Lecture de l'état du projet…" />
-      </Panel>
-    );
-  }
-
+/** Chiffre « Connexion » du haut de page, lu dans le dernier rapport reçu. */
+export function connConnectionMetric(details: ProjectDetails | null): { value: string; tone?: "ok" | "warn" | "bad"; hint?: string } {
+  if (!details) return { value: "—" };
   const c = details.connection;
   const s = CONN_STATE[c?.status ?? "none"];
-  const tone = BLOCK[s.tone];
-  const Icon = s.icon;
+  return { value: s.metric, tone: s.metricTone, hint: c ? `${connByConnector(c.by) ? "Test du connecteur" : "Rapport de l'agent"} · ${connDate(c.at)}` : "Aucune connexion rapportée" };
+}
+
+const TONE: Record<string, AlertTone> = { ok: "ok", warn: "warn", bad: "bad", info: "info" };
+
+/**
+ * Dernier rapport de connexion réellement reçu (agent, ou test réel du connecteur HTTP).
+ * Rien n'est présenté comme réussi sans lui ; les changements sont annoncés poliment.
+ */
+export function ConnConnectionReport() {
+  const { details } = useProject();
+  const c = details?.connection;
+  if (!c) return null;
+  const s = CONN_STATE[c.status] ?? CONN_STATE.none;
+  const explain = connExplain(c.detail);
+  const humanAction = c.status === "mfa_required" || c.status === "human_needed";
+  return (
+    <Alert
+      tone={TONE[s.tone]}
+      live="polite"
+      title={
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          Dernier rapport de connexion : {s.title.charAt(0).toLowerCase() + s.title.slice(1)}
+          {connByTestPlan(c.by) && <TestBadge />}
+        </span>
+      }
+    >
+      {c.detail && <p className="break-words">{c.detail}</p>}
+      {explain && <p className="mt-1">{explain}</p>}
+      {(humanAction || !c.detail) && <p className="mt-1">{s.text}</p>}
+      <p className="mt-1 text-small text-text-3">
+        {connByConnector(c.by) ? "Test du connecteur HTTP de REBORN, sans l'agent" : `Rapporté par ${c.by}`} · {connDate(c.at)}
+      </p>
+    </Alert>
+  );
+}
+
+/**
+ * « Votre logiciel » : informations déclarées, et l'adresse de connexion modifiable. Changer
+ * l'adresse supprime les identifiants déposés (ils ne partent jamais vers une autre adresse).
+ */
+export function ConnSoftwareSection() {
+  const { id, summary, details, refresh } = useProject();
+  const [editing, setEditing] = useState(false);
+  const [url, setUrl] = useState("");
+  const [problem, setProblem] = useState<string | null>(null);
+  const [confirm, setConfirm] = useState(false);
+  const action = useConnAction();
+  if (!summary) return null;
+  const stored = !!details?.credentials?.stored;
+
+  const save = async () => {
+    await connApi("PATCH", `/api/projects/${id}`, { legacy_url: url.trim() });
+    setEditing(false);
+    action.setResult({ tone: "ok", title: url.trim() ? "Adresse de connexion enregistrée" : "Adresse de connexion retirée", text: stored ? "Vos identifiants ont été supprimés : déposez-en de nouveaux pour cette adresse." : undefined });
+    await refresh();
+  };
+
+  async function submit(e: FormEvent) {
+    e.preventDefault();
+    const p = legacyUrlProblem(url);
+    setProblem(p);
+    if (p) return;
+    if (url.trim() === (summary?.legacy_url ?? "")) {
+      setEditing(false);
+      return;
+    }
+    if (stored) {
+      setConfirm(true);
+      return;
+    }
+    await action.run("save", save, { errorTitle: "Adresse non enregistrée" });
+  }
+
+  return (
+    <Section title="Votre logiciel" description="Ce que vous avez déclaré à la création du projet.">
+      <div className="flex flex-col gap-4">
+        <Facts
+          items={[
+            { label: "Entreprise", value: summary.company ?? summary.name },
+            { label: "Logiciel", value: [summary.software, details?.software_type].filter(Boolean).join(" · ") || "Non précisé" },
+            {
+              label: "Adresse de connexion",
+              value: summary.legacy_url ? <span className="font-mono text-small break-all">{summary.legacy_url}</span> : <span className="text-text-3">Non renseignée</span>,
+            },
+          ]}
+        />
+        {editing ? (
+          <form onSubmit={submit} noValidate className="flex flex-col gap-3" aria-label="Modifier l'adresse de connexion">
+            <Field label="Nouvelle adresse de connexion" hint="La seule adresse que l'agent ouvrira. Laissez vide pour la retirer." error={problem}>
+              <Input name="legacy_url" type="url" inputMode="url" autoComplete="off" spellCheck={false} value={url} onChange={(e) => setUrl(e.target.value)} maxLength={500} placeholder="https://logiciel.exemple.fr" />
+            </Field>
+            {stored && <p className="text-small text-warning-ink">Changer l&apos;adresse supprimera les identifiants déposés.</p>}
+            <div className="flex flex-wrap gap-2">
+              <Button type="submit" variant="primary" loading={action.busy === "save"} loadingText="Enregistrement…">
+                Enregistrer l&apos;adresse
+              </Button>
+              <Button variant="ghost" onClick={() => setEditing(false)}>
+                Annuler
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <div>
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<Pencil size={14} />}
+              onClick={() => {
+                setUrl(summary.legacy_url ?? "");
+                setProblem(null);
+                setEditing(true);
+              }}
+            >
+              {summary.legacy_url ? "Modifier l'adresse" : "Renseigner l'adresse"}
+            </Button>
+          </div>
+        )}
+        <ConnResultCallout result={action.result} onClose={() => action.setResult(null)} />
+      </div>
+      <ConfirmationDialog
+        open={confirm}
+        onClose={() => setConfirm(false)}
+        onConfirm={save}
+        title="Changer l'adresse de connexion ?"
+        confirmLabel="Changer et supprimer les identifiants"
+        pendingLabel="Enregistrement…"
+        tone="danger"
+      >
+        Vos identifiants ont été confiés pour l&apos;adresse actuelle : ils seront supprimés immédiatement. Vous en déposerez de nouveaux pour la nouvelle adresse.
+      </ConfirmationDialog>
+    </Section>
+  );
+}
+
+/**
+ * Qui établit la connexion : l'agent d'analyse (logiciel réel) ou le connecteur HTTP de REBORN
+ * sur le logiciel de test Relatio 2004 (jeu de test, test RÉEL de connexion). Proposé seulement
+ * si le projet nomme Relatio 2004 (connTestApplies).
+ */
+export function ConnTestConnector() {
+  const { id, summary, details, post, refresh } = useProject();
+  const [method, setMethod] = useState<"agent" | "test">("agent");
+  const action = useConnAction();
+  if (!summary || !details || !connTestApplies(summary)) return null;
   const creds = details.credentials;
   const paused = summary.status === "PAUSED";
-  const stepDone = summary.progress.steps.find((x) => x.id === "connection")?.done ?? false;
-  const viaExports = stepDone && c?.status !== "connected";
-  const explain = connExplain(c?.detail);
-  const otherSoftware = !!summary.software && !/relatio/i.test(summary.software) ? summary.software : null;
 
-  async function testConnection() {
-    await run(
+  async function test() {
+    await action.run(
       "test",
       async () => {
         const r = await post<{ detail?: string }>(`/api/projects/${id}/connection/test`, { plan: "test" });
-        return { tone: "ok", title: "Jeu de test — Relatio 2004 : connexion réussie", text: `${r.detail ?? "Session ouverte"} · connecteur HTTP REBORN, plan d'extraction de test.` };
+        return { tone: "ok", title: "Connecté — jeu de test Relatio 2004", text: r.detail ?? "Connexion établie par le connecteur HTTP de REBORN." };
       },
-      { errorTitle: "Jeu de test — Relatio 2004 : test non abouti", after: refresh },
+      { errorTitle: "Test non abouti — jeu de test Relatio 2004", after: refresh },
     );
   }
 
   return (
-    <Panel eyebrow="Connexion à l'ancien logiciel" title="État de la connexion">
-      <div className="grid gap-4 md:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
-        {/* État rapporté ---------------------------------------------------- */}
-        <div className={cx("self-start rounded-md p-4", tone.box)}>
-          <div className="flex items-start gap-3">
-            <span className={cx("flex size-10 shrink-0 items-center justify-center rounded-full bg-paper shadow-[0_0_0_1px_var(--color-line)]", tone.text)}>
-              <Icon size={19} aria-hidden />
-            </span>
-            <div className="min-w-0">
-              <p className={cx("text-[19px] leading-tight font-black tracking-[-0.015em]", tone.text)}>{s.label}</p>
-              <p className="mt-1 text-[12.5px] leading-relaxed text-ink/80">{s.text}</p>
-              {c && (
-                <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-sediment">
-                  <span>
-                    Rapporté par <b className="text-ink">{c.by}</b> · {connDate(c.at)}
-                  </span>
-                  {connByConnector(c.by) ? (
-                    <ConnTag tone="warn" title="Test de connexion par formulaire, effectué par REBORN sans l'agent Computer Use">
-                      Connecteur HTTP REBORN
-                    </ConnTag>
-                  ) : (
-                    <ConnTag tone="info" title="État transmis par l'API de rapport de connexion">
-                      Rapport d&apos;agent
-                    </ConnTag>
-                  )}
-                </p>
-              )}
-              {c && connByConnector(c.by) && (
-                <p className="mt-1 text-[12px] text-sediment">Établie par un test de formulaire du connecteur HTTP de REBORN, sans l&apos;agent Computer Use de H Company.</p>
-              )}
+    <Section title="Qui établit la connexion ?" description="Votre logiciel réel est toujours analysé par l'agent ; le logiciel de test sert à vérifier le connecteur de REBORN.">
+      <div className="flex flex-col gap-4">
+        <RadioGroup
+          legend="Qui établit la connexion ?"
+          legendHidden
+          name="connection_method"
+          value={method}
+          onChange={(v) => setMethod(v as "agent" | "test")}
+          options={[
+            { value: "agent", label: "L'agent d'analyse, sur votre logiciel", hint: "Il se connecte avec le compte déposé quand vous demandez l'analyse." },
+            { value: "test", label: "Logiciel de test Relatio 2004", hint: "Test réel du connecteur HTTP de REBORN, sans l'agent (jeu de test)." },
+          ]}
+        />
+        {method === "test" && (
+          <div className="flex flex-col gap-4 rounded-panel bg-warning-soft/50 px-4 py-4 ring-1 ring-warning/30">
+            <TestBadge className="self-start" />
+            <Facts
+              items={[
+                { label: "Adresse testée", value: summary.legacy_url ? <span className="font-mono text-small break-all">{summary.legacy_url}</span> : "Celle du plan de test (aucune adresse renseignée)" },
+                { label: "Compte utilisé", value: creds.stored ? <span className="font-mono text-small">{creds.username_hint ?? "masqué"}</span> : <span className="text-danger-ink">Aucun identifiant déposé</span> },
+              ]}
+            />
+            {!creds.stored && <p className="text-small text-text-2">Déposez d&apos;abord des identifiants : le test utilise le compte du projet.</p>}
+            <div className="flex flex-wrap items-center gap-3">
+              <Button variant="primary" icon={<PlugZap size={16} />} onClick={test} loading={action.busy === "test"} loadingText="Test en cours…" disabled={!creds.stored || paused}>
+                Tester la connexion
+              </Button>
+              <span className="text-small text-text-3">Un refus fait passer le projet à l&apos;état « Échec — intervention requise ».</span>
             </div>
+            {action.result && <ConnResultCallout result={action.result.tone === "bad" ? { ...action.result, text: <TestError text={action.result.text} /> } : action.result} />}
           </div>
-          {c?.detail && (
-            <div className="mt-3 rounded-sm bg-paper/75 px-3 py-2">
-              <div className="eyebrow">Détail rapporté</div>
-              <p className="mt-0.5 text-[12.5px] break-words text-ink">{c.detail}</p>
-              {explain && <p className="mt-1 text-[12px] text-sediment">{explain}</p>}
-            </div>
-          )}
-        </div>
-
-        {/* Préalables -------------------------------------------------------- */}
-        <div className="min-w-0">
-          <div className="eyebrow mb-2">Préalables à la connexion</div>
-          <ul className="flex flex-col gap-2.5">
-            <Prerequisite
-              state={details.authorization ? "ok" : "warn"}
-              label="Autorisation du propriétaire"
-              value={details.authorization ? `Confirmée par ${details.authorization.by}` : "Non enregistrée"}
-            />
-            <Prerequisite
-              state={creds.stored ? "ok" : "missing"}
-              label="Identifiants confiés"
-              value={creds.stored ? `Compte ${creds.username_hint ?? "masqué"} · effacés le ${connDate(creds.expires_at)}` : "Aucun identifiant confié"}
-            />
-            <Prerequisite state={summary.legacy_url ? "ok" : "missing"} label="Adresse de l'ancien logiciel" value={summary.legacy_url ?? "Non renseignée"} mono={!!summary.legacy_url} />
-          </ul>
-          <dl className="mt-3 border-t border-line pt-3">
-            <ConnFact label="Étape 1 du parcours">
-              {stepDone ? (
-                viaExports ? (
-                  <span>Franchie sans connexion rapportée : des exports ont déjà été déposés (étape Données).</span>
-                ) : (
-                  <span className="text-[#0b6b5f]">Franchie : connexion confirmée.</span>
-                )
-              ) : (
-                <span className="text-sediment">Non franchie : en attente d&apos;une connexion confirmée ou d&apos;exports déposés.</span>
-              )}
-            </ConnFact>
-          </dl>
-        </div>
+        )}
       </div>
-
-      {/* Qui établit la connexion ? ------------------------------------------ */}
-      <fieldset className="mt-5 border-t border-line pt-4">
-        <legend className="sr-only">Qui établit la connexion ?</legend>
-        <div className="mb-2 text-[12.5px] font-bold text-ink" aria-hidden>
-          Qui établit la connexion ?
-        </div>
-        <div className="grid gap-2 sm:grid-cols-2">
-          <MethodOption
-            checked={method === "agent"}
-            onChange={() => setMethod("agent")}
-            icon={Bot}
-            title="Agent Computer Use (Mouss)"
-            text="Logiciel réel du client : l'agent de H Company se connecte avec le compte confié et rapporte l'état."
-          />
-          <MethodOption
-            checked={method === "test"}
-            onChange={() => setMethod("test")}
-            icon={TestTubeDiagonal}
-            title="Logiciel de test Relatio 2004 (plan d'extraction de test)"
-            tag="Jeu de test"
-            text="Test réel du connecteur HTTP de REBORN sur le formulaire de connexion décrit par le plan de test."
-            test
-          />
-        </div>
-
-        <div className="mt-3">
-          {method === "agent" ? (
-            <ConnNotice tone="idle" icon={Bot} title={c && !connByConnector(c.by) ? `Connexion suivie par l'agent : dernier rapport de ${c.by}` : "En attente de l'agent Computer Use"}>
-              Pour un logiciel réel, REBORN ne dispose d&apos;aucun connecteur automatique : c&apos;est l&apos;agent qui se connecte, puis rapporte une réussite, un échec, une double
-              authentification ou un besoin d&apos;intervention. Aucune connexion n&apos;est affichée comme réussie sans ce rapport.{" "}
-              <a href="#mission" className="font-bold text-ink underline decoration-line-strong underline-offset-2 hover:decoration-ink">
-                Préparer la mission de l&apos;agent
-              </a>
-            </ConnNotice>
-          ) : (
-            <div className="flex flex-col gap-3 rounded-md bg-ochre-soft/45 p-3 shadow-[inset_0_0_0_1px_rgb(168_107_18/0.25)]">
-              <div className="flex flex-wrap items-center gap-2">
-                <ConnTag tone="warn">Jeu de test — Relatio 2004</ConnTag>
-                <span className="text-[12px] text-sediment">Ce test ne fait pas intervenir l&apos;agent de H Company.</span>
-              </div>
-              <dl className="grid gap-3 sm:grid-cols-2">
-                <ConnFact label="Adresse testée" mono={!!summary.legacy_url}>
-                  {summary.legacy_url ?? "Celle décrite par le plan de test (aucune adresse renseignée pour ce projet)"}
-                </ConnFact>
-                <ConnFact label="Compte utilisé">{creds.stored ? <span className="font-mono text-[12px]">{creds.username_hint ?? "masqué"}</span> : <span className="text-rust">Aucun identifiant confié</span>}</ConnFact>
-              </dl>
-              {otherSoftware && (
-                <ConnNotice tone="warn" title="Logiciel différent du jeu de test">
-                  Ce projet vise « {otherSoftware} ». Le plan de test décrit Relatio 2004 : un résultat, même positif, ne prouverait rien pour ce logiciel.
-                </ConnNotice>
-              )}
-              <p className="text-[12px] leading-relaxed text-sediment">
-                Le résultat réel est enregistré dans le projet. Un refus fait passer le projet à l&apos;état « Échec — intervention requise ».
-              </p>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <Button variant="primary" onClick={testConnection} disabled={!creds.stored || paused || !!busy || !!otherSoftware} title={otherSoftware ? "Le plan de test ne s'applique qu'à Relatio 2004" : undefined} className={CONN_WRAP_BTN}>
-                  <PlugZap size={14} className="shrink-0" aria-hidden /> {busy === "test" ? "Test en cours…" : "Tester la connexion (connecteur HTTP REBORN)"}
-                </Button>
-                {!creds.stored && <span className="text-[12px] text-sediment">Confiez d&apos;abord des identifiants (panneau Identifiants).</span>}
-                {paused && <span className="text-[12px] text-sediment">Projet en pause : reprenez-le pour lancer un test.</span>}
-              </div>
-            </div>
-          )}
-        </div>
-      </fieldset>
-
-      {result && <ConnNotice live tone={result.tone} title={result.title} className="mt-3">{result.text}</ConnNotice>}
-    </Panel>
+    </Section>
   );
 }
 
-function Prerequisite({ state, label, value, mono }: { state: "ok" | "missing" | "warn"; label: string; value: string; mono?: boolean }) {
+function TestError({ text }: { text: unknown }) {
+  const msg = typeof text === "string" ? text : connErrorText(text);
+  const explain = connExplain(msg);
   return (
-    <li className="flex items-start gap-2">
-      {state === "ok" ? (
-        <CircleCheck size={15} className="mt-0.5 shrink-0 text-verdigris" aria-label="Fait" />
-      ) : state === "warn" ? (
-        <TriangleAlert size={15} className="mt-0.5 shrink-0 text-ochre" aria-label="À vérifier" />
-      ) : (
-        <CircleDashed size={15} className="mt-0.5 shrink-0 text-silt" aria-label="Manquant" />
-      )}
-      <span className="min-w-0">
-        <span className="block text-[12.5px] leading-tight font-bold text-ink">{label}</span>
-        <span className={cx("block text-[12px] leading-snug text-sediment", mono ? "font-mono text-[11.5px] break-all" : "break-words")}>{value}</span>
-      </span>
-    </li>
-  );
-}
-
-function MethodOption({
-  checked,
-  onChange,
-  icon: Icon,
-  title,
-  text,
-  tag,
-  test,
-}: {
-  checked: boolean;
-  onChange: () => void;
-  icon: typeof Bot;
-  title: string;
-  text: string;
-  tag?: string;
-  test?: boolean;
-}) {
-  return (
-    <label
-      className={cx(
-        "flex cursor-pointer items-start gap-2.5 rounded-sm p-3 transition-[background-color,box-shadow] duration-150 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-verdigris",
-        checked
-          ? test
-            ? "bg-ochre-soft shadow-[inset_0_0_0_1.5px_var(--color-ochre)]"
-            : "bg-verdigris-soft shadow-[inset_0_0_0_1.5px_var(--color-verdigris)]"
-          : "bg-chalk shadow-[inset_0_0_0_1px_var(--color-line-strong)] hover:bg-chalk-2",
-      )}
-    >
-      <input type="radio" name="connection-method" checked={checked} onChange={onChange} className="sr-only" />
-      <Icon size={16} className={cx("mt-0.5 shrink-0", checked ? (test ? "text-ochre" : "text-verdigris") : "text-silt")} aria-hidden />
-      <span className="min-w-0">
-        <span className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[13px] leading-tight font-bold text-ink">{title}</span>
-          {tag && <ConnTag tone="warn">{tag}</ConnTag>}
-        </span>
-        <span className="mt-0.5 block text-[12px] leading-snug text-sediment">{text}</span>
-      </span>
-    </label>
+    <>
+      <span className="block break-words">{msg}</span>
+      {explain && <span className="mt-1 block">{explain}</span>}
+    </>
   );
 }

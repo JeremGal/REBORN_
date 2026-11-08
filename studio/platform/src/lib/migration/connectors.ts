@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { sha256 } from "./transforms";
+import { maskUsername, redactText } from "./credentials";
+import { egressErrorMessage, egressRequest, EgressError, safeOrigin, type EgressResponse } from "./egress";
+import { legacyUrlProblem } from "./project-contracts";
 
 /**
  * Connecteur d'extraction HTTP générique : ouvre une session avec le compte confié par le
@@ -9,7 +12,12 @@ import { sha256 } from "./transforms";
  * pendant la découverte ; REBORN ne devine rien et ne tente aucun contournement : un refus
  * (401/403) est consigné comme donnée inaccessible.
  *
- * Identifiants : utilisés en mémoire le temps de l'extraction, jamais stockés ni journalisés.
+ * Sorties réseau : uniquement par egress.ts (adresses internes refusées, chaque adresse résolue
+ * contrôlée, redirections jamais suivies, délais, taille lue en flux). Toutes les requêtes restent
+ * sur l'origine de l'ancien logiciel : le cookie de session n'est jamais envoyé ailleurs.
+ *
+ * Identifiants : utilisés en mémoire le temps de l'extraction, jamais stockés ni journalisés ; aucun
+ * message (résultat, erreur) ne contient le mot de passe, l'identifiant en clair ou une URL complète.
  */
 export const EXTRACTION_CONTRACT_VERSION = "1.0";
 
@@ -75,30 +83,69 @@ export interface ExtractionOutcome {
 }
 
 const MAX_BYTES = 200 * 1024 * 1024;
+const MAX_MANIFEST_BYTES = 5 * 1024 * 1024;
 
-export const maskAccount = (u: string) => (u.length <= 2 ? "**" : `${u.slice(0, 2)}${"*".repeat(Math.max(2, u.length - 2))}`);
+/** Compatibilité : l'ancien second masque n'est plus publié (masque unique : maskUsername). */
+export const maskAccount = maskUsername;
 
-export async function runHttpExtraction(plan: ExtractionPlan, opts: { baseUrl?: string; username?: string; password?: string; timeoutMs?: number }): Promise<ExtractionOutcome> {
-  const base = new URL(opts.baseUrl ?? plan.base_url ?? "");
-  if (!/^https?:$/.test(base.protocol)) throw new Error("Adresse du logiciel source invalide (http ou https)");
-  const timeout = opts.timeoutMs ?? 30000;
-  // Toutes les requêtes restent sur l'origine du logiciel source : le cookie de session n'est jamais envoyé ailleurs
-  const resolve = (u: string) => {
-    const url = new URL(u, base);
-    if (url.origin !== base.origin) throw new Error(`URL hors du logiciel source refusée : ${url.origin}`);
+/** Adresse de base contrôlée (forme de LegacyUrlSchema), sans jamais recopier l'adresse dans l'erreur. */
+function baseOf(raw: string | undefined): URL {
+  const problem = legacyUrlProblem(raw ?? "");
+  if (problem) throw new EgressError("url", problem);
+  return new URL(raw!.trim());
+}
+
+/** Toutes les URL du plan sont résolues contre la base et doivent garder la même origine. */
+function resolver(base: URL) {
+  return (u: string) => {
+    let url: URL;
+    try {
+      url = new URL(u, base);
+    } catch {
+      throw new EgressError("url", "URL du plan invalide");
+    }
+    if (url.origin !== base.origin) throw new EgressError("url", "URL hors du logiciel source refusée (autre origine que l'adresse déclarée)");
+    if (url.username || url.password) throw new EgressError("credentials_in_url", "URL du plan refusée : elle contient des identifiants");
     return url;
   };
+}
+
+const cookiesOf = (res: EgressResponse, wanted?: string) => {
+  const pairs = res.setCookies.map((c) => c.split(";")[0].trim()).filter(Boolean);
+  return (wanted ? pairs.filter((c) => c.startsWith(`${wanted}=`)) : pairs).join("; ");
+};
+
+async function login(plan: ExtractionPlan & { login: NonNullable<ExtractionPlan["login"]> }, base: URL, username: string, password: string, timeoutMs: number) {
+  const resolve = resolver(base);
+  const body = new URLSearchParams({ [plan.login.username_field]: username, [plan.login.password_field]: password }).toString();
+  try {
+    return await egressRequest(resolve(plan.login.url), {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body,
+      timeoutMs,
+      maxErrorBytes: 16 * 1024,
+      maxBytes: 2 * 1024 * 1024,
+    });
+  } catch (e) {
+    throw new EgressError(e instanceof EgressError ? e.code : "network", egressErrorMessage(e));
+  }
+}
+
+export async function runHttpExtraction(plan: ExtractionPlan, opts: { baseUrl?: string; username?: string; password?: string; timeoutMs?: number }): Promise<ExtractionOutcome> {
+  const base = baseOf(opts.baseUrl ?? plan.base_url);
+  const timeout = opts.timeoutMs ?? 30000;
+  const resolve = resolver(base);
+  const secrets = [opts.password, opts.username];
+  const clean = (m: string) => redactText(m, secrets);
   let cookie = "";
   if (plan.login) {
     if (!opts.username || !opts.password) throw new Error("Identifiants du compte de migration requis pour ce logiciel");
-    const body = new URLSearchParams({ [plan.login.username_field]: opts.username, [plan.login.password_field]: opts.password });
-    const res = await fetch(resolve(plan.login.url), { method: "POST", body, redirect: "manual", signal: AbortSignal.timeout(timeout) });
-    const cookies = res.headers.getSetCookie().map((c) => c.split(";")[0]);
-    const wanted = plan.login.session_cookie;
-    cookie = (wanted ? cookies.filter((c) => c.startsWith(`${wanted}=`)) : cookies).join("; ");
+    const res = await login(plan as ExtractionPlan & { login: NonNullable<ExtractionPlan["login"]> }, base, opts.username, opts.password, timeout);
+    cookie = cookiesOf(res, plan.login.session_cookie);
     if (res.status >= 400 || !cookie) throw new Error(`Connexion refusée par le logiciel source (HTTP ${res.status}) : vérifiez les identifiants fournis par le propriétaire`);
   }
-  const get = (u: URL) => fetch(u, { headers: cookie ? { cookie } : {}, redirect: "manual", signal: AbortSignal.timeout(timeout) });
+  const get = (u: URL, maxBytes = MAX_BYTES) => egressRequest(u, { headers: cookie ? { cookie } : {}, timeoutMs: timeout, maxBytes, maxErrorBytes: 4096 });
 
   const files: ExtractedFile[] = [];
   const results: MechanismResult[] = [];
@@ -107,13 +154,14 @@ export async function runHttpExtraction(plan: ExtractionPlan, opts: { baseUrl?: 
     try {
       url = resolve(m.url);
     } catch (e) {
-      results.push({ id: m.id, label: m.label, url: m.url, status: "error", message: (e as Error).message });
+      results.push({ id: m.id, label: m.label, url: "(refusée)", status: "error", message: (e as Error).message });
       continue;
     }
     try {
       const res = await get(url);
       if (res.status === 401 || res.status === 403 || (res.status >= 300 && res.status < 400)) {
-        const text = (await res.text().catch(() => "")).slice(0, 200);
+        // Redirection jamais suivie : un 3xx sur un export vaut « session refusée ».
+        const text = clean(res.body.toString("utf8").slice(0, 200));
         results.push({ id: m.id, label: m.label, url: url.pathname, status: res.status === 403 ? "forbidden" : "unauthorized", http: res.status, message: text || (res.status === 403 ? "accès refusé au compte fourni" : "session refusée") });
         continue;
       }
@@ -121,35 +169,33 @@ export async function runHttpExtraction(plan: ExtractionPlan, opts: { baseUrl?: 
         results.push({ id: m.id, label: m.label, url: url.pathname, status: "not_found", http: 404, message: "mécanisme introuvable" });
         continue;
       }
-      if (!res.ok) {
+      if (res.status < 200 || res.status >= 300) {
         results.push({ id: m.id, label: m.label, url: url.pathname, status: "error", http: res.status, message: `HTTP ${res.status}` });
         continue;
       }
-      const data = Buffer.from(await res.arrayBuffer());
-      if (data.length > MAX_BYTES) {
-        results.push({ id: m.id, label: m.label, url: url.pathname, status: "error", message: "fichier trop volumineux (200 Mo max)" });
-        continue;
-      }
+      const data = res.body;
       const name = m.file ?? decodeURIComponent(url.pathname.split("/").pop() || m.id);
-      files.push({ mechanism: m.id, name, url: url.pathname, data, content_type: res.headers.get("content-type") });
+      const ct = res.headers["content-type"];
+      files.push({ mechanism: m.id, name, url: url.pathname, data, content_type: typeof ct === "string" ? ct : null });
       results.push({ id: m.id, label: m.label, url: url.pathname, status: "ok", http: res.status, bytes: data.length, sha256: sha256(data), file: name });
     } catch (e) {
-      results.push({ id: m.id, label: m.label, url: url.pathname, status: "error", message: (e as Error).name === "TimeoutError" ? "délai dépassé" : (e as Error).message });
+      const msg = e instanceof EgressError && e.code === "too_large" ? "fichier trop volumineux (200 Mo max)" : e instanceof EgressError && e.code === "timeout" ? "délai dépassé" : egressErrorMessage(e);
+      results.push({ id: m.id, label: m.label, url: url.pathname, status: "error", message: clean(msg) });
     }
   }
 
   let manifest: ExtractionOutcome["manifest"] = null;
   if (plan.manifest) {
     try {
-      const res = await get(resolve(plan.manifest));
-      if (res.ok) manifest = (await res.json()) as ExtractionOutcome["manifest"];
+      const res = await get(resolve(plan.manifest), MAX_MANIFEST_BYTES);
+      if (res.status >= 200 && res.status < 300) manifest = JSON.parse(res.body.toString("utf8")) as ExtractionOutcome["manifest"];
     } catch {}
   }
   return {
     at: new Date().toISOString(),
     system: plan.system,
     base_url: base.origin,
-    account: opts.username ? maskAccount(opts.username) : "(aucun)",
+    account: opts.username ? maskUsername(opts.username) : "(aucun)",
     files,
     results,
     manifest,
@@ -164,16 +210,10 @@ export async function runHttpExtraction(plan: ExtractionPlan, opts: { baseUrl?: 
  */
 export async function testHttpLogin(plan: ExtractionPlan, opts: { baseUrl?: string; username?: string; password?: string; timeoutMs?: number }): Promise<{ ok: true; detail: string }> {
   if (!plan.login) throw new Error("Ce plan ne décrit pas de connexion par formulaire : la connexion doit être établie par l'agent");
-  const base = new URL(opts.baseUrl ?? plan.base_url ?? "");
-  if (!/^https?:$/.test(base.protocol)) throw new Error("Adresse du logiciel source invalide (http ou https)");
+  const base = baseOf(opts.baseUrl ?? plan.base_url);
   if (!opts.username || !opts.password) throw new Error("Identifiants requis : confiez-les au projet");
-  const url = new URL(plan.login.url, base);
-  if (url.origin !== base.origin) throw new Error(`URL hors du logiciel source refusée : ${url.origin}`);
-  const body = new URLSearchParams({ [plan.login.username_field]: opts.username, [plan.login.password_field]: opts.password });
-  const res = await fetch(url, { method: "POST", body, redirect: "manual", signal: AbortSignal.timeout(opts.timeoutMs ?? 15000) });
-  const cookies = res.headers.getSetCookie().map((c) => c.split(";")[0]);
-  const wanted = plan.login.session_cookie;
-  const ok = res.status < 400 && (wanted ? cookies.some((c) => c.startsWith(`${wanted}=`)) : cookies.length > 0);
+  const res = await login(plan as ExtractionPlan & { login: NonNullable<ExtractionPlan["login"]> }, base, opts.username, opts.password, opts.timeoutMs ?? 15000);
+  const ok = res.status < 400 && !!cookiesOf(res, plan.login.session_cookie);
   if (!ok) throw new Error(`Connexion refusée par le logiciel source (HTTP ${res.status})`);
-  return { ok: true, detail: `Session ouverte sur ${base.origin} avec le compte ${maskAccount(opts.username)}` };
+  return { ok: true, detail: `Session ouverte sur ${safeOrigin(base.href) ?? base.origin} avec le compte ${maskUsername(opts.username)}` };
 }

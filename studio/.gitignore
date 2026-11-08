@@ -20,3 +20,5 @@ generated/*/backups/
 generated/*/.secrets/
 generated/*/app.log
 generated/*/run/
+# Brief du hackathon (document des organisateurs), gardé hors du dépôt
+/REBORN_Projet_Complet_Equipe_Hackathon.pdf

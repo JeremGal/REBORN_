@@ -1,120 +1,59 @@
 #!/usr/bin/env node
 /**
- * Parcours critiques dans un vrai navigateur (Chrome headless piloté via le
- * protocole DevTools, sans dépendance). Pré-requis : `npm run dev` lancé.
+ * Atelier de l'équipe (règles reconstruites, application générée /app, tableaux de bord) dans un VRAI
+ * navigateur (Chrome headless piloté par le protocole DevTools, sans dépendance), sur une pile ISOLÉE :
+ * Studio de production construit dans un dossier dédié, données temporaires, ports libres, secrets
+ * aléatoires. Le Studio en service (:3000) et ses données ne sont JAMAIS touchés : les scénarios de
+ * démonstration remettent à zéro l'atelier de la pile temporaire seulement.
  *
- *   node scripts/e2e-browser.mjs            (captures dans ./e2e-shots)
- *   REBORN_URL=… CHROME_PATH=… SHOTS_DIR=… node scripts/e2e-browser.mjs
+ * L'atelier est réservé à l'équipe REBORN : un compte est créé par l'inscription réelle, reçoit le rôle
+ * opérateur par scripts/account.mjs (sur la base temporaire, comme en production), puis se connecte par
+ * le formulaire de connexion.
  *
- * ATTENTION : remet la plateforme à zéro (scénarios de démonstration).
+ *   npm run e2e                                (construit le Studio dans platform/.next-test si nécessaire)
+ *   REBORN_DIST_DIR=.next-xxx CHROME_PATH=… SHOTS_DIR=… node scripts/e2e-browser.mjs
+ * Captures : SHOTS_DIR, sinon un dossier temporaire (jamais dans le dépôt).
  */
-import { spawn } from "node:child_process";
-import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
+import { checker, createStack, shotsDir, distDir, ensureBuild, launchChrome, makeOperator, signUp, up } from "./acceptance/stack.mjs";
 
-const BASE = process.env.REBORN_URL ?? "http://127.0.0.1:3000";
-const CHROME = process.env.CHROME_PATH ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const SHOTS = path.resolve(process.env.SHOTS_DIR ?? "e2e-shots");
-const PORT = 9300 + Math.floor(Math.random() * 500);
-fs.mkdirSync(SHOTS, { recursive: true });
+const SHOTS = shotsDir("atelier");
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const results = [];
-const check = (name, ok, detail = "") => {
-  results.push({ name, ok, detail });
-  console.log(`${ok ? "✓" : "✗"} ${name}${detail ? ` — ${detail}` : ""}`);
-};
+const { check, results, failed } = checker();
+const dist = distDir();
+ensureBuild(dist);
+const stack = createStack("atelier");
+const studio = await stack.startStudio({ dist });
+const BASE = studio.url;
+let b;
 
-async function api(p, body) {
-  const r = await fetch(BASE + p, body === undefined ? {} : { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-  return r.json();
-}
-
-/* --- Chrome + CDP -------------------------------------------------------- */
-const profile = fs.mkdtempSync(path.join(os.tmpdir(), "reborn-e2e-"));
-const chrome = spawn(CHROME, ["--headless=new", `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`, "--no-first-run", "--disable-gpu", "about:blank"], { stdio: "ignore" });
-let ws;
-let seq = 0;
-const pending = new Map();
-const exceptions = [];
-
-async function connect() {
-  for (let i = 0; i < 50; i++) {
-    try {
-      const list = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
-      const page = list.find((t) => t.type === "page");
-      if (page) {
-        ws = new WebSocket(page.webSocketDebuggerUrl);
-        await new Promise((res, rej) => ((ws.onopen = res), (ws.onerror = rej)));
-        ws.onmessage = (m) => {
-          const msg = JSON.parse(m.data);
-          if (msg.id && pending.has(msg.id)) {
-            pending.get(msg.id)(msg);
-            pending.delete(msg.id);
-          } else if (msg.method === "Runtime.exceptionThrown") {
-            exceptions.push(msg.params.exceptionDetails?.exception?.description ?? msg.params.exceptionDetails?.text);
-          }
-        };
-        return;
-      }
-    } catch {}
-    await sleep(200);
-  }
-  throw new Error("Chrome injoignable");
-}
-const send = (method, params = {}) =>
-  new Promise((res) => {
-    const id = ++seq;
-    pending.set(id, res);
-    ws.send(JSON.stringify({ id, method, params }));
-  });
-let lastEvalError = null;
-const evaluate = async (expr) => {
-  const r = await send("Runtime.evaluate", { expression: expr, awaitPromise: true, returnByValue: true });
-  if (r.error || r.result?.exceptionDetails) lastEvalError = JSON.stringify(r.error ?? r.result.exceptionDetails).slice(0, 300);
-  return r.result?.result?.value;
-};
-const text = () => evaluate("document.body.innerText");
-async function waitFor(pred, timeout = 15000) {
-  const t0 = Date.now();
-  while (Date.now() - t0 < timeout) {
-    if (await evaluate(`(() => { try { return !!(${pred}); } catch { return false } })()`)) return true;
-    await sleep(150);
-  }
-  return false;
-}
-// textContent (et non innerText) : insensible au text-transform CSS
-const hasText = async (s) => {
-  const ok = await waitFor(`document.body.textContent.includes(${JSON.stringify(s)})`);
-  if (!ok && process.env.E2E_DEBUG) console.log("   debug:", lastEvalError, (await evaluate("document.body.innerText.slice(0, 200)")) ?? "");
-  return ok;
-};
-async function goto(url, viewport = { width: 1440, height: 1000, mobile: false }) {
-  await send("Emulation.setDeviceMetricsOverride", { width: viewport.width, height: viewport.height, deviceScaleFactor: 1, mobile: viewport.mobile });
-  await send("Page.navigate", { url: BASE + url });
-  await waitFor("document.readyState === 'complete'");
-}
-async function shot(name) {
-  const r = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: false });
-  fs.writeFileSync(path.join(SHOTS, `${name}.png`), Buffer.from(r.result.data, "base64"));
-}
-/** Saisie compatible React (setter natif + évènement input). */
-const typeInto = (selector, value) =>
-  evaluate(`(() => { const el = document.querySelector(${JSON.stringify(selector)}); if (!el) return false;
-    const proto = el.tagName === 'SELECT' ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
-    Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, ${JSON.stringify(value)});
-    el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true })); return true; })()`);
-const clickLabel = (txt) => evaluate(`(() => { const l = [...document.querySelectorAll('label')].find(x => x.textContent.trim().includes(${JSON.stringify(txt)})); if (!l) return false; l.click(); return true; })()`);
-
-/* --- Parcours ------------------------------------------------------------- */
 try {
-  await connect();
-  await send("Page.enable");
-  await send("Runtime.enable");
+  check("Studio isolé démarré (build dédié, données temporaires, secrets aléatoires)", await up(`${BASE}/api/health`, 60000, (r) => r.ok));
+  // Compte de l'équipe : inscription réelle, rôle opérateur donné par la ligne de commande (jamais par l'API)
+  const op = await signUp(BASE, { firstName: "Équipe", lastName: "Atelier", company: "REBORN (test)" });
+  const role = makeOperator(stack, op.email);
+  check("Compte opérateur : inscription réelle + npm run account -- operator (base temporaire)", role.ok, role.ok ? "" : role.out.slice(0, 200));
+
+  b = await launchChrome(stack, { base: BASE, shotsDir: SHOTS });
+  const { evaluate, waitFor, hasText, goto, fill, shot } = b;
+  await goto("/connexion");
+  await fill("form [name=email]", op.email);
+  await fill("form [name=password]", op.password);
+  await evaluate(`document.querySelector("form").requestSubmit()`);
+  check("Opérateur connecté par le formulaire de connexion", await waitFor("location.pathname === '/espace'", 20000));
+  const me = await evaluate(`fetch("/api/me").then((r) => r.json())`);
+  check("Session de l'opérateur dans le navigateur", me?.user?.role === "operator");
+
+  // Scénarios de référence de l'atelier : appels de l'opérateur connecté (cookie de session, même origine)
+  const scenario = (sc, step) => evaluate(`fetch("/api/scenarios", { method: "POST", headers: { "content-type": "application/json" }, body: ${JSON.stringify(JSON.stringify({ scenario: sc, step }))} }).then((r) => r.status)`);
+  const clickLabel = (txt) => evaluate(`(() => { const l = [...document.querySelectorAll('label')].find(x => x.textContent.trim().includes(${JSON.stringify(txt)})); if (!l) return false; l.click(); return true; })()`);
+  const typeInto = (selector, value) =>
+    evaluate(`(() => { const el = document.querySelector(${JSON.stringify(selector)}); if (!el) return false;
+      const proto = el.tagName === 'SELECT' ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
+      Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, ${JSON.stringify(value)});
+      el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true })); return true; })()`);
 
   // A — Configurateur de devis
-  await api("/api/scenarios", { scenario: "quote", step: "baseline" });
+  check("Scénario « quote » chargé par l'opérateur (POST /api/scenarios)", (await scenario("quote", "baseline")) === 200);
   await goto("/app");
   check("A · /app génère le configurateur", await hasText("Configurer un devis"));
   check("A · valeur initiale calculée (A × 1, standard)", await hasText("145,00"));
@@ -131,7 +70,7 @@ try {
   await shot("A-app-devis");
 
   // B — Calculateur logistique : autre logiciel, mêmes composants
-  await api("/api/scenarios", { scenario: "logistics", step: "baseline" });
+  await scenario("logistics", "baseline");
   await goto("/app");
   check("B · /app régénérée pour un autre métier", await hasText("Calcul des frais de transport"));
   check("B · case à cocher générée", await waitFor("document.querySelector('input[type=checkbox][name=express]')"));
@@ -147,9 +86,9 @@ try {
   await shot("B-app-logistique");
 
   // C — Mise à jour du modèle pendant l'utilisation
-  await api("/api/scenarios", { scenario: "logistics", step: "change" });
+  await scenario("logistics", "change");
   check("C · nouveau champ apparu sans rechargement", await hasText("Valeur déclarée"));
-  await api("/api/scenarios", { scenario: "logistics", step: "update" });
+  await scenario("logistics", "update");
   check("C · bannière de mise à jour", await hasText("Application mise à jour"));
   check("C · versions affichées", await hasText("règles v2"));
   // Même saisie (FR, 10 kg, express) : 15 × 1,65 = 24,75 → arrondi au dixième supérieur 24,80 €
@@ -157,7 +96,7 @@ try {
   await shot("C-app-mise-a-jour");
 
   // Stabilité après actualisation
-  await send("Page.reload");
+  await b.send("Page.reload");
   await waitFor("document.readyState === 'complete'");
   check("Actualisation · état restitué", (await hasText("règles v2")) && (await hasText("Valeur déclarée")));
 
@@ -168,7 +107,7 @@ try {
   check("Mobile · aucune barre de défilement horizontale", overflow <= 0, `débordement ${overflow}px`);
   await shot("D-app-mobile");
 
-  // Dashboard
+  // Tableaux de bord de l'atelier
   for (const [url, needle, name] of [
     ["/atelier", "Équivalence comportementale", "E-dashboard"],
     ["/investigation", "Exploration du logiciel historique", "E-investigation"],
@@ -179,16 +118,17 @@ try {
     await goto(url);
     const ok = url === "/reconstruction" ? await waitFor("document.querySelector('[aria-label=\"Chaîne de reconstruction\"]')") : await hasText(needle);
     check(`Dashboard · ${url}`, ok);
-    await sleep(300);
     await shot(name);
   }
-  check("Aucune exception JavaScript", exceptions.length === 0, exceptions.slice(0, 3).join(" | "));
+  check("Aucune exception JavaScript", b.exceptions.length === 0, b.exceptions.slice(0, 3).join(" | "));
 } catch (e) {
   check("Exécution", false, e.message);
 } finally {
-  ws?.close();
-  chrome.kill("SIGTERM");
-  const failed = results.filter((r) => !r.ok).length;
-  console.log(`\n${results.length - failed}/${results.length} vérifications réussies · captures : ${SHOTS}`);
-  process.exit(failed ? 1 : 0);
+  await b?.close(); // profil Chrome supprimé
+  await stack.stop();
+  const n = failed();
+  if (n) console.log(`\nDernières lignes du journal du Studio :\n${stack.tail("studio", 25)}`);
+  stack.cleanup();
+  console.log(`\n${results.length - n}/${results.length} vérifications réussies · captures : ${SHOTS}${n ? " · relancer avec REBORN_KEEP_TMP=1 pour garder le dossier de test" : ""}`);
+  process.exit(n ? 1 : 0);
 }

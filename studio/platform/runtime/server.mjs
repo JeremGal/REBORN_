@@ -8,9 +8,13 @@
  *
  *   node server.mjs                     → http://127.0.0.1:5050
  *   PORT=5051 HOST=0.0.0.0 node server.mjs
+ *   PUBLIC_URL=https://logiciel.exemple.fr node server.mjs   (adresse publique : liens d'invitation, cookie Secure)
+ *   node server.mjs invite <e-mail> [admin|editor|viewer]   (accès de secours : lien écrit dans .secrets/lien-activation.txt)
  *
- * Sécurité : sessions HttpOnly/SameSite=Strict, mots de passe scrypt, rôles (admin, editor,
- * viewer), contrôle d'origine sur les écritures, journal d'audit, sauvegardes cohérentes.
+ * Sécurité : sessions HttpOnly/SameSite=Strict revalidées à chaque requête (rôle, compte désactivé,
+ * mot de passe changé), mots de passe scrypt choisis par chaque personne (12 caractères minimum),
+ * accès par invitation à usage unique (seule l'empreinte du jeton est conservée), rôles (admin,
+ * editor, viewer), contrôle d'origine sur les écritures, journal d'audit, sauvegardes cohérentes.
  */
 import http from "node:http";
 import fs from "node:fs";
@@ -35,7 +39,30 @@ const RULES_DIR = path.join(ROOT, "rules");
 const PID_FILE = path.join(ROOT, "run", "server.pid");
 const ENTITIES = new Map(SPEC.entities.map((e) => [e.name, e]));
 const ROLES = { admin: 3, editor: 2, viewer: 1 };
+const ROLE_FR = { admin: "Administration", editor: "Saisie", viewer: "Lecture" };
 const q = (id) => `"${String(id).replace(/"/g, '""')}"`;
+/** Secrets locaux (jamais servis) : compte de secours de l'opérateur, invitations déposées, liens. */
+const SECRETS = path.join(ROOT, ".secrets");
+const INVITES_DIR = path.join(SECRETS, "invites");
+/** Empreintes des invitations utilisées ou révoquées, hors de la base : une restauration ne les rouvre pas. */
+const CLOSED_FILE = path.join(SECRETS, "invitations-closes.txt");
+/** Lien créé par « node server.mjs invite » : écrit ici (0600), jamais affiché, supprimé à l'activation. */
+const CLI_LINK = path.join(SECRETS, "lien-activation.txt");
+/** Logo facultatif de l'entreprise (app.branding.logo ou app.logo = nom d'un fichier de ce dossier, ou image data:). */
+const BRANDING_DIR = path.join(ROOT, "branding");
+const PUBLIC_URL = /^https?:\/\/[^\s/?#]+/i.test(process.env.PUBLIC_URL ?? "") ? String(process.env.PUBLIC_URL).replace(/\/+$/, "") : "";
+const PUBLIC_BASE = PUBLIC_URL || `http://127.0.0.1:${PORT}`;
+const SECURE_COOKIE = PUBLIC_BASE.startsWith("https://");
+/**
+ * Cookie de session propre à ce logiciel : les cookies ne distinguent pas les ports, deux logiciels
+ * livrés sur la même machine ne doivent ni s'écraser ni se lire leurs sessions.
+ */
+const COOKIE = `app_${createHash("sha256").update(`${SPEC.app.id}|${PORT}`).digest("hex").slice(0, 10)}_sid`;
+const COOKIE_RE = new RegExp(`(?:^|;\\s*)${COOKIE}=([a-f0-9]{48})(?:;|$)`);
+const SESSION_MS = 8 * 3600e3;
+const PASSWORD_MIN = 12;
+const INVITE_DEFAULT_HOURS = 72;
+const INVITE_MAX_MS = 7 * 24 * 3600e3;
 
 fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
 fs.mkdirSync(FILES, { recursive: true });
@@ -52,6 +79,7 @@ function openDb() {
   if (fresh) for (const s of SPEC.ddl) db.exec(s);
   ensureSchema();
   bootstrapAdmin();
+  importInvites();
   rulesStamp = null;
   syncRules();
 }
@@ -65,6 +93,13 @@ const SQL_TYPE = { integer: "INTEGER", money: "INTEGER", reference: "INTEGER", b
 function ensureSchema() {
   db.exec(`CREATE TABLE IF NOT EXISTS "_rules" ("version" INTEGER PRIMARY KEY, "sha256" TEXT NOT NULL, "source" TEXT, "published_at" TEXT, "published_by" TEXT, "imported_at" TEXT NOT NULL, "package" TEXT NOT NULL)`);
   db.exec(`CREATE TABLE IF NOT EXISTS "_meta" ("key" TEXT PRIMARY KEY, "value" TEXT)`);
+  // Comptes : les bases existantes reçoivent les colonnes d'accès (e-mail, révocation des sessions)
+  db.exec(`CREATE TABLE IF NOT EXISTS "_users" ("id" INTEGER PRIMARY KEY, "username" TEXT NOT NULL UNIQUE, "password_hash" TEXT NOT NULL, "role" TEXT NOT NULL CHECK ("role" IN ('admin', 'editor', 'viewer')), "created_at" TEXT NOT NULL, "disabled" INTEGER NOT NULL DEFAULT 0)`);
+  const userCols = new Set(db.prepare(`PRAGMA table_info("_users")`).all().map((c) => c.name));
+  for (const [name, def] of [["email", "TEXT"], ["session_epoch", "INTEGER NOT NULL DEFAULT 0"], ["password_changed_at", "TEXT"], ["last_login_at", "TEXT"]]) if (!userCols.has(name)) db.exec(`ALTER TABLE "_users" ADD COLUMN ${q(name)} ${def}`);
+  // Invitations : empreinte SHA-256 du jeton seulement, usage unique, expiration
+  db.exec(`CREATE TABLE IF NOT EXISTS "_invites" ("id" INTEGER PRIMARY KEY, "token_sha256" TEXT NOT NULL UNIQUE, "email" TEXT NOT NULL, "role" TEXT NOT NULL CHECK ("role" IN ('admin', 'editor', 'viewer')), "created_by" TEXT, "created_at" TEXT NOT NULL, "expires_at" TEXT NOT NULL, "consumed_at" TEXT, "revoked_at" TEXT, "source" TEXT)`);
+  db.exec(`CREATE INDEX IF NOT EXISTS "_invites_email" ON "_invites" ("email")`);
   for (const e of SPEC.entities) {
     const cols = new Set(db.prepare(`PRAGMA table_info(${q(e.name)})`).all().map((c) => c.name));
     if (!cols.size) continue;
@@ -100,6 +135,204 @@ function checkPassword(pw, stored) {
 }
 function audit(user, action, entity, id, before, after, justification = null) {
   db.prepare(`INSERT INTO "_audit" ("ts", "user", "action", "entity", "record_id", "before", "after", "justification") VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).run(now(), user, action, entity, id, before ? JSON.stringify(before) : null, after ? JSON.stringify(after) : null, justification);
+}
+/** Empreinte de comparaison calculée même pour un identifiant inconnu (temps de réponse identique). */
+let dummyHash = null;
+const fakeHash = () => (dummyHash ??= hashPassword(randomBytes(18).toString("base64url")));
+function passwordProblem(pw, ident) {
+  if (pw.length < PASSWORD_MIN) return `Mot de passe trop court : ${PASSWORD_MIN} caractères minimum.`;
+  if (pw.length > 200) return "Mot de passe trop long : 200 caractères maximum.";
+  if (ident && pw.trim().toLowerCase() === String(ident).trim().toLowerCase()) return "Le mot de passe ne doit pas reprendre votre identifiant.";
+  if (/^(.)\1+$/u.test(pw)) return "Le mot de passe ne doit pas répéter un seul caractère.";
+  return null;
+}
+
+/* ------------------------------------------------------------------ */
+/* Accès par invitation (usage unique)                                  */
+/* ------------------------------------------------------------------ */
+// Une invitation ouvre l'accès d'une adresse e-mail avec un rôle ; la personne choisit SON mot de
+// passe à l'activation. Seule l'empreinte SHA-256 du jeton est conservée ; le lien n'est montré
+// qu'une fois, à qui invite. REBORN Studio (ou « node server.mjs invite ») dépose des fichiers
+// { v:1, token_sha256, email, role, created_by, created_at, expires_at } dans .secrets/invites/ :
+// ils sont importés au démarrage, avant une activation et avant l'affichage des invitations.
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@.]+(\.[^\s@.]+)+$/;
+const normEmail = (v) => String(v ?? "").trim().toLowerCase();
+const validEmail = (v) => v.length <= 254 && EMAIL_RE.test(v);
+const sha256 = (s) => createHash("sha256").update(s).digest("hex");
+const TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
+
+function secretDir(dir) {
+  fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+  try {
+    fs.chmodSync(dir, 0o700);
+  } catch {}
+}
+function closedHashes() {
+  try {
+    return new Set(fs.readFileSync(CLOSED_FILE, "utf8").split(/\r?\n/).filter((l) => /^[a-f0-9]{64}$/.test(l)));
+  } catch {
+    return new Set();
+  }
+}
+function closeHashes(list) {
+  if (!list.length) return;
+  secretDir(SECRETS);
+  fs.appendFileSync(CLOSED_FILE, list.map((h) => `${h}\n`).join(""), { mode: 0o600 });
+}
+/** Le lien de secours écrit par la ligne de commande disparaît dès qu'il ne sert plus. */
+function forgetCliLink(sha) {
+  try {
+    const m = /#\/activation\/([A-Za-z0-9_-]{43})/.exec(fs.readFileSync(CLI_LINK, "utf8"));
+    if (m && sha256(m[1]) === sha) fs.rmSync(CLI_LINK, { force: true });
+  } catch {}
+}
+function inviteState(r, closed) {
+  if (r.consumed_at) return "consumed";
+  if (r.revoked_at || closed.has(r.token_sha256)) return "revoked";
+  if (!(Date.parse(r.expires_at) > Date.now())) return "expired";
+  return "pending";
+}
+function inviteView(r, closed = closedHashes()) {
+  const account = db.prepare(`SELECT "id", "disabled" FROM "_users" WHERE "username" = ? OR "email" = ?`).get(r.email, r.email);
+  return { id: r.id, email: r.email, role: r.role, created_by: r.created_by, created_at: r.created_at, expires_at: r.expires_at, consumed_at: r.consumed_at, revoked_at: r.revoked_at, source: r.source ?? null, state: inviteState(r, closed), existing_account: !!account };
+}
+/** La plus récente invitation ouverte d'une adresse remplace les autres (révoquées). Renvoie les empreintes closes. */
+function supersede(email, keepId, createdAt) {
+  const open = db.prepare(`SELECT "id", "token_sha256", "created_at" FROM "_invites" WHERE "email" = ? AND "id" != ? AND "consumed_at" IS NULL AND "revoked_at" IS NULL`).all(email, keepId);
+  const t = now();
+  const closed = [];
+  const revoke = (id, sha) => {
+    db.prepare(`UPDATE "_invites" SET "revoked_at" = ? WHERE "id" = ?`).run(t, id);
+    closed.push(sha);
+  };
+  if (open.some((r) => r.created_at > createdAt)) revoke(keepId, db.prepare(`SELECT "token_sha256" FROM "_invites" WHERE "id" = ?`).get(keepId).token_sha256);
+  for (const r of open.filter((x) => x.created_at <= createdAt)) revoke(r.id, r.token_sha256);
+  return closed;
+}
+function inviteFileProblem(inv) {
+  if (!inv || typeof inv !== "object" || inv.v !== 1) return "format inconnu (v:1 attendu)";
+  if (!/^[a-f0-9]{64}$/.test(String(inv.token_sha256 ?? ""))) return "empreinte du jeton invalide";
+  if (!Object.hasOwn(ROLES, String(inv.role))) return "rôle inconnu";
+  if (!validEmail(normEmail(inv.email))) return "adresse e-mail invalide";
+  const created = Date.parse(inv.created_at);
+  const expires = Date.parse(inv.expires_at);
+  if (!Number.isFinite(created) || !Number.isFinite(expires)) return "dates illisibles";
+  if (created > Date.now() + 5 * 60e3) return "date de création dans le futur";
+  if (expires <= Date.now()) return "invitation expirée";
+  if (expires - created > INVITE_MAX_MS || expires - Date.now() > INVITE_MAX_MS) return "validité supérieure à 7 jours";
+  return null;
+}
+/**
+ * Importe les invitations déposées (fichiers *.json ; les *.tmp en cours d'écriture sont ignorés).
+ * Un fichier reste en place tant que son invitation est ouverte : si la base est remplacée (remise
+ * en service, retour arrière, restauration), l'invitation est réimportée. Il est supprimé dès qu'elle
+ * est utilisée, révoquée ou remplacée (empreinte notée dans .secrets/invitations-closes.txt) ou expirée.
+ */
+function importInvites() {
+  let names;
+  try {
+    names = fs.readdirSync(INVITES_DIR).filter((f) => f.endsWith(".json"));
+  } catch {
+    return 0;
+  }
+  const closedBefore = closedHashes();
+  const items = [];
+  for (const name of names) {
+    const file = path.join(INVITES_DIR, name);
+    let inv = null;
+    let why;
+    try {
+      inv = JSON.parse(fs.readFileSync(file, "utf8"));
+      why = inviteFileProblem(inv);
+    } catch {
+      why = "fichier illisible";
+    }
+    if (why) {
+      console.error(`[app] invitation ${name} ignorée : ${why}`);
+      fs.rmSync(file, { force: true });
+      continue;
+    }
+    if (closedBefore.has(inv.token_sha256)) {
+      fs.rmSync(file, { force: true });
+      continue;
+    }
+    items.push({ file, inv });
+  }
+  items.sort((a, b) => Date.parse(a.inv.created_at) - Date.parse(b.inv.created_at));
+  let n = 0;
+  for (const { file, inv } of items) {
+    const email = normEmail(inv.email);
+    const by = String(inv.created_by ?? "REBORN Studio").slice(0, 200) || "REBORN Studio";
+    const created = new Date(Date.parse(inv.created_at)).toISOString();
+    const expires = new Date(Date.parse(inv.expires_at)).toISOString();
+    let closed = [];
+    db.exec("BEGIN IMMEDIATE");
+    try {
+      const info = db.prepare(`INSERT OR IGNORE INTO "_invites" ("token_sha256", "email", "role", "created_by", "created_at", "expires_at", "source") VALUES (?, ?, ?, ?, ?, ?, ?)`).run(inv.token_sha256, email, inv.role, by, created, expires, String(inv.source ?? "studio").slice(0, 20));
+      if (info.changes) {
+        closed = supersede(email, Number(info.lastInsertRowid), created);
+        audit(by, "invite_imported", null, null, null, { email, role: inv.role, expires_at: expires });
+        n++;
+      }
+      db.exec("COMMIT");
+    } catch (x) {
+      try {
+        db.exec("ROLLBACK");
+      } catch {}
+      console.error(`[app] invitation non importée : ${x.message}`);
+      continue;
+    }
+    closeHashes(closed);
+    if (closed.includes(inv.token_sha256)) fs.rmSync(file, { force: true });
+  }
+  return n;
+}
+/** Invitation créée dans ce logiciel (administration) : le jeton n'est renvoyé qu'une fois. */
+function createInvite({ email, role, hours, by, source }) {
+  const token = randomBytes(32).toString("base64url");
+  const created = now();
+  const expires = new Date(Date.now() + hours * 3600e3).toISOString();
+  let id;
+  let closed = [];
+  db.exec("BEGIN IMMEDIATE");
+  try {
+    id = Number(db.prepare(`INSERT INTO "_invites" ("token_sha256", "email", "role", "created_by", "created_at", "expires_at", "source") VALUES (?, ?, ?, ?, ?, ?, ?)`).run(sha256(token), email, role, by, created, expires, source).lastInsertRowid);
+    closed = supersede(email, id, created);
+    audit(by, "invite_created", null, null, null, { email, role, expires_at: expires });
+    db.exec("COMMIT");
+  } catch (x) {
+    try {
+      db.exec("ROLLBACK");
+    } catch {}
+    throw x;
+  }
+  closeHashes(closed);
+  return { token, invitation: inviteView(db.prepare(`SELECT * FROM "_invites" WHERE "id" = ?`).get(id)) };
+}
+const userView = (u) => ({ id: u.id, username: u.username, email: u.email ?? (u.username.includes("@") ? u.username : null), role: u.role, created_at: u.created_at, disabled: u.disabled, last_login_at: u.last_login_at ?? null, password_changed_at: u.password_changed_at ?? null });
+
+/** Accès de secours sans le Studio : « node server.mjs invite <e-mail> [rôle] ». Le lien n'est jamais affiché. */
+function cliInvite(args) {
+  const email = normEmail(args[0]);
+  const role = String(args[1] ?? "admin");
+  if (!validEmail(email) || !Object.hasOwn(ROLES, role)) {
+    console.error("Usage : node server.mjs invite <adresse e-mail> [admin|editor|viewer]   (rôle par défaut : admin)");
+    return 2;
+  }
+  const token = randomBytes(32).toString("base64url");
+  const created = new Date();
+  const expires = new Date(created.getTime() + INVITE_DEFAULT_HOURS * 3600e3);
+  secretDir(SECRETS);
+  secretDir(INVITES_DIR);
+  const name = `commande-${created.toISOString().replace(/[:.]/g, "-")}-${randomBytes(4).toString("hex")}.json`;
+  const tmp = path.join(INVITES_DIR, `${name}.tmp`);
+  fs.writeFileSync(tmp, JSON.stringify({ v: 1, token_sha256: sha256(token), email, role, created_by: "Accès de secours (ligne de commande)", created_at: created.toISOString(), expires_at: expires.toISOString(), source: "commande" }), { mode: 0o600 });
+  fs.renameSync(tmp, path.join(INVITES_DIR, name));
+  fs.rmSync(CLI_LINK, { force: true });
+  fs.writeFileSync(CLI_LINK, `# Lien d'activation à usage unique pour ${email} (rôle : ${ROLE_FR[role]}), valable jusqu'au ${expires.toISOString()}\n${PUBLIC_BASE}/#/activation/${token}\n`, { mode: 0o600 });
+  console.log(`Invitation créée pour ${email} (rôle : ${ROLE_FR[role]}), valable ${INVITE_DEFAULT_HOURS} heures.`);
+  console.log(`Le lien d'activation est dans ${path.relative(process.cwd(), CLI_LINK) || CLI_LINK} (lisible par vous seul) : transmettez-le à la personne par un canal sûr. Il ne sert qu'une fois et n'est pas affiché ici.`);
+  return 0;
 }
 
 /* ------------------------------------------------------------------ */
@@ -323,12 +556,47 @@ function repriceDocument(pe, pid, version = null) {
 /* ------------------------------------------------------------------ */
 const sessions = new Map();
 const failures = new Map();
+/**
+ * Session de la requête, revalidée à chaque appel : un compte désactivé, un mot de passe changé
+ * (session_epoch) ou un compte disparu (restauration) ferme la session immédiatement ; un
+ * changement de rôle s'applique dès la requête suivante.
+ */
 function sessionOf(req) {
-  const m = /(?:^|;\s*)app_sid=([a-f0-9]{48})/.exec(req.headers.cookie ?? "");
-  const s = m && sessions.get(m[1]);
-  if (!s || s.expires < Date.now()) return null;
-  s.expires = Date.now() + 8 * 3600e3;
+  const m = COOKIE_RE.exec(req.headers.cookie ?? "");
+  const s = m ? sessions.get(m[1]) : null;
+  if (!s) return null;
+  if (s.expires < Date.now()) {
+    sessions.delete(s.sid);
+    return null;
+  }
+  const u = db.prepare(`SELECT "id", "username", "role", "disabled", "session_epoch" FROM "_users" WHERE "id" = ?`).get(s.uid);
+  if (!u || u.username !== s.user || u.disabled || Number(u.session_epoch ?? 0) !== s.epoch || !Object.hasOwn(ROLES, u.role)) {
+    sessions.delete(s.sid);
+    return null;
+  }
+  s.role = u.role;
+  s.expires = Date.now() + SESSION_MS;
   return s;
+}
+const sessionCookie = (sid, maxAge = SESSION_MS / 1000) => `${COOKIE}=${sid}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}${SECURE_COOKIE ? "; Secure" : ""}`;
+/** Ouvre une session pour un compte (connexion, activation, changement de mot de passe). */
+function openSession(res, u, status, body) {
+  for (const [k, v] of sessions) if (v.expires < Date.now()) sessions.delete(k);
+  const sid = randomBytes(24).toString("hex");
+  sessions.set(sid, { sid, uid: u.id, user: u.username, role: u.role, epoch: Number(u.session_epoch ?? 0), expires: Date.now() + SESSION_MS });
+  db.prepare(`UPDATE "_users" SET "last_login_at" = ? WHERE "id" = ?`).run(now(), u.id);
+  return send(res, status, body, undefined, { "set-cookie": sessionCookie(sid) });
+}
+/** Limiteur de tentatives (connexion, activation, mot de passe actuel) : 8 échecs → 5 minutes de blocage. */
+function assertNotLimited(key) {
+  const f = failures.get(key);
+  if (f && f.until > Date.now()) throw new HttpError(429, "Trop de tentatives : réessayez dans quelques minutes.");
+}
+function countFailure(key) {
+  const f = failures.get(key) ?? { n: 0, until: 0 };
+  f.n++;
+  if (f.n >= 8) Object.assign(f, { n: 0, until: Date.now() + 5 * 60e3 });
+  failures.set(key, f);
 }
 
 /* ------------------------------------------------------------------ */
@@ -409,16 +677,25 @@ function refTitles(e, rows) {
   return out;
 }
 
+/** Recherche textuelle d'une entité (champs de recherche, sinon titre ; clé d'origine exacte). */
+function searchClause(e, term) {
+  const cols = e.search_fields?.length ? e.search_fields : [e.title_field].filter(Boolean);
+  const like = `%${term.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
+  if (!cols.length) return { sql: `"_source_key" = ?`, args: [term] };
+  return { sql: `(${cols.map((c) => `${q(c)} LIKE ? ESCAPE '\\'`).join(" OR ")} OR "_source_key" = ?)`, args: [...cols.map(() => like), term] };
+}
+const RANGE_TYPES = new Set(["date", "money", "integer", "decimal", "percent"]);
+
 function list(e, params) {
-  const per = Math.min(200, Math.max(1, Number(params.get("per") ?? 25)));
-  const page = Math.max(1, Number(params.get("page") ?? 1));
+  const per = Math.min(200, Math.max(1, Number(params.get("per") ?? 25) || 25));
+  const page = Math.max(1, Number(params.get("page") ?? 1) || 1);
   const where = [];
   const args = [];
   const search = (params.get("q") ?? "").trim();
   if (search) {
-    const cols = e.search_fields.length ? e.search_fields : [e.title_field].filter(Boolean);
-    where.push(`(${cols.map((c) => `${q(c)} LIKE ?`).join(" OR ")} OR "_source_key" = ?)`);
-    args.push(...cols.map(() => `%${search}%`), search);
+    const s = searchClause(e, search);
+    where.push(s.sql);
+    args.push(...s.args);
   }
   for (const f of e.fields) {
     const v = params.get(f.name);
@@ -427,17 +704,50 @@ function list(e, params) {
       args.push(["reference", "integer", "money", "boolean"].includes(f.type) ? Number(v) : v);
     }
   }
+  // Plages : <champ>.from / <champ>.to (dates AAAA-MM-JJ, montants en centimes, nombres)
+  for (const f of fieldsOf(e).filter((x) => RANGE_TYPES.has(x.type))) {
+    for (const [suffix, op] of [
+      [".from", ">="],
+      [".to", "<="],
+    ]) {
+      const v = params.get(f.name + suffix);
+      if (v === null || v === "") continue;
+      const val = f.type === "date" ? (ISO.test(v) ? v : null) : Number.isFinite(Number(v)) ? Number(v) : null;
+      if (val === null) throw new HttpError(400, `${f.label} : valeur de filtre invalide`);
+      where.push(`${q(f.name)} ${op} ?`);
+      args.push(val);
+    }
+  }
   if (params.get("_migrated") === "1" || params.get("_migrated") === "0") {
     where.push(`"_migrated" = ?`);
     args.push(Number(params.get("_migrated")));
   }
-  const sortField = e.fields.some((f) => f.name === params.get("sort")) ? params.get("sort") : "id";
+  const sortField = fieldsOf(e).some((f) => f.name === params.get("sort")) ? params.get("sort") : "id";
   const dir = params.get("dir") === "desc" ? "DESC" : "ASC";
   const w = where.length ? `WHERE ${where.join(" AND ")}` : "";
   const total = db.prepare(`SELECT COUNT(*) AS n FROM ${q(e.name)} ${w}`).get(...args).n;
   const rows = db.prepare(`SELECT * FROM ${q(e.name)} ${w} ORDER BY ${q(sortField)} ${dir}, "id" ${dir} LIMIT ? OFFSET ?`).all(...args, per, (page - 1) * per);
   const refs = refTitles(e, rows);
   return { rows: rows.map((r, i) => ({ ...r, _refs: refs[i] })), total, page, per };
+}
+
+/** Recherche dans tous les modules (ceux de la navigation d'abord) : quelques résultats par module. */
+function searchAll(term, per) {
+  if (!term) return { q: term, groups: [] };
+  const nav = SPEC.navigation.map((n) => n.entity);
+  const order = [...nav, ...SPEC.entities.map((e) => e.name).filter((n) => !nav.includes(n))];
+  const groups = [];
+  for (const name of order) {
+    const e = ENTITIES.get(name);
+    if (!e || !(e.search_fields?.length || e.title_field)) continue;
+    const s = searchClause(e, term);
+    const total = db.prepare(`SELECT COUNT(*) AS n FROM ${q(e.name)} WHERE ${s.sql}`).get(...s.args).n;
+    if (!total) continue;
+    const rows = db.prepare(`SELECT * FROM ${q(e.name)} WHERE ${s.sql} ORDER BY "id" DESC LIMIT ?`).all(...s.args, per);
+    const refs = refTitles(e, rows);
+    groups.push({ entity: e.name, total, rows: rows.map((r, i) => ({ ...r, _refs: refs[i] })) });
+  }
+  return { q: term, groups };
 }
 
 function detail(e, id) {
@@ -675,9 +985,29 @@ function dashboard() {
     return { ...c, value: db.prepare(`SELECT COUNT(*) AS v FROM ${q(e.name)}`).get().v, migrated: db.prepare(`SELECT COUNT(*) AS v FROM ${q(e.name)} WHERE "_migrated" = 1`).get().v };
   });
   const breakdowns = SPEC.dashboard.breakdowns.map((b) => ({ ...b, values: db.prepare(`SELECT ${q(b.field)} AS value, COUNT(*) AS n FROM ${q(b.entity)} GROUP BY 1 ORDER BY 2 DESC`).all() }));
-  const recent = db.prepare(`SELECT "ts", "user", "action", "entity", "record_id" FROM "_audit" WHERE "entity" IS NOT NULL ORDER BY "id" DESC LIMIT 8`).all();
+  const recent = db
+    .prepare(`SELECT "ts", "user", "action", "entity", "record_id" FROM "_audit" WHERE "entity" IS NOT NULL ORDER BY "id" DESC LIMIT 8`)
+    .all()
+    .map((r) => {
+      const e = ENTITIES.get(r.entity);
+      const row = e?.title_field && r.record_id !== null ? db.prepare(`SELECT ${q(e.title_field)} AS t FROM ${q(e.name)} WHERE "id" = ?`).get(r.record_id) : null;
+      return { ...r, title: row?.t ?? null };
+    });
   const meta = Object.fromEntries(db.prepare(`SELECT "key", "value" FROM "_meta"`).all().map((r) => [r.key, r.value]));
-  return { cards, breakdowns, recent, migration: meta.migration_run ? { run: meta.migration_run, source_system: meta.source_system, migrated_at: meta.migrated_at } : null };
+  // Derniers enregistrements de chaque module de la navigation (les plus récents d'abord)
+  const latest = SPEC.navigation
+    .map((n) => ENTITIES.get(n.entity))
+    .filter(Boolean)
+    .map((e) => {
+      const rows = db.prepare(`SELECT * FROM ${q(e.name)} ORDER BY "id" DESC LIMIT 5`).all();
+      const refs = refTitles(e, rows);
+      return { entity: e.name, total: db.prepare(`SELECT COUNT(*) AS n FROM ${q(e.name)}`).get().n, rows: rows.map((r, i) => ({ ...r, _refs: refs[i] })) };
+    });
+  // Activité réelle des 30 derniers jours (journal d'audit)
+  const since = new Date(Date.now() - 30 * 86400e3).toISOString();
+  const counts = Object.fromEntries(db.prepare(`SELECT "action", COUNT(*) AS n FROM "_audit" WHERE "ts" >= ? AND "action" IN ('create', 'update', 'delete', 'file_added') GROUP BY 1`).all(since).map((r) => [r.action, r.n]));
+  const people = db.prepare(`SELECT COUNT(DISTINCT "user") AS n FROM "_audit" WHERE "ts" >= ? AND "action" IN ('create', 'update', 'delete', 'file_added')`).get(since).n;
+  return { cards, breakdowns, recent, latest, activity: { since, ...counts, people }, migration: meta.migration_run ? { run: meta.migration_run, source_system: meta.source_system, migrated_at: meta.migrated_at } : null };
 }
 
 /* Sauvegardes ----------------------------------------------------------- */
@@ -708,10 +1038,36 @@ function csv(e) {
   return "﻿" + [cols.join(";"), ...rows.map((r) => cols.map((c) => cell(r[c])).join(";"))].join("\r\n") + "\r\n";
 }
 
+/* Identité de l'entreprise (écran de connexion compris) ------------------- */
+const IMAGE_TYPES = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".svg": "image/svg+xml" };
+/** Logo facultatif : app.branding.logo (ou app.logo) = image data:… ou nom d'un fichier du dossier branding/. */
+function logoSource() {
+  const v = SPEC.app.branding?.logo ?? SPEC.app.logo ?? null;
+  if (typeof v !== "string" || !v) return null;
+  if (v.length <= 400000 && /^data:image\/(png|jpeg|webp|svg\+xml);base64,[A-Za-z0-9+/]+=*$/.test(v)) return { url: v };
+  if (/^[\w-]{1,80}\.(png|jpe?g|webp|svg)$/i.test(v)) {
+    const file = path.join(BRANDING_DIR, v);
+    if (fs.existsSync(file) && fs.statSync(file).size <= 2 * 1024 * 1024) return { url: "/api/branding/logo", file };
+  }
+  return null;
+}
+function branding() {
+  const b = SPEC.app.branding ?? {};
+  return {
+    name: String(b.name || SPEC.app.company || SPEC.app.name),
+    app_name: SPEC.app.name,
+    company: SPEC.app.company ?? null,
+    tagline: SPEC.app.tagline ?? "",
+    primary_color: typeof b.primary_color === "string" && /^#[0-9a-f]{6}$/i.test(b.primary_color) ? b.primary_color : null,
+    logo_text: String(b.logo_text ?? "").slice(0, 4),
+    logo_url: logoSource()?.url ?? null,
+  };
+}
+
 /* ------------------------------------------------------------------ */
 /* Routage                                                              */
 /* ------------------------------------------------------------------ */
-const STATIC = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".json": "application/json" };
+const STATIC = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".json": "application/json", ".woff2": "font/woff2", ".txt": "text/plain; charset=utf-8", ".png": "image/png" };
 
 async function route(req, res) {
   const url = new URL(req.url ?? "/", "http://localhost");
@@ -720,46 +1076,124 @@ async function route(req, res) {
   if (!p.startsWith("/api/")) {
     const file = path.join(PUBLIC, p === "/" ? "index.html" : path.normalize(p).replace(/^(\.\.[/\\])+/, ""));
     if (!file.startsWith(PUBLIC) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return send(res, 200, fs.readFileSync(path.join(PUBLIC, "index.html")), STATIC[".html"]);
-    return send(res, 200, fs.readFileSync(file), STATIC[path.extname(file)] ?? "application/octet-stream");
+    const ext = path.extname(file);
+    return send(res, 200, fs.readFileSync(file), STATIC[ext] ?? "application/octet-stream", ext === ".woff2" ? { "cache-control": "public, max-age=604800" } : {});
   }
   if (req.method !== "GET" && !sameOrigin(req)) throw new HttpError(403, "Origine refusée");
   if (p === "/api/health") {
     syncRules();
     return send(res, 200, { ok: true, app: SPEC.app.id, name: SPEC.app.name, spec_version: SPEC.spec_version, rules_version: activeVersion(), pid: process.pid });
   }
+  // Identité de l'entreprise : nécessaire avant la connexion (aucune donnée métier)
+  if (p === "/api/branding" && req.method === "GET") return send(res, 200, branding());
+  if (p === "/api/branding/logo" && req.method === "GET") {
+    const src = logoSource();
+    if (!src?.file) throw new HttpError(404, "Aucun logo");
+    // Une image SVG ouverte directement ne doit rien exécuter dans ce logiciel
+    return send(res, 200, fs.readFileSync(src.file), IMAGE_TYPES[path.extname(src.file).toLowerCase()] ?? "application/octet-stream", { "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox", "cache-control": "private, max-age=3600" });
+  }
 
   if (p === "/api/auth/login" && req.method === "POST") {
-    const f = failures.get(ip) ?? { n: 0, until: 0 };
-    if (f.until > Date.now()) throw new HttpError(429, "Trop de tentatives : réessayez dans quelques minutes");
+    assertNotLimited(`login:${ip}`);
     const { username, password } = await readJson(req, 10000);
-    const u = db.prepare(`SELECT * FROM "_users" WHERE "username" = ? AND "disabled" = 0`).get(String(username ?? ""));
-    if (!u || !checkPassword(password, u.password_hash)) {
-      f.n++;
-      if (f.n >= 8) Object.assign(f, { n: 0, until: Date.now() + 5 * 60e3 });
-      failures.set(ip, f);
+    const ident = String(username ?? "").trim();
+    const key = ident.includes("@") ? ident.toLowerCase() : ident;
+    const u = (key && (db.prepare(`SELECT * FROM "_users" WHERE "username" = ?`).get(key) ?? (key.includes("@") ? db.prepare(`SELECT * FROM "_users" WHERE "email" = ?`).get(key) : null))) || null;
+    // scrypt est calculé même pour un identifiant inconnu : la réponse ne révèle pas quels comptes existent
+    const ok = checkPassword(String(password ?? ""), u?.password_hash ?? fakeHash());
+    if (!u || u.disabled || !ok) {
+      countFailure(`login:${ip}`);
       throw new HttpError(401, "Identifiant ou mot de passe incorrect");
     }
-    failures.delete(ip);
-    const sid = randomBytes(24).toString("hex");
-    sessions.set(sid, { user: u.username, role: u.role, expires: Date.now() + 8 * 3600e3 });
+    failures.delete(`login:${ip}`);
     audit(u.username, "login", null, null, null, null);
-    return send(res, 200, { ok: true, user: u.username, role: u.role }, undefined, { "set-cookie": `app_sid=${sid}; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800` });
+    return openSession(res, u, 200, { ok: true, user: u.username, role: u.role });
+  }
+  // Écran d'activation : à qui s'adresse le lien (sans rien consommer). Même limiteur que l'activation.
+  if (p === "/api/auth/invitation" && req.method === "POST") {
+    assertNotLimited(`activate:${ip}`);
+    const body = await readJson(req, 2000);
+    importInvites();
+    const token = String(body.token ?? "");
+    const inv = TOKEN_RE.test(token) ? db.prepare(`SELECT * FROM "_invites" WHERE "token_sha256" = ?`).get(sha256(token)) : null;
+    if (!inv || inviteState(inv, closedHashes()) !== "pending") {
+      // Seul un jeton inconnu compte comme tentative (essais au hasard) ; la réponse est la même dans tous les cas
+      if (!inv) countFailure(`activate:${ip}`);
+      throw new HttpError(410, "Ce lien d'activation n'est plus valable : il a expiré, a déjà servi ou a été révoqué. Demandez un nouveau lien à la personne qui vous a invité.");
+    }
+    const view = inviteView(inv);
+    return send(res, 200, { email: view.email, role: view.role, expires_at: view.expires_at, existing_account: view.existing_account, password_min: PASSWORD_MIN });
+  }
+  if (p === "/api/auth/activate" && req.method === "POST") {
+    assertNotLimited(`activate:${ip}`);
+    const body = await readJson(req, 10000);
+    importInvites();
+    const token = String(body.token ?? "");
+    const sha = TOKEN_RE.test(token) ? sha256(token) : null;
+    const inv = sha ? db.prepare(`SELECT * FROM "_invites" WHERE "token_sha256" = ?`).get(sha) : null;
+    if (!inv || inviteState(inv, closedHashes()) !== "pending") {
+      if (!inv) countFailure(`activate:${ip}`);
+      throw new HttpError(410, "Ce lien d'activation n'est plus valable : il a expiré, a déjà servi ou a été révoqué. Demandez un nouveau lien à la personne qui vous a invité.");
+    }
+    const password = String(body.password ?? "");
+    const problem = passwordProblem(password, inv.email);
+    if (problem) throw new HttpError(400, problem, { field: "password" });
+    const hash = hashPassword(password);
+    let account;
+    db.exec("BEGIN IMMEDIATE");
+    try {
+      // Usage unique : seule la première activation passe (l'invitation est marquée dans la même transaction)
+      if (db.prepare(`UPDATE "_invites" SET "consumed_at" = ? WHERE "id" = ? AND "consumed_at" IS NULL AND "revoked_at" IS NULL`).run(now(), inv.id).changes !== 1) throw new HttpError(410, "Ce lien d'activation a déjà servi.");
+      const existing = db.prepare(`SELECT * FROM "_users" WHERE "username" = ? OR "email" = ?`).get(inv.email, inv.email);
+      if (existing) {
+        // Compte existant : nouveau mot de passe choisi, réactivé, anciennes sessions fermées, rôle inchangé
+        db.prepare(`UPDATE "_users" SET "password_hash" = ?, "disabled" = 0, "session_epoch" = "session_epoch" + 1, "password_changed_at" = ?, "email" = COALESCE("email", ?) WHERE "id" = ?`).run(hash, now(), inv.email, existing.id);
+        audit(existing.username, "password_reset", null, null, null, { invited_by: inv.created_by, reactivated: !!existing.disabled });
+        account = existing.id;
+      } else {
+        account = Number(db.prepare(`INSERT INTO "_users" ("username", "email", "password_hash", "role", "created_at", "password_changed_at") VALUES (?, ?, ?, ?, ?, ?)`).run(inv.email, inv.email, hash, inv.role, now(), now()).lastInsertRowid);
+        audit(inv.email, "user_activated", null, null, null, { role: inv.role, invited_by: inv.created_by });
+      }
+      db.exec("COMMIT");
+    } catch (x) {
+      try {
+        db.exec("ROLLBACK");
+      } catch {}
+      throw x;
+    }
+    closeHashes([sha]);
+    forgetCliLink(sha);
+    failures.delete(`activate:${ip}`);
+    const u = db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(account);
+    return openSession(res, u, 200, { ok: true, user: u.username, role: u.role });
   }
   const sess = sessionOf(req);
   if (p === "/api/auth/logout" && req.method === "POST") {
-    for (const [k, v] of sessions) if (v === sess) sessions.delete(k);
-    return send(res, 200, { ok: true }, undefined, { "set-cookie": "app_sid=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0" });
+    if (sess) sessions.delete(sess.sid);
+    return send(res, 200, { ok: true }, undefined, { "set-cookie": sessionCookie("", 0) });
   }
   requireRole(sess, "viewer");
-  if (p === "/api/auth/me") return send(res, 200, { user: sess.user, role: sess.role });
+  if (p === "/api/auth/me") {
+    const u = db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(sess.uid);
+    return send(res, 200, { user: sess.user, role: sess.role, email: userView(u).email, created_at: u.created_at, password_changed_at: u.password_changed_at ?? null, last_login_at: u.last_login_at ?? null });
+  }
   if (p === "/api/auth/password" && req.method === "POST") {
+    assertNotLimited(`password:${sess.uid}`);
     const { current, next } = await readJson(req, 10000);
-    const u = db.prepare(`SELECT * FROM "_users" WHERE "username" = ?`).get(sess.user);
-    if (!checkPassword(current, u.password_hash)) throw new HttpError(400, "Mot de passe actuel incorrect");
-    if (String(next ?? "").length < 10) throw new HttpError(400, "10 caractères minimum");
-    db.prepare(`UPDATE "_users" SET "password_hash" = ? WHERE "id" = ?`).run(hashPassword(next), u.id);
+    const u = db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(sess.uid);
+    if (!checkPassword(String(current ?? ""), u.password_hash)) {
+      countFailure(`password:${sess.uid}`);
+      throw new HttpError(400, "Mot de passe actuel incorrect", { field: "current" });
+    }
+    const pw = String(next ?? "");
+    const problem = passwordProblem(pw, u.username) ?? (checkPassword(pw, u.password_hash) ? "Le nouveau mot de passe doit être différent de l'actuel." : null);
+    if (problem) throw new HttpError(400, problem, { field: "next" });
+    // Toutes les sessions de ce compte sont fermées (session_epoch + 1) ; celle-ci est rouverte
+    db.prepare(`UPDATE "_users" SET "password_hash" = ?, "session_epoch" = "session_epoch" + 1, "password_changed_at" = ? WHERE "id" = ?`).run(hashPassword(pw), now(), u.id);
     audit(sess.user, "password_changed", null, null, null, null);
-    return send(res, 200, { ok: true });
+    failures.delete(`password:${sess.uid}`);
+    sessions.delete(sess.sid);
+    return openSession(res, db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(u.id), 200, { ok: true, other_sessions_closed: true });
   }
   if (p === "/api/meta") {
     syncRules();
@@ -768,7 +1202,13 @@ async function route(req, res) {
       const outs = outputsOf(e);
       return { ...e, fields: fieldsOf(e).map((f) => (outs.has(f.name) ? { ...f, computed_by_rules: true } : f)), rules: { line: boundAnywhere(e.name, "line"), document: boundAnywhere(e.name, "document") } };
     });
-    return send(res, 200, { ...spec, entities, rules: rulesInfo(), user: { name: sess.user, role: sess.role } });
+    const counts = Object.fromEntries(SPEC.navigation.filter((n) => ENTITIES.has(n.entity)).map((n) => [n.entity, db.prepare(`SELECT COUNT(*) AS n FROM ${q(n.entity)}`).get().n]));
+    const me = db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(sess.uid);
+    return send(res, 200, { ...spec, entities, rules: rulesInfo(), branding: branding(), counts, user: { name: sess.user, role: sess.role, email: userView(me).email } });
+  }
+  if (p === "/api/search" && req.method === "GET") {
+    const per = Math.min(20, Math.max(1, Number(url.searchParams.get("per") ?? 5) || 5));
+    return send(res, 200, searchAll((url.searchParams.get("q") ?? "").trim().slice(0, 120), per));
   }
   if (p === "/api/rules" && req.method === "GET") {
     syncRules();
@@ -873,23 +1313,87 @@ async function route(req, res) {
       syncRules();
       return send(res, 200, { ok: true, active_version: activeVersion() });
     }
-    if (p === "/api/admin/users" && req.method === "GET") return send(res, 200, db.prepare(`SELECT "id", "username", "role", "created_at", "disabled" FROM "_users" ORDER BY "id"`).all());
+    if (p === "/api/admin/users" && req.method === "GET") return send(res, 200, db.prepare(`SELECT * FROM "_users" ORDER BY "id"`).all().map((u) => ({ ...userView(u), me: u.id === sess.uid })));
+    // Compatibilité : création directe avec un mot de passe choisi par l'administrateur (l'écran passe par les invitations)
     if (p === "/api/admin/users" && req.method === "POST") {
       const { username, password, role } = await readJson(req, 10000);
       if (!/^[\w.-]{3,40}$/.test(String(username ?? ""))) throw new HttpError(400, "Identifiant : 3 à 40 caractères (lettres, chiffres, . _ -)");
-      if (String(password ?? "").length < 10) throw new HttpError(400, "Mot de passe : 10 caractères minimum");
-      if (!ROLES[role]) throw new HttpError(400, "Rôle : admin, editor ou viewer");
+      const problem = passwordProblem(String(password ?? ""), username);
+      if (problem) throw new HttpError(400, problem);
+      if (!Object.hasOwn(ROLES, String(role))) throw new HttpError(400, "Rôle : admin, editor ou viewer");
       try {
-        db.prepare(`INSERT INTO "_users" ("username", "password_hash", "role", "created_at") VALUES (?, ?, ?, ?)`).run(username, hashPassword(password), role, now());
+        db.prepare(`INSERT INTO "_users" ("username", "password_hash", "role", "created_at", "password_changed_at") VALUES (?, ?, ?, ?, ?)`).run(username, hashPassword(String(password)), role, now(), now());
       } catch {
         throw new HttpError(409, "Identifiant déjà utilisé");
       }
       audit(sess.user, "user_created", null, null, null, { username, role });
       return send(res, 201, { ok: true });
     }
+    m = /^\/api\/admin\/users\/(\d+)$/.exec(p);
+    if (m && req.method === "PUT") {
+      const body = await readJson(req, 2000);
+      const u = db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(Number(m[1]));
+      if (!u) throw new HttpError(404, "Compte introuvable");
+      const role = body.role === undefined ? u.role : String(body.role);
+      const disabled = body.disabled === undefined ? u.disabled : body.disabled ? 1 : 0;
+      if (!Object.hasOwn(ROLES, role)) throw new HttpError(400, "Rôle : admin, editor ou viewer", { field: "role" });
+      if (u.id === sess.uid && disabled) throw new HttpError(409, "Vous ne pouvez pas désactiver votre propre compte.");
+      if (role !== u.role || disabled !== u.disabled) {
+        db.exec("BEGIN IMMEDIATE");
+        try {
+          // Désactivation : toutes les sessions du compte sont fermées immédiatement
+          db.prepare(`UPDATE "_users" SET "role" = ?, "disabled" = ?, "session_epoch" = "session_epoch" + ? WHERE "id" = ?`).run(role, disabled, disabled && !u.disabled ? 1 : 0, u.id);
+          if (!db.prepare(`SELECT COUNT(*) AS n FROM "_users" WHERE "role" = 'admin' AND "disabled" = 0`).get().n) throw new HttpError(409, "Il doit toujours rester au moins un administrateur actif : désignez-en un autre avant ce changement.");
+          audit(sess.user, "user_updated", null, null, { username: u.username, role: u.role, disabled: !!u.disabled }, { username: u.username, role, disabled: !!disabled });
+          db.exec("COMMIT");
+        } catch (x) {
+          try {
+            db.exec("ROLLBACK");
+          } catch {}
+          throw x;
+        }
+      }
+      const after = db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(u.id);
+      return send(res, 200, { ok: true, user: { ...userView(after), me: after.id === sess.uid } });
+    }
+    if (p === "/api/admin/invitations" && req.method === "GET") {
+      importInvites();
+      const closed = closedHashes();
+      return send(res, 200, db.prepare(`SELECT * FROM "_invites" ORDER BY "id" DESC LIMIT 100`).all().map((r) => inviteView(r, closed)));
+    }
+    if (p === "/api/admin/invitations" && req.method === "POST") {
+      const body = await readJson(req, 2000);
+      const email = normEmail(body.email);
+      if (!validEmail(email)) throw new HttpError(400, "Adresse e-mail invalide", { field: "email" });
+      const role = String(body.role ?? "");
+      if (!Object.hasOwn(ROLES, role)) throw new HttpError(400, "Choisissez un rôle", { field: "role" });
+      const hours = body.hours === undefined ? INVITE_DEFAULT_HOURS : Number(body.hours);
+      if (!Number.isInteger(hours) || hours < 1 || hours > INVITE_MAX_MS / 3600e3) throw new HttpError(400, "Validité : de 1 heure à 7 jours", { field: "hours" });
+      importInvites();
+      const out = createInvite({ email, role, hours, by: sess.user, source: "admin" });
+      // Le lien n'est renvoyé qu'ici, une seule fois (jamais journalisé)
+      return send(res, 201, { ok: true, invitation: out.invitation, path: `/#/activation/${out.token}` });
+    }
+    m = /^\/api\/admin\/invitations\/(\d+)\/revoke$/.exec(p);
+    if (m && req.method === "POST") {
+      importInvites();
+      const r = db.prepare(`SELECT * FROM "_invites" WHERE "id" = ?`).get(Number(m[1]));
+      if (!r) throw new HttpError(404, "Invitation introuvable");
+      if (r.consumed_at) throw new HttpError(409, "Invitation déjà utilisée : pour retirer l'accès, désactivez le compte.");
+      if (!r.revoked_at) {
+        db.prepare(`UPDATE "_invites" SET "revoked_at" = ? WHERE "id" = ? AND "revoked_at" IS NULL AND "consumed_at" IS NULL`).run(now(), r.id);
+        audit(sess.user, "invite_revoked", null, null, null, { email: r.email });
+      }
+      closeHashes([r.token_sha256]);
+      forgetCliLink(r.token_sha256);
+      return send(res, 200, { ok: true, invitation: inviteView(db.prepare(`SELECT * FROM "_invites" WHERE "id" = ?`).get(r.id)) });
+    }
   }
   throw new HttpError(404, "Route inconnue");
 }
+
+// Accès de secours en ligne de commande : dépose une invitation sans démarrer le serveur ni ouvrir la base
+if (process.argv[2] === "invite") process.exit(cliInvite(process.argv.slice(3)));
 
 openDb();
 const server = http.createServer((req, res) => {

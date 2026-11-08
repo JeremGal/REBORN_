@@ -1,0 +1,97 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
+import { ApiError } from "../errors";
+import { appsRoot } from "./project";
+
+/**
+ * Accès au logiciel livré par invitation à usage unique (conception A, phase 1).
+ *
+ * Le Studio dépose une invitation dans `generated/<id>/.secrets/invites/` (dossier 0700, fichier
+ * 0600, écriture atomique : fichier `.tmp` puis renommage). Le fichier ne contient QUE l'empreinte
+ * SHA-256 du jeton ; le jeton n'existe que dans le lien renvoyé, une seule fois, à l'appelant. Le
+ * logiciel livré importe l'invitation (au démarrage, avant une activation, à l'affichage des
+ * invitations) : cela fonctionne même s'il est arrêté au moment de l'invitation. Le fichier reste en
+ * place tant que l'invitation est ouverte (elle survit à un remplacement de la base) ; le logiciel le
+ * supprime une fois l'invitation utilisée, révoquée, remplacée ou expirée. Une nouvelle invitation pour
+ * la même adresse remplace la précédente. La personne choisit ensuite son propre mot de passe sur
+ * l'écran d'activation ; ni le Studio ni l'ancien logiciel ne le connaissent jamais.
+ *
+ * Ne jamais journaliser le lien (ni migrationLog, ni addEvent, ni console) : il donne accès au logiciel.
+ */
+
+export type AppRole = "admin" | "editor" | "viewer";
+export interface AppInviteInput {
+  email: string;
+  role: AppRole;
+  /** Identité authentifiée de la personne qui invite (affichée dans le journal du logiciel livré). */
+  by: string;
+  /** Validité du lien en heures (72 par défaut, 7 jours au plus, comme le logiciel livré l'exige). */
+  ttlHours?: number;
+}
+
+export const APP_INVITE_DEFAULT_TTL_HOURS = 72;
+export const APP_INVITE_MAX_TTL_HOURS = 168;
+const ROLES: readonly AppRole[] = ["admin", "editor", "viewer"];
+const APP_ID = /^[a-z0-9][a-z0-9_-]{0,63}$/i;
+/** Même contrôle que le logiciel livré (runtime/server.mjs, validEmail). */
+const EMAIL = /^[^\s@]{1,64}@[^\s@.]+(\.[^\s@.]+)+$/;
+
+function secretDir(dir: string) {
+  fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+  fs.chmodSync(dir, 0o700);
+}
+
+/**
+ * Crée une invitation pour le logiciel livré `appId` et renvoie le lien d'activation
+ * `http://127.0.0.1:<port>/#/activation/<jeton>` (port lu dans son app.json). Le jeton est dans le
+ * fragment `#` : il n'est envoyé ni au serveur dans l'adresse, ni dans l'en-tête Referer.
+ */
+export function issueAppInvite(appId: string, i: AppInviteInput): { link: string; expires_at: string } {
+  if (!APP_ID.test(appId)) throw new ApiError(400, "Identifiant de logiciel invalide");
+  const dir = path.join(appsRoot(), appId);
+  let port: number;
+  try {
+    port = Number((JSON.parse(fs.readFileSync(path.join(dir, "app.json"), "utf8")) as { app?: { port?: unknown } }).app?.port);
+  } catch {
+    throw new ApiError(404, "Logiciel non généré");
+  }
+  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new ApiError(409, "Port du logiciel livré illisible (app.json)");
+  const email = String(i.email ?? "")
+    .trim()
+    .toLowerCase();
+  if (email.length > 254 || !EMAIL.test(email)) throw new ApiError(400, "Adresse e-mail invalide");
+  if (!ROLES.includes(i.role)) throw new ApiError(400, "Rôle : admin, editor ou viewer");
+  const by = String(i.by ?? "").trim().slice(0, 200);
+  if (!by) throw new ApiError(400, "Auteur de l'invitation requis");
+  const ttl = i.ttlHours ?? APP_INVITE_DEFAULT_TTL_HOURS;
+  if (!Number.isInteger(ttl) || ttl < 1 || ttl > APP_INVITE_MAX_TTL_HOURS) throw new ApiError(400, `Validité : de 1 à ${APP_INVITE_MAX_TTL_HOURS} heures`);
+
+  const token = randomBytes(32).toString("base64url");
+  const created = new Date();
+  const expires = new Date(created.getTime() + ttl * 3600e3);
+  const record = {
+    v: 1,
+    token_sha256: createHash("sha256").update(token).digest("hex"),
+    email,
+    role: i.role,
+    created_by: by,
+    created_at: created.toISOString(),
+    expires_at: expires.toISOString(),
+  };
+  const secrets = path.join(dir, ".secrets");
+  const invites = path.join(secrets, "invites");
+  secretDir(secrets);
+  secretDir(invites);
+  const name = `studio-${created.toISOString().replace(/[:.]/g, "-")}-${randomUUID().slice(0, 8)}.json`;
+  const tmp = path.join(invites, `${name}.tmp`);
+  // Écriture atomique : le logiciel livré ignore les *.tmp, il ne lit jamais un fichier incomplet
+  fs.writeFileSync(tmp, JSON.stringify(record), { mode: 0o600, flag: "wx" });
+  try {
+    fs.renameSync(tmp, path.join(invites, name));
+  } catch (e) {
+    fs.rmSync(tmp, { force: true });
+    throw e;
+  }
+  return { link: `http://127.0.0.1:${port}/#/activation/${token}`, expires_at: record.expires_at };
+}

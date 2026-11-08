@@ -4,10 +4,29 @@ Aucune dépendance : bibliothèque standard uniquement (Python ≥ 3.9).
 Documentation : README.md (section « Intégration ») et contracts/ (schémas JSON + exemples).
 
     from reborn_client import Reborn, RebornError
-    rb = Reborn()   # REBORN_URL (défaut http://127.0.0.1:3000) et REBORN_TOKEN (mode réseau) lus dans l'environnement
-    rb.health()     # joignable ? jeton valide ? mode courant ?
+    rb = Reborn()   # lit REBORN_URL (défaut http://127.0.0.1:3000), REBORN_TOKEN et REBORN_PROJECT dans l'environnement
+    rb.health()     # joignable ? version des contrats ?
 
-    # --- Mouss -------------------------------------------------------------
+    REBORN_TOKEN : jeton de SERVICE, obligatoire pour toute route autre que health/contracts —
+      jeton explorer (exécuteur de Mouss : npm run token -- explorer) ou analyst (Analyste d'Alan :
+      npm run token -- analyst) ; jamais le mot de passe d'un compte.
+    REBORN_PROJECT (MIG_xxxxxxxx, visible dans l'adresse du projet) : obligatoire pour un agent, il n'y a
+      plus de « projet courant » ; ajouté en ?project= sur les routes du projet (migration, découverte,
+      règles, application, révision). Sans projet, ces routes visent l'atelier de l'équipe.
+
+    # --- Mouss : exécuteur (file des missions, client 1.2) -------------------
+    rb = Reborn(executor_id="poste-mouss-1")     # REBORN_TOKEN = jeton explorer ; X-Reborn-Executor = cette instance
+    rb.heartbeat(networks=["public"], login="h_vault")       # au moins toutes les 20 s
+    mission = rb.claim_mission()                 # None s'il n'y a rien en file (contrat connection_mission 1.1)
+    if mission:
+        rb.use_project(mission["project_id"])    # appels suivants : ?project= du projet de la mission (1.3)
+        creds = rb.redeem_credentials(mission["credential"]["token"], mission["project_id"], mission["mission_id"])
+        # … saisie HORS du modèle (coffre H fill_secret_at, ou CDP), jamais dans la consigne ni un journal …
+        rb.report_connection("connected", "Page d'accueil authentifiée affichée", mission["project_id"], mission_id=mission["mission_id"])
+        # … exploration, observations, exports (?project=…) en renouvelant le prêt par heartbeat(active_missions=[…]) …
+        rb.complete_mission(mission["mission_id"], "completed", h_vault_item_deleted=True, local_artifacts_purged=True)
+
+    # --- Mouss (investigations, inchangé) ------------------------------------
     inv = rb.wait_for_investigation()            # investigation « agents réels » lancée depuis le dashboard
     rb.publish_schema({...}, investigation_id=inv["id"])
     rb.action("Clic sur « Calculer »", screenshot="shot.png", investigation_id=inv["id"])
@@ -55,7 +74,9 @@ from typing import Any, Dict, List, Optional
 
 Json = Dict[str, Any]
 
-__version__ = "1.1"
+# 1.3 : avec un projet configuré (REBORN_PROJECT, project=, use_project), ?project= est aussi ajouté sur
+# investigations, rules, compute, compare, app et revision (sans projet : comportement 1.2 inchangé).
+__version__ = "1.3"
 
 
 class RebornError(RuntimeError):
@@ -72,9 +93,12 @@ class RebornError(RuntimeError):
 
 
 class Reborn:
-    def __init__(self, base_url: Optional[str] = None, token: Optional[str] = None, timeout: float = 15.0, retries: int = 2, project: Optional[str] = None):
+    def __init__(self, base_url: Optional[str] = None, token: Optional[str] = None, timeout: float = 15.0, retries: int = 2, project: Optional[str] = None, executor_id: Optional[str] = None):
         self.base = (base_url or os.environ.get("REBORN_URL", "http://127.0.0.1:3000")).rstrip("/")
         self.token = token or os.environ.get("REBORN_TOKEN") or None
+        # Instance de l'exécuteur (en-tête X-Reborn-Executor, 1 à 64 caractères : lettres, chiffres, . _ : -).
+        # Plusieurs exécuteurs d'un même jeton explorer se distinguent ainsi ; le jeton de remise est lié à l'instance.
+        self.executor_id = executor_id or os.environ.get("REBORN_EXECUTOR_ID") or None
         self.timeout = timeout
         self.retries = retries
         # Projet de migration visé par les appels /api/migration/... (sinon : projet courant du Studio)
@@ -82,13 +106,29 @@ class Reborn:
         self._after_seq: Optional[int] = None
 
     # ------------------------------------------------------------------ HTTP
+    # Routes rattachées au projet configuré (?project=…) : migration, découverte (investigations, évènements,
+    # observations, schéma), règles et application reconstruite (rules, compute, compare, app) et compteur de
+    # révision. Sans projet configuré, aucune n'est modifiée (atelier, comme avant). Les routes
+    # /api/projects/<id>/… portent déjà leur projet ; /api/executor/…, /api/health, /api/contracts et
+    # /api/scenarios n'en ont pas.
+    _PROJECT_ROUTES = ("/api/migration", "/api/events", "/api/observations", "/api/schema", "/api/investigations", "/api/rules", "/api/compute", "/api/compare", "/api/app", "/api/revision")
+
+    def _scoped(self, path: str) -> str:
+        if not self.project or "project=" in path:
+            return path
+        route = path.split("?", 1)[0]
+        if not any(route == r or route.startswith(r + "/") for r in self._PROJECT_ROUTES):
+            return path
+        return path + ("&" if "?" in path else "?") + "project=" + urllib.parse.quote(self.project)
+
     def _req(self, method: str, path: str, body: Any = None) -> Any:
-        if self.project and path.startswith(("/api/migration", "/api/events", "/api/observations", "/api/schema")) and "project=" not in path:
-            path += ("&" if "?" in path else "?") + "project=" + urllib.parse.quote(self.project)
+        path = self._scoped(path)
         data = json.dumps(body).encode() if body is not None else None
         headers = {"content-type": "application/json", "user-agent": f"reborn-client/{__version__}"} if data else {"user-agent": f"reborn-client/{__version__}"}
         if self.token:
             headers["authorization"] = f"Bearer {self.token}"
+        if self.executor_id:
+            headers["x-reborn-executor"] = self.executor_id
         # Les lectures sont réessayées en cas de coupure réseau ; les écritures ne le sont pas
         # automatiquement (un renvoi d'observation identique reste sans effet côté REBORN).
         attempts = 1 + (self.retries if method == "GET" else 0)
@@ -139,13 +179,16 @@ class Reborn:
         mode : "live" (agents réels) · "replay" (données de référence / tests) · "simulation"
         (explorateur de répétition intégré à REBORN). project_id : rattache la découverte au projet."""
         body = {"application": application, "module": module, "mode": mode, "kind": kind}
-        if project_id or self.project:
-            body["project_id"] = project_id or self.project
+        pid = project_id or self.project
+        if pid:
+            body["project_id"] = pid
         if target_url:
             body["target_url"] = target_url
         if objective:
             body["objective"] = objective
-        return self._req("POST", "/api/investigations", body)["investigation"]
+        # Le projet du corps et celui de la requête doivent concorder (REBORN répond 422 sinon)
+        path = "/api/investigations" + (f"?project={urllib.parse.quote(pid)}" if pid else "")
+        return self._req("POST", path, body)["investigation"]
 
     def active_investigation(self, live_only: bool = True) -> Optional[Json]:
         """Investigation en cours, ou None. Par défaut, uniquement une investigation « agents réels » :
@@ -324,10 +367,15 @@ class Reborn:
             body["mechanism"] = mechanism
         return self._req("POST", "/api/migration/sources", body)
 
-    def migration_extract(self, plan: Json, username: str, password: str, base_url: Optional[str] = None) -> Json:
+    def migration_extract(self, plan: Json, username: Optional[str] = None, password: Optional[str] = None, base_url: Optional[str] = None) -> Json:
         """Lance l'extraction HTTP autorisée décrite par un plan (contrat extraction_plan).
+        Sans username/password : les identifiants confiés au projet sont utilisés côté Studio, et SEULE
+        l'adresse déclarée du projet sert (base_url refusé). Exécuteur : titulaire de la mission du projet.
         Le mot de passe sert uniquement à ouvrir la session ; REBORN ne le conserve pas."""
-        body: Json = {"plan": plan, "username": username, "password": password}
+        body: Json = {"plan": plan}
+        if username and password:
+            body["username"] = username
+            body["password"] = password
         if base_url:
             body["base_url"] = base_url
         return self._req("POST", "/api/migration/extract", body)
@@ -383,22 +431,62 @@ class Reborn:
         return self._req("GET", f"/api/projects/{self._pid(project_id)}/mission")
 
     def take_mission(self, project_id: Optional[str] = None) -> Json:
-        """Mission AVEC jeton de remise des identifiants (usage unique, 15 min).
+        """Compatibilité 1.0 : prend la mission EN FILE de ce projet (même format, champs 1.1 en plus),
+        avec un jeton de remise des identifiants (usage unique, 15 min, lié à la mission et à cet exécuteur).
+        RebornError 409 si aucune analyse n'est en file (le propriétaire lance « Analyser mon logiciel »).
         Le jeton et les identifiants sont destinés au code technique de l'exécuteur : ne jamais
         les transmettre à un modèle de langage ni les journaliser."""
         return self._req("POST", f"/api/projects/{self._pid(project_id)}/mission")
 
-    def redeem_credentials(self, token: str, project_id: Optional[str] = None) -> Json:
-        """Échange le jeton de mission contre les identifiants (une seule fois). Ne pas journaliser le résultat."""
-        return self._req("POST", f"/api/projects/{self._pid(project_id)}/credentials/redeem", {"token": token})
+    def redeem_credentials(self, token: str, project_id: Optional[str] = None, mission_id: Optional[str] = None) -> Json:
+        """Échange le jeton de mission contre les identifiants (une seule fois, par le titulaire de la
+        mission en cours). Refus : RebornError 403 (payload["reason"]). Ne jamais journaliser le résultat."""
+        body: Json = {"token": token}
+        if mission_id:
+            body["mission_id"] = mission_id
+        return self._req("POST", f"/api/projects/{self._pid(project_id)}/credentials/redeem", body)
 
-    def report_connection(self, status: str, detail: Optional[str] = None, project_id: Optional[str] = None, by: str = "Explorer") -> Json:
-        """État de connexion : pending · connected · failed · mfa_required · human_needed.
+    def report_connection(self, status: str, detail: Optional[str] = None, project_id: Optional[str] = None, by: str = "Explorer", mission_id: Optional[str] = None) -> Json:
+        """État de connexion : pending · connected · failed · mfa_required · human_needed (contrat
+        connection_report 1.1). Réservé au titulaire de la mission en cours du projet (403 sinon) ; `by` est
+        ignoré (identité authentifiée). Ne déclarer « connected » qu'après avoir VU une page authentifiée.
         REBORN ne passe jamais un projet à « Connecté » sans ce rapport (ou un test réel du connecteur)."""
         body: Json = {"status": status, "by": by}
         if detail:
             body["detail"] = detail
+        if mission_id:
+            body["mission_id"] = mission_id
         return self._req("POST", f"/api/projects/{self._pid(project_id)}/connection", body)
+
+    # ------------------------------------------- Mouss : exécuteur (file des missions, 1.2)
+    def heartbeat(self, networks: List[str], login: str, max_concurrent: int = 1, active_missions: Optional[List[str]] = None, version: str = "1.1", label: Optional[str] = None) -> Json:
+        """Signe de vie de l'exécuteur, au moins toutes les 20 s (contrat executor_heartbeat 1.0).
+        networks : réseaux RÉELLEMENT joignables ("public" = Internet, "private" = réseau local/bouclage).
+        login : saisie des identifiants hors du modèle ("h_vault" coffre H fill_secret_at, "cdp", ou "none" :
+        missions sans identifiants seulement). active_missions : missions en cours (prêt de 120 s renouvelé).
+        Réponse : { server_time, renew_within_s, executor_id, lease_s, leases }."""
+        body: Json = {"version": version, "networks": networks, "login": login, "max_concurrent": max_concurrent, "active_missions": active_missions or []}
+        if label:
+            body["label"] = label
+        return self._req("POST", "/api/executor/heartbeat", body)
+
+    def claim_mission(self) -> Optional[Json]:
+        """Prend la plus ancienne mission en file compatible (contrat connection_mission 1.1), ou None (204).
+        credential.token : usage unique, 15 min, lié à la mission et à CET exécuteur (executor_id).
+        RebornError 409 sans battement de cœur récent."""
+        return self._req("POST", "/api/executor/missions/claim")
+
+    def complete_mission(self, mission_id: str, outcome: str, detail: Optional[str] = None, h_vault_item_deleted: Optional[bool] = None, local_artifacts_purged: Optional[bool] = None) -> Json:
+        """Fin de mission par le titulaire (contrat mission_complete 1.0) : outcome "completed" ou "failed"
+        (jamais "completed" sans travail réellement mené). disposal : élément du coffre H supprimé, fichiers
+        locaux purgés. Le Studio clôt l'investigation et EFFACE les identifiants confiés au projet."""
+        body: Json = {"outcome": outcome}
+        if detail:
+            body["detail"] = detail
+        disposal = {k: v for k, v in (("h_vault_item_deleted", h_vault_item_deleted), ("local_artifacts_purged", local_artifacts_purged)) if v is not None}
+        if disposal:
+            body["disposal"] = disposal
+        return self._req("POST", f"/api/executor/missions/{urllib.parse.quote(mission_id)}/complete", body)
 
     # ---------------------------------------------------- Alan : modèle métier
     def publish_business_model(self, model: Json) -> Json:
@@ -445,7 +533,8 @@ class Reborn:
 
 
 def _image(path_or_url: str) -> str:
-    """Chemin local → data URL base64 (stockée par REBORN, 8 Mo max). URL → inchangée."""
+    """Chemin local → data URL base64 (rangée par REBORN : PNG, JPEG ou WebP, 8 Mo max). Une URL http(s) est
+    transmise telle quelle, mais le Studio ne conserve pas une adresse externe : envoyez le fichier."""
     if path_or_url.startswith(("http://", "https://", "data:")):
         return path_or_url
     mime = mimetypes.guess_type(path_or_url)[0] or "image/png"

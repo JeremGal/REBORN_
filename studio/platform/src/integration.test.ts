@@ -2,11 +2,12 @@
  * Tests d'intégration : simulent les futurs envois de l'Explorer (Mouss) et de
  * l'Analyste (Alan) à travers les VRAIES routes API, avec les formats JSON prévus
  * pour l'intégration finale (fichiers platform/scenarios/*).
+ * Les appels de l'atelier sont authentifiés par un jeton de service (Bearer), comme les agents.
  */
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
+import { asService, asUser, cleanupAuthEnv, makeOperator, setupAuthEnv, signUp, type TestEnv, type TestUser } from "@/test/auth";
 
 type Mod = Record<string, (req: Request, ctx: { params: Promise<Record<string, string>> }) => Promise<Response>>;
 const R: Record<string, Mod> = {};
@@ -15,10 +16,22 @@ let ENGINE_ID: string;
 
 const scen = (s: string, f: string) => JSON.parse(fs.readFileSync(path.join(import.meta.dirname, "../scenarios", s, f), "utf8"));
 
+let env: TestEnv;
+/** Compte de l'équipe REBORN : seul autorisé à remettre l'atelier à zéro (reset, scenarios en écriture). */
+let op: TestUser;
+
+/**
+ * Appel authentifié par défaut (jeton de service « all ») ; reset, scenarios en écriture et investigations
+ * locales (modes replay et simulation, réservés à l'équipe) : session de l'opérateur (navigateur du Studio).
+ * Un en-tête de valeur "" est retiré (ex. { authorization: "" } : anonyme).
+ */
 async function call(route: string, method: string, url = "", body?: unknown, headers: Record<string, string> = {}) {
+  const local = route === "investigations" && method === "POST" && ["replay", "simulation"].includes((body as { mode?: string } | undefined)?.mode ?? "");
+  const identity = (method === "POST" && (route === "reset" || route === "scenarios")) || local ? asUser(op.cookie) : asService("all");
+  const all = Object.entries({ "content-type": "application/json", ...identity, ...headers }).filter(([, v]) => v !== "");
   const req = new Request(`http://127.0.0.1:3000/api/${route}${url}`, {
     method,
-    headers: { "content-type": "application/json", ...headers },
+    headers: Object.fromEntries(all),
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const res = await R[route][method](req, { params: Promise.resolve({}) });
@@ -26,19 +39,21 @@ async function call(route: string, method: string, url = "", body?: unknown, hea
 }
 
 beforeAll(async () => {
-  process.env.REBORN_DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), "reborn-it-"));
-  delete process.env.REBORN_API_TOKEN;
+  env = setupAuthEnv("reborn-it-");
   delete process.env.EXPLORER_WEBHOOK_URL;
   for (const r of ["state", "observations", "rules", "schema", "app", "events", "investigations", "compute", "compare", "reset", "scenarios", "contracts", "health", "session", "revision"]) {
     R[r] = (await import(`@/app/api/${r}/route`)) as unknown as Mod;
   }
   store = await import("@/lib/store");
   ENGINE_ID = (await import("@/lib/engine/engine")).ENGINE_ID;
+  op = await signUp({ firstName: "Équipe", lastName: "Atelier" });
+  await makeOperator(op.email);
 });
 
 beforeEach(async () => {
   await call("reset", "POST");
 });
+afterAll(() => cleanupAuthEnv());
 
 /** Séquence d'intégration : investigation → schéma → observations → règles. */
 async function baseline(s: "quote" | "logistics", schemaFile: string) {
@@ -215,16 +230,13 @@ describe("Traçabilité, persistance et stabilité", () => {
     expect((await call("compare", "GET")).body).toEqual(cmpBefore);
   });
 
-  it("exige le jeton d'API en mode réseau", async () => {
-    process.env.REBORN_API_TOKEN = "secret-test";
-    try {
-      expect((await call("rules", "POST", "", scen("quote", "rules.v1.json"))).status).toBe(401);
-      expect((await call("rules", "POST", "", scen("quote", "rules.v1.json"), { authorization: "Bearer mauvais" })).status).toBe(401);
-      expect((await call("rules", "POST", "", scen("quote", "rules.v1.json"), { authorization: "Bearer secret-test" })).status).toBe(200);
-      expect((await call("state", "GET")).status).toBe(200); // lecture libre
-    } finally {
-      delete process.env.REBORN_API_TOKEN;
-    }
+  it("exige une identité (jeton de service ou compte), en écriture comme en lecture", async () => {
+    expect((await call("rules", "POST", "", scen("quote", "rules.v1.json"), { authorization: "" })).status).toBe(401);
+    expect((await call("rules", "POST", "", scen("quote", "rules.v1.json"), { authorization: "Bearer mauvais" })).status).toBe(401);
+    expect((await call("rules", "POST", "", scen("quote", "rules.v1.json"), { authorization: `Bearer ${env.tokens.all}` })).status).toBe(200);
+    // Plus de lecture libre : l'état de l'atelier exige aussi une identité
+    expect((await call("state", "GET", "", undefined, { authorization: "" })).status).toBe(401);
+    expect((await call("state", "GET")).status).toBe(200);
   });
 });
 
@@ -341,10 +353,10 @@ describe("Intégration future — identifiants, synchronisation et modes", () =>
 
 describe("Sécurité des API", () => {
   it("en mode local, ne sert que les adresses de bouclage (rebinding DNS)", async () => {
-    const r = await R.state.GET(new Request("http://evil.example:3000/api/state", { headers: { host: "evil.example:3000" } }), { params: Promise.resolve({}) });
+    const r = await R.state.GET(new Request("http://evil.example:3000/api/state", { headers: { host: "evil.example:3000", ...asService("all") } }), { params: Promise.resolve({}) });
     expect(r.status).toBe(403);
     for (const host of ["localhost:3000", "127.0.0.1:3000", "[::1]:3000"]) {
-      expect((await R.state.GET(new Request(`http://${host}/api/state`, { headers: { host } }), { params: Promise.resolve({}) })).status).toBe(200);
+      expect((await R.state.GET(new Request(`http://${host}/api/state`, { headers: { host, ...asService("all") } }), { params: Promise.resolve({}) })).status).toBe(200);
     }
   });
 
@@ -352,42 +364,47 @@ describe("Sécurité des API", () => {
     const body = scen("quote", "rules.v1.json");
     expect((await call("rules", "POST", "", body, { origin: "https://evil.example" })).status).toBe(403);
     expect((await call("rules", "POST", "", body, { origin: "http://127.0.0.1:4000" })).status).toBe(403);
-    expect((await call("reset", "POST", "", undefined, { "sec-fetch-site": "cross-site" })).status).toBe(403);
+    expect((await call("reset", "POST", "", undefined, { cookie: "", origin: "", ...asService("all"), "sec-fetch-site": "cross-site" })).status).toBe(403);
+    expect((await call("reset", "POST", "", undefined, { origin: "https://evil.example" })).status).toBe(403); // session de l'opérateur, page étrangère
     expect((await call("rules", "POST", "", body, { origin: "http://127.0.0.1:3000" })).status).toBe(200);
-    expect((await call("rules", "POST", "", body)).status).toBe(200); // client Python : pas d'Origin
+    expect((await call("rules", "POST", "", body)).status).toBe(200); // client Python (jeton de service) : pas d'Origin
+    // Navigateur (session de compte) : l'Origin du Studio est exigée pour écrire
+    const op = await signUp();
+    await makeOperator(op.email);
+    expect((await call("rules", "POST", "", body, { authorization: "", cookie: op.cookie })).status).toBe(403);
+    expect((await call("rules", "POST", "", body, { authorization: "", ...asUser(op.cookie) })).status).toBe(200);
   });
 
-  it("indique via /api/health si le jeton est exigé et valide, sans le révéler", async () => {
-    expect((await call("health", "GET")).body.auth).toEqual({ write_token_required: false, token_presented: false, token_valid: null, can_write: true });
-    process.env.REBORN_API_TOKEN = "secret-test";
+  it("indique via /api/health l'état d'authentification, sans révéler le jeton", async () => {
+    const anon = (await call("health", "GET", "", undefined, { authorization: "" })).body;
+    expect(anon).toEqual({ ok: true, service: "reborn", contract_version: expect.any(String), auth: { authenticated: false } }); // public et réduit
+    expect((await call("health", "GET", "", undefined, { authorization: "Bearer mauvais" })).body.auth).toEqual({ authenticated: false, token_valid: false });
+    const good = (await call("health", "GET")).body;
+    expect(good.auth).toEqual({ authenticated: true, kind: "service", service: "all" });
+    expect(good.counts).toBeDefined(); // diagnostic complet pour les agents
+    expect(JSON.stringify(good)).not.toContain(env.tokens.all);
+    // Mode réseau (REBORN_LAN=1) : toutes les adresses sont servies, l'accès reste protégé
+    const lan = () => new Request("http://172.16.0.9:3000/api/state", { headers: { host: "172.16.0.9:3000", ...asService("all") } });
+    expect((await R.state.GET(lan(), { params: Promise.resolve({}) })).status).toBe(403);
+    process.env.REBORN_LAN = "1";
     try {
-      const anon = (await call("health", "GET")).body;
-      expect(anon.auth).toMatchObject({ write_token_required: true, token_valid: false, can_write: false });
-      const good = (await call("health", "GET", "", undefined, { authorization: "Bearer secret-test" })).body;
-      expect(good.auth).toMatchObject({ token_valid: true, can_write: true });
-      expect(JSON.stringify(good)).not.toContain("secret-test");
-      // Mode réseau : toutes les adresses sont servies, l'écriture reste protégée
-      const lan = new Request("http://172.16.0.9:3000/api/state", { headers: { host: "172.16.0.9:3000" } });
-      expect((await R.state.GET(lan, { params: Promise.resolve({}) })).status).toBe(200);
+      expect((await R.state.GET(lan(), { params: Promise.resolve({}) })).status).toBe(200);
+      const anonLan = new Request("http://172.16.0.9:3000/api/state", { headers: { host: "172.16.0.9:3000" } });
+      expect((await R.state.GET(anonLan, { params: Promise.resolve({}) })).status).toBe(401);
     } finally {
-      delete process.env.REBORN_API_TOKEN;
+      delete process.env.REBORN_LAN;
     }
   });
 
-  it("ouvre la session navigateur par POST uniquement (jeton jamais dans l'URL)", async () => {
-    process.env.REBORN_API_TOKEN = "secret-test";
-    try {
-      expect((await call("session", "GET", "?token=secret-test")).status).toBe(410);
-      expect((await call("session", "POST", "", { token: "mauvais" })).status).toBe(401);
-      const req = new Request("http://127.0.0.1:3000/api/session", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: "secret-test" }) });
-      const res = await R.session.POST(req, { params: Promise.resolve({}) });
-      expect(res.status).toBe(200);
-      expect(res.headers.get("set-cookie")).toMatch(/HttpOnly; SameSite=Strict/);
-      const cookie = res.headers.get("set-cookie")!.split(";")[0];
-      expect((await call("reset", "POST", "", undefined, { cookie })).status).toBe(200);
-    } finally {
-      delete process.env.REBORN_API_TOKEN;
+  it("l'ancienne session par jeton maître est retirée : /api/session répond 410, le cookie reborn_token n'ouvre rien", async () => {
+    expect((await call("session", "GET", `?token=${env.tokens.all}`)).status).toBe(410);
+    for (const m of ["POST", "DELETE"]) {
+      const req = new Request("http://127.0.0.1:3000/api/session", { method: m, headers: { "content-type": "application/json" }, body: JSON.stringify({ token: env.tokens.all }) });
+      const res = await R.session[m](req, { params: Promise.resolve({}) });
+      expect(res.status).toBe(410);
+      expect(res.headers.getSetCookie()).toEqual([]);
     }
+    expect((await call("reset", "POST", "", undefined, { authorization: "", cookie: `reborn_token=${encodeURIComponent(env.tokens.all)}` })).status).toBe(401);
   });
 });
 

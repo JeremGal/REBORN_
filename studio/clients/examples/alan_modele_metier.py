@@ -9,7 +9,11 @@ Exemple exécutable — Alan (Analyste) → REBORN Studio : correspondances puis
 
 Données : les JEUX DE TEST Relatio 2004 du dépôt (platform/scenarios/crm/), au format d'Alan.
 
-    REBORN_URL=http://127.0.0.1:3000 REBORN_PROJECT=MIG_xxxxxxxx python3 clients/examples/alan_modele_metier.py
+    REBORN_URL=http://127.0.0.1:3000 REBORN_TOKEN=<jeton analyst> REBORN_PROJECT=MIG_xxxxxxxx \
+      python3 clients/examples/alan_modele_metier.py
+
+REBORN_TOKEN : jeton de service de l'Analyste (npm run token -- analyst le copie, jamais affiché).
+REBORN_PROJECT : projet obligatoire (aucun « projet courant » pour un agent).
 """
 import json
 import os
@@ -26,6 +30,9 @@ def main() -> int:
     rb = Reborn()
     if not rb.project:
         print("Définissez REBORN_PROJECT (projet contenant les données extraites de Relatio 2004).", file=sys.stderr)
+        return 2
+    if not rb.token:
+        print("Définissez REBORN_TOKEN (jeton de l'Analyste : npm run token -- analyst le copie).", file=sys.stderr)
         return 2
     try:
         with open(os.path.join(SCENARIO, "mapping.json"), encoding="utf-8") as f:

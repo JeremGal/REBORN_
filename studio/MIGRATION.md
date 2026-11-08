@@ -1,5 +1,7 @@
 # REBORN — Migration des données et logiciel livré
 
+> Document de la V1.0, centré sur la vue `/migration` de l'équipe (réservée aux opérateurs depuis la V1.1). Fonctionnement et chiffres actuels : [README.md](README.md) et [RAPPORT_FINAL.md](RAPPORT_FINAL.md).
+
 Ce document décrit la partie **Jerem** de REBORN : les moteurs de migration des données (Data Migration Engine), de vérification (Migration Validation Engine), de reconstruction (Application Reconstruction Engine) et de modernisation (Modernization Engine).
 
 ```
@@ -147,8 +149,8 @@ Ces protections sont des bases techniques. Elles ne constituent **pas** une cert
 
 | Commande | Couverture |
 |---|---|
-| `npm test` | 86 tests, dont `migration.chain.test.ts` (chaîne complète sur le vrai serveur Relatio, vérité lue dans sa base SQLite, détection d'altérations, mise en service, API du CRM livré, saisie, réconciliation, retour arrière) et `migration.test.ts` (formats, conversions exactes, analyse, correspondances, runtime) |
-| `node scripts/e2e-migration.mjs` | 28 vérifications dans Chrome headless : Studio, puis nouveau CRM (connexion, données, création, mobile). À lancer de préférence sur `npm run start` : en développement, le rechargement à chaud de Next peut boucler quelques minutes après un redémarrage. |
+| `npm test` | 386 tests (27 fichiers), dont `migration.chain.test.ts` (chaîne complète sur le vrai serveur Relatio, vérité lue dans sa base SQLite, détection d'altérations, mise en service, API du CRM livré, saisie, réconciliation, retour arrière) et `migration.test.ts` (formats, conversions exactes, analyse, correspondances, runtime) |
+| `node scripts/e2e-migration.mjs` | 32 vérifications dans Chrome headless, sur une pile isolée (le Studio en service n'est pas touché) : Studio, puis nouveau CRM (connexion, données, création, mobile). |
 
 ## Limites actuelles
 
@@ -159,4 +161,4 @@ Ces protections sont des bases techniques. Elles ne constituent **pas** une cert
 - **Logiciel livré** : CRUD, relations, règles calculées et agrégats sont pris en charge. Les workflows à étapes (validation de devis, relances), les droits par enregistrement, l'authentification multi-facteurs et le chiffrement de la base ne sont pas générés.
 - **Volumétrie** : la migration s'exécute dans le processus du Studio, en une transaction. Elle a été testée sur environ 21 700 lignes (1,2 s) ; au-delà de quelques centaines de milliers de lignes, un traitement par lots serait nécessaire.
 - **Mode développement** : juste après un redémarrage de `npm run dev`, le rechargement à chaud de Next 16 (Turbopack) a provoqué pendant quelques minutes des rechargements en boucle du Studio, sans cause trouvée dans notre code. Le mode production (`npm run start`), recommandé pour la démonstration, n'est pas concerné ; les deux parcours navigateur y passent intégralement.
-- **Projet** : un seul projet de migration est actif à la fois.
+- **Projet** : la vue `/migration` de l'équipe travaille sur le projet courant de l'atelier ; chaque client a ses propres projets (`/projets`).

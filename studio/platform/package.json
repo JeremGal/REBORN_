@@ -12,6 +12,7 @@
     "runtime": "node scripts/build-runtime.mjs"
   },
   "dependencies": {
+    "better-auth": "1.7.12",
     "lucide-react": "1.57.0",
     "next": "16.4.2",
     "react": "19.2.9",
@@ -23,6 +24,7 @@
     "@types/node": "24.19.2",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.7",
+    "axe-core": "4.14.0",
     "tailwindcss": "4.3.3",
     "typescript": "6.0.3",
     "vitest": "4.1.12"

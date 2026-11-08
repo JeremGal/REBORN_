@@ -1,16 +1,18 @@
 "use client";
 
 import { RefreshCw } from "lucide-react";
-import { Button, Empty } from "@/components/ui";
+import { Button, Tabs } from "@/components/ds";
 import { useProjectData } from "@/components/project/ProjectProvider";
-import { Loading, Notice, StepLink, sentence, type AppSpecPreview, type BusinessModelMeta, type MigrationOverview } from "@/components/project/AppKit";
-import { AppGeneratePanel } from "@/components/project/AppGenerate";
-import { AppActions, AppEntities, AppNotRebuilt, AppScreens, AppSpecSummary } from "@/components/project/AppSpecView";
-import { AppBusinessModelPanel } from "@/components/project/AppBusinessModel";
+import { Callout, EmptyState, Metric, Metrics, Section, StepHeader } from "@/components/project/Step";
+import { Loading, StepLink, fmtDate, fmtInt, plural, sentence, type AppSpecPreview, type BusinessModelMeta, type MigrationOverview } from "@/components/project/AppKit";
+import { DeployButton, DeployMessages, DeployReadyLine, useDeploy } from "@/components/project/AppGenerate";
+import { NotRebuiltList, ReconstructionTechSection, SpecDetails, SpecOverview } from "@/components/project/AppSpecView";
+import { BusinessModelSection, totals } from "@/components/project/AppBusinessModel";
 
 /**
- * Étape 7 · Reconstruction : aperçu de la spécification du nouveau logiciel (GET /api/migration/spec),
- * modèle métier (versions, vérification sur l'historique, décision) et génération / mise en service.
+ * Étape 7 · Reconstruction : examen du logiciel qui sera généré (vue d'ensemble et vue avancée de
+ * l'ApplicationSpec, GET /api/migration/spec : rien n'y est inventé), modèle métier (versions, rejeu
+ * sur l'historique, décision), puis génération et mise en service.
  */
 export default function ReconstructionPage() {
   const spec = useProjectData<AppSpecPreview>("/api/migration/spec");
@@ -20,56 +22,109 @@ export default function ReconstructionPage() {
   const reloadAll = async () => {
     await Promise.all([spec.reload(), models.reload(), overview.reload()]);
   };
+  const deploy = useDeploy({ overview: overview.data, reloadOverview: overview.reload, onDeployed: reloadAll });
   const completedRunId = overview.data ? ([...overview.data.runs].reverse().find((r) => r.status === "completed")?.id ?? null) : null;
+
   const s = spec.data;
+  const versions = models.data?.versions ?? null;
+  const sorted = versions ? [...versions].sort((a, b) => b.version - a.version) : [];
+  const validated = sorted.find((v) => v.status === "validated") ?? null;
+  const pending = sorted.filter((v) => v.status === "proposed");
+  const modules = s ? s.navigation.length : 0;
+  const pages = s?.screens?.length ?? 0;
+  const notRebuilt = s?.not_rebuilt?.length ?? 0;
+  const replay = validated?.history_check ? totals(validated.history_check) : null;
+  const testMapping = overview.data?.mapping?.origin === "fixture";
+  // Après la mise en service, la description n'annonce plus ce qui « sera » généré (PR-16)
+  const deployment = overview.data?.app?.deployment ?? null;
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="min-w-0">
-        <div className="eyebrow">Étape 7 · Reconstruction</div>
-        <h2 className="mt-0.5 text-[19px] leading-tight font-black tracking-[-0.02em]">Structure du nouveau logiciel et modèle métier</h2>
-        <p className="mt-1 max-w-3xl text-[13px] leading-relaxed text-sediment">
-          Aperçu de la spécification que REBORN déduit des données réellement extraites, des correspondances et des décisions validées : entités, provenance de chaque champ, écrans, actions, règles installables et éléments non reconstruits. Rien n&apos;est généré ni démarré avant votre demande.
-        </p>
-      </div>
+    <div className="flex flex-col gap-6">
+      <StepHeader
+        step={7}
+        title="Reconstruction"
+        lead="Votre nouveau logiciel est décrit à partir de vos données et de leurs correspondances : examinez-le, validez ses calculs, puis mettez-le en service."
+        actions={<DeployButton d={deploy} />}
+        aside={<DeployReadyLine d={deploy} />}
+      />
 
-      <AppGeneratePanel overview={overview.data} overviewError={overview.error} reloadOverview={overview.reload} spec={s} specError={spec.error} specLoading={spec.loading} onDeployed={reloadAll} />
+      <Metrics>
+        <Metric label="Modules" value={s ? fmtInt(modules) : "—"} hint={s ? plural(s.entities.length, "table reprise", "tables reprises") : undefined} tone={s ? undefined : "muted"} />
+        <Metric label="Pages" value={s ? fmtInt(pages) : "—"} hint={s ? "listes, fiches, formulaires" : undefined} tone={s ? undefined : "muted"} />
+        <Metric
+          label="Modèle métier validé"
+          value={validated ? `v${validated.version}` : "—"}
+          tone={validated ? "ok" : "muted"}
+          hint={
+            pending.length
+              ? `v${pending[0].version} à valider`
+              : validated
+                ? replay
+                  ? `${plural(replay.identical, "identique", "identiques")} sur ${fmtInt(replay.checked)}`
+                  : "pas rejoué sur l'historique"
+                : versions
+                  ? versions.length
+                    ? "aucune version validée"
+                    : "aucune version reçue"
+                  : undefined
+          }
+        />
+        <Metric label="Non reconstruits" value={s ? fmtInt(notRebuilt) : "—"} tone={!s ? "muted" : notRebuilt ? "warn" : undefined} hint={s ? "absents du nouveau logiciel" : undefined} />
+      </Metrics>
 
-      {spec.loading && !s ? (
-        <div className="card px-4">
-          <Loading label="Calcul de la spécification du nouveau logiciel…" />
-        </div>
-      ) : !s ? (
-        <div className="card p-4">
-          <Empty
-            title="Structure du nouveau logiciel non disponible"
-            hint={
-              <>
-                {sentence(spec.error ?? "Réponse vide de l'API")} La spécification se déduit des correspondances ancien → nouveau : <StepLink step="correspondances">étape Correspondances</StepLink>.
-              </>
+      <DeployMessages d={deploy} overview={overview.data} overviewError={overview.error} reloadOverview={overview.reload} spec={s} />
+
+      {s && spec.error && <Callout tone="warn">Actualisation de la spécification impossible : {sentence(spec.error)} Dernier aperçu affiché.</Callout>}
+
+      {s ? (
+        <Section
+          title="Votre nouveau logiciel"
+          description={
+            deployment
+              ? `Tel que le décrit sa spécification actuelle. Le logiciel en service a été généré le ${fmtDate(deployment.at)} ; une nouvelle mise en service appliquerait cette description.`
+              : "Ce qui sera généré à la mise en service, tel que décrit par sa spécification. Rien n'est créé avant."
+          }
+        >
+          <Tabs
+            label="Présentation de la spécification"
+            tabs={[
+              { id: "ensemble", label: "Vue d'ensemble", content: <SpecOverview spec={s} testMapping={testMapping} /> },
+              {
+                id: "avance",
+                label: "Vue avancée",
+                content: (
+                  <div className="flex flex-col gap-7">
+                    <SpecDetails spec={s} />
+                    <div>
+                      <h3 className="mb-2 text-body font-semibold text-ink">Éléments non reconstruits</h3>
+                      <NotRebuiltList items={s.not_rebuilt ?? []} />
+                    </div>
+                  </div>
+                ),
+              },
+            ]}
+          />
+        </Section>
+      ) : spec.loading ? (
+        <Loading label="Calcul de la spécification du nouveau logiciel…" />
+      ) : (
+        <Section title="Votre nouveau logiciel">
+          <EmptyState
+            title="Spécification indisponible"
+            action={
+              <Button size="sm" variant="secondary" icon={<RefreshCw size={14} />} onClick={() => void spec.reload()}>
+                Recalculer l&apos;aperçu
+              </Button>
             }
           >
-            <Button size="sm" variant="ghost" onClick={() => void spec.reload()}>
-              <RefreshCw size={12} aria-hidden /> Recalculer l&apos;aperçu
-            </Button>
-          </Empty>
-        </div>
-      ) : (
-        <>
-          {spec.error && <Notice tone="warn">Actualisation de la spécification impossible : {sentence(spec.error)} Dernier aperçu reçu affiché.</Notice>}
-          <div className="grid gap-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-            <AppSpecSummary spec={s} testMapping={overview.data?.mapping?.origin === "fixture"} />
-            <AppNotRebuilt items={s.not_rebuilt ?? []} />
-          </div>
-          <AppEntities spec={s} />
-          <div className="grid gap-5 lg:grid-cols-2">
-            <AppScreens spec={s} />
-            <AppActions spec={s} />
-          </div>
-        </>
+            {sentence(spec.error ?? "Le Studio n'a renvoyé aucune description")} Elle se déduit des correspondances : <StepLink step="correspondances">étape Correspondances</StepLink>.
+          </EmptyState>
+        </Section>
       )}
 
-      <AppBusinessModelPanel versions={models.data?.versions ?? null} loading={models.loading} error={models.error} reload={models.reload} spec={s} completedRunId={completedRunId} onChanged={reloadAll} />
+      <BusinessModelSection versions={versions} loading={models.loading} error={models.error} reload={models.reload} spec={s} completedRunId={completedRunId} onChanged={reloadAll} />
+
+      <ReconstructionTechSection spec={s} />
     </div>
   );
 }

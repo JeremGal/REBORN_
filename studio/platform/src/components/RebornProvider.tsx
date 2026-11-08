@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { compareAll } from "@/lib/compare";
 import { resolveApp, type ResolvedApp } from "@/lib/appschema";
 import type { ComparisonReport, Investigation, RebornState, StoredRuleModel, StoredSchema } from "@/lib/types";
+import { loginPath } from "@/components/shell/next-path";
 
 interface Ctx {
   state: RebornState | null;
@@ -22,6 +23,20 @@ interface Ctx {
 
 const RebornContext = createContext<Ctx | null>(null);
 
+/** Une session expirée ou révoquée : une seule redirection, puis plus aucune requête de synchronisation. */
+let leaving = false;
+class SessionLost extends Error {}
+
+/**
+ * Session perdue (401) : retour à la page de connexion, avec la page en cours comme adresse de retour.
+ * Rechargement complet (aucun état d'un compte ne reste en mémoire pour le suivant).
+ */
+export function redirectToLogin(): void {
+  if (typeof window === "undefined" || leaving) return;
+  leaving = true;
+  window.location.assign(loginPath(window.location.pathname + window.location.search, "expiree"));
+}
+
 export function RebornProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<RebornState | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -37,10 +52,15 @@ export function RebornProvider({ children }: { children: React.ReactNode }) {
     inflight.current = true;
     try {
       const r = await fetch("/api/state", { cache: "no-store" });
+      if (r.status === 401) throw new SessionLost();
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       setState(await r.json());
       setError(null);
     } catch (e) {
+      if (e instanceof SessionLost) {
+        redirectToLogin();
+        return;
+      }
       setError(`Plateforme injoignable (${(e as Error).message}). Nouvelle tentative automatique…`);
     } finally {
       inflight.current = false;
@@ -53,13 +73,21 @@ export function RebornProvider({ children }: { children: React.ReactNode }) {
 
   // Synchronisation : polling d'un compteur de révision (≈ 0,7 s, ralenti si l'onglet est masqué).
   // Aucun flux persistant : plusieurs onglets ouverts ne saturent pas les connexions du navigateur.
+  // Monté uniquement dans l'espace connecté ((platform)/layout.tsx) et /app : aucun sondage avant
+  // la connexion. Une réponse 401 (session expirée ou révoquée) arrête le sondage et ramène à la connexion.
   const lastRevision = useRef<number | null>(null);
   useEffect(() => {
     let stopped = false;
     let timer: ReturnType<typeof setTimeout>;
     const tick = async () => {
+      if (leaving) return;
       try {
         const r = await fetch("/api/revision", { cache: "no-store" });
+        if (r.status === 401) {
+          stopped = true;
+          redirectToLogin();
+          return;
+        }
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const { revision } = (await r.json()) as { revision: number };
         setConnected(true);
@@ -108,6 +136,10 @@ export function useReborn(): Ctx {
 export async function post(url: string, body: unknown) {
   const r = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
   const data = await r.json().catch(() => ({}));
+  if (r.status === 401) {
+    redirectToLogin();
+    throw new Error("Session expirée : reconnexion à REBORN…");
+  }
   if (!r.ok) {
     const details = Array.isArray(data?.issues)
       ? data.issues
@@ -115,8 +147,7 @@ export async function post(url: string, body: unknown) {
           .map((i: { message?: string; path?: string; rule_id?: string }) => `${i.rule_id ? `${i.rule_id} : ` : i.path ? `${i.path} : ` : ""}${i.message}`)
           .join(" · ")
       : "";
-    const hint = r.status === 401 ? " Ouvrez /connexion pour autoriser ce navigateur." : "";
-    throw new Error(`${data?.error ?? `HTTP ${r.status}`}${details ? ` — ${details}` : ""}${hint}`);
+    throw new Error(`${data?.error ?? `HTTP ${r.status}`}${details ? ` — ${details}` : ""}`);
   }
   return data;
 }

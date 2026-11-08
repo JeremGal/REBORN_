@@ -1,20 +1,23 @@
 import fs from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-import { ApiError } from "../http";
+import { ApiError } from "../errors";
 import { addEvent } from "../store";
+import { AUTHORIZATION_DECLARATION } from "../legal";
+import { scopedPrincipal, type Principal } from "../auth/principal";
 import { detectFormat, FormatError, parseSource, type ArchiveEntry, type ParsedSource, type SourceFormat } from "./formats";
 import { profileTables, type SourceProfile } from "./profile";
 import { checkMapping, effectiveMapping, MigrationMappingSchema, proposeMapping, reviewItems, type Decision, type MappingIssue, type MigrationMapping } from "./mapping";
 import { runMigration, type RunResult, type SourceTableInput } from "./run";
 import { verifyMigration, type VerificationReport } from "./verify";
 import { ExtractionPlanSchema, runHttpExtraction, type ExtractionOutcome } from "./connectors";
+import { redactText, registerCopyScrubber, releaseCredentials, revokeRedeemTokens } from "./credentials";
 import { canonical, sha256 } from "./transforms";
 import { BusinessModelSchema, checkBusinessModel, type ModelIssue } from "./business-model";
 import type { RulePackage } from "../engine/bindings";
 import type { RuleModel } from "../types";
 import type { HistoryCheck } from "./rules-history";
-import { projectScope } from "./context";
+import { PROJECT_ID, projectScope } from "./context";
 
 /**
  * Projet de migration : coffre des fichiers extraits (empreintes), structure analysée,
@@ -120,8 +123,12 @@ export interface MigrationProject {
   legacy_url?: string;
   software_type?: string;
   notes?: string;
-  /** Confirmation du propriétaire : il est autorisé à faire analyser et migrer ces données. */
-  authorization?: { by: string; at: string; statement: string };
+  /**
+   * Confirmation du propriétaire : il est autorisé à faire analyser et migrer ces données.
+   * `by` = identité authentifiée (« Prénom Nom »), `version` = version de la déclaration acceptée
+   * (absente pour les projets créés avant les comptes).
+   */
+  authorization?: { by: string; at: string; statement: string; version?: string };
   connection?: { status: "pending" | "connected" | "failed" | "mfa_required" | "human_needed"; detail?: string; at: string; by: string };
   status?: ProjectStatus;
   status_history?: { status: ProjectStatus; at: string; reason: string }[];
@@ -146,13 +153,15 @@ export const migrationRoot = () => path.join(process.env.REBORN_DATA_DIR ?? path
  * (dossier racine) et devient le premier projet de l'index : aucune donnée n'est déplacée.
  */
 interface ProjectIndex {
+  /** Projet de repli des requêtes sans projet : opérateur et appels internes uniquement (pages historiques). */
   current: string | null;
-  projects: { id: string; dir: string }[];
+  /** owner_id : compte propriétaire (absent pour les projets créés avant les comptes : visibles de l'opérateur seulement). */
+  projects: { id: string; dir: string; owner_id?: string }[];
 }
-const g = globalThis as unknown as { __rebornMigration?: { index: ProjectIndex | null; root: string; projects: Map<string, MigrationProject>; draft: MigrationProject | null; parsed: Map<string, ParsedSource> } };
+const g = globalThis as unknown as { __rebornMigration?: { index: ProjectIndex | null; indexStamp?: string | null; root: string; projects: Map<string, MigrationProject>; draft: MigrationProject | null; parsed: Map<string, ParsedSource> } };
 const mem = () => {
-  const m = (g.__rebornMigration ??= { index: null, root: "", projects: new Map(), draft: null, parsed: new Map() });
-  if (m.root !== migrationRoot()) Object.assign(m, { index: null, root: migrationRoot(), projects: new Map(), draft: null });
+  const m = (g.__rebornMigration ??= { index: null, indexStamp: null, root: "", projects: new Map(), draft: null, parsed: new Map() });
+  if (m.root !== migrationRoot()) Object.assign(m, { index: null, indexStamp: null, root: migrationRoot(), projects: new Map(), draft: null });
   return m;
 };
 const indexFile = () => path.join(migrationRoot(), "projects.json");
@@ -162,12 +171,28 @@ function writeAtomic(file: string, data: unknown) {
   fs.writeFileSync(tmp, JSON.stringify(data, null, 1));
   fs.renameSync(tmp, file);
 }
+/** Empreinte du fichier d'index : la CLI de l'opérateur (npm run account) peut le modifier pendant que le Studio tourne. */
+function indexStamp(): string | null {
+  try {
+    const s = fs.statSync(indexFile());
+    return `${s.mtimeMs}:${s.size}:${s.ino}`;
+  } catch {
+    return null;
+  }
+}
 function readIndex(): ProjectIndex {
   const m = mem();
-  if (m.index) return m.index;
+  const stamp = indexStamp();
+  if (m.index && m.indexStamp === stamp) return m.index;
   try {
     m.index = JSON.parse(fs.readFileSync(indexFile(), "utf8")) as ProjectIndex;
-  } catch {
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code !== "ENOENT") {
+      // Index présent mais illisible : il n'est JAMAIS remplacé par l'ancien projet unique (les autres
+      // projets disparaîtraient). On garde la version en mémoire, sinon on s'arrête sans rien modifier.
+      if (m.index) return m.index;
+      throw new ApiError(500, "Index des projets illisible (migration/projects.json) : aucune donnée n'a été modifiée, intervention de l'opérateur requise");
+    }
     try {
       const legacy = JSON.parse(fs.readFileSync(path.join(migrationRoot(), "project.json"), "utf8")) as MigrationProject;
       m.index = { current: legacy.id, projects: [{ id: legacy.id, dir: "" }] };
@@ -176,25 +201,63 @@ function readIndex(): ProjectIndex {
       m.index = { current: null, projects: [] };
     }
   }
+  m.indexStamp = indexStamp();
   return m.index!;
 }
 function writeIndex(idx: ProjectIndex) {
   writeAtomic(indexFile(), idx);
-  mem().index = idx;
+  const m = mem();
+  m.index = idx;
+  m.indexStamp = indexStamp();
 }
 
-/** Projet de la requête (?project=…) ou projet courant. */
+/**
+ * Projet de la requête (?project=…, [id]) ou, sans portée, projet de repli `current`.
+ * Le repli n'existe que pour l'opérateur et pour les appels internes sans principal (chaîne de
+ * migration testée en bibliothèque) : un client ou un service doit toujours désigner son projet.
+ */
 export function currentProjectId(): string | null {
   const scoped = projectScope.getStore();
   if (scoped) {
-    if (!readIndex().projects.some((p) => p.id === scoped)) throw new ApiError(404, `Projet inconnu : ${scoped}`);
+    if (!readIndex().projects.some((p) => p.id === scoped)) throw new ApiError(404, "Projet introuvable");
     return scoped;
   }
-  return readIndex().current;
+  const who = scopedPrincipal();
+  if (who && !(who.kind === "user" && who.role === "operator")) throw new ApiError(400, "Projet requis : précisez ?project=MIG_… (ou l'en-tête x-reborn-project)");
+  const current = readIndex().current;
+  // Repli de l'opérateur : jamais sur le projet d'un client (rattaché par `npm run account -- assign`) —
+  // l'opérateur ne voit que ses projets et ceux sans propriétaire (SPEC §1.3, §3) ; il doit le désigner.
+  if (who && current && !fallbackAllowed(who, current)) throw new ApiError(400, "Projet requis : le projet courant appartient à un client ; précisez ?project=MIG_… (ou l'en-tête x-reborn-project)");
+  return current;
+}
+
+/** Projet de repli utilisable par cet opérateur : le sien, ou un projet sans propriétaire. */
+function fallbackAllowed(who: Principal, id: string): boolean {
+  const owner = ownerOf(id);
+  return owner === undefined || owner === null || (who.kind === "user" && owner === who.userId);
 }
 export function projectRoot(id: string | null = currentProjectId()): string {
+  if (id !== null && !PROJECT_ID.test(id)) throw new ApiError(400, "Identifiant de projet invalide");
   const entry = readIndex().projects.find((p) => p.id === id);
   return entry ? path.join(migrationRoot(), entry.dir) : path.join(migrationRoot(), "projects", id ?? "_");
+}
+
+/** Propriétaire d'un projet : identifiant du compte, null si aucun, undefined si le projet est inconnu. */
+export function ownerOf(id: string): string | null | undefined {
+  const entry = readIndex().projects.find((p) => p.id === id);
+  return entry ? (entry.owner_id ?? null) : undefined;
+}
+export const projectExists = (id: string) => readIndex().projects.some((p) => p.id === id);
+/** Projets dont le compte est propriétaire (index en mémoire, relu si la CLI l'a modifié) : vue client de l'état global. */
+export const ownedProjectIds = (userId: string): ReadonlySet<string> => new Set(readIndex().projects.filter((p) => p.owner_id === userId).map((p) => p.id));
+
+/** Visibilité d'un projet : client → les siens ; opérateur → les siens + sans propriétaire ; service → tous. */
+export function canSeeProject(who: Principal | undefined, owner: string | null | undefined): boolean {
+  if (owner === undefined) return false;
+  if (!who) return true; // appel interne
+  if (who.kind === "service") return true;
+  if (who.kind === "user") return owner === who.userId || (who.role === "operator" && owner === null);
+  return false;
 }
 const projectFile = (id?: string | null) => path.join(projectRoot(id), "project.json");
 export const runDir = (id: string) => path.join(projectRoot(), "runs", id);
@@ -274,14 +337,75 @@ export function setStatus(p: MigrationProject, status: ProjectStatus, reason: st
   if (p.status === status && p.status_history?.at(-1)?.reason === reason) return;
   p.status = status;
   p.status_history = [...(p.status_history ?? []), { status, at: new Date().toISOString(), reason }].slice(-200);
+  credentialsFollowStatus(p, status);
 }
 
+/** États à partir desquels les identifiants de l'ancien logiciel ne servent plus (SPEC §5, lot B2). */
+const CREDENTIALS_RELEASE_STATUSES: ReadonlySet<ProjectStatus> = new Set(["MAPPING", "RECONSTRUCTING", "MIGRATING", "VALIDATING", "READY_FOR_REVIEW", "PUBLISHED"]);
+
+/**
+ * Identifiants liés à l'état du projet (lot B2) : pause → jetons de remise révoqués ; étape des
+ * correspondances atteinte (ou dépassée) ou mise en service → identifiants effacés (tracé, sans valeur).
+ * Les données déjà extraites ne sont jamais touchées. Une erreur ici n'empêche jamais le changement d'état.
+ */
+function credentialsFollowStatus(p: MigrationProject, status: ProjectStatus) {
+  if (!PROJECT_ID.test(p.id)) return;
+  try {
+    const dir = projectRoot(p.id);
+    if (status === "PAUSED") revokeRedeemTokens(dir, "projet mis en pause");
+    else if (CREDENTIALS_RELEASE_STATUSES.has(status) || (p.mappings?.length ?? 0) > 0) {
+      releaseCredentials(dir, status === "PUBLISHED" ? "logiciel mis en service" : "projet passé à l'étape des correspondances", p.id);
+    }
+  } catch (e) {
+    console.error("[reborn] identifiants (changement d'état du projet) :", (e as Error).message);
+  }
+}
+
+/**
+ * Effacement des identifiants confiés (credentials.ts) : toute copie restée dans project.json — détail du dernier
+ * rapport de connexion, raisons de l'historique des états, messages et libellés de l'extraction, notes — est
+ * masquée tant que leurs valeurs sont connues en mémoire. Les données métier (sources, correspondances,
+ * exécutions) et les références (empreintes, fichiers) ne sont jamais touchées.
+ */
+registerCopyScrubber("project.json", (id, redact) => {
+  const p = loadProject(id);
+  if (!p) return;
+  let changed = false;
+  const fix = (v: string): string => {
+    const r = redact(v);
+    if (r !== v) changed = true;
+    return r;
+  };
+  if (typeof p.connection?.detail === "string") p.connection.detail = fix(p.connection.detail);
+  for (const h of p.status_history ?? []) if (typeof h.reason === "string") h.reason = fix(h.reason);
+  if (typeof p.notes === "string") p.notes = fix(p.notes);
+  const x = p.extraction;
+  if (x) {
+    if (typeof x.account === "string") x.account = fix(x.account);
+    for (const r of x.results ?? []) {
+      if (typeof r.message === "string") r.message = fix(r.message);
+      if (typeof r.label === "string") r.label = fix(r.label);
+    }
+    for (const n of x.not_extractable ?? []) {
+      if (typeof n.label === "string") n.label = fix(n.label);
+      if (typeof n.reason === "string") n.reason = fix(n.reason);
+    }
+  }
+  if (changed) save(p);
+});
+
+/**
+ * Journal de migration du projet de la requête (lot B1) : `project_id` fixé par le serveur, au premier
+ * niveau (et dans data, pour les lecteurs existants) ; jamais rattaché à une investigation. Sans projet
+ * résolu (appel interne sans projet) : évènement de l'équipe seulement (project_id null).
+ */
 function log(title: string, detail?: string, source: "platform" | "user" | "analyst" | "explorer" = "platform", data?: unknown) {
   let project_id: string | undefined;
   try {
-    project_id = getProject().id;
+    const id = projectScope.getStore() ?? getProject().id;
+    project_id = projectExists(id) ? id : undefined;
   } catch {}
-  addEvent({ source, type: "migration", title, detail, data: data && typeof data === "object" ? { ...(data as object), project_id } : data === undefined ? { project_id } : { value: data, project_id } });
+  addEvent({ source, type: "migration", title, detail, project_id: project_id ?? null, data: data && typeof data === "object" ? { ...(data as object), project_id } : data === undefined ? { project_id } : { value: data, project_id } });
 }
 
 export interface ProjectInput {
@@ -290,35 +414,60 @@ export interface ProjectInput {
   legacy_url?: string;
   software_type?: string;
   notes?: string;
-  /** Nom de la personne qui confirme l'autorisation du propriétaire. */
+  /** La déclaration d'autorisation (lib/legal.ts) a été acceptée : enregistrée avec l'identité authentifiée. */
+  authorized?: boolean;
+  /** Compatibilité (appels internes sans compte) : ignoré dès qu'un propriétaire authentifié est fourni. */
   authorized_by?: string;
 }
-export const AUTHORIZATION_STATEMENT =
-  "Je confirme être autorisé(e) par le propriétaire des données à faire analyser ce logiciel et à en migrer les données, dans la limite des accès fournis.";
+/** Texte exact de la déclaration d'autorisation (versionnée : AUTHORIZATION_DECLARATION de lib/legal.ts). */
+export const AUTHORIZATION_STATEMENT = AUTHORIZATION_DECLARATION.text;
 
-/** Nouveau projet isolé, qui devient le projet courant. Les autres projets ne sont pas touchés. */
-export function createProject(i: ProjectInput): MigrationProject {
+/** Compte propriétaire d'un nouveau projet : identifiant et nom affiché (« Prénom Nom »). */
+export interface ProjectOwner {
+  id: string;
+  name: string;
+}
+
+export const newProjectId = () => `MIG_${randomUUID().replace(/-/g, "").slice(0, 8)}`;
+
+/**
+ * Nouveau projet isolé. Propriétaire = compte authentifié (ou aucun pour les appels internes).
+ * Ne change PAS le projet de repli (index.current) : chaque requête désigne son projet.
+ * L'autorisation est enregistrée avec l'identité authentifiée et la version de la déclaration.
+ */
+export function createProject(i: ProjectInput, owner: ProjectOwner | null = null, opts: { id?: string } = {}): MigrationProject {
   const p = emptyProject(i.company);
+  if (opts.id) {
+    if (!PROJECT_ID.test(opts.id) || projectExists(opts.id)) throw new ApiError(409, "Identifiant de projet indisponible");
+    p.id = opts.id;
+  }
+  const by = owner ? owner.name : i.authorized_by?.trim();
+  const authorized = owner ? i.authorized === true : i.authorized === true || !!by;
   Object.assign(p, {
     company: i.company,
     source_system: i.software,
     legacy_url: i.legacy_url,
     software_type: i.software_type,
     notes: i.notes,
-    authorization: i.authorized_by ? { by: i.authorized_by, at: new Date().toISOString(), statement: AUTHORIZATION_STATEMENT } : undefined,
+    authorization: authorized && by ? { by, at: new Date().toISOString(), statement: AUTHORIZATION_DECLARATION.text, version: AUTHORIZATION_DECLARATION.version } : undefined,
     status_history: [],
   });
   setStatus(p, i.legacy_url ? "CONNECTION_PENDING" : "CREATED", i.legacy_url ? "Projet créé : connexion à l'ancien logiciel à établir" : "Projet créé");
   const idx = readIndex();
-  writeIndex({ current: p.id, projects: [...idx.projects, { id: p.id, dir: path.join("projects", p.id) }] });
+  writeIndex({ current: idx.current, projects: [...idx.projects, { id: p.id, dir: path.join("projects", p.id), ...(owner ? { owner_id: owner.id } : {}) }] });
   save(p);
-  log(`Projet de migration « ${p.name} » créé`, i.software ? `Logiciel source : ${i.software}` : undefined, "user");
+  projectScope.run(p.id, () => log(`Projet de migration « ${p.name} » créé`, i.software ? `Logiciel source : ${i.software}` : undefined, "user"));
   return p;
 }
 
-/** Compatibilité (POST /api/migration/project) : crée un nouveau projet isolé. */
-export function newProject(name: string, sourceSystem?: string): MigrationProject {
-  return createProject({ company: name || "Migration", software: sourceSystem });
+/**
+ * Compatibilité (POST /api/migration/project, réservé à l'opérateur ; chaîne de migration testée en
+ * bibliothèque) : crée un projet isolé et en fait le projet de repli des pages historiques.
+ */
+export function newProject(name: string, sourceSystem?: string, owner: ProjectOwner | null = null): MigrationProject {
+  const p = createProject({ company: name || "Migration", software: sourceSystem }, owner);
+  selectProject(p.id);
+  return p;
 }
 
 export function selectProject(id: string) {
@@ -330,6 +479,25 @@ export function selectProject(id: string) {
 export function projectIds(): string[] {
   return readIndex().projects.map((p) => p.id);
 }
+
+/**
+ * Suppression demandée (npm run account -- delete-project, lib/migration/erase.ts) : retire le projet de l'index
+ * (et du projet de repli) et du cache en mémoire. Ne supprime aucun fichier : renvoie le dossier du projet
+ * (relatif au dossier de migration, "" pour le projet historique à la racine), ou null s'il est inconnu.
+ */
+export function removeProjectEntry(id: string): { dir: string; owner_id?: string } | null {
+  const idx = readIndex();
+  const entry = idx.projects.find((p) => p.id === id);
+  if (!entry) return null;
+  writeIndex({ current: idx.current === id ? null : idx.current, projects: idx.projects.filter((p) => p.id !== id) });
+  const m = mem();
+  m.projects.delete(id);
+  if (m.draft?.id === id) m.draft = null;
+  return { dir: entry.dir, ...(entry.owner_id ? { owner_id: entry.owner_id } : {}) };
+}
+
+/** Projets dont ce compte est propriétaire (index relu si la ligne de commande l'a modifié). */
+export const projectsOwnedBy = (userId: string): string[] => readIndex().projects.filter((p) => p.owner_id === userId).map((p) => p.id);
 
 /** Met à jour un projet désigné (sans changer le projet courant). */
 export function updateProject(id: string, fn: (p: MigrationProject) => void): MigrationProject {
@@ -434,11 +602,13 @@ export async function extract(rawPlan: unknown, creds: { base_url?: string; user
   try {
     outcome = await runHttpExtraction(plan, { baseUrl: creds.base_url, username: creds.username, password: creds.password });
   } catch (e) {
-    log(`Extraction refusée par ${plan.system}`, (e as Error).message, "platform");
+    // Messages du connecteur déjà sans secret ni URL complète ; masquage par prudence (lot B2).
+    const msg = redactText((e as Error).message, [creds.password, creds.username]);
+    log(`Extraction refusée par ${plan.system}`, msg, "platform");
     const p = getProject();
-    setStatus(p, "FAILED", `Extraction refusée par ${plan.system} : ${(e as Error).message}`);
+    setStatus(p, "FAILED", `Extraction refusée par ${plan.system} : ${msg}`);
     save(p);
-    throw new ApiError(502, (e as Error).message);
+    throw new ApiError(502, msg);
   }
   for (const f of outcome.files) {
     try {
@@ -462,6 +632,8 @@ export async function extract(rawPlan: unknown, creds: { base_url?: string; user
     `${refused.length ? `Refusés au compte fourni : ${refused.map((r) => r.label ?? r.id).join(", ")}. ` : ""}Compte ${outcome.account} (mot de passe non conservé).`,
     "platform",
   );
+  // Fin réussie d'une extraction : les identifiants confiés ne servent plus (SPEC §5, lot B2).
+  releaseCredentials(projectRoot(p.id), "extraction terminée", p.id);
   return summary;
 }
 
@@ -486,22 +658,24 @@ export function setMapping(raw: unknown, origin: MappingVersion["origin"]): Mapp
   const items = new Set(reviewItems(mapping).map((i) => i.key));
   p.decisions = Object.fromEntries(Object.entries(p.decisions).filter(([k]) => items.has(k)));
   p.mappings.push(v);
+  const total = reviewItems(mapping).length;
   const pending = reviewItems(mapping).filter((i) => !p.decisions[i.key]).length;
-  setStatus(p, pending ? "NEEDS_HUMAN_REVIEW" : "MAPPING", pending ? `Correspondances v${v.version} : ${pending} point(s) à valider` : `Correspondances v${v.version} prêtes`);
+  setStatus(p, pending ? "NEEDS_HUMAN_REVIEW" : "MAPPING", pending ? pendingReason(v.version, pending) : `Correspondances v${v.version} prêtes`);
   save(p);
   const errors = issues.filter((i) => i.level === "error").length;
+  const decided = total - pending;
   log(
-    `Correspondances v${v.version} reçues (${origin === "analyst" ? "Analyste" : origin === "auto" ? "proposition automatique" : origin === "fixture" ? "jeu de test" : "opérateur"}) — ${mapping.entities.length} entité(s)`,
-    `${reviewItems(mapping).length} point(s) à valider${errors ? ` · ${errors} erreur(s) bloquante(s)` : ""}`,
+    // Origine « user » : correction manuelle (propriétaire ou équipe, lot B4b) — jamais présentée comme venant de l'équipe.
+    `Correspondances v${v.version} reçues (${origin === "analyst" ? "Analyste" : origin === "auto" ? "proposition automatique" : origin === "fixture" ? "jeu de test" : "correction manuelle"}) — ${mapping.entities.length} entité(s)`,
+    // Total à examiner ET déjà tranchés (décisions reprises de la version précédente) : jamais un total présenté comme un reste.
+    `${total} point(s) à examiner${decided ? ` (dont ${decided} déjà tranché${decided > 1 ? "s" : ""})` : ""}${errors ? ` · ${errors} erreur(s) bloquante(s)` : ""}`,
     origin === "analyst" ? "analyst" : "platform",
   );
   return v;
 }
 
-export function proposeAutomatic(): MappingVersion {
-  const prof = profile();
-  if (!prof.tables.length) throw new ApiError(409, "Aucune source : extrayez ou importez des données d'abord");
-  const p = getProject();
+/** Identité du nouveau logiciel propre au projet : `<entreprise>-<4 derniers caractères du projet>`, « <entreprise> — nouveau logiciel ». */
+export function projectAppIdentity(p: MigrationProject): { id: string; name: string } {
   const base = (p.company ?? p.source_system ?? "logiciel")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -510,9 +684,31 @@ export function proposeAutomatic(): MappingVersion {
     .replace(/^-+|-+$/g, "")
     .replace(/^(\d)/, "app-$1")
     .slice(0, 28) || "logiciel";
-  const id = `${/^[a-z]/.test(base) ? base : `app-${base}`}-${p.id.slice(-4)}`;
-  return setMapping(proposeMapping(prof, { source_system: p.source_system, target: { id, name: `${p.company ?? p.source_system ?? "Logiciel"} — nouveau logiciel` } }), "auto");
+  return { id: `${/^[a-z]/.test(base) ? base : `app-${base}`}-${p.id.slice(-4)}`, name: `${p.company ?? p.source_system ?? "Logiciel"} — nouveau logiciel` };
 }
+
+/**
+ * Logiciel visé quand le jeu de test au format de l'Analyste est appliqué (?fixture=crm) : celui déjà livré
+ * pour CE projet (même identifiant, même nom : mise à jour sans perte de données), sinon l'identité propre au
+ * projet (projectAppIdentity, comme la proposition automatique). Jamais l'identifiant écrit dans le fichier du
+ * jeu de test (« morel-crm ») : il désignerait pour tous les clients le logiciel livré du premier d'entre eux.
+ */
+export function fixtureAppTarget(p: MigrationProject = getProject()): { id: string; name: string } {
+  const delivered = deliveredApp(p);
+  if (!delivered) return projectAppIdentity(p);
+  const previous = [...p.mappings].reverse().find((m) => m.mapping.target.id === delivered.id)?.mapping.target;
+  return { id: delivered.id, name: previous?.name ?? projectAppIdentity(p).name };
+}
+
+export function proposeAutomatic(): MappingVersion {
+  const prof = profile();
+  if (!prof.tables.length) throw new ApiError(409, "Aucune source : extrayez ou importez des données d'abord");
+  const p = getProject();
+  return setMapping(proposeMapping(prof, { source_system: p.source_system, target: projectAppIdentity(p) }), "auto");
+}
+
+/** Raison de l'état « validation humaine requise » des correspondances : nombre RÉEL de points encore à trancher. */
+const pendingReason = (version: number, pending: number) => `Correspondances v${version} : ${pending} point(s) à valider`;
 
 export function decide(key: string, decision: Decision["decision"], by: string, comment?: string) {
   assertActive();
@@ -522,7 +718,16 @@ export function decide(key: string, decision: Decision["decision"], by: string, 
   if (!item) throw new ApiError(404, `Point de validation inconnu : ${key}`);
   const p = getProject();
   p.decisions[key] = { decision, at: new Date().toISOString(), by, comment };
-  if (!reviewItems(m.mapping).some((i) => !p.decisions[i.key])) setStatus(p, "MAPPING", "Toutes les correspondances incertaines ont été tranchées : migration possible");
+  const pending = reviewItems(m.mapping).filter((i) => !p.decisions[i.key]).length;
+  if (!pending) setStatus(p, "MAPPING", "Toutes les correspondances incertaines ont été tranchées : migration possible");
+  else {
+    // L'état ne change pas (des points restent à trancher) : sa raison est tenue à jour, sans nouvelle entrée
+    // d'historique, pour que la barre latérale et le suivi affichent le reste réel et non le total de départ.
+    const last = p.status_history?.at(-1);
+    if (p.status === "NEEDS_HUMAN_REVIEW" && last?.status === "NEEDS_HUMAN_REVIEW" && new RegExp(`^Correspondances v${m.version} : \\d+ point\\(s\\) à valider$`).test(last.reason)) {
+      last.reason = pendingReason(m.version, pending);
+    }
+  }
   save(p);
   const verb = item.kind === "accounting" ? (decision === "accepted" ? "Protection de l'historique confirmée" : "Protection de l'historique retirée") : decision === "accepted" ? "Correspondance validée" : "Correspondance exclue";
   log(`${verb} : ${item.label}`, comment, "user");
@@ -757,6 +962,26 @@ export function recordDeployment(d: Deployment, app?: { id: string; port: number
   save(p);
 }
 
+// Dossiers lus à l'exécution (logiciels générés) : exclus du traçage du build
+export const appsRoot = () => process.env.REBORN_APPS_DIR ?? path.resolve(/* turbopackIgnore: true */ process.cwd(), "..", "generated");
+
+/**
+ * Logiciel livré du projet : celui enregistré à la mise en service, sinon celui de la dernière
+ * mise en service active, lu dans sa spécification (projets livrés avant l'enregistrement de `app`).
+ */
+export function deliveredApp(p: MigrationProject): { id: string; port: number } | null {
+  if (p.app) return p.app;
+  const active = [...p.deployments].reverse().find((d) => d.status === "active");
+  if (!active) return null;
+  const id = path.basename(active.app_dir);
+  try {
+    const port = Number(JSON.parse(fs.readFileSync(path.join(appsRoot(), id, "app.json"), "utf8")).app.port);
+    return port ? { id, port } : null;
+  } catch {
+    return null;
+  }
+}
+
 export function markRolledBack(id: string) {
   const p = getProject();
   const d = p.deployments.find((x) => x.id === id);
@@ -782,7 +1007,18 @@ export interface MigrationSummary {
   deployed: { run_id: string; at: string } | null;
 }
 
-export function migrationSummary(): MigrationSummary {
+/**
+ * Résumé du projet de la requête ou du projet de repli. Sans projet désigné, le repli n'existe que
+ * pour l'opérateur et les appels internes : null pour un client ou un service (rien à résumer).
+ */
+export function migrationSummary(): MigrationSummary | null {
+  if (!projectScope.getStore()) {
+    const who = scopedPrincipal();
+    if (who && !(who.kind === "user" && who.role === "operator")) return null;
+    // Projet courant rattaché à un client : jamais résumé pour l'équipe (voir currentProjectId)
+    const current = readIndex().current;
+    if (who && current && !fallbackAllowed(who, current)) return null;
+  }
   const p = getProject();
   const r = p.runs.at(-1);
   const d = [...p.deployments].reverse().find((x) => x.status === "active");
@@ -838,7 +1074,6 @@ export interface ProjectSummary {
   status_reason: string | null;
   created_at: string;
   updated_at: string | null;
-  current: boolean;
   /** Avancement mesuré sur les étapes réellement accomplies (pas un minuteur). */
   progress: { done: number; total: number; steps: { id: string; label: string; done: boolean }[] };
   data: { sources: number; source_rows: number; imported: number; rejected: number };
@@ -856,6 +1091,7 @@ export function projectSummary(id: string): ProjectSummary | null {
   const pending = mv ? reviewItems(mv.mapping).filter((i) => !p.decisions[i.key]).length : 0;
   const mappingErrors = mv ? mv.issues.filter((i) => i.level === "error").length : 0;
   const active = [...p.deployments].reverse().find((d) => d.status === "active") ?? null;
+  const app = deliveredApp(p);
   const bm = [...(p.business_models ?? [])].reverse().find((m) => m.status === "validated") ?? p.business_models?.at(-1) ?? null;
   let gaps = 0;
   let failed = 0;
@@ -887,7 +1123,6 @@ export function projectSummary(id: string): ProjectSummary | null {
     status_reason: p.status_history?.at(-1)?.reason ?? null,
     created_at: p.created_at,
     updated_at: p.updated_at ?? null,
-    current: readIndex().current === p.id,
     progress: { done: steps.filter((s) => s.done).length, total: steps.length, steps },
     data: {
       sources: p.sources.length,
@@ -897,13 +1132,15 @@ export function projectSummary(id: string): ProjectSummary | null {
     },
     anomalies: { pending_decisions: pending, gaps, failed_checks: failed },
     business_model: bm ? { version: bm.version, status: bm.status } : null,
-    app: active && p.app ? { id: p.app.id, port: p.app.port, deployed_at: active.at, run_id: active.run_id } : null,
+    app: active && app ? { id: app.id, port: app.port, deployed_at: active.at, run_id: active.run_id } : null,
   };
 }
 
-export function listProjects(): ProjectSummary[] {
-  return projectIds()
-    .map((id) => projectSummary(id))
+/** Projets visibles par le principal (SPEC §3) ; sans principal (appel interne) : tous. */
+export function listProjects(who: Principal | undefined = scopedPrincipal()): ProjectSummary[] {
+  return readIndex()
+    .projects.filter((e) => canSeeProject(who, e.owner_id ?? null))
+    .map((e) => projectSummary(e.id))
     .filter((x): x is ProjectSummary => !!x)
     .sort((a, b) => (b.updated_at ?? b.created_at).localeCompare(a.updated_at ?? a.created_at));
 }

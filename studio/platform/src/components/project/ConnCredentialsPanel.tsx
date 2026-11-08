@@ -1,146 +1,219 @@
 "use client";
 
-import { useState } from "react";
-import { Eraser, KeyRound, LockKeyhole } from "lucide-react";
-import { Button, Field, Panel, cx, inputCls } from "@/components/ui";
+import { useState, type FormEvent } from "react";
+import Link from "next/link";
+import { Bot, ChevronDown, Clock3, KeyRound, LockKeyhole, Trash2 } from "lucide-react";
+import { StatusBadge } from "@/components/ds/Badge";
+import { Button } from "@/components/ds/Button";
+import { ConfirmationDialog } from "@/components/ds/Dialog";
+import { Field, Input, PasswordInput, Select } from "@/components/ds/Field";
+import { Skeleton } from "@/components/ds/Progress";
+import { cx } from "@/components/ds/cx";
+import { LEGAL_DOCUMENTS } from "@/lib/legal";
+import { Facts, Section } from "./Step";
 import { useProject } from "./ProjectProvider";
-import { ConnLoading, ConnNotice, connDate, useConnAction } from "./ConnShared";
+import { ConnResultCallout, connApi, connDate, connRelative, useConnAction, useCredentialErasure } from "./ConnShared";
 
-/** Durées acceptées par l'API (0,25 h à 168 h) ; 24 h est la valeur par défaut du coffre. */
+/** Durées proposées : 24 h au plus (SPEC §5). */
 const TTL = [
   { value: "1", label: "1 heure" },
   { value: "4", label: "4 heures" },
   { value: "8", label: "8 heures" },
-  { value: "24", label: "24 heures (recommandé)" },
-  { value: "72", label: "3 jours" },
-  { value: "168", label: "7 jours (maximum)" },
+  { value: "24", label: "24 heures (maximum)" },
 ];
 
+/** Attributs qui demandent aux gestionnaires de mots de passe de ne pas enregistrer ce compte tiers. */
+export const NO_PASSWORD_MANAGER = { "data-1p-ignore": "true", "data-lpignore": "true", "data-bwignore": "true", "data-form-type": "other" } as const;
+
 /**
- * Identifiants de l'ancien logiciel : seul l'indice masqué et l'échéance renvoyés par l'API sont
- * affichés. Le mot de passe saisi n'est jamais montré et le champ est vidé après l'envoi.
+ * Ce qu'il advient des identifiants confiés : mêmes engagements dans l'assistant et à l'étape Connexion.
+ * Seulement ce que REBORN Studio fait réellement et que ses tests vérifient ; ce qui dépend de l'agent
+ * (en cours d'intégration) et de son prestataire est annoncé comme prévu et non vérifié, jamais promis.
  */
-export function ConnCredentialsPanel() {
-  const { id, details, post, del, refresh } = useProject();
+export function CredentialsPromise({ className, compact }: { className?: string; compact?: boolean }) {
+  const items = [
+    { icon: <LockKeyhole size={16} />, title: "Chiffrés dès réception", text: "Avec une clé propre à ce dépôt ; REBORN Studio ne les réaffiche jamais, ni à vous ni à l'équipe." },
+    { icon: <Clock3 size={16} />, title: "24 heures au maximum", text: "Puis supprimés automatiquement, même si personne ne revient sur le projet." },
+    { icon: <Trash2 size={16} />, title: "Supprimés plus tôt dès qu'ils ne servent plus", text: "Fin de l'extraction ou de l'analyse, changement d'adresse, ou à tout moment depuis votre projet." },
+    {
+      icon: <Bot size={16} />,
+      title: "Remis au seul agent d'analyse habilité",
+      text: "Par un jeton à usage unique de 15 minutes, pour une mission en lecture seule. Prévu : l'agent les saisira hors du modèle d'IA, par le coffre de son prestataire H Company. Intégration en cours, non vérifiée à ce jour.",
+    },
+  ];
+  return (
+    <ul className={cx("grid gap-3", !compact && "sm:grid-cols-2", className)} aria-label="Ce qu'il advient de vos identifiants">
+      {items.map((i) => (
+        <li key={i.title} className="flex min-w-0 gap-3">
+          <span aria-hidden className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-control bg-accent-soft text-accent-ink">
+            {i.icon}
+          </span>
+          <span className="min-w-0">
+            <span className="block text-body font-semibold text-ink">{i.title}</span>
+            <span className="block text-small leading-relaxed text-text-2">{i.text}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * Identifiants de l'ancien logiciel : état (déposés, échéance), suppression immédiate (avec
+ * confirmation), dépôt ou remplacement. Seuls l'indice masqué et l'échéance renvoyés par l'API
+ * sont affichés ; les champs sont vidés après chaque envoi.
+ */
+export function ConnCredentialsSection() {
+  const { id, details, refresh } = useProject();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [ttl, setTtl] = useState("24");
-  const { busy, result, run } = useConnAction();
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [missing, setMissing] = useState<{ username?: string; password?: string }>({});
+  const { busy, result, setResult, run } = useConnAction();
   const creds = details?.credentials;
   const spaced = username.length > 0 && username.trim() !== username;
+  const erased = useCredentialErasure(id, creds?.stored);
+  // L'avis d'une opération ne vaut que pour l'état qu'elle a produit : des identifiants « déposés » puis supprimés
+  // ailleurs (changement d'adresse, échéance, fin d'extraction) ne gardent pas l'avis « Identifiants déposés ».
+  const [expect, setExpect] = useState<"stored" | "none" | null>(null);
+  const credState = creds ? (creds.stored ? "stored" : "none") : null;
+  const notice = result && (expect === null || expect === credState) ? result : null;
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
-    if (!username.trim() || !password) return;
+    const m = { username: username.trim() ? undefined : "Indiquez l'identifiant du compte.", password: password ? undefined : "Indiquez le mot de passe du compte." };
+    setMissing(m);
+    if (m.username || m.password) return;
+    const body = { username, password, ttl_hours: Number(ttl) };
+    // Le mot de passe ne reste pas dans la page : champs vidés dès l'envoi, quel que soit le résultat.
+    setPassword("");
+    setExpect(null);
     await run(
       "store",
       async () => {
-        const r = await post<{ username_hint: string; expires_at: string }>(`/api/projects/${id}/credentials`, { username, password, ttl_hours: Number(ttl) });
+        const r = await connApi<{ username_hint?: string; expires_at?: string }>("POST", `/api/projects/${id}/credentials`, body);
         setUsername("");
-        setPassword("");
-        return { tone: "ok", title: "Identifiants chiffrés et confiés au projet", text: `Compte ${r.username_hint} · effacement automatique le ${connDate(r.expires_at)}.` };
+        setExpect("stored");
+        return { tone: "ok", title: "Identifiants chiffrés et déposés", text: `${r.username_hint ? `Compte ${r.username_hint} · ` : ""}suppression automatique le ${connDate(r.expires_at)}.` };
       },
       { errorTitle: "Identifiants non enregistrés", after: refresh },
     );
   }
 
-  async function forget() {
-    await run(
-      "forget",
-      async () => {
-        await del(`/api/projects/${id}/credentials`);
-        return { tone: "ok", title: "Identifiants effacés", text: "Le fichier chiffré et tout jeton de remise en cours ont été supprimés." };
-      },
-      { errorTitle: "Effacement impossible", after: refresh },
+  async function remove() {
+    const r = await connApi<{ revoked_at?: string }>("DELETE", `/api/projects/${id}/credentials`);
+    setExpect("none");
+    setResult({ tone: "ok", title: "Identifiants supprimés", text: `Ils ont été effacés${r.revoked_at ? ` le ${connDate(r.revoked_at)}` : ""}. Les données déjà récupérées sont conservées.` });
+    await refresh();
+  }
+
+  if (!creds) {
+    return (
+      <Section title="Vos identifiants de l'ancien logiciel">
+        <Skeleton lines={2} label="Lecture de l'état des identifiants…" />
+      </Section>
     );
   }
 
+  const form = (
+    <form onSubmit={submit} className="flex flex-col gap-4" autoComplete="off" noValidate aria-label={creds.stored ? "Remplacer les identifiants" : "Déposer des identifiants"}>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Identifiant" hint="Le nom du compte dans votre logiciel." error={missing.username}>
+          <Input name="legacy_username" value={username} onChange={(e) => setUsername(e.target.value)} maxLength={200} autoComplete="off" autoCapitalize="none" spellCheck={false} {...NO_PASSWORD_MANAGER} />
+        </Field>
+        <Field label="Mot de passe" hint="Masqué ; affichez-le un instant pour vérifier la saisie." error={missing.password}>
+          <PasswordInput name="legacy_password" value={password} onChange={(e) => setPassword(e.target.value)} maxLength={500} autoComplete="off" {...NO_PASSWORD_MANAGER} />
+        </Field>
+      </div>
+      {spaced && <p className="text-small text-warning-ink">L&apos;identifiant commence ou se termine par une espace : il sera transmis tel quel.</p>}
+      <div className="grid items-end gap-4 sm:grid-cols-[minmax(0,1fr)_auto]">
+        <Field label="Suppression automatique après" hint="Vos identifiants sont effacés à cette échéance, même si l'analyse n'a pas eu lieu.">
+          <Select name="legacy_ttl" value={ttl} onChange={(e) => setTtl(e.target.value)}>
+            {TTL.map((t) => (
+              <option key={t.value} value={t.value}>
+                {t.label}
+              </option>
+            ))}
+          </Select>
+        </Field>
+        <Button type="submit" variant={creds.stored ? "secondary" : "primary"} icon={<KeyRound size={16} />} loading={busy === "store"} loadingText="Chiffrement…">
+          {creds.stored ? "Remplacer les identifiants" : "Chiffrer et déposer"}
+        </Button>
+      </div>
+      <p className="text-small text-text-3">
+        Détail du traitement :{" "}
+        <Link href={LEGAL_DOCUMENTS.identifiants.path} target="_blank" rel="noopener" className="ds-link">
+          {LEGAL_DOCUMENTS.identifiants.title} (version {LEGAL_DOCUMENTS.identifiants.version})
+          <span className="sr-only"> (nouvel onglet)</span>
+        </Link>
+        .
+      </p>
+    </form>
+  );
+
   return (
-    <Panel eyebrow="Accès confié par le propriétaire" title="Identifiants de l'ancien logiciel">
-      {!creds ? (
-        <ConnLoading label="Lecture de l'état des identifiants…" lines={2} />
-      ) : (
-        <div className="flex flex-col gap-4">
-          <div className={cx("flex flex-wrap items-start justify-between gap-3 rounded-md p-3", creds.stored ? "bg-verdigris-soft" : "bg-chalk")}>
-            <div className="flex min-w-0 items-start gap-2.5">
-              {creds.stored ? <KeyRound size={16} className="mt-0.5 shrink-0 text-verdigris" aria-hidden /> : <LockKeyhole size={16} className="mt-0.5 shrink-0 text-silt" aria-hidden />}
-              <div className="min-w-0">
-                <p className={cx("text-[13.5px] font-bold", creds.stored ? "text-[#0b6b5f]" : "text-ink")}>{creds.stored ? "Identifiants confiés" : "Aucun identifiant confié"}</p>
-                {creds.stored ? (
-                  <p className="mt-0.5 text-[12.5px] text-ink/80">
-                    Compte <span className="font-mono text-[12px] text-ink">{creds.username_hint ?? "masqué"}</span> · effacement automatique le {connDate(creds.expires_at)}
-                  </p>
-                ) : (
-                  <p className="mt-0.5 text-[12.5px] text-sediment">Sans compte, l&apos;agent ne peut pas se connecter. Les données peuvent aussi être déposées directement à l&apos;étape Données.</p>
-                )}
-              </div>
-            </div>
-            {creds.stored && (
-              <Button variant="danger" size="sm" onClick={() => { if (window.confirm("Effacer les identifiants confiés ? Il faudra les confier à nouveau pour toute connexion ou extraction.")) void forget(); }} disabled={!!busy}>
-                <Eraser size={13} aria-hidden /> {busy === "forget" ? "Effacement…" : "Effacer les identifiants"}
+    <Section
+      title="Vos identifiants de l'ancien logiciel"
+      badge={creds.stored ? <StatusBadge tone="ok">Déposés et chiffrés</StatusBadge> : <StatusBadge tone="neutral">{erased ? "Effacés" : "Aucun identifiant déposé"}</StatusBadge>}
+      description={
+        creds.stored
+          ? "L'agent les utilise pour se connecter à votre logiciel, et uniquement à l'adresse déclarée."
+          : erased
+            ? `Les derniers identifiants confiés ont été effacés le ${connDate(erased.at)} — ${erased.reason}. Les données déjà récupérées sont conservées ; déposez-en de nouveaux seulement si une nouvelle connexion est nécessaire.`
+            : "Sans compte, l'agent ne peut pas se connecter. Vous pouvez aussi importer vos exports à l'étape Données."
+      }
+    >
+      <div className="flex flex-col gap-5">
+        {creds.stored ? (
+          <>
+            <Facts
+              items={[
+                { label: "Compte", value: <span className="font-mono text-small">{creds.username_hint ?? "masqué"}</span> },
+                {
+                  label: "Suppression automatique",
+                  value: (
+                    <>
+                      {connDate(creds.expires_at)}
+                      {connRelative(creds.expires_at) && <span className="text-text-3"> · {connRelative(creds.expires_at)}</span>}
+                    </>
+                  ),
+                },
+              ]}
+            />
+            <div>
+              <Button variant="danger-subtle" icon={<Trash2 size={16} />} onClick={() => setConfirmDelete(true)} disabled={!!busy}>
+                Supprimer mes identifiants maintenant
               </Button>
-            )}
-          </div>
-
-          <form onSubmit={submit} className="flex flex-col gap-3" autoComplete="off">
-            <div className="text-[12.5px] font-bold text-ink">{creds.stored ? "Remplacer les identifiants" : "Confier des identifiants"}</div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Identifiant">
-                <input
-                  className={inputCls}
-                  name="legacy-account"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  maxLength={200}
-                  autoComplete="off"
-                  autoCapitalize="none"
-                  spellCheck={false}
-                  required
-                />
-              </Field>
-              <Field label="Mot de passe">
-                <input
-                  className={inputCls}
-                  name="legacy-secret"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  maxLength={500}
-                  autoComplete="new-password"
-                  required
-                />
-              </Field>
             </div>
-            {spaced && <p className="text-[12px] text-ochre">L&apos;identifiant commence ou se termine par une espace : il sera transmis tel quel.</p>}
-            <div className="flex flex-col gap-1.5">
-              <div className="grid items-end gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-                <Field label="Durée de conservation">
-                  <select className={inputCls} value={ttl} onChange={(e) => setTtl(e.target.value)} name="legacy-ttl">
-                    {TTL.map((t) => (
-                      <option key={t.value} value={t.value}>
-                        {t.label}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-                <Button type="submit" variant="primary" disabled={!username.trim() || !password || !!busy}>
-                  <KeyRound size={14} aria-hidden /> {busy === "store" ? "Chiffrement…" : creds.stored ? "Remplacer" : "Chiffrer et confier"}
-                </Button>
-              </div>
-              <p className="text-[11.5px] text-silt">Effacement automatique à l&apos;échéance, ou immédiat avec « Effacer les identifiants ».</p>
-            </div>
-          </form>
-
-          {result && <ConnNotice live tone={result.tone} title={result.title}>{result.text}</ConnNotice>}
-
-          <ul className="flex flex-col gap-1 border-t border-line pt-3 text-[12px] leading-snug text-sediment">
-            <li>• Chiffrés au repos (AES-256-GCM), jamais renvoyés par l&apos;API ni affichés : seul un indice masqué du compte apparaît.</li>
-            <li>• Remis à l&apos;exécuteur de l&apos;agent par un jeton à usage unique (15 min), jamais transmis à un modèle de langage.</li>
-            <li>• Servent uniquement à l&apos;ancien logiciel ; privilégiez un compte dédié en lecture seule.</li>
-            <li className="text-silt">Limite : la clé de chiffrement est conservée sur le même poste que les données du projet.</li>
-          </ul>
-        </div>
-      )}
-    </Panel>
+            <ConnResultCallout result={notice} onClose={() => setResult(null)} />
+            <details className="group rounded-panel ring-1 ring-line">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-panel px-4 py-2.5 text-body font-semibold text-ink hover:bg-canvas [&::-webkit-details-marker]:hidden">
+                Remplacer les identifiants
+                <ChevronDown size={18} aria-hidden className="shrink-0 text-text-3 transition-transform duration-(--duration-base) group-open:rotate-180" />
+              </summary>
+              <div className="border-t border-line px-4 py-4">{form}</div>
+            </details>
+          </>
+        ) : (
+          <>
+            <CredentialsPromise />
+            {form}
+            <ConnResultCallout result={notice} onClose={() => setResult(null)} />
+          </>
+        )}
+      </div>
+      <ConfirmationDialog
+        open={confirmDelete}
+        onClose={() => setConfirmDelete(false)}
+        onConfirm={remove}
+        title="Supprimer vos identifiants maintenant ?"
+        confirmLabel="Supprimer maintenant"
+        pendingLabel="Suppression…"
+        tone="danger"
+      >
+        Ils seront effacés immédiatement et définitivement. L&apos;agent ne pourra plus se connecter à votre logiciel tant que vous n&apos;en aurez pas déposé de nouveaux. Les données déjà récupérées sont conservées.
+      </ConfirmationDialog>
+    </Section>
   );
 }

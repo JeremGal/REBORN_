@@ -1,14 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState, type DragEvent } from "react";
-import { Ban, CircleCheck, CircleX, Clock, FileUp, TriangleAlert, Upload } from "lucide-react";
-import { Button, cx } from "@/components/ui";
+import { useEffect, useRef, useState } from "react";
+import { Ban, CircleCheck, CircleX, Clock, Upload } from "lucide-react";
+import { Button } from "@/components/ds/Button";
+import { FileUpload } from "@/components/ds/FileUpload";
+import { Progress } from "@/components/ds/Progress";
+import { cx } from "@/components/ds/cx";
 import { bytes, FORMAT_LABEL, plural, Spinner, UPLOAD_BY, type SourceMeta } from "./DataKit";
 
 /*
  * Import manuel de fichiers exportés → POST /api/migration/sources { name, content_base64, by }.
- * Progression réelle, fichier par fichier : octets lus par le navigateur (FileReader), puis octets
- * envoyés (XMLHttpRequest.upload) ; l'analyse côté serveur n'a pas de pourcentage (état « en cours »).
+ * Sélection par le composant FileUpload du design system (glisser-déposer + bouton natif), puis
+ * envoi fichier par fichier avec une progression RÉELLE : octets lus par le navigateur
+ * (FileReader), puis octets envoyés (XMLHttpRequest.upload). L'analyse côté serveur n'a pas de
+ * pourcentage : elle est annoncée « en cours », sans chiffre inventé.
  */
 
 /** Extensions lues par REBORN (lib/migration/formats.ts). Un fichier sans extension est identifié par son contenu. */
@@ -16,7 +21,8 @@ const ACCEPTED = ["csv", "tsv", "txt", "json", "ndjson", "jsonl", "xlsx", "sql",
 const ACCEPT_ATTR = ACCEPTED.map((e) => `.${e}`).join(",");
 /** Corps JSON limité à 20 Mo par l'API (lib/http.ts) : ≈ 15 Mo de fichier une fois encodé en base64. */
 const MAX_BODY = 20 * 1024 * 1024;
-const MAX_FILE_LABEL = "15 Mo";
+const MAX_FILE = 15 * 1024 * 1024;
+const FORMATS_HINT = "CSV, Excel (.xlsx), JSON, export SQL, base SQLite ou archive ZIP de pièces jointes · 15 Mo au plus par fichier";
 const bodySize = (size: number, name: string) => 4 * Math.ceil(size / 3) + JSON.stringify({ name, content_base64: "", by: UPLOAD_BY }).length;
 
 type Phase = "queued" | "reading" | "sending" | "analyzing" | "done" | "error" | "cancelled";
@@ -59,10 +65,10 @@ export function apiFileName(raw: string): string {
 /** Contrôles faits avant l'envoi, avec un message lisible (le serveur refait ses propres contrôles). */
 function checkFile(file: File, name: string): string | null {
   const ext = name.includes(".") ? name.split(".").pop()!.toLowerCase() : "";
-  if (ext === "xls") return "Classeur Excel 97-2003 (.xls) non pris en charge : enregistrez-le au format .xlsx ou CSV, puis déposez-le à nouveau.";
+  if (ext === "xls") return "Classeur Excel 97-2003 (.xls) non pris en charge : enregistrez-le au format .xlsx ou CSV, puis importez-le à nouveau.";
   if (ext && !ACCEPTED.includes(ext)) return `Format .${ext} non pris en charge. Formats lus : CSV (.csv, .tsv, .txt), Excel (.xlsx), JSON (.json, .ndjson), export SQL (.sql), base SQLite (.db, .sqlite), archive ZIP (.zip).`;
   if (file.size === 0) return "Fichier vide : rien à importer.";
-  if (bodySize(file.size, name) > MAX_BODY) return `Fichier trop volumineux pour un dépôt depuis le navigateur (${bytes(file.size)} ; ${MAX_FILE_LABEL} au plus). Découpez l'export, ou faites-le récupérer par l'extraction automatique.`;
+  if (bodySize(file.size, name) > MAX_BODY) return `Fichier trop volumineux pour un import depuis le navigateur (${bytes(file.size)} ; 15 Mo au plus). Découpez l'export, ou faites-le récupérer par l'agent.`;
   return null;
 }
 
@@ -95,7 +101,7 @@ function sendSource(url: string, body: string, onProgress: (f: number) => void, 
     };
     xhr.upload.onload = () => onSent();
     xhr.onabort = () => reject(new Cancelled());
-    xhr.onerror = () => reject(new Error("Envoi impossible : la plateforme ne répond pas (réseau coupé ou serveur arrêté)."));
+    xhr.onerror = () => reject(new Error("Envoi impossible : le Studio ne répond pas (réseau coupé ou serveur arrêté)."));
     xhr.onload = () => {
       let data: { source?: SourceMeta; error?: string; issues?: { path?: string; message?: string }[] } = {};
       try {
@@ -107,27 +113,27 @@ function sendSource(url: string, body: string, onProgress: (f: number) => void, 
       const issues = Array.isArray(data.issues)
         ? data.issues
             .slice(0, 5)
-            .map((i) => `${i.path ? `${i.path} : ` : ""}${i.message ?? ""}`)
+            .map((i) => i.message ?? "")
+            .filter(Boolean)
             .join(" · ")
         : "";
-      reject(new Error(`${data.error ?? `Erreur HTTP ${xhr.status}`}${issues ? ` — ${issues}` : ""}`));
+      reject(new Error(`${data.error ?? `Le Studio a refusé le fichier (HTTP ${xhr.status}).`}${issues ? ` — ${issues}` : ""}`));
     };
     xhr.send(body);
   });
 }
 
-const hasFiles = (e: DragEvent) => Array.from(e.dataTransfer?.types ?? []).includes("Files");
+const ACTIVE: Phase[] = ["queued", "reading", "sending", "analyzing"];
 
+/** Import de fichiers : sélection (FileUpload), puis envoi un par un avec progression réelle. */
 export function DataUpload({ projectId, existing, onUploaded }: { projectId: string; existing: SourceMeta[]; onUploaded: (s: SourceMeta) => void }) {
+  const [picked, setPicked] = useState<File[]>([]);
   const [items, setItems] = useState<Item[]>([]);
-  const ref = useRef<Item[]>([]);
+  const list = useRef<Item[]>([]);
   const running = useRef(false);
   const controls = useRef(new Map<string, Control>());
-  const input = useRef<HTMLInputElement>(null);
-  const depth = useRef(0);
   const seq = useRef(0);
-  const [over, setOver] = useState(false);
-  const active = items.some((i) => i.phase === "queued" || i.phase === "reading" || i.phase === "sending" || i.phase === "analyzing");
+  const active = items.some((i) => ACTIVE.includes(i.phase));
 
   // Fermer l'onglet interromprait un envoi en cours : le navigateur demande confirmation
   useEffect(() => {
@@ -141,10 +147,10 @@ export function DataUpload({ projectId, existing, onUploaded }: { projectId: str
   }, [active]);
 
   const commit = (next: Item[]) => {
-    ref.current = next;
+    list.current = next;
     setItems(next);
   };
-  const patch = (key: string, p: Partial<Item>) => commit(ref.current.map((i) => (i.key === key ? { ...i, ...p } : i)));
+  const patch = (key: string, p: Partial<Item>) => commit(list.current.map((i) => (i.key === key ? { ...i, ...p } : i)));
 
   async function uploadOne(item: Item) {
     const ctl: Control = {};
@@ -156,13 +162,7 @@ export function DataUpload({ projectId, existing, onUploaded }: { projectId: str
       if (!b64) throw new Error("Fichier vide : rien à importer.");
       const body = JSON.stringify({ name: item.name, content_base64: b64, by: UPLOAD_BY });
       patch(item.key, { phase: "sending", progress: 0 });
-      const source = await sendSource(
-        `/api/migration/sources?project=${encodeURIComponent(projectId)}`,
-        body,
-        (f) => patch(item.key, { progress: f }),
-        () => patch(item.key, { phase: "analyzing" }),
-        ctl,
-      );
+      const source = await sendSource(`/api/migration/sources?project=${encodeURIComponent(projectId)}`, body, (f) => patch(item.key, { progress: f }), () => patch(item.key, { phase: "analyzing" }), ctl);
       patch(item.key, { phase: "done", source });
       onUploaded(source);
     } catch (e) {
@@ -178,33 +178,31 @@ export function DataUpload({ projectId, existing, onUploaded }: { projectId: str
     running.current = true;
     try {
       // Un fichier à la fois : progression lisible, et le serveur traite chaque fichier en entier
-      for (let next = ref.current.find((i) => i.phase === "queued"); next; next = ref.current.find((i) => i.phase === "queued")) {
-        await uploadOne(next);
-      }
+      for (let next = list.current.find((i) => i.phase === "queued"); next; next = list.current.find((i) => i.phase === "queued")) await uploadOne(next);
     } finally {
       running.current = false;
     }
   }
 
-  function enqueue(files: FileList | File[]) {
-    const list = Array.from(files);
-    if (!list.length) return;
+  function start() {
+    if (!picked.length) return;
     // Un nouveau lot remplace l'affichage des envois terminés du lot précédent
-    const keep = ref.current.filter((i) => i.phase === "queued" || i.phase === "reading" || i.phase === "sending" || i.phase === "analyzing");
+    const keep = list.current.filter((i) => ACTIVE.includes(i.phase));
     const taken = new Set([...existing.map((s) => s.name), ...keep.map((i) => i.name)]);
-    const fresh = list.map((file): Item => {
+    const fresh = picked.map((file): Item => {
       const name = apiFileName(file.name);
       const problem = checkFile(file, name);
       const item: Item = { key: `f${++seq.current}`, file, name, renamed: name !== file.name, replaces: !problem && taken.has(name), phase: problem ? "error" : "queued", progress: 0, error: problem ?? undefined };
       if (!problem) taken.add(name);
       return item;
     });
+    setPicked([]);
     commit([...keep, ...fresh]);
     void pump();
   }
 
   function cancel(key: string) {
-    const it = ref.current.find((i) => i.key === key);
+    const it = list.current.find((i) => i.key === key);
     if (!it) return;
     if (it.phase === "queued") return patch(key, { phase: "cancelled" });
     const ctl = controls.current.get(key);
@@ -218,70 +216,28 @@ export function DataUpload({ projectId, existing, onUploaded }: { projectId: str
   const failed = items.filter((i) => i.phase === "error").length;
 
   return (
-    <div className="flex flex-col gap-3">
-      <div
-        onDragEnter={(e) => {
-          if (!hasFiles(e)) return;
-          e.preventDefault();
-          depth.current += 1;
-          setOver(true);
-        }}
-        onDragOver={(e) => {
-          if (!hasFiles(e)) return;
-          e.preventDefault();
-          e.dataTransfer.dropEffect = "copy";
-        }}
-        onDragLeave={() => {
-          depth.current = Math.max(0, depth.current - 1);
-          if (!depth.current) setOver(false);
-        }}
-        onDrop={(e) => {
-          if (!hasFiles(e)) return;
-          e.preventDefault();
-          depth.current = 0;
-          setOver(false);
-          enqueue(e.dataTransfer.files);
-        }}
-        className={cx(
-          "flex flex-col items-center justify-center gap-2 rounded-md border border-dashed px-4 py-7 text-center transition-colors duration-150",
-          over ? "border-verdigris bg-verdigris-soft/60" : "border-line-strong bg-chalk/50",
-        )}
-      >
-        <Upload size={20} className={over ? "text-verdigris" : "text-silt"} aria-hidden />
-        <p className="text-[13px] font-bold">{over ? "Déposez les fichiers pour les importer" : "Glissez-déposez vos fichiers exportés ici"}</p>
-        <p className="max-w-[520px] text-[12px] text-sediment">
-          CSV, Excel (.xlsx), JSON, export SQL, base SQLite, archive ZIP de pièces jointes · plusieurs fichiers à la fois · {MAX_FILE_LABEL} au plus par fichier. Un fichier du même nom
-          remplace la source existante.
-        </p>
-        <Button type="button" variant="ghost" size="sm" className="mt-1" onClick={() => input.current?.click()}>
-          <FileUp size={13} aria-hidden /> Choisir des fichiers
-        </Button>
-        <input
-          ref={input}
-          type="file"
-          multiple
-          accept={ACCEPT_ATTR}
-          className="sr-only"
-          tabIndex={-1}
-          aria-hidden
-          onChange={(e) => {
-            if (e.target.files) enqueue(e.target.files);
-            e.target.value = "";
-          }}
-        />
-      </div>
+    <div className="flex flex-col gap-4">
+      <FileUpload label="Fichiers exportés de votre logiciel" hint={FORMATS_HINT} accept={ACCEPT_ATTR} maxSizeBytes={MAX_FILE} files={picked} onFilesChange={setPicked} />
+      {picked.length > 0 && (
+        <div className="flex flex-wrap items-center gap-3">
+          <Button variant="primary" icon={<Upload size={16} />} onClick={start}>
+            {picked.length > 1 ? `Importer les ${picked.length} fichiers` : "Importer le fichier"}
+          </Button>
+          <span className="text-small text-text-3">Un fichier du même nom remplace la source existante.</span>
+        </div>
+      )}
 
       {items.length > 0 && (
         <div>
-          <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2 text-[12px]">
-            <span className="font-bold text-sediment">Fichiers déposés pendant cette session</span>
-            <span className="text-silt">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-small">
+            <span className="font-semibold text-text-2">Imports de cette session</span>
+            <span className="tabular text-text-3">
               {plural(done, "fichier reçu", "fichiers reçus")}
               {failed ? ` · ${plural(failed, "refusé")}` : ""}
               {active ? " · envoi en cours" : ""}
             </span>
           </div>
-          <ul className="flex flex-col divide-y divide-line rounded-md shadow-[0_0_0_1px_var(--color-line)]" aria-live="polite">
+          <ul className="flex flex-col divide-y divide-line rounded-panel ring-1 ring-line" aria-live="polite">
             {items.map((i) => (
               <UploadRow key={i.key} item={i} onCancel={() => cancel(i.key)} />
             ))}
@@ -297,72 +253,47 @@ function UploadRow({ item, onCancel }: { item: Item; onCancel: () => void }) {
   const rows = s?.tables.reduce((n, t) => n + t.rows, 0) ?? 0;
   const cancellable = item.phase === "queued" || item.phase === "reading" || item.phase === "sending";
   const Icon = item.phase === "done" ? CircleCheck : item.phase === "error" ? CircleX : item.phase === "cancelled" ? Ban : item.phase === "queued" ? Clock : null;
+  // Arrondi inférieur : 100 % n'apparaît qu'une fois tous les octets réellement lus ou envoyés
+  const pct = Math.floor(item.progress * 1000) / 10;
   return (
-    <li className="px-3 py-2.5">
+    <li className="px-4 py-3">
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-            {Icon ? (
-              <Icon size={14} aria-hidden className={cx("shrink-0", item.phase === "done" ? "text-verdigris" : item.phase === "error" ? "text-rust" : "text-silt")} />
-            ) : (
-              <Spinner className="text-verdigris" />
-            )}
-            <span className="min-w-0 text-[13px] font-bold break-all">{item.name}</span>
-            <span className="tabular text-[12px] text-silt">{bytes(item.file.size)}</span>
+        <div className="flex min-w-0 items-start gap-2.5">
+          {Icon ? <Icon size={16} aria-hidden className={cx("mt-0.5 shrink-0", item.phase === "done" ? "text-accent" : item.phase === "error" ? "text-danger" : "text-text-3")} /> : <Spinner size={16} className="mt-0.5 text-accent" />}
+          <div className="min-w-0">
+            <p className="text-body font-semibold break-all text-ink">
+              {item.name} <span className="tabular font-normal text-text-3">· {bytes(item.file.size)}</span>
+            </p>
+            {item.renamed && <p className="text-small text-text-3">Renommé depuis « {item.file.name} » (caractères non acceptés).</p>}
+            {item.replaces && item.phase !== "cancelled" && item.phase !== "error" && <p className="text-small text-warning-ink">{item.phase === "done" ? "A remplacé la source du même nom." : "Remplacera la source du même nom."}</p>}
           </div>
-          {item.renamed && <p className="mt-0.5 text-[11.5px] text-silt">Nom d&apos;origine « {item.file.name} » adapté aux caractères acceptés par l&apos;API.</p>}
-          {item.replaces && item.phase !== "cancelled" && item.phase !== "error" && (
-            <p className="mt-0.5 text-[11.5px] text-ochre">{item.phase === "done" ? "A remplacé la source du même nom." : "Remplacera la source du même nom."}</p>
-          )}
         </div>
         {cancellable && (
-          <Button type="button" size="sm" variant="quiet" onClick={onCancel}>
+          <Button size="sm" variant="ghost" onClick={onCancel} aria-label={`Annuler l'import de ${item.name}`}>
             Annuler
           </Button>
         )}
       </div>
-
-      {item.phase === "queued" && <p className="mt-1 text-[12px] text-silt">En attente : les fichiers sont envoyés un par un.</p>}
-      {(item.phase === "reading" || item.phase === "sending") && <Progress value={item.progress} label={item.phase === "reading" ? "Lecture du fichier par le navigateur" : "Envoi à REBORN"} />}
-      {item.phase === "analyzing" && (
-        <p className="mt-1.5 flex items-center gap-1.5 text-[12px] text-sediment">
-          <Spinner size={12} /> Fichier transmis. Analyse par REBORN : lecture des tables, empreinte SHA-256, rangement dans le coffre…
-        </p>
-      )}
-      {item.phase === "done" && s && (
-        <p className="mt-1 text-[12px] text-[#0b6b5f]">
-          Reçu · {FORMAT_LABEL[s.format] ?? s.format}
-          {s.encoding ? ` (${s.encoding})` : ""} ·{" "}
-          {s.archive_entries !== undefined ? `${plural(s.archive_entries, "fichier")} dans l'archive` : `${plural(s.tables.length, "table")} · ${plural(rows, "ligne")}`}
-        </p>
-      )}
-      {item.phase === "done" && s && s.warnings.length > 0 && (
-        <ul className="mt-1 flex flex-col gap-0.5 text-[12px] text-ochre">
-          {s.warnings.map((w) => (
-            <li key={w} className="flex gap-1.5">
-              <TriangleAlert size={12} className="mt-0.5 shrink-0" aria-hidden /> {w}
-            </li>
-          ))}
-        </ul>
-      )}
-      {item.phase === "error" && <p className="mt-1 text-[12px] break-words text-rust">{item.error}</p>}
-      {item.phase === "cancelled" && <p className="mt-1 text-[12px] text-silt">Envoi annulé.</p>}
+      <div className="pl-[26px]">
+        {item.phase === "queued" && <p className="mt-1 text-small text-text-3">En attente : un fichier à la fois.</p>}
+        {(item.phase === "reading" || item.phase === "sending") && <Progress className="mt-2 max-w-[420px]" label={item.phase === "reading" ? "Lecture du fichier" : "Envoi au Studio"} value={pct} max={100} />}
+        {item.phase === "analyzing" && <Progress className="mt-2 max-w-[420px]" label="Fichier transmis : lecture des tables en cours…" value={null} />}
+        {item.phase === "done" && s && (
+          <p className="mt-1 text-small text-accent-ink">
+            Reçu · {FORMAT_LABEL[s.format] ?? s.format}
+            {s.encoding ? ` (${s.encoding})` : ""} · {s.archive_entries !== undefined ? `${plural(s.archive_entries, "fichier")} dans l'archive` : `${plural(s.tables.length, "table")} · ${plural(rows, "ligne")}`}
+          </p>
+        )}
+        {item.phase === "done" && s && s.warnings.length > 0 && (
+          <ul className="mt-1 flex flex-col gap-0.5 text-small text-warning-ink">
+            {s.warnings.map((w) => (
+              <li key={w}>{w}</li>
+            ))}
+          </ul>
+        )}
+        {item.phase === "error" && <p className="mt-1 text-small break-words text-danger-ink">{item.error}</p>}
+        {item.phase === "cancelled" && <p className="mt-1 text-small text-text-3">Import annulé.</p>}
+      </div>
     </li>
-  );
-}
-
-function Progress({ value, label }: { value: number; label: string }) {
-  // Arrondi inférieur : 100 % n'apparaît qu'une fois tous les octets réellement lus ou envoyés
-  const p = Math.max(0, Math.min(100, Math.floor(value * 100)));
-  return (
-    <div className="mt-1.5">
-      <div className="flex justify-between gap-2 text-[11.5px] text-sediment">
-        <span>{label}</span>
-        <span className="tabular">{p} %</span>
-      </div>
-      <div className="mt-0.5 h-1.5 overflow-hidden rounded-full bg-chalk-2" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={p}>
-        <div className="h-full rounded-full bg-verdigris transition-[width] duration-150" style={{ width: `${p}%` }} />
-      </div>
-    </div>
   );
 }

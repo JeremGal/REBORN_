@@ -1,84 +1,141 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useMemo, useState, type SyntheticEvent } from "react";
-import { ArrowRight, ChevronDown, ChevronsDownUp, ChevronsUpDown, CircleCheck, Database, FlaskConical, Inbox, Sparkles, TriangleAlert } from "lucide-react";
-import { Button, ButtonLink, Empty, Panel, cx, inputCls } from "@/components/ui";
-import { useProject, useProjectData } from "@/components/project/ProjectProvider";
-import { STEPS } from "@/components/project/ProjectShell";
-import { anchorOf, AttachmentRow, blockerText, EntityCard, entityOfKey, FocusLink, IssueList, indexMapping, MappingLegend, RelationsList, ReviewList, type MappingIndex } from "@/components/project/DataMapping";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowRight, ChevronsDownUp, ChevronsUpDown, FlaskConical, Inbox, Settings2, Sparkles, X, type LucideIcon } from "lucide-react";
+import { Badge, Button, Textarea, cx, formatPercent } from "@/components/ds";
+import { projectCall, useProject, useProjectData } from "@/components/project/ProjectProvider";
+import { Callout, Facts, Metric, Metrics, Section, StepHeader, TestBadge } from "@/components/project/Step";
+import { useViewer } from "@/components/project/AppKit";
 import {
-  Chip,
-  dt,
-  Kpi,
-  LoadError,
-  Loading,
-  nf,
-  Notice,
+  AttachmentRow,
+  CorrectFieldDialog,
+  DecidedList,
+  EntityGroup,
+  FocusLink,
+  IssueList,
+  MappingNotes,
   ORIGIN,
-  plural,
-  shortHash,
-  Spinner,
-  StepHeader,
+  PendingList,
+  RejectFieldDialog,
+  RelationsList,
   TEST_SYSTEM,
-  TestBadge,
-  useAction,
-  useKeyedData,
+  anchorOf,
+  blockerText,
+  dt,
+  entityOfKey,
+  indexMapping,
   legacyTables,
-  WRAP_BTN,
+  matchesFilter,
+  modifiesValue,
+  nf,
+  plural,
+  useMappingActions,
   type ExtractionSummary,
+  type FieldFilter,
+  type MappingIndex,
   type MappingPostResponse,
   type MappingResponse,
   type MappingVersion,
-  type PlanStatus,
+  type RemovedField,
+  type ReviewItem,
   type SourceMeta,
   type SourceProfile,
-} from "@/components/project/DataKit";
+} from "@/components/project/DataMapping";
 
 /*
- * Étape « Correspondances » : comment chaque table / colonne ancienne devient une entité / un champ
- * du nouveau logiciel.
- * - GET /api/migration/mapping : version en vigueur, problèmes du contrat, points à valider, bloquants.
- * - POST /api/migration/mapping?propose=auto | ?fixture=crm (jeu de test) | ?source=user (corps contrat).
- *   Les envois de l'Analyste arrivent par POST /api/migration/mapping (sans passer par cet écran).
- * - POST /api/migration/decisions : accepter / exclure un point incertain (protection de l'historique incluse).
- * - GET /api/migration/sources et /api/migration/profile : données lues, pour situer chaque colonne.
+ * Étape « Correspondances » : chaque champ de l'ancien logiciel et le champ du nouveau logiciel qui
+ * le reprend (« Ancien champ → Nouveau champ »), avec type, transformation, incertitude et statut.
+ * - GET /api/migration/mapping : version en vigueur, problèmes, points à vérifier, bloquants.
+ * - POST /api/migration/mapping?propose=auto | ?fixture=crm (jeu de test) ; envoi de l'Analyste par l'API.
+ * - POST /api/migration/decisions : accepter / rejeter une proposition incertaine.
+ * - POST /api/migration/mapping/fields : corriger, rejeter ou reprendre un champ (nouvelle version).
+ * La migration reste impossible côté serveur tant qu'un point bloquant subsiste.
  */
 
-const STEP_INDEX = STEPS.findIndex((s) => s.slug === "correspondances");
+const NO_ENTITY = new Set<string>();
 const reducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const ADVANCED_KEY = "reborn:correspondances:avance";
+
+const SOURCE_URL = { auto: "/api/migration/mapping?propose=auto", fixture: "/api/migration/mapping?fixture=crm", user: "/api/migration/mapping?source=user" } as const;
+type SourceKind = keyof typeof SOURCE_URL;
+
+/** Charge une ressource uniquement quand `key` change (ex. empreintes des sources) : la structure lue n'est pas recalculée à chaque évènement. */
+function useKeyed<T>(url: string | null, key: string) {
+  const { id } = useProject();
+  const [state, setState] = useState<{ data: T | null; error: string | null }>({ data: null, error: null });
+  const seq = useRef(0);
+  const load = useCallback(async () => {
+    const n = ++seq.current;
+    if (!url) return setState({ data: null, error: null });
+    try {
+      const data = await projectCall<T>(id, "GET", url);
+      if (n === seq.current) setState({ data, error: null });
+    } catch (e) {
+      if (n === seq.current) setState((s) => ({ data: s.data, error: (e as Error).message }));
+    }
+  }, [id, url]);
+  useEffect(() => {
+    void load();
+  }, [load, key]);
+  return { ...state, reload: load };
+}
+
+function useAdvanced(): [boolean, (v: boolean) => void] {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    try {
+      setOn(window.localStorage.getItem(ADVANCED_KEY) === "1");
+    } catch {}
+  }, []);
+  return [
+    on,
+    (v: boolean) => {
+      setOn(v);
+      try {
+        window.localStorage.setItem(ADVANCED_KEY, v ? "1" : "0");
+      } catch {}
+    },
+  ];
+}
 
 export default function CorrespondancesPage() {
-  const { id } = useProject();
+  const { id, post } = useProject();
+  const viewer = useViewer();
   const mapping = useProjectData<MappingResponse>("/api/migration/mapping");
   const sources = useProjectData<SourceMeta[]>("/api/migration/sources");
   const fingerprint = useMemo(() => (sources.data ?? []).map((s) => s.sha256).join(","), [sources.data]);
-  const profile = useKeyedData<SourceProfile>(sources.data?.length ? "/api/migration/profile" : null, fingerprint);
-  // Manifeste de la dernière extraction (vue d'ensemble) : noms des tables dans l'ancien logiciel
-  const overview = useKeyedData<{ extraction: ExtractionSummary | null }>(sources.data?.length ? "/api/migration" : null, fingerprint);
-  const legacy = useMemo(() => legacyTables(sources.data ?? [], overview.data?.extraction ?? null), [sources.data, overview.data]);
+  const profile = useKeyed<SourceProfile>(sources.data?.length ? "/api/migration/profile" : null, fingerprint);
+  // Manifeste de la dernière extraction : noms des tables dans l'ancien logiciel (ex. T_CLIENT)
+  const overview = useKeyed<{ extraction: ExtractionSummary | null }>(sources.data?.length ? "/api/migration" : null, fingerprint);
   const current = mapping.data?.current ?? null;
   const status = mapping.data?.status ?? null;
-  const idx = useMemo(() => (current && status ? indexMapping(current.mapping, status.items, current.issues, profile.data, legacy) : null), [current, status, profile.data, legacy]);
+  const removedQ = useKeyed<{ removed: RemovedField[] }>(current ? "/api/migration/mapping/fields" : null, String(current?.version ?? 0));
+  const legacy = useMemo(() => legacyTables(sources.data ?? [], overview.data?.extraction ?? null), [sources.data, overview.data]);
+  const idx = useMemo(() => (current && status ? indexMapping(current, status.items, profile.data, legacy, removedQ.data?.removed ?? []) : null), [current, status, profile.data, legacy, removedQ.data]);
+  const hasSources = !!sources.data?.length;
+  const [advanced, setAdvanced] = useAdvanced();
+  const [filter, setFilter] = useState<FieldFilter>("all");
 
-  // Entités dépliées : par défaut toutes (≤ 12), sinon celles qui demandent une action ; mémorisé par version
-  const [openState, setOpenState] = useState<{ version: number; names: Set<string> } | null>(null);
-  const defaultOpen = useMemo(() => {
-    if (!current || !idx) return new Set<string>();
-    const ents = current.mapping.entities;
-    return new Set((ents.length <= 12 ? ents : ents.filter((e) => idx.pendingOf(e.name).length > 0 || idx.issuesOf(e.name).some((i) => i.level === "error"))).map((e) => e.name));
-  }, [current, idx]);
-  const openSet = openState && current && openState.version === current.version ? openState.names : defaultOpen;
-  const updateOpen = (fn: (s: Set<string>) => Set<string>) => {
-    if (current) setOpenState({ version: current.version, names: fn(new Set(openSet)) });
-  };
+  const reload = useCallback(async () => {
+    await mapping.reload();
+  }, [mapping]);
+  const { actions, notice, setNotice, dialog, closeDialog, saved } = useMappingActions(current?.version ?? 0, reload);
 
-  // Navigation interne : déplie l'entité visée, la met en évidence et y fait défiler la page
+  // Tables dépliées (repliées par défaut) : elles le restent d'une version à l'autre (une correction ne fait pas perdre sa place)
+  const [openSet, setOpenSet] = useState<Set<string>>(NO_ENTITY);
+  const updateOpen = (fn: (s: Set<string>) => Set<string>) => setOpenSet((prev) => fn(new Set(prev)));
+  // Un filtre actif déplie les tables concernées
+  const groupOpen = (name: string) => filter !== "all" || openSet.has(name);
+
+  // Navigation interne : déplie la table visée, la met en évidence et y fait défiler la page
   const [highlight, setHighlight] = useState<string | null>(null);
   const [scrollTo, setScrollTo] = useState<string | null>(null);
   useEffect(() => {
     if (!scrollTo) return;
-    document.getElementById(scrollTo)?.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" });
+    const el = document.getElementById(scrollTo);
+    const section = el?.closest("details");
+    if (section && !section.open) section.open = true;
+    el?.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" });
     setScrollTo(null);
   }, [scrollTo]);
   const focus = (key: string) => {
@@ -88,132 +145,141 @@ export default function CorrespondancesPage() {
     setScrollTo(anchorOf(key).slice(1));
   };
 
-  const late = current && sources.data ? sources.data.filter((s) => s.received_at > current.received_at) : [];
-  const missing = current && profile.data ? [...new Set(current.mapping.entities.map((e) => e.source.table).filter((t) => !profile.data!.tables.some((x) => x.name === t)))] : [];
-  const refs = current ? current.mapping.entities.reduce((n, e) => n + e.fields.filter((f) => f.type === "reference").length, 0) : 0;
+  const m = current?.mapping ?? null;
+  const counts = useMemo(() => {
+    if (!m || !idx) return null;
+    const all = m.entities.flatMap((e) => e.fields.map((f) => ({ e, f })));
+    return {
+      fields: all.length,
+      kept: all.filter(({ e, f }) => !idx.excludedEntities.has(e.name) && idx.item(`field:${e.name}.${f.name}`)?.decision?.decision !== "excluded").length,
+      change: all.filter(({ f }) => modifiesValue(f)).length,
+      locked: all.filter(({ e, f }) => matchesFilter(e, f, idx, "locked")).length,
+      refs: all.filter(({ f }) => f.type === "reference").length,
+      pendingFields: all.filter(({ e, f }) => matchesFilter(e, f, idx, "pending")).length,
+    };
+  }, [m, idx]);
+  const decided = status?.items.filter((i) => i.decision) ?? [];
+  const pendingItems = status?.items.filter((i) => !i.decision) ?? [];
+
+  /* Source des correspondances ------------------------------------------- */
+  const [confirm, setConfirm] = useState<null | "auto" | "fixture">(null);
+  const [sourceBusy, setSourceBusy] = useState<SourceKind | null>(null);
+  const [sourceNotice, setSourceNotice] = useState<{ tone: "ok" | "warn" | "bad"; text: string } | null>(null);
+  async function create(kind: SourceKind, body?: unknown) {
+    setSourceBusy(kind);
+    setSourceNotice(null);
+    try {
+      const r = await post<MappingPostResponse>(SOURCE_URL[kind], body);
+      setConfirm(null);
+      const errors = r.issues.filter((i) => i.level === "error").length;
+      setSourceNotice({ tone: errors ? "warn" : "ok", text: `Version ${r.version} créée : ${plural(r.review.pending, "point")} à vérifier${errors ? ` · ${plural(errors, "erreur bloquante", "erreurs bloquantes")}` : ""}.` });
+      await mapping.reload();
+    } catch (e) {
+      setSourceNotice({ tone: "bad", text: (e as Error).message });
+    } finally {
+      setSourceBusy(null);
+    }
+  }
+  const start = (kind: "auto" | "fixture") => (current ? setConfirm(kind) : void create(kind));
+
+  const dlgEntity = dialog && m ? m.entities.find((e) => e.name === dialog.entity) : undefined;
+  const dlgField = dialog && dlgEntity ? dlgEntity.fields.find((f) => f.name === dialog.field) : undefined;
 
   return (
-    <div className="flex flex-col gap-5">
-      <StepHeader step={`Étape ${STEP_INDEX + 1} · ${STEPS[STEP_INDEX].label}`} title="Correspondances ancien → nouveau">
-        Comment chaque table et chaque colonne de l&apos;ancien logiciel sont reprises dans le nouveau : type, transformations, références, protection de l&apos;historique. Rien n&apos;est importé tant que les points incertains ne sont
-        pas tranchés par un humain.
-      </StepHeader>
+    <div className="flex flex-col gap-6">
+      <StepHeader
+        step={4}
+        title="Correspondances"
+        lead="Correspondance des champs : chaque champ de votre ancien logiciel et celui qui le reprend dans le nouveau. Vérifiez les propositions incertaines : acceptez-les, corrigez-les ou rejetez-les."
+        actions={
+          status?.can_run && current ? (
+            <Button href={`/projets/${id}/migration`} variant="primary" iconEnd={<ArrowRight size={16} />}>
+              Passer à la migration
+            </Button>
+          ) : undefined
+        }
+        aside={current ? <VersionLine current={current} /> : undefined}
+      />
+
+      <Metrics>
+        <Metric label="Champs repris" value={counts ? nf(counts.kept) : "—"} hint={counts && m ? `sur ${nf(counts.fields)}, dans ${plural(m.entities.length, "table")}` : undefined} />
+        {/* Points = champs, tables, protections et pièces jointes à trancher ; le filtre du tableau ne compte que les champs */}
+        <Metric
+          label="Points à vérifier"
+          value={current && status ? nf(status.pending) : "—"}
+          hint={current && status ? (status.items.length ? pendingHint(pendingItems, decided.length, status.items.length) : "aucune proposition incertaine") : undefined}
+          tone={current && status ? (status.pending ? "warn" : "ok") : undefined}
+        />
+        <Metric label="Valeurs transformées" value={counts ? nf(counts.change) : "—"} hint={counts ? (counts.change ? "transformations signalées dans le tableau" : "aucune valeur modifiée") : undefined} />
+        <Metric label="Champs protégés" value={counts ? nf(counts.locked) : "—"} hint={counts ? "historique comptable, non modifiable" : undefined} />
+      </Metrics>
+
+      {notice && (
+        <Callout
+          tone={notice.tone}
+          action={
+            <Button variant="ghost" size="sm" onClick={() => setNotice(null)} aria-label="Fermer le message" icon={<X size={14} />}>
+              Fermer
+            </Button>
+          }
+        >
+          {notice.text}
+        </Callout>
+      )}
 
       {mapping.loading && !mapping.data ? (
-        <Loading label="Chargement des correspondances…" />
+        <p role="status" className="py-6 text-body text-text-3">
+          Chargement des correspondances…
+        </p>
       ) : mapping.error && !mapping.data ? (
-        <LoadError message={mapping.error} onRetry={() => void mapping.reload()} />
-      ) : !current || !status || !idx ? (
-        <NoMapping id={id} sourcesLoaded={!!sources.data} hasSources={!!sources.data?.length} sourcesError={sources.error} onCreated={mapping.reload} />
+        <Callout tone="bad" title="Chargement impossible" action={<Button size="sm" variant="secondary" onClick={() => void mapping.reload()}>Réessayer</Button>}>
+          {mapping.error}
+        </Callout>
+      ) : !current || !status || !idx || !m ? (
+        <>
+          <Section title="Obtenir les correspondances" description="Choisissez d'où vient la première version ; chaque proposition incertaine vous sera ensuite soumise.">
+            <div className="flex flex-col gap-3">
+              {sources.error && !sources.data && <Callout tone="bad" title="Données reçues indisponibles">{sources.error}</Callout>}
+              {sources.data && !hasSources && (
+                <Callout tone="warn" action={<Button href={`/projets/${id}/extraction`} size="sm" variant="secondary">Données</Button>}>
+                  Aucune donnée reçue : récupérez d&apos;abord les données de l&apos;ancien logiciel à l&apos;étape Données.
+                </Callout>
+              )}
+              <SourceOptions current={null} hasSources={hasSources} busy={sourceBusy} onStart={start} confirm={confirm} setConfirm={setConfirm} onCreate={create} notice={sourceNotice} onCloseNotice={() => setSourceNotice(null)} />
+            </div>
+          </Section>
+          <Section collapsible title="Intégration technique" description="Détails pour l'équipe technique : envoi des correspondances par l'Analyste.">
+            <MappingTechnical id={id} current={null} hasSources={hasSources} operator={viewer?.role === "operator"} busy={sourceBusy} onCreate={create} />
+          </Section>
+        </>
       ) : (
         <>
-          {mapping.error && <Notice tone="bad">Actualisation impossible : {mapping.error}</Notice>}
+          {mapping.error && <Callout tone="bad">Actualisation impossible : {mapping.error}</Callout>}
+          <Blockers status={status} idx={idx} id={id} onFocus={focus} />
+          <StaleNotice current={current} sources={sources.data} profile={profile.data} />
 
-          <VersionBand current={current} status={status} idx={idx} id={id} onFocus={focus} />
-
-          {(late.length > 0 || missing.length > 0) && (
-            <Notice tone="warn" title="Les données ont changé depuis la réception de cette version">
-              {late.length > 0 && (
-                <span className="block">
-                  Reçu(s) après la v{current.version} : {late.map((s) => s.name).join(", ")}. La cohérence de cette version a été contrôlée sur la structure lue le {dt(current.received_at)}.
-                </span>
-              )}
-              {missing.length > 0 && <span className="block">Table(s) source introuvable(s) dans les données actuelles : {missing.join(", ")}.</span>}
-              <span className="block">Recevez ou générez une nouvelle version pour recontrôler les correspondances.</span>
-            </Notice>
+          {pendingItems.length > 0 && (
+            <Section id="a-verifier" className="scroll-mt-6" title="À vérifier" badge={<Badge tone="warn">{nf(pendingItems.length)}</Badge>} description="Propositions incertaines : rien n'est migré tant qu'une seule reste en attente.">
+              <PendingList items={pendingItems} idx={idx} actions={actions} onFocus={focus} advanced={advanced} />
+            </Section>
           )}
 
-          <div className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] xl:items-start">
-            <div id="points-a-valider" className="min-w-0 scroll-mt-4">
-              <Panel
-                eyebrow="Validation humaine"
-                title="Points à valider"
-                actions={status.items.length ? <Chip tone={status.pending ? "warn" : "ok"}>{status.pending ? `${status.pending} en attente` : "tous tranchés"}</Chip> : undefined}
-              >
-                <p className="mb-3 text-[12.5px] text-sediment">
-                  Correspondances dont la confiance est sous le seuil de {Math.round(current.mapping.review_threshold * 100)} %, et classements incertains de documents historiques : chacun doit être accepté ou exclu avant
-                  l&apos;import. Chaque décision est consignée (auteur, date, commentaire) ; une exclusion figure au rapport d&apos;écarts.
-                </p>
-                {status.items.length ? (
-                  <ReviewList key={current.version} items={status.items} threshold={current.mapping.review_threshold} onDecided={mapping.reload} onFocus={focus} />
-                ) : (
-                  <Empty
-                    title="Aucun point à valider"
-                    hint={`Toutes les correspondances de la v${current.version} ont une confiance d'au moins ${Math.round(current.mapping.review_threshold * 100)} %, ou non précisée (considérée comme sûre par le contrat).`}
-                  />
-                )}
-              </Panel>
+          <Section
+            title="Ancien champ → Nouveau champ"
+            description="Chaque table de l'ancien logiciel, puis chacun de ses champs : type, transformation, incertitude et statut."
+            actions={<ToggleAll allOpen={m.entities.every((e) => openSet.has(e.name))} onToggle={(open) => updateOpen(() => new Set(open ? m.entities.map((e) => e.name) : []))} />}
+          >
+            <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <FilterBar value={filter} onChange={setFilter} counts={counts} />
+              <AdvancedToggle on={advanced} onChange={setAdvanced} />
             </div>
-            <div className="flex min-w-0 flex-col gap-5">
-              <IssuesPanel current={current} idx={idx} onFocus={focus} />
-              <SourcePanel current={current} hasSources={!!sources.data?.length} onCreated={mapping.reload} />
-            </div>
-          </div>
-
-          <Panel eyebrow="Schéma du nouveau logiciel" title={`Relations entre entités (${refs})`}>
-            <p className="mb-3 text-[12.5px] text-sediment">
-              Chaque référence relie un enregistrement à un autre (une facture à son client, une ligne à sa facture). Elle est résolue pendant la migration à partir de la clé d&apos;origine ; une référence introuvable est
-              rejetée ou conservée sans lien selon la règle déclarée, et toujours signalée.
-            </p>
-            <RelationsList idx={idx} onFocus={focus} />
-          </Panel>
-
-          <section className="flex flex-col gap-3" aria-labelledby="entites-titre">
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div className="min-w-0">
-                <div className="eyebrow">Correspondances détaillées</div>
-                <h3 id="entites-titre" className="text-[16px] leading-snug font-bold tracking-[-0.01em]">
-                  Entité par entité : ancienne table → nouvelle entité
-                </h3>
-              </div>
-              <div className="flex gap-1">
-                <button
-                  type="button"
-                  onClick={() => updateOpen(() => new Set(current.mapping.entities.map((e) => e.name)))}
-                  className="inline-flex items-center gap-1 rounded-sm px-2 py-1 text-[12px] font-bold text-sediment hover:bg-chalk-2 hover:text-ink"
-                >
-                  <ChevronsUpDown size={13} aria-hidden /> Tout déplier
-                </button>
-                <button type="button" onClick={() => updateOpen(() => new Set())} className="inline-flex items-center gap-1 rounded-sm px-2 py-1 text-[12px] font-bold text-sediment hover:bg-chalk-2 hover:text-ink">
-                  <ChevronsDownUp size={13} aria-hidden /> Tout replier
-                </button>
-              </div>
-            </div>
-            <nav aria-label="Entités du nouveau logiciel" className="flex flex-wrap gap-1.5">
-              {current.mapping.entities.map((e) => {
-                const p = idx.pendingOf(e.name).length;
-                return (
-                  <a
-                    key={e.name}
-                    href={`#entite-${e.name}`}
-                    onClick={(ev) => {
-                      ev.preventDefault();
-                      focus(`entity:${e.name}`);
-                    }}
-                    className={cx(
-                      "inline-flex items-center gap-1.5 rounded-sm bg-paper px-2 py-1 text-[12px] font-bold shadow-[0_0_0_1px_var(--color-line)] transition-colors duration-150 hover:bg-chalk",
-                      idx.excludedEntities.has(e.name) && "text-silt line-through",
-                    )}
-                  >
-                    {e.label ?? e.name}
-                    <span className="tabular font-normal text-silt">{e.fields.length}</span>
-                    {p > 0 && (
-                      <span className="size-1.5 rounded-full bg-ochre" title={`${p} point(s) à valider`}>
-                        <span className="sr-only">{p} point(s) à valider</span>
-                      </span>
-                    )}
-                  </a>
-                );
-              })}
-            </nav>
-            <MappingLegend origin={current.origin} threshold={current.mapping.review_threshold} classified={idx.classified} />
-            <div className="flex flex-col gap-3">
-              {current.mapping.entities.map((e) => (
-                <EntityCard
+            <ul className="-mx-5 -mb-5 flex flex-col divide-y divide-line overflow-hidden rounded-b-panel border-t border-line">
+              {m.entities.map((e) => (
+                <EntityGroup
                   key={e.name}
                   e={e}
                   idx={idx}
-                  open={openSet.has(e.name)}
+                  open={groupOpen(e.name)}
                   onToggle={() =>
                     updateOpen((s) => {
                       if (s.has(e.name)) s.delete(e.name);
@@ -223,355 +289,289 @@ export default function CorrespondancesPage() {
                   }
                   highlight={highlight}
                   onFocus={focus}
+                  filter={filter}
+                  advanced={advanced}
+                  actions={actions}
                 />
               ))}
-            </div>
-          </section>
+            </ul>
+          </Section>
 
-          <PerimeterPanel current={current} idx={idx} profile={profile.data} profileError={profile.error} sources={sources.data ?? []} highlight={highlight} />
-
-          {status.can_run && (
-            <div className="card flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-              <p className="max-w-[680px] text-[13px] text-sediment">Correspondances prêtes : aucun point en attente et aucune erreur bloquante. La migration construira la nouvelle base à partir des fichiers du coffre.</p>
-              <ButtonLink href={`/projets/${id}/migration`} variant="accent">
-                Passer à la migration <ArrowRight size={14} aria-hidden />
-              </ButtonLink>
-            </div>
+          {decided.length > 0 && (
+            <Section collapsible title="Décisions prises" badge={<Badge>{nf(decided.length)}</Badge>} description="Consignées avec leur auteur et leur date ; chacune reste modifiable.">
+              <DecidedList items={decided} idx={idx} actions={actions} onFocus={focus} />
+            </Section>
           )}
+
+          {current.issues.length > 0 && (
+            <Section collapsible title="Problèmes détectés" badge={<IssueBadges current={current} />} description={`Contrôles faits à la réception de la version ${current.version}.`}>
+              <IssueList issues={current.issues} idx={idx} onFocus={focus} />
+            </Section>
+          )}
+
+          <Section collapsible title="Liens entre fiches" badge={<Badge>{nf(counts?.refs ?? 0)}</Badge>} description="Comment les fiches restent reliées (un devis à son client, une ligne à sa facture…).">
+            <RelationsList idx={idx} onFocus={focus} />
+          </Section>
+
+          <Perimeter current={current} idx={idx} profile={profile.data} profileError={profile.error} sources={sources.data ?? []} highlight={highlight} actions={actions} />
+
+          <Section collapsible title="Source des correspondances" description={`Version ${current.version} : ${ORIGIN[current.origin]?.label ?? current.origin}.`}>
+            <SourceOptions current={current} hasSources={hasSources} busy={sourceBusy} onStart={start} confirm={confirm} setConfirm={setConfirm} onCreate={create} notice={sourceNotice} onCloseNotice={() => setSourceNotice(null)} />
+          </Section>
+
+          <Section collapsible title="Intégration technique" description="Détails pour l'équipe technique : envoi des correspondances par l'Analyste.">
+            <MappingTechnical key={current.version} id={id} current={current} hasSources={hasSources} operator={viewer?.role === "operator"} busy={sourceBusy} onCreate={create} />
+          </Section>
         </>
       )}
-    </div>
-  );
-}
 
-/* ------------------------------------------------------------------ */
-/* Version en vigueur et état « prêt / bloqué »                         */
-/* ------------------------------------------------------------------ */
-
-function VersionBand({ current, status, idx, id, onFocus }: { current: MappingVersion; status: PlanStatus; idx: MappingIndex; id: string; onFocus: (key: string) => void }) {
-  const m = current.mapping;
-  const origin = ORIGIN[current.origin] ?? { label: current.origin, hint: "", test: false };
-  const fields = m.entities.reduce((n, e) => n + e.fields.length, 0);
-  const refs = m.entities.reduce((n, e) => n + e.fields.filter((f) => f.type === "reference").length, 0);
-  const locked = m.entities.reduce((n, e) => n + e.fields.filter((f) => f.accounting).length, 0);
-  const errors = current.issues.filter((i) => i.level === "error").length;
-  const warnings = current.issues.length - errors;
-  const decided = status.items.length - status.pending;
-
-  return (
-    <section className="card overflow-hidden" aria-label="Version des correspondances en vigueur">
-      <div className="grid lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
-        <div className="min-w-0 px-4 py-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="eyebrow">Version en vigueur</span>
-            {origin.test ? <TestBadge>{origin.label}</TestBadge> : <Chip>{origin.label}</Chip>}
-          </div>
-          <h3 className="mt-1.5 text-[17px] leading-snug font-black tracking-[-0.01em] break-words">
-            v{current.version} · {m.source_system ?? "Ancien logiciel"} <span className="text-verdigris">→</span> {m.target.name} <span className="font-mono text-[12px] font-normal text-silt">{m.target.id}</span>
-          </h3>
-          <p className="mt-0.5 text-[12px] text-silt">
-            Reçue le {dt(current.received_at)} · contrat v{m.contract_version} · empreinte {shortHash(current.sha256, 12)}
-          </p>
-          {origin.hint && <p className="mt-1.5 text-[12.5px] text-sediment">{origin.hint}</p>}
-          {m.notes && <p className="mt-1 text-[12px] break-words text-sediment">Note de l&apos;émetteur : « {m.notes} »</p>}
-          <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-4">
-            <Kpi label="Entités" value={nf(m.entities.length)} />
-            <Kpi label="Champs" value={nf(fields)} />
-            <Kpi label="Références" value={nf(refs)} />
-            <Kpi label="Champs protégés" value={nf(locked)} />
-          </dl>
-        </div>
-        <div className={cx("min-w-0 border-t border-line px-4 py-4 lg:border-t-0 lg:border-l", status.can_run ? "bg-verdigris-soft/50" : "bg-ochre-soft/40")}>
-          {status.can_run ? (
-            <>
-              <div className="flex items-center gap-2 text-[14.5px] font-black text-[#0b6b5f]">
-                <CircleCheck size={17} aria-hidden /> Prêt pour la migration
-              </div>
-              <p className="mt-1 text-[12.5px] text-ink">
-                Constaté par l&apos;API : aucun point incertain en attente, aucune erreur bloquante dans le contrat, données présentes dans le coffre.
-                {warnings ? ` ${plural(warnings, "avertissement")} à connaître (voir « Problèmes détectés »).` : ""}
-              </p>
-              <p className="mt-1 text-[12px] text-sediment">Les résultats de la migration seront contrôlés sur les vraies données à l&apos;étape Validation.</p>
-              <ButtonLink href={`/projets/${id}/migration`} variant="accent" className="mt-3">
-                Passer à la migration <ArrowRight size={14} aria-hidden />
-              </ButtonLink>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center gap-2 text-[14.5px] font-black text-ochre">
-                <TriangleAlert size={17} aria-hidden /> Migration pas encore possible
-              </div>
-              <p className="mt-1 text-[12px] text-sediment">Bloquants relevés par l&apos;API :</p>
-              <ul className="mt-1 flex flex-col gap-1 text-[12.5px] text-ink">
-                {status.blockers.map((b, i) => {
-                  const t = blockerText(b, idx);
-                  return (
-                    <li key={`${i}-${b}`} className="flex gap-1.5">
-                      <span className="text-ochre" aria-hidden>
-                        •
-                      </span>
-                      <span className="min-w-0 break-words">
-                        {t.focus ? (
-                          <FocusLink to={t.focus} onFocus={onFocus}>
-                            {t.text}
-                          </FocusLink>
-                        ) : /incertaine/.test(b) ? (
-                          <a href="#points-a-valider" className="underline-offset-2 hover:text-verdigris hover:underline">
-                            {t.text}
-                          </a>
-                        ) : (
-                          t.text
-                        )}
-                      </span>
-                    </li>
-                  );
-                })}
-                {!status.blockers.length && (
-                  <li className="flex gap-1.5">
-                    <span className="text-ochre" aria-hidden>
-                      •
-                    </span>
-                    <span>
-                      Aucune donnée dans le coffre du projet :{" "}
-                      <Link href={`/projets/${id}/extraction`} className="font-bold underline underline-offset-2">
-                        étape Données
-                      </Link>
-                      .
-                    </span>
-                  </li>
-                )}
-              </ul>
-            </>
-          )}
-          <p className="mt-3 text-[11.5px] text-silt">
-            Points à valider : {decided}/{status.items.length} tranché(s) · seuil {Math.round(m.review_threshold * 100)} % · {plural(errors, "erreur bloquante", "erreurs bloquantes")} · {plural(warnings, "avertissement")}
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Problèmes du contrat                                                 */
-/* ------------------------------------------------------------------ */
-
-function IssuesPanel({ current, idx, onFocus }: { current: MappingVersion; idx: MappingIndex; onFocus: (key: string) => void }) {
-  const errors = current.issues.filter((i) => i.level === "error").length;
-  const warnings = current.issues.length - errors;
-  return (
-    <Panel
-      eyebrow="Contrôle du contrat"
-      title="Problèmes détectés"
-      actions={
-        current.issues.length ? (
-          <span className="flex flex-wrap justify-end gap-1">
-            {errors > 0 && <Chip tone="bad">{plural(errors, "erreur")}</Chip>}
-            {warnings > 0 && <Chip tone="warn">{plural(warnings, "avertissement")}</Chip>}
-          </span>
-        ) : undefined
-      }
-    >
-      <p className="mb-2.5 text-[12px] text-silt">
-        Contrôles faits par l&apos;API à la réception de la v{current.version} ({dt(current.received_at)}), sur la structure lue à ce moment-là : tables et colonnes existantes, unicité des clés, références, types déclarés et lus,
-        champs obligatoires vides, expressions, ordre d&apos;import. Une erreur bloque la migration ; un avertissement est à connaître.
-      </p>
-      {current.issues.length ? (
-        <div className="max-h-[420px] overflow-y-auto pr-0.5">
-          <IssueList issues={current.issues} idx={idx} onFocus={onFocus} />
-        </div>
-      ) : (
-        <Notice tone="ok">Aucun problème détecté par ces contrôles.</Notice>
+      {dialog?.kind === "correct" && dlgEntity && dlgField && idx && (
+        <CorrectFieldDialog key={`c-${dialog.seq}`} open={dialog.open} onClose={closeDialog} e={dlgEntity} f={dlgField} idx={idx} onSaved={saved} />
       )}
-    </Panel>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Sources des correspondances : Analyste, proposition, jeu de test     */
-/* ------------------------------------------------------------------ */
-
-function SourcePanel({ current, hasSources, onCreated }: { current: MappingVersion | null; hasSources: boolean; onCreated: () => Promise<void> }) {
-  const { id, post } = useProject();
-  const { busy, notice, setNotice, run } = useAction();
-  const [confirm, setConfirm] = useState<null | "auto" | "fixture">(null);
-  const [json, setJson] = useState("");
-  const next = (current?.version ?? 0) + 1;
-
-  const create = (kind: "auto" | "fixture" | "user", url: string, body?: unknown) =>
-    run(
-      kind,
-      () => post<MappingPostResponse>(url, body),
-      (r) => {
-        setConfirm(null);
-        void onCreated();
-        const errors = r.issues.filter((i) => i.level === "error").length;
-        const warnings = r.issues.length - errors;
-        return {
-          tone: errors ? "warn" : "ok",
-          text: `Version ${r.version} créée : ${plural(r.review.pending, "point")} en attente de décision · ${plural(errors, "erreur bloquante", "erreurs bloquantes")} · ${plural(warnings, "avertissement")}.`,
-        };
-      },
-    );
-  const AUTO = "/api/migration/mapping?propose=auto";
-  const FIXTURE = "/api/migration/mapping?fixture=crm";
-  const start = (kind: "auto" | "fixture") => {
-    if (current) setConfirm(kind);
-    else void create(kind, kind === "auto" ? AUTO : FIXTURE);
-  };
-
-  return (
-    <Panel eyebrow="Source des correspondances" title={current ? "Recevoir ou générer une nouvelle version" : "Obtenir une première version"}>
-      <div className="flex flex-col gap-3">
-        <div className="rounded-md px-3.5 py-3 shadow-[0_0_0_1px_var(--color-line-strong)]">
-          <div className="flex items-center gap-2 text-[13px] font-bold">
-            <Inbox size={14} className="text-verdigris" aria-hidden /> Envoi de l&apos;Analyste (agent d&apos;Alan)
-          </div>
-          <p className="mt-1 text-[12.5px] text-sediment">
-            L&apos;Analyste publie ses correspondances directement par l&apos;API, sans passer par cet écran. Chaque envoi crée une nouvelle version, contrôlée contre la structure lue ; les décisions déjà prises sont conservées pour
-            les points qui figurent encore dans la nouvelle version.
-          </p>
-          <code className="mt-2 block rounded-sm bg-chalk px-2.5 py-1.5 font-mono text-[11.5px] break-all text-ink">POST /api/migration/mapping?project={id}</code>
-          <p className="mt-2 text-[12px]">
-            {current?.origin === "analyst" ? (
-              <span className="font-bold text-verdigris">Version en vigueur reçue de l&apos;Analyste le {dt(current.received_at)}.</span>
-            ) : (
-              <span className="font-bold text-ochre">En attente de l&apos;agent : {current ? "la version en vigueur ne provient pas de l'Analyste." : "aucun envoi de l'Analyste reçu."}</span>
-            )}{" "}
-            <a href="/api/migration/contracts" target="_blank" rel="noreferrer" className="font-bold whitespace-nowrap text-sediment underline underline-offset-2 hover:text-ink">
-              Contrat (JSON Schema)
-            </a>
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-2 rounded-md px-3.5 py-3 shadow-[0_0_0_1px_var(--color-line)]">
-          <div className="flex items-center gap-2 text-[13px] font-bold">
-            <Sparkles size={14} className="text-ink-3" aria-hidden /> Proposition automatique
-          </div>
-          <p className="text-[12.5px] text-sediment">
-            Déduite uniquement de la structure lue : une entité par table dotée d&apos;une clé unique, un champ par colonne, types et relations détectés, documents historiques protégés par défaut. Les codes sans signification
-            connue, les colonnes vides et les relations incomplètes sont marqués « à valider ».
-          </p>
-          <Button size="sm" variant="ghost" className="self-start" disabled={!hasSources || !!busy} onClick={() => start("auto")}>
-            {busy === "auto" ? <Spinner size={12} /> : <Sparkles size={12} aria-hidden />} Proposition automatique
-          </Button>
-        </div>
-
-        <div className="flex flex-col gap-2 rounded-md bg-ochre-soft/25 px-3.5 py-3 shadow-[0_0_0_1px_var(--color-line)]">
-          <TestBadge className="self-start">Jeu de test au format de l&apos;Analyste — Relatio</TestBadge>
-          <p className="text-[12.5px] text-sediment">
-            Correspondances écrites à la main pour les données du logiciel de test {TEST_SYSTEM}, au format que l&apos;Analyste enverra. Ce n&apos;est pas un envoi de l&apos;Analyste ; sur d&apos;autres données, les tables
-            attendues seront signalées introuvables.
-          </p>
-          <Button size="sm" variant="ghost" className={cx("self-start", WRAP_BTN)} disabled={!hasSources || !!busy} onClick={() => start("fixture")}>
-            {busy === "fixture" ? <Spinner size={12} /> : <FlaskConical size={12} aria-hidden />} Jeu de test au format de l&apos;Analyste — Relatio
-          </Button>
-        </div>
-
-        {!hasSources && (
-          <Notice tone="warn">
-            Aucune donnée reçue : les correspondances se construisent et se contrôlent sur les données réellement lues.{" "}
-            <Link href={`/projets/${id}/extraction`} className="inline-flex items-center gap-1 font-bold underline underline-offset-2">
-              <Database size={12} aria-hidden /> Étape Données
-            </Link>
-          </Notice>
-        )}
-
-        {confirm && current && (
-          <div className="rounded-md bg-ochre-soft/60 px-3 py-2.5 text-[12.5px]" role="group" aria-label="Confirmer la nouvelle version">
-            <p className="text-ink">
-              Créer la v{next} {confirm === "auto" ? "par proposition automatique" : `à partir du jeu de test ${TEST_SYSTEM}`} ? Elle remplacera la v{current.version} ({ORIGIN[current.origin]?.label ?? current.origin}) ; les
-              décisions déjà prises sont conservées pour les points qui figurent encore dans la nouvelle version.
-            </p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <Button size="sm" variant="primary" disabled={!!busy} onClick={() => void create(confirm, confirm === "auto" ? AUTO : FIXTURE)}>
-                {busy ? <Spinner size={12} /> : null} Créer la v{next}
-              </Button>
-              <Button size="sm" variant="quiet" disabled={!!busy} onClick={() => setConfirm(null)}>
-                Annuler
-              </Button>
-            </div>
-          </div>
-        )}
-
-        <details
-          className="group rounded-md shadow-[0_0_0_1px_var(--color-line)]"
-          onToggle={(e: SyntheticEvent<HTMLDetailsElement>) => {
-            if (e.currentTarget.open && !json && current) setJson(JSON.stringify(current.mapping, null, 2));
-          }}
-        >
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3.5 py-2.5 text-[12.5px] font-bold text-sediment hover:text-ink [&::-webkit-details-marker]:hidden">
-            Correction manuelle du contrat (JSON, avancé)
-            <ChevronDown size={14} className="shrink-0 transition-transform duration-150 group-open:rotate-180" aria-hidden />
-          </summary>
-          <div className="flex flex-col gap-2 border-t border-line px-3.5 py-3">
-            <p className="text-[12px] text-sediment">
-              Pour corriger une correspondance sans attendre un nouvel envoi{current ? " : le contrat ci-dessous est pré-rempli avec la version en vigueur" : ""}. Il est contrôlé par l&apos;API comme tout envoi et enregistré comme
-              « saisie opérateur », jamais comme un envoi de l&apos;Analyste.
-            </p>
-            <textarea
-              className={cx(inputCls, "h-56 resize-y py-2 font-mono text-[11.5px] leading-relaxed")}
-              value={json}
-              onChange={(e) => setJson(e.target.value)}
-              spellCheck={false}
-              placeholder='{ "target": { "id": "…", "name": "…" }, "entities": [ … ] }'
-              aria-label="Contrat de correspondances (JSON)"
-            />
-            <div className="flex justify-end">
-              <Button
-                size="sm"
-                className={WRAP_BTN}
-                disabled={!json.trim() || !hasSources || !!busy}
-                onClick={() => {
-                  let body: unknown;
-                  try {
-                    body = JSON.parse(json);
-                  } catch (e) {
-                    setNotice({ tone: "bad", text: `Contrat illisible : JSON invalide (${(e as Error).message}).` });
-                    return;
-                  }
-                  void create("user", "/api/migration/mapping?source=user", body);
-                }}
-              >
-                {busy === "user" ? <Spinner size={12} /> : null} Enregistrer comme saisie opérateur (v{next})
-              </Button>
-            </div>
-          </div>
-        </details>
-
-        {notice && (
-          <Notice tone={notice.tone} onClose={() => setNotice(null)}>
-            {notice.text}
-          </Notice>
-        )}
-      </div>
-    </Panel>
-  );
-}
-
-function NoMapping({ id, sourcesLoaded, hasSources, sourcesError, onCreated }: { id: string; sourcesLoaded: boolean; hasSources: boolean; sourcesError: string | null; onCreated: () => Promise<void> }) {
-  return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] xl:items-start">
-      <Panel eyebrow="Aucune version" title="Aucune correspondance pour ce projet">
-        <div className="flex flex-col gap-3 text-[13px] text-sediment">
-          <p>
-            Les correspondances décrivent, entité par entité, d&apos;où vient chaque champ du nouveau logiciel : colonne d&apos;origine, type, transformations explicites, références vers les autres entités et protection de
-            l&apos;historique comptable.
-          </p>
-          <p>Elles sont contrôlées par l&apos;API contre la structure réellement lue, et chaque point incertain doit être tranché par un humain avant la migration.</p>
-          {sourcesError && <LoadError title="Sources indisponibles" message={sourcesError} />}
-          {sourcesLoaded && !hasSources && (
-            <Notice tone="warn">
-              Aucune donnée reçue pour l&apos;instant.{" "}
-              <Link href={`/projets/${id}/extraction`} className="font-bold underline underline-offset-2">
-                Récupérer les données (étape Données)
-              </Link>
-            </Notice>
-          )}
-        </div>
-      </Panel>
-      <SourcePanel current={null} hasSources={hasSources} onCreated={onCreated} />
+      {dialog?.kind === "reject" && dlgEntity && dlgField && idx && (
+        <RejectFieldDialog key={`r-${dialog.seq}`} open={dialog.open} onClose={closeDialog} e={dlgEntity} f={dlgField} idx={idx} onSaved={saved} />
+      )}
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* En-tête, bloquants, données modifiées                                */
+/* ------------------------------------------------------------------ */
+
+function VersionLine({ current }: { current: MappingVersion }) {
+  const m = current.mapping;
+  const origin = ORIGIN[current.origin] ?? { label: current.origin, test: false };
+  return (
+    <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-small text-text-3">
+      <span className="font-semibold text-text-2">
+        {m.source_system ?? "Ancien logiciel"} → {m.target.name}
+      </span>
+      <span aria-hidden>·</span>
+      <span>
+        Version {current.version} du {dt(current.received_at)}
+      </span>
+      {origin.test ? <TestBadge /> : <Badge>{origin.label}</Badge>}
+    </p>
+  );
+}
+
+function Blockers({ status, idx, id, onFocus }: { status: MappingResponse["status"]; idx: MappingIndex; id: string; onFocus: (key: string) => void }) {
+  if (status.can_run) return null;
+  // Les propositions en attente ont leur propre section, juste en dessous
+  const errors = status.blockers.filter((b) => !/incertaine/.test(b));
+  if (errors.length)
+    return (
+      <Callout tone="bad" title={errors.length > 1 ? `${errors.length} erreurs bloquent la migration` : "Une erreur bloque la migration"}>
+        <ul className="flex flex-col gap-0.5">
+          {errors.map((b, i) => {
+            const t = blockerText(b, idx);
+            return (
+              <li key={`${i}-${b}`} className="break-words">
+                {t.focus ? (
+                  <FocusLink to={t.focus} onFocus={onFocus}>
+                    {t.text}
+                  </FocusLink>
+                ) : (
+                  t.text
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </Callout>
+    );
+  if (!status.blockers.length)
+    return (
+      <Callout tone="warn" title="Aucune donnée reçue" action={<Button href={`/projets/${id}/extraction`} size="sm" variant="secondary">Données</Button>}>
+        La migration lit les fichiers reçus à l&apos;étape Données.
+      </Callout>
+    );
+  return null;
+}
+
+function StaleNotice({ current, sources, profile }: { current: MappingVersion; sources: SourceMeta[] | null; profile: SourceProfile | null }) {
+  const late = sources ? sources.filter((s) => s.received_at > current.received_at) : [];
+  const missing = profile ? [...new Set(current.mapping.entities.map((e) => e.source.table).filter((t) => !profile.tables.some((x) => x.name === t)))] : [];
+  if (!late.length && !missing.length) return null;
+  return (
+    <Callout tone="warn" title={`Données modifiées depuis la version ${current.version}`}>
+      {late.length > 0 && <span className="block break-words">Reçu ensuite : {late.map((s) => s.name).join(", ")}.</span>}
+      {missing.length > 0 && <span className="block break-words">Introuvable dans les données actuelles : {missing.join(", ")}.</span>}
+      <span className="block">Obtenez une nouvelle version pour recontrôler les correspondances.</span>
+    </Callout>
+  );
+}
+
+/** « 5 champs et 1 rattachement de pièces jointes · 0 tranché sur 6 » : ce que recouvre le nombre de points. */
+function pendingHint(pending: ReviewItem[], decided: number, total: number): string {
+  const kinds: Record<string, [string, string]> = { field: ["champ", "champs"], entity: ["table", "tables"], accounting: ["protection de l'historique", "protections de l'historique"], attachment: ["rattachement de pièces jointes", "rattachements de pièces jointes"] };
+  const by = new Map<string, number>();
+  for (const i of pending) by.set(i.kind, (by.get(i.kind) ?? 0) + 1);
+  const parts = [...by.entries()].map(([k, n]) => plural(n, kinds[k]?.[0] ?? k, kinds[k]?.[1] ?? k));
+  const what = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} et ${parts.at(-1)}` : (parts[0] ?? "");
+  return `${what ? `${what} · ` : ""}${nf(decided)} tranché${decided > 1 ? "s" : ""} sur ${nf(total)}`;
+}
+
+function IssueBadges({ current }: { current: MappingVersion }) {
+  const errors = current.issues.filter((i) => i.level === "error").length;
+  const warnings = current.issues.length - errors;
+  return (
+    <span className="flex flex-wrap gap-1.5">
+      {errors > 0 && <Badge tone="bad">{plural(errors, "erreur")}</Badge>}
+      {warnings > 0 && <Badge tone="warn">{plural(warnings, "avertissement")}</Badge>}
+    </span>
+  );
+}
+
+function ToggleAll({ allOpen, onToggle }: { allOpen: boolean; onToggle: (open: boolean) => void }) {
+  return (
+    <Button size="sm" variant="ghost" onClick={() => onToggle(!allOpen)} icon={allOpen ? <ChevronsDownUp size={14} /> : <ChevronsUpDown size={14} />}>
+      {allOpen ? "Tout replier" : "Tout déplier"}
+    </Button>
+  );
+}
+
+type Counts = { fields: number; pendingFields: number; change: number; locked: number };
+const FILTERS: { id: FieldFilter; label: string; count: (c: Counts) => number }[] = [
+  { id: "all", label: "Tous les champs", count: (c) => c.fields },
+  { id: "pending", label: "Champs à vérifier", count: (c) => c.pendingFields },
+  { id: "change", label: "Valeurs transformées", count: (c) => c.change },
+  { id: "locked", label: "Protégés", count: (c) => c.locked },
+];
+
+function FilterBar({ value, onChange, counts }: { value: FieldFilter; onChange: (f: FieldFilter) => void; counts: Counts | null }) {
+  return (
+    <div role="group" aria-label="Afficher" className="flex flex-wrap gap-1.5">
+      {FILTERS.map((f) => (
+        <button
+          key={f.id}
+          type="button"
+          aria-pressed={value === f.id}
+          onClick={() => onChange(f.id)}
+          className={cx(
+            "inline-flex h-control-sm items-center gap-1.5 rounded-control px-3 text-small font-medium transition-colors duration-(--duration-fast) max-sm:h-control-lg",
+            value === f.id ? "bg-ink text-white" : "bg-surface text-text-2 ring-1 ring-line-strong hover:bg-surface-sunken hover:text-ink",
+          )}
+        >
+          {f.label}
+          {counts && <span className={cx("tabular", value === f.id ? "text-white/80" : "text-text-3")}>{nf(f.count(counts))}</span>}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function AdvancedToggle({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={on}
+      onClick={() => onChange(!on)}
+      className={cx(
+        "inline-flex h-control-sm items-center gap-2 self-start rounded-control px-3 text-small font-medium transition-colors duration-(--duration-fast) max-sm:h-control-lg md:self-auto",
+        on ? "bg-surface-sunken text-ink ring-1 ring-line-strong" : "text-text-2 hover:bg-surface-sunken hover:text-ink",
+      )}
+    >
+      <Settings2 size={14} aria-hidden />
+      Détails techniques {on ? "affichés" : "masqués"}
+    </button>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Source des correspondances : Analyste, proposition, jeu de test      */
+/* ------------------------------------------------------------------ */
+
+function SourceOptions({
+  current,
+  hasSources,
+  busy,
+  onStart,
+  confirm,
+  setConfirm,
+  onCreate,
+  notice,
+  onCloseNotice,
+}: {
+  current: MappingVersion | null;
+  hasSources: boolean;
+  busy: SourceKind | null;
+  onStart: (k: "auto" | "fixture") => void;
+  confirm: null | "auto" | "fixture";
+  setConfirm: (c: null | "auto" | "fixture") => void;
+  onCreate: (k: SourceKind) => Promise<void>;
+  notice: { tone: "ok" | "warn" | "bad"; text: string } | null;
+  onCloseNotice: () => void;
+}) {
+  const next = (current?.version ?? 0) + 1;
+  const analyst = current?.origin === "analyst";
+  return (
+    <div className="flex flex-col gap-3">
+      <ul className="flex flex-col divide-y divide-line overflow-hidden rounded-panel ring-1 ring-line">
+        <li className="flex items-start gap-3.5 px-4 py-3.5">
+          <Inbox size={18} className="mt-0.5 shrink-0 text-text-3" aria-hidden />
+          <span className="min-w-0 flex-1">
+            <span className="block text-body font-semibold text-ink">Envoi de l&apos;Analyste</span>
+            <span className="block text-small text-text-2">
+              {analyst && current ? `Version en vigueur reçue le ${dt(current.received_at)}.` : "Envoyé directement par l'agent d'analyse au Studio, sans passer par cet écran."}
+            </span>
+          </span>
+          {analyst ? <Badge tone="ok">Reçu</Badge> : <Badge>En attente de l&apos;agent</Badge>}
+        </li>
+        <li>
+          <OptionButton Icon={Sparkles} title="Proposition automatique" text="Déduite de la structure lue : une table devient une fiche, une colonne un champ, sans connaissance du logiciel." disabled={!hasSources || !!busy} busy={busy === "auto"} onClick={() => onStart("auto")} />
+        </li>
+        <li>
+          <OptionButton
+            Icon={FlaskConical}
+            iconCls="text-warning"
+            title="Jeu de test au format de l'Analyste — Relatio"
+            text={`Écrit à la main pour le logiciel de test ${TEST_SYSTEM} : ce n'est pas un envoi de l'Analyste.`}
+            disabled={!hasSources || !!busy}
+            busy={busy === "fixture"}
+            onClick={() => onStart("fixture")}
+          />
+        </li>
+      </ul>
+      {confirm && current && (
+        <Callout tone="warn" title={`Créer la version ${next} ?`}>
+          Elle remplacera la version {current.version} ; les décisions déjà prises restent acquises pour les propositions conservées.
+          <span className="mt-2.5 flex flex-wrap gap-2">
+            <Button size="sm" variant="primary" loading={!!busy} onClick={() => onCreate(confirm)}>
+              Créer la version {next}
+            </Button>
+            <Button size="sm" variant="ghost" disabled={!!busy} onClick={() => setConfirm(null)}>
+              Annuler
+            </Button>
+          </span>
+        </Callout>
+      )}
+      {notice && (
+        <Callout tone={notice.tone} action={<Button variant="ghost" size="sm" onClick={onCloseNotice} icon={<X size={14} />}>Fermer</Button>}>
+          {notice.text}
+        </Callout>
+      )}
+    </div>
+  );
+}
+
+function OptionButton({ Icon, iconCls, title, text, disabled, busy, onClick }: { Icon: LucideIcon; iconCls?: string; title: string; text: string; disabled: boolean; busy: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      aria-busy={busy || undefined}
+      onClick={onClick}
+      className="group/opt flex w-full items-start gap-3.5 px-4 py-3.5 text-left transition-colors duration-(--duration-fast) hover:bg-canvas disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-transparent"
+    >
+      <Icon size={18} className={cx("mt-0.5 shrink-0", busy ? "animate-pulse text-accent motion-reduce:animate-none" : (iconCls ?? "text-text-3"))} aria-hidden />
+      <span className="min-w-0 flex-1">
+        <span className="block text-body font-semibold text-ink">{title}</span>
+        <span className="block text-small text-text-2">{busy ? "Création de la version en cours…" : text}</span>
+      </span>
+      <ArrowRight size={16} className="mt-0.5 shrink-0 text-text-3 transition-transform duration-(--duration-fast) group-hover/opt:translate-x-0.5" aria-hidden />
+    </button>
   );
 }
 
@@ -579,13 +579,14 @@ function NoMapping({ id, sourcesLoaded, hasSources, sourcesError, onCreated }: {
 /* Périmètre : pièces jointes, tables non reprises, tables écartées     */
 /* ------------------------------------------------------------------ */
 
-function PerimeterPanel({
+function Perimeter({
   current,
   idx,
   profile,
   profileError,
   sources,
   highlight,
+  actions,
 }: {
   current: MappingVersion;
   idx: MappingIndex;
@@ -593,69 +594,147 @@ function PerimeterPanel({
   profileError: string | null;
   sources: SourceMeta[];
   highlight: string | null;
+  actions: ReturnType<typeof useMappingActions>["actions"];
 }) {
   const m = current.mapping;
   const attachments = m.attachments ?? [];
   const used = new Set([...m.entities.map((e) => e.source.table), ...attachments.map((a) => a.source.table), ...(m.excluded_sources ?? []).map((x) => x.table)]);
   const unmapped = profile ? profile.tables.filter((t) => !used.has(t.name)) : null;
   const unusedArchives = sources.filter((s) => s.format === "zip" && !attachments.some((a) => a.archive === s.name));
+  const summary = [plural(attachments.length, "rattachement de pièces jointes", "rattachements de pièces jointes"), unmapped ? plural(unmapped.length, "table non reprise", "tables non reprises") : null, m.excluded_sources?.length ? plural(m.excluded_sources.length, "table écartée", "tables écartées") : null]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
-    <Panel eyebrow="Périmètre" title="Pièces jointes et données non reprises">
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="min-w-0">
-          <h4 className="mb-1.5 text-[12.5px] font-bold text-sediment">Pièces jointes ({attachments.length})</h4>
+    <Section collapsible title="Documents et données non reprises" description={summary} badge={unmapped?.length || unusedArchives.length ? <Badge tone="warn">À connaître</Badge> : undefined}>
+      <div className="flex flex-col gap-5">
+        <div>
+          <h3 className="mb-2 text-body font-semibold text-ink">Pièces jointes</h3>
           {attachments.length ? (
             <ul className="flex flex-col gap-2">
               {attachments.map((a, i) => (
-                <AttachmentRow key={i} a={a} i={i} idx={idx} highlight={highlight} />
+                <AttachmentRow key={i} a={a} i={i} idx={idx} highlight={highlight} actions={actions} />
               ))}
             </ul>
           ) : (
-            <p className="text-[12.5px] text-silt">Aucun rattachement de pièces jointes déclaré dans cette version.</p>
+            <p className="text-small text-text-3">Aucun rattachement de pièces jointes dans cette version.</p>
           )}
-          {unusedArchives.length > 0 && (
-            <p className="mt-2 text-[12px] text-ochre">
-              Archive(s) reçue(s) sans rattachement : {unusedArchives.map((s) => s.name).join(", ")} — leurs fichiers ne seront pas rattachés aux enregistrements.
-            </p>
-          )}
+          {unusedArchives.length > 0 && <p className="mt-2 text-small text-warning-ink">Archive sans rattachement : {unusedArchives.map((s) => s.name).join(", ")} ; ses fichiers ne seront rattachés à aucune fiche.</p>}
         </div>
-        <div className="flex min-w-0 flex-col gap-4">
-          <div>
-            <h4 className="mb-1.5 text-[12.5px] font-bold text-sediment">Tables lues sans correspondance{unmapped ? ` (${unmapped.length})` : ""}</h4>
-            {unmapped === null ? (
-              <p className="text-[12.5px] text-silt">{profileError ? `Structure lue indisponible (${profileError}) : impossible de lister les tables non reprises.` : "Structure lue en cours de chargement…"}</p>
-            ) : unmapped.length ? (
-              <>
-                <ul className="flex flex-wrap gap-1.5">
-                  {unmapped.map((t) => (
-                    <li key={t.name}>
-                      <Chip tone="warn">
-                        <span className="font-mono">{t.name}</span> · {plural(t.rows, "ligne")}
-                      </Chip>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-1.5 text-[12px] text-sediment">Non migrées : elles figureront au rapport d&apos;écarts. Pour les reprendre, il faut une nouvelle version des correspondances.</p>
-              </>
-            ) : (
-              <p className="text-[12.5px] text-verdigris">Toutes les tables lues sont reprises, rattachées ou écartées explicitement.</p>
-            )}
-          </div>
-          {!!m.excluded_sources?.length && (
-            <div>
-              <h4 className="mb-1.5 text-[12.5px] font-bold text-sediment">Tables écartées volontairement ({m.excluded_sources.length})</h4>
-              <ul className="flex flex-col gap-1 text-[12.5px] text-sediment">
-                {m.excluded_sources.map((x) => (
-                  <li key={x.table}>
-                    <span className="font-mono font-bold text-ink">{x.table}</span> — {x.reason}
+        <div>
+          <h3 className="mb-2 text-body font-semibold text-ink">Tables reçues sans correspondance</h3>
+          {unmapped === null ? (
+            <p className="text-small text-text-3">{profileError ? `Structure lue indisponible (${profileError}).` : "Structure lue en cours de chargement…"}</p>
+          ) : unmapped.length ? (
+            <>
+              <ul className="flex flex-wrap gap-1.5">
+                {unmapped.map((t) => (
+                  <li key={t.name}>
+                    <Badge tone="warn">
+                      <span className="font-mono">{idx.legacy(t.name)}</span> · {plural(t.rows, "ligne")}
+                    </Badge>
                   </li>
                 ))}
               </ul>
-            </div>
+              <p className="mt-2 text-small text-text-2">Non migrées : elles figureront au rapport d&apos;écarts.</p>
+            </>
+          ) : (
+            <p className="text-small text-accent-ink">Toutes les tables reçues sont reprises, rattachées ou écartées.</p>
           )}
         </div>
+        {!!m.excluded_sources?.length && (
+          <div>
+            <h3 className="mb-2 text-body font-semibold text-ink">Tables écartées volontairement</h3>
+            <ul className="flex flex-col gap-1 text-small text-text-2">
+              {m.excluded_sources.map((x) => (
+                <li key={x.table}>
+                  <span className="font-mono font-semibold text-ink">{idx.legacy(x.table)}</span> — {x.reason}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
-    </Panel>
+    </Section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Intégration technique                                                */
+/* ------------------------------------------------------------------ */
+
+function MappingTechnical({ id, current, hasSources, operator, busy, onCreate }: { id: string; current: MappingVersion | null; hasSources: boolean; operator: boolean; busy: SourceKind | null; onCreate: (k: SourceKind, body?: unknown) => Promise<void> }) {
+  const [json, setJson] = useState("");
+  const [parseError, setParseError] = useState<string | null>(null);
+  const next = (current?.version ?? 0) + 1;
+  const m = current?.mapping;
+  return (
+    <div className="flex flex-col gap-5">
+      <Facts
+        items={[
+          { label: "Envoi de l'Analyste", value: <code className="font-mono text-small break-all">POST /api/migration/mapping?project={id}</code> },
+          { label: "Correction d'un champ", value: <code className="font-mono text-small break-all">POST /api/migration/mapping/fields?project={id}</code> },
+          {
+            label: "Contrat",
+            value: (
+              <a href="/api/migration/contracts" target="_blank" rel="noreferrer" className="ds-link">
+                migration_mapping v{m?.contract_version ?? "1.0"} (JSON Schema)
+              </a>
+            ),
+          },
+          ...(current && m
+            ? [
+                { label: "Version en vigueur", value: `v${current.version} · ${ORIGIN[current.origin]?.label ?? current.origin} · ${dt(current.received_at)}` },
+                { label: "Empreinte", value: <span className="font-mono text-small">{current.sha256.slice(0, 16)}…</span> },
+                { label: "Seuil de validation", value: `${formatPercent(m.review_threshold, 0)} de confiance` },
+                { label: "Identifiant du nouveau logiciel", value: <span className="font-mono text-small">{m.target.id}</span> },
+                ...(m.notes ? [{ label: "Note de l'émetteur", value: `« ${m.notes} »` }] : []),
+              ]
+            : []),
+        ]}
+      />
+      {current && m && (
+        <div>
+          <h3 className="mb-1.5 text-body font-semibold text-ink">Repères du tableau</h3>
+          <MappingNotes threshold={m.review_threshold} auto={current.origin === "auto"} />
+        </div>
+      )}
+      {operator && (
+        <div className="flex flex-col gap-2">
+          <h3 className="text-body font-semibold text-ink">Saisie du contrat complet (équipe REBORN)</h3>
+          <p className="max-w-[720px] text-small text-text-2">Contrôlée par l&apos;API comme tout envoi, et enregistrée comme correction manuelle, jamais comme un envoi de l&apos;Analyste.</p>
+          {current && !json && (
+            <div>
+              <Button size="sm" variant="secondary" onClick={() => setJson(JSON.stringify(current.mapping, null, 2))}>
+                Partir de la version {current.version}
+              </Button>
+            </div>
+          )}
+          <Textarea className="h-56 resize-y font-mono text-small leading-relaxed" value={json} onChange={(e) => setJson(e.target.value)} spellCheck={false} placeholder='{ "target": { "id": "…", "name": "…" }, "entities": [ … ] }' aria-label="Contrat de correspondances (JSON)" />
+          {parseError && <p className="text-small text-danger-ink">Contrat illisible : {parseError}</p>}
+          <div className="flex justify-end">
+            <Button
+              size="sm"
+              variant="secondary"
+              disabled={!json.trim() || !hasSources || !!busy}
+              loading={busy === "user"}
+              onClick={() => {
+                let body: unknown;
+                try {
+                  body = JSON.parse(json);
+                } catch (e) {
+                  setParseError((e as Error).message);
+                  return;
+                }
+                setParseError(null);
+                void onCreate("user", body);
+              }}
+            >
+              Enregistrer comme correction manuelle (v{next})
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

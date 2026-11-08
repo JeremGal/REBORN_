@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 /**
  * Rejoue une version du modèle métier sur les documents historiques de la dernière migration
  * (base migrée, lecture seule) et compare aux montants enregistrés : { version }.
+ * Propriétaire du projet et Analyste.
  */
 export const POST = handler(
   async (req) => {
@@ -23,5 +24,5 @@ export const POST = handler(
     recordBusinessModel(b.version, { history_check: check });
     return json({ ok: true, check });
   },
-  { write: true },
+  { access: ["owner", "analyst"], write: true, project: "query" },
 );

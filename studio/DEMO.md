@@ -1,6 +1,6 @@
-# Démonstration complète (environ 10 minutes)
+# Démonstration complète (environ 15 minutes)
 
-Elle se fait sur un **ancien logiciel de test réel** : Relatio 2004, un CRM web avec sa base SQLite et des données synthétiques. Les éléments que fourniront Alan et Mouss sont remplacés par des **jeux de test à leur format**, étiquetés comme tels dans l'interface. Aucune exploration réelle par H Company n'est simulée.
+Elle suit le parcours d'un **client** de REBORN, sur un **ancien logiciel de test réel** : Relatio 2004, un CRM web avec sa base SQLite et des données synthétiques. Les éléments que fourniront Alan et Mouss sont remplacés par des **jeux de test à leur format**, étiquetés comme tels dans l'interface. Aucune exploration par l'agent de H Company n'est simulée : tant que l'exécuteur de Mouss n'est pas branché, le Studio l'affiche honnêtement.
 
 ## Préparer
 
@@ -10,54 +10,66 @@ npm run start                        # Studio :3000 · Relatio :4100 · Quotix :
 npm run crm-source:password          # copie le mot de passe du compte « migration » de Relatio
 ```
 
+Pour une démonstration répétée, utiliser une nouvelle adresse e-mail : une adresse n'a qu'un compte.
+
 ## Dérouler
 
-1. **Projets** (`http://127.0.0.1:3000`)
-   - Cliquer sur « Nouveau projet ».
-   - Renseigner : entreprise « Morel Équipements », logiciel « Relatio 2004 », URL `http://127.0.0.1:4100`, identifiant `migration` et le mot de passe copié.
-   - Cocher l'autorisation du propriétaire, puis créer le projet.
-   - Le mot de passe ne sera plus jamais affiché : il est chiffré et effacé au bout de 24 h.
-2. **Connexion**
-   - Montrer l'état « Connexion en attente » et la mission prévue pour l'agent de Mouss : objectifs, contraintes, jeton à usage unique.
-   - Lancer le test réel du connecteur HTTP avec le plan de test Relatio : l'état passe à « Connecté ».
-3. **Découverte**
-   - Expliquer qu'aucune exploration réelle n'a eu lieu : l'écran indique « En attente de l'agent Computer Use ».
-   - L'atelier (`/atelier`) montre la chaîne règles en mode test.
-4. **Données**
-   - Extraire avec le plan de test : 11 exports sont récupérés et 2 sont refusés au compte (commissions, sauvegarde SQL). Les refus sont consignés.
-   - Montrer l'encodage détecté et les empreintes SHA-256.
-5. **Correspondances**
-   - Comparer la proposition automatique et le jeu de test de l'Analyste (Relatio).
-   - Montrer « Ancien T_CLIENT.RAISON_SOC → clients.raison_sociale », les relations et la protection des factures.
-   - Valider les points incertains : la migration reste bloquée tant qu'il en reste.
-6. **Migration**
-   - La lancer : environ 21 000 enregistrements, chacun avec son origine.
-   - Montrer les rejets et leur motif (CSV), ainsi que les doublons signalés.
-7. **Validation**
-   - Montrer la vérification indépendante : volumes, valeurs champ par champ, relations, montants au centime, pièces jointes, intégrité.
-   - Accepter les écarts documentés.
-   - Recevoir le modèle métier (jeu de test au format d'Alan) et le **rejouer sur l'historique** : 1 772 devis identiques au centime sur 1 796, 24 écarts d'arrondi signalés comme tels, aucun écart réel.
-8. **Reconstruction**
-   - Parcourir l'ApplicationSpec : entités, provenance (observé, déduit, validé), écrans, actions, règles installées, éléments **non reconstruits** (exports refusés).
-   - Valider le modèle métier, puis « Générer et mettre en service ».
-9. **Livraison**
-   - Le logiciel est en service sur son port. Ouvrir le lien.
-   - `npm run crm:password` copie le mot de passe admin.
-10. **Dans le nouveau CRM**
-    - Retrouver un client migré et son origine exacte.
-    - Créer un devis : choisir un client, ajouter 3 articles avec leur quantité. Prix, remises, TVA et TTC sont calculés côté serveur par le modèle métier v1, et la version est affichée sur le devis.
-    - Tenter de modifier une facture historique : le serveur refuse et la tentative est journalisée.
-11. **Nouvelle version des règles**
-    - Publier une v2 validée depuis l'étape Livraison.
-    - Un nouveau devis est calculé en v2 ; le premier garde ses montants en v1.
-12. **Indépendance**
+1. **Accueil** (`http://127.0.0.1:3000`)
+   - Page publique « Your software. Reborn. ». Cliquer sur « Commencer une migration ».
+2. **Inscription**
+   - Prénom, nom, entreprise (« Morel Équipements »), e-mail professionnel, mot de passe (10 caractères au moins) et sa confirmation.
+   - Montrer les deux cases, **non cochées** : « J'accepte les conditions d'utilisation (version 1.0). » (contrat) et « J'ai pris connaissance de la politique de confidentialité (version 1.0). » (information). Sans elles, le compte n'est pas créé.
+   - « Créer mon compte » ouvre l'espace du client.
+3. **Nouvelle migration** (assistant en 3 étapes)
+   - *Votre logiciel* : entreprise « Morel Équipements », logiciel « Relatio 2004 », adresse `http://127.0.0.1:4100`.
+   - *Accès* : « Je confie un compte de connexion (recommandé) », identifiant `migration`, mot de passe copié. L'écran explique ce que deviennent les identifiants : chiffrés dès réception, 24 heures au maximum, supprimés plus tôt dès qu'ils ne servent plus, jamais montrés à un modèle d'IA, jamais écrits dans un journal.
+   - *Confidentialité et autorisation* : cocher la déclaration d'autorisation d'accès et la prise de connaissance du traitement des identifiants, puis « Analyser mon logiciel ».
+   - Résultat : le projet est créé et la demande d'analyse est en file. Sans exécuteur en ligne, le Studio affiche exactement « Agent d'analyse non disponible pour le moment. » ; aucune exploration n'a commencé. L'import manuel de fichiers reste possible.
+4. **Connexion** (« Suivre la demande »)
+   - État de la demande (« En file d'attente », agent « Non disponible »), échéance des identifiants, bouton de suppression immédiate.
+   - « Logiciel de test Relatio 2004 » puis « Tester la connexion » : le connecteur HTTP de REBORN se connecte **réellement** au logiciel de test, l'état passe à « Connecté ».
+5. **Découverte**
+   - « Exploration indisponible — agent non connecté. » et la chronologie des seuls faits réels (demande, connexion, exports).
+6. **Données**
+   - « Extraire avec le plan de test » : 11 exports récupérés, 2 refusés au compte (commissions, sauvegarde SQL), refus consignés. Les identifiants confiés sont effacés à la fin de l'extraction réussie.
+   - Consultation paginée côté serveur (tri, recherche, filtre), colonnes et qualité.
+7. **Correspondances**
+   - « Jeu de test au format de l'Analyste — Relatio ». La file « À vérifier » montre « Ancien champ → Nouveau champ » (ex. `T_CLIENT.RAISON_SOC` → Clients / Raison sociale), l'incertitude et les transformations qui modifient une valeur.
+   - Accepter, corriger (aperçu sur les vraies valeurs avant d'enregistrer) ou rejeter un champ ; la migration reste bloquée tant qu'un point incertain n'est pas tranché.
+8. **Migration**
+   - « Lancer la migration » : 21 065 fiches transférées sur 21 079 lignes sources, 14 rejetées avec leur motif (2 clients sans raison sociale, leurs devis et leurs lignes).
+9. **Validation**
+   - Vérification indépendante : totaux financiers, fiches et champs, documents, règles métier, et ce qui n'a pas pu être vérifié.
+   - Accepter les écarts documentés avec un commentaire (enregistré au nom du compte connecté).
+10. **Reconstruction**
+    - Vue d'ensemble de la spécification : modules, écrans, liens, fonctionnalités, éléments **non reconstruits** (exports refusés).
+    - « Recevoir le jeu de test Relatio » (modèle métier au format d'Alan), « Rejouer sur l'historique » : 1 772 devis identiques au centime sur 1 796, 24 écarts d'arrondi de 1 à 2 centimes signalés comme tels, aucun écart réel.
+    - « Valider cette version », puis « Générer et mettre en service ».
+11. **Livraison**
+    - Le logiciel est « En service » sur son port ; « Ouvrir mon nouveau logiciel ».
+    - « Créer mon accès au logiciel » : lien d'activation à usage unique, affiché une seule fois. L'ouvrir et **choisir son mot de passe** (12 caractères au moins). Ni le mot de passe REBORN ni celui de Relatio n'ouvrent le nouveau logiciel.
+12. **Dans le nouveau CRM**
+    - Retrouver un client migré et l'origine exacte de sa fiche.
+    - Créer un devis : choisir un client, ajouter 3 articles avec leur quantité. Prix, remises, TVA et TTC sont calculés côté serveur par le modèle métier v1 (« Calculé par le serveur »), et la version est affichée sur le devis.
+    - Ouvrir une facture historique : « Historique protégé ». Une modification de son montant est refusée par le serveur et la tentative est journalisée.
+13. **Nouvelle version des règles** (si l'Analyste a envoyé une v2, rejouée et validée)
+    - « Publier v2 » à l'étape Livraison : un nouveau devis est calculé en v2 ; le premier garde ses montants en v1 ; l'historique n'est jamais recalculé.
+14. **Indépendance**
     - Faire Ctrl+C dans le terminal de `npm run start` : le Studio et l'ancien logiciel s'arrêtent, le CRM continue de répondre.
-    - Il se relance seul avec `npm run crm`, et ses données sont intactes.
+    - Il se relance seul avec `npm run crm`, et ses données comme les accès créés sont intacts.
+
+## Côté équipe (facultatif)
+
+Avec un compte opérateur (`npm run account -- operator <email>`) : l'atelier règles (`/atelier`, `/app`), la vue `/migration` et `/design-system`. Un client n'y a pas accès (page introuvable).
 
 ## Preuves automatisées
 
 ```bash
-npm test                 # vitest, dont la chaîne complète sur le vrai serveur Relatio
-npm run acceptance       # tests d'acceptation 1 à 6 et 8 : processus réels, Ctrl+C sur le Studio compris
-node scripts/e2e-parcours.mjs   # parcours d'un projet dans un vrai navigateur
+npm test                          # vitest, dont la chaîne complète sur le vrai serveur Relatio
+npm run acceptance                # 95 vérifications : comptes, deux clients isolés, doublure d'exécuteur, Ctrl+C sur le Studio
+node scripts/e2e-parcours.mjs     # 72 vérifications : ce parcours client dans un vrai navigateur
+npm run e2e                       # 29 vérifications : atelier de l'équipe
+node scripts/e2e-migration.mjs    # 32 vérifications : vue /migration de l'équipe
 ```
+
+Chacun monte sa propre pile isolée (dossier temporaire, ports libres, secrets aléatoires) : le Studio en service et ses données ne sont pas touchés.

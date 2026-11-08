@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { useReborn } from "@/components/RebornProvider";
+import { redirectToLogin, useReborn } from "@/components/RebornProvider";
 
 /* Types renvoyés par /api/projects (voir src/lib/migration/project.ts : ProjectSummary). */
 export type ProjectStatus =
@@ -48,11 +48,22 @@ export interface ProjectDetails {
   status_history: { status: ProjectStatus; label: string; at: string; reason: string }[];
 }
 
-/** Appel d'API sur un projet : ajoute ?project=… et remonte un message d'erreur lisible. */
+/** Message de l'erreur levée quand la session a expiré ou a été révoquée (la page part vers la connexion). */
+export const SESSION_LOST_MESSAGE = "Session expirée : reconnectez-vous pour continuer.";
+
+/**
+ * Appel d'API sur un projet : ajoute ?project=… et remonte un message d'erreur lisible.
+ * 401 (session expirée ou révoquée, demande du lot B3) : retour à la page de connexion avec la page en cours
+ * comme adresse de retour (redirectToLogin, une seule redirection) ; l'appel échoue, rien n'est affiché comme réussi.
+ */
 export async function projectCall<T = unknown>(projectId: string, method: string, url: string, body?: unknown): Promise<T> {
   const u = new URL(url, window.location.origin);
   if (!u.pathname.startsWith("/api/projects/")) u.searchParams.set("project", projectId);
   const r = await fetch(u.pathname + u.search, { method, cache: "no-store", headers: body === undefined ? {} : { "content-type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body) });
+  if (r.status === 401) {
+    redirectToLogin();
+    throw new Error(SESSION_LOST_MESSAGE);
+  }
   const data = await r.json().catch(() => ({}));
   if (!r.ok) {
     const issues = Array.isArray(data?.issues)

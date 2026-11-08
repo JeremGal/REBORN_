@@ -1,41 +1,75 @@
 @import "tailwindcss";
 
 /*
- * REBORN — carnet de fouille numérique.
- * ink        : l'encre du rapport (marine du brief)
- * verdigris  : la patine — ce qui est restauré, validé, identique
- * ochre      : l'hypothèse, le travail en cours
- * rust       : la dérive, l'écart avec le logiciel historique
- * chalk      : la page
- * legacy     : le gris du monde ancien
+ * REBORN — atelier de restauration (design system, SPEC §10.1).
+ *
+ * Un carnet de fouille devenu atelier : des matériaux qui ont vécu (encre, craie, patine,
+ * ocre, rouille), remis à neuf. Une seule couleur d'accent : le vert-de-gris (patine =
+ * restauré, validé). Ocre = avertissement, rouille = erreur. Boutons principaux anthracite.
+ *
+ * Contrastes : chaque couple texte/fond a été calculé selon la formule WCAG 2.x, et
+ * npm run a11y les contrôle aussi sur les pages réelles (axe-core). Texte ≥ 4,5:1 sur canvas, surface, surface-sunken
+ * et les fonds *-soft ; bordures de contrôle et anneau de focus ≥ 3:1.
+ *
+ * Les anciens noms (ink, sediment, silt, dust, chalk, paper, verdigris, ochre, rust…) restent
+ * des alias des nouveaux jetons : toutes les pages existantes adoptent le nouveau rendu.
  */
-@theme {
-  --color-ink: #13233a;
-  --color-ink-2: #1c3050;
-  --color-ink-3: #2a4166;
-  --color-verdigris: #11907f;
-  --color-verdigris-bright: #19b19d;
-  --color-verdigris-soft: #e2f2ee;
-  --color-chalk: #f3f4f1;
-  --color-chalk-2: #eceee9;
-  --color-paper: #ffffff;
-  --color-sediment: #4f5968;
-  --color-silt: #828a96;
-  --color-dust: #aab0b8;
-  --color-line: rgb(19 35 58 / 0.09);
-  --color-line-strong: rgb(19 35 58 / 0.16);
-  --color-ochre: #a86b12;
-  --color-ochre-soft: #f8eedb;
-  --color-rust: #b8452c;
-  --color-rust-soft: #f8e6e1;
+@theme static {
+  /* ---------- Surfaces ---------- */
+  --color-canvas: #f6f5f1; /* fond d'application, blanc cassé chaud */
+  --color-surface: #ffffff; /* zones de contenu surélevées, avec parcimonie */
+  --color-surface-sunken: #efede8; /* zones encastrées, pastilles, survols */
+  --color-field: #faf9f6; /* fond des champs : encastrement léger (ombre interne d'un pixel) */
+
+  /* ---------- Texte ---------- */
+  --color-ink: #16191d; /* anthracite : texte principal, boutons principaux */
+  --color-ink-2: #2b2f35; /* survol des boutons principaux */
+  --color-ink-3: #454a52;
+  --color-text-2: #4a4e55; /* secondaire (7,2:1 au plus bas) */
+  --color-text-3: #62666d; /* métadonnées (4,8:1 au plus bas) */
+  --color-text-disabled: #9d9e9f; /* éléments désactivés ou décoratifs uniquement */
+
+  /* ---------- Filets, contrôles, focus ---------- */
+  --color-line: rgb(22 25 29 / 0.1); /* séparations discrètes (décoratives) */
+  --color-line-strong: rgb(22 25 29 / 0.17);
+  --color-control-border: #85837d; /* bordure des champs et cases (≥ 3,2:1) */
+  --color-focus: var(--color-accent); /* anneau de focus = accent */
+
+  /* ---------- Accent : vert-de-gris ---------- */
+  --color-accent: #21736a; /* liens forts, progression, étape active, validation (≥ 4,7:1) */
+  --color-accent-ink: #18604f; /* texte et liens (≥ 6,2:1) */
+  --color-accent-soft: #e2efeb; /* fonds */
+  --color-accent-bright: #4cc0aa; /* accent sur fond sombre (7,9:1 sur ink) */
+
+  /* ---------- Avertissement : ocre ---------- */
+  --color-warning: #b07418; /* icônes, bordures (≥ 3,3:1) */
+  --color-warning-ink: #875609; /* texte (≥ 5,2:1) */
+  --color-warning-soft: #f8edd8;
+
+  /* ---------- Erreur : rouille ---------- */
+  --color-danger: #b8472e; /* icônes, bordures, bouton danger (≥ 4,4:1) */
+  --color-danger-ink: #9b3a23; /* texte (≥ 5,8:1) */
+  --color-danger-soft: #f9e7e1;
+
+  /* ---------- Alias historiques (ne pas employer dans les nouveaux écrans) ---------- */
+  --color-paper: var(--color-surface);
+  --color-chalk: var(--color-canvas);
+  --color-chalk-2: var(--color-surface-sunken);
+  --color-sediment: var(--color-text-2);
+  --color-silt: var(--color-text-3);
+  --color-dust: var(--color-text-disabled);
+  --color-verdigris: var(--color-accent);
+  --color-verdigris-bright: var(--color-accent-bright);
+  --color-verdigris-soft: var(--color-accent-soft);
+  --color-ochre: var(--color-warning-ink);
+  --color-ochre-soft: var(--color-warning-soft);
+  --color-rust: var(--color-danger-ink);
+  --color-rust-soft: var(--color-danger-soft);
+  /* le gris du monde ancien (captures et valeurs du logiciel historique) */
   --color-legacy: #c0c0c0;
   --color-legacy-ink: #2b2b2b;
 
-  --font-sans: var(--font-lato), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-legacy: "Courier New", Courier, monospace;
-
-  /* Application générée (livrable client) : thème indépendant de REBORN */
+  /* ---------- Application générée (livrable client) : thème indépendant, inchangé ---------- */
   --color-ga-bg: #f5f6f8;
   --color-ga-field: #f0f2f5;
   --color-ga-field-hover: #e7eaef;
@@ -51,89 +85,744 @@
   --color-ga-danger-soft: #fdeceb;
   --color-ga-warn: #9a6100;
   --color-ga-warn-soft: #fdf3e0;
+
+  /* ---------- Typographie ---------- */
+  --font-sans: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-legacy: "Courier New", Courier, monospace;
   --font-app: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
 
-  --radius-xs: 3px;
-  --radius-sm: 5px;
+  /* Échelle ≈ 1,25 depuis 14 px : 12 (jamais en dessous) · 13 · 14 · 16 · 18 · 22 · 28 · 36 */
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1rem;
+  --text-small: 0.8125rem;
+  --text-small--line-height: 1.125rem;
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.25rem;
+  --text-lead: 1rem;
+  --text-lead--line-height: 1.5rem;
+  --text-h3: 1.125rem;
+  --text-h3--line-height: 1.5rem;
+  --text-h3--letter-spacing: -0.005em;
+  --text-h2: 1.375rem;
+  --text-h2--line-height: 1.75rem;
+  --text-h2--letter-spacing: -0.012em;
+  --text-h1: 1.75rem;
+  --text-h1--line-height: 2.125rem;
+  --text-h1--letter-spacing: -0.02em;
+  --text-display: 2.25rem;
+  --text-display--line-height: 2.625rem;
+  --text-display--letter-spacing: -0.025em;
+
+  /* ---------- Rayons : contrôles 6 · panneaux 8 · dialogues 12 ---------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-control: 6px;
+  --radius-panel: 8px;
+  --radius-dialog: 12px;
 
+  /* ---------- Hauteurs de contrôle : 36 compact · 40 · 44 tactile ---------- */
+  --spacing-control-sm: 2.25rem;
+  --spacing-control-md: 2.5rem;
+  --spacing-control-lg: 2.75rem;
+
+  /* ---------- Ombres : deux niveaux, rares et douces ---------- */
+  --shadow-raised: 0 1px 2px rgb(22 25 29 / 0.06), 0 1px 1px rgb(22 25 29 / 0.03);
+  --shadow-overlay: 0 16px 40px -12px rgb(22 25 29 / 0.28), 0 3px 8px rgb(22 25 29 / 0.08);
+
+  /* ---------- Mouvement : 120–200 ms, ease-out, transitions d'état uniquement ---------- */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-:root {
-  color-scheme: light;
+/* ======================================================================== */
+/* Base                                                                       */
+/* ======================================================================== */
+@layer base {
+  :root {
+    color-scheme: light;
+    --duration-fast: 120ms;
+    --duration-base: 160ms;
+    --duration-slow: 200ms;
+    --focus-ring-width: 2px;
+    --focus-ring-offset: 2px;
+  }
+
+  html {
+    background: var(--color-canvas);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.5;
+    font-feature-settings: "kern";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 24%, white);
+    color: var(--color-ink);
+  }
+
+  /* Anneau de focus unique : accent 2 px + décalage. Couleur relevée sur les fonds sombres. */
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+  .on-dark,
+  [data-surface="dark"],
+  .bg-ink {
+    --color-focus: var(--color-accent-bright);
+  }
+  /* Les éléments eux-mêmes anthracite (bouton principal) gardent l'anneau d'accent : il est dessiné sur le fond clair. */
+  .bg-ink:focus-visible,
+  .btn-primary:focus-visible {
+    outline-color: var(--color-accent);
+  }
+  /* Cible d'un lien d'évitement : pas d'anneau autour de toute la zone de contenu. */
+  main:focus,
+  [data-skip-target]:focus {
+    outline: none;
+  }
+
+  /* Une fenêtre modale ouverte bloque le défilement de la page. */
+  html:has(dialog[open]:modal) {
+    overflow: hidden;
+  }
+
+  /* Mouvement réduit : aucune animation ni transition non essentielle. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 1ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+      transition-delay: 0ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ======================================================================== */
+/* Composants : classes partagées par components/ds et par les anciens kits    */
+/* (couche « components » : les utilitaires Tailwind les surchargent toujours) */
+/* ======================================================================== */
+@layer components {
+  /* ---------- Classes historiques, restylées sur les jetons ---------- */
+  .card {
+    background: var(--color-surface);
+    border-radius: var(--radius-panel);
+    box-shadow: 0 0 0 1px var(--color-line);
+  }
+
+  /* Étiquette d'inventaire (EXP_001, RULE_005…) */
+  .specimen {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: 1.125rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    padding: 0 6px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-canvas);
+    color: var(--color-ink-2);
+    white-space: nowrap;
+  }
+
+  .eyebrow {
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-3);
+  }
+
+  /* Valeur lue sur l'écran du logiciel historique (aspect volontairement ancien) */
+  .legacy-value {
+    font-family: var(--font-legacy);
+    font-weight: 700;
+    color: var(--color-legacy-ink);
+    background: #fff;
+    border: 1px solid;
+    border-color: #9a9a9a #e4e4e4 #e4e4e4 #9a9a9a;
+    padding: 1px 6px;
+    border-radius: 0;
+  }
+
+  .enter {
+    animation: enter var(--duration-slow) var(--ease-standard) both;
+  }
+
+  .live-dot {
+    animation: pulse-dot 1.6s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .enter,
+    .live-dot {
+      animation: none;
+    }
+  }
+
+  /* ---------- Lien dans le texte : souligné (jamais la couleur seule) ---------- */
+  .ds-link {
+    color: var(--color-accent-ink);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, var(--color-accent-ink) 55%, transparent);
+    transition: text-decoration-color var(--duration-fast) var(--ease-standard);
+    border-radius: 2px;
+  }
+  .ds-link:hover {
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 2px;
+  }
+
+  /* ---------- Boutons ---------- */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: var(--spacing-control-md);
+    padding-inline: 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-control);
+    font-family: inherit;
+    font-size: var(--text-body);
+    font-weight: 600;
+    line-height: 1.25rem;
+    letter-spacing: -0.003em;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard),
+      transform var(--duration-fast) var(--ease-standard);
+  }
+  .btn > svg {
+    flex-shrink: 0;
+  }
+  .btn-sm {
+    height: var(--spacing-control-sm);
+    padding-inline: 0.75rem;
+    gap: 0.375rem;
+    font-size: var(--text-small);
+  }
+  .btn-lg {
+    height: var(--spacing-control-lg);
+    padding-inline: 1.25rem;
+    font-size: 0.9375rem;
+  }
+  .btn-icon {
+    width: var(--spacing-control-md);
+    padding-inline: 0;
+  }
+  .btn-icon.btn-sm {
+    width: var(--spacing-control-sm);
+  }
+  .btn-icon.btn-lg {
+    width: var(--spacing-control-lg);
+  }
+  .btn:where(:active, [data-force="active"]):not(:disabled, [aria-disabled="true"]) {
+    transform: translateY(1px);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+  .btn[aria-busy="true"] {
+    cursor: progress;
+  }
+
+  /* Principal : anthracite */
+  .btn-primary {
+    background: var(--color-ink);
+    color: #fff;
+  }
+  .btn-primary:where(:hover, [data-force="hover"]):not(:disabled, [aria-disabled="true"]) {
+    background: var(--color-ink-2);
+  }
+  /* Secondaire : surface + bordure de contrôle */
+  .btn-secondary {
+    background: var(--color-surface);
+    border-color: var(--color-control-border);
+    color: var(--color-ink);
+  }
+  .btn-secondary:where(:hover, [data-force="hover"]):not(:disabled, [aria-disabled="true"]) {
+    background: var(--color-surface-sunken);
+    border-color: var(--color-text-2);
+  }
+  /* Discret : sans fond */
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-text-2);
+  }
+  .btn-ghost:where(:hover, [data-force="hover"]):not(:disabled, [aria-disabled="true"]) {
+    background: var(--color-surface-sunken);
+    color: var(--color-ink);
+  }
+  /* Validation : vert-de-gris (réservé aux actions de validation) */
+  .btn-accent {
+    background: var(--color-accent);
+    color: #fff;
+  }
+  .btn-accent:where(:hover, [data-force="hover"]):not(:disabled, [aria-disabled="true"]) {
+    background: var(--color-accent-ink);
+  }
+  /* Danger : rouille pleine (action destructive décisive, confirmation) */
+  .btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+  }
+  .btn-danger:where(:hover, [data-force="hover"]):not(:disabled, [aria-disabled="true"]) {
+    background: var(--color-danger-ink);
+  }
+  /* Danger discret : action destructive placée dans le contenu */
+  .btn-danger-subtle {
+    background: var(--color-surface);
+    border-color: color-mix(in srgb, var(--color-danger) 55%, var(--color-control-border));
+    color: var(--color-danger-ink);
+  }
+  .btn-danger-subtle:where(:hover, [data-force="hover"]):not(:disabled, [aria-disabled="true"]) {
+    background: var(--color-danger-soft);
+    border-color: var(--color-danger);
+  }
+  /* Désactivé : même rendu pour toutes les variantes (texte exempté de contraste, WCAG 1.4.3) */
+  .btn:disabled:not([aria-busy="true"]) {
+    background: var(--color-surface-sunken);
+    border-color: var(--color-line);
+    color: var(--color-text-disabled);
+  }
+  .btn-ghost:disabled:not([aria-busy="true"]) {
+    background: transparent;
+    border-color: transparent;
+  }
+  .btn[data-force="focus"] {
+    outline: var(--focus-ring-width) solid var(--color-accent);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* ---------- Champs ---------- */
+  .ds-control {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: var(--spacing-control-md);
+    padding-inline: 0.75rem;
+    border: 1px solid var(--color-control-border);
+    border-radius: var(--radius-control);
+    background: var(--color-field);
+    box-shadow: inset 0 1px 1px rgb(22 25 29 / 0.06);
+    color: var(--color-ink);
+    font-family: inherit;
+    font-size: var(--text-body);
+    line-height: 1.25rem;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
+  }
+  .ds-control::placeholder {
+    color: var(--color-text-3);
+    opacity: 1;
+  }
+  .ds-control:where(:hover, [data-force="hover"]):not(:disabled, :focus) {
+    border-color: var(--color-text-2);
+  }
+  .ds-control:focus,
+  .ds-control[data-force="focus"] {
+    background: var(--color-surface);
+    border-color: var(--color-accent);
+  }
+  .ds-control[data-force="focus"] {
+    outline: var(--focus-ring-width) solid var(--color-accent);
+    outline-offset: var(--focus-ring-offset);
+  }
+  .ds-control[aria-invalid="true"] {
+    border-color: var(--color-danger);
+    background: var(--color-surface);
+  }
+  .ds-control:disabled {
+    border-color: var(--color-line-strong);
+    background: var(--color-canvas);
+    box-shadow: none;
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+  }
+  .ds-control:read-only:not(select) {
+    background: var(--color-canvas);
+  }
+  .ds-control-sm {
+    height: var(--spacing-control-sm);
+    padding-inline: 0.625rem;
+    font-size: var(--text-small);
+  }
+  .ds-control-lg {
+    height: var(--spacing-control-lg);
+  }
+  textarea.ds-control {
+    height: auto;
+    min-height: 5.5rem;
+    padding-block: 0.5rem;
+    line-height: 1.5;
+    resize: vertical;
+  }
+  select.ds-control {
+    appearance: none;
+    padding-right: 2.25rem;
+    cursor: pointer;
+    /* chevron dessiné en text-2 (#4a4e55) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a4e55' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+  }
+  select.ds-control:disabled {
+    cursor: not-allowed;
+  }
+  /* Select du design system : chevron rendu par le composant, fond uni */
+  select.ds-control.ds-select-plain {
+    background-image: none;
+  }
+  input[type="search"].ds-control::-webkit-search-cancel-button {
+    appearance: none;
+  }
+
+  .ds-label {
+    display: block;
+    font-size: var(--text-small);
+    line-height: 1.125rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .ds-hint {
+    font-size: var(--text-small);
+    line-height: 1.125rem;
+    color: var(--color-text-3);
+  }
+  .ds-error,
+  .ds-success {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.375rem;
+    font-size: var(--text-small);
+    line-height: 1.125rem;
+    font-weight: 500;
+  }
+  .ds-error {
+    color: var(--color-danger-ink);
+  }
+  .ds-success {
+    color: var(--color-accent-ink);
+  }
+  .ds-error > svg,
+  .ds-success > svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Cases à cocher et boutons radio : natifs, redessinés (bordure ≥ 3:1) */
+  .ds-check,
+  .ds-radio {
+    appearance: none;
+    flex: none;
+    display: inline-grid;
+    place-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0.0625rem 0 0;
+    border: 1.5px solid var(--color-control-border);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
+  }
+  .ds-check {
+    border-radius: 4px;
+  }
+  .ds-radio {
+    border-radius: 999px;
+  }
+  .ds-check::before,
+  .ds-radio::before {
+    content: "";
+    width: 0.625rem;
+    height: 0.625rem;
+    background: #fff;
+    transform: scale(0);
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+  .ds-check::before {
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  }
+  .ds-radio::before {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+  }
+  .ds-check:where(:hover, [data-force="hover"]):not(:disabled, :checked, :indeterminate),
+  .ds-radio:where(:hover, [data-force="hover"]):not(:disabled, :checked) {
+    border-color: var(--color-ink);
+  }
+  .ds-check:checked,
+  .ds-check:indeterminate,
+  .ds-radio:checked {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+  .ds-check:checked::before,
+  .ds-radio:checked::before {
+    transform: scale(1);
+  }
+  .ds-check:indeterminate::before {
+    clip-path: inset(40% 8% 40% 8%);
+    transform: scale(1);
+  }
+  .ds-check[aria-invalid="true"],
+  .ds-radio[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+  .ds-check:disabled,
+  .ds-radio:disabled {
+    border-color: var(--color-line-strong);
+    background: var(--color-canvas);
+    cursor: not-allowed;
+  }
+  .ds-check:disabled:checked,
+  .ds-radio:disabled:checked {
+    background: var(--color-text-disabled);
+    border-color: var(--color-text-disabled);
+  }
+  .ds-check[data-force="focus"],
+  .ds-radio[data-force="focus"] {
+    outline: var(--focus-ring-width) solid var(--color-accent);
+    outline-offset: var(--focus-ring-offset);
+  }
+  @media (forced-colors: active) {
+    .ds-check,
+    .ds-radio,
+    select.ds-control {
+      appearance: auto;
+    }
+  }
+
+  /* ---------- Badges ---------- */
+  /*
+   * Une ligne quand la place le permet ; un libellé plus large que son conteneur passe à la ligne au lieu
+   * de déborder sur la colonne voisine (max-width, V09).
+   */
+  .ds-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
+    min-height: 1.375rem;
+    max-width: 100%;
+    padding-block: 0.1875rem;
+    padding-inline: 0.5rem;
+    border-radius: var(--radius-xs);
+    font-size: var(--text-meta);
+    line-height: 1rem;
+    font-weight: 600;
+    white-space: normal;
+    overflow-wrap: break-word;
+    vertical-align: middle;
+  }
+  .ds-badge > svg {
+    flex-shrink: 0;
+  }
+
+  /* ---------- Info-bulle ---------- */
+  .ds-tooltip {
+    position: absolute;
+    z-index: 60;
+    width: max-content;
+    max-width: min(18rem, calc(100vw - 2rem));
+    padding: 0.375rem 0.625rem;
+    border-radius: var(--radius-control);
+    background: var(--color-ink);
+    color: #fff;
+    font-size: var(--text-meta);
+    line-height: 1rem;
+    font-weight: 500;
+    text-align: left;
+    white-space: normal;
+    box-shadow: var(--shadow-overlay);
+    animation: ds-fade-in var(--duration-fast) var(--ease-standard);
+  }
+
+  /* ---------- Dialogues et tiroirs (<dialog> natif) ---------- */
+  .ds-dialog {
+    margin: auto;
+    padding: 0;
+    border: 0;
+    width: min(calc(100% - 2rem), var(--dialog-width, 35rem));
+    max-width: none;
+    max-height: min(calc(100dvh - 2rem), 52rem);
+    border-radius: var(--radius-dialog);
+    background: var(--color-surface);
+    color: var(--color-ink);
+    box-shadow: var(--shadow-overlay);
+    overflow: hidden;
+  }
+  .ds-dialog[open] {
+    display: flex;
+    flex-direction: column;
+    animation: ds-dialog-in var(--duration-slow) var(--ease-standard);
+  }
+  .ds-dialog::backdrop {
+    background: rgb(22 25 29 / 0.5);
+    animation: ds-fade-in var(--duration-slow) var(--ease-standard);
+  }
+  .ds-drawer {
+    margin: 0 0 0 auto;
+    width: min(calc(100% - 3rem), var(--dialog-width, 26rem));
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+  .ds-drawer[data-side="left"] {
+    margin: 0 auto 0 0;
+  }
+  .ds-drawer[open] {
+    animation: ds-drawer-in-right var(--duration-slow) var(--ease-standard);
+  }
+  .ds-drawer[data-side="left"][open] {
+    animation-name: ds-drawer-in-left;
+  }
+
+  /* ---------- Chargement ---------- */
+  .ds-skeleton {
+    display: block;
+    border-radius: var(--radius-xs);
+    background: var(--color-surface-sunken);
+    animation: ds-pulse 1.6s ease-in-out infinite;
+  }
+  .ds-progress-indeterminate::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 40%;
+    border-radius: inherit;
+    background: var(--color-accent);
+    animation: ds-indeterminate 1.5s var(--ease-standard) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-skeleton {
+      animation: none;
+    }
+    /* Sans mouvement : barre pleine atténuée, le texte dit que l'opération est en cours. */
+    .ds-progress-indeterminate::after {
+      width: 100%;
+      opacity: 0.4;
+      animation: none;
+    }
+  }
+
+  /* ---------- Lien d'évitement : hors écran tant qu'il n'a pas le focus ---------- */
+  .ds-skip {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 80;
+    transform: translateY(-200%);
+  }
+  .ds-skip:focus {
+    transform: none;
+  }
+
+  /* ---------- Menus et listes flottantes ---------- */
+  .ds-popover {
+    max-width: calc(100vw - 2rem);
+    border-radius: var(--radius-panel);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-overlay), 0 0 0 1px var(--color-line);
+  }
+
+  /* ---------- Touche clavier (documentation) ---------- */
+  .ds-kbd {
+    display: inline-block;
+    min-width: 1.5rem;
+    padding: 0 0.375rem;
+    border: 1px solid var(--color-line-strong);
+    border-bottom-width: 2px;
+    border-radius: var(--radius-xs);
+    background: var(--color-surface);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: 1.25rem;
+    text-align: center;
+    color: var(--color-ink);
+  }
+
+  /* ---------- Cibles tactiles ≥ 44 × 44 px sur mobile (pointeur grossier ou écran étroit) ---------- */
+  @media (pointer: coarse), (max-width: 39.99rem) {
+    .btn,
+    .btn-sm,
+    .btn-lg {
+      height: auto;
+      min-height: var(--spacing-control-lg);
+    }
+  }
+  /*
+   * Écran étroit (jusqu'à 320 px, soit un zoom de 400 %) : un libellé long passe à la ligne dans son
+   * bouton au lieu de le faire déborder de la page (WCAG 1.4.10). Les boutons à icône seule sont exclus.
+   */
+  @media (max-width: 39.99rem) {
+    .btn:not(.btn-icon) {
+      max-width: 100%;
+      padding-block: 0.5rem;
+      text-align: center;
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
+  }
+  @media (pointer: coarse), (max-width: 39.99rem) {
+    .btn-icon,
+    .btn-icon.btn-sm {
+      min-width: var(--spacing-control-lg);
+    }
+    .ds-control,
+    .ds-control-sm {
+      min-height: var(--spacing-control-lg);
+    }
+  }
 }
 
-body {
-  background: var(--color-chalk);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-h1,
-h2,
-h3 {
-  text-wrap: balance;
-}
-
-p {
-  text-wrap: pretty;
-}
-
-.tabular {
+@utility tabular {
   font-variant-numeric: tabular-nums;
-}
-
-/* Surface « carte » : anneau + profondeur très légère */
-.card {
-  background: var(--color-paper);
-  border-radius: var(--radius-md);
-  box-shadow:
-    0 0 0 1px var(--color-line),
-    0 1px 2px -1px rgb(19 35 58 / 0.06),
-    0 2px 6px rgb(19 35 58 / 0.03);
-}
-
-/* Étiquette d'inventaire (EXP_001, RULE_005…) */
-.specimen {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  padding: 1px 6px;
-  border-radius: var(--radius-xs);
-  border: 1px solid var(--color-line-strong);
-  background: var(--color-chalk);
-  color: var(--color-ink-2);
-  white-space: nowrap;
-}
-
-.eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--color-silt);
-}
-
-/* Valeur lue sur l'écran du logiciel historique */
-.legacy-value {
-  font-family: var(--font-legacy);
-  font-weight: 700;
-  color: var(--color-legacy-ink);
-  background: #fff;
-  border: 1px solid;
-  border-color: #9a9a9a #e4e4e4 #e4e4e4 #9a9a9a;
-  padding: 1px 6px;
-  border-radius: 0;
 }
 
 @keyframes enter {
@@ -147,10 +836,6 @@ p {
   }
 }
 
-.enter {
-  animation: enter 240ms var(--ease-out-quint) both;
-}
-
 @keyframes pulse-dot {
   0%,
   100% {
@@ -161,24 +846,42 @@ p {
   }
 }
 
-.live-dot {
-  animation: pulse-dot 1.6s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .enter {
-    animation: none;
-  }
-  .live-dot {
-    animation: none;
+@keyframes ds-fade-in {
+  from {
+    opacity: 0;
   }
 }
 
-button:not(:disabled):active {
-  transform: scale(0.97);
+@keyframes ds-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
 }
 
-:focus-visible {
-  outline: 2px solid var(--color-verdigris);
-  outline-offset: 2px;
+@keyframes ds-drawer-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes ds-drawer-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes ds-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes ds-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
 }

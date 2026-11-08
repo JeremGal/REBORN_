@@ -1,0 +1,92 @@
+{
+  "$comment": "Exemple de FORMAT du contrat connection_mission 1.1 (valeurs fictives, jeu de test) : jamais une vraie mission, jamais un vrai jeton.",
+  "contract": "connection_mission",
+  "contract_version": "1.1",
+  "mission_id": "MIS_0000000000",
+  "project_id": "MIG_00000000",
+  "status": "claimed",
+  "created_at": "2026-11-07T09:00:00.000Z",
+  "expires_at": "2026-11-08T09:00:00.000Z",
+  "requires_network": "public",
+  "investigation_id": "INV_001",
+  "executor": {
+    "id": "EXE_000000000000",
+    "lease_expires_at": "2026-11-07T09:02:00.000Z"
+  },
+  "target": {
+    "url": "https://logiciel.exemple.test",
+    "software": "Logiciel d'exemple",
+    "software_type": "CRM",
+    "company": "Entreprise d'exemple"
+  },
+  "authorization": {
+    "by": "Prénom Nom",
+    "at": "2026-11-07T08:55:00.000Z",
+    "statement": "Texte de la déclaration d'autorisation acceptée",
+    "version": "1.0"
+  },
+  "consent": {
+    "privacy_notice_version": "1.0",
+    "authorization_version": "1.0",
+    "accepted_at": "2026-11-07T08:55:00.000Z"
+  },
+  "objectives": [
+    "Se connecter à l'ancien logiciel avec le compte fourni et rapporter l'état de connexion"
+  ],
+  "constraints": [
+    "Ne jamais transmettre les identifiants à un modèle de langage : seul le code technique de l'exécuteur les utilise"
+  ],
+  "credential": {
+    "username_hint": "e••••••e",
+    "expires_at": "2026-11-07T09:15:00.000Z",
+    "credentials_expires_at": "2026-11-08T08:55:00.000Z",
+    "redeem_url": "/api/projects/MIG_00000000/credentials/redeem",
+    "token": "exemple-de-jeton-fictif-0000000000",
+    "token_expires_at": "2026-11-07T09:15:00.000Z",
+    "handling": "remplir hors du modèle : coffre H fill_secret_at ou CDP ; jamais dans la consigne"
+  },
+  "limits": {
+    "read_only": true,
+    "login_screenshots": false,
+    "max_duration_s": 3600
+  },
+  "report": {
+    "connection_status": {
+      "method": "POST",
+      "url": "/api/projects/MIG_00000000/connection",
+      "body": "{ \"status\": \"pending|connected|failed|mfa_required|human_needed\", \"detail\": \"…\", \"mission_id\": \"MIS_0000000000\" }"
+    },
+    "investigation": {
+      "method": "POST",
+      "url": "/api/investigations",
+      "body": "déjà créée par le Studio : investigation_id INV_001 (ne pas en créer une autre)"
+    },
+    "events": {
+      "method": "POST",
+      "url": "/api/events?project=MIG_00000000"
+    },
+    "screens": {
+      "method": "POST",
+      "url": "/api/schema?project=MIG_00000000"
+    },
+    "observations": {
+      "method": "POST",
+      "url": "/api/observations?project=MIG_00000000"
+    },
+    "exports": {
+      "method": "POST",
+      "url": "/api/migration/sources?project=MIG_00000000",
+      "body": "{ \"name\": \"clients.csv\", \"content_base64\": \"…\", \"mechanism\": \"export CSV\" }"
+    },
+    "heartbeat": {
+      "method": "POST",
+      "url": "/api/executor/heartbeat",
+      "body": "{ \"version\": \"1.1\", \"networks\": [\"public\"], \"login\": \"h_vault\", \"max_concurrent\": 1, \"active_missions\": [\"MIS_0000000000\"] } — toutes les 20 s"
+    },
+    "complete": {
+      "method": "POST",
+      "url": "/api/executor/missions/MIS_0000000000/complete",
+      "body": "{ \"outcome\": \"completed|failed\", \"detail\": \"…\", \"disposal\": { \"h_vault_item_deleted\": true, \"local_artifacts_purged\": true } }"
+    }
+  }
+}

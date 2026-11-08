@@ -1,46 +1,83 @@
-import { z } from "zod";
-import { loadProject, projectRoot } from "@/lib/migration/project";
-import { credentialStatus, forgetCredentials, storeCredentials } from "@/lib/migration/credentials";
-import { addEvent } from "@/lib/store";
+import { loadProject } from "@/lib/migration/project";
+import { credentialStatus, releaseCredentials, storeCredentials } from "@/lib/migration/credentials";
+import { onCredentialsReplaced, onCredentialsWithdrawn, projectEvent, sweepIfDue } from "@/lib/migration/analysis";
+import { CredentialsDepositSchema } from "@/lib/migration/project-contracts";
+import { recordConsent } from "@/lib/auth/consents";
+import { currentPrincipal, displayName, type UserPrincipal } from "@/lib/auth/principal";
+import { LEGAL_DOCUMENTS } from "@/lib/legal";
 import { ApiError, handler, json, readJson } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
 
-const known = (id: string) => {
-  if (!loadProject(id)) throw new ApiError(404, `Projet inconnu : ${id}`);
-};
+/*
+ * Identifiants de l'ancien logiciel d'un projet (SPEC §5, lot B2) — propriétaire du projet uniquement.
+ * Jamais de valeur en réponse : seul un indice masqué et l'échéance (24 h au plus).
+ */
 
-/** État des identifiants (jamais leur valeur). */
-export const GET = handler(async (_req, ctx) => {
-  const { id } = await ctx.params;
-  known(id);
-  return json(credentialStatus(projectRoot(id)));
-});
+function project(id: string) {
+  const p = loadProject(id);
+  if (!p) throw new ApiError(404, "Projet introuvable");
+  return p;
+}
 
-const Schema = z.object({ username: z.string().min(1).max(200), password: z.string().min(1).max(500), ttl_hours: z.number().min(0.25).max(168).optional() }).strict();
+const dateFr = (iso: string) => new Date(iso).toLocaleString("fr-FR", { timeZone: "Europe/Paris" });
 
-/** Confie les identifiants de l'ancien logiciel au projet : chiffrés, durée limitée, jamais renvoyés. */
+/** État : { stored, username_hint?, created_at?, expires_at? } (identifiants expirés : effacés, stored false). */
+export const GET = handler(
+  async (_req, ctx) => {
+    const { id } = await ctx.params;
+    await sweepIfDue();
+    project(id);
+    return json(credentialStatus(id));
+  },
+  { access: ["owner"], project: "param" },
+);
+
+/**
+ * Confie (ou remplace) les identifiants : { username, password, ttl_hours? ≤ 24, credentials_notice_version? }.
+ * Chiffrés (une clé par identifiant), effacés automatiquement à l'échéance ; le jeton de remise en cours
+ * est révoqué et une analyse en cours repart en file (l'agent recevra les nouveaux à sa prochaine prise).
+ */
 export const POST = handler(
   async (req, ctx) => {
     const { id } = await ctx.params;
-    known(id);
-    const parsed = Schema.safeParse(await readJson(req));
-    if (!parsed.success) throw new ApiError(400, "Identifiant et mot de passe requis");
-    const out = storeCredentials(projectRoot(id), parsed.data.username, parsed.data.password, parsed.data.ttl_hours);
-    addEvent({ source: "user", type: "migration", title: "Identifiants de l'ancien logiciel confiés au projet", detail: `Compte ${out.username_hint} · chiffrés, effacés le ${new Date(out.expires_at).toLocaleString("fr-FR")}` });
-    return json({ ok: true, ...out });
+    await sweepIfDue();
+    const p = project(id);
+    if (p.status === "PAUSED") throw new ApiError(409, "Projet en pause : reprenez-le avant toute opération");
+    const parsed = CredentialsDepositSchema.safeParse(await readJson(req));
+    if (!parsed.success) {
+      const issues = parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message }));
+      const ttl = issues.find((i) => i.path === "ttl_hours");
+      throw new ApiError(400, ttl ? ttl.message : "Identifiant et mot de passe requis", issues);
+    }
+    const b = parsed.data;
+    if (b.credentials_notice_version !== undefined && b.credentials_notice_version !== LEGAL_DOCUMENTS.identifiants.version) {
+      throw new ApiError(409, `Le traitement des identifiants a été mis à jour (version ${LEGAL_DOCUMENTS.identifiants.version}) : relisez-le avant de confier vos accès.`);
+    }
+    const who = currentPrincipal() as UserPrincipal; // access ["owner"] : compte connecté
+    const out = storeCredentials(id, b.username, b.password, b.ttl_hours ?? 24);
+    // Prise de connaissance enregistrée seulement si l'interface annonce la version affichée (jamais présumée).
+    if (b.credentials_notice_version !== undefined) await recordConsent({ userId: who.userId, projectId: id, kind: "credentials_notice" });
+    await onCredentialsReplaced(id, out.expires_at);
+    projectEvent(id, "Identifiants de l'ancien logiciel confiés au projet", `Compte ${out.username_hint} · chiffrés, effacés automatiquement le ${dateFr(out.expires_at)} au plus tard`, "user");
+    return json({ ok: true, stored: true, username_hint: out.username_hint, created_at: out.created_at, expires_at: out.expires_at });
   },
-  { write: true },
+  { access: ["owner"], project: "param", write: true },
 );
 
-/** Efface immédiatement les identifiants confiés (et tout jeton de remise en cours). */
+/**
+ * Suppression demandée par le client : jetons révoqués, clé de l'identifiant supprimée en premier,
+ * puis le fichier chiffré ; une analyse qui en dépendait est annulée. Les données déjà récupérées
+ * (sources, correspondances, exécutions) ne sont jamais touchées. Réponse : { revoked_at }.
+ */
 export const DELETE = handler(
   async (_req, ctx) => {
     const { id } = await ctx.params;
-    known(id);
-    forgetCredentials(projectRoot(id));
-    addEvent({ source: "user", type: "migration", title: "Identifiants de l'ancien logiciel effacés" });
-    return json({ ok: true });
+    project(id);
+    const who = currentPrincipal();
+    const out = releaseCredentials(id, `suppression demandée par ${displayName(who)}`);
+    await onCredentialsWithdrawn(id, "identifiants supprimés à la demande du client");
+    return json({ ok: true, stored: false, revoked_at: out.revoked_at, erased: out.erased });
   },
-  { write: true },
+  { access: ["owner"], project: "param", write: true },
 );
