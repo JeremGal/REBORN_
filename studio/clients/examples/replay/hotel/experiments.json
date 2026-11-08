@@ -1,0 +1,39 @@
+[
+  {
+    "_comment": "JEU DE TEST — observations INVENTÉES de l'explorateur (format Mouss -> Alan).",
+    "experiment_id": "EXP_001",
+    "application": "Logiciel hôtelier (jeu de test)",
+    "module": "Réservation",
+    "inputs": { "chambre": "101", "nuits": 3, "tarif": "Demi-pension" },
+    "observed_output": { "total_sejour": "255,00", "nombre_de_nuits": 3, "lignes": ["Nuit 1", "Nuit 2", "Nuit 3"] },
+    "status": "success",
+    "error": null,
+    "duration_s": 21.4,
+    "session_id": "sess-fictive",
+    "agent_view_url": "https://platform.exemple.test/agents/sessions/sess-fictive",
+    "agent_config": { "browser": "cloud", "model": "modele" },
+    "external_context": { "provider": "linkup", "status": "skipped" },
+    "evidence": { "trace_path": "artifacts/EXP_001/trace.json", "final_screenshot": "artifacts/EXP_001/step_05.png" }
+  },
+  {
+    "_comment": "JEU DE TEST — refus métier AFFICHÉ par le logiciel (status error attendu).",
+    "experiment_id": "EXP_002",
+    "application": "Logiciel hôtelier (jeu de test)",
+    "module": "Réservation",
+    "inputs": { "chambre": "101", "nuits": 0 },
+    "observed_output": {},
+    "status": "success",
+    "app_error": "Date de départ antérieure à la date d'arrivée.",
+    "session_id": "sess-fictive-2"
+  },
+  {
+    "_comment": "JEU DE TEST — échec technique de l'agent (status failed, exclu du score).",
+    "experiment_id": "EXP_003",
+    "application": "Logiciel hôtelier (jeu de test)",
+    "module": "Réservation",
+    "inputs": { "chambre": "201", "nuits": 2 },
+    "observed_output": null,
+    "status": "failed",
+    "error": "Délai de session dépassé"
+  }
+]

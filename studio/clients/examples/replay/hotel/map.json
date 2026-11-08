@@ -1,0 +1,51 @@
+{
+  "_comment": "JEU DE TEST — sortie d'explorateur INVENTÉE (aucune donnée réelle, aucun nom de marque) pour rejouer le protocole de l'exécuteur sans appeler H. Structure proche d'un logiciel hôtelier ouvert sans connexion.",
+  "exploration_id": "EXPL_TEST",
+  "application_url": "http://logiciel-hotelier.exemple.test",
+  "status": "success",
+  "app_map": {
+    "app_summary": "Logiciel de gestion hôtelière (jeu de test) : planning des chambres, réservations, tarifs.",
+    "pages": [
+      {
+        "name": "Accueil",
+        "url": "/",
+        "purpose": "Tableau de bord : occupation du jour, liens vers les modules.",
+        "elements": [
+          { "kind": "link", "label": "Planning" },
+          { "kind": "link", "label": "Nouvelle réservation" },
+          { "kind": "link", "label": "Sauvegarde / Backup" }
+        ],
+        "outputs": ["Chambres occupées : 12", "Arrivées du jour : 3"]
+      },
+      {
+        "name": "Nouvelle réservation",
+        "url": "/crea_prenotazione.php",
+        "purpose": "Créer une réservation sur une plage de dates et une chambre.",
+        "elements": [
+          { "kind": "select", "label": "Chambre", "options": ["101", "102", "201"] },
+          { "kind": "text_input", "label": "Date d'arrivée" },
+          { "kind": "text_input", "label": "Date de départ" },
+          { "kind": "number_input", "label": "Nombre de personnes" },
+          { "kind": "select", "label": "Tarif", "options": ["Standard", "Petit-déjeuner inclus", "Demi-pension"] },
+          { "kind": "checkbox", "label": "Acompte reçu" },
+          { "kind": "button", "label": "Enregistrer" }
+        ],
+        "outputs": ["Total séjour (EUR)", "Nombre de nuits"]
+      },
+      {
+        "name": "Sauvegarde / Backup",
+        "url": "/crea_backup.php",
+        "purpose": "Créer puis télécharger une sauvegarde complète des données.",
+        "elements": [
+          { "kind": "select", "label": "Année", "options": ["2024", "2025", "2026"] },
+          { "kind": "button", "label": "Créer la sauvegarde" },
+          { "kind": "button", "label": "Télécharger la sauvegarde" }
+        ],
+        "outputs": ["File created."]
+      }
+    ],
+    "workflows": ["Créer une réservation", "Consulter le planning", "Exporter une sauvegarde complète"],
+    "candidate_experiments": ["Faire varier le tarif et le nombre de nuits pour lire le total du séjour"],
+    "oddities": []
+  }
+}

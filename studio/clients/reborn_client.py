@@ -380,6 +380,18 @@ class Reborn:
             body["base_url"] = base_url
         return self._req("POST", "/api/migration/extract", body)
 
+    def propose_extraction_plan(self, plan: Json, project_id: Optional[str] = None) -> Json:
+        """Explorer → Studio : propose un plan d'extraction (contrat extraction_plan 1.1) à VALIDER par le
+        propriétaire. Le plan est enregistré « à valider » et ne s'exécute qu'après sa validation explicite
+        dans le Studio (chaque requête visible : méthode, adresse, champs, tables exclues).
+
+        Appel isolé ici volontairement : la route de proposition est POST /api/migration/extraction-plan
+        (corps = plan 1.1). Tant qu'elle n'existe pas côté Studio, l'appel lève RebornError 404/405 ;
+        l'exécuteur retombe alors sur un évènement de journal (voir h_executor.propose_extraction_plan)."""
+        pid = project_id or self.project
+        path = "/api/migration/extraction-plan" + (f"?project={urllib.parse.quote(pid)}" if pid else "")
+        return self._req("POST", path, plan)
+
     def migration_profile(self) -> Json:
         """Structure lue : tables, colonnes (types, formats, anomalies), clés, relations probables."""
         return self._req("GET", "/api/migration/profile")
@@ -402,15 +414,45 @@ class Reborn:
         """Résumé + détails (connexion, autorisation, historique des états). Jamais de secret."""
         return self._req("GET", f"/api/projects/{self._pid(project_id)}")
 
-    def create_project(self, company: str, authorized_by: str, software: Optional[str] = None, legacy_url: Optional[str] = None, software_type: Optional[str] = None, notes: Optional[str] = None, username: Optional[str] = None, password: Optional[str] = None) -> Json:
-        """Crée un projet (le propriétaire confirme son autorisation). Les identifiants éventuels
-        sont chiffrés côté Studio (24 h) et ne sont jamais renvoyés. Le client utilise ensuite ce projet."""
-        body: Json = {"company": company, "authorized": True, "authorized_by": authorized_by}
+    def create_project(
+        self,
+        company: str,
+        authorized_by: str,
+        software: Optional[str] = None,
+        legacy_url: Optional[str] = None,
+        software_type: Optional[str] = None,
+        notes: Optional[str] = None,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+        authorization_version: Optional[str] = None,
+        credentials_notice_version: Optional[str] = None,
+        ttl_hours: Optional[float] = None,
+    ) -> Json:
+        """Crée un projet au contrat project_create 1.3 (le propriétaire confirme son autorisation).
+
+        Aucun consentement n'est présumé : `authorization_version` est la version AFFICHÉE de la
+        déclaration d'autorisation acceptée (400 sans elle), et `credentials_notice_version` celle du
+        texte sur le traitement des identifiants, exigée dès qu'un identifiant est confié (400 sans elle,
+        409 si périmée). À défaut d'argument, REBORN_AUTHORIZATION_VERSION / REBORN_CREDENTIALS_NOTICE_VERSION
+        sont lues dans l'environnement ; il n'y a pas de valeur par défaut (un consentement s'annonce
+        explicitement). `authorized_by` est ignoré par le Studio (autorisation au nom du compte connecté) ;
+        il reste accepté pour compatibilité. Les identifiants sont chiffrés côté Studio (≤ 24 h) et jamais
+        renvoyés. Le client utilise ensuite ce projet."""
+        auth_v = authorization_version or os.environ.get("REBORN_AUTHORIZATION_VERSION")
+        if not auth_v:
+            raise RebornError("create_project : authorization_version requise (version AFFICHÉE de la déclaration d'autorisation acceptée, ou REBORN_AUTHORIZATION_VERSION)")
+        body: Json = {"company": company, "authorized": True, "authorized_by": authorized_by, "authorization_version": auth_v}
         for k, v in (("software", software), ("legacy_url", legacy_url), ("software_type", software_type), ("notes", notes)):
             if v:
                 body[k] = v
         if username and password:
+            notice_v = credentials_notice_version or os.environ.get("REBORN_CREDENTIALS_NOTICE_VERSION")
+            if not notice_v:
+                raise RebornError("create_project : credentials_notice_version requise dès que des identifiants sont confiés (ou REBORN_CREDENTIALS_NOTICE_VERSION)")
             body["credentials"] = {"username": username, "password": password}
+            if ttl_hours is not None:
+                body["credentials"]["ttl_hours"] = ttl_hours
+            body["credentials_notice_version"] = notice_v
         p = self._req("POST", "/api/projects", body)["project"]
         self.project = p["id"]
         return p
@@ -509,6 +551,13 @@ class Reborn:
     # ---------------------------------------------------------------- Divers
     def log(self, title: str, detail: Optional[str] = None, source: str = "explorer", investigation_id: Optional[str] = None) -> Json:
         return self._event(source, "log", title, detail, None, None, investigation_id)
+
+    def emit(self, events: List[Json], investigation_id: Optional[str] = None) -> Json:
+        """Envoi groupé d'évènements déjà formés (contrat event) : action, form_discovered, log…
+        `investigation_id` complète ceux qui n'en portent pas. Un évènement peut porter source, type,
+        title, detail, data, investigation_id. Réponse : { ok, ids, seqs }."""
+        payload = [{**({"investigation_id": investigation_id} if investigation_id else {}), **e} for e in events]
+        return self._req("POST", "/api/events", payload)
 
     def _event(
         self,
