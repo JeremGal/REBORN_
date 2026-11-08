@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>GESCOM v3.2 - Module DEVIS</title>
+<style>
+  body { margin: 0; background: #c0c0c0; font: 12px "MS Sans Serif", Tahoma, Arial, sans-serif; color: #000; }
+  .titlebar { background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold; padding: 3px 6px; }
+  .menubar { background: #d4d0c8; border-bottom: 1px solid #808080; padding: 2px 6px; }
+  .menubar span { margin-right: 14px; }
+  .window { margin: 10px; background: #d4d0c8; border: 2px outset #fff; padding: 8px; width: 560px; }
+  fieldset { border: 2px groove #fff; margin: 0 0 8px 0; padding: 6px; }
+  legend { font-weight: bold; }
+  table.form { border-collapse: collapse; }
+  table.form td { padding: 2px 4px; }
+  input, select { font: 12px Tahoma, Arial, sans-serif; border: 2px inset #fff; padding: 1px; height: 18px; }
+  input[type=number] { width: 70px; }
+  button { font: bold 12px Tahoma, Arial, sans-serif; border: 2px outset #fff; background: #d4d0c8; padding: 2px 14px; }
+  button:active { border-style: inset; }
+  table.result { border-collapse: collapse; width: 100%; background: #fff; }
+  table.result th, table.result td { border: 1px solid #808080; padding: 2px 6px; text-align: left; }
+  table.result th { background: #e0dcd4; width: 45%; }
+  #row-total td, #row-total th { font-weight: bold; font-size: 13px; background: #ffffe1; }
+  .statusbar { margin-top: 6px; border: 1px inset #fff; padding: 2px 4px; background: #d4d0c8; min-height: 14px; }
+  .error { color: #c00000; font-weight: bold; }
+</style>
+<script>
+  // Cache-busting: after a Blind Challenge rule change, always load the latest rules.js
+  // (GitHub Pages serves it with max-age=600).
+  document.write('<script src="rules.js?v=' + Date.now() + '"><\/script>');
+</script>
+</head>
+<body>
+<div class="titlebar">GESCOM v3.2 - [Saisie devis client]</div>
+<div class="menubar"><span><u>F</u>ichier</span><span><u>E</u>dition</span><span><u>D</u>evis</span><span><u>O</u>utils</span><span><u>?</u></span></div>
+
+<div class="window">
+  <fieldset>
+    <legend>Saisie</legend>
+    <table class="form">
+      <tr>
+        <td><label for="product">Article :</label></td>
+        <td>
+          <select id="product" name="product">
+            <option value="">-- choisir --</option>
+            <option value="A">A - Vis inox M8 (lot)</option>
+            <option value="B">B - Roulement 6204-2RS</option>
+            <option value="C">C - Joint torique NBR</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td><label for="quantity">Quantit&eacute; :</label></td>
+        <td><input type="number" id="quantity" name="quantity" min="1" step="1" value="1"></td>
+      </tr>
+      <tr>
+        <td><label for="customer_type">Type client :</label></td>
+        <td>
+          <select id="customer_type" name="customer_type">
+            <option value="standard">Standard</option>
+            <option value="premium">Premium</option>
+            <option value="distributeur">Distributeur</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button type="button" id="btn-calc">Calculer</button></td>
+      </tr>
+    </table>
+  </fieldset>
+
+  <fieldset>
+    <legend>R&eacute;sultat</legend>
+    <table class="result">
+      <tr><th>Total HT (EUR)</th><td id="total">-</td></tr>
+    </table>
+  </fieldset>
+
+  <div class="statusbar" id="status">Pr&ecirc;t.</div>
+</div>
+
+<script>
+  // Legacy-style computation. Only the final total is displayed (black box).
+  function fmt(n) { return n.toFixed(2).replace('.', ','); }
+
+  function compute(product, qty, customer) {
+    var R = LEGACY_RULES;
+    var amount = R.UNIT_PRICE[product] * qty;
+    if (qty >= R.QTY_DISCOUNT_THRESHOLD) amount = amount * (1 - R.QTY_DISCOUNT_PCT / 100);
+    amount = amount * (1 - (R.CUSTOMER_DISCOUNT_PCT[customer] || 0) / 100);
+    amount = Math.round(amount * 100) / 100;
+    if (amount < R.FREE_SHIPPING_FROM) amount += R.SHIPPING_FEE;
+    return amount;
+  }
+
+  document.getElementById('btn-calc').addEventListener('click', function () {
+    var status = document.getElementById('status');
+    var totalCell = document.getElementById('total');
+    var product = document.getElementById('product').value;
+    var qtyRaw = document.getElementById('quantity').value;
+    var customer = document.getElementById('customer_type').value;
+    var qty = Number(qtyRaw);
+
+    totalCell.textContent = '-';
+    status.className = 'statusbar';
+
+    if (!product) { status.className = 'statusbar error'; status.textContent = 'ERR-101 : article obligatoire.'; return; }
+    if (!Number.isInteger(qty) || qty < 1 || qty > 9999) {
+      status.className = 'statusbar error'; status.textContent = 'ERR-102 : quantite invalide (1 a 9999).'; return;
+    }
+
+    status.textContent = 'Calcul en cours...';
+    setTimeout(function () {   // legacy apps are slow
+      totalCell.textContent = fmt(compute(product, qty, customer));
+      status.textContent = 'Devis calcule.';
+    }, 400);
+  });
+</script>
+</body>
+</html>

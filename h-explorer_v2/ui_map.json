@@ -1,0 +1,12 @@
+{
+  "product": {
+    "B": "B - Roulement 6204-2RS",
+    "A": "A - Vis inox M8 (lot)",
+    "C": "C - Joint torique NBR"
+  },
+  "customer_type": {
+    "distributeur": "Distributeur",
+    "premium": "Premium",
+    "standard": "Standard"
+  }
+}
