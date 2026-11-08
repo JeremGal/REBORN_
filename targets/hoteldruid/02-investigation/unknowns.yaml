@@ -1,0 +1,10 @@
+# Open questions. A probe of kind h-mission becomes a block 1 mission with: node tools/reborn.mjs ask <target>
+target: hoteldruid
+unknowns: []
+# Example:
+# - id: U-001
+#   question: Is the invoice number reset every year?
+#   why: the numbering rule of F-002 depends on it
+#   blocks: [F-002]
+#   probe: { kind: h-mission, suggestion: "Create an invoice dated 31/12, then one dated 01/01, read both numbers." }
+#   status: open

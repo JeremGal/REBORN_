@@ -1,0 +1,21 @@
+{
+  "_comment": "JEU DE TEST — métadonnées de la doublure : issue de connexion simulée et mécanismes d'export INVENTÉS (plan d'extraction 1.1). Aucune donnée réelle, aucun nom de marque.",
+  "connection": "connected",
+  "system": "Logiciel hôtelier (jeu de test)",
+  "plan_mechanisms": [
+    {
+      "id": "sauvegarde_complete",
+      "label": "Sauvegarde complète (jeu de test)",
+      "kind": "database",
+      "url": "/crea_backup.php",
+      "method": "POST",
+      "form": { "anno": "2026", "id_sessione": "", "azione": "SI", "mostra_header": "NO", "salva_backup": "1", "compresso": "SI" },
+      "prepare": [
+        { "url": "/crea_backup.php", "method": "POST", "form": { "anno": "2026", "id_sessione": "", "azione": "SI", "crea_backup": "1" } }
+      ],
+      "format": "tagged-dump",
+      "compression": "gzip",
+      "exclude_tables": ["utenti", "sessioni", "transazioni", "privilegi"]
+    }
+  ]
+}
