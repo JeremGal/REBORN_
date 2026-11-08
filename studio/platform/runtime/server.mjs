@@ -29,6 +29,10 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const SPEC = JSON.parse(fs.readFileSync(path.join(ROOT, "app.json"), "utf8"));
 const PORT = Number(process.env.PORT ?? SPEC.app.port ?? 5050);
 const HOST = process.env.HOST ?? "127.0.0.1";
+// Lancé par REBORN Studio derrière un tunnel https : toutes les connexions arrivent de 127.0.0.1. Avec TRUST_PROXY=1,
+// l'adresse du visiteur est la DERNIÈRE de X-Forwarded-For (ajoutée par le tunnel ; une valeur envoyée par le
+// visiteur reste devant et n'est pas lue). Sans TRUST_PROXY, ou pour une connexion qui ne vient pas de cette machine : adresse de la connexion.
+const TRUST_PROXY = process.env.TRUST_PROXY === "1";
 const DB_PATH = path.join(ROOT, "data", "app.db");
 const FILES = path.join(ROOT, "files");
 const BACKUPS = path.join(ROOT, "backups");
@@ -612,15 +616,21 @@ function openSession(res, u, status, body) {
   db.prepare(`UPDATE "_users" SET "last_login_at" = ? WHERE "id" = ?`).run(now(), u.id);
   return send(res, status, body, undefined, { "set-cookie": sessionCookie(sid) });
 }
-/** Limiteur de tentatives (connexion, activation, mot de passe actuel) : 8 échecs → 5 minutes de blocage. */
+/**
+ * Limiteur de tentatives (connexion, activation, mot de passe actuel) : `max` échecs (8 par défaut) → 5 minutes de blocage.
+ * Appelé APRÈS la lecture du corps de la requête : contrôle, vérification et comptage se font alors d'un seul tenant
+ * (code synchrone), si bien que des essais envoyés en même temps ne passent pas tous avant le premier échec compté.
+ */
 function assertNotLimited(key) {
   const f = failures.get(key);
   if (f && f.until > Date.now()) throw new HttpError(429, "Trop de tentatives : réessayez dans quelques minutes.");
 }
-function countFailure(key) {
+function countFailure(key, max = 8) {
+  // Mémoire bornée : au-delà de 10 000 clés (adresses ou identifiants inventés), seules les clés bloquées sont gardées
+  if (failures.size > 10_000) for (const [k, v] of failures) if (!(v.until > Date.now())) failures.delete(k);
   const f = failures.get(key) ?? { n: 0, until: 0 };
   f.n++;
-  if (f.n >= 8) Object.assign(f, { n: 0, until: Date.now() + 5 * 60e3 });
+  if (f.n >= max) Object.assign(f, { n: 0, until: Date.now() + 5 * 60e3 });
   failures.set(key, f);
 }
 
@@ -1281,10 +1291,17 @@ function branding() {
 /* ------------------------------------------------------------------ */
 const STATIC = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".json": "application/json", ".woff2": "font/woff2", ".txt": "text/plain; charset=utf-8", ".png": "image/png" };
 
+function clientAddress(req) {
+  const peer = req.socket.remoteAddress ?? "";
+  if (!TRUST_PROXY || !/^(127\.0\.0\.1|::1|::ffff:127\.0\.0\.1)$/.test(peer)) return peer;
+  const fwd = String(req.headers["x-forwarded-for"] ?? "").split(",").map((s) => s.trim()).filter(Boolean).at(-1);
+  return fwd || peer;
+}
+
 async function route(req, res) {
   const url = new URL(req.url ?? "/", "http://localhost");
   const p = url.pathname;
-  const ip = req.socket.remoteAddress ?? "";
+  const ip = clientAddress(req);
   if (!p.startsWith("/api/")) {
     const file = path.join(PUBLIC, p === "/" ? "index.html" : path.normalize(p).replace(/^(\.\.[/\\])+/, ""));
     if (!file.startsWith(PUBLIC) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return send(res, 200, fs.readFileSync(path.join(PUBLIC, "index.html")), STATIC[".html"]);
@@ -1306,25 +1323,31 @@ async function route(req, res) {
   }
 
   if (p === "/api/auth/login" && req.method === "POST") {
-    assertNotLimited(`login:${ip}`);
     const { username, password } = await readJson(req, 10000);
     const ident = String(username ?? "").trim();
     const key = ident.includes("@") ? ident.toLowerCase() : ident;
     const u = (key && (db.prepare(`SELECT * FROM "_users" WHERE "username" = ?`).get(key) ?? (key.includes("@") ? db.prepare(`SELECT * FROM "_users" WHERE "email" = ?`).get(key) : null))) || null;
+    // Deux compteurs : par visiteur (8 échecs) et par compte visé (30 échecs, quelle que soit l'adresse annoncée :
+    // borne les essais même si un programme connecté directement choisit son adresse). Identifiant inconnu : compté de la même façon.
+    const account = `account:${u ? u.id : key}`;
+    assertNotLimited(`login:${ip}`);
+    assertNotLimited(account);
     // scrypt est calculé même pour un identifiant inconnu : la réponse ne révèle pas quels comptes existent
     const ok = checkPassword(String(password ?? ""), u?.password_hash ?? fakeHash());
     if (!u || u.disabled || !ok) {
       countFailure(`login:${ip}`);
+      countFailure(account, 30);
       throw new HttpError(401, "Identifiant ou mot de passe incorrect");
     }
     failures.delete(`login:${ip}`);
+    failures.delete(account);
     audit(u.username, "login", null, null, null, null);
     return openSession(res, u, 200, { ok: true, user: u.username, role: u.role });
   }
   // Écran d'activation : à qui s'adresse le lien (sans rien consommer). Même limiteur que l'activation.
   if (p === "/api/auth/invitation" && req.method === "POST") {
-    assertNotLimited(`activate:${ip}`);
     const body = await readJson(req, 2000);
+    assertNotLimited(`activate:${ip}`);
     importInvites();
     const token = String(body.token ?? "");
     const inv = TOKEN_RE.test(token) ? db.prepare(`SELECT * FROM "_invites" WHERE "token_sha256" = ?`).get(sha256(token)) : null;
@@ -1337,8 +1360,8 @@ async function route(req, res) {
     return send(res, 200, { email: view.email, role: view.role, expires_at: view.expires_at, existing_account: view.existing_account, password_min: PASSWORD_MIN });
   }
   if (p === "/api/auth/activate" && req.method === "POST") {
-    assertNotLimited(`activate:${ip}`);
     const body = await readJson(req, 10000);
+    assertNotLimited(`activate:${ip}`);
     importInvites();
     const token = String(body.token ?? "");
     const sha = TOKEN_RE.test(token) ? sha256(token) : null;
@@ -1391,8 +1414,8 @@ async function route(req, res) {
     return send(res, 200, { user: sess.user, role: sess.role, email: userView(u).email, created_at: u.created_at, password_changed_at: u.password_changed_at ?? null, last_login_at: u.last_login_at ?? null });
   }
   if (p === "/api/auth/password" && req.method === "POST") {
-    assertNotLimited(`password:${sess.uid}`);
     const { current, next } = await readJson(req, 10000);
+    assertNotLimited(`password:${sess.uid}`);
     const u = db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(sess.uid);
     if (!checkPassword(String(current ?? ""), u.password_hash)) {
       countFailure(`password:${sess.uid}`);
@@ -1630,6 +1653,9 @@ const server = http.createServer((req, res) => {
     send(res, 500, { ok: false, error: "Erreur interne" });
   });
 });
+// Aucune ligne d'en-tête écartée (Node n'en garde que 1000 par défaut) : une requête remplie de lignes inutiles ne peut pas
+// faire disparaître l'adresse ajoutée en dernier par le tunnel. La taille totale reste bornée (16 Kio).
+server.maxHeadersCount = 0;
 server.listen(PORT, HOST, () => {
   fs.mkdirSync(path.dirname(PID_FILE), { recursive: true });
   fs.writeFileSync(PID_FILE, JSON.stringify({ pid: process.pid, port: PORT, host: HOST, app: SPEC.app.id, started_at: now() }));

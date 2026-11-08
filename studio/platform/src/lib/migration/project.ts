@@ -1221,7 +1221,7 @@ export interface ProjectSummary {
   anomalies: { pending_decisions: number; gaps: number; failed_checks: number };
   business_model: { version: number; status: string } | null;
   /** `url` : adresse à ouvrir depuis le navigateur, donnée par le serveur (tunnel https publié, sinon adresse locale). */
-  app: { id: string; port: number; url: string; deployed_at: string; run_id: string } | null;
+  app: { id: string; port: number; url: string; running: boolean; deployed_at: string; run_id: string } | null;
 }
 
 /** Résumé calculé à partir de ce qui a réellement été fait dans le projet. */
@@ -1284,7 +1284,19 @@ export function projectSummary(id: string): ProjectSummary | null {
  * ou un hébergeur ne sert que le Studio.
  */
 export function deliveredSummary(app: { id: string; port: number }, active: { at: string; run_id: string }) {
-  return { id: app.id, port: app.port, url: appPublicUrl(app.port), deployed_at: active.at, run_id: active.run_id };
+  return { id: app.id, port: app.port, url: appPublicUrl(app.port), running: appRunning(app.id), deployed_at: active.at, run_id: active.run_id };
+}
+
+/** Logiciel livré en marche : fichier PID de son dossier (écrit au démarrage, effacé à l'arrêt) et processus vivant. */
+function appRunning(id: string): boolean {
+  try {
+    const p = JSON.parse(fs.readFileSync(path.join(appsRoot(), id, "run", "server.pid"), "utf8")) as { pid?: unknown; app?: unknown };
+    if (typeof p.pid !== "number" || (p.app !== undefined && p.app !== id)) return false;
+    process.kill(p.pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /** Projets visibles par le principal (SPEC §3) ; sans principal (appel interne) : tous. */

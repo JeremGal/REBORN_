@@ -2,6 +2,7 @@ import { ApiError, handler, json } from "@/lib/http";
 import { currentPrincipal, displayName } from "@/lib/auth/principal";
 import { APP_INVITE_DEFAULT_TTL_HOURS, issueAppInvite } from "@/lib/migration/app-access";
 import { deliveredApp, getProject, migrationLog } from "@/lib/migration/project";
+import { requireAppPublicUrl } from "@/lib/migration/public-urls";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,7 @@ export const POST = handler(
     const active = p.deployments.some((d) => d.status === "active");
     const app = active ? deliveredApp(p) : null;
     if (!app) throw new ApiError(409, "Aucun logiciel livré en service pour ce projet : mettez-le en service à l'étape Reconstruction.");
+    await requireAppPublicUrl(app.port); // mode tunnels : jamais de lien vers 127.0.0.1 ; vérifié AVANT d'émettre (le lien valide n'est pas révoqué)
     const out = issueAppInvite(app.id, { email: who.email, role: "admin", by: `${displayName(who)} (REBORN Studio)`, ttlHours: APP_INVITE_DEFAULT_TTL_HOURS });
     migrationLog(
       `Accès au logiciel livré préparé pour ${displayName(who)}`,

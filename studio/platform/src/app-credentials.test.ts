@@ -17,6 +17,10 @@ beforeAll(async () => {
     let body = "";
     req.on("data", (c) => (body += c));
     req.on("end", () => {
+      if (req.method === "GET" && req.url === "/api/health") {
+        res.writeHead(200, { "content-type": "application/json" });
+        return res.end(JSON.stringify({ ok: true, app: "hotel-test-app" }));
+      }
       if (req.method === "POST" && req.url === "/api/auth/activate") {
         const b = JSON.parse(body || "{}");
         received.push({ token: b.token, password: b.password, origin: String(req.headers.origin ?? "") });
@@ -62,10 +66,19 @@ describe("identifiant et mot de passe du logiciel livré", () => {
     expect(a.password).not.toBe(b.password);
   });
 
-  it("logiciel arrêté : refus explicite (409)", async () => {
+  it("logiciel arrêté : refus explicite (409), sans invitation écrite (le lien valable du propriétaire n'est pas révoqué)", async () => {
     const { issueAppCredentials } = await import("@/lib/migration/app-access");
     fs.mkdirSync(path.join(tmp, "arrete-app"), { recursive: true });
     fs.writeFileSync(path.join(tmp, "arrete-app", "app.json"), JSON.stringify({ app: { id: "arrete-app", port: 1 } }));
     await expect(issueAppCredentials("arrete-app", { email: "client.test@exemple.test", by: "Test" })).rejects.toMatchObject({ status: 409 });
+    expect(fs.existsSync(path.join(tmp, "arrete-app", ".secrets", "invites"))).toBe(false);
+  });
+
+  it("un autre logiciel répond sur ce port : refus (409), sans invitation écrite", async () => {
+    const { issueAppCredentials } = await import("@/lib/migration/app-access");
+    fs.mkdirSync(path.join(tmp, "autre-app"), { recursive: true });
+    fs.writeFileSync(path.join(tmp, "autre-app", "app.json"), JSON.stringify({ app: { id: "autre-app", port } }));
+    await expect(issueAppCredentials("autre-app", { email: "client.test@exemple.test", by: "Test" })).rejects.toMatchObject({ status: 409 });
+    expect(fs.existsSync(path.join(tmp, "autre-app", ".secrets", "invites"))).toBe(false);
   });
 });

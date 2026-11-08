@@ -83,13 +83,14 @@ for (let i = 0; i < 40 && !ready; i++) {
   if (!ready) await sleep(500);
 }
 if (!ready) throw new Error(`agent ngrok injoignable (voir ${path.join(LOGS, "ngrok.log")})`);
+const API_TIMEOUT = () => AbortSignal.timeout(5000); // un appel bloqué à l'agent ngrok ne fige pas la publication des autres logiciels
 async function tunnel(name, port) {
-  const list = await (await fetch(NGROK_API)).json();
+  const list = await (await fetch(NGROK_API, { signal: API_TIMEOUT() })).json();
   const found = list.tunnels?.find((t) => t.name === name);
   // Un tunnel du même nom vers un AUTRE port est fermé : jamais d'adresse publique vers un service inattendu.
   if (found && new URL(found.config?.addr?.includes("://") ? found.config.addr : `http://${found.config?.addr}`).port === String(port)) return found.public_url;
-  if (found) await fetch(`${NGROK_API}/${encodeURIComponent(name)}`, { method: "DELETE" });
-  const r = await fetch(NGROK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name, addr: String(port), proto: "http" }) });
+  if (found) await fetch(`${NGROK_API}/${encodeURIComponent(name)}`, { method: "DELETE", signal: API_TIMEOUT() });
+  const r = await fetch(NGROK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name, addr: String(port), proto: "http" }), signal: API_TIMEOUT() });
   const j = await r.json();
   if (!j.public_url) throw new Error(`tunnel ${name} refusé : ${JSON.stringify(j).slice(0, 200)}`);
   return j.public_url;
@@ -149,30 +150,52 @@ function runExecutor() {
 }
 runExecutor();
 
-/* 4. Logiciels livrés : un tunnel https dès qu'un logiciel tourne (fichier run/server.pid). */
+/* 4. Logiciels livrés : un tunnel https dès qu'un logiciel tourne (fichier run/server.pid). L'adresse de chaque logiciel en
+   marche est revérifiée auprès de l'agent ngrok à chaque passage (une adresse d'une session ngrok précédente est remplacée),
+   chaque seconde, pour que le Studio, qui attend ce tunnel avant de répondre, réponde vite. */
+let watching = false;
 async function watchApps() {
-  const urls = JSON.parse(fs.readFileSync(URLS_FILE, "utf8"));
-  let changed = false;
-  for (const id of fs.readdirSync(APPS)) {
-    let pid;
+  if (watching) return;
+  watching = true;
+  try {
+    let urls = {};
     try {
-      pid = JSON.parse(fs.readFileSync(path.join(APPS, id, "run", "server.pid"), "utf8"));
-    } catch {
-      continue;
-    }
-    const key = String(pid?.port ?? "");
-    if (!/^\d+$/.test(key) || urls[key]) continue;
-    try {
-      urls[key] = await tunnel(`app-${key}`, key);
-      changed = true;
-      console.log(`Logiciel livré « ${id} » publié : ${urls[key]}`);
+      urls = JSON.parse(fs.readFileSync(URLS_FILE, "utf8")) ?? {};
     } catch (e) {
-      console.warn(`Tunnel du logiciel livré « ${id} » impossible : ${e instanceof Error ? e.message : e}`);
+      console.warn(`Fichier des adresses illisible (${e instanceof Error ? e.message : e}) : il est reconstruit.`);
     }
+    let changed = false;
+    for (const id of fs.readdirSync(APPS)) {
+      let pid;
+      try {
+        pid = JSON.parse(fs.readFileSync(path.join(APPS, id, "run", "server.pid"), "utf8"));
+      } catch {
+        continue;
+      }
+      const key = String(pid?.port ?? "");
+      if (!/^\d+$/.test(key)) continue;
+      try {
+        const url = await tunnel(`app-${key}`, key);
+        if (urls[key] !== url) {
+          urls[key] = url;
+          changed = true;
+          console.log(`Logiciel livré « ${id} » publié : ${url}`);
+        }
+      } catch (e) {
+        console.warn(`Tunnel du logiciel livré « ${id} » impossible : ${e instanceof Error ? e.message : e}`);
+      }
+    }
+    if (changed) {
+      // Écriture atomique : le Studio, qui lit ce fichier à tout moment, ne voit jamais un fichier vide ou à moitié écrit
+      fs.writeFileSync(`${URLS_FILE}.tmp`, JSON.stringify(urls, null, 1), { mode: 0o600 });
+      fs.renameSync(`${URLS_FILE}.tmp`, URLS_FILE);
+    }
+  } finally {
+    watching = false;
   }
-  if (changed) fs.writeFileSync(URLS_FILE, JSON.stringify(urls, null, 1), { mode: 0o600 });
 }
-setInterval(() => watchApps().catch(() => {}), 4000);
+watchApps().catch(() => {});
+setInterval(() => watchApps().catch(() => {}), 1000);
 
 console.log(`REBORN en ligne : ${STUDIO_URL}`);
 console.log(`Agent H : ${hKey ? "clé présente (jamais affichée)" : "CLÉ H ABSENTE — les analyses échoueront proprement"} · journaux : ${LOGS}`);

@@ -48,16 +48,22 @@ function secretDir(dir: string) {
  * `http://127.0.0.1:<port>/#/activation/<jeton>` (port lu dans son app.json). Le jeton est dans le
  * fragment `#` : il n'est envoyé ni au serveur dans l'adresse, ni dans l'en-tête Referer.
  */
-export function issueAppInvite(appId: string, i: AppInviteInput): { link: string; expires_at: string; port: number } {
+/** Port du logiciel livré `appId`, lu dans son app.json. */
+function deliveredPort(appId: string): number {
   if (!APP_ID.test(appId)) throw new ApiError(400, "Identifiant de logiciel invalide");
-  const dir = path.join(appsRoot(), appId);
   let port: number;
   try {
-    port = Number((JSON.parse(fs.readFileSync(path.join(dir, "app.json"), "utf8")) as { app?: { port?: unknown } }).app?.port);
+    port = Number((JSON.parse(fs.readFileSync(path.join(appsRoot(), appId, "app.json"), "utf8")) as { app?: { port?: unknown } }).app?.port);
   } catch {
     throw new ApiError(404, "Logiciel non généré");
   }
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new ApiError(409, "Port du logiciel livré illisible (app.json)");
+  return port;
+}
+
+export function issueAppInvite(appId: string, i: AppInviteInput): { link: string; expires_at: string; port: number } {
+  const port = deliveredPort(appId);
+  const dir = path.join(appsRoot(), appId);
   const email = String(i.email ?? "")
     .trim()
     .toLowerCase();
@@ -113,6 +119,13 @@ function readablePassword(): string {
  * (le logiciel livré réinitialise le mot de passe d'un compte existant). Logiciel arrêté : 409.
  */
 export async function issueAppCredentials(appId: string, i: { email: string; by: string }): Promise<{ login: string; password: string; url: string }> {
+  // Logiciel joignable AVANT d'écrire l'invitation : un refus ne laisse aucune invitation qui révoquerait, au prochain
+  // démarrage du logiciel, le lien d'activation encore valable du propriétaire.
+  const port = deliveredPort(appId);
+  const h = await fetch(`http://127.0.0.1:${port}/api/health`, { signal: AbortSignal.timeout(3000) })
+    .then((r) => (r.ok ? (r.json() as Promise<{ app?: unknown }>) : null))
+    .catch(() => null);
+  if (h?.app !== appId) throw new ApiError(409, "Le logiciel livré ne répond pas : démarrez-le, puis réessayez.");
   const invite = issueAppInvite(appId, { email: i.email, role: "admin", by: i.by, ttlHours: 1 });
   const token = decodeURIComponent(invite.link.slice(invite.link.indexOf("#/activation/") + "#/activation/".length));
   const password = readablePassword();

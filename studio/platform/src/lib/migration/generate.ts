@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { appPublicUrl } from "./public-urls";
+import { appPublicUrl, tunnelMode, waitAppPublicUrl } from "./public-urls";
 import path from "node:path";
 import { spawn, type ChildProcess } from "node:child_process";
 import { randomBytes, randomUUID } from "node:crypto";
@@ -232,7 +232,10 @@ export async function startApp(appId: string): Promise<void> {
     throw new ApiError(409, `Le port ${port} est déjà utilisé par une autre application`);
   }
   const log = fs.openSync(path.join(dir, "app.log"), "a");
-  const env = { PATH: process.env.PATH ?? "", PORT: String(port), HOST: "127.0.0.1" } as unknown as NodeJS.ProcessEnv;
+  // TRUST_PROXY, en mode tunnels seulement (hors tunnels, personne n'ajoute X-Forwarded-For) : le limiteur de tentatives
+  // compte par visiteur (dernière adresse de X-Forwarded-For, ajoutée par le tunnel) ; le compteur par compte, lui,
+  // borne les essais quelle que soit l'adresse annoncée.
+  const env = { PATH: process.env.PATH ?? "", PORT: String(port), HOST: "127.0.0.1", ...(tunnelMode() ? { TRUST_PROXY: "1" } : {}) } as unknown as NodeJS.ProcessEnv;
   const child: ChildProcess = spawn(process.execPath, ["--no-warnings", "server.mjs"], { cwd: dir, env, stdio: ["ignore", log, log], detached: true });
   child.unref();
   fs.closeSync(log);
@@ -391,9 +394,11 @@ export async function deploy(runId: string, by: string, opts: { force?: boolean 
   const deployment: Deployment = { id: `DEP_${randomUUID().slice(0, 8)}`, at: new Date().toISOString(), by, run_id: runId, app_dir: path.relative(path.resolve(process.cwd(), ".."), dir), backup: backup ? path.basename(backup) : null, status: "active" };
   recordDeployment(deployment, { id: appId, port });
   await startApp(appId);
+  // Mode tunnels : la réponse (et l'évènement qui rafraîchit les écrans) attend l'adresse https du logiciel.
+  const url = await waitAppPublicUrl(port);
   migrationLog(`Nouveau logiciel « ${mapping.target.name} » mis en service (${runId})`, `${meta.summary.imported} enregistrement(s) migré(s) · ${backup ? "base précédente sauvegardée" : "première mise en service"}${wasManaged ? " · redémarré" : ""}`);
   transition("PUBLISHED", `Nouveau logiciel « ${mapping.target.name} » en service sur le port ${port} (${runId}${rules.length ? `, modèle métier v${rules.at(-1)!.version}` : ", sans modèle métier"})`);
-  return { deployment, url: appPublicUrl(port), report: report! };
+  return { deployment, url, report: report! };
   }
 }
 
@@ -462,8 +467,9 @@ export async function upgradeApp(by: string): Promise<{ app_id: string; backup: 
   const rules = installableRules(mapping);
   writeApp(specFor(mapping, active.run_id, meta.mapping_version, port, rules), dir, rules);
   await startApp(appId);
+  const url = await waitAppPublicUrl(port);
   migrationLog(`Logiciel « ${mapping.target.name} » mis à jour (moteur et spécification)`, `Données conservées · sauvegarde ${path.basename(backup)}${rules.length ? ` · modèle métier v${rules.map((r) => r.version).join(", v")}` : ""} · par ${by}`);
-  return { app_id: appId, backup: path.basename(backup), rules_versions: rules.map((r) => r.version), url: appPublicUrl(port) };
+  return { app_id: appId, backup: path.basename(backup), rules_versions: rules.map((r) => r.version), url };
 }
 
 /** Port libre pour un nouveau logiciel livré : à partir de CRM_PORT (5050), hors ports des autres projets. */

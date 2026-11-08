@@ -83,7 +83,7 @@ describe("journey", () => {
 
   it("logiciel livré : toutes les étapes faites sauf la Découverte, action « Ouvrir la livraison »", () => {
     const s = summary(
-      { status: "PUBLISHED", data: { sources: 1, source_rows: 10, imported: 10, rejected: 0 }, app: { id: "garage-crm", port: 5051, url: "http://127.0.0.1:5051", deployed_at: "2026-11-03T10:00:00.000Z", run_id: "RUN_1" } },
+      { status: "PUBLISHED", data: { sources: 1, source_rows: 10, imported: 10, rejected: 0 }, app: { id: "garage-crm", port: 5051, url: "http://127.0.0.1:5051", running: true, deployed_at: "2026-11-03T10:00:00.000Z", run_id: "RUN_1" } },
       { connection: true, extraction: true, mapping: true, migration: true, rules: true, delivery: true },
     );
     const j = journey(s, 0);

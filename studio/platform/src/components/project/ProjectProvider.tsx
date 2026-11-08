@@ -37,7 +37,7 @@ export interface ProjectSummary {
   anomalies: { pending_decisions: number; gaps: number; failed_checks: number };
   business_model: { version: number; status: string } | null;
   /** Adresse à ouvrir depuis le navigateur, donnée par le serveur (jamais l'hôte du Studio suivi du port). */
-  app: { id: string; port: number; url: string; deployed_at: string; run_id: string } | null;
+  app: { id: string; port: number; url: string; running: boolean; deployed_at: string; run_id: string } | null;
 }
 
 export interface ProjectDetails {

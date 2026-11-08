@@ -2,6 +2,7 @@ import { ApiError, handler, json } from "@/lib/http";
 import { currentPrincipal, displayName } from "@/lib/auth/principal";
 import { issueAppCredentials } from "@/lib/migration/app-access";
 import { deliveredApp, getProject, migrationLog } from "@/lib/migration/project";
+import { requireAppPublicUrl } from "@/lib/migration/public-urls";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export const POST = handler(
     const active = p.deployments.some((d) => d.status === "active");
     const app = active ? deliveredApp(p) : null;
     if (!app) throw new ApiError(409, "Aucun logiciel livré en service pour ce projet : mettez-le en service à l'étape Reconstruction.");
+    await requireAppPublicUrl(app.port); // mode tunnels : adresse https prête avant de générer (aucun mot de passe remplacé sinon)
     const out = await issueAppCredentials(app.id, { email: who.email, by: `${displayName(who)} (REBORN Studio)` });
     migrationLog(
       `Identifiant et mot de passe du logiciel livré générés pour ${displayName(who)}`,

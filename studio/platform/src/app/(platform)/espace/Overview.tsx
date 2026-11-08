@@ -104,15 +104,18 @@ function DeliveredRow({ e }: { e: ProjectEntry }) {
         <p className="truncate text-body font-semibold text-ink">{projectName(s)}</p>
         <p className="mt-0.5 text-small text-text-3">
           <span className="font-mono text-meta text-text-2">{app.id}</span> · mis en service le {when(app.deployed_at)}
+          {!app.running && <span className="text-text-2"> · arrêté (données conservées) : à redémarrer depuis la Livraison</span>}
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
-        <a href={app.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm">
-          <ExternalLink size={15} aria-hidden />
-          Ouvrir le logiciel
-          <span className="sr-only"> {projectName(s)} (nouvel onglet)</span>
-        </a>
-        <Button href={`/projets/${s.id}/livraison`} variant="secondary" size="sm">
+        {app.running && (
+          <a href={app.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm">
+            <ExternalLink size={15} aria-hidden />
+            Ouvrir le logiciel
+            <span className="sr-only"> {projectName(s)} (nouvel onglet)</span>
+          </a>
+        )}
+        <Button href={`/projets/${s.id}/livraison`} variant={app.running ? "secondary" : "primary"} size="sm">
           Livraison
           <span className="sr-only"> ({projectName(s)})</span>
         </Button>
