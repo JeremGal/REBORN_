@@ -38,6 +38,31 @@ const RULES_DIR = path.join(ROOT, "rules");
 /** Fichier de processus : permet d'arrêter ce logiciel sans dépendre du processus qui l'a lancé. */
 const PID_FILE = path.join(ROOT, "run", "server.pid");
 const ENTITIES = new Map(SPEC.entities.map((e) => [e.name, e]));
+/**
+ * Vues d'ensemble déclarées par la spécification (planning : une ligne par ressource, une colonne par jour).
+ * Validées une fois au démarrage : les noms de champs viennent de la spécification et doivent désigner des
+ * champs de l'entité, du bon type (dates, référence) ; une vue incohérente est ignorée (message au démarrage).
+ */
+const IDENT = /^[a-z][a-z0-9_]{0,59}$/;
+const VIEWS = new Map();
+for (const v of Array.isArray(SPEC.views) ? SPEC.views : []) {
+  const e = ENTITIES.get(v?.entity);
+  const f = (n) => (typeof n === "string" && IDENT.test(n) ? (e?.fields.find((x) => x.name === n) ?? null) : null);
+  const r = f(v?.resource);
+  const why =
+    v?.kind !== "planning" ? "type de vue inconnu (planning attendu)"
+    : !IDENT.test(String(v.name ?? "")) || VIEWS.has(v.name) ? "nom absent, invalide ou déjà utilisé"
+    : !e ? `entité inconnue ${v.entity}`
+    : f(v.start)?.type !== "date" || f(v.end)?.type !== "date" || v.start === v.end ? "start et end doivent désigner deux champs date"
+    : r?.type !== "reference" || !ENTITIES.has(r.references) ? "resource doit désigner une référence"
+    : v.title != null && !f(v.title) ? `champ titre inconnu ${v.title}`
+    : v.status != null && !f(v.status) ? `champ statut inconnu ${v.status}`
+    : null;
+  if (why) console.error(`[app] vue ${v?.name ?? "?"} ignorée : ${why}`);
+  else VIEWS.set(v.name, { entity: e.name, kind: "planning", name: v.name, label: String(v.label || e.label).slice(0, 80), start: v.start, end: v.end, resource: v.resource, title: v.title ?? null, status: v.status ?? null });
+}
+/** Vue dont `name` est l'entité des éléments (la première) : sert aux titres « ressource · du … au … ». */
+const viewOf = (name) => [...VIEWS.values()].find((v) => v.entity === name) ?? null;
 const ROLES = { admin: 3, editor: 2, viewer: 1 };
 const ROLE_FR = { admin: "Administration", editor: "Saisie", viewer: "Lecture" };
 const q = (id) => `"${String(id).replace(/"/g, '""')}"`;
@@ -661,25 +686,90 @@ function entityOf(name) {
   if (!e) throw new HttpError(404, `Entité inconnue : ${name}`);
   return e;
 }
-const titleOf = (e, row) => (row ? String(row[e.title_field] ?? `#${row.id}`) : null);
+/* Titres affichés --------------------------------------------------------- */
+const blank = (v) => v === null || v === undefined || v === "";
+const NUMERIC_LIKE = /^[\s#\d.,:/_-]+$/;
+const frDate = (s) => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s ?? ""));
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : String(s ?? "");
+};
+const rangeText = (s, e) => (s && e && e !== s ? `du ${frDate(s)} au ${frDate(e)}` : s ? `le ${frDate(s)}` : "");
+/** Listes à deux valeurs oui / non sans libellé (S/N, O/N, Y/N, 1/0…) : « Oui » / « Non » (même règle que l'interface). */
+const YES_NO = [["s", "n"], ["o", "n"], ["y", "n"], ["j", "n"], ["1", "0"], ["oui", "non"], ["si", "no"], ["sì", "no"], ["yes", "no"], ["true", "false"], ["vrai", "faux"]];
+function yesNo(f) {
+  const opts = f?.type === "enum" ? (f.options ?? []) : [];
+  if (opts.length !== 2 || opts.some((o) => o.label)) return null;
+  const vals = opts.map((o) => String(o.value));
+  for (const [y, n] of YES_NO) {
+    const yes = vals.find((v) => v.trim().toLowerCase() === y);
+    const no = vals.find((v) => v.trim().toLowerCase() === n);
+    if (yes !== undefined && no !== undefined) return { yes, no };
+  }
+  return null;
+}
+/** Valeur d'un champ en texte (titres) : dates à la française, libellés des listes. Les références sont résolues à part. */
+function textOf(f, v) {
+  if (blank(v)) return "";
+  if (f?.type === "date") return frDate(v);
+  if (f?.type === "boolean") return Number(v) ? "Oui" : "Non";
+  if (f?.type === "enum") {
+    const o = f.options?.find((x) => x.value === String(v));
+    if (o?.label) return o.label;
+    const yn = yesNo(f);
+    if (yn && String(v) === yn.yes) return "Oui";
+    if (yn && String(v) === yn.no) return "Non";
+  }
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(v)) ? frDate(v) : String(v);
+}
+/**
+ * Titres affichés des enregistrements `ids` de l'entité `e`, comme dans l'interface : champ titre ; s'il est
+ * vide ou n'est qu'un numéro et que l'entité est dessinée dans un planning, « titre lié · ressource · du … au … » ;
+ * sinon la clé de l'ancien logiciel ; en dernier recours « #id ». Un seul niveau de références (aucune boucle).
+ */
+function displayTitles(e, ids, depth = 0) {
+  const out = new Map();
+  const list = [...new Set(ids.filter((x) => !blank(x)))];
+  if (!e || !list.length) return out;
+  const field = (n) => (n ? (e.fields.find((x) => x.name === n) ?? null) : null);
+  const tf = field(e.title_field);
+  const v = depth === 0 ? viewOf(e.name) : null;
+  const cols = [`"id"`, `"_source_key" AS "_k"`, `${tf ? q(tf.name) : "NULL"} AS "_t"`];
+  if (v) cols.push(`${q(v.start)} AS "_s"`, `${q(v.end)} AS "_e"`, `${q(v.resource)} AS "_r"`, `${v.title ? q(v.title) : "NULL"} AS "_w"`);
+  const rows = [];
+  for (let i = 0; i < list.length; i += 500) {
+    const part = list.slice(i, i + 500);
+    rows.push(...db.prepare(`SELECT ${cols.join(", ")} FROM ${q(e.name)} WHERE "id" IN (${part.map(() => "?").join(",")})`).all(...part));
+  }
+  const linked = (f, values) => (f?.type === "reference" && depth < 1 ? displayTitles(ENTITIES.get(f.references), values, depth + 1) : null);
+  const text = (f, refs, raw) => (blank(raw) ? "" : refs ? (refs.get(raw) ?? `#${raw}`) : textOf(f, raw));
+  const tRefs = linked(tf, rows.map((r) => r._t));
+  const wf = v ? field(v.title) : null;
+  const wRefs = v ? linked(wf, rows.map((r) => r._w)) : null;
+  const rRefs = v ? linked(field(v.resource), rows.map((r) => r._r)) : null;
+  for (const r of rows) {
+    const t = text(tf, tRefs, r._t);
+    if (v && !blank(r._s) && (!t || NUMERIC_LIKE.test(t))) out.set(r.id, [text(wf, wRefs, r._w), text(null, rRefs, r._r), rangeText(r._s, r._e)].filter(Boolean).join(" · "));
+    else out.set(r.id, t || (blank(r._k) ? `#${r.id}` : String(r._k)));
+  }
+  return out;
+}
 
 function refTitles(e, rows) {
   const out = rows.map(() => ({}));
   for (const f of e.fields.filter((x) => x.type === "reference")) {
     const target = ENTITIES.get(f.references);
-    const ids = [...new Set(rows.map((r) => r[f.name]).filter((v) => v !== null))];
-    if (!ids.length || !target) continue;
-    const found = new Map(db.prepare(`SELECT "id", ${q(target.title_field ?? "id")} AS t FROM ${q(target.name)} WHERE "id" IN (${ids.map(() => "?").join(",")})`).all(...ids).map((r) => [r.id, r.t]));
+    if (!target) continue;
+    const found = displayTitles(target, rows.map((r) => r[f.name]));
     rows.forEach((r, i) => {
-      if (r[f.name] !== null) out[i][f.name] = found.get(r[f.name]) ?? `#${r[f.name]}`;
+      if (!blank(r[f.name])) out[i][f.name] = found.get(r[f.name]) ?? `#${r[f.name]}`;
     });
   }
   return out;
 }
 
-/** Recherche textuelle d'une entité (champs de recherche, sinon titre ; clé d'origine exacte). */
+/** Recherche textuelle d'une entité (champs de recherche et titre ; clé d'origine exacte). */
 function searchClause(e, term) {
-  const cols = e.search_fields?.length ? e.search_fields : [e.title_field].filter(Boolean);
+  const cols = [...new Set([...(e.search_fields ?? []), e.title_field].filter((c) => c && e.fields.some((f) => f.name === c)))];
   const like = `%${term.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
   if (!cols.length) return { sql: `"_source_key" = ?`, args: [term] };
   return { sql: `(${cols.map((c) => `${q(c)} LIKE ? ESCAPE '\\'`).join(" OR ")} OR "_source_key" = ?)`, args: [...cols.map(() => like), term] };
@@ -722,11 +812,10 @@ function list(e, params) {
     where.push(`"_migrated" = ?`);
     args.push(Number(params.get("_migrated")));
   }
-  const sortField = fieldsOf(e).some((f) => f.name === params.get("sort")) ? params.get("sort") : "id";
   const dir = params.get("dir") === "desc" ? "DESC" : "ASC";
   const w = where.length ? `WHERE ${where.join(" AND ")}` : "";
   const total = db.prepare(`SELECT COUNT(*) AS n FROM ${q(e.name)} ${w}`).get(...args).n;
-  const rows = db.prepare(`SELECT * FROM ${q(e.name)} ${w} ORDER BY ${q(sortField)} ${dir}, "id" ${dir} LIMIT ? OFFSET ?`).all(...args, per, (page - 1) * per);
+  const rows = db.prepare(`SELECT * FROM ${q(e.name)} ${w} ORDER BY ${orderExpr(e, params.get("sort"))} ${dir}, "id" ${dir} LIMIT ? OFFSET ?`).all(...args, per, (page - 1) * per);
   const refs = refTitles(e, rows);
   return { rows: rows.map((r, i) => ({ ...r, _refs: refs[i] })), total, page, per };
 }
@@ -750,16 +839,53 @@ function searchAll(term, per) {
   return { q: term, groups };
 }
 
+/**
+ * Expression de tri d'une liste : un champ de l'entité, ou « <référence>.<champ> » = un champ de la fiche liée
+ * (ex. la date de début du séjour d'une ligne qui n'a pas de date). Noms vérifiés dans la spécification ; à
+ * défaut, l'ordre de création.
+ */
+function orderExpr(e, sort) {
+  if (typeof sort === "string" && fieldsOf(e).some((f) => f.name === sort)) return q(sort);
+  const m = /^([a-z][a-z0-9_]{0,59})\.([a-z][a-z0-9_]{0,59})$/.exec(String(sort ?? ""));
+  const rf = m && e.fields.find((f) => f.name === m[1] && f.type === "reference");
+  const te = rf && ENTITIES.get(rf.references);
+  // Table liée renommée dans la sous-requête : la référence désigne toujours l'enregistrement de la liste
+  if (te && fieldsOf(te).some((f) => f.name === m[2])) return `(SELECT "_lie".${q(m[2])} FROM ${q(te.name)} AS "_lie" WHERE "_lie"."id" = ${q(e.name)}.${q(m[1])})`;
+  return `"id"`;
+}
+/**
+ * Tri « le plus récent d'abord » des enregistrements liés à une fiche : début du planning de l'entité, sinon
+ * première date de ses colonnes de liste, sinon sa première date (jamais un champ technique), sinon la date de
+ * début de la fiche liée dessinée dans un planning ; à défaut, l'ordre de création. Le même tri sert aux pages
+ * suivantes (GET /api/e/<entité>?<via>=<id>&sort=…&dir=desc).
+ */
+function recentField(ce) {
+  const v = viewOf(ce.name);
+  if (v) return v.start;
+  const tech = new Set(ce.technical_fields ?? []);
+  const dates = ce.fields.filter((f) => f.type === "date" && !tech.has(f.name));
+  const own = (dates.find((f) => (ce.list_fields ?? []).includes(f.name)) ?? dates[0])?.name;
+  if (own) return own;
+  for (const f of ce.fields.filter((x) => x.type === "reference" && !tech.has(x.name))) {
+    const tv = viewOf(f.references);
+    if (tv) return `${f.name}.${tv.start}`;
+  }
+  return null;
+}
+
 function detail(e, id) {
   const row = db.prepare(`SELECT * FROM ${q(e.name)} WHERE "id" = ?`).get(id);
   if (!row) throw new HttpError(404, "Enregistrement introuvable");
   const children = {};
   for (const c of e.children) {
     const ce = ENTITIES.get(c.entity);
-    const rows = db.prepare(`SELECT * FROM ${q(c.entity)} WHERE ${q(c.via)} = ? ORDER BY "id" DESC LIMIT 100`).all(id);
+    // Relation portée par un champ technique (clé recomposée de l'ancien logiciel) : pas un enregistrement lié à montrer
+    if (!ce || !ce.fields.some((f) => f.name === c.via) || (ce.technical_fields ?? []).includes(c.via)) continue;
+    const sort = recentField(ce);
+    const rows = db.prepare(`SELECT * FROM ${q(c.entity)} WHERE ${q(c.via)} = ? ORDER BY ${orderExpr(ce, sort)} DESC, "id" DESC LIMIT 100`).all(id);
     const total = db.prepare(`SELECT COUNT(*) AS n FROM ${q(c.entity)} WHERE ${q(c.via)} = ?`).get(id).n;
     const refs = refTitles(ce, rows);
-    children[`${c.entity}.${c.via}`] = { total, rows: rows.map((r, i) => ({ ...r, _refs: refs[i] })) };
+    children[`${c.entity}.${c.via}`] = { total, sort: { field: sort ?? "id", dir: "desc" }, rows: rows.map((r, i) => ({ ...r, _refs: refs[i] })) };
   }
   const lineage = db.prepare(`SELECT "source_system", "source_table", "source_key", "source_file", "source_file_sha256", "source_row", "source_row_hash", "transforms", "run_id", "migrated_at" FROM "_lineage" WHERE "entity" = ? AND "record_id" = ?`).get(e.name, id);
   const files = db.prepare(`SELECT "id", "filename", "mime", "size", "sha256", "_migrated", "created_at", "created_by", "source_path" FROM "_files" WHERE "entity" = ? AND "record_id" = ? ORDER BY "id"`).all(e.name, id);
@@ -977,8 +1103,90 @@ function remove(e, id, sess) {
   }
 }
 
+/* Vues d'ensemble : planning ------------------------------------------------ */
+// Un élément occupe les jours de son début (inclus) à sa fin (exclue) ; sans fin, ou si la fin précède le
+// début, il occupe son seul jour de début. Les dates sont du texte AAAA-MM-JJ (contrôle du schéma) : la
+// comparaison de textes suit l'ordre des dates.
+const PLANNING_MAX_DAYS = 92;
+const PLANNING_MAX_ITEMS = 3000;
+const PLANNING_MAX_RESOURCES = 500;
+const validDay = (s) => {
+  const m = ISO.exec(String(s ?? ""));
+  if (!m) return null;
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  return d.getUTCFullYear() === +m[1] && d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3] ? String(s) : null;
+};
+const plusDays = (iso, n) => new Date(Date.parse(`${iso}T00:00:00Z`) + n * 86400e3).toISOString().slice(0, 10);
+const localDay = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+/** Condition SQL « l'élément occupe au moins un jour de [?1, ?2] » ; paramètres : (fin de période, début, début). */
+const overlaps = (v) => `${q(v.start)} IS NOT NULL AND ${q(v.start)} <= ? AND (CASE WHEN ${q(v.end)} IS NULL OR ${q(v.end)} <= ${q(v.start)} THEN ${q(v.start)} >= ? ELSE ${q(v.end)} > ? END)`;
+/** Textes affichés d'un champ pour une liste de valeurs (titres liés pour une référence). */
+function textsOf(e, fieldName, values) {
+  const f = fieldName ? e.fields.find((x) => x.name === fieldName) : null;
+  const refs = f?.type === "reference" ? displayTitles(ENTITIES.get(f.references), values) : null;
+  return (v) => (blank(v) ? null : refs ? (refs.get(v) ?? `#${v}`) : textOf(f, v));
+}
+function planning(v, from, to) {
+  const e = ENTITIES.get(v.entity);
+  const re = ENTITIES.get(e.fields.find((f) => f.name === v.resource).references);
+  const total = db.prepare(`SELECT COUNT(*) AS n FROM ${q(re.name)}`).get().n;
+  const ids = db.prepare(`SELECT "id" FROM ${q(re.name)} ORDER BY "id" LIMIT ?`).all(PLANNING_MAX_RESOURCES).map((r) => r.id);
+  const titles = displayTitles(re, ids);
+  const coll = new Intl.Collator("fr", { numeric: true, sensitivity: "base" });
+  const resources = ids.map((id) => ({ id, title: titles.get(id) ?? `#${id}` })).sort((a, b) => coll.compare(a.title, b.title) || a.id - b.id);
+  const cols = [`"id"`, `${q(v.start)} AS "start"`, `${q(v.end)} AS "end"`, `${q(v.resource)} AS "resource"`, `${v.title ? q(v.title) : "NULL"} AS "title"`, `${v.status ? q(v.status) : "NULL"} AS "status"`];
+  const rows = db.prepare(`SELECT ${cols.join(", ")} FROM ${q(e.name)} WHERE ${overlaps(v)} ORDER BY ${q(v.start)}, "id" LIMIT ?`).all(to, from, from, PLANNING_MAX_ITEMS + 1);
+  const kept = rows.slice(0, PLANNING_MAX_ITEMS);
+  const title = v.title ? textsOf(e, v.title, kept.map((r) => r.title)) : (() => {
+    const own = displayTitles(e, kept.map((r) => r.id));
+    return (_, r) => own.get(r.id) ?? null;
+  })();
+  // Ressource hors de la liste (au-delà de la limite) : son titre accompagne l'élément
+  const known = new Set(ids);
+  const others = displayTitles(re, kept.map((r) => r.resource).filter((x) => !blank(x) && !known.has(x)));
+  return {
+    view: v,
+    from,
+    to,
+    resources,
+    resources_total: total,
+    items: kept.map((r) => ({ id: r.id, start: r.start, end: r.end, resource: r.resource, title: title(r.title, r), status: r.status, ...(others.has(r.resource) ? { resource_title: others.get(r.resource) } : {}) })),
+    truncated: { items: rows.length > PLANNING_MAX_ITEMS, resources: total > ids.length },
+  };
+}
+/** « Aujourd'hui » pour chaque planning : arrivées, départs, en cours, ressources occupées sur le total. */
+function todayBoards(day) {
+  return [...VIEWS.values()].map((v) => {
+    const e = ENTITIES.get(v.entity);
+    const re = ENTITIES.get(e.fields.find((f) => f.name === v.resource).references);
+    const s = q(v.start);
+    const en = q(v.end);
+    const r = q(v.resource);
+    const occupies = `${s} <= ? AND (CASE WHEN ${en} IS NULL OR ${en} <= ${s} THEN ${s} = ? ELSE ${en} > ? END)`;
+    const count = (where, ...args) => db.prepare(`SELECT COUNT(*) AS n FROM ${q(e.name)} WHERE ${where}`).get(...args).n;
+    const pick = (where, ...args) => db.prepare(`SELECT "id", ${r} AS "resource", ${v.title ? q(v.title) : "NULL"} AS "title" FROM ${q(e.name)} WHERE ${where} ORDER BY "id" LIMIT 12`).all(...args);
+    const arriving = pick(`${s} = ?`, day);
+    const leaving = pick(`${en} = ? AND ${en} > ${s}`, day);
+    const all = [...arriving, ...leaving];
+    const rt = displayTitles(re, all.map((x) => x.resource));
+    const tt = v.title ? textsOf(e, v.title, all.map((x) => x.title)) : () => null;
+    const item = (x) => ({ id: x.id, title: tt(x.title), resource: blank(x.resource) ? null : (rt.get(x.resource) ?? `#${x.resource}`) });
+    return {
+      view: v.name,
+      entity: e.name,
+      day,
+      arrivals: { total: count(`${s} = ?`, day), items: arriving.map(item) },
+      departures: { total: count(`${en} = ? AND ${en} > ${s}`, day), items: leaving.map(item) },
+      current: count(occupies, day, day, day),
+      current_titles: v.title ? db.prepare(`SELECT COUNT(DISTINCT ${q(v.title)}) AS n FROM ${q(e.name)} WHERE ${q(v.title)} IS NOT NULL AND ${occupies}`).get(day, day, day).n : null,
+      occupied: db.prepare(`SELECT COUNT(DISTINCT ${r}) AS n FROM ${q(e.name)} WHERE ${r} IS NOT NULL AND ${occupies}`).get(day, day, day).n,
+      resources: db.prepare(`SELECT COUNT(*) AS n FROM ${q(re.name)}`).get().n,
+    };
+  });
+}
+
 /* Tableau de bord ------------------------------------------------------- */
-function dashboard() {
+function dashboard(todayParam = null) {
   const cards = SPEC.dashboard.cards.map((c) => {
     const e = ENTITIES.get(c.entity);
     if (c.kind === "sum") return { ...c, value: db.prepare(`SELECT COALESCE(SUM(${q(c.field)}), 0) AS v FROM ${q(e.name)}`).get().v };
@@ -990,8 +1198,9 @@ function dashboard() {
     .all()
     .map((r) => {
       const e = ENTITIES.get(r.entity);
-      const row = e?.title_field && r.record_id !== null ? db.prepare(`SELECT ${q(e.title_field)} AS t FROM ${q(e.name)} WHERE "id" = ?`).get(r.record_id) : null;
-      return { ...r, title: row?.t ?? null };
+      // Enregistrement supprimé depuis : pas de titre (l'interface affiche « Libellé #id »)
+      const exists = e && r.record_id !== null && db.prepare(`SELECT 1 FROM ${q(e.name)} WHERE "id" = ?`).get(r.record_id);
+      return { ...r, title: exists ? (displayTitles(e, [r.record_id]).get(r.record_id) ?? null) : null };
     });
   const meta = Object.fromEntries(db.prepare(`SELECT "key", "value" FROM "_meta"`).all().map((r) => [r.key, r.value]));
   // Derniers enregistrements de chaque module de la navigation (les plus récents d'abord)
@@ -1007,7 +1216,10 @@ function dashboard() {
   const since = new Date(Date.now() - 30 * 86400e3).toISOString();
   const counts = Object.fromEntries(db.prepare(`SELECT "action", COUNT(*) AS n FROM "_audit" WHERE "ts" >= ? AND "action" IN ('create', 'update', 'delete', 'file_added') GROUP BY 1`).all(since).map((r) => [r.action, r.n]));
   const people = db.prepare(`SELECT COUNT(DISTINCT "user") AS n FROM "_audit" WHERE "ts" >= ? AND "action" IN ('create', 'update', 'delete', 'file_added')`).get(since).n;
-  return { cards, breakdowns, recent, latest, activity: { since, ...counts, people }, migration: meta.migration_run ? { run: meta.migration_run, source_system: meta.source_system, migrated_at: meta.migrated_at } : null };
+  // « Aujourd'hui » (plannings) : jour de l'appareil de la personne s'il est fourni et valide, sinon celui du serveur
+  const day = validDay(todayParam) ?? localDay();
+  const today = VIEWS.size ? { day, boards: todayBoards(day) } : null;
+  return { cards, breakdowns, recent, latest, today, activity: { since, ...counts, people }, migration: meta.migration_run ? { run: meta.migration_run, source_system: meta.source_system, migrated_at: meta.migrated_at } : null };
 }
 
 /* Sauvegardes ----------------------------------------------------------- */
@@ -1173,6 +1385,7 @@ async function route(req, res) {
     return send(res, 200, { ok: true }, undefined, { "set-cookie": sessionCookie("", 0) });
   }
   requireRole(sess, "viewer");
+  let m;
   if (p === "/api/auth/me") {
     const u = db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(sess.uid);
     return send(res, 200, { user: sess.user, role: sess.role, email: userView(u).email, created_at: u.created_at, password_changed_at: u.password_changed_at ?? null, last_login_at: u.last_login_at ?? null });
@@ -1204,7 +1417,21 @@ async function route(req, res) {
     });
     const counts = Object.fromEntries(SPEC.navigation.filter((n) => ENTITIES.has(n.entity)).map((n) => [n.entity, db.prepare(`SELECT COUNT(*) AS n FROM ${q(n.entity)}`).get().n]));
     const me = db.prepare(`SELECT * FROM "_users" WHERE "id" = ?`).get(sess.uid);
-    return send(res, 200, { ...spec, entities, rules: rulesInfo(), branding: branding(), counts, user: { name: sess.user, role: sess.role, email: userView(me).email } });
+    // Seules les vues valides (contrôlées au démarrage) sont proposées à l'interface
+    return send(res, 200, { ...spec, entities, views: [...VIEWS.values()], rules: rulesInfo(), branding: branding(), counts, user: { name: sess.user, role: sess.role, email: userView(me).email } });
+  }
+  m = /^\/api\/views\/([a-z][a-z0-9_]{0,59})$/.exec(p);
+  if (m) {
+    if (req.method !== "GET") throw new HttpError(405, "Méthode non autorisée");
+    const v = VIEWS.get(m[1]);
+    if (!v) throw new HttpError(404, "Vue inconnue");
+    const first = new Date();
+    const from = url.searchParams.has("from") ? validDay(url.searchParams.get("from")) : localDay(new Date(first.getFullYear(), first.getMonth(), 1));
+    const to = url.searchParams.has("to") ? validDay(url.searchParams.get("to")) : localDay(new Date(first.getFullYear(), first.getMonth() + 1, 0));
+    if (!from || !to) throw new HttpError(400, "Période invalide : dates AAAA-MM-JJ attendues (from, to)");
+    if (to < from) throw new HttpError(400, "Période invalide : la fin précède le début");
+    if (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`) >= PLANNING_MAX_DAYS * 86400e3) throw new HttpError(400, `Période trop longue : ${PLANNING_MAX_DAYS} jours au plus`);
+    return send(res, 200, planning(v, from, to));
   }
   if (p === "/api/search" && req.method === "GET") {
     const per = Math.min(20, Math.max(1, Number(url.searchParams.get("per") ?? 5) || 5));
@@ -1231,9 +1458,9 @@ async function route(req, res) {
     const r = evaluateBinding(packages.get(ctx.version) ?? null, ctx.b, accessFor(e, row), (field) => fieldsOf(e).find((f) => f.name === field)?.type ?? null);
     return send(res, 200, { status: r.status, version: ctx.version, module: ctx.b.module, values: r.values, message: r.message, steps: (r.result?.trace ?? []).filter((t) => t.applied).map((t) => ({ label: t.label, rule_id: t.rule_id, delta: t.delta ?? null, after: t.after ?? null })) });
   }
-  if (p === "/api/dashboard") return send(res, 200, dashboard());
+  if (p === "/api/dashboard") return send(res, 200, dashboard(url.searchParams.get("today")));
 
-  let m = /^\/api\/e\/([a-z][a-z0-9_]*)(?:\/(\d+))?(?:\/(files|reprice))?$/.exec(p);
+  m = /^\/api\/e\/([a-z][a-z0-9_]*)(?:\/(\d+))?(?:\/(files|reprice))?$/.exec(p);
   if (m) {
     const e = entityOf(m[1]);
     const id = m[2] ? Number(m[2]) : null;

@@ -11,8 +11,15 @@
  *   (colonne <col>_cle) ; iddatainizio / iddatafine → périodes de la même année.
  * - Jamais importés : blocs <file> (configuration), tables de comptes, sessions, intégrations, modèles de
  *   documents et réglages, colonnes nommées comme un secret, tables vides. Tout est listé dans le rapport.
- * - Aucune valeur recalculée : une chaîne vide dans une colonne numérique devient NULL (absence), le reste
- *   est copié tel quel.
+ * - Aucune valeur d'origine recalculée : une chaîne vide dans une colonne numérique devient NULL (absence), le
+ *   reste est copié tel quel.
+ * - Séjour lisible (réservations `prenota` et réservations annulées `prenotacanc`) : colonnes AJOUTÉES en fin de
+ *   table, les colonnes d'origine restent intactes. `date_arrivee` = début du jour n° iddatainizio et
+ *   `date_depart` = fin du jour n° iddatafine (lendemain de la dernière nuit), lus dans les périodes de la MÊME
+ *   année (dates ISO AAAA-MM-JJ) ; `nuits` = iddatafine − iddatainizio + 1 ; `type_tarif` et `prix_tarif`
+ *   = les deux premières parties de `tariffa` (« type#@&prix », prix en nombre ; une 3e partie « p », tarif par
+ *   personne, reste dans `tariffa`). Valeur introuvable ou illisible : NULL, jamais devinée. Le rapport compte
+ *   les dates résolues et non résolues, les nuits incohérentes avec les dates, les tarifs découpés ou non.
  *
  *   node scripts/tagged-dump-to-sqlite.mjs <sauvegarde[.gz]> <sortie.db>
  */
@@ -74,7 +81,7 @@ for (const line of text.split("\n")) {
 }
 
 /* 2. Familles annuelles et exclusions. */
-const report = { tables_read: tables.length, rows_read: tables.reduce((a, t) => a + t.rows.length, 0), rejected_rows: bad, excluded: [], removed_columns: [], written: [] };
+const report = { tables_read: tables.length, rows_read: tables.reduce((a, t) => a + t.rows.length, 0), rejected_rows: bad, excluded: [], removed_columns: [], written: [], derived: [] };
 const kept = [];
 for (const t of tables) {
   const base = /^(.*?)(\d{4})$/.exec(t.name)?.[1] ?? t.name;
@@ -124,6 +131,98 @@ for (const s of specs) {
   }
 }
 
+/* 3 bis. Séjour lisible : colonnes dérivées AJOUTÉES aux réservations (les colonnes d'origine restent intactes). */
+const intOf = (v) => (typeof v === "string" && /^-?\d+$/.test(v.trim()) ? Number(v.trim()) : null);
+/** Date ISO AAAA-MM-JJ (calendrier vérifié) ; une heure éventuelle est ignorée ; sinon null. */
+const isoDay = (v) => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})(?:$|[T ])/.exec(String(v ?? "").trim());
+  if (!m) return null;
+  const d = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
+  return d.getUTCFullYear() === Number(m[1]) && d.getUTCMonth() === Number(m[2]) - 1 && d.getUTCDate() === Number(m[3]) ? `${m[1]}-${m[2]}-${m[3]}` : null;
+};
+const dayDiff = (a, b) => Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86400000);
+const TARIFF_SEP = "#@&";
+const PRICE = /^-?\d+(?:\.\d+)?$/;
+// Jours : « année:n° de jour » → début et fin du jour (lendemain), lus dans les périodes de cette année-là.
+const days = new Map();
+const per = byName.get("periodi");
+if (per && ["idperiodi", "datainizio", "datafine"].every((c) => per.cols.some((x) => x.name === c))) {
+  for (const p of per.parts) {
+    const idx = Object.fromEntries(p.t.cols.map((c, i) => [c, i]));
+    for (const r of p.t.rows) {
+      const n = intOf(r[idx.idperiodi]);
+      const k = `${p.year ?? ""}:${n}`;
+      if (n !== null && !days.has(k)) days.set(k, { start: isoDay(r[idx.datainizio]), end: isoDay(r[idx.datafine]) });
+    }
+  }
+}
+for (const s of specs) {
+  s.derived = [];
+  if (s.name !== "prenota" && s.name !== "prenotacanc") continue;
+  const has = (c) => s.cols.some((x) => x.name === c);
+  const skipped = [];
+  // Nom déjà porté par une colonne d'origine : la colonne d'origine est gardée, la dérivée n'est pas ajoutée.
+  const add = (name, type) => (has(name) ? skipped.push(name) : s.derived.push({ name, type }));
+  if (has("iddatainizio") && has("iddatafine")) {
+    if (days.size) {
+      add("date_arrivee", "TEXT");
+      add("date_depart", "TEXT");
+    }
+    add("nuits", "INTEGER");
+  }
+  if (has("tariffa")) {
+    add("type_tarif", "TEXT");
+    add("prix_tarif", "REAL");
+  }
+  if (s.derived.length || skipped.length) {
+    const cols = s.derived.map((d) => d.name);
+    s.stats = {
+      table: s.name,
+      columns: cols,
+      ...(skipped.length ? { skipped_columns: skipped } : {}),
+      note: "Colonnes ajoutées, colonnes d'origine intactes : arrivée et départ lus dans les périodes de la même année, nuits = dernier jour − premier jour + 1, tarif découpé sur « #@& ». Valeur introuvable : vide.",
+      rows: 0,
+      ...(cols.includes("date_arrivee") ? { dates_resolved: 0, dates_unresolved: 0, nights_mismatch: 0 } : {}),
+      ...(cols.includes("nuits") ? { nights_unresolved: 0 } : {}),
+      ...(cols.includes("type_tarif") ? { tariffs_split: 0, tariffs_unsplit: 0, tariffs_empty: 0, tariffs_per_person: 0 } : {}),
+    };
+  }
+}
+
+/** Valeurs des colonnes dérivées d'une ligne de réservation (année de la partition, valeurs brutes). */
+function derive(s, year, get) {
+  const st = s.stats;
+  st.rows++;
+  const out = {};
+  const want = new Set(s.derived.map((d) => d.name));
+  const a = intOf(get("iddatainizio"));
+  const b = intOf(get("iddatafine"));
+  if (want.has("nuits")) {
+    out.nuits = a !== null && b !== null && b - a + 1 >= 1 ? b - a + 1 : null;
+    if (out.nuits === null) st.nights_unresolved++;
+  }
+  if (want.has("date_arrivee")) {
+    out.date_arrivee = a === null ? null : (days.get(`${year ?? ""}:${a}`)?.start ?? null);
+    out.date_depart = b === null ? null : (days.get(`${year ?? ""}:${b}`)?.end ?? null);
+    if (out.date_arrivee && out.date_depart) {
+      st.dates_resolved++;
+      if (out.nuits !== null && out.nuits !== undefined && dayDiff(out.date_arrivee, out.date_depart) !== out.nuits) st.nights_mismatch++;
+    } else st.dates_unresolved++;
+  }
+  if (want.has("type_tarif")) {
+    const raw = get("tariffa");
+    const parts = typeof raw === "string" && raw !== "" ? raw.split(TARIFF_SEP) : [];
+    const price = parts.length >= 2 && PRICE.test(parts[1].trim()) ? Number(parts[1].trim()) : null;
+    out.type_tarif = parts.length >= 2 && parts[0] !== "" ? parts[0] : null;
+    out.prix_tarif = price;
+    if (!parts.length) st.tariffs_empty++;
+    else if (out.type_tarif !== null && price !== null) st.tariffs_split++;
+    else st.tariffs_unsplit++;
+    if (parts.length >= 3 && parts[2] === "p") st.tariffs_per_person++;
+  }
+  return s.derived.map((d) => out[d.name] ?? null);
+}
+
 /* 4. Écriture SQLite (une transaction). */
 fs.mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
 if (fs.existsSync(output)) fs.unlinkSync(output);
@@ -143,11 +242,12 @@ for (const s of ordered) {
     defs.push(`${q(c.name)} ${c.type}${pk}${link ? ` REFERENCES ${q(link.target)}(${q(byName.get(link.target).keyCol)})` : ""}`);
   }
   for (const l of s.links.filter((x) => x.viaKey)) defs.push(`${q(l.col + "_cle")} TEXT REFERENCES ${q(l.target)}("cle")`);
+  for (const d of s.derived) defs.push(`${q(d.name)} ${d.type}`);
   db.exec(`CREATE TABLE ${q(s.name)} (${defs.join(", ")})`);
 }
 db.exec("BEGIN");
 for (const s of ordered) {
-  const names = [...(s.partitioned ? ["cle", "annee"] : []), ...s.cols.map((c) => c.name), ...s.links.filter((l) => l.viaKey).map((l) => l.col + "_cle")];
+  const names = [...(s.partitioned ? ["cle", "annee"] : []), ...s.cols.map((c) => c.name), ...s.links.filter((l) => l.viaKey).map((l) => l.col + "_cle"), ...s.derived.map((d) => d.name)];
   const ins = db.prepare(`INSERT INTO ${q(s.name)} (${names.map(q).join(", ")}) VALUES (${names.map(() => "?").join(", ")})`);
   let n = 0;
   for (const p of s.parts) {
@@ -167,11 +267,13 @@ for (const s of ordered) {
         const v = r[idx[l.col]];
         out.push(v === "" || v === undefined ? null : `${l.sameYear ? p.year : ""}${l.sameYear ? ":" : ""}${v}`);
       }
+      if (s.derived.length) out.push(...derive(s, p.year, (c) => (c in idx ? r[idx[c]] : undefined)));
       ins.run(...out);
       n++;
     });
   }
-  report.written.push({ table: s.name, rows: n, partitions: s.partitioned ? s.parts.map((p) => p.year) : null, links: s.links.map((l) => `${l.col} → ${l.target}${l.sameYear ? " (même année)" : ""}`) });
+  report.written.push({ table: s.name, rows: n, partitions: s.partitioned ? s.parts.map((p) => p.year) : null, links: s.links.map((l) => `${l.col} → ${l.target}${l.sameYear ? " (même année)" : ""}`), ...(s.derived.length ? { derived: s.derived.map((d) => d.name) } : {}) });
+  if (s.stats) report.derived.push(s.stats);
 }
 db.exec("COMMIT");
 db.close();

@@ -212,6 +212,8 @@ export interface SpecEntity {
   aggregates: { field: string; children: string; via: string; expr: string }[];
   classification?: { kind: "financial" | "commercial" | "line" | "master" | "other"; confidence: number; parent?: string; note?: string };
   line_of?: { entity: string; via: string };
+  form_fields?: string[];
+  technical_fields?: string[];
   provenance?: SpecProvenance;
 }
 
@@ -235,15 +237,16 @@ export interface AppSpecPreview {
   entities: SpecEntity[];
   navigation: { entity: string }[];
   dashboard: { cards: { label: string; entity: string; kind: "count" | "sum"; field?: string }[]; breakdowns: { label: string; entity: string; field: string }[] };
+  views?: { entity: string; kind: "planning"; name: string; label: string; start: string; end: string; resource: string; title: string; status?: string }[];
   ddl: string[];
-  screens?: { id: string; kind: "dashboard" | "list" | "detail" | "form" | "admin"; entity?: string; fields?: string[]; note?: string }[];
+  screens?: { id: string; kind: "dashboard" | "list" | "detail" | "form" | "admin" | "planning"; entity?: string; fields?: string[]; note?: string }[];
   actions?: { entity: string; action: "create" | "update" | "delete" | "export" | "attach" | "reprice"; available: boolean; note?: string }[];
   rules?: {
     versions: { version: number; source?: string; modules: string[]; history_check?: string | null }[];
     bindings: { id: string; entity: string; scope: "line" | "document"; module: string; outputs: string[] }[];
   };
   workflows?: Record<string, unknown>[];
-  not_rebuilt?: { kind: "table" | "field" | "entity" | "workflow" | "rule" | "attachment"; name: string; reason: string }[];
+  not_rebuilt?: { kind: "table" | "field" | "entity" | "workflow" | "rule" | "attachment" | "view"; name: string; reason: string }[];
   provenance?: { mapping_version: number; mapping_origin: string; migration_run: string; business_model_versions: number[]; statement: string };
 }
 

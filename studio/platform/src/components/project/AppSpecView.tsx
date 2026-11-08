@@ -47,6 +47,7 @@ const NOT_REBUILT_KIND: Record<string, string> = {
   workflow: "Workflow",
   rule: "Règles",
   attachment: "Pièces jointes",
+  view: "Vue",
 };
 
 export const ACTION_LABEL: Record<string, string> = {

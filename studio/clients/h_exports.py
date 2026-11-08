@@ -364,7 +364,15 @@ def recover(
     params = None
     for candidate in REGISTRY:
         try:
-            params = candidate.detect(http, origin)
+            # Erreur réseau ponctuelle de l'hébergeur du logiciel : jusqu'à 4 essais espacés avant d'abandonner.
+            for attempt in range(4):
+                try:
+                    params = candidate.detect(http, origin)
+                    break
+                except ExportError as e1:
+                    if e1.reason == "needs_login" or attempt == 3:
+                        raise
+                    time.sleep(2)
         except ExportError as e:
             # Détection impossible (connexion exigée, injoignable) : on le signale et on s'arrête proprement.
             if e.reason == "needs_login":

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { RulePackage } from "../engine/bindings";
 import type { AppSpec } from "./generate";
-import type { Decision, MigrationMapping } from "./mapping";
+import { viewProblems, type Decision, type MigrationMapping } from "./mapping";
 
 /**
  * ApplicationSpec — contrat unique décrivant un logiciel reconstruit (fichier app.json du logiciel
@@ -77,14 +77,36 @@ export const ApplicationSpecSchema = z
           children: z.array(z.object({ entity: z.string(), via: z.string(), label: z.string() })),
           computed: z.array(z.object({ field: z.string(), expr: z.string() })),
           aggregates: z.array(z.object({ field: z.string(), children: z.string(), via: z.string(), expr: z.string() })),
+          /** Champs essentiels, dans l'ordre (formulaire et tête de fiche) ; absents ou vides : tous les champs. */
+          form_fields: z.array(z.string()).optional(),
+          /** Champs techniques : jamais saisis ni en colonne ; repliés dans « Données d'origine ». */
+          technical_fields: z.array(z.string()).optional(),
           provenance: Provenance.optional(),
         })
         .loose(),
     ),
     navigation: z.array(z.object({ entity: z.string() })),
     dashboard: z.object({ cards: z.array(z.record(z.string(), z.unknown())), breakdowns: z.array(z.record(z.string(), z.unknown())) }),
+    /** Vues d'ensemble : planning = une ligne par ressource, une colonne par jour, une barre par élément (fin exclue). */
+    views: z
+      .array(
+        z
+          .object({
+            entity: z.string(),
+            kind: z.enum(["planning"]),
+            name: z.string().regex(/^[a-z][a-z0-9_]{0,59}$/),
+            label: z.string(),
+            start: z.string(),
+            end: z.string(),
+            resource: z.string(),
+            title: z.string(),
+            status: z.string().optional(),
+          })
+          .strict(),
+      )
+      .optional(),
     ddl: z.array(z.string()),
-    screens: z.array(z.object({ id: z.string(), kind: z.enum(["dashboard", "list", "detail", "form", "admin"]), entity: z.string().optional(), fields: z.array(z.string()).optional(), note: z.string().optional() }).strict()).optional(),
+    screens: z.array(z.object({ id: z.string(), kind: z.enum(["dashboard", "list", "detail", "form", "admin", "planning"]), entity: z.string().optional(), fields: z.array(z.string()).optional(), note: z.string().optional() }).strict()).optional(),
     actions: z.array(z.object({ entity: z.string(), action: z.enum(["create", "update", "delete", "export", "attach", "reprice"]), available: z.boolean(), note: z.string().optional() }).strict()).optional(),
     rules: z
       .object({
@@ -94,7 +116,7 @@ export const ApplicationSpecSchema = z
       .strict()
       .optional(),
     workflows: z.array(z.record(z.string(), z.unknown())).optional(),
-    not_rebuilt: z.array(z.object({ kind: z.enum(["table", "field", "entity", "workflow", "rule", "attachment"]), name: z.string(), reason: z.string() }).strict()).optional(),
+    not_rebuilt: z.array(z.object({ kind: z.enum(["table", "field", "entity", "workflow", "rule", "attachment", "view"]), name: z.string(), reason: z.string() }).strict()).optional(),
     provenance: z
       .object({
         mapping_version: z.number().int(),
@@ -160,15 +182,26 @@ export function enrichSpec(spec: AppSpec, m: MigrationMapping, ctx: SpecContext)
     return { ...e, fields, provenance: prov(`entity:${e.name}`, em.source.table, em.confidence) };
   });
 
+  const views = spec.views ?? [];
   const screens: NonNullable<ApplicationSpec["screens"]> = [
-    { id: "dashboard", kind: "dashboard", note: "Indicateurs et répartitions calculés sur la base du logiciel" },
-    ...entities.flatMap((e) => [
-      { id: `${e.name}.list`, kind: "list" as const, entity: e.name, fields: e.list_fields },
-      { id: `${e.name}.detail`, kind: "detail" as const, entity: e.name, fields: e.fields.map((f) => f.name) },
-      { id: `${e.name}.form`, kind: "form" as const, entity: e.name, fields: e.fields.filter((f) => !("computed_by_rules" in f && f.computed_by_rules)).map((f) => f.name) },
-    ]),
+    { id: "dashboard", kind: "dashboard", note: views.length ? "« Aujourd'hui » (arrivées, départs, en cours, occupation), puis indicateurs et répartitions calculés sur la base du logiciel" : "Indicateurs et répartitions calculés sur la base du logiciel" },
+    ...views.map((v) => ({ id: `view.${v.name}`, kind: "planning" as const, entity: v.entity, fields: [v.start, v.end, v.resource, v.title, ...(v.status ? [v.status] : [])], note: v.label })),
+    ...entities.flatMap((e) => {
+      const technical = new Set(e.technical_fields ?? []);
+      // Formulaire : champs essentiels d'abord (dans leur ordre), puis les autres ; jamais les champs techniques ni calculés
+      const editable = e.fields.filter((f) => !technical.has(f.name) && !("computed_by_rules" in f && f.computed_by_rules)).map((f) => f.name);
+      const essential = (e.form_fields ?? []).filter((n) => editable.includes(n));
+      return [
+        { id: `${e.name}.list`, kind: "list" as const, entity: e.name, fields: e.list_fields },
+        { id: `${e.name}.detail`, kind: "detail" as const, entity: e.name, fields: [...essential, ...e.fields.map((f) => f.name).filter((n) => !essential.includes(n))] },
+        { id: `${e.name}.form`, kind: "form" as const, entity: e.name, fields: [...essential, ...editable.filter((n) => !essential.includes(n))], ...(essential.length ? { note: `${essential.length} champ(s) essentiel(s) affichés d'emblée ; les autres sous « Informations complémentaires »` } : {}) },
+      ];
+    }),
     { id: "admin", kind: "admin", note: "Utilisateurs, sauvegardes, journal d'audit" },
   ];
+  // Vues déclarées mais incohérentes avec les champs appliqués (champ exclu, type inattendu…) : dites, jamais ignorées en silence
+  const built = new Set(views.map((v) => `${v.entity}.${v.name}`));
+  const droppedViews = m.entities.flatMap((e) => (e.ui?.views ?? []).filter((v) => !built.has(`${e.name}.${v.name}`)).map((v) => ({ e, v })));
   const protectedDoc = (name: string) => entities.find((e) => e.name === name)?.fields.some((f) => f.accounting) || latest?.bindings.some((b) => b.entity === name && b.scope === "document");
   const actions: NonNullable<ApplicationSpec["actions"]> = entities.flatMap((e) => [
     { entity: e.name, action: "create" as const, available: true },
@@ -188,6 +221,10 @@ export function enrichSpec(spec: AppSpec, m: MigrationMapping, ctx: SpecContext)
       .map(([k, d]) => ({ kind: (k.startsWith("entity:") ? "entity" : k.startsWith("field:") ? "field" : "attachment") as "entity" | "field" | "attachment", name: k.split(":")[1], reason: `Exclu par décision humaine (${d.by})${d.comment ? ` : ${d.comment}` : ""}` })),
     ...ctx.pendingModels.map((x) => ({ kind: "rule" as const, name: `modèle métier v${x.version}`, reason: x.status === "rejected" ? "Version refusée par un responsable" : "Version reçue, non validée : non installée" })),
     ...(ctx.workflows ?? []).map((w, i) => ({ kind: "workflow" as const, name: String(w.name ?? w.id ?? `workflow ${i + 1}`), reason: "Workflow décrit par l'analyse : l'exécution de workflows n'est pas encore prise en charge par le runtime" })),
+    ...droppedViews.map(({ e, v }) => {
+      const why = viewProblems(e, v, new Set(m.entities.map((x) => x.name)));
+      return { kind: "view" as const, name: `${e.name}.${v.name}`, reason: why.length ? `Vue « ${v.label} » non construite : ${why.join(" ; ")}` : `Vue « ${v.label} » non construite : nom déjà utilisé par une autre vue` };
+    }),
     ...(latest ? [] : [{ kind: "rule" as const, name: "règles de calcul", reason: "Aucun modèle métier validé : les nouveaux documents ne sont pas calculés automatiquement" }]),
   ];
 

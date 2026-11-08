@@ -61,6 +61,25 @@ const AggregateSchema = z
   })
   .strict();
 
+/**
+ * Vue « planning » déclarée sur l'entité des éléments à placer (ex. réservations) : une ligne par
+ * enregistrement de l'entité ressource (champ `resource`), une colonne par jour ; chaque élément est une
+ * barre de `start` (inclus) à `end` (exclu), étiquetée par `title`, colorée selon `status` (facultatif).
+ */
+export const ViewSchema = z
+  .object({
+    kind: z.enum(["planning"]),
+    name: Ident,
+    label: z.string().min(1).max(80),
+    start: Ident,
+    end: Ident,
+    resource: Ident,
+    title: Ident,
+    status: Ident.optional(),
+  })
+  .strict();
+export type ViewMap = z.output<typeof ViewSchema>;
+
 export const EntityMapSchema = z
   .object({
     name: Ident,
@@ -97,6 +116,16 @@ export const EntityMapSchema = z
         search_fields: z.array(Ident).optional(),
         indicators: z.array(z.object({ label: z.string(), kind: z.enum(["count", "sum"]), field: Ident.optional() }).strict()).optional(),
         breakdown: Ident.optional(),
+        /**
+         * Champs essentiels, dans l'ordre : affichés d'emblée dans le formulaire de création / modification et
+         * en tête de la fiche. Tous les autres champs restent enregistrés et modifiables, regroupés sous
+         * « Informations complémentaires » (replié par défaut).
+         */
+        form_fields: z.array(Ident).max(200).optional(),
+        /** Champs techniques (clés recomposées, poste de saisie…) : jamais dans un formulaire ni en colonne ; visibles dans le bloc replié « Données d'origine » de la fiche. */
+        technical_fields: z.array(Ident).max(200).optional(),
+        /** Vues d'ensemble dessinées par le logiciel livré (planning : ressources × jours). */
+        views: z.array(ViewSchema).max(10).optional(),
       })
       .strict()
       .optional(),
@@ -282,7 +311,15 @@ export function checkMapping(m: MigrationMapping, profile: SourceProfile, archiv
         err(`${p}.aggregates.${a.id}`, `expression invalide : ${(x as Error).message}`);
       }
     }
+    // Présentation (formulaires simples, champs techniques, vues) : jamais bloquant, l'élément incohérent n'est pas construit
+    for (const key of ["form_fields", "technical_fields"] as const) for (const n of e.ui?.[key] ?? []) if (!fnames.has(n)) warn(`${p}.ui.${key}`, `champ inconnu : ${n} (ignoré)`);
+    const technical = new Set(e.ui?.technical_fields ?? []);
+    for (const n of e.ui?.form_fields ?? []) if (technical.has(n)) warn(`${p}.ui.form_fields`, `${n} est aussi déclaré technique : il ne sera jamais proposé à la saisie`);
+    for (const f of e.fields) if (technical.has(f.name) && f.required) warn(`${p}.ui.technical_fields`, `${f.name} est obligatoire mais technique : il ne pourra pas être saisi à la création`);
+    for (const v of e.ui?.views ?? []) for (const msg of viewProblems(e, v, entityByName)) warn(`${p}.ui.views.${v.name}`, `${msg} : vue non construite`);
   });
+  const viewNames = m.entities.flatMap((e) => (e.ui?.views ?? []).map((v) => v.name));
+  for (const n of new Set(viewNames)) if (viewNames.filter((x) => x === n).length > 1) warn("entities.ui.views", `vue « ${n} » déclarée plusieurs fois : seule la première est construite`);
 
   // Dépendances obligatoires sans cycle (ordre d'import)
   try {
@@ -303,6 +340,27 @@ export function checkMapping(m: MigrationMapping, profile: SourceProfile, archiv
     if (archives.length && !archives.includes(a.archive)) err(p, `archive introuvable parmi les sources : ${a.archive}`);
   });
   return issues;
+}
+
+/**
+ * Cohérence d'une vue avec les champs de son entité (correspondances appliquées) : dates de début et de fin,
+ * référence vers une entité existante pour la ressource, titre et statut existants. Liste vide = vue constructible.
+ */
+export function viewProblems(e: Pick<EntityMap, "name" | "fields">, v: ViewMap, entities: { has(name: string): boolean }): string[] {
+  const out: string[] = [];
+  const field = (n: string | undefined) => (n ? e.fields.find((f) => f.name === n) : undefined);
+  for (const k of ["start", "end"] as const) {
+    const f = field(v[k]);
+    if (!f) out.push(`${k} : champ inconnu ${v[k]}`);
+    else if (f.type !== "date") out.push(`${k} : ${v[k]} n'est pas une date`);
+  }
+  if (v.start === v.end) out.push("start et end désignent le même champ");
+  const r = field(v.resource);
+  if (!r) out.push(`resource : champ inconnu ${v.resource}`);
+  else if (r.type !== "reference" || !r.references || !entities.has(r.references)) out.push(`resource : ${v.resource} n'est pas une référence vers une entité du logiciel`);
+  if (!field(v.title)) out.push(`title : champ inconnu ${v.title}`);
+  if (v.status !== undefined && !field(v.status)) out.push(`status : champ inconnu ${v.status}`);
+  return out;
 }
 
 /** Ordre d'import : une entité après celles qu'elle référence (références obligatoires). */

@@ -92,7 +92,7 @@ Connecteur HTTP et simulateur de l'atelier passent par `node:http`/`node:https` 
 | Modèle métier | `business-model.ts`, `rules-history.ts`, `engine/bindings.ts` | Contrat `business_model` 1.0 (modules de règles + liaisons), versions immuables à valider, rejeu sur les documents historiques (identiques / arrondis / écarts) |
 | Moteur de règles | `platform/src/lib/engine/` | Exécution déterministe par étapes (base, remise, frais, ajustement, arrondi), évaluateur d'expressions sûr (pas d'`eval`) |
 | Génération | `generate.ts`, `application-spec.ts`, `app-access.ts` | ApplicationSpec 1.1, installation du modèle validé, port par logiciel, lancement détaché, mise à jour sans perte, retour arrière, réconciliation ; invitations au logiciel livré |
-| Runtime livré | `platform/runtime/` (copié dans `generated/<id>/`) | API REST, interface web générique, comptes (activation par invitation, « Mon mot de passe », sessions revalidées à chaque requête), rôles, audit, sauvegardes, export CSV, calcul des documents par le moteur de règles copié |
+| Runtime livré | `platform/runtime/` (copié dans `generated/<id>/`) | API REST, interface web générique (formulaires simples, fiches reliées, planning et « Aujourd'hui » quand la spécification les déclare), comptes (activation par invitation, « Mon mot de passe », sessions revalidées à chaque requête), rôles, audit, sauvegardes, export CSV, calcul des documents par le moteur de règles copié |
 
 ## Données
 
@@ -135,6 +135,18 @@ La classification « comptable / commercial / lignes / référentiel » est prop
 ## Accès au logiciel livré (phase 1)
 
 « Créer mon accès au logiciel » (`POST /api/migration/app/access`, propriétaire) dépose dans `generated/<id>/.secrets/invites/` une invitation qui ne contient que l'**empreinte** du jeton (fichier 0600, écriture atomique) et renvoie le lien une seule fois (jamais journalisé). Le logiciel livré importe l'invitation (même s'il était arrêté), l'activation est à usage unique (transaction) et la personne choisit son mot de passe ; les empreintes utilisées sont notées hors de la base pour qu'une restauration ne rouvre pas une invitation. `admin.json` reste l'accès de secours de l'opérateur.
+
+## Interface du logiciel livré : simple, reliée, pilotée par la spécification
+
+Tout vient de l'ApplicationSpec (clés facultatives : sans elles, comportement d'origine). Les fonctions sans DOM (valeurs affichées, groupes de champs, titres, calendrier, disposition du planning) sont dans `runtime/public/ui-core.js`, partagé par `app.js` et vérifié par `platform/src/delivered-ui.test.ts` (jeu de test inventé, runtime réel démarré).
+
+| Spécification (depuis `ui` des correspondances) | Effet |
+|---|---|
+| `form_fields` (ordonnés) | Formulaire : ces champs d'abord (et tout champ obligatoire), les autres sous « Informations complémentaires » replié, toujours enregistrés ; fiche : mêmes champs en tête, les autres repliés (renseignés d'abord). |
+| `technical_fields` | Jamais saisis, jamais en colonne ni en filtre, aucune relation inverse affichée par eux ; bloc replié « Données d'origine » du panneau Origine de la donnée. |
+| `views` (`kind: planning`) | Entrée « Planning » en tête de la navigation ; `GET /api/views/<nom>?from=&to=` (session, période ≤ 92 jours, noms de champs pris de la spécification et validés au démarrage) ; « Aujourd'hui » en tête du tableau de bord (`/api/dashboard?today=`) : arrivées, départs, en cours, ressources occupées, chaque carte ouvrant la liste filtrée ; disponibilité vérifiée pendant la saisie (avertissement, jamais bloquant). |
+
+Titres : une référence s'affiche avec le titre de la fiche liée ; titre vide ou simple numéro d'un élément de planning → « titre lié · ressource · du … au … » ; à défaut la clé de l'ancien logiciel. Fiches : enregistrements liés par pages de 10, du plus récent au plus ancien (début du planning, date propre, ou date de la fiche liée : tri `référence.champ`). Listes : dates à la française, montants en euros, entiers sans séparateur, listes S/N, O/N, Y/N… non libellées lues « Oui / Non » (codes conservés).
 
 ## Interface du Studio et design system
 

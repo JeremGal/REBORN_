@@ -5,7 +5,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { randomBytes, randomUUID } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
 import { ApiError } from "../http";
-import { effectiveMapping, type EntityMap, type MigrationMapping } from "./mapping";
+import { effectiveMapping, viewProblems, type EntityMap, type MigrationMapping, type ViewMap } from "./mapping";
 import { buildDdl } from "./model";
 import { appsRoot, assertActive, deliveredApp, getProject, loadProject, unmappedTables, markRolledBack, migrationLog, projectIds, reconcileDeployed, recordBusinessModel, recordDeployment, runArtifacts, runDir, statusLabel, transition, validatedBusinessModels, type Deployment } from "./project";
 import { checkBusinessModel, type BusinessModel } from "./business-model";
@@ -51,30 +51,60 @@ export interface AppSpec {
     aggregates: { field: string; children: string; via: string; expr: string }[];
     classification?: EntityMap["classification"];
     line_of?: EntityMap["line_of"];
+    /** Champs essentiels (ordre d'affichage du formulaire et de la fiche) ; vide : tous les champs, comme avant. */
+    form_fields: string[];
+    /** Champs techniques : jamais dans un formulaire ni en colonne ; repliés dans « Données d'origine ». */
+    technical_fields: string[];
   }[];
   navigation: { entity: string }[];
   dashboard: { cards: { label: string; entity: string; kind: "count" | "sum"; field?: string }[]; breakdowns: { label: string; entity: string; field: string }[] };
+  /** Vues d'ensemble (planning) : entité des éléments, champs de début / fin (exclue) / ressource / titre / statut. */
+  views: SpecView[];
   ddl: string[];
+}
+export type SpecView = ViewMap & { entity: string };
+
+/** Vues déclarées par les correspondances et constructibles avec les champs réellement appliqués (première de chaque nom). */
+export function specViews(m: MigrationMapping): SpecView[] {
+  const entities = new Set(m.entities.map((e) => e.name));
+  const seen = new Set<string>();
+  const out: SpecView[] = [];
+  for (const e of m.entities)
+    for (const v of e.ui?.views ?? []) {
+      if (seen.has(v.name) || viewProblems(e, v, entities).length) continue;
+      seen.add(v.name);
+      out.push({ entity: e.name, ...v });
+    }
+  return out;
 }
 
 export function buildAppSpec(m: MigrationMapping, opts: { runId: string; sourceSystem?: string; port?: number; company?: string }): AppSpec {
   const childOf = new Set(m.entities.flatMap((e) => (e.aggregates ?? []).map((a) => a.children)));
   const entities = m.entities.map((e) => {
-    const title = e.title_field ?? e.fields.find((f) => f.type === "text")?.name ?? null;
-    const listDefault = [title, ...e.fields.filter((f) => f.name !== title && ["enum", "date", "money", "reference", "text", "email"].includes(f.type)).map((f) => f.name)].filter(Boolean).slice(0, 6) as string[];
+    const names = new Set(e.fields.map((f) => f.name));
+    const technical = [...new Set((e.ui?.technical_fields ?? []).filter((n) => names.has(n)))];
+    const tech = new Set(technical);
+    const formFields = [...new Set((e.ui?.form_fields ?? []).filter((n) => names.has(n) && !tech.has(n)))];
+    const title = e.title_field ?? e.fields.find((f) => f.type === "text" && !tech.has(f.name))?.name ?? e.fields.find((f) => f.type === "text")?.name ?? null;
+    const listDefault = [title, ...e.fields.filter((f) => f.name !== title && !tech.has(f.name) && ["enum", "date", "money", "reference", "text", "email"].includes(f.type)).map((f) => f.name)].filter((n): n is string => !!n && !tech.has(n)).slice(0, 6);
+    // Un champ technique n'est jamais une colonne, même demandé dans list_fields
+    const listFields = (e.ui?.list_fields ?? listDefault).filter((n) => !tech.has(n));
     return {
       name: e.name,
       label: e.label ?? e.name,
       label_singular: e.label_singular ?? e.label ?? e.name,
       title_field: title,
       fields: e.fields.map((f) => ({ name: f.name, label: f.label ?? f.name, type: f.type, required: !!f.required, unique: !!f.unique, options: f.options, references: f.references, accounting: !!f.accounting })),
-      list_fields: e.ui?.list_fields ?? listDefault,
-      search_fields: e.ui?.search_fields ?? e.fields.filter((f) => ["text", "email", "phone"].includes(f.type)).slice(0, 4).map((f) => f.name),
-      children: m.entities.flatMap((o) => o.fields.filter((f) => f.type === "reference" && f.references === e.name).map((f) => ({ entity: o.name, via: f.name, label: o.label ?? o.name }))),
+      list_fields: listFields.length ? listFields : listDefault,
+      search_fields: e.ui?.search_fields ?? e.fields.filter((f) => ["text", "email", "phone"].includes(f.type) && !tech.has(f.name)).slice(0, 4).map((f) => f.name),
+      // Enregistrements liés affichés sur la fiche : relations inverses, sauf celles portées par un champ technique
+      children: m.entities.flatMap((o) => o.fields.filter((f) => f.type === "reference" && f.references === e.name && !(o.ui?.technical_fields ?? []).includes(f.name)).map((f) => ({ entity: o.name, via: f.name, label: o.label ?? o.name }))),
       computed: e.computed ?? [],
       aggregates: (e.aggregates ?? []).map((a) => ({ field: a.field, children: a.children, via: a.via, expr: a.expr })),
       ...(e.classification ? { classification: e.classification } : {}),
       ...(e.line_of ? { line_of: e.line_of } : {}),
+      form_fields: formFields,
+      technical_fields: technical,
     };
   });
   const nav = m.entities.filter((e) => e.ui?.nav ?? !childOf.has(e.name));
@@ -105,6 +135,7 @@ export function buildAppSpec(m: MigrationMapping, opts: { runId: string; sourceS
     entities,
     navigation: nav.map((e) => ({ entity: e.name })),
     dashboard: { cards, breakdowns },
+    views: specViews(m),
     ddl: buildDdl(m),
   };
 }

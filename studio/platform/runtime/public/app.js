@@ -1,7 +1,36 @@
 // Interface du logiciel livré : entièrement pilotée par /api/meta (spécification générée, app.json).
-// Rien n'est propre à un métier ici : modules, libellés, champs, règles, indicateurs et identité de
-// l'entreprise viennent de l'API. Aucun calcul métier dans le navigateur : chaque montant affiché est
-// celui que le serveur a calculé (modèle métier versionné) ou conservé (historique migré).
+// Rien n'est propre à un métier ici : modules, libellés, champs, règles, indicateurs, vues (planning) et
+// identité de l'entreprise viennent de l'API. Aucun calcul métier dans le navigateur : chaque montant affiché
+// est celui que le serveur a calculé (modèle métier versionné) ou conservé (historique migré).
+import {
+  addDays,
+  dateFr,
+  dayLabel,
+  daysBetween,
+  empty,
+  esc,
+  fieldGroups,
+  formatOf,
+  headingOf as headingText,
+  int,
+  listColumns,
+  localIso,
+  moneyOf,
+  monthOf,
+  nb,
+  optionLabel,
+  planningLayout,
+  plainOf,
+  rangeLabel,
+  relatedColumns,
+  shiftMonth,
+  titleOf as titleText,
+  todayLinks,
+  validIso,
+  WEEKDAY_SHORT,
+  yesNo,
+} from "./ui-core.js";
+
 const root = document.getElementById("root");
 const live = document.getElementById("live");
 let META = null;
@@ -32,22 +61,15 @@ const RANGE = new Set(["date", "money", "integer", "decimal", "percent"]);
 const ACTIVATION_RE = /^#\/activation\/([A-Za-z0-9_-]{43})$/;
 const SOURCE_LABEL = { fixture: "Jeu de test", analyst: "Analyste", investigation: "Investigation du Studio", user: "Opérateur", publication: "Publication" };
 const STATUS_LABEL = { hypothesis: "Hypothèse à confirmer", validated: "Validée", observed: "Observée", confirmed: "Confirmée", rejected: "Refusée" };
-const KIND_LABEL = { table: "Table", field: "Champ", entity: "Entité", workflow: "Processus", rule: "Règle", attachment: "Pièces jointes" };
+const KIND_LABEL = { table: "Table", field: "Champ", entity: "Entité", workflow: "Processus", rule: "Règle", attachment: "Pièces jointes", view: "Vue" };
 const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 const isMobile = () => window.matchMedia?.("(max-width: 1023px)").matches ?? false;
 
 /* Utilitaires ---------------------------------------------------------- */
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const int = (n) => Number(n ?? 0).toLocaleString(LOCALE);
-const nb = (n) => Number(n).toLocaleString(LOCALE, { maximumFractionDigits: 4 });
-const money = (c) => (c === null || c === undefined || c === "" ? "—" : (Number(c) / 100).toLocaleString(LOCALE, { style: "currency", currency: CUR() }));
+const money = (c) => moneyOf(c, CUR());
 const plural = (n, one, many) => `${int(n)} ${Math.abs(Number(n)) > 1 ? many : one}`;
 const cap = (s) => (s ? String(s)[0].toUpperCase() + String(s).slice(1) : "");
-const empty = (v) => v === null || v === undefined || v === "";
-const dateFr = (s) => {
-  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s ?? ""));
-  return m ? `${m[3]}/${m[2]}/${m[1]}` : s ? String(s) : "—";
-};
+const lower = (s) => String(s ?? "").toLocaleLowerCase(LOCALE);
 const dateTime = (s) => {
   if (!s) return "—";
   const d = new Date(s);
@@ -86,17 +108,15 @@ const initials = (s) =>
     .join("") || "?";
 const entity = (name) => META.entities.find((e) => e.name === name) ?? null;
 const fieldOf = (e, name) => e?.fields.find((f) => f.name === name) ?? null;
-const optionLabel = (f, v) => f?.options?.find((o) => o.value === v)?.label ?? v;
-const titleOf = (e, row) => {
-  const v = e?.title_field ? row?.[e.title_field] : null;
-  return !empty(v) ? String(v) : `${e?.label_singular ?? e?.label ?? ""} #${row?.id ?? "?"}`.trim();
-};
-/** Résumé d'un enregistrement : quelques colonnes de la liste après le titre. */
+/** Vues d'ensemble valides (planning), contrôlées par le serveur. */
+const views = () => META?.views ?? [];
+const viewFor = (e) => views().find((v) => v.entity === e?.name) ?? null;
+/** Titre d'un enregistrement (listes, choix, références) et titre de page (fiche, formulaire). */
+const titleOf = (e, row) => titleText(e, row, views(), CUR());
+const headingOf = (e, row) => headingText(e, row, CUR());
+/** Résumé d'un enregistrement : quelques colonnes de la liste après le titre (jamais un champ technique). */
 const subOf = (e, row, n = 2) =>
-  e.list_fields
-    .filter((x) => x !== e.title_field)
-    .map((x) => fieldOf(e, x))
-    .filter(Boolean)
+  listColumns(e, e.list_fields, { exclude: [e.title_field] })
     .map((f) => plain(f, row[f.name], row._refs?.[f.name]))
     .filter((v) => v !== "—")
     .slice(0, n)
@@ -126,6 +146,8 @@ const ICONS = {
   calc: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M8.5 11.5h1M14.5 11.5h1M8.5 15.5h1M14.5 15.5h1"/>',
   key: '<circle cx="8" cy="15" r="3.5"/><path d="m10.5 12.5 8-8M15.5 7.5l2.5 2.5"/>',
   logout: '<path d="M14 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 8l-4 4 4 4M6 12h10"/>',
+  calendar: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h3M8 17h6"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/>',
 };
 const icon = (n, cls = "") => `<svg class="ic${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${ICONS[n] ?? ""}</svg>`;
 
@@ -429,56 +451,10 @@ function parseMoney(input) {
   const cents = Number(i.replaceAll(sep === "," ? "." : ",", "")) * 100 + Number((f + "00").slice(0, 2));
   return neg ? -cents : cents;
 }
-/** Valeur affichée (HTML). */
-function format(f, v, refTitle) {
-  if (empty(v)) return '<span class="muted">—</span>';
-  switch (f?.type) {
-    case "money":
-      return `<span class="num">${esc(money(v))}</span>`;
-    case "date":
-      return `<span class="num">${esc(dateFr(v))}</span>`;
-    case "boolean":
-      return v ? "Oui" : "Non";
-    case "enum":
-      return esc(optionLabel(f, v));
-    case "percent":
-      return `<span class="num">${esc(nb(v))} %</span>`;
-    case "decimal":
-    case "integer":
-      return `<span class="num">${esc(nb(v))}</span>`;
-    case "reference":
-      return `<a href="#/e/${esc(f.references)}/${esc(v)}">${esc(refTitle ?? `#${v}`)}</a>`;
-    case "email":
-      return `<a href="mailto:${esc(v)}">${esc(v)}</a>`;
-    case "phone":
-      return `<a href="tel:${esc(String(v).replace(/[^\d+]/g, ""))}">${esc(v)}</a>`;
-    default:
-      return esc(v);
-  }
-}
-/** Valeur affichée (texte brut : journal, confirmations). */
-function plain(f, v, refTitle) {
-  if (empty(v)) return "—";
-  switch (f?.type) {
-    case "money":
-      return money(v);
-    case "date":
-      return dateFr(v);
-    case "boolean":
-      return v ? "Oui" : "Non";
-    case "enum":
-      return String(optionLabel(f, v));
-    case "percent":
-      return `${nb(v)} %`;
-    case "decimal":
-    case "integer":
-      return nb(v);
-    case "reference":
-      return refTitle ?? `#${v}`;
-    default:
-      return String(v);
-  }
-}
+/** Valeur affichée (HTML) : références en liens titrés, dates à la française, montants, Oui / Non. */
+const format = (f, v, refTitle) => formatOf(f, v, refTitle, CUR());
+/** Valeur affichée (texte brut : journal, confirmations, résumés). */
+const plain = (f, v, refTitle) => plainOf(f, v, refTitle, CUR());
 
 /* Modèle métier et protection de l'historique --------------------------- */
 const activeVersion = () => META?.rules?.active_version ?? null;
@@ -569,6 +545,9 @@ function markErrors(form, list, { summary = true } = {}) {
   for (const { id, message } of list) {
     const el = form.querySelector(`#${CSS.escape(id)}`);
     const box = form.querySelector(`#${CSS.escape(id)}-err`);
+    // Champ à corriger dans une section repliée (« Informations complémentaires ») : la section s'ouvre
+    const fold = el?.closest("details");
+    if (fold) fold.open = true;
     el?.setAttribute("aria-invalid", "true");
     if (box) {
       box.innerHTML = `${icon("alert")}<span>${esc(message)}</span>`;
@@ -763,7 +742,11 @@ function navHtml(path) {
     })
     .join("");
   const group = (id, label, items) => `<p class="nav-group" id="${id}">${esc(label)}</p><ul class="nav-list" aria-labelledby="${id}">${items}</ul>`;
-  return `<ul class="nav-list">${link("#/", "Tableau de bord", path === "/")}</ul>
+  // Vues d'ensemble (planning) en tête : c'est l'écran de travail quotidien
+  const viewLinks = views()
+    .map((v) => link(`#/vue/${v.name}`, v.label, path === `/vue/${v.name}`))
+    .join("");
+  return `<ul class="nav-list">${viewLinks}${link("#/", "Tableau de bord", path === "/")}</ul>
     ${mods ? group("ng-mod", "Modules", mods) : ""}
     ${hasRules() ? group("ng-ref", "Référentiel", link("#/modele", "Modèle métier", path === "/modele")) : ""}
     ${
@@ -957,6 +940,8 @@ function bindGlobalSearch() {
 /* Tableaux ---------------------------------------------------------------- */
 /** Tableau d'enregistrements : nombres alignés à droite, en-têtes lisibles, empilé sur petit écran. */
 function rowsTable(e, cols, rows, { th = null, origin = false, tail = null, tailLabel = "Actions", caption = "" } = {}) {
+  // Aucune colonne utilisable (toutes techniques, par exemple) : le titre de chaque enregistrement
+  if (!cols.length) cols = [{ name: "__title", label: e.label_singular ?? e.label, type: "text" }];
   const head =
     cols.map((f) => (th ? th(f) : `<th scope="col"${NUMERIC.has(f.type) ? ' class="num"' : ""}>${esc(f.label)}</th>`)).join("") +
     (origin ? '<th scope="col" class="origin-col">Origine</th>' : "") +
@@ -1035,10 +1020,7 @@ function latestPanel(latest) {
   const panels = items
     .map((x, i) => {
       const e = entity(x.entity);
-      const cols = e.list_fields
-        .map((n) => fieldOf(e, n))
-        .filter(Boolean)
-        .slice(0, 3);
+      const cols = listColumns(e, e.list_fields, { max: 3 });
       const body = x.rows.length
         ? `${rowsTable(e, cols, x.rows, { origin: true, caption: `${e.label} : derniers enregistrements` })}<p class="panel-foot"><a href="#/e/${e.name}">Voir tout (${esc(int(x.total))})${icon("chevron")}</a></p>`
         : `<div class="empty-state small"><p>Aucun enregistrement pour l'instant.</p>${can("editor") && allowed(e, "create") ? `<p><a class="btn secondary sm" href="#/e/${e.name}/new">${icon("plus")}Créer le premier</a></p>` : ""}</div>`;
@@ -1069,9 +1051,53 @@ function bindTabs(scope) {
     });
   });
 }
+/**
+ * « Aujourd'hui » d'un planning : arrivées et départs du jour, éléments en cours, ressources occupées sur le
+ * total. Chaque carte ouvre la liste filtrée par le serveur (plages de dates) ; l'occupation ouvre le planning.
+ */
+function todaySection(board, several) {
+  const v = views().find((x) => x.name === board.view);
+  const e = entity(board.entity);
+  const rf = v && fieldOf(e, v.resource);
+  const re = rf && entity(rf.references);
+  if (!v || !e || !re) return "";
+  const tf = fieldOf(e, v.title);
+  const te = tf?.type === "reference" ? entity(tf.references) : null;
+  const links = todayLinks(v, board.day);
+  const who = (x) => [x.title, x.resource].filter(Boolean).join(" · ") || `${e.label_singular ?? e.label} #${x.id}`;
+  const preview = (block) => {
+    if (!block.total) return "Rien pour aujourd'hui";
+    const names = block.items.slice(0, 3).map((x) => x.title ?? x.resource ?? `#${x.id}`);
+    const rest = block.total - names.length;
+    return `${names.join(", ")}${rest > 0 ? ` et ${plural(rest, "autre", "autres")}` : ""}`;
+  };
+  const pct = board.resources ? Math.round((board.occupied / board.resources) * 100) : 0;
+  const card = (href, label, value, sub, key) =>
+    `<a class="kpi" href="${href}" data-fkey="${key}"><span class="kpi-label">${esc(label)}</span><span class="kpi-value">${esc(value)}</span><span class="kpi-sub">${esc(sub)}</span></a>`;
+  const list = (title, block, href, id) =>
+    `<section class="today-list" aria-labelledby="${id}"><h3 id="${id}">${esc(title)} <span class="count">(${esc(int(block.total))})</span></h3>${
+      block.items.length
+        ? `<ul>${block.items.map((x) => `<li><a href="#/e/${esc(e.name)}/${esc(x.id)}">${esc(who(x))}</a></li>`).join("")}</ul>${block.total > block.items.length ? `<p class="small"><a href="${href}">Voir les ${esc(int(block.total))}</a></p>` : ""}`
+        : `<p class="muted small">Rien pour aujourd'hui.</p>`
+    }</section>`;
+  const sid = `today-${board.view}`;
+  return `<section class="today" aria-labelledby="${sid}">
+    <header class="today-head"><h2 id="${sid}">${icon("sun")}Aujourd'hui${several ? ` · ${esc(v.label)}` : ""}</h2><p>${esc(cap(dayLabel(board.day)))}</p><a class="btn secondary sm" href="${links.planning}">${icon("calendar")}${esc(v.label)}</a></header>
+    <div class="kpi-band today-band">
+      ${card(links.arrivals, "Arrivées du jour", int(board.arrivals.total), preview(board.arrivals), `${sid}-a`)}
+      ${card(links.departures, "Départs du jour", int(board.departures.total), preview(board.departures), `${sid}-d`)}
+      ${card(links.current, `${e.label} en cours`, int(board.current), te && board.current_titles !== null ? plural(board.current_titles, lower(te.label_singular ?? te.label), lower(te.label)) : "En cours aujourd'hui", `${sid}-c`)}
+      ${card(links.planning, "Occupation", `${int(board.occupied)} / ${int(board.resources)}`, `${pct} % des ${lower(re.label)}`, `${sid}-o`)}
+    </div>
+    ${board.arrivals.total || board.departures.total ? `<div class="today-lists">${list("Arrivées", board.arrivals, links.arrivals, `${sid}-la`)}${list("Départs", board.departures, links.departures, `${sid}-ld`)}</div>` : ""}
+  </section>`;
+}
+
 async function viewDashboard(t) {
-  const d = await api("GET", "/api/dashboard");
+  const d = await api("GET", `/api/dashboard?today=${localIso()}`);
   if (t !== NAV) return;
+  const boards = d.today?.boards ?? [];
+  const today = boards.map((b) => todaySection(b, boards.length > 1)).join("");
   const av = activeVersion();
   const docs = META.entities.filter(isDocument);
   const model = docs.length
@@ -1120,12 +1146,150 @@ async function viewDashboard(t) {
     .join("");
   const now = new Date();
   shell(
-    `${origin}<section class="kpi-band" aria-label="Indicateurs">${d.cards.map(kpiCell).join("")}</section>
+    `${today}${origin}${today ? '<h2 class="section-title" id="h-kpi">Indicateurs</h2><section class="kpi-band" aria-labelledby="h-kpi">' : '<section class="kpi-band" aria-label="Indicateurs">'}${d.cards.map(kpiCell).join("")}</section>
      <div class="dash-grid">${latestPanel(d.latest)}${activity}</div>
      ${breakdowns ? `<section class="dash-section" aria-labelledby="h-rep"><h2 class="section-title" id="h-rep">Répartitions</h2><div class="breakdowns">${breakdowns}</div></section>` : ""}`,
     { title: "Tableau de bord", subtitle: `Chiffres lus dans la base du logiciel le ${esc(now.toLocaleDateString(LOCALE, { dateStyle: "long" }))} à ${esc(now.toLocaleTimeString(LOCALE, { timeStyle: "short" }))}.` },
   );
   bindTabs(root.querySelector("#latest"));
+}
+
+/* Planning ------------------------------------------------------------------ */
+/** Couleur des barres selon le statut : oui / non, sinon une couleur par valeur (six au plus), avec leur légende. */
+function statusStyles(sf, items) {
+  if (!sf) return { cls: () => "", text: () => "", legend: [] };
+  const text = (v) => (empty(v) ? "" : sf.type === "boolean" ? (Number(v) ? "Oui" : "Non") : String(optionLabel(sf, v)));
+  const yn = sf.type === "boolean" ? { yes: 1, no: 0 } : yesNo(sf);
+  if (yn)
+    return {
+      cls: (v) => (v === yn.yes ? "st-yes" : v === yn.no ? "st-no" : "st-none"),
+      text,
+      legend: [
+        ["st-yes", "Oui"],
+        ["st-no", "Non"],
+      ],
+    };
+  const values = (sf.options?.length ? sf.options.map((o) => o.value) : [...new Set(items.map((x) => x.status).filter((x) => !empty(x)))]).slice(0, 6);
+  return {
+    cls: (v) => {
+      const i = values.indexOf(v);
+      return i < 0 ? "st-none" : `st-${i}`;
+    },
+    text,
+    legend: values.map((v, i) => [`st-${i}`, text(v)]),
+  };
+}
+
+/**
+ * Planning (ui.views, kind « planning ») : un mois, une ligne par ressource (triées par titre), une colonne par
+ * jour, une barre par élément du début (inclus) à la fin (exclue), étiquetée par le titre lié ; clic → fiche.
+ * Le défilement horizontal reste dans la grille ; la colonne des ressources reste visible.
+ */
+async function viewPlanning(name, t) {
+  const v = views().find((x) => x.name === name);
+  const e = entity(v.entity);
+  const rf = fieldOf(e, v.resource);
+  const re = entity(rf?.references) ?? { name: rf?.references ?? "", label: rf?.label ?? "", label_singular: rf?.label ?? "" };
+  const sf = v.status ? fieldOf(e, v.status) : null;
+  const today = localIso();
+  const month = monthOf(params().get("mois")) ?? monthOf(today.slice(0, 7));
+  const data = await api("GET", `/api/views/${encodeURIComponent(name)}?from=${month.from}&to=${month.to}`);
+  if (t !== NAV) return;
+  const layout = planningLayout(data, month.from, month.to, today);
+  const st = statusStyles(sf, data.items);
+  const canCreate = can("editor") && allowed(e, "create");
+  const base = `#/vue/${name}`;
+  const dayClass = (d) => `${d.weekend ? " we" : ""}${d.today ? " today" : ""}`;
+  const head = `<tr><th scope="col" class="pl-res">${esc(rf?.label ?? re.label_singular)}</th>${layout.days
+    .map(
+      (d) =>
+        `<th scope="col" class="pl-day${dayClass(d)}"${d.today ? ' aria-current="date"' : ""}><span class="pl-dw" aria-hidden="true">${WEEKDAY_SHORT[d.dow]}</span><span class="pl-dn" aria-hidden="true">${d.day}</span><span class="sr">${esc(dayLabel(d.iso))}${d.today ? " (aujourd'hui)" : ""}</span></th>`,
+    )
+    .join("")}</tr>`;
+  const bar = (s, row) => {
+    const it = s.item;
+    const label = it.title ?? `${e.label_singular ?? e.label} #${it.id}`;
+    const status = sf && !empty(it.status) ? `${sf.label} : ${st.text(it.status)}` : "";
+    const where = row.resource?.title ?? it.resource_title ?? "";
+    const full = [label, where, rangeLabel(it.start, it.end), status, s.before ? "commence avant ce mois" : "", s.after ? "se poursuit après ce mois" : ""].filter(Boolean).join(" · ");
+    return `<a class="pl-bar ${st.cls(it.status)}${s.before ? " before" : ""}${s.after ? " after" : ""}" style="--span:${s.span}" href="#/e/${esc(e.name)}/${esc(it.id)}" title="${esc(full)}" aria-label="${esc(full)}">${s.before ? '<span class="pl-cont" aria-hidden="true">‹</span>' : ""}<span class="pl-t">${esc(label)}</span>${s.after ? '<span class="pl-cont" aria-hidden="true">›</span>' : ""}</a>`;
+  };
+  const body = layout.rows.length
+    ? layout.rows
+        .map((row) =>
+          row.lanes
+            .map((lane, li) => {
+              const th = li
+                ? ""
+                : `<th scope="row" class="pl-res"${row.lanes.length > 1 ? ` rowspan="${row.lanes.length}"` : ""}>${row.resource ? `<a href="#/e/${esc(re.name)}/${esc(row.resource.id)}">${esc(row.resource.title)}</a>` : `<span class="muted">${esc(`Sans ${lower(rf?.label ?? re.label_singular)}`)}</span>`}</th>`;
+              const starts = new Map(lane.map((s) => [s.col, s]));
+              const cells = layout.days
+                .map((d, i) => {
+                  const s = starts.get(i);
+                  if (s) return `<td class="pl-c has-bar${dayClass(d)}">${bar(s, row)}</td>`;
+                  return `<td class="pl-c${dayClass(d)}"${canCreate && row.resource && !li ? ` data-new="${esc(row.resource.id)}" data-day="${d.iso}"` : ""}></td>`;
+                })
+                .join("");
+              return `<tr${li ? ' class="pl-lane"' : ""}>${th}${cells}</tr>`;
+            })
+            .join(""),
+        )
+        .join("")
+    : `<tr><td class="pl-empty" colspan="${layout.days.length + 1}">Aucun enregistrement dans « ${esc(re.label)} » : rien à planifier.</td></tr>`;
+  const pct = layout.capacity ? Math.round((layout.used / layout.capacity) * 100) : 0;
+  const notices = [
+    data.truncated?.items ? noticeHtml("warn", esc(`Plus de ${int(data.items.length)} éléments sur la période : seuls les premiers sont dessinés. Consultez la liste « ${e.label} » pour le détail.`)) : "",
+    data.truncated?.resources ? noticeHtml("warn", esc(`Seules les ${int(data.resources.length)} premières lignes sur ${int(data.resources_total)} sont affichées.`)) : "",
+  ].join("");
+  const legend = `<div class="pl-legend"><p class="pl-legend-title" id="pl-legend">Légende</p><ul aria-labelledby="pl-legend">${st.legend.map(([c, l]) => `<li><span class="pl-sw ${c}" aria-hidden="true"></span>${esc(`${sf.label} : ${l}`)}</li>`).join("")}<li><span class="pl-sw today" aria-hidden="true"></span>Aujourd'hui</li><li><span class="pl-sw we" aria-hidden="true"></span>Samedi et dimanche</li><li><span class="pl-cont" aria-hidden="true">‹ ›</span>Commence avant ou se poursuit après le mois affiché</li>${canCreate ? `<li>Case libre : un clic ouvre « Nouveau » avec ${esc(lower(rf?.label ?? re.label_singular))} et date préremplies</li>` : ""}</ul></div>`;
+  const summary = [cap(month.label), plural(data.resources.length, lower(re.label_singular), lower(re.label)), plural(layout.count, lower(e.label_singular ?? e.label), lower(e.label)), `occupation du mois : ${pct} %`].join(" · ");
+  shell(
+    `<section class="panel planning-panel" aria-labelledby="pl-month">
+      <div class="pl-toolbar">
+        <div class="pl-nav">
+          <a class="btn secondary" href="${base}?mois=${shiftMonth(month.ym, -1)}" data-fkey="pl-prev">${icon("back")}<span class="pl-nav-t">Mois précédent</span></a>
+          <a class="btn secondary" href="${base}" data-fkey="pl-today">Aujourd'hui</a>
+          <a class="btn secondary" href="${base}?mois=${shiftMonth(month.ym, 1)}" data-fkey="pl-next"><span class="pl-nav-t">Mois suivant</span>${icon("chevron")}</a>
+        </div>
+        <h2 class="pl-month" id="pl-month" tabindex="-1">${esc(cap(month.label))}</h2>
+        <form class="pl-jump" id="pl-jump" novalidate><label for="pl-mois">Aller au mois</label><input type="month" id="pl-mois" name="mois" value="${month.ym}" data-fkey="pl-mois" aria-describedby="pl-mois-err"><button class="btn secondary" type="submit">Afficher</button><p class="field-error" id="pl-mois-err" hidden></p></form>
+      </div>
+      ${notices ? `<div class="pad-x">${notices}</div>` : ""}
+      <div class="pl-wrap" role="region" aria-labelledby="pl-cap" tabindex="0">
+        <table class="planning" style="--days:${layout.days.length}">
+          <caption id="pl-cap" class="sr">${esc(`${v.label}, ${month.label} : une ligne par ${lower(re.label_singular)}, une colonne par jour`)}</caption>
+          <thead>${head}</thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>
+      ${legend}
+    </section>`,
+    { title: v.label, subtitle: esc(summary), actions: canCreate ? `<a class="btn primary" href="#/e/${esc(e.name)}/new">${icon("plus")}Nouveau<span class="sr"> : ${esc(e.label_singular ?? e.label)}</span></a>` : "" },
+  );
+  const wrap = root.querySelector(".pl-wrap");
+  // Mois en cours : si le jour actuel est hors de la partie visible de la grille, il y est amené
+  const now = wrap?.querySelector("thead th.today");
+  if (now) {
+    const lead = wrap.querySelector("thead th.pl-res").offsetWidth;
+    const hidden = now.offsetLeft < wrap.scrollLeft + lead || now.offsetLeft + now.offsetWidth > wrap.scrollLeft + wrap.clientWidth;
+    if (hidden) wrap.scrollLeft = Math.max(0, now.offsetLeft - lead - now.offsetWidth * 2);
+  }
+  wrap?.addEventListener("click", (ev) => {
+    const td = ev.target.closest("td[data-new]");
+    if (!td) return;
+    go(`#/e/${e.name}/new?${encodeURIComponent(v.resource)}=${td.dataset.new}&${encodeURIComponent(v.start)}=${td.dataset.day}&${encodeURIComponent(v.end)}=${addDays(td.dataset.day, 1)}`);
+  });
+  const jump = root.querySelector("#pl-jump");
+  liveClear(jump);
+  jump.onsubmit = (ev) => {
+    ev.preventDefault();
+    clearErrors(jump);
+    const raw = String(new FormData(jump).get("mois") ?? "").trim();
+    const fr = /^(\d{1,2})\/(\d{4})$/.exec(raw);
+    const ym = fr ? `${fr[2]}-${fr[1].padStart(2, "0")}` : raw;
+    if (!monthOf(ym)) return markErrors(jump, [{ id: "pl-mois", label: "Mois", message: "Mois attendu, ex. 2026-03 ou 03/2026" }], { summary: false });
+    go(`${base}?mois=${ym}`);
+  };
 }
 
 /* Recherche ---------------------------------------------------------------- */
@@ -1138,10 +1302,7 @@ async function viewSearch(t) {
     .map((g) => {
       const e = entity(g.entity);
       if (!e) return "";
-      const cols = e.list_fields
-        .map((n) => fieldOf(e, n))
-        .filter(Boolean)
-        .slice(0, 4);
+      const cols = listColumns(e, e.list_fields, { max: 4 });
       return panel(e.label, `${rowsTable(e, cols, g.rows, { origin: true, caption: `${e.label} : résultats` })}${g.total > g.rows.length ? `<p class="panel-foot"><a href="#/e/${e.name}?q=${encodeURIComponent(term)}">Voir les ${esc(int(g.total))} résultats dans ${esc(e.label)}${icon("chevron")}</a></p>` : ""}`, { count: g.total, raw: true });
     })
     .join("");
@@ -1158,9 +1319,25 @@ async function viewSearch(t) {
 /* Liste -------------------------------------------------------------------- */
 function rangeText(f, a, b) {
   const v = (x) => (f.type === "date" ? dateFr(x) : f.type === "money" ? money(Number(x)) : f.type === "percent" ? `${nb(Number(x))} %` : nb(Number(x)));
+  if (a && b && a === b) return f.type === "date" ? `le ${v(a)}` : `exactement ${v(a)}`;
   if (a && b) return f.type === "date" ? `du ${v(a)} au ${v(b)}` : `de ${v(a)} à ${v(b)}`;
   if (a) return f.type === "date" ? `à partir du ${v(a)}` : `au moins ${v(a)}`;
   return f.type === "date" ? `jusqu'au ${v(b)}` : `au plus ${v(b)}`;
+}
+/** Accès aux plannings où paraît une entité : ses éléments (ex. les séjours) ou ses ressources (ex. les lignes du planning). */
+const planningLinks = (e) =>
+  views()
+    .filter((v) => v.entity === e.name || fieldOf(entity(v.entity), v.resource)?.references === e.name)
+    .map((v) => `<a class="btn secondary" href="#/vue/${esc(v.name)}">${icon("calendar")}${esc(v.label)}</a>`)
+    .join("");
+/** Libellé d'un tri de liste : champ de l'entité, ou « champ de la fiche liée » (référence.champ). */
+function sortLabel(e, sort) {
+  const own = fieldOf(e, sort);
+  if (own) return own.label;
+  const [ref, sub] = String(sort).split(".");
+  const rf = fieldOf(e, ref);
+  const tf = rf && fieldOf(entity(rf.references), sub);
+  return rf && tf ? `${tf.label} (${rf.label})` : String(sort);
 }
 async function viewList(name, t) {
   const e = entity(name);
@@ -1171,7 +1348,9 @@ async function viewList(name, t) {
   qs.set("per", String(per));
   const data = await api("GET", `/api/e/${name}?${qs}`);
   if (t !== NAV) return;
-  const cols = e.list_fields.map((n) => fieldOf(e, n)).filter(Boolean);
+  // Colonnes de la liste : jamais un champ technique
+  const cols = listColumns(e);
+  const technical = new Set(e.technical_fields ?? []);
   const href = (x) => {
     const s = x.toString();
     return `#/e/${name}${s ? `?${s}` : ""}`;
@@ -1218,7 +1397,7 @@ async function viewList(name, t) {
     .join("")}`;
   const canCreate = can("editor") && allowed(e, "create");
   const table = data.rows.length
-    ? rowsTable(e, cols, data.rows, { th, origin: true, caption: `${e.label} : ${data.rows.length} sur ${data.total}${p.get("sort") ? `, triés par ${fieldOf(e, p.get("sort"))?.label ?? p.get("sort")}` : ""}` })
+    ? rowsTable(e, cols, data.rows, { th, origin: true, caption: `${e.label} : ${data.rows.length} sur ${data.total}${p.get("sort") ? `, triés par ${sortLabel(e, p.get("sort"))}${p.get("dir") === "desc" ? " (décroissant)" : ""}` : ""}` })
     : `<div class="empty-state">${
         filtered
           ? `${icon("search", "empty-ic")}<p><b>Aucun résultat${p.get("q") ? ` pour « ${esc(p.get("q"))} »` : ""}.</b></p><p class="muted">Aucun enregistrement ne correspond à ces critères.</p><p><a class="btn secondary" href="#/e/${name}">Effacer la recherche et les filtres</a></p>`
@@ -1242,7 +1421,7 @@ async function viewList(name, t) {
     .map(([v, l]) => `<option value="${esc(v)}"${v === curSort ? " selected" : ""}>${esc(l)}</option>`)
     .join("")}</select></div>`;
   const open = FILTERS_OPEN.has(name);
-  const filterFields = e.fields.filter((f) => (f.type === "enum" && f.options?.length) || f.type === "boolean");
+  const filterFields = e.fields.filter((f) => !technical.has(f.name) && ((f.type === "enum" && f.options?.length) || f.type === "boolean"));
   const activeFilters = chips.length - (p.get("q") ? 1 : 0);
   const rangeValue = (f, v) => (empty(v) ? "" : f.type === "money" ? (Number(v) / 100).toFixed(2).replace(".", ",") : f.type === "date" ? v : String(v).replace(".", ","));
   const filterPanel = `<form id="filters" class="filters" novalidate${open ? "" : " hidden"} aria-label="Filtres : ${esc(e.label)}">
@@ -1255,7 +1434,7 @@ async function viewList(name, t) {
             `<div class="field"><label for="fl-${esc(f.name)}">${esc(f.label)}</label><select id="fl-${esc(f.name)}" name="${esc(f.name)}"><option value="">Tous</option>${
               f.type === "boolean"
                 ? `<option value="1"${p.get(f.name) === "1" ? " selected" : ""}>Oui</option><option value="0"${p.get(f.name) === "0" ? " selected" : ""}>Non</option>`
-                : f.options.map((o) => `<option value="${esc(o.value)}"${p.get(f.name) === o.value ? " selected" : ""}>${esc(o.label ?? o.value)}</option>`).join("")
+                : f.options.map((o) => `<option value="${esc(o.value)}"${p.get(f.name) === o.value ? " selected" : ""}>${esc(optionLabel(f, o.value))}</option>`).join("")
             }</select></div>`,
         )
         .join("")}
@@ -1287,7 +1466,7 @@ async function viewList(name, t) {
     {
       title: e.label,
       subtitle: esc(filtered ? `${plural(data.total, "enregistrement correspond", "enregistrements correspondent")} aux critères` : plural(data.total, "enregistrement", "enregistrements")),
-      actions: `${allowed(e, "export") ? `<a class="btn secondary" href="/api/export/${name}.csv" title="Tous les enregistrements du module, au format CSV">${icon("download")}Exporter tout (CSV)</a>` : ""}${canCreate ? `<a class="btn primary" href="${createHref}">${icon("plus")}Nouveau<span class="sr"> : ${esc(e.label_singular ?? e.label)}</span></a>` : ""}`,
+      actions: `${planningLinks(e)}${allowed(e, "export") ? `<a class="btn secondary" href="/api/export/${name}.csv" title="Tous les enregistrements du module, au format CSV">${icon("download")}Exporter tout (CSV)</a>` : ""}${canCreate ? `<a class="btn primary" href="${createHref}">${icon("plus")}Nouveau<span class="sr"> : ${esc(e.label_singular ?? e.label)}</span></a>` : ""}`,
     },
   );
   const nav = (x) => {
@@ -1428,6 +1607,63 @@ function historyChanges(e, h) {
   return "";
 }
 
+/** Enregistrements liés affichés par page dans une fiche (les plus récents d'abord). */
+const RELATED_PER = 10;
+/** Contenu d'un panneau d'enregistrements liés : tableau, pages (plus récents / plus anciens), liste complète. */
+function relatedBody(e, r, x, rows, page) {
+  const { c, ce, block, label } = x;
+  if (!block.total || !rows.length) return emptyMini("Aucun enregistrement lié.");
+  const pages = Math.max(1, Math.ceil(block.total / RELATED_PER));
+  const from = (page - 1) * RELATED_PER + 1;
+  const to = Math.min(block.total, page * RELATED_PER);
+  const sort = block.sort?.field ?? "id";
+  const table = rowsTable(ce, relatedColumns(ce, c.via, views()), rows, { origin: true, caption: `${label} · ${headingOf(e, r)} · du plus récent au plus ancien${pages > 1 ? ` (page ${page} sur ${pages})` : ""}` });
+  const pager =
+    pages > 1
+      ? `<nav class="pager rel-pager" aria-label="${esc(`Pages : ${label}`)}"><p class="pager-info">${esc(int(from))}–${esc(int(to))} sur ${esc(int(block.total))} · du plus récent au plus ancien</p><ul class="pager-list"><li><button type="button" class="pg wide" data-rel-page="${page - 1}" data-rel-dir="prev"${page <= 1 ? " disabled" : ""}>${icon("back")}<span>Page précédente</span></button></li><li><button type="button" class="pg wide" data-rel-page="${page + 1}" data-rel-dir="next"${page >= pages ? " disabled" : ""}><span>Page suivante</span>${icon("chevron")}</button></li></ul></nav>`
+      : "";
+  const all = block.total > RELATED_PER ? `<p class="panel-foot"><a href="#/e/${esc(c.entity)}?${encodeURIComponent(c.via)}=${esc(r.id)}${sort !== "id" ? `&sort=${encodeURIComponent(sort)}&dir=desc` : ""}">Ouvrir la liste complète (${esc(int(block.total))})${icon("chevron")}</a></p>` : "";
+  return `${table}${pager}${all}`;
+}
+/** Pages suivantes d'un panneau lié : même tri que la fiche (GET /api/e/<entité>?<via>=<id>&sort=…&dir=desc). */
+function bindRelated(e, r, x) {
+  const sec = root.querySelector(`#${CSS.escape(x.id)}`);
+  const body = sec?.querySelector(".rel-body");
+  if (!body) return;
+  body.addEventListener("click", async (ev) => {
+    const b = ev.target.closest("[data-rel-page]");
+    if (!b || b.disabled) return;
+    const page = Number(b.dataset.relPage);
+    const dir = b.dataset.relDir;
+    const done = busy(b);
+    try {
+      const sort = x.block.sort?.field ?? "id";
+      const res = await api("GET", `/api/e/${x.c.entity}?${encodeURIComponent(x.c.via)}=${r.id}&sort=${encodeURIComponent(sort)}&dir=desc&per=${RELATED_PER}&page=${page}`);
+      if (!body.isConnected) return;
+      x.block = { ...x.block, total: res.total };
+      body.innerHTML = relatedBody(e, r, x, res.rows, page);
+      body.querySelectorAll("tr.link").forEach((tr) => (tr.onclick = (ev2) => ev2.target.closest("a, button, input, select, label") || go(tr.dataset.href)));
+      (body.querySelector(`[data-rel-dir="${dir}"]:not([disabled])`) ?? body.querySelector("[data-rel-page]:not([disabled])") ?? sec.querySelector("h2, h3"))?.focus();
+      announce(`${x.label} : page ${page} sur ${Math.max(1, Math.ceil(res.total / RELATED_PER))}`);
+    } catch (err) {
+      done();
+      toastError(err);
+    }
+  });
+}
+/** Résumé d'un enregistrement dessiné dans un planning : titre lié et ressource en liens, période, accès au planning. */
+function viewSummary(e, r) {
+  const v = viewFor(e);
+  if (!v || empty(r[v.start])) return "";
+  const part = (n) => {
+    const f = fieldOf(e, n);
+    if (!f || empty(r[n])) return "";
+    return f.type === "reference" ? `<a href="#/e/${esc(f.references)}/${esc(r[n])}">${esc(r._refs?.[n] ?? `#${r[n]}`)}</a>` : esc(plain(f, r[n]));
+  };
+  const parts = [part(v.title), part(v.resource), esc(rangeLabel(r[v.start], r[v.end]))].filter(Boolean);
+  return `<span class="view-sum">${parts.join(" · ")}</span><a class="view-sum-link" href="#/vue/${esc(v.name)}?mois=${esc(String(r[v.start]).slice(0, 7))}">${icon("calendar")}Voir dans « ${esc(v.label)} »</a>`;
+}
+
 async function viewDetail(name, id, t) {
   const e = entity(name);
   const [d, rules] = await Promise.all([api("GET", `/api/e/${name}/${id}`), isDocument(e) ? api("GET", "/api/rules") : Promise.resolve(null)]);
@@ -1435,39 +1671,42 @@ async function viewDetail(name, id, t) {
   const lines = doc ? await api("GET", `/api/e/${doc.le.name}?${encodeURIComponent(doc.via)}=${id}&per=200`) : null;
   if (t !== NAV) return;
   const r = d.record;
-  const title = titleOf(e, r);
+  const title = headingOf(e, r);
   const protRec = isProtectedRecord(e, r);
   const protLine = isProtectedLine(e, r) ? lineParent(e) : null;
   const src = META.app.source_system || "l'ancien logiciel";
 
-  const fields = e.fields
-    .map((f) => {
-      const note = lockReason(e, f, r, "detail");
-      const long = (f.type === "text" && String(r[f.name] ?? "").length > 90) || /\n/.test(String(r[f.name] ?? ""));
-      return `<div class="kv${long ? " wide" : ""}"><dt>${esc(f.label)}${f.accounting && r._migrated ? ` <span class="stamp lock sm" title="Valeur historique protégée : non modifiable">${icon("lock")}protégé</span>` : ""}</dt><dd>${format(f, r[f.name], r._refs?.[f.name])}${note && f.computed_by_rules ? `<span class="kv-note">${icon("calc")}${esc(note)}</span>` : ""}</dd></div>`;
-    })
-    .join("");
+  // Champs essentiels en tête ; les autres repliés sous « Informations complémentaires » ; les champs
+  // techniques seulement dans « Données d'origine » (panneau Origine de la donnée)
+  const groups = fieldGroups(e);
+  const kv = (f) => {
+    const note = lockReason(e, f, r, "detail");
+    const long = (f.type === "text" && String(r[f.name] ?? "").length > 90) || /\n/.test(String(r[f.name] ?? ""));
+    return `<div class="kv${long ? " wide" : ""}"><dt>${esc(f.label)}${f.accounting && r._migrated ? ` <span class="stamp lock sm" title="Valeur historique protégée : non modifiable">${icon("lock")}protégé</span>` : ""}</dt><dd>${format(f, r[f.name], r._refs?.[f.name])}${note && f.computed_by_rules ? `<span class="kv-note">${icon("calc")}${esc(note)}</span>` : ""}</dd></div>`;
+  };
+  const fields = groups.essential.map(kv).join("");
+  const filled = groups.more.filter((f) => !empty(r[f.name]));
+  const unfilled = groups.more.filter((f) => empty(r[f.name]));
+  const more = groups.more.length
+    ? `<details class="more" id="more-info"><summary>Informations complémentaires <span class="count">(${esc(plural(filled.length, "renseignée", "renseignées"))} sur ${esc(int(groups.more.length))})</span></summary>${filled.length ? `<dl class="kv-grid">${filled.map(kv).join("")}</dl>` : ""}${unfilled.length ? `<p class="muted small more-blank">Non renseignés : ${esc(unfilled.map((f) => f.label).join(", "))}.</p>` : ""}</details>`
+    : "";
+  const technical = groups.technical.length
+    ? `<details class="raw tech"><summary>Données d'origine (${esc(int(groups.technical.length))})</summary><dl class="kv-list">${groups.technical.map((f) => `<div><dt>${esc(f.label)}</dt><dd>${format(f, r[f.name], r._refs?.[f.name])}</dd></div>`).join("")}</dl></details>`
+    : "";
 
+  // Enregistrements liés (références inverses) : les plus récents d'abord, par pages de RELATED_PER
   const kids = e.children.filter((c) => !(doc && c.entity === doc.le.name && c.via === doc.via) && entity(c.entity) && d.children[`${c.entity}.${c.via}`]);
-  const children = kids
-    .map((c) => {
-      const ce = entity(c.entity);
-      const block = d.children[`${c.entity}.${c.via}`];
-      const cols = ce.list_fields
-        .filter((n) => n !== c.via)
-        .slice(0, 5)
-        .map((n) => fieldOf(ce, n))
-        .filter(Boolean);
-      const body = block.rows.length
-        ? `${rowsTable(ce, cols, block.rows, { origin: true, caption: `${c.label} liés à ${title}` })}${block.total > block.rows.length ? `<p class="panel-foot"><a href="#/e/${c.entity}?${c.via}=${r.id}">Voir les ${esc(int(block.total))} enregistrements${icon("chevron")}</a></p>` : ""}`
-        : emptyMini("Aucun enregistrement lié.");
-      const lockedLines = protRec && lineOf(ce, e, c.via);
-      const canAdd = can("editor") && allowed(ce, "create") && !lockedLines;
-      return panel(c.label, body, {
-        id: `rel-${c.entity}-${c.via}`,
-        count: block.total,
+  const relLabel = (c) => (e.children.filter((x) => x.entity === c.entity).length > 1 ? `${c.label} · ${fieldOf(entity(c.entity), c.via)?.label ?? c.via}` : c.label);
+  const related = kids.map((c) => ({ c, ce: entity(c.entity), block: d.children[`${c.entity}.${c.via}`], label: relLabel(c), id: `rel-${c.entity}-${c.via}` }));
+  const children = related
+    .map((x) => {
+      const lockedLines = protRec && lineOf(x.ce, e, x.c.via);
+      const canAdd = can("editor") && allowed(x.ce, "create") && !lockedLines;
+      return panel(x.label, `<div class="rel-body">${relatedBody(e, r, x, x.block.rows.slice(0, RELATED_PER), 1)}</div>`, {
+        id: x.id,
+        count: x.block.total,
         raw: true,
-        actions: canAdd ? `<a class="btn secondary sm" href="#/e/${c.entity}/new?${c.via}=${r.id}">${icon("plus")}Ajouter<span class="sr"> : ${esc(ce.label_singular ?? ce.label)}</span></a>` : lockedLines ? lockStamp("historique protégé") : "",
+        actions: canAdd ? `<a class="btn secondary sm" href="#/e/${x.c.entity}/new?${encodeURIComponent(x.c.via)}=${r.id}">${icon("plus")}Ajouter<span class="sr"> : ${esc(x.ce.label_singular ?? x.ce.label)}</span></a>` : lockedLines ? lockStamp("historique protégé") : "",
       });
     })
     .join("");
@@ -1478,7 +1717,7 @@ async function viewDetail(name, id, t) {
     .map((f) => `<li><span class="rel-label">${esc(f.label)}</span><a href="#/e/${esc(f.references)}/${esc(r[f.name])}">${esc(r._refs?.[f.name] ?? `#${r[f.name]}`)}</a></li>`);
   const attached = [
     ...(doc ? [{ id: "doc", label: doc.le.label, total: lines?.total ?? 0 }] : []),
-    ...kids.map((c) => ({ id: `rel-${c.entity}-${c.via}`, label: c.label, total: d.children[`${c.entity}.${c.via}`].total })),
+    ...related.map((x) => ({ id: x.id, label: x.label, total: x.block.total })),
   ].map((x) => `<li><span class="rel-label">${esc(x.label)}</span>${x.total ? `<button type="button" class="link-btn" data-goto="${esc(x.id)}">${esc(plural(x.total, "enregistrement", "enregistrements"))}</button>` : '<span class="muted">aucun</span>'}</li>`);
   const relations = parents.length || attached.length ? panel("Relations", `${parents.length ? `<ul class="rel-list">${parents.join("")}</ul>` : ""}${attached.length ? `<ul class="rel-list">${attached.join("")}</ul>` : ""}`, {}) : "";
 
@@ -1499,10 +1738,11 @@ async function viewDetail(name, id, t) {
             .map(([k, x]) => `${k} ← ${x.source}${x.transforms?.length ? `  [${x.transforms.join(" → ")}]` : ""}`)
             .join("\n"),
         )}</pre></details>
+        ${technical}
         <details class="raw"><summary>Ligne d'origine complète</summary><pre>${esc(JSON.stringify(d.lineage.source_row, null, 2))}</pre><p class="muted small">Exécution de migration ${esc(d.lineage.run_id)} · empreinte du fichier extrait (SHA-256) <span class="mono">${esc(d.lineage.source_file_sha256 ?? "—")}</span></p></details>`,
         { actions: `<span class="stamp migrated">${icon("archive")}migré</span>` },
       )
-    : panel("Origine de la donnée", `<p class="muted">Enregistrement créé le ${esc(dateTime(r._created_at))}.</p>`, { actions: '<span class="stamp here"><span class="dot" aria-hidden="true"></span>créé dans ce logiciel</span>' });
+    : panel("Origine de la donnée", `<p class="muted">Enregistrement créé le ${esc(dateTime(r._created_at))}.</p>${technical}`, { actions: '<span class="stamp here"><span class="dot" aria-hidden="true"></span>créé dans ce logiciel</span>' });
   const history = panel(
     "Historique",
     d.history.length
@@ -1544,15 +1784,17 @@ async function viewDetail(name, id, t) {
   const canDelete = can("editor") && allowed(e, "delete") && !protRec && !protLine;
   const docBlock = doc ? documentBlock(e, r, doc, lines, rules) : null;
   shell(
-    `${banner}<div class="detail-grid"><div class="detail-main">${panel("Informations", `<dl class="kv-grid">${fields}</dl>`, {})}${docBlock ? docBlock.html : ""}${children}</div><div class="detail-side">${relations}${lineage}${files}${history}</div></div>`,
+    `${banner}<div class="detail-grid"><div class="detail-main">${panel("Informations", `<dl class="kv-grid">${fields}</dl>${more}`, {})}${docBlock ? docBlock.html : ""}${children}</div><div class="detail-side">${relations}${lineage}${files}${history}</div></div>`,
     {
       title,
+      subtitle: viewSummary(e, r),
       badges: `${originStamp(r)}${protRec || protLine ? lockStamp("Historique protégé", true) : ""}${r._source_key ? `<span class="stamp key" title="Clé de l'enregistrement dans l'ancien logiciel">clé d'origine <span class="mono">${esc(r._source_key)}</span></span>` : ""}`,
       crumbs: [[`#/e/${name}`, e.label]],
       actions: `${canEdit ? `<a class="btn secondary" href="#/e/${name}/${id}/edit">${icon("edit")}Modifier</a>` : ""}${canDelete ? `<button class="btn danger" type="button" id="del">${icon("trash")}Supprimer</button>` : ""}`,
     },
   );
   docBlock?.bind();
+  for (const x of related) bindRelated(e, r, x);
   root.querySelectorAll("[data-goto]").forEach((b) =>
     b.addEventListener("click", () => {
       const sec = root.querySelector(`#${CSS.escape(b.dataset.goto)}`);
@@ -1610,13 +1852,7 @@ function documentBlock(e, r, doc, lines, rules) {
   // Mêmes règles que le serveur : les lignes d'un document historique protégé ne sont jamais modifiables
   const lockedByHistory = isProtectedRecord(e, r);
   const editable = !lockedByHistory && can("editor") && allowed(le, "create");
-  const cols = [
-    ...le.list_fields
-      .filter((n) => n !== via)
-      .map((n) => fieldOf(le, n))
-      .filter(Boolean),
-    ...le.fields.filter((f) => f.computed_by_rules && !le.list_fields.includes(f.name)),
-  ];
+  const cols = [...listColumns(le, le.list_fields, { exclude: [via] }), ...le.fields.filter((f) => f.computed_by_rules && !le.list_fields.includes(f.name))];
   const rows = lines?.rows ?? [];
   const canDeleteLine = editable && allowed(le, "delete");
   // Nom d'une ligne : sa première colonne (ex. la référence choisie), sinon « <libellé> #id »
@@ -1626,7 +1862,7 @@ function documentBlock(e, r, doc, lines, rules) {
   };
   const table = rows.length
     ? rowsTable(le, cols, rows, {
-        caption: `${le.label} de ${titleOf(e, r)}`,
+        caption: `${le.label} de ${headingOf(e, r)}`,
         tail: canDeleteLine ? (x) => `<button class="btn quiet sm danger-text" type="button" data-del-line="${x.id}">${icon("trash")}Supprimer<span class="sr"> la ligne ${esc(lineName(x))}</span></button>` : null,
       })
     : `<p class="empty">${historical ? "Aucune ligne migrée pour ce document." : editable ? "Aucune ligne pour l'instant : ajoutez la première ci-dessous." : "Aucune ligne pour l'instant."}</p>`;
@@ -1662,8 +1898,9 @@ function documentBlock(e, r, doc, lines, rules) {
     ? `<div class="totals"><dl>${totals.map((f) => `<div><dt>${esc(f.label)}</dt><dd class="num">${format(f, r[f.name])}</dd></div>`).join("")}</dl><p class="totals-note">${totalsNote}</p></div>`
     : "";
 
-  // Ligne à ajouter : tous les champs saisissables (ni la référence au document, ni les champs calculés)
-  const inputs = le.fields.filter((f) => f.name !== via && !f.computed_by_rules && !(f.accounting && historical));
+  // Ligne à ajouter : champs saisissables (ni la référence au document, ni les champs calculés, ni les champs
+  // techniques) ; si la spécification déclare des champs essentiels, seulement ceux-là (et les obligatoires)
+  const inputs = fieldGroups(le).essential.filter((f) => f.name !== via && !f.computed_by_rules && !(f.accounting && historical));
   const computedLine = le.fields.filter((f) => f.computed_by_rules);
   // Une ligne est calculée avec la version du document (épinglée), sinon avec la version active
   const lineVersion = r._rules_version ?? av;
@@ -1691,7 +1928,7 @@ function documentBlock(e, r, doc, lines, rules) {
     sec.querySelector("#reprice")?.addEventListener("click", async (ev) => {
       const btn = ev.currentTarget;
       const ok = await confirmDialog({
-        title: `Recalculer « ${titleOf(e, r)} » ?`,
+        title: `Recalculer « ${headingOf(e, r)} » ?`,
         message: `Le serveur recalcule ce document avec la version active du modèle métier (v${av}).\nSes montants actuels${r._rules_version ? ` (calculés avec la v${r._rules_version})` : ""} seront remplacés. L'opération est tracée dans le journal.`,
         confirm: "Recalculer",
       });
@@ -1778,8 +2015,11 @@ function hintFor(f) {
       return "Nombre, ex. 12,5";
     case "percent":
       return "En %, ex. 5 ou 12,5";
-    case "reference":
-      return "Tapez quelques lettres puis choisissez dans la liste";
+    case "reference": {
+      const t = entity(f.references);
+      const by = fieldOf(t, t?.title_field)?.label;
+      return by ? `Recherchez par ${esc(lower(by))}, puis choisissez dans la liste` : "Tapez quelques lettres puis choisissez dans la liste";
+    }
     case "email":
       return "Exemple : nom@entreprise.fr";
     default:
@@ -1800,7 +2040,7 @@ function fieldControl(e, f, v, { idPrefix = "f", title = null, compact = false }
       // Trois états : une valeur vide de l'historique reste vide (jamais transformée en « Non »)
       return wrap(`<select id="${id}" name="${esc(f.name)}"${req}${aria}><option value=""${v === null || v === undefined ? " selected" : ""}>—</option><option value="1"${v === 1 || v === true ? " selected" : ""}>Oui</option><option value="0"${v === 0 || v === false ? " selected" : ""}>Non</option></select>`);
     case "enum":
-      return wrap(`<select id="${id}" name="${esc(f.name)}"${req}${aria}><option value="">—</option>${(f.options ?? []).map((o) => `<option value="${esc(o.value)}"${o.value === v ? " selected" : ""}>${esc(o.label ?? o.value)}</option>`).join("")}</select>`);
+      return wrap(`<select id="${id}" name="${esc(f.name)}"${req}${aria}><option value="">—</option>${(f.options ?? []).map((o) => `<option value="${esc(o.value)}"${o.value === v ? " selected" : ""}>${esc(optionLabel(f, o.value))}</option>`).join("")}</select>`);
     case "date":
       return wrap(`<input type="date" id="${id}" name="${esc(f.name)}" value="${esc(v ?? "")}"${req}${aria}>`);
     case "money":
@@ -1921,11 +2161,9 @@ function bindPickers(scope) {
     const list = box.querySelector(".picker-list");
     const t = entity(box.dataset.ref);
     if (!t) return;
-    const extra = t.list_fields
-      .filter((n) => n !== t.title_field)
-      .slice(0, 3)
-      .map((n) => fieldOf(t, n))
-      .filter((f) => f && f.type !== "reference");
+    const extra = listColumns(t, t.list_fields, { exclude: [t.title_field], max: 3 }).filter((f) => f.type !== "reference" && f.name !== t.title_field);
+    // Choix rangés par titre (ordre alphabétique, ou numérique pour des numéros)
+    const order = fieldOf(t, t.title_field) ? `&sort=${encodeURIComponent(t.title_field)}` : "";
     let timer = null;
     let seq = 0;
     let items = [];
@@ -1952,7 +2190,7 @@ function bindPickers(scope) {
       list.hidden = false;
       input.setAttribute("aria-expanded", "true");
       try {
-        const res = await api("GET", `/api/e/${t.name}?per=20${q ? `&q=${encodeURIComponent(q)}` : ""}`);
+        const res = await api("GET", `/api/e/${t.name}?per=20${order}${q ? `&q=${encodeURIComponent(q)}` : ""}`);
         if (my !== seq) return;
         items = res.rows;
         active = -1;
@@ -2083,6 +2321,60 @@ function previewHtml(e, res) {
   return `<div class="pv ${blocking ? "warn" : "idle"}"><div class="pv-head"><p class="pv-title">${esc(title)}</p>${where ? `<span>${esc(where)}</span>` : ""}</div><p>${esc(cap(msg.replace(/^Calcul (impossible|non disponible)\s*:\s*/i, "")))}</p>${blocking ? '<p class="pv-foot">Le serveur refusera l\'enregistrement tant que ce calcul est impossible.</p>' : ""}</div>`;
 }
 
+/**
+ * Disponibilité pendant la saisie d'un élément dessiné dans un planning : dès que la ressource et la date de
+ * début sont choisies, le serveur dit ce qui occupe déjà cette ressource sur la période (avertissement, jamais
+ * bloquant : la décision reste à la personne).
+ */
+function attachAvailability(form, e, v, id, zone) {
+  if (!zone) return;
+  let timer = null;
+  let seq = 0;
+  const value = (n) => String(form.elements.namedItem(n)?.value ?? "").trim();
+  const run = async () => {
+    const my = ++seq;
+    const res = value(v.resource);
+    const start = value(v.start);
+    const end = value(v.end);
+    if (!res || !validIso(start)) {
+      zone.innerHTML = "";
+      return;
+    }
+    const stop = validIso(end) && end > start ? end : addDays(start, 1);
+    if (daysBetween(start, stop) > 90) {
+      zone.innerHTML = "";
+      return;
+    }
+    try {
+      const data = await api("GET", `/api/views/${encodeURIComponent(v.name)}?from=${start}&to=${addDays(stop, -1)}`);
+      if (my !== seq) return;
+      const typed = form.elements.namedItem(v.resource)?.closest?.("[data-picker]")?.querySelector(".picker-input")?.value;
+      const where = data.resources.find((x) => String(x.id) === res)?.title ?? data.items.find((x) => String(x.resource) === res)?.resource_title ?? (typed || `#${res}`);
+      const clash = data.items.filter((x) => String(x.resource) === res && String(x.id) !== String(id ?? ""));
+      zone.innerHTML = clash.length
+        ? noticeHtml(
+            "warn",
+            `<ul class="avail-list">${clash
+              .slice(0, 5)
+              .map((x) => `<li><a href="#/e/${esc(e.name)}/${esc(x.id)}">${esc(x.title ?? `${e.label_singular ?? e.label} #${x.id}`)}</a> · ${esc(rangeLabel(x.start, x.end))}</li>`)
+              .join("")}</ul><p class="notice-sub">Vous pouvez enregistrer quand même ; vérifiez d'abord qu'il ne s'agit pas d'un doublon.</p>`,
+            `Période déjà occupée : ${where}`,
+          )
+        : noticeHtml("ok", esc(`${where} est libre ${rangeLabel(start, stop)}.`));
+    } catch (x) {
+      if (my === seq && !x.handled) zone.innerHTML = "";
+    }
+  };
+  const schedule = () => {
+    clearTimeout(timer);
+    timer = setTimeout(run, 250);
+  };
+  form.addEventListener("change", (ev) => {
+    if ([v.resource, v.start, v.end].includes(ev.target.name)) schedule();
+  });
+  run();
+}
+
 /* Formulaire ---------------------------------------------------------------- */
 async function viewForm(name, id, t) {
   const e = entity(name);
@@ -2110,8 +2402,8 @@ async function viewForm(name, id, t) {
   const docVia = isLine(e) ? (bindings().find((b) => b.entity === e.name && b.scope === "line")?.document?.via ?? null) : null;
   const version = !isLine(e) ? null : !id && docVia && records[docVia] ? (records[docVia]._rules_version ?? activeVersion()) : "document";
   const back = id ? `#/e/${name}/${id}` : `#/e/${name}`;
-  const pageTitle = id ? `Modifier · ${titleOf(e, current)}` : `Nouveau · ${e.label_singular ?? e.label}`;
-  const crumbs = id ? [[`#/e/${name}`, e.label], [`#/e/${name}/${id}`, titleOf(e, current)]] : [[`#/e/${name}`, e.label]];
+  const pageTitle = id ? `Modifier · ${headingOf(e, current)}` : `Nouveau · ${e.label_singular ?? e.label}`;
+  const crumbs = id ? [[`#/e/${name}`, e.label], [`#/e/${name}/${id}`, headingOf(e, current)]] : [[`#/e/${name}`, e.label]];
   if (id && isProtectedLine(e, current)) {
     const lp = lineParent(e);
     shell(
@@ -2120,15 +2412,23 @@ async function viewForm(name, id, t) {
     );
     return;
   }
+  // Formulaire simple : champs essentiels d'abord (dans leur ordre), les autres repliés sous « Informations
+  // complémentaires » (enregistrés et modifiables), les champs techniques jamais proposés à la saisie
+  const groups = fieldGroups(e);
   const editable = [];
-  const controls = e.fields
-    .map((f) => {
-      const reason = lockReason(e, f, id ? current : {}, "form", version);
-      if (reason) return readOnlyField(e, f, id ? current : null, reason);
-      editable.push(f);
-      return fieldControl(e, f, id ? current[f.name] : (presets[f.name] ?? null), { title: id ? (current._refs?.[f.name] ?? null) : (titles[f.name] ?? null) });
-    })
-    .join("");
+  const control = (f) => {
+    const reason = lockReason(e, f, id ? current : {}, "form", version);
+    if (reason) return readOnlyField(e, f, id ? current : null, reason);
+    editable.push(f);
+    return fieldControl(e, f, id ? current[f.name] : (presets[f.name] ?? null), { title: id ? (current._refs?.[f.name] ?? null) : (titles[f.name] ?? null) });
+  };
+  const controls = groups.essential.map(control).join("");
+  const moreFilled = id ? groups.more.filter((f) => !empty(current[f.name])).length : 0;
+  const moreOpen = !id && groups.more.some((f) => presets[f.name] !== undefined);
+  const more = groups.more.length
+    ? `<details class="more form-more" id="form-more"${moreOpen ? " open" : ""}><summary>Informations complémentaires <span class="count">(${esc(plural(groups.more.length, "champ", "champs"))}${id ? `, ${esc(plural(moreFilled, "renseigné", "renseignés"))}` : ""})</span></summary><p class="hint more-hint">Facultatif : à compléter seulement si besoin. Tout est enregistré avec la fiche.</p><div class="form-grid">${groups.more.map(control).join("")}</div></details>`
+    : "";
+  const planned = viewFor(e);
   const protRec = id && isProtectedRecord(e, current);
   const intro = protRec
     ? noticeHtml("lock", esc("Les valeurs historiques protégées et les montants calculés sont en lecture seule. Les autres informations restent modifiables ; chaque modification est tracée dans le journal. Si une modification touche une donnée utilisée par le calcul d'origine, le serveur la refuse."), "Historique protégé")
@@ -2140,6 +2440,8 @@ async function viewForm(name, id, t) {
       <div data-summary></div><div id="err"></div>
       ${required ? '<p class="form-legend"><span class="req" aria-hidden="true">*</span> Champ obligatoire</p>' : ""}
       <div class="form-grid">${controls}</div>
+      ${planned ? '<div id="form-avail" class="avail-zone" aria-live="polite"></div>' : ""}
+      ${more}
       ${withPreview ? '<div id="form-preview" class="preview-zone" aria-live="polite"></div>' : ""}
       ${id && current._migrated ? '<div class="field justification"><label for="f-justification">Motif de la modification</label><input type="text" id="f-justification" name="_justification" aria-describedby="f-justification-hint"><p class="hint" id="f-justification-hint">Facultatif : enregistré dans le journal d\'audit avec la modification.</p></div>' : ""}
       <div class="form-actions"><button class="btn primary" type="submit">${id ? "Enregistrer" : "Créer"}</button><a class="btn secondary" href="${back}">Annuler</a></div></form></section>`,
@@ -2149,6 +2451,7 @@ async function viewForm(name, id, t) {
   bindPickers(form);
   liveClear(form);
   const preview = withPreview ? attachPreview(form, e, { fields: editable, id, panel: form.querySelector("#form-preview") }) : null;
+  if (planned) attachAvailability(form, e, planned, id, form.querySelector("#form-avail"));
   form.onsubmit = async (ev) => {
     ev.preventDefault();
     if (form.dataset.busy) return;
@@ -2598,6 +2901,7 @@ async function route(fresh = false) {
     else if (parts[0] === "compte" && parts.length === 1) await viewAccount(t);
     else if (parts[0] === "admin" && can("admin") && parts.length <= 2 && [undefined, "sauvegardes", "journal"].includes(parts[1])) await viewAdmin(t, parts[1]);
     else if (parts[0] === "modele" && parts.length === 1) await viewModel(t);
+    else if (parts[0] === "vue" && parts.length === 2 && views().some((v) => v.name === parts[1])) await viewPlanning(parts[1], t);
     else if (parts[0] === "e" && entity(parts[1])) {
       const id = Number(parts[2]);
       if (parts.length === 2) await viewList(parts[1], t);

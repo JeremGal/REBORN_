@@ -535,6 +535,76 @@
               "breakdown": {
                 "type": "string",
                 "pattern": "^[a-z][a-z0-9_]{0,59}$"
+              },
+              "form_fields": {
+                "maxItems": 200,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{0,59}$"
+                }
+              },
+              "technical_fields": {
+                "maxItems": 200,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{0,59}$"
+                }
+              },
+              "views": {
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "planning"
+                      ]
+                    },
+                    "name": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,59}$"
+                    },
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    },
+                    "start": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,59}$"
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,59}$"
+                    },
+                    "resource": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,59}$"
+                    },
+                    "title": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,59}$"
+                    },
+                    "status": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{0,59}$"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "name",
+                    "label",
+                    "start",
+                    "end",
+                    "resource",
+                    "title"
+                  ],
+                  "additionalProperties": false
+                }
               }
             },
             "additionalProperties": false

@@ -191,7 +191,7 @@ describe("Runtime du logiciel livré", () => {
   });
 
   it("ne contient aucun vocabulaire métier (tout vient de app.json)", () => {
-    const src = ["server.mjs", "public/app.js"].map((f) => fs.readFileSync(path.join(ROOT, "platform/runtime", f), "utf8")).join("\n");
+    const src = ["server.mjs", "public/app.js", "public/ui-core.js"].map((f) => fs.readFileSync(path.join(ROOT, "platform/runtime", f), "utf8")).join("\n");
     expect(src).not.toMatch(/\b(client|facture|devis|prospect|article|relatio|morel)s?\b/i);
   });
 });

@@ -276,6 +276,18 @@
               ]
             }
           },
+          "form_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "technical_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "provenance": {
             "type": "object",
             "properties": {
@@ -372,6 +384,56 @@
         "breakdowns"
       ]
     },
+    "views": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "planning"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,59}$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "entity",
+          "kind",
+          "name",
+          "label",
+          "start",
+          "end",
+          "resource",
+          "title"
+        ],
+        "additionalProperties": false
+      }
+    },
     "ddl": {
       "type": "array",
       "items": {
@@ -393,7 +455,8 @@
               "list",
               "detail",
               "form",
-              "admin"
+              "admin",
+              "planning"
             ]
           },
           "entity": {
@@ -554,7 +617,8 @@
               "entity",
               "workflow",
               "rule",
-              "attachment"
+              "attachment",
+              "view"
             ]
           },
           "name": {

@@ -35,6 +35,48 @@ Pour chaque entité du nouveau logiciel, tu décris :
 
 Sous le seuil (0,9), un élément devient un point à valider par un humain, et la migration est bloquée tant qu'il n'est pas tranché. Exemple complet : `contracts/migration_mapping.example.json` (Relatio 2004).
 
+### Présentation : formulaires simples, champs techniques, planning (`ui`, facultatif)
+
+Le but est de simplifier la saisie, jamais de retirer une donnée. Tout est facultatif ; sans ces clés, le logiciel livré se comporte comme avant.
+
+| Clé (dans `ui` d'une entité) | Effet dans le logiciel livré |
+|---|---|
+| `form_fields` | Liste ORDONNÉE des champs essentiels : affichés d'emblée dans le formulaire de création / modification et en tête de la fiche. Tous les autres champs restent enregistrés et modifiables, regroupés sous « Informations complémentaires » (replié). |
+| `technical_fields` | Champs techniques de l'ancien logiciel (clés recomposées, poste de saisie…) : jamais dans un formulaire ni en colonne, visibles seulement dans le bloc replié « Données d'origine » de la fiche. Un champ technique n'est jamais proposé à la saisie, même s'il est aussi listé comme essentiel. |
+| `views` | Vues d'ensemble. Planning : `{ "kind": "planning", "name": "planning", "label": "Planning des chambres", "start": "<date d'arrivée>", "end": "<date de départ, exclue>", "resource": "<référence vers l'entité des ressources>", "title": "<champ affiché sur la barre>", "status": "<champ de couleur, facultatif>" }`, déclaré sur l'entité des éléments à placer (ex. les réservations). |
+
+## 1 bis. Logiciel d'hôtel (sauvegarde de type HotelDruid)
+
+Chaîne : sauvegarde officielle → [`scripts/tagged-dump-to-sqlite.mjs`](scripts/tagged-dump-to-sqlite.mjs) (adaptateur) → dépôt (même nom de fichier : la source précédente est remplacée) → proposition automatique du Studio → [`scripts/hotel-vocabulary.mjs`](scripts/hotel-vocabulary.mjs) (vocabulaire de l'Analyste) → validation par le propriétaire → migration → mise en service.
+
+**Adaptateur : séjour lisible.** Pour les réservations (`prenota`) et les réservations annulées (`prenotacanc`), des colonnes sont AJOUTÉES en fin de table ; les colonnes d'origine restent intactes, valeurs comprises.
+
+| Colonne ajoutée | Type | Valeur |
+|---|---|---|
+| `date_arrivee` | TEXT (AAAA-MM-JJ) | début du jour n° `iddatainizio`, lu dans les périodes de la MÊME année |
+| `date_depart` | TEXT (AAAA-MM-JJ) | fin du jour n° `iddatafine` (lendemain de la dernière nuit) : date de départ, exclue du séjour |
+| `nuits` | INTEGER | `iddatafine − iddatainizio + 1` |
+| `type_tarif`, `prix_tarif` | TEXT, REAL | les deux premières parties de `tariffa` (« type#@&prix ») ; une 3e partie « p » (tarif par personne) reste dans `tariffa` |
+
+Valeur introuvable ou illisible : vide, jamais devinée. Le rapport de conversion (JSON sur la sortie standard) porte une entrée `derived` par table : `dates_resolved`, `dates_unresolved`, `nights_mismatch` (nuits différentes de l'écart entre les dates : périodes non journalières), `nights_unresolved`, `tariffs_split`, `tariffs_unsplit`, `tariffs_empty`, `tariffs_per_person`.
+
+**Vocabulaire de l'Analyste.** Libellés français, entités renommées (Réservations, Clients, Chambres…), et :
+- `form_fields` : clients = nom, prénom, téléphone, e-mail, ville, pays, commentaire ; réservations = client, chambre, arrivée, départ, personnes, type de tarif, montant du séjour, acompte, montant payé, confirmée, commentaire ; chambres = numéro, étage, capacité, lits, commentaire ; paiements = date, mode, montant lié à la réservation, montant de caisse, note ; occupants = réservation, client ; frais de séjour = réservation, frais, montant ; autres entités : 4 à 6 champs utiles.
+- `technical_fields` : `cle`, `annee`, liens `*_cle` (sauf la réservation d'un frais ou d'un occupant, essentielle), poste et auteur de saisie, numéros de jour, détails internes des tarifs, colonnes `var*` des frais.
+- `views` : planning des chambres sur les réservations (arrivée, départ, chambre, client, confirmée) ; titres : client = nom, chambre = numéro, réservation = arrivée ; listes et répartitions du tableau de bord choisies pour un hôtel ; confirmation affichée Oui / Non (codes d'origine S / N conservés).
+- **Liens rétablis.** Toutes les tables annuelles ont une clé « année:numéro » de même forme : la proposition générique rattache parfois un lien `*_cle` à la première table qui couvre ses valeurs (par exemple le jour d'arrivée vers les frais). L'Analyste remet les liens déclarés par l'adaptateur (`idprenota_cle` → réservations, `iddatainizio_cle` / `iddatafine_cle` → jours, `idntariffe_cle` → catalogue des frais), toujours « conservé sans lien et signalé » quand la cible manque (frais et occupants d'une réservation annulée, par exemple) : aucune ligne n'est rejetée pour un lien. `cle` est la référence d'origine d'un enregistrement, jamais un lien.
+- **Champs lus sur la clé d'origine.** Quand l'essentiel d'un formulaire est la clé d'origine (numéro de chambre ; réservation d'un occupant), un champ qui lit la même colonne est ajouté.
+- Types des colonnes ajoutées : arrivée et départ en date, nuits en entier, prix du tarif en montant.
+- Ne change jamais : tables et colonnes sources, clés, protections comptables, valeurs. Appliqué deux fois, même résultat. Vérification locale avant tout envoi (`checkVocabulary`) : rien n'est envoyé si un nom est inconnu ou si un champ technique est affiché.
+
+```bash
+# Après le dépôt d'une nouvelle conversion : nouvelle proposition automatique, vocabulaire, envoi par l'Analyste
+REBORN_URL=http://127.0.0.1:3000 REBORN_ANALYST_TOKEN=<jeton analyst> node scripts/hotel-vocabulary.mjs --project MIG_xxxxxxxx --propose --publish
+# Sans --publish : affiche le résultat sans rien envoyer (--propose crée quand même une proposition automatique)
+```
+
+Ensuite, le propriétaire tranche les points à valider, lance la migration et met en service ; si le logiciel en service contient des saisies de ses utilisateurs, la mise en service demande une confirmation explicite (sauvegarde faite avant). Test de la chaîne sur une sauvegarde inventée : `cd platform && npx vitest run src/hotel-vocabulary.test.ts`.
+
 ## 2. Modèle métier : `business_model` 1.0
 
 `POST /api/migration/business-model?project=<id>` (jeton analyst) ou `rb.publish_business_model(model)`. Schéma : `contracts/business_model.schema.json`. Exemple : `contracts/business_model.example.json`.
