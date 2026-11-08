@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ProjectDetails, ProjectSummary } from "@/components/project/ProjectProvider";
-import { actionItems, blockedStep, categoryOf, deliveredUrl, journey, nextAction, openPoints, parseAnalysis, plural, REQUIRED_STEPS, requiredDone, statusLabel, STEPS } from "./journey";
+import { actionItems, blockedStep, categoryOf, journey, nextAction, openPoints, parseAnalysis, plural, REQUIRED_STEPS, requiredDone, statusLabel, STEPS } from "./journey";
 
 /** Lot B3 : parcours et points à traiter, calculés uniquement à partir des réponses de l'API. */
 
@@ -83,7 +83,7 @@ describe("journey", () => {
 
   it("logiciel livré : toutes les étapes faites sauf la Découverte, action « Ouvrir la livraison »", () => {
     const s = summary(
-      { status: "PUBLISHED", data: { sources: 1, source_rows: 10, imported: 10, rejected: 0 }, app: { id: "garage-crm", port: 5051, deployed_at: "2026-11-03T10:00:00.000Z", run_id: "RUN_1" } },
+      { status: "PUBLISHED", data: { sources: 1, source_rows: 10, imported: 10, rejected: 0 }, app: { id: "garage-crm", port: 5051, url: "http://127.0.0.1:5051", deployed_at: "2026-11-03T10:00:00.000Z", run_id: "RUN_1" } },
       { connection: true, extraction: true, mapping: true, migration: true, rules: true, delivery: true },
     );
     const j = journey(s, 0);
@@ -155,15 +155,6 @@ describe("actionItems", () => {
     expect(parseAnalysis({ request: { state: "queued", requested_at: "x" }, agent_available: true })).toEqual({ state: "queued", agentAvailable: true, message: null, requestedAt: "x" });
     expect(parseAnalysis({ ok: false, error: "Projet introuvable" })).toBeNull();
     expect(parseAnalysis("<html>")).toBeNull();
-  });
-});
-
-describe("deliveredUrl", () => {
-  it("même hôte que le Studio, port du logiciel livré", () => {
-    expect(deliveredUrl(5050, { protocol: "http:", hostname: "127.0.0.1" })).toBe("http://127.0.0.1:5050/");
-    expect(deliveredUrl(5050, { protocol: "http:", hostname: "localhost" })).toBe("http://127.0.0.1:5050/");
-    expect(deliveredUrl(5050, { protocol: "http:", hostname: "192.168.1.20" })).toBe("http://192.168.1.20:5050/");
-    expect(deliveredUrl(5050, { protocol: "http:", hostname: "[::1]" })).toBe("http://[::1]:5050/");
   });
 });
 

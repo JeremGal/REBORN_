@@ -18,6 +18,7 @@ import type { RulePackage } from "../engine/bindings";
 import type { RuleModel } from "../types";
 import type { HistoryCheck } from "./rules-history";
 import { PROJECT_ID, projectScope } from "./context";
+import { appPublicUrl } from "./public-urls";
 
 /**
  * Projet de migration : coffre des fichiers extraits (empreintes), structure analysée,
@@ -1219,7 +1220,8 @@ export interface ProjectSummary {
   data: { sources: number; source_rows: number; imported: number; rejected: number };
   anomalies: { pending_decisions: number; gaps: number; failed_checks: number };
   business_model: { version: number; status: string } | null;
-  app: { id: string; port: number; deployed_at: string; run_id: string } | null;
+  /** `url` : adresse à ouvrir depuis le navigateur, donnée par le serveur (tunnel https publié, sinon adresse locale). */
+  app: { id: string; port: number; url: string; deployed_at: string; run_id: string } | null;
 }
 
 /** Résumé calculé à partir de ce qui a réellement été fait dans le projet. */
@@ -1272,8 +1274,17 @@ export function projectSummary(id: string): ProjectSummary | null {
     },
     anomalies: { pending_decisions: pending, gaps, failed_checks: failed },
     business_model: bm ? { version: bm.version, status: bm.status } : null,
-    app: active && app ? { id: app.id, port: app.port, deployed_at: active.at, run_id: active.run_id } : null,
+    app: active && app ? deliveredSummary(app, active) : null,
   };
+}
+
+/**
+ * Logiciel livré tel que le résumé le montre. Son adresse vient du serveur (tunnel https publié par
+ * scripts/serve-public.mjs, sinon adresse locale) : jamais déduite de l'hôte du Studio, qui derrière un tunnel
+ * ou un hébergeur ne sert que le Studio.
+ */
+export function deliveredSummary(app: { id: string; port: number }, active: { at: string; run_id: string }) {
+  return { id: app.id, port: app.port, url: appPublicUrl(app.port), deployed_at: active.at, run_id: active.run_id };
 }
 
 /** Projets visibles par le principal (SPEC §3) ; sans principal (appel interne) : tous. */

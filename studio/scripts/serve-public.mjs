@@ -22,7 +22,8 @@ const REPO = path.resolve(ROOT, "..");
 const ENV_FILE = process.env.REBORN_ENV_FILE || path.resolve(REPO, "..", "secrets", "vercel-env.txt");
 const H_ENV = path.join(REPO, ".env");
 const PORT = Number(process.env.PORT || 3100);
-const DIST = ".next-public";
+// Dossier du build servi ; REBORN_PUBLIC_DIST permet de construire à côté puis de basculer sans couper le Studio en service.
+const DIST = process.env.REBORN_PUBLIC_DIST || ".next-public";
 const DATA = path.resolve(process.env.REBORN_DATA_DIR || path.join(PLATFORM, ".data"));
 const APPS = path.join(DATA, "apps");
 const LOGS = path.join(DATA, "logs");

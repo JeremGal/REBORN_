@@ -29,3 +29,32 @@ describe("adresse publique d'un logiciel livré", () => {
     fs.rmSync(dir, { recursive: true, force: true });
   });
 });
+
+describe("lien « Ouvrir le logiciel » (liste des logiciels livrés)", () => {
+  it("le résumé du projet porte l'adresse publique du logiciel, pas l'hôte du Studio suivi du port", async () => {
+    const { deliveredSummary } = await import("@/lib/migration/project");
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "reborn-urls-"));
+    const file = path.join(dir, "public-app-urls.json");
+    fs.writeFileSync(file, JSON.stringify({ "4311": "https://a1b2-1-2-3-4.ngrok-free.app" }));
+    process.env.REBORN_APP_PUBLIC_URLS_FILE = file;
+    const active = { at: "2026-11-08T14:46:40.000Z", run_id: "RUN_1" };
+    expect(deliveredSummary({ id: "hotel-rm", port: 4311 }, active)).toEqual({ id: "hotel-rm", port: 4311, url: "https://a1b2-1-2-3-4.ngrok-free.app", deployed_at: active.at, run_id: "RUN_1" });
+    // Port sans tunnel publié : adresse locale du poste, jamais une adresse inventée
+    expect(deliveredSummary({ id: "autre", port: 4312 }, active).url).toBe("http://127.0.0.1:4312");
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("aucun écran ne fabrique l'adresse d'un logiciel livré à partir de l'adresse du Studio dans le navigateur", () => {
+    const roots = [path.join(__dirname, "app"), path.join(__dirname, "components")];
+    const offenders: string[] = [];
+    const walk = (d: string) => {
+      for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+        const f = path.join(d, e.name);
+        if (e.isDirectory()) walk(f);
+        else if (/\.tsx?$/.test(e.name) && !/\.test\.tsx?$/.test(e.name) && /location\.host(name)?\b/.test(fs.readFileSync(f, "utf8"))) offenders.push(path.relative(__dirname, f));
+      }
+    };
+    roots.forEach(walk);
+    expect(offenders).toEqual([]);
+  });
+});

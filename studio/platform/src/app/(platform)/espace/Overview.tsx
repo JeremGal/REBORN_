@@ -11,7 +11,7 @@ import { agreePlurals, formatDateTime } from "@/components/ds/format";
 import { StatusPill } from "@/components/project/ProjectShell";
 import { useViewer } from "@/components/shell/context";
 import { JourneyBar } from "@/components/shell/JourneyBar";
-import { actionItems, deliveredUrl, hostOf, isDelivered, journey, nextAction, plural, projectName, statusLabel, type ActionItem, type ActionTone, type ProjectEntry } from "@/components/shell/journey";
+import { actionItems, hostOf, isDelivered, journey, nextAction, plural, projectName, statusLabel, type ActionItem, type ActionTone, type ProjectEntry } from "@/components/shell/journey";
 import { useProjectEntries } from "@/components/shell/useProjects";
 
 /*
@@ -107,7 +107,7 @@ function DeliveredRow({ e }: { e: ProjectEntry }) {
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
-        <a href={deliveredUrl(app.port)} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm">
+        <a href={app.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm">
           <ExternalLink size={15} aria-hidden />
           Ouvrir le logiciel
           <span className="sr-only"> {projectName(s)} (nouvel onglet)</span>

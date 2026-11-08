@@ -374,11 +374,3 @@ export function actionItems(entries: ProjectEntry[], now: number = Date.now()): 
   return [...kept.values()].sort((x, y) => TONE_RANK[x.tone] - TONE_RANK[y.tone] || y.at.localeCompare(x.at));
 }
 
-const NO_WINDOW = { protocol: "http:", hostname: "127.0.0.1" };
-
-/** Adresse du logiciel livré, vue depuis le navigateur (même hôte que le Studio, port du logiciel). */
-export function deliveredUrl(port: number, loc: { protocol: string; hostname: string } = typeof window === "undefined" ? NO_WINDOW : window.location): string {
-  const host = loc.hostname === "localhost" ? "127.0.0.1" : loc.hostname;
-  const h = host.includes(":") && !host.startsWith("[") ? `[${host}]` : host;
-  return `${loc.protocol === "https:" ? "https:" : "http:"}//${h}:${port}/`;
-}
