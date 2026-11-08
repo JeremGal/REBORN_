@@ -1,33 +1,62 @@
 "use client";
 
 import { useState } from "react";
-import { LoaderCircle, Play, RotateCcw } from "lucide-react";
+import { ArrowRight, Play, RotateCcw } from "lucide-react";
 import { useProject, useProjectData } from "@/components/project/ProjectProvider";
-import { Button, Empty, Panel, cx } from "@/components/ui";
+import { Button, ConfirmationDialog, Progress } from "@/components/ds";
+import { Callout, EmptyState, Facts, Metric, Metrics, Section, StepHeader, TestBadge } from "@/components/project/Step";
 import {
   LoadError,
   Loading,
   MAPPING_ORIGIN,
-  Notice,
   StepLink,
+  Tag,
   VERDICT,
   count,
   fmt,
   readableError,
+  share,
   type MappingState,
+  type MappingVersion,
   type RunDetail,
   type RunMeta,
   type RunStart,
 } from "@/components/project/RunCommon";
 import { RunHistoryList, RunJournal } from "@/components/project/RunHistory";
-import { RunDuplicates, RunIssues, RunOverview, RunRejections } from "@/components/project/RunLedger";
+import { RESULT_ANCHOR, RunDuplicates, RunIssues, RunRejections, RunResult } from "@/components/project/RunLedger";
 
 type Outcome = { kind: "done"; run: RunMeta; report: RunStart["report"] } | { kind: "error"; message: string };
 
 /**
- * Étape 5 · Migration : construit la nouvelle base à partir des fichiers extraits et des
- * correspondances validées (POST /api/migration/runs, appel synchrone), puis montre ce qui a
- * réellement été importé, rejeté ou signalé pour chaque exécution.
+ * Lignes lues par l'exécution (tables reprises) et lignes reçues qui n'en font pas partie, d'après l'exécution
+ * elle-même : index des pièces jointes (rattachées aux fiches comme documents) et tables sans correspondance
+ * (écarts « table non reprise » du rapport). Explique l'écart avec les « lignes reçues » de l'étape (V17, PR-07).
+ */
+function sourceRowsHint(detail: RunDetail): string {
+  const parts = [`lues dans ${count(detail.entities.length, "table reprise", "tables reprises")}`];
+  const index = detail.attachments.expected;
+  if (index) parts.push(`+ ${count(index, "ligne", "lignes")} d'index des pièces jointes (documents rattachés aux fiches)`);
+  const left = (detail.report?.gaps ?? []).filter((g) => g.kind === "unmapped_table");
+  const rows = left.reduce((n, g) => n + (g.count ?? 0), 0);
+  if (rows) parts.push(`+ ${count(rows, "ligne", "lignes")} sans correspondance (${left.map((g) => g.source).filter(Boolean).join(", ")}), non migrées`);
+  return parts.join(" ; ");
+}
+
+/** Origine des correspondances, en clair (le jeu de test est signalé à part par <TestBadge>). */
+const ORIGIN_SHORT: Record<MappingVersion["origin"], string | null> = {
+  fixture: null,
+  analyst: "reçues de l'Analyste",
+  auto: "proposition automatique",
+  user: "corrigées à la main",
+};
+
+const code = "font-mono text-small text-ink";
+
+/**
+ * Étape 5 · Migration : construit la nouvelle base à partir des fichiers récupérés et des
+ * correspondances validées (POST /api/migration/runs, appel synchrone : aucune progression n'est
+ * inventée, l'attente est affichée comme telle), puis montre ce qui a réellement été transféré,
+ * rejeté ou signalé pour chaque exécution.
  */
 export default function MigrationStepPage() {
   const { id, summary, post } = useProject();
@@ -36,18 +65,22 @@ export default function MigrationStepPage() {
   const [picked, setPicked] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
+  // Logiciel déjà livré : relancer crée une exécution qui devra être revérifiée ; on le dit avant (PR-17)
+  const [confirmRelaunch, setConfirmRelaunch] = useState(false);
+  const deployed = summary?.app ?? null;
 
   const runs = runsQ.data ?? [];
   const latest = runs.at(-1) ?? null;
   const lastCompleted = runs.findLast((r) => r.status === "completed") ?? null;
   const selectedId = picked && runs.some((r) => r.id === picked) ? picked : (latest?.id ?? null);
+  const selected = runs.find((r) => r.id === selectedId) ?? null;
   const detailQ = useProjectData<RunDetail>(selectedId ? `/api/migration/runs/${selectedId}` : null);
   const detail = detailQ.data && detailQ.data.meta.id === selectedId ? detailQ.data : null;
 
   const plan = mappingQ.data;
   const mapping = plan?.current ?? null;
   const canRun = !!plan?.status.can_run;
-  const blockers = plan ? (canRun ? [] : plan.status.blockers.length ? plan.status.blockers : ["Aucune source de données reçue : récupérez d'abord les données de l'ancien logiciel."]) : [];
+  const blockers = plan ? (canRun ? [] : plan.status.blockers.length ? plan.status.blockers : ["Aucune donnée reçue : récupérez d'abord les données de l'ancien logiciel."]) : [];
   const base = `/projets/${id}`;
 
   async function launch() {
@@ -65,196 +98,270 @@ export default function MigrationStepPage() {
     }
   }
 
-  return (
-    <div className="flex flex-col gap-5">
-      {/* Lancement ------------------------------------------------------- */}
-      <section className="card px-4 py-4 sm:px-5" aria-labelledby="migration-title">
-        <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
-          <div className="min-w-0 max-w-[760px]">
-            <p className="eyebrow">Étape 5 · Migration</p>
-            <h2 id="migration-title" className="mt-1 text-[20px] leading-tight font-black tracking-[-0.02em]">
-              Construire la nouvelle base avec les données historiques
-            </h2>
-            <p className="mt-1 text-[13px] text-sediment">
-              Les fichiers extraits de l&apos;ancien logiciel sont relus, transformés selon les correspondances validées et importés dans une base neuve, dans l&apos;ordre de leurs dépendances.
-              Chaque enregistrement garde la trace de sa ligne d&apos;origine ; la vérification indépendante démarre automatiquement à la fin de l&apos;import.
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-col items-start gap-1.5 sm:items-end">
-            <Button
-              variant="accent"
-              onClick={() => void launch()}
-              disabled={!canRun || running || (runsQ.loading && !runsQ.data)}
-              aria-describedby={blockers.length ? "migration-blockers" : undefined}
-            >
-              {running ? (
-                <>
-                  <LoaderCircle size={14} className="animate-spin motion-reduce:animate-none" aria-hidden /> Migration en cours…
-                </>
-              ) : latest ? (
-                <>
-                  <RotateCcw size={14} aria-hidden /> Relancer la migration
-                </>
-              ) : (
-                <>
-                  <Play size={14} aria-hidden /> Lancer la migration
-                </>
-              )}
-            </Button>
-            {mappingQ.loading && !plan && <span className="text-[11.5px] text-silt">Vérification des prérequis…</span>}
-          </div>
-        </div>
+  /** Choix d'une exécution dans l'historique : son résultat s'affiche en haut de page. */
+  function select(rid: string) {
+    setPicked(rid === latest?.id ? null : rid);
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    requestAnimationFrame(() => document.getElementById(RESULT_ANCHOR)?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }));
+  }
 
-        <dl className="mt-4 grid gap-x-6 gap-y-2 border-t border-line pt-3 text-[12.5px] sm:grid-cols-2">
-          <div className="min-w-0">
-            <dt className="text-[11.5px] text-silt">Correspondances appliquées</dt>
-            <dd className="text-ink">
-              {mapping ? (
-                <>
-                  <b>v{mapping.version}</b> · {MAPPING_ORIGIN[mapping.origin] ?? mapping.origin} · vers <b>{mapping.mapping.target.name}</b>
-                </>
-              ) : plan ? (
-                "Aucune correspondance reçue"
-              ) : (
-                "…"
-              )}
-            </dd>
-          </div>
-          <div className="min-w-0">
-            <dt className="text-[11.5px] text-silt">Données sources</dt>
-            <dd className="tabular text-ink">
-              {summary ? (summary.data.sources ? `${count(summary.data.sources, "fichier source", "fichiers sources")} · ${count(summary.data.source_rows, "ligne reçue", "lignes reçues")}` : "Aucun fichier reçu") : "…"}
-            </dd>
-          </div>
-        </dl>
+  /* Action principale ------------------------------------------------- */
+  const launchButton = (
+    <Button
+      variant={latest?.status === "completed" ? "secondary" : "primary"}
+      onClick={() => (deployed && latest ? setConfirmRelaunch(true) : void launch())}
+      disabled={!canRun || running || (runsQ.loading && !runsQ.data)}
+      loading={running}
+      loadingText="Migration en cours…"
+      icon={latest ? <RotateCcw size={16} /> : <Play size={16} />}
+      aria-describedby={blockers.length ? "migration-blockers" : undefined}
+      title={latest ? "Chaque exécution repart d'une base neuve ; le logiciel déjà en service n'est pas modifié." : undefined}
+    >
+      {latest ? "Relancer la migration" : "Lancer la migration"}
+    </Button>
+  );
+  const nextButton =
+    latest?.status === "completed" && !running ? (
+      <Button href={`${base}/validation`} variant="primary" iconEnd={<ArrowRight size={16} />}>
+        Examiner la vérification
+      </Button>
+    ) : null;
 
-        <div className="mt-3 flex flex-col gap-2.5" aria-live="polite">
-          {mappingQ.error && !plan && <LoadError message={mappingQ.error} onRetry={() => void mappingQ.reload()} title="Prérequis de la migration illisibles" />}
+  /* Contexte et retour de l'action (sous l'en-tête) ---------------------- */
+  const done = outcome?.kind === "done" ? outcome : null;
+  const doneTone = done?.report ? VERDICT[done.report.status].tone : "info";
+  const hasAside = !!mapping || !!(mappingQ.error && !plan) || (!!plan && !canRun) || running || !!outcome;
+  const aside = hasAside && (
+    <div className="flex flex-col gap-3">
+      {mapping && (
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-body text-text-2">
+          <span>
+            Correspondances <b className="font-semibold text-ink">v{mapping.version}</b> vers <b className="font-semibold text-ink">{mapping.mapping.target.name}</b>
+            {ORIGIN_SHORT[mapping.origin] ? ` · ${ORIGIN_SHORT[mapping.origin]}` : ""}
+          </span>
+          {mapping.origin === "fixture" && <TestBadge />}
+        </p>
+      )}
 
-          {plan && !canRun && !running && (
-            <div id="migration-blockers">
-              <Notice tone="warn" title="Migration impossible pour l'instant">
-                <ul className="flex flex-col gap-0.5">
-                  {blockers.map((b) => (
-                    <li key={b} className="break-words">
-                      — {b}
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1">
-                  {summary?.data.sources ? <StepLink href={`${base}/correspondances`}>Ouvrir les correspondances</StepLink> : <StepLink href={`${base}/extraction`}>Récupérer les données</StepLink>}
-                </div>
-              </Notice>
-            </div>
+      {mappingQ.error && !plan && <LoadError message={mappingQ.error} onRetry={() => void mappingQ.reload()} title="Prérequis de la migration illisibles" />}
+
+      {plan && !canRun && !running && (
+        <Callout tone="warn" title="Migration impossible pour l'instant">
+          <ul id="migration-blockers" className="flex flex-col gap-0.5">
+            {blockers.map((b) => (
+              <li key={b} className="break-words">
+                {b}
+              </li>
+            ))}
+          </ul>
+          {summary?.data.sources ? (
+            <StepLink className="mt-1.5" href={`${base}/correspondances`}>
+              Ouvrir les correspondances
+            </StepLink>
+          ) : (
+            <StepLink className="mt-1.5" href={`${base}/extraction`}>
+              Récupérer les données
+            </StepLink>
           )}
+        </Callout>
+      )}
 
-          {running && (
-            <div role="status" className="flex items-start gap-2.5 rounded-md bg-[#e7eef8] px-3 py-2.5 text-[12.5px] text-ink">
-              <span aria-hidden className="live-dot mt-[5px] size-2 shrink-0 rounded-full bg-[#2457a6]" />
-              <div className="min-w-0">
-                <p className="font-bold text-[#2457a6]">Migration en cours</p>
-                <p>
-                  REBORN relit les fichiers extraits, importe les enregistrements dans une nouvelle base (une seule transaction), puis lance la vérification indépendante. L&apos;opération est
-                  synchrone : le résultat s&apos;affiche dès qu&apos;elle est terminée.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {outcome?.kind === "error" && (
-            <Notice tone="bad" title="La migration n'a pas abouti">
-              <p className="break-words">{outcome.message}</p>
-            </Notice>
-          )}
-          {outcome?.kind === "done" && outcome.run.status === "failed" && (
-            <Notice tone="bad" title={`${outcome.run.id} interrompue : transaction annulée, aucune donnée partielle conservée`}>
-              <p className="break-words">{outcome.run.error ?? "Cause non précisée par le moteur de migration."}</p>
-              <p className="text-sediment">Corrigez la cause puis relancez : la prochaine exécution repartira d&apos;une base vide.</p>
-            </Notice>
-          )}
-          {outcome?.kind === "done" && outcome.run.status === "completed" && (
-            <Notice
-              tone={outcome.report ? (VERDICT[outcome.report.status].tone === "ok" ? "ok" : VERDICT[outcome.report.status].tone === "warn" ? "warn" : "bad") : "info"}
-              title={`${outcome.run.id} terminée : ${count(outcome.run.summary.imported, "enregistrement importé", "enregistrements importés")}, ${count(outcome.run.summary.rejected, "ligne rejetée", "lignes rejetées")}`}
-            >
-              <p>
-                {outcome.report
-                  ? `Vérification indépendante : ${VERDICT[outcome.report.status].label.toLowerCase()} · ${count(outcome.report.failed, "contrôle en échec", "contrôles en échec")} sur ${fmt(outcome.report.checks)}.`
-                  : "Aucun rapport de vérification n'a été produit."}
-              </p>
-              <div>
-                <StepLink href={`${base}/validation`}>Examiner la vérification</StepLink>
-              </div>
-            </Notice>
-          )}
-
-          <p className="text-[12px] text-silt">
-            {latest && <b className="font-bold text-sediment">Relancer après correction. </b>}
-            Chaque exécution reconstruit une base neuve en une seule transaction. Si elle échoue, rien n&apos;est conservé : jamais de données partielles. Les exécutions précédentes restent
-            consultables et le logiciel déjà en service n&apos;est pas modifié (la mise en service se fait à l&apos;étape Livraison).
+      {running && (
+        <div className="rounded-panel bg-surface px-4 py-3.5 ring-1 ring-line">
+          <Progress label="Migration en cours" />
+          <p className="mt-2 text-small leading-relaxed text-text-2">
+            Copie des données dans une base neuve, puis vérification indépendante de chaque fiche. La durée dépend du volume ; aucune estimation n&apos;est affichée. Le résultat apparaît ici dès la
+            fin, sans recharger la page.
           </p>
         </div>
-      </section>
+      )}
+      {outcome?.kind === "error" && (
+        <Callout tone="bad" title="La migration n'a pas abouti.">
+          <p className="break-words">{outcome.message}</p>
+        </Callout>
+      )}
+      {done?.run.status === "failed" && (
+        <Callout tone="bad" title={`${done.run.id} interrompue : aucune donnée partielle n'a été conservée.`}>
+          <p className="break-words">{done.run.error ?? "Cause non précisée par le moteur de migration."}</p>
+        </Callout>
+      )}
+      {done?.run.status === "completed" && (
+        <Callout
+          tone={doneTone === "ok" || doneTone === "warn" || doneTone === "bad" ? doneTone : "info"}
+          title={`${done.run.id} terminée : ${count(done.run.summary.imported, "fiche transférée", "fiches transférées")}, ${count(done.run.summary.rejected, "ligne rejetée", "lignes rejetées")}.`}
+        >
+          <p>
+            {done.report
+              ? `Vérification : ${VERDICT[done.report.status].label.toLowerCase()} (${count(done.report.checks, "contrôle", "contrôles")}). Le détail, statut par statut, est à l'étape Validation.`
+              : "Aucun rapport de vérification n'a été produit."}
+          </p>
+          <StepLink className="mt-1.5" href={`${base}/validation`}>
+            Voir la vérification
+          </StepLink>
+        </Callout>
+      )}
+    </div>
+  );
 
-      {/* Détail + historique -------------------------------------------- */}
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="flex min-w-0 flex-col gap-5">
-          {runsQ.loading && !runsQ.data ? (
-            <Panel title="Dernière exécution">
-              <Loading label="Chargement des exécutions…" />
-            </Panel>
-          ) : runsQ.error && !runsQ.data ? (
-            <LoadError message={runsQ.error} onRetry={() => void runsQ.reload()} />
-          ) : !runs.length ? (
-            <Empty
-              title="Aucune exécution pour l'instant"
-              hint="Lancez la migration une fois les correspondances validées : le détail par entité, les rejets et leurs motifs, les valeurs signalées et les doublons apparaîtront ici."
-            />
-          ) : !detail ? (
-            detailQ.error ? (
-              <LoadError message={detailQ.error} onRetry={() => void detailQ.reload()} title={`Détail de ${selectedId} illisible`} />
-            ) : (
-              <Panel eyebrow={selectedId ? `Exécution ${selectedId}` : undefined} title="Chargement du détail">
-                <Loading label="Lecture du résultat de l'exécution…" />
-              </Panel>
-            )
-          ) : (
+  /* Chiffres de l'exécution affichée --------------------------------- */
+  const s = selected?.summary;
+  const flagged = detail ? detail.entities.reduce((n, e) => n + e.conversion_issues + e.unlinked, 0) + (detail.duplicates?.length ?? 0) : null;
+  const metrics = !selected ? (
+    <Metrics>
+      <Metric
+        label="Lignes reçues"
+        value={summary?.data.source_rows ? fmt(summary.data.source_rows) : "—"}
+        hint={summary ? (summary.data.sources ? `dans ${count(summary.data.sources, "fichier récupéré", "fichiers récupérés")} ; seules les tables reprises dans les correspondances seront migrées` : "aucun fichier reçu") : undefined}
+        tone={summary?.data.source_rows ? undefined : "muted"}
+      />
+      <Metric label="Transférées" value="—" tone="muted" hint="pas encore de migration" />
+      <Metric label="Rejetées" value="—" tone="muted" />
+      <Metric label="Anomalies" value="—" tone="muted" />
+    </Metrics>
+  ) : selected.status === "failed" || !s ? (
+    <Metrics>
+      <Metric label="Lignes sources" value="—" tone="muted" hint={`${selected.id} interrompue`} />
+      <Metric label="Transférées" value="—" tone="muted" hint="aucune donnée conservée" />
+      <Metric label="Rejetées" value="—" tone="muted" />
+      <Metric label="Anomalies" value="—" tone="muted" />
+    </Metrics>
+  ) : (
+    <Metrics>
+      <Metric label="Lignes sources" value={fmt(s.source_rows)} hint={detail ? sourceRowsHint(detail) : selected.id} />
+      <Metric label="Transférées" value={fmt(s.imported)} hint={s.source_rows ? `${share(s.imported, s.source_rows)} des lignes sources` : undefined} tone={s.imported === s.source_rows ? "ok" : undefined} />
+      <Metric label="Rejetées" value={fmt(s.rejected)} tone={s.rejected ? "warn" : undefined} hint={s.rejected ? "motifs détaillés plus bas" : "aucun rejet"} />
+      <Metric
+        label="Anomalies"
+        value={flagged === null ? "—" : fmt(flagged)}
+        tone={flagged ? "warn" : undefined}
+        hint={detail ? (flagged ? "valeurs signalées et doublons possibles" : "aucune valeur signalée") : undefined}
+      />
+    </Metrics>
+  );
+
+  /* Résultat de l'exécution affichée --------------------------------- */
+  const result =
+    runsQ.loading && !runsQ.data ? (
+      <Section title="Résultat de la migration">
+        <Loading label="Chargement des exécutions…" />
+      </Section>
+    ) : runsQ.error && !runsQ.data ? (
+      <LoadError message={runsQ.error} onRetry={() => void runsQ.reload()} />
+    ) : !runs.length ? (
+      <EmptyState title="Aucune migration lancée">Le résultat par table, les rejets et leurs motifs apparaîtront ici.</EmptyState>
+    ) : !detail ? (
+      detailQ.error ? (
+        <LoadError message={detailQ.error} onRetry={() => void detailQ.reload()} title={`Détail de ${selectedId} illisible`} />
+      ) : (
+        <Section id={RESULT_ANCHOR} className="scroll-mt-24" title="Résultat de la migration" description={selectedId ?? undefined}>
+          <Loading label="Lecture du résultat de l'exécution…" />
+        </Section>
+      )
+    ) : (
+      <RunResult
+        detail={detail}
+        latestId={latest?.id ?? null}
+        projectId={id}
+        validationHref={detail.meta.id === lastCompleted?.id ? `${base}/validation` : null}
+        onShowLatest={() => setPicked(null)}
+      />
+    );
+
+  /* Annonce aux lecteurs d'écran (région toujours présente, pour être lue à chaque changement) */
+  const announce = running
+    ? "Migration en cours."
+    : outcome?.kind === "error"
+      ? `La migration n'a pas abouti : ${outcome.message}`
+      : done
+        ? done.run.status === "failed"
+          ? `${done.run.id} interrompue : aucune donnée partielle n'a été conservée.`
+          : `${done.run.id} terminée : ${count(done.run.summary.imported, "fiche transférée", "fiches transférées")}, ${count(done.run.summary.rejected, "ligne rejetée", "lignes rejetées")}.`
+        : "";
+
+  return (
+    <div className="flex flex-col gap-6">
+      <p className="sr-only" aria-live="polite">
+        {announce}
+      </p>
+      <StepHeader
+        step={5}
+        title="Migration"
+        lead="Vos données sont copiées dans une base neuve selon les correspondances validées, puis chaque fiche est revérifiée."
+        aside={aside}
+        actions={
+          nextButton ? (
             <>
-              <RunOverview
-                detail={detail}
-                latestId={latest?.id ?? null}
-                validationHref={detail.meta.id === lastCompleted?.id ? `${base}/validation` : null}
-                onShowLatest={() => setPicked(null)}
-              />
-              {detail.meta.status === "completed" && (
-                <>
-                  <RunRejections detail={detail} projectId={id} />
-                  <div className="grid gap-5 xl:grid-cols-2">
-                    <RunIssues detail={detail} />
-                    <RunDuplicates detail={detail} />
-                  </div>
-                </>
-              )}
+              {nextButton}
+              {launchButton}
             </>
-          )}
-        </div>
+          ) : (
+            launchButton
+          )
+        }
+      />
+      <ConfirmationDialog
+        open={confirmRelaunch}
+        onClose={() => setConfirmRelaunch(false)}
+        onConfirm={async () => {
+          setConfirmRelaunch(false);
+          await launch();
+        }}
+        title="Relancer la migration ?"
+        confirmLabel="Relancer la migration"
+        pendingLabel="Migration en cours…"
+      >
+        Le logiciel en service garde ses données ({deployed?.run_id}) : rien n&apos;y change. La nouvelle exécution sera vérifiée, et ses écarts devront être examinés à
+        nouveau avant toute nouvelle mise en service.
+      </ConfirmationDialog>
 
-        <aside className="flex min-w-0 flex-col gap-5" aria-label="Historique et journal">
-          <Panel eyebrow="Historique" title={runs.length ? count(runs.length, "exécution", "exécutions") : "Exécutions"} bodyClassName={cx(runs.length ? "px-0 pb-1" : undefined)}>
-            {runs.length ? (
-              <>
-                <RunHistoryList runs={runs} selected={selectedId} onSelect={(rid) => setPicked(rid === latest?.id ? null : rid)} />
-              </>
-            ) : runsQ.loading ? (
-              <Loading />
-            ) : (
-              <p className="text-[12.5px] text-sediment">Les exécutions apparaîtront ici, avec leur résultat et leur vérification.</p>
-            )}
-          </Panel>
-          <Panel eyebrow="Journal d'exécution" title="Évènements de migration">
-            {summary ? <RunJournal since={summary.created_at} /> : <Loading label="Chargement du journal…" />}
-          </Panel>
-        </aside>
+      {metrics}
+
+      {result}
+
+      <div className="flex flex-col gap-3">
+        {detail?.meta.status === "completed" && (
+          <>
+            <RunRejections detail={detail} />
+            <RunIssues detail={detail} />
+            <RunDuplicates detail={detail} />
+          </>
+        )}
+
+        {runs.length > 1 && (
+          <Section collapsible title="Historique des exécutions" badge={<Tag tone="idle" plain>{fmt(runs.length)}</Tag>}>
+            <RunHistoryList runs={runs} selected={selectedId} onSelect={select} />
+          </Section>
+        )}
+
+        <Section collapsible title="Journal de migration">
+          {summary ? <RunJournal since={summary.created_at} /> : <Loading label="Chargement du journal…" />}
+        </Section>
+
+        <Section collapsible title="Intégration technique" description="Détails pour l'équipe technique : déroulement et empreinte de la base.">
+          <Facts
+            items={[
+              {
+                label: "Lancement",
+                value: (
+                  <>
+                    <code className={code}>POST /api/migration/runs</code> — synchrone : import puis vérification indépendante
+                  </>
+                ),
+              },
+              { label: "Détail d'une exécution", value: <code className={code}>GET /api/migration/runs/{"{id}"}</code> },
+              { label: "Rapport d'écarts (CSV)", value: <code className={code}>GET /api/migration/runs/{"{id}"}/rejects</code> },
+              { label: "Transaction", value: "Une par exécution : en cas d'échec, rien n'est conservé ; le logiciel en service n'est pas modifié." },
+              {
+                label: "Correspondances",
+                value: mapping ? `v${mapping.version} · ${MAPPING_ORIGIN[mapping.origin] ?? mapping.origin} · cible ${mapping.mapping.target.id}` : "Aucune correspondance reçue",
+              },
+              {
+                label: "Empreinte de la base (SHA-256)",
+                value: detail?.db_sha256 ? <code className={`${code} break-all`}>{detail.db_sha256}</code> : "—",
+              },
+            ]}
+          />
+        </Section>
       </div>
     </div>
   );

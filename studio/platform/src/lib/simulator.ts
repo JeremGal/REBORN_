@@ -1,6 +1,7 @@
 import { addEvent, completeInvestigation, getState } from "./store";
 import { ingestObservations, publishSchema } from "./service";
 import { DEMO_PLAN } from "./fixtures";
+import { egressRequest, safeOrigin } from "./migration/egress";
 import type { AgentEvent, AppSchema, InputField, Inputs, Investigation, Observation } from "./types";
 
 /**
@@ -107,8 +108,12 @@ async function runExperiment(base: string, formAction: string, inv: Investigatio
     act(inv, "Clic sur « Calculer »", undefined, { action: "click", target: "Calculer" });
   }
   const body = new URLSearchParams(Object.entries(inputs).map(([k, v]) => [k, String(v)]));
-  const res = await fetch(new URL(formAction, base), { method: "POST", body, signal: AbortSignal.timeout(8000) });
-  const r = readResult(await res.text());
+  // Garde réseau (lot B2) : même contrôle que le connecteur (adresses internes refusées hors liste blanche,
+  // redirections jamais suivies) ; le formulaire doit rester sur l'origine du logiciel exploré.
+  const target = new URL(formAction, base);
+  if (target.origin !== new URL(base).origin) throw new Error("Formulaire hors du logiciel exploré : refusé");
+  const res = await egressRequest(target, { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: body.toString(), timeoutMs: 8000, maxBytes: 2 * 1024 * 1024 });
+  const r = readResult(res.body.toString("utf8"));
   await sleep(STEP_MS);
   const [saved] = ingestObservations({
     experiment_id: id,
@@ -131,11 +136,13 @@ async function runExperiment(base: string, formAction: string, inv: Investigatio
 
 export async function runSimulation(inv: Investigation) {
   const base = inv.target_url || DEFAULT_LEGACY_URL;
+  // Adresse affichée sans identifiant ni chemin (jamais une URL complète dans le journal).
+  const shown = safeOrigin(base) ?? "adresse invalide";
   try {
-    act(inv, `Ouverture de ${inv.application}`, base, { action: "navigate", url: base });
+    act(inv, `Ouverture de ${inv.application}`, shown, { action: "navigate", url: shown });
     await sleep(STEP_MS * 2);
-    const res = await fetch(base, { signal: AbortSignal.timeout(5000) });
-    const { schema, submitLabel, action } = readForm(await res.text());
+    const res = await egressRequest(base, { timeoutMs: 5000, maxBytes: 2 * 1024 * 1024 });
+    const { schema, submitLabel, action } = readForm(res.body.toString("utf8"));
 
     addEvent({
       source: "explorer",
@@ -165,7 +172,7 @@ export async function runSimulation(inv: Investigation) {
       source: "explorer",
       type: "error",
       title: "Logiciel historique injoignable",
-      detail: `${base} : ${(e as Error).message}. Lancez-le avec « npm run dev » à la racine du projet.`,
+      detail: `${shown} : ${(e as Error).message}. Lancez-le avec « npm run dev » à la racine du projet.`,
       investigation_id: inv.id,
     });
     completeInvestigation(inv.id, "failed");

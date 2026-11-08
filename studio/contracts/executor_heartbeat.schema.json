@@ -1,0 +1,60 @@
+{
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat executor_heartbeat 1.0.",
+  "title": "executor_heartbeat",
+  "description": "Battement de cœur de l'exécuteur (Mouss → Studio), au moins toutes les 20 s : POST /api/executor/heartbeat. Renouvelle le prêt (120 s) des missions déclarées en cours ; sans battement depuis 60 s, l'agent est « non disponible ».",
+  "x-contract-version": "1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "networks": {
+      "minItems": 1,
+      "maxItems": 2,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "public",
+          "private"
+        ]
+      }
+    },
+    "login": {
+      "type": "string",
+      "enum": [
+        "h_vault",
+        "cdp",
+        "none"
+      ]
+    },
+    "max_concurrent": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50
+    },
+    "active_missions": {
+      "default": [],
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^MIS_[a-f0-9]{10}$"
+      }
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 80
+    }
+  },
+  "required": [
+    "version",
+    "networks",
+    "login",
+    "max_concurrent"
+  ],
+  "additionalProperties": {}
+}

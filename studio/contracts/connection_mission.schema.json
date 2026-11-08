@@ -1,0 +1,455 @@
+{
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat connection_mission 1.1.",
+  "title": "connection_mission",
+  "description": "Mission remise à l'exécuteur (Studio → Mouss) : POST /api/executor/missions/claim, ou compatibilité 1.0 POST /api/projects/<id>/mission. 1.1 additif (tous les champs 1.0 conservés) : état, échéance, réseau requis, investigation, prêt de l'exécuteur, consentement, limites, jeton de remise lié à la mission et à l'exécuteur (15 min, usage unique), points de rapport heartbeat et complete.",
+  "x-contract-version": "1.1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "contract": {
+      "type": "string",
+      "const": "connection_mission"
+    },
+    "contract_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+$"
+    },
+    "mission_id": {
+      "type": "string",
+      "pattern": "^MIS_[a-f0-9]{10}$"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^MIG_[a-f0-9]{8}$"
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "software": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "software_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "company": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "url",
+        "software",
+        "software_type",
+        "company"
+      ],
+      "additionalProperties": {}
+    },
+    "authorization": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "by": {
+              "type": "string"
+            },
+            "at": {
+              "type": "string"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "by",
+            "at",
+            "statement"
+          ],
+          "additionalProperties": {}
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "objectives": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "constraints": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "credential": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "username_hint": {
+              "type": "string"
+            },
+            "expires_at": {
+              "type": "string"
+            },
+            "redeem_url": {
+              "type": "string"
+            },
+            "token": {
+              "type": "string"
+            },
+            "credentials_expires_at": {
+              "type": "string"
+            },
+            "token_expires_at": {
+              "type": "string"
+            },
+            "handling": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "username_hint",
+            "expires_at",
+            "credentials_expires_at",
+            "handling"
+          ],
+          "additionalProperties": {}
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "report": {
+      "type": "object",
+      "properties": {
+        "connection_status": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "method",
+            "url"
+          ],
+          "additionalProperties": {}
+        },
+        "investigation": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "method",
+            "url"
+          ],
+          "additionalProperties": {}
+        },
+        "events": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "method",
+            "url"
+          ],
+          "additionalProperties": {}
+        },
+        "screens": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "method",
+            "url"
+          ],
+          "additionalProperties": {}
+        },
+        "observations": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "method",
+            "url"
+          ],
+          "additionalProperties": {}
+        },
+        "exports": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "method",
+            "url"
+          ],
+          "additionalProperties": {}
+        },
+        "heartbeat": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "method",
+            "url"
+          ],
+          "additionalProperties": {}
+        },
+        "complete": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "method",
+            "url"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "connection_status",
+        "investigation",
+        "events",
+        "screens",
+        "observations",
+        "exports",
+        "heartbeat",
+        "complete"
+      ],
+      "additionalProperties": {}
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "claimed",
+        "connecting",
+        "connected",
+        "exploring",
+        "needs_human",
+        "completed",
+        "failed",
+        "cancelled",
+        "expired"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "string"
+    },
+    "requires_network": {
+      "type": "string",
+      "enum": [
+        "public",
+        "private"
+      ]
+    },
+    "investigation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "executor": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "lease_expires_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "lease_expires_at"
+          ],
+          "additionalProperties": {}
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "consent": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "privacy_notice_version": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "authorization_version": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "accepted_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "privacy_notice_version",
+            "authorization_version",
+            "accepted_at"
+          ],
+          "additionalProperties": {}
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "read_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "login_screenshots": {
+          "type": "boolean",
+          "const": false
+        },
+        "max_duration_s": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "read_only",
+        "login_screenshots",
+        "max_duration_s"
+      ],
+      "additionalProperties": {}
+    }
+  },
+  "required": [
+    "contract",
+    "contract_version",
+    "mission_id",
+    "project_id",
+    "target",
+    "authorization",
+    "objectives",
+    "constraints",
+    "credential",
+    "report",
+    "status",
+    "created_at",
+    "expires_at",
+    "requires_network",
+    "investigation_id",
+    "executor",
+    "consent",
+    "limits"
+  ],
+  "additionalProperties": {}
+}

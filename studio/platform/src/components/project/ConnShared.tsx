@@ -1,45 +1,59 @@
 "use client";
 
-import { useCallback, useState, useSyncExternalStore, type ReactNode } from "react";
-import { CircleAlert, CircleCheck, CircleX, Hand, Hourglass, Info, PlugZap, ShieldAlert, TriangleAlert, type LucideIcon } from "lucide-react";
-import { cx } from "@/components/ui";
-import { MODE_INFO } from "@/lib/modes";
-import type { ProjectDetails } from "./ProjectProvider";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { Alert, type AlertTone } from "@/components/ds/Alert";
+import { formatDateTime, formatDay, formatInt, formatNumber } from "@/components/ds/format";
+import { redirectToLogin, useReborn } from "@/components/RebornProvider";
+import { lastCredentialErasure } from "@/components/shell/timeline";
+import { SESSION_LOST_MESSAGE, type ProjectDetails } from "./ProjectProvider";
+import { safeShotUrl } from "./view-rules";
 
 /*
- * Outils communs aux étapes Connexion et Découverte : formats français, messages de résultat,
- * étiquettes d'état. Aucun chiffre n'est calculé ici : tout vient des réponses d'API.
+ * Outils communs aux étapes Connexion et Découverte : formats français, appels d'API déclenchés
+ * par un bouton, états de connexion rapportés. Aucun chiffre n'est calculé ici : tout vient des
+ * réponses d'API. Rendu : composants du design system (components/ds).
  */
 
-export type ConnTone = "ok" | "warn" | "bad" | "info" | "idle";
-
-/** Bouton à libellé long : passe à la ligne sur mobile (390 px) au lieu de déborder. */
-export const CONN_WRAP_BTN = "h-auto! min-h-9 py-2 whitespace-normal! text-left leading-snug";
-
-/** Mode d'une investigation ; un mode inconnu est traité comme local (jamais présenté comme réel). */
-export function connMode(mode: string): { group: "local" | "real"; label: string; detail: string } {
-  return MODE_INFO[mode as keyof typeof MODE_INFO] ?? { group: "local", label: `mode « ${mode} »`, detail: "Mode non reconnu : traité comme un essai local, sans agent H Company." };
-}
+export type ConnTone = "ok" | "warn" | "bad" | "info";
 
 /* ------------------------------------------------------------------ */
 /* Formats                                                              */
 /* ------------------------------------------------------------------ */
 
-/** Date et heure d'un horodatage renvoyé par l'API (« — » s'il manque). */
-export function connDate(iso: string | null | undefined): string {
-  if (!iso) return "—";
+const valid = (iso: string | null | undefined) => {
+  if (!iso) return null;
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  return Number.isNaN(d.getTime()) ? null : d;
+};
+
+/** Date et heure au format unique du Studio (« 7 nov. 2026, 23:10 ») ; « — » si absente ou illisible. */
+export function connDate(iso: string | null | undefined): string {
+  return formatDateTime(iso);
+}
+
+/** Date seule, même format (« 7 nov. 2026 »). */
+export function connDay(iso: string | null | undefined): string {
+  return formatDay(iso);
 }
 
 /** Heure seule (hh:mm). */
 export function connHour(iso: string | null | undefined): string {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  const d = valid(iso);
+  return d ? d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : "—";
 }
 
-export const connNum = (n: number) => n.toLocaleString("fr-FR");
+/** Date relative courte (« dans 23 h », « il y a 5 min ») pour une échéance ; null si illisible. */
+export function connRelative(iso: string | null | undefined, now = Date.now()): string | null {
+  const d = valid(iso);
+  if (!d) return null;
+  const min = Math.round((d.getTime() - now) / 60000);
+  const abs = Math.abs(min);
+  const span = abs < 1 ? "moins d'une minute" : abs < 60 ? `${abs} min` : abs < 48 * 60 ? `${Math.floor(abs / 60)} h${abs % 60 ? ` ${String(abs % 60).padStart(2, "0")}` : ""}` : `${Math.round(abs / 1440)} jours`;
+  return min >= 0 ? `dans ${span}` : `il y a ${span}`;
+}
+
+/** Nombre entier au format français, séparateur de milliers lisible (formatInt du design system). */
+export const connNum = (n: number) => formatInt(n);
 
 /** Accord en nombre à la française (0 et 1 au singulier) : connCount(3, "capture") → « 3 captures ». */
 export const connCount = (n: number, one: string, many = `${one}s`) => `${connNum(n)} ${n > 1 ? many : one}`;
@@ -47,76 +61,154 @@ export const connCount = (n: number, one: string, many = `${one}s`) => `${connNu
 /** Valeur brute lisible (observations, codes…). */
 export function connValue(v: unknown): string {
   if (v === null || v === undefined || v === "") return "—";
-  if (typeof v === "number") return v.toLocaleString("fr-FR", { maximumFractionDigits: 6 });
+  if (typeof v === "number") return formatNumber(v, { maximumFractionDigits: 6 });
   if (typeof v === "boolean") return v ? "oui" : "non";
   return String(v);
 }
 
-/** Seules les captures servies par REBORN (/api/shots/…) ou par une adresse http(s) sont affichées. */
+/**
+ * Seules les captures servies par REBORN (/api/shots/<nom>, accès contrôlé, cache privé) sont affichées :
+ * jamais une image externe (http…), que le navigateur du client chargerait chez un tiers (lot C4).
+ */
 export function connSafeShot(url: string | undefined | null): string | null {
-  if (!url) return null;
-  if (/^\/api\/shots\/[A-Za-z0-9._-]+$/.test(url)) return url;
-  if (/^https?:\/\/[^\s"'<>]+$/i.test(url)) return url;
-  return null;
-}
-
-/** Adresse de la plateforme (pour lire les adresses relatives d'une mission), sans écart serveur/navigateur. */
-const noSubscribe = () => () => {};
-export function useConnOrigin(): string | null {
-  return useSyncExternalStore(
-    noSubscribe,
-    () => window.location.origin,
-    () => null,
-  );
+  return safeShotUrl(url);
 }
 
 /* ------------------------------------------------------------------ */
-/* États de connexion (details.connection)                              */
+/* Adresse de l'ancien logiciel                                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Contrôle de l'adresse de connexion saisie (le serveur refait ses propres contrôles, SPEC §7) :
+ * http(s) seulement, sans identifiant ni mot de passe, hôte non vide, 500 caractères au plus.
+ * Le message ne recopie jamais l'adresse. Vide → null (l'appelant décide si elle est obligatoire).
+ */
+export function legacyUrlProblem(raw: string): string | null {
+  const v = raw.trim();
+  if (!v) return null;
+  if (v.length > 500) return "Adresse trop longue : 500 caractères au plus.";
+  if (/\s/.test(v)) return "L'adresse ne doit pas contenir d'espace.";
+  let u: URL;
+  try {
+    u = new URL(v);
+  } catch {
+    return "Adresse incomplète : saisissez l'adresse entière, par exemple https://logiciel.exemple.fr";
+  }
+  if (u.protocol !== "http:" && u.protocol !== "https:") return "Seules les adresses qui commencent par http:// ou https:// sont acceptées.";
+  if (u.username || u.password) return "Retirez l'identifiant et le mot de passe de l'adresse : confiez-les dans la partie « Accès », où ils sont chiffrés.";
+  if (!u.hostname) return "Adresse incomplète : le nom du serveur manque.";
+  return null;
+}
+
+/* ------------------------------------------------------------------ */
+/* Appels d'API                                                         */
+/* ------------------------------------------------------------------ */
+
+/** Message lisible d'une réponse d'erreur de l'API (message + premiers détails de validation). */
+function apiMessage(status: number, data: { error?: unknown; issues?: unknown } | null): string {
+  const issues = Array.isArray(data?.issues)
+    ? (data.issues as { path?: string; message?: string }[])
+        .slice(0, 4)
+        .map((i) => i.message)
+        .filter(Boolean)
+        .join(" · ")
+    : "";
+  const base = typeof data?.error === "string" && data.error ? data.error : status === 404 ? "Service introuvable (HTTP 404)." : `Le Studio a répondu par une erreur (HTTP ${status}).`;
+  return issues ? `${base} — ${issues}` : base;
+}
+
+/** Erreur d'API avec son statut HTTP (404 : service ou ressource introuvable, 409 : conflit d'état…). */
+export class ConnApiError extends Error {
+  constructor(
+    public status: number,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+/**
+ * Appel JSON vers le Studio (même origine : le navigateur joint le cookie de session et l'en-tête
+ * Origin exigé pour les écritures). Lève une ConnApiError lisible en cas de refus. Session expirée ou
+ * révoquée (401) : retour à la page de connexion, comme projectCall (lot C4).
+ */
+export async function connApi<T = unknown>(method: string, url: string, body?: unknown): Promise<T> {
+  const r = await fetch(url, {
+    method,
+    cache: "no-store",
+    headers: body === undefined ? {} : { "content-type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  if (r.status === 401) {
+    redirectToLogin();
+    throw new ConnApiError(401, SESSION_LOST_MESSAGE);
+  }
+  const data = (await r.json().catch(() => null)) as T | null;
+  if (!r.ok) throw new ConnApiError(r.status, apiMessage(r.status, data as { error?: unknown; issues?: unknown } | null));
+  return (data ?? ({} as T)) as T;
+}
+
+/** Message d'erreur compréhensible : celui de l'API, ou une panne réseau expliquée en français. */
+export function connErrorText(e: unknown): string {
+  const msg = e instanceof Error ? e.message : String(e);
+  if (e instanceof TypeError && /fetch|network|load failed/i.test(msg)) return "Le Studio REBORN ne répond pas : vérifiez votre connexion, puis réessayez.";
+  return msg;
+}
+
+/* ------------------------------------------------------------------ */
+/* États de connexion rapportés (details.connection)                    */
 /* ------------------------------------------------------------------ */
 
 export type ConnConnectionStatus = NonNullable<ProjectDetails["connection"]>["status"];
 
-export const CONN_STATE: Record<ConnConnectionStatus | "none", { label: string; tone: ConnTone; icon: LucideIcon; text: string }> = {
+/** `metric` : valeur courte du haut de page ; `title` et `text` : message d'état détaillé. */
+export const CONN_STATE: Record<ConnConnectionStatus | "none", { metric: string; metricTone?: "ok" | "warn" | "bad"; tone: ConnTone; title: string; text: string }> = {
   none: {
-    label: "En attente de l'agent",
-    tone: "idle",
-    icon: Hourglass,
-    text: "Aucun rapport de connexion reçu. L'agent Computer Use de H Company (Mouss) se connectera avec le compte confié et rapportera ici le résultat.",
+    metric: "Aucun rapport",
+    tone: "info",
+    title: "Aucun rapport de connexion",
+    text: "Aucune connexion n'est affichée comme réussie sans un rapport réel de l'agent ou un test réel du connecteur.",
   },
   pending: {
-    label: "En attente de l'agent",
-    tone: "warn",
-    icon: Hourglass,
-    text: "L'agent a signalé que la connexion est en cours d'établissement. Le résultat s'affichera à son prochain rapport.",
+    metric: "En cours",
+    tone: "info",
+    title: "Connexion en cours d'établissement",
+    text: "Le résultat s'affichera au prochain rapport de l'agent.",
   },
   connected: {
-    label: "Connexion réussie",
+    metric: "Connecté",
+    metricTone: "ok",
     tone: "ok",
-    icon: PlugZap,
-    text: "L'accès à l'ancien logiciel a été confirmé.",
+    title: "Connexion établie",
+    text: "L'accès à l'ancien logiciel est confirmé.",
   },
   failed: {
-    label: "Échec de la connexion",
+    metric: "Échec",
+    metricTone: "bad",
     tone: "bad",
-    icon: CircleX,
-    text: "La connexion a été refusée ou n'a pas pu être établie. La cause rapportée est indiquée ci-dessous.",
+    title: "Échec de la connexion",
+    text: "La connexion a été refusée ou n'a pas pu être établie.",
   },
   mfa_required: {
-    label: "Double authentification demandée",
+    metric: "Intervention",
+    metricTone: "warn",
     tone: "warn",
-    icon: ShieldAlert,
-    text: "Le logiciel exige un second facteur. Une personne habilitée doit le valider : l'agent ne le contourne jamais.",
+    title: "Intervention nécessaire : double authentification",
+    text: "Votre logiciel demande un code de vérification. L'agent ne contourne jamais cette protection : c'est à vous d'intervenir.",
   },
   human_needed: {
-    label: "Intervention humaine nécessaire",
+    metric: "Intervention",
+    metricTone: "warn",
     tone: "warn",
-    icon: Hand,
-    text: "L'agent est bloqué et demande une action humaine (voir le détail rapporté).",
+    title: "Intervention nécessaire",
+    text: "L'agent est bloqué et attend une action de votre part.",
   },
 };
 
 /** Rapport émis par le test du connecteur HTTP de REBORN (et non par l'agent). */
 export const connByConnector = (by: string | undefined) => !!by && by.startsWith("REBORN");
+/** Rapport du connecteur émis avec le plan de test Relatio 2004 (jeu de test). */
+export const connByTestPlan = (by: string | undefined) => connByConnector(by) && /plan de test/i.test(by ?? "");
 
 /** Explication en clair de quelques causes techniques fréquentes (le message d'origine reste affiché). */
 export function connExplain(detail: string | undefined): string | null {
@@ -128,95 +220,7 @@ export function connExplain(detail: string | undefined): string | null {
 }
 
 /* ------------------------------------------------------------------ */
-/* Messages                                                             */
-/* ------------------------------------------------------------------ */
-
-const NOTICE: Record<ConnTone, { box: string; title: string; icon: LucideIcon }> = {
-  ok: { box: "bg-verdigris-soft", title: "text-[#0b6b5f]", icon: CircleCheck },
-  warn: { box: "bg-ochre-soft", title: "text-ochre", icon: TriangleAlert },
-  bad: { box: "bg-rust-soft", title: "text-rust", icon: CircleAlert },
-  info: { box: "bg-[#e7eef8]", title: "text-[#2457a6]", icon: Info },
-  idle: { box: "bg-chalk", title: "text-ink", icon: Info },
-};
-
-/** Encadré d'information ou de résultat. `live` : annoncé aux lecteurs d'écran (résultat d'une opération). */
-export function ConnNotice({ tone, title, children, live, icon, className }: { tone: ConnTone; title?: ReactNode; children?: ReactNode; live?: boolean; icon?: LucideIcon; className?: string }) {
-  const s = NOTICE[tone];
-  const Icon = icon ?? s.icon;
-  return (
-    <div role={live ? (tone === "bad" ? "alert" : "status") : undefined} className={cx("flex gap-2.5 rounded-sm px-3 py-2.5 text-[12.5px] leading-relaxed", s.box, className)}>
-      <Icon size={15} className={cx("mt-0.5 shrink-0", s.title)} aria-hidden />
-      <div className="min-w-0 break-words">
-        {title && <div className={cx("font-bold", s.title)}>{title}</div>}
-        {children && <div className={cx("text-ink/80", title ? "mt-0.5" : undefined)}>{children}</div>}
-      </div>
-    </div>
-  );
-}
-
-const TAG: Record<ConnTone, string> = {
-  ok: "bg-verdigris-soft text-[#0b6b5f]",
-  warn: "bg-ochre-soft text-ochre",
-  bad: "bg-rust-soft text-rust",
-  info: "bg-[#e7eef8] text-[#2457a6]",
-  idle: "bg-chalk-2 text-sediment",
-};
-
-/** Petite étiquette (« Jeu de test », « Agents réels », « En cours »…). */
-export function ConnTag({ tone = "idle", children, title, dot }: { tone?: ConnTone; children: ReactNode; title?: string; dot?: boolean }) {
-  return (
-    <span title={title} className={cx("inline-flex h-5 items-center gap-1 rounded-xs px-1.5 text-[10.5px] font-bold tracking-[0.06em] whitespace-nowrap uppercase", TAG[tone])}>
-      {dot && <span className="live-dot size-1.5 rounded-full bg-current" aria-hidden />}
-      {children}
-    </span>
-  );
-}
-
-/** Ligne libellé / valeur d'une fiche (à placer dans un <dl>). */
-export function ConnFact({ label, children, mono, className }: { label: string; children: ReactNode; mono?: boolean; className?: string }) {
-  return (
-    <div className={cx("min-w-0", className)}>
-      <dt className="text-[11px] font-bold text-silt">{label}</dt>
-      <dd className={cx("mt-0.5 text-[13px] leading-snug text-ink", mono ? "font-mono text-[12px] break-all" : "break-words")}>{children}</dd>
-    </div>
-  );
-}
-
-/** Chiffre clé issu de l'API (jamais estimé). */
-export function ConnStat({ label, value, tone, hint }: { label: string; value: ReactNode; tone?: ConnTone; hint?: ReactNode }) {
-  return (
-    <div className="min-w-0">
-      <dt className="text-[11.5px] text-silt">{label}</dt>
-      <dd className={cx("tabular text-[22px] leading-tight font-black tracking-[-0.01em]", tone === "ok" ? "text-verdigris" : tone === "warn" ? "text-ochre" : tone === "bad" ? "text-rust" : "text-ink")}>{value}</dd>
-      {hint && <dd className="text-[11.5px] leading-snug text-sediment">{hint}</dd>}
-    </div>
-  );
-}
-
-/** Intertitre de section à l'intérieur d'un panneau. */
-export function ConnHeading({ children, aside }: { children: ReactNode; aside?: ReactNode }) {
-  return (
-    <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-      <h3 className="text-[12.5px] font-bold tracking-[-0.005em] text-ink">{children}</h3>
-      {aside && <span className="text-[11.5px] text-silt">{aside}</span>}
-    </div>
-  );
-}
-
-/** Chargement : libellé visible + lignes neutres (pas de faux contenu). */
-export function ConnLoading({ label, lines = 3 }: { label: string; lines?: number }) {
-  return (
-    <div aria-busy="true" className="flex flex-col gap-2 py-1">
-      <span className="text-[12px] text-silt">{label}</span>
-      {Array.from({ length: lines }, (_, i) => (
-        <span key={i} className="h-2.5 rounded-xs bg-chalk-2 motion-safe:animate-pulse" style={{ width: `${88 - i * 17}%` }} />
-      ))}
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Opérations d'API déclenchées par un bouton                           */
+/* Opérations déclenchées par un bouton                                 */
 /* ------------------------------------------------------------------ */
 
 export interface ConnResult {
@@ -225,15 +229,31 @@ export interface ConnResult {
   text?: ReactNode;
 }
 
-/** Message d'erreur compréhensible : celui de l'API, ou une panne réseau expliquée en français. */
-export function connErrorText(e: unknown): string {
-  const msg = e instanceof Error ? e.message : String(e);
-  if (e instanceof TypeError && /fetch|network|load failed/i.test(msg)) return "Plateforme REBORN injoignable : vérifiez que le serveur est démarré, puis réessayez.";
-  return msg;
+const ALERT_TONE: Record<ConnTone, AlertTone> = { ok: "ok", warn: "warn", bad: "bad", info: "info" };
+
+/** Résultat d'une opération : annoncé poliment (alerte immédiate si échec). */
+export function ConnResultCallout({ result, className, onClose }: { result: ConnResult | null; className?: string; onClose?: () => void }) {
+  if (!result) return null;
+  return (
+    <Alert
+      tone={ALERT_TONE[result.tone]}
+      title={result.title}
+      className={className}
+      action={
+        onClose ? (
+          <button type="button" onClick={onClose} className="btn btn-ghost btn-sm">
+            Fermer
+          </button>
+        ) : undefined
+      }
+    >
+      {result.text}
+    </Alert>
+  );
 }
 
 /**
- * Une opération à la fois par panneau : état « en cours », résultat lisible. `after` est toujours
+ * Une opération à la fois par bloc : état « en cours », résultat lisible. `after` est toujours
  * appelé (succès ou échec) pour relire l'état réel renvoyé par l'API.
  */
 export function useConnAction() {
@@ -261,48 +281,16 @@ export function useConnAction() {
   return { busy, result, setResult, run };
 }
 
-/**
- * Copie un JSON obtenu par une requête en cours, sans jamais l'afficher. Le presse-papiers est
- * réservé pendant le clic (ClipboardItem + promesse, exigé par Safari), avec repli sur writeText
- * puis sur la copie système. L'erreur éventuelle de l'API est propagée à l'appelant.
- */
-export async function connCopyJson(pending: Promise<unknown>): Promise<boolean> {
-  const text = (v: unknown) => JSON.stringify(v, null, 2);
-  if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
-    const blob = pending.then((v) => new Blob([text(v)], { type: "text/plain" }));
-    blob.catch(() => {});
-    try {
-      await navigator.clipboard.write([new ClipboardItem({ "text/plain": blob })]);
-      return true;
-    } catch {
-      /* navigateur sans prise en charge : nouvel essai une fois la réponse reçue */
-    }
-  }
-  const value = await pending;
-  if (navigator.clipboard?.writeText) {
-    try {
-      await navigator.clipboard.writeText(text(value));
-      return true;
-    } catch {
-      /* repli ci-dessous */
-    }
-  }
-  // Contexte non sécurisé (accès réseau en http) : copie système, zone de texte hors écran et retirée aussitôt.
-  const area = document.createElement("textarea");
-  area.value = text(value);
-  area.setAttribute("readonly", "");
-  area.setAttribute("aria-hidden", "true");
-  area.style.position = "fixed";
-  area.style.top = "-10000px";
-  area.style.opacity = "0";
-  document.body.appendChild(area);
-  try {
-    area.select();
-    return document.execCommand("copy");
-  } catch {
-    return false;
-  } finally {
-    area.value = "";
-    area.remove();
-  }
+/* ------------------------------------------------------------------ */
+/* Dernier effacement des identifiants                                  */
+/* ------------------------------------------------------------------ */
+
+export { lastCredentialErasure };
+
+/** Effacement le plus récent, quand aucun identifiant n'est déposé (sinon null). */
+export function useCredentialErasure(projectId: string, stored: boolean | undefined): { at: string; reason: string } | null {
+  const { state } = useReborn();
+  const events = state?.events;
+  const investigations = state?.investigations;
+  return useMemo(() => (stored === false ? lastCredentialErasure(events, projectId, investigations ?? []) : null), [stored, events, projectId, investigations]);
 }

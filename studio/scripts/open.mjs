@@ -1,12 +1,13 @@
 // Ouvre les accès protégés sans jamais afficher les jetons.
 //
-//   npm run maintenance  → console de maintenance de Quotix 98 (Blind Challenge) dans le navigateur
-//   npm run connect      → dashboard REBORN authentifié (mode réseau)
-//   npm run token        → copie le jeton d'API dans le presse-papiers (à transmettre à Mouss et Alan)
+//   npm run maintenance                → console de maintenance de Quotix 98 (Blind Challenge) dans le navigateur
+//   npm run connect                    → page de connexion des comptes REBORN (/connexion)
+//   npm run token -- explorer|analyst  → copie le jeton de l'agent demandé dans le presse-papiers
+//   npm run token -- api               → ancien jeton unique (s'il existe encore)
 //
 // Ne pas ouvrir la console de maintenance dans le navigateur piloté par l'agent explorateur.
 import { spawnSync } from "node:child_process";
-import { ensureSecret, TOKENS } from "./secrets.mjs";
+import { ensureSecret, readSecret, TOKENS } from "./secrets.mjs";
 
 const cmd = process.argv[2];
 const base = (process.env.REBORN_URL ?? "http://127.0.0.1:3000").replace(/\/$/, "");
@@ -35,9 +36,8 @@ if (cmd === "maintenance") {
   openUrl(`http://127.0.0.1:${adminPort}/?token=${encodeURIComponent(token)}`);
   console.log(`[reborn] Console de maintenance ouverte (http://127.0.0.1:${adminPort}, session par cookie).`);
 } else if (cmd === "connect") {
-  const token = process.env.REBORN_API_TOKEN || ensureSecret(TOKENS.api);
-  openUrl(`${base}/connexion#token=${encodeURIComponent(token)}`);
-  console.log("[reborn] Dashboard ouvert : la page /connexion lit le jeton dans le fragment de l'URL (jamais envoyé au serveur).");
+  openUrl(`${base}/connexion`);
+  console.log("[reborn] Page de connexion ouverte : connectez-vous avec votre compte REBORN (aucun jeton dans le navigateur).");
 } else if (cmd === "crm-password" || cmd === "crm-source-password") {
   const fs = await import("node:fs");
   const path = await import("node:path");
@@ -65,10 +65,25 @@ if (cmd === "maintenance") {
   if (copy(secret)) console.log(`[reborn] Mot de passe ${cmd === "crm-password" ? "du compte « admin » du nouveau CRM" : "du compte « migration » de Relatio 2004"} copié dans le presse-papiers (non affiché).`);
   else console.log(`[reborn] Presse-papiers indisponible : voir ${path.relative(ROOT, file)}`);
 } else if (cmd === "token") {
-  const token = process.env.REBORN_API_TOKEN || ensureSecret(TOKENS.api);
-  if (copy(token)) console.log("[reborn] Jeton d'API copié dans le presse-papiers (non affiché). Transmettez-le en message privé : export REBORN_TOKEN=…");
-  else console.log("[reborn] Presse-papiers indisponible : le jeton se trouve dans .secrets/tokens.json (clé reborn_api_token).");
+  const kinds = {
+    explorer: { key: TOKENS.explorer, env: "REBORN_EXPLORER_TOKEN", who: "de l'exécuteur de l'agent (Mouss)" },
+    analyst: { key: TOKENS.analyst, env: "REBORN_ANALYST_TOKEN", who: "de l'Analyste (Alan)" },
+    api: { key: TOKENS.api, env: "REBORN_API_TOKEN", who: "unique (ancien, explorer + analyst)" },
+  };
+  const kind = kinds[process.argv[3] ?? ""];
+  if (!kind) {
+    console.log("Usage : npm run token -- explorer | analyst   (ou api pour l'ancien jeton unique, s'il existe)");
+    process.exit(1);
+  }
+  // Jetons des agents : créés s'ils manquent (jamais régénérés). L'ancien jeton unique n'est jamais créé.
+  const token = process.env[kind.env] || (kind.key === TOKENS.api ? readSecret(kind.key) : ensureSecret(kind.key));
+  if (!token) {
+    console.log("[reborn] Aucun ancien jeton unique : utilisez npm run token -- explorer ou npm run token -- analyst.");
+    process.exit(1);
+  }
+  if (copy(token)) console.log(`[reborn] Jeton ${kind.who} copié dans le presse-papiers (non affiché). Transmettez-le en message privé : export REBORN_TOKEN=…`);
+  else console.log(`[reborn] Presse-papiers indisponible : le jeton se trouve dans .secrets/tokens.json (clé ${kind.key}).`);
 } else {
-  console.log("Usage : node scripts/open.mjs maintenance | connect | token");
+  console.log("Usage : node scripts/open.mjs maintenance | connect | token <explorer|analyst|api>");
   process.exit(1);
 }

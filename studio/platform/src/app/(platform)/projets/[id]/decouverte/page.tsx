@@ -1,185 +1,189 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ArrowRight, Hourglass, TestTubeDiagonal } from "lucide-react";
-import { ButtonLink, Panel, cx } from "@/components/ui";
+import { useMemo } from "react";
+import { ArrowRight, Database, FileUp } from "lucide-react";
+import { Alert } from "@/components/ds/Alert";
+import { Badge } from "@/components/ds/Badge";
+import { Button } from "@/components/ds/Button";
+import { Skeleton } from "@/components/ds/Progress";
 import { useReborn } from "@/components/RebornProvider";
-import type { Investigation } from "@/lib/types";
+import { Facts, Metric, Metrics, Section, StepHeader, TestBadge } from "@/components/project/Step";
 import { useProject, useProjectData } from "@/components/project/ProjectProvider";
-import { ConnDiscoveryInvestigation } from "@/components/project/ConnDiscoveryInvestigation";
-import { ConnDiscoveryLaunch } from "@/components/project/ConnDiscoveryLaunch";
-import { ConnDiscoveryStructure } from "@/components/project/ConnDiscoveryStructure";
-import { ConnMissionReportList, type ConnMissionData } from "@/components/project/ConnMission";
-import { CONN_STATE, CONN_WRAP_BTN, ConnFact, ConnLoading, ConnNotice, ConnTag, connDate, connMode } from "@/components/project/ConnShared";
+import { missionInfo, useAnalysis } from "@/components/project/ConnAnalysis";
+import { DiscoveryAnomalies, DiscoveryDetails, DiscoveryModules, DiscoveryTimeline, buildTimeline, collectAnomalies, connMode, discoveryData, fromTestPlan, sourceOrigin } from "@/components/project/ConnDiscovery";
+import { connByConnector, connCount, connDate, connNum } from "@/components/project/ConnShared";
+import { journey, nextAction } from "@/components/shell/journey";
+import type { ExtractionSummary, SourceMeta } from "@/components/project/DataKit";
+
+/** Exploration indisponible tant qu'aucun rapport réel de l'agent n'est reçu (SPEC §6). */
+const NO_AGENT = "Exploration indisponible — agent non connecté.";
 
 /**
- * Étape 2 — Découverte : résultats réels des investigations rattachées au projet (project_id),
- * avec leurs preuves, et structure des données lue dans les exports déposés.
+ * Étape 2 — Découverte : ce que l'agent d'analyse a réellement observé (chronologie des faits
+ * reçus, modules et écrans, données accessibles, anomalies). Aucune progression simulée.
  */
 export default function DecouvertePage() {
-  const { id } = useProject();
+  const { id, summary, details, tick } = useProject();
   const { state, error } = useReborn();
-  const [selected, setSelected] = useState<string | null>(null);
-  const mine = useMemo(() => (state?.investigations ?? []).filter((i) => i.project_id === id), [state, id]);
-  const current = mine.find((i) => i.id === selected) ?? mine.find((i) => i.status === "running") ?? mine.at(-1) ?? null;
+  const analysis = useAnalysis(id, tick);
+  const sources = useProjectData<SourceMeta[]>("/api/migration/sources");
+  const overview = useProjectData<{ extraction: ExtractionSummary | null }>("/api/migration");
+  const extraction = overview.data?.extraction ?? null;
+  const data = useMemo(() => (state ? discoveryData(state, id) : null), [state, id]);
+  const mission = analysis.data?.mission ?? null;
+  const timeline = useMemo(() => buildTimeline({ details, mission, data, sources: sources.data, extraction }), [details, mission, data, sources.data, extraction]);
+  const anomalies = useMemo(() => collectAnomalies(data, sources.data, extraction), [data, sources.data, extraction]);
+  const fromAgent = (sources.data ?? []).filter((s) => sourceOrigin(s) !== "manual");
+  const testFlags = (sources.data ?? []).map((s) => fromTestPlan(s, extraction));
+  const anyTest = testFlags.some(Boolean);
+  const mixedTest = anyTest && testFlags.some((t) => !t);
+  const realAgent = !!data && (data.fromAgents > 0 || data.schemas.some((s) => s.source !== "fixture") || data.observations.length > 0 || (!!details?.connection && !connByConnector(details.connection.by)));
+  const available = analysis.data?.executor_available ?? false;
+  const info = missionInfo(mission?.status);
+  const loading = !state || !details || analysis.loading;
+  // Une seule action principale : la suite du parcours si des données sont déjà là, sinon l'import de fichiers
+  // tant qu'aucun agent n'a rien rapporté (la Découverte est facultative, jamais un préalable).
+  const investigations = data?.investigations.length ?? 0;
+  const ahead = summary && summary.data.sources > 0 ? nextAction(summary, journey(summary, investigations, details)) : null;
+  const next = ahead && ahead.slug !== "decouverte" && ahead.slug !== "connexion" ? ahead : null;
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-        <div className="min-w-0 max-w-[780px]">
-          <div className="eyebrow">Étape 2 · Découverte</div>
-          <h2 className="mt-1 text-[20px] leading-tight font-black tracking-[-0.02em]">Écrans, fonctions et règles observés</h2>
-          <p className="mt-1 text-[13px] leading-relaxed text-sediment">
-            Résultats réels de l&apos;exploration de l&apos;ancien logiciel par l&apos;agent Computer Use de H Company (Mouss), avec leurs preuves. Seules les investigations rattachées à ce
-            projet sont présentées.
-          </p>
-        </div>
-        <ButtonLink href={`/projets/${id}/extraction`} variant="ghost">
-          Étape suivante : Données <ArrowRight size={14} aria-hidden />
-        </ButtonLink>
-      </div>
+      <StepHeader
+        step={2}
+        title="Découverte de l'ancien logiciel"
+        lead="Ce que l'agent d'analyse a réellement observé dans votre logiciel : modules, écrans, données accessibles et anomalies, au fil de ses rapports."
+        actions={
+          <>
+            {next ? (
+              <Button href={`/projets/${id}/${next.slug}`} variant="primary" iconEnd={<ArrowRight size={16} />}>
+                {next.label}
+              </Button>
+            ) : !realAgent ? (
+              <Button href={`/projets/${id}/extraction#importer`} variant="primary" icon={<FileUp size={16} />}>
+                Importer mes fichiers
+              </Button>
+            ) : null}
+            <Button href={`/projets/${id}/connexion`} variant="secondary" iconEnd={<ArrowRight size={16} />}>
+              Suivre l&apos;analyse
+            </Button>
+          </>
+        }
+      />
 
-      {!state ? (
-        error ? (
-          <ConnNotice live tone="bad" title="Explorations indisponibles">
-            {error}
-          </ConnNotice>
+      <Metrics className="grid-cols-1! min-[480px]:grid-cols-2! lg:grid-cols-4!">
+        <Metric label="Explorations" value={data ? connNum(data.investigations.length) : "—"} hint={data ? (data.investigations.some((i) => i.status === "running") ? "Une exploration en cours" : data.investigations.length ? "Aucune en cours" : "Aucune ouverte") : undefined} />
+        <Metric label="Écrans décrits" value={data ? connNum(data.schemas.length) : "—"} hint={data?.schemas.length ? connCount(new Set(data.schemas.map((s) => s.module ?? "")).size, "module") : undefined} />
+        <Metric label="Exports reçus" value={sources.data ? connNum(fromAgent.length) : "—"} hint={sources.data ? `${connCount(sources.data.length - fromAgent.length, "fichier importé", "fichiers importés")} à la main` : undefined} />
+        <Metric label="Anomalies relevées" value={data && sources.data ? connNum(anomalies.length) : "—"} tone={anomalies.length ? "warn" : undefined} />
+      </Metrics>
+
+      {loading && !state ? (
+        <Skeleton lines={3} label="Lecture des rapports reçus pour ce projet…" />
+      ) : !realAgent ? (
+        available ? (
+          <Alert tone="info" title="L'agent d'analyse est disponible">
+            Aucun rapport n&apos;a encore été reçu pour ce projet. {mission && info.active ? `Demande : ${info.label.toLowerCase()}.` : "Demandez l'analyse à l'étape Connexion."} Les résultats s&apos;afficheront ici dès ses premiers rapports.
+          </Alert>
         ) : (
-          <Panel eyebrow="Explorations du projet">
-            <ConnLoading label="Chargement des explorations rattachées au projet…" />
-          </Panel>
+          <Alert
+            tone="warn"
+            title={NO_AGENT}
+            action={
+              <Button href={`/projets/${id}/extraction#importer`} variant="secondary" size="sm" icon={<FileUp size={14} />}>
+                Importer des fichiers
+              </Button>
+            }
+          >
+            Aucun rapport de l&apos;agent d&apos;analyse n&apos;a été reçu pour ce projet : rien n&apos;est affiché tant qu&apos;il n&apos;a rien transmis. {mission && info.active ? `Votre demande est ${info.label.toLowerCase()}.` : ""} En attendant, vous pouvez importer les exports de votre logiciel.
+          </Alert>
         )
-      ) : (
-        <>
-          {error && (
-            <ConnNotice live tone="warn" title="Synchronisation interrompue">
-              {error} Les informations affichées sont les dernières reçues.
-            </ConnNotice>
-          )}
-          {!current ? (
-            <>
-              <Waiting />
-              <ConnDiscoveryLaunch onLaunched={setSelected} />
-            </>
-          ) : (
-            <>
-              {mine.length > 1 && <InvestigationPicker list={mine} value={current.id} onChange={setSelected} />}
-              <ConnDiscoveryInvestigation key={current.id} inv={current} state={state} />
-              <ConnDiscoveryLaunch again onLaunched={setSelected} />
-            </>
-          )}
-        </>
+      ) : null}
+      {error && state && (
+        <Alert tone="warn" live="off" title="Synchronisation interrompue">
+          {error} Les informations affichées sont les dernières reçues.
+        </Alert>
       )}
 
-      <ConnDiscoveryStructure />
+      <Section title="Chronologie" description="Faits réellement reçus pour ce projet, du plus ancien au plus récent.">
+        {!state || !details ? <Skeleton lines={3} label="Lecture de la chronologie…" /> : <DiscoveryTimeline items={timeline} />}
+      </Section>
 
-      <aside className="card flex flex-wrap items-center justify-between gap-x-6 gap-y-3 p-4" aria-label="Mode de test local">
-        <div className="flex min-w-0 max-w-[820px] items-start gap-3">
-          <TestTubeDiagonal size={17} className="mt-0.5 shrink-0 text-ochre" aria-hidden />
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[13px] font-bold text-ink">Mode de test local</span>
-              <ConnTag tone="warn">Test</ConnTag>
-            </div>
-            <p className="mt-0.5 text-[12.5px] leading-relaxed text-sediment">
-              L&apos;atelier rejoue des scénarios de référence ou un explorateur de répétition intégré, sans agent H Company. Ses investigations ne sont pas rattachées à ce projet et
-              n&apos;apparaissent pas sur cette page.
-            </p>
-          </div>
-        </div>
-        <ButtonLink href="/atelier" variant="ghost">
-          Ouvrir l&apos;atelier (test) <ArrowRight size={14} aria-hidden />
-        </ButtonLink>
-      </aside>
-    </div>
-  );
-}
+      {data && data.schemas.length > 0 && (
+        <Section title="Modules et écrans identifiés" badge={<Badge>{connNum(data.schemas.length)}</Badge>} description="Champs, valeurs possibles et sorties relevés à l'écran par l'agent.">
+          <DiscoveryModules schemas={data.schemas} />
+        </Section>
+      )}
 
-/** Choix de l'investigation affichée (projet ayant plusieurs explorations). */
-function InvestigationPicker({ list, value, onChange }: { list: Investigation[]; value: string; onChange: (id: string) => void }) {
-  return (
-    <div role="group" aria-label="Investigations rattachées au projet" className="flex w-fit max-w-full flex-wrap gap-0.5 rounded-sm bg-chalk-2 p-0.5">
-      {list.map((i) => {
-        const on = i.id === value;
-        const mode = connMode(i.mode);
-        const local = mode.group === "local";
-        return (
-          <button
-            key={i.id}
-            type="button"
-            aria-pressed={on}
-            onClick={() => onChange(i.id)}
-            title={`${i.id} · ouverte le ${connDate(i.created_at)}${local ? ` · mode local (${mode.label})` : " · agents réels"}`}
-            className={cx("flex h-8 items-center gap-1.5 rounded-xs px-2.5 text-[12px] font-bold transition-colors duration-150", on ? "bg-paper text-ink shadow-[0_0_0_1px_var(--color-line)]" : "text-sediment hover:text-ink")}
-          >
-            {i.status === "running" && <span className="live-dot size-1.5 rounded-full bg-verdigris" aria-hidden />}
-            Inv. #{i.number}
-            {local && <span className="font-mono text-[9.5px] tracking-wider text-ochre uppercase">local</span>}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-/** Aucune investigation rattachée : état d'attente explicite, rappel de la mission et de ce qui sera rapporté. */
-function Waiting() {
-  const { id, summary, details } = useProject();
-  const mission = useProjectData<ConnMissionData>(`/api/projects/${id}/mission`);
-  const c = details?.connection;
-  const s = CONN_STATE[c?.status ?? "none"];
-  return (
-    <section className="card overflow-hidden" aria-labelledby="discovery-waiting">
-      <div className="grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-        <div className="p-5">
-          <div className="flex items-center gap-2">
-            <span className="flex size-8 items-center justify-center rounded-full bg-chalk text-ink shadow-[0_0_0_1px_var(--color-line)]">
-              <Hourglass size={15} aria-hidden />
-            </span>
-            <span className="eyebrow">Découverte non commencée</span>
-          </div>
-          <h3 id="discovery-waiting" className="mt-3 text-[18px] leading-tight font-black tracking-[-0.015em] text-ink">
-            En attente de l&apos;exploration par l&apos;agent Computer Use (Mouss)
-          </h3>
-          <p className="mt-2 text-[13px] leading-relaxed text-sediment">
-            Aucune exploration n&apos;est encore rattachée à ce projet. L&apos;agent de H Company se connecte à l&apos;ancien logiciel avec le compte confié, parcourt les écrans
-            accessibles et rapporte ce qu&apos;il observe, captures à l&apos;appui. Aucun résultat n&apos;est affiché tant qu&apos;il n&apos;a rien transmis.
+      {sources.data && sources.data.length > 0 && (
+        <Section
+          title="Données accessibles"
+          badge={anyTest && !mixedTest ? <TestBadge /> : undefined}
+          description="Fichiers reçus pour ce projet : ils sont consultables en détail à l'étape Données."
+          actions={
+            <Button href={`/projets/${id}/extraction`} variant="secondary" size="sm" icon={<Database size={14} />}>
+              Consulter les données
+            </Button>
+          }
+        >
+          <p className="mb-3 text-small text-text-2">
+            {connCount(sources.data.length, "fichier")} · {connCount(sources.data.reduce((n, s) => n + s.tables.length, 0), "table")} ·{" "}
+            {connCount(sources.data.reduce((n, s) => n + s.tables.reduce((m, t) => m + t.rows, 0), 0), "ligne")}
+            {sources.data.some((s) => s.archive_entries !== undefined) ? ` · ${connCount(sources.data.reduce((n, s) => n + (s.archive_entries ?? 0), 0), "pièce jointe", "pièces jointes")}` : ""}
           </p>
+          <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            {sources.data.map((s) => {
+              const rows = s.tables.reduce((n, t) => n + t.rows, 0);
+              const o = sourceOrigin(s);
+              return (
+                <li key={s.id} className="flex min-w-0 flex-col gap-0.5 rounded-control px-3 py-2.5 ring-1 ring-line">
+                  <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="min-w-0 text-body font-semibold break-words text-ink">{s.name}</span>
+                    {mixedTest && fromTestPlan(s, extraction) && <TestBadge />}
+                  </span>
+                  <span className="tabular text-small text-text-2">{s.archive_entries !== undefined ? connCount(s.archive_entries, "fichier") : s.tables.length > 1 ? `${connCount(s.tables.length, "table")} · ${connCount(rows, "ligne")}` : connCount(rows, "ligne")}</span>
+                  <span className="text-meta text-text-3">
+                    {o === "connector" ? "Connecteur de REBORN" : o === "agent" ? "Agent d'analyse" : o === "manual" ? "Import manuel" : `Envoyé par ${s.origin.by ?? "API"}`} · {connDate(s.received_at)}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </Section>
+      )}
 
-          <div className="mt-4 rounded-md bg-chalk p-3.5">
-            <div className="eyebrow mb-2">Rappel de la mission</div>
-            <dl className="grid gap-3 sm:grid-cols-2">
-              <ConnFact label="Connexion">
-                {s.label}
-                {c ? <span className="text-silt"> · {connDate(c.at)}</span> : null}
-              </ConnFact>
-              <ConnFact label="Identifiants">
-                {!details ? "…" : details.credentials.stored ? <span className="font-mono text-[12px]">{details.credentials.username_hint ?? "masqué"}</span> : <span className="text-ochre">Aucun identifiant confié</span>}
-              </ConnFact>
-              <ConnFact label="Cible" mono={!!summary?.legacy_url} className="sm:col-span-2">
-                {summary?.legacy_url ?? <span className="font-sans text-ochre">Adresse de l&apos;ancien logiciel non renseignée</span>}
-              </ConnFact>
-            </dl>
-            <ButtonLink href={`/projets/${id}/connexion#mission`} variant="ghost" className={`mt-3 ${CONN_WRAP_BTN}`}>
-              Préparer la mission (étape Connexion) <ArrowRight size={14} className="shrink-0" aria-hidden />
-            </ButtonLink>
-          </div>
-        </div>
+      {anomalies.length > 0 && (
+        <Section title="Anomalies relevées" badge={<Badge tone="warn">{connNum(anomalies.length)}</Badge>} description="Refus, éléments non reconstruits, essais non aboutis et avertissements, tels que rapportés.">
+          <DiscoveryAnomalies items={anomalies} />
+        </Section>
+      )}
 
-        <div className="border-t border-line bg-chalk/40 p-5 lg:border-t-0 lg:border-l">
-          <div className="eyebrow">Ce que l&apos;agent devra rapporter</div>
-          <p className="mt-1 mb-3 text-[12.5px] leading-relaxed text-sediment">Points de rapport de sa mission : chaque envoi apparaîtra sur cette page, ou à l&apos;étape Données pour les exports.</p>
-          {mission.loading && !mission.data ? (
-            <ConnLoading label="Chargement de la mission…" lines={4} />
-          ) : mission.data ? (
-            <ConnMissionReportList report={mission.data.report} />
+      <div className="flex flex-col gap-3">
+        {data && <DiscoveryDetails data={data} />}
+        <Section collapsible title="Intégration technique" description="Détails pour l'équipe technique : explorations rattachées au projet.">
+          {!data || data.investigations.length === 0 ? (
+            <p className="text-body text-text-2">Aucune exploration n&apos;est rattachée à ce projet. Elles sont ouvertes par l&apos;agent quand il prend en charge la demande d&apos;analyse.</p>
           ) : (
-            <ConnNotice tone="bad" title="Mission indisponible">
-              {mission.error ?? "Réponse vide de l'API."}
-            </ConnNotice>
+            <ul className="flex flex-col gap-4">
+              {data.investigations.map((i) => {
+                const mode = connMode(i.mode);
+                return (
+                  <li key={i.id}>
+                    <Facts
+                      items={[
+                        { label: "Exploration", value: <span className="font-mono text-small">{`${i.id} · n° ${i.number}`}</span> },
+                        { label: "Mode", value: mode.local ? <TestBadge>{`Essai local — ${mode.label}`}</TestBadge> : "Agent réel" },
+                        { label: "Ouverte le", value: connDate(i.created_at) },
+                        { label: "État", value: i.status === "running" ? "En cours" : i.status === "failed" ? "En échec" : `Terminée${i.completed_at ? ` le ${connDate(i.completed_at)}` : ""}` },
+                      ]}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
           )}
-        </div>
+        </Section>
       </div>
-    </section>
+    </div>
   );
 }

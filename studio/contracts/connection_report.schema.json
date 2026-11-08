@@ -1,8 +1,8 @@
 {
-  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat connection_report 1.0.",
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat connection_report 1.1.",
   "title": "connection_report",
-  "description": "Rapport d'état de connexion de l'agent Computer Use (Mouss → Studio).",
-  "x-contract-version": "1.0",
+  "description": "Rapport d'état de connexion de l'exécuteur de l'agent Computer Use (Mouss → Studio), réservé au titulaire de la mission en cours. 1.1 : mission_id facultatif ; by ignoré (identité authentifiée).",
+  "x-contract-version": "1.1",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
@@ -23,6 +23,10 @@
     "by": {
       "type": "string",
       "maxLength": 60
+    },
+    "mission_id": {
+      "type": "string",
+      "pattern": "^MIS_[a-f0-9]{10}$"
     }
   },
   "required": [

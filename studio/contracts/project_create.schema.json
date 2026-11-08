@@ -1,8 +1,8 @@
 {
-  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat project_create 1.0.",
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat project_create 1.3.",
   "title": "project_create",
-  "description": "Création d'un projet de migration (propriétaire → Studio). Les identifiants sont chiffrés et jamais renvoyés.",
-  "x-contract-version": "1.0",
+  "description": "Création d'un projet de migration par un compte client connecté (propriétaire → Studio). L'autorisation est enregistrée au nom du compte ; les identifiants sont chiffrés et jamais renvoyés. 1.3 : aucun consentement présumé — authorization_version exigée, et credentials_notice_version dès que des identifiants sont confiés (400 sans elles, 409 si périmées).",
+  "x-contract-version": "1.3",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
@@ -19,7 +19,8 @@
       "anyOf": [
         {
           "type": "string",
-          "maxLength": 500
+          "maxLength": 500,
+          "pattern": "^https?:\\/\\/[^\\s/?#@]+(?:[/?#]\\S*)?$"
         },
         {
           "type": "string",
@@ -39,9 +40,13 @@
       "type": "boolean",
       "const": true
     },
-    "authorized_by": {
+    "authorization_version": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 20
+    },
+    "authorized_by": {
+      "type": "string",
       "maxLength": 120
     },
     "credentials": {
@@ -60,7 +65,7 @@
         "ttl_hours": {
           "type": "number",
           "minimum": 0.25,
-          "maximum": 168
+          "maximum": 24
         }
       },
       "required": [
@@ -68,12 +73,16 @@
         "password"
       ],
       "additionalProperties": false
+    },
+    "credentials_notice_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20
     }
   },
   "required": [
     "company",
-    "authorized",
-    "authorized_by"
+    "authorized"
   ],
   "additionalProperties": false
 }

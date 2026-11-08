@@ -1,28 +1,37 @@
 "use client";
 
-import { Fragment, useMemo } from "react";
-import { Download, Paperclip } from "lucide-react";
-import { Button, Panel, cx } from "@/components/ui";
+import { Fragment, useMemo, type ReactNode } from "react";
+import { Button, cx } from "@/components/ds";
+import { Callout, Section } from "./Step";
 import {
-  Cell,
-  HeaderRow,
-  Notice,
+  CsvLink,
+  More,
   StepLink,
+  T,
   TONE_TEXT,
   Tag,
   VERDICT,
-  bytes,
+  ZERO,
   count,
   duration,
   fmt,
   maskRaw,
-  tally,
-  when,
+  pl,
+  share,
+  sourceHint,
+  whenShort,
+  type Check,
   type FieldIssue,
   type Rejection,
   type RunDetail,
   type Tone,
+  TableScroll,
+  scrollRegion,
 } from "./RunCommon";
+import { checkState, stateCounts } from "./RunVerification";
+
+/** Ancre de la section « Résultat » (on y revient quand on choisit une autre exécution). */
+export const RESULT_ANCHOR = "resultat-execution";
 
 const labelOf = (detail: RunDetail) => {
   const m = new Map(detail.entities.map((e) => [e.entity, e.label ?? e.entity]));
@@ -40,209 +49,226 @@ function groupBy<T>(list: T[], key: (x: T) => string): [string, T[]][] {
   return [...m.entries()];
 }
 
-/** Lien de téléchargement du rapport d'écarts (CSV) d'une exécution. */
-export function rejectsCsvHref(runId: string, projectId: string) {
-  return `/api/migration/runs/${encodeURIComponent(runId)}/rejects?project=${encodeURIComponent(projectId)}`;
-}
-
-export function CsvLink({ runId, projectId, label = "CSV des écarts" }: { runId: string; projectId: string; label?: string }) {
-  return (
-    <a
-      href={rejectsCsvHref(runId, projectId)}
-      download
-      className="inline-flex h-7 items-center gap-1.5 rounded-sm bg-paper px-2.5 text-xs font-bold whitespace-nowrap text-ink shadow-[0_0_0_1px_var(--color-line-strong)] transition-colors duration-150 hover:bg-chalk"
-    >
-      <Download size={12} aria-hidden /> {label}
-    </a>
-  );
-}
+const listCls = "overflow-hidden rounded-panel ring-1 ring-line";
 
 /* ------------------------------------------------------------------ */
-/* Synthèse d'une exécution                                             */
+/* Bilan d'une exécution : relations, contrôles, statut                  */
 /* ------------------------------------------------------------------ */
 
-function Term({ op, value, label, tone }: { op?: string; value: number; label: string; tone?: "ok" | "warn" | "bad" }) {
+/** Relations préservées, d'après les contrôles réellement faits sur la nouvelle base. */
+export function relationsState(detail: RunDetail): { tone: Tone; label: string; text: string } {
+  const integrity = detail.report?.checks.find((c) => c.id === "relations.integrite");
+  const links = detail.report?.checks.find((c) => c.id === "relations.rattachements");
+  const unlinked = detail.entities.reduce((n, e) => n + e.unlinked, 0);
+  if (!integrity || !links) return { tone: "idle", label: "Non vérifiées", text: "Aucun rapport de vérification pour cette exécution." };
+  if (integrity.status === "fail") return { tone: "bad", label: "Références cassées", text: integrity.summary };
+  if (links.status === "fail") return { tone: "bad", label: "Relations faussées", text: links.summary };
+  if (unlinked) return { tone: "warn", label: "Préservées, avec des fiches sans lien", text: `${count(unlinked, "fiche migrée sans lien", "fiches migrées sans lien")} : la fiche liée n'existait pas dans l'ancien logiciel (signalé, jamais deviné).` };
+  return { tone: "ok", label: "Préservées", text: "Chaque lien lu dans l'ancien logiciel pointe vers la bonne fiche migrée ; aucune référence cassée." };
+}
+
+function Fact({ label, tone, title, children }: { label: string; tone: Tone; title: string; children: ReactNode }) {
   return (
-    <div className="min-w-0">
-      <div className="flex items-baseline gap-2">
-        {op && <span className={cx("text-[22px] leading-none font-light", tone === "bad" && op === "≠" ? "text-rust" : "text-dust")}>{op}</span>}
-        <span className={cx("tabular text-[28px] leading-none font-black", tone === "ok" ? "text-verdigris" : tone === "warn" ? "text-ochre" : "text-ink")}>{fmt(value)}</span>
-      </div>
-      <div className="mt-1 text-[12px] text-sediment">{label}</div>
+    <div className="flex min-w-0 flex-col gap-1.5 py-3 sm:px-4 sm:first:pl-0">
+      <dt className="text-small font-medium text-text-3">{label}</dt>
+      <dd className="flex min-w-0 flex-col gap-1">
+        <span>
+          <Tag tone={tone}>{title}</Tag>
+        </span>
+        <span className="text-small leading-snug text-text-2">{children}</span>
+      </dd>
     </div>
   );
 }
 
-function Figure({ label, value, note, tone }: { label: string; value: string; note?: string; tone?: Tone }) {
-  return (
-    <div className="min-w-0">
-      <dt className="text-[11.5px] text-silt">{label}</dt>
-      <dd className={cx("tabular mt-0.5 text-[17px] leading-tight font-black", tone && tone !== "idle" ? TONE_TEXT[tone] : "text-ink")}>{value}</dd>
-      {note && <dd className="mt-0.5 text-[11.5px] leading-snug text-sediment">{note}</dd>}
-    </div>
-  );
+function checksTone(checks: Check[]): Tone {
+  const states = new Set(checks.map(checkState));
+  return states.has("intervention") ? "bad" : states.has("gap") ? "warn" : states.has("unverified") ? "info" : "ok";
 }
 
-const ENTITY_COLS = "md:grid-cols-[minmax(0,2fr)_repeat(4,minmax(0,1fr))]";
+/* ------------------------------------------------------------------ */
+/* Résultat d'une exécution                                             */
+/* ------------------------------------------------------------------ */
 
 /**
- * Exécution choisie : équilibre « lignes sources = importées + rejetées », volumes par entité,
- * pièces jointes, durée et résultat de la vérification. Une exécution interrompue n'affiche pas
- * de volumes : sa transaction a été annulée, rien n'a été conservé.
+ * Exécution choisie : volumes par entité (lignes sources = transférées + rejetées), relations et
+ * contrôles de la vérification indépendante. Une exécution interrompue n'affiche pas de volumes : sa
+ * transaction a été annulée, rien n'a été conservé.
  */
-export function RunOverview({
+export function RunResult({
   detail,
   latestId,
+  projectId,
   validationHref,
   onShowLatest,
 }: {
   detail: RunDetail;
   latestId: string | null;
+  projectId: string;
   /** Lien vers l'étape Validation, seulement si son rapport est celui de cette exécution. */
   validationHref: string | null;
   onShowLatest: () => void;
 }) {
   const m = detail.meta;
-  const failed = m.status === "failed";
+  const older =
+    latestId && latestId !== m.id ? (
+      <Callout
+        tone="info"
+        className="mb-4"
+        title={`Exécution antérieure : la plus récente est ${latestId}.`}
+        action={
+          <Button size="sm" variant="secondary" onClick={onShowLatest}>
+            Afficher {latestId}
+          </Button>
+        }
+      />
+    ) : null;
+
+  if (m.status === "failed") {
+    return (
+      <Section id={RESULT_ANCHOR} className="scroll-mt-24" title={`${m.id} interrompue`} description={`Lancée le ${whenShort(m.at)} par ${m.by} · correspondances v${m.mapping_version}`}>
+        {older}
+        <Callout tone="bad" title="Transaction annulée : aucune donnée n'a été conservée.">
+          <p className="break-words">{m.error ?? "Cause non précisée par le moteur de migration."}</p>
+        </Callout>
+      </Section>
+    );
+  }
+
   const s = m.summary;
   const balanced = s.source_rows === s.imported + s.rejected;
-  const a = detail.attachments;
-  const dups = detail.duplicates?.length ?? 0;
-  const t = detail.report ? tally(detail.report.checks) : null;
+  const sum = detail.entities.reduce(
+    (a, e) => ({ source: a.source + e.source_rows, imported: a.imported + e.imported, rejected: a.rejected + e.rejected, flagged: a.flagged + e.conversion_issues + e.unlinked }),
+    { source: 0, imported: 0, rejected: 0, flagged: 0 },
+  );
+  const csv = detail.rejections.total + detail.field_issues.total + detail.attachments.missing > 0;
   const verdict = m.verification ? VERDICT[m.verification] : null;
   const ack = m.verification === "review" ? detail.acknowledged : null;
+  const report = detail.report;
+  const t = report ? stateCounts(report, 0) : null;
+  const rel = relationsState(detail);
 
   return (
-    <Panel
-      eyebrow={`Exécution ${m.id}`}
-      title={failed ? "Exécution interrompue" : "Nouvelle base construite"}
-      actions={failed ? <Tag tone="bad">Interrompue</Tag> : ack ? <Tag tone="ok">Écarts acceptés</Tag> : verdict ? <Tag tone={verdict.tone}>{verdict.label}</Tag> : null}
+    <Section
+      id={RESULT_ANCHOR}
+      className="scroll-mt-24"
+      title="Résultat de la migration"
+      description={`${m.id} · lancée le ${whenShort(m.at)} par ${m.by} · durée ${duration(s.duration_ms)} · correspondances v${m.mapping_version}`}
+      actions={csv ? <CsvLink runId={m.id} projectId={projectId} /> : undefined}
     >
-      <p className="text-[12px] text-silt">
-        Lancée le {when(m.at)} par {m.by} · correspondances v{m.mapping_version} · durée {duration(s.duration_ms)} (migration et vérification)
+      {older}
+      {!balanced && (
+        <Callout tone="bad" className="mb-4" title="Le compte ne tombe pas juste.">
+          {fmt(s.source_rows)} lignes lues pour {fmt(s.imported + s.rejected)} transférées ou rejetées : la vérification détaille l&apos;écart.
+        </Callout>
+      )}
+
+      <dl className="mb-5 grid border-y border-line sm:grid-cols-3 sm:divide-x sm:divide-line">
+        <Fact label="Statut" tone={ack ? "ok" : (verdict?.tone ?? "idle")} title={ack ? "Écarts acceptés" : (verdict?.label ?? "Non vérifiée")}>
+          {verdict ? (ack ? `Acceptés par ${ack.by} le ${whenShort(ack.at)}.` : m.verification === "validated" ? "Aucun contrôle en échec, aucun écart documenté." : m.verification === "review" ? "Des écarts documentés attendent votre examen." : "Un contrôle bloquant a échoué.") : "Aucun rapport de vérification pour cette exécution."}
+        </Fact>
+        <Fact label="Relations" tone={rel.tone} title={rel.label}>
+          {rel.text}
+        </Fact>
+        <Fact label="Contrôles" tone={report ? checksTone(report.checks) : "idle"} title={t ? `${fmt(t.validated)} / ${fmt(t.total)} ${pl(t.validated, "validé", "validés")}` : "Aucun"}>
+          {t && report
+            ? [
+                t.gap ? `${fmt(t.gap)} avec écart` : "",
+                t.unverified ? `${fmt(t.unverified)} non ${pl(t.unverified, "vérifié", "vérifiés")}` : "",
+                t.intervention ? `${fmt(t.intervention)} ${pl(t.intervention, "bloquant", "bloquants")} en échec` : "",
+                !t.gap && !t.unverified && !t.intervention ? "aucun écart" : "",
+                report.gaps.length ? count(report.gaps.length, "écart documenté", "écarts documentés") : "",
+              ]
+                .filter(Boolean)
+                .join(" · ")
+            : "Relancez la migration pour produire une vérification."}
+        </Fact>
+      </dl>
+
+      {detail.entities.length > 0 ? (
+        <TableScroll label={`Résultat de ${m.id} par table`}>
+          <table className={T.table}>
+            <caption className="sr-only">
+              Résultat de {m.id} par table : lignes sources, transférées, rejetées et valeurs signalées
+            </caption>
+            <thead>
+              <tr className={T.head}>
+                <th scope="col" className={T.th}>
+                  Table
+                </th>
+                <th scope="col" className={cx(T.th, "hidden sm:table-cell")}>
+                  Lignes sources
+                </th>
+                <th scope="col" className={T.th}>
+                  Transférées
+                </th>
+                <th scope="col" className={cx(T.th, "max-sm:pr-5")}>
+                  Rejetées
+                </th>
+                <th scope="col" className={cx(T.th, "hidden sm:table-cell")}>
+                  Signalées
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {detail.entities.map((e) => {
+                const flagged = e.conversion_issues + e.unlinked;
+                const table = sourceHint(e.entity, e.source_table, e.label);
+                return (
+                  <tr key={e.entity} className={T.row}>
+                    <th scope="row" className={cx(T.td, "font-normal")}>
+                      <span className="font-semibold text-ink">{e.label ?? e.entity}</span>
+                      {table && <span className="block font-mono text-meta break-all text-text-3 sm:ml-2 sm:inline">{table}</span>}
+                    </th>
+                    <td className={cx(T.td, "hidden text-text-2 sm:table-cell")}>{fmt(e.source_rows)}</td>
+                    <td className={cx(T.td, "text-ink")}>
+                      <span className="font-semibold">{fmt(e.imported)}</span>
+                      {e.source_rows > 0 && <span className="ml-1.5 text-meta text-text-3">{share(e.imported, e.source_rows)}</span>}
+                    </td>
+                    <td className={cx(T.td, "max-sm:pr-5", e.rejected ? cx("font-semibold", TONE_TEXT.warn) : ZERO)}>{fmt(e.rejected)}</td>
+                    <td
+                      className={cx(T.td, "hidden sm:table-cell", flagged ? cx("font-semibold", TONE_TEXT.warn) : ZERO)}
+                      title={flagged ? `${count(e.conversion_issues, "valeur non convertie", "valeurs non converties")} · ${fmt(e.unlinked)} sans lien` : undefined}
+                    >
+                      {fmt(flagged)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            {detail.entities.length > 1 && (
+              <tfoot>
+                <tr className={T.foot}>
+                  <th scope="row" className={cx(T.td, "font-semibold text-ink")}>
+                    Total
+                  </th>
+                  <td className={cx(T.td, "hidden font-semibold sm:table-cell")}>{fmt(sum.source)}</td>
+                  <td className={cx(T.td, "font-semibold")}>
+                    {fmt(sum.imported)}
+                    {sum.source > 0 && <span className="ml-1.5 text-meta font-normal text-text-3">{share(sum.imported, sum.source)}</span>}
+                  </td>
+                  <td className={cx(T.td, "max-sm:pr-5 font-semibold", sum.rejected ? TONE_TEXT.warn : ZERO)}>{fmt(sum.rejected)}</td>
+                  <td className={cx(T.td, "hidden font-semibold sm:table-cell", sum.flagged ? TONE_TEXT.warn : ZERO)}>{fmt(sum.flagged)}</td>
+                </tr>
+              </tfoot>
+            )}
+          </table>
+        </TableScroll>
+      ) : (
+        <p className="text-body text-text-2">Aucune table dans cette exécution.</p>
+      )}
+      <p className="mt-3 text-small text-text-3">
+        Transférées : copiées dans la nouvelle base. Rejetées : non copiées, avec leur motif ; elles restent intactes dans les fichiers récupérés. Signalées : copiées avec une valeur laissée vide ou sans lien,
+        jamais devinée.
       </p>
 
-      {latestId && latestId !== m.id && (
-        <Notice tone="info" className="mt-3" title={`Exécution antérieure : la plus récente est ${latestId}`}>
-          <div>
-            <Button size="sm" variant="ghost" onClick={onShowLatest}>
-              Afficher {latestId}
-            </Button>
-          </div>
-        </Notice>
+      {verdict && validationHref && (
+        <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-body">
+          <span className="text-text-2">Le détail de chaque contrôle est à l&apos;étape Validation.</span>
+          <StepLink href={validationHref}>Voir la vérification</StepLink>
+        </p>
       )}
-
-      {failed ? (
-        <Notice tone="bad" className="mt-3" title="Transaction annulée : aucune donnée de cette exécution n'a été conservée">
-          <p className="break-words">{m.error ?? "Cause non précisée par le moteur de migration."}</p>
-          <p className="text-sediment">Corrigez la cause (correspondances ou fichiers sources), puis relancez : une nouvelle exécution repart d&apos;une base vide.</p>
-        </Notice>
-      ) : (
-        <>
-          <div className="mt-4">
-            <p className="sr-only">
-              {fmt(s.source_rows)} lignes sources lues, {fmt(s.imported)} importées, {fmt(s.rejected)} rejetées{balanced ? "" : " : le total ne correspond pas, voir la vérification"}.
-            </p>
-            <div aria-hidden className="flex flex-wrap items-start gap-x-6 gap-y-3">
-              <Term value={s.source_rows} label="lignes sources lues" />
-              <Term op={balanced ? "=" : "≠"} value={s.imported} label="importées dans la nouvelle base" tone={balanced ? "ok" : "bad"} />
-              <Term op="+" value={s.rejected} label={s.rejected ? "rejetées, motifs ci-dessous" : "rejetée"} tone={s.rejected ? "warn" : undefined} />
-            </div>
-            {!balanced && (
-              <Notice tone="bad" className="mt-3" title="Le compte ne tombe pas juste">
-                <p>
-                  {fmt(s.source_rows)} lignes lues pour {fmt(s.imported + s.rejected)} importées ou rejetées : la vérification indépendante détaille l&apos;écart.
-                </p>
-              </Notice>
-            )}
-          </div>
-
-          <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-line pt-3 sm:grid-cols-4">
-            <Figure
-              label="Pièces jointes"
-              value={a.expected ? `${fmt(a.stored)} / ${fmt(a.expected)}` : "—"}
-              note={a.expected ? (a.missing ? `${count(a.missing, "manquante", "manquantes")} · ${bytes(a.bytes)} copiés` : `toutes copiées · ${bytes(a.bytes)}`) : "aucune déclarée dans les correspondances"}
-              tone={a.missing ? "warn" : undefined}
-            />
-            <Figure
-              label="Valeurs signalées"
-              value={fmt(detail.field_issues.total)}
-              note="enregistrements migrés, valeur vide ou sans lien"
-              tone={detail.field_issues.total ? "warn" : undefined}
-            />
-            <Figure label="Doublons potentiels" value={fmt(dups)} note={dups ? "groupes, migrés sans fusion" : "aucun groupe signalé"} tone={dups ? "warn" : undefined} />
-            <Figure label="Durée" value={duration(s.duration_ms)} note="migration + vérification" />
-          </dl>
-
-          {detail.entities.length > 0 && (
-            <div className="mt-4 overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line)]">
-              <HeaderRow cols={ENTITY_COLS}>
-                <span>Entité · table source</span>
-                <span className="text-right">Lignes sources</span>
-                <span className="text-right">Importées</span>
-                <span className="text-right">Rejetées</span>
-                <span className="text-right">Valeurs signalées</span>
-              </HeaderRow>
-              <ul>
-                {detail.entities.map((e) => {
-                  const flagged = e.conversion_issues + e.unlinked;
-                  return (
-                    <li key={e.entity} className={cx("grid grid-cols-2 gap-x-3 gap-y-1.5 border-t border-line px-3 py-2 first:border-t-0 md:items-baseline", ENTITY_COLS)}>
-                      <div className="col-span-2 min-w-0 md:col-span-1">
-                        <span className="text-[13px] font-bold">{e.label ?? e.entity}</span> <span className="font-mono text-[11px] break-all text-silt">{e.source_table}</span>
-                      </div>
-                      <Cell label="Lignes sources">{fmt(e.source_rows)}</Cell>
-                      <Cell label="Importées">
-                        <b className="font-bold">{fmt(e.imported)}</b>
-                      </Cell>
-                      <Cell label="Rejetées">
-                        <span className={e.rejected ? cx("font-bold", TONE_TEXT.warn) : "text-silt"}>{fmt(e.rejected)}</span>
-                      </Cell>
-                      <Cell label="Valeurs signalées">
-                        <span className={flagged ? cx("font-bold", TONE_TEXT.warn) : "text-silt"} title={flagged ? `${fmt(e.conversion_issues)} non convertie(s) · ${fmt(e.unlinked)} sans lien` : undefined}>
-                          {fmt(flagged)}
-                        </span>
-                      </Cell>
-                    </li>
-                  );
-                })}
-              </ul>
-              {a.expected > 0 && (
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-line bg-chalk/40 px-3 py-2 text-[12.5px]">
-                  <Paperclip size={13} className="text-silt" aria-hidden />
-                  <span className="font-bold">Pièces jointes (toutes entités)</span>
-                  <span className="tabular text-sediment">
-                    {fmt(a.stored)} copiées sur {fmt(a.expected)} référencées · {bytes(a.bytes)}
-                    {a.missing ? <span className={cx("font-bold", TONE_TEXT.warn)}> · {count(a.missing, "manquante", "manquantes")}</span> : null}
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-line pt-3">
-            <p className="min-w-0 text-[12.5px] text-sediment">
-              {verdict && t ? (
-                <>
-                  <span className={cx("font-bold", TONE_TEXT[verdict.tone])}>Vérification indépendante : {verdict.label.toLowerCase()}</span> · {count(t.pass, "réussi", "réussis")},{" "}
-                  {count(t.warn, "avertissement", "avertissements")}, {count(t.info, "information", "informations")}, {count(t.fail, "échec", "échecs")} sur{" "}
-                  {count(t.total, "contrôle", "contrôles")}
-                  {ack ? ` · écarts acceptés par ${ack.by} le ${when(ack.at)}` : ""}
-                </>
-              ) : (
-                "Aucun rapport de vérification pour cette exécution."
-              )}
-            </p>
-            {validationHref ? <StepLink href={validationHref}>Examiner la vérification</StepLink> : verdict ? <span className="text-[11.5px] text-silt">L&apos;étape Validation porte sur la dernière exécution terminée.</span> : null}
-          </div>
-          {detail.db_sha256 && (
-            <p className="mt-2 font-mono text-[11px] break-all text-silt" title={detail.db_sha256}>
-              Empreinte de la nouvelle base · SHA-256 {detail.db_sha256.slice(0, 24)}…
-            </p>
-          )}
-        </>
-      )}
-    </Panel>
+    </Section>
   );
 }
 
@@ -259,97 +285,79 @@ function topReasons(list: Rejection[], max = 6): { shown: [string, number][]; ot
 
 function SourceRow({ raw }: { raw: Record<string, unknown> }) {
   return (
-    <details className="mt-1">
-      <summary className="cursor-pointer text-[11.5px] font-bold text-silt hover:text-ink">Ligne source complète</summary>
-      <dl className="mt-1 grid grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-x-3 gap-y-0.5 rounded-sm bg-chalk px-2 py-1.5 font-mono text-[11px]">
+    <More label="Ligne source complète" className="mt-1.5">
+      <dl className="grid grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-x-4 gap-y-1 rounded-control bg-surface px-3 py-2 font-mono text-meta ring-1 ring-line">
         {maskRaw(raw).map(([k, v]) => (
           <Fragment key={k}>
-            <dt className="text-silt">{k}</dt>
+            <dt className="text-text-3">{k}</dt>
             <dd className="break-all text-ink">{v}</dd>
           </Fragment>
         ))}
       </dl>
-    </details>
+    </More>
   );
 }
 
-export function RunRejections({ detail, projectId }: { detail: RunDetail; projectId: string }) {
+/** Lignes rejetées (non transférées), regroupées par table avec leurs motifs. Section repliée. */
+export function RunRejections({ detail }: { detail: RunDetail }) {
   const { total, items } = detail.rejections;
   const entityLabel = labelOf(detail);
   const groups = useMemo(() => groupBy(items, (r) => r.entity), [items]);
+  if (!total) return null;
   const partial = items.length < total;
-  const csv = total + detail.field_issues.total + detail.attachments.missing > 0;
 
   return (
-    <Panel
-      eyebrow="Rejets"
-      title={total ? `${count(total, "ligne rejetée", "lignes rejetées")}, non importée${total > 1 ? "s" : ""}` : "Aucune ligne rejetée"}
-      actions={csv ? <CsvLink runId={detail.meta.id} projectId={projectId} /> : null}
-    >
-      <p className="text-[12.5px] text-sediment">
-        {total
-          ? "Une ligne rejetée n'entre pas dans la nouvelle base : elle reste intacte dans les fichiers extraits. Le CSV des écarts reprend chaque rejet avec ses motifs et la ligne source complète, ainsi que les valeurs signalées et les pièces jointes manquantes."
-          : "Toutes les lignes lues ont été importées."}
-      </p>
-      {groups.length > 0 && (
-        <ul className="mt-3 overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line)]">
-          {groups.map(([entity, list]) => {
-            const { shown, others } = topReasons(list);
-            return (
-              <li key={entity} className="border-t border-line px-3 py-2.5 first:border-t-0">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-                  <span className="min-w-0 text-[13px] font-bold">
-                    {entityLabel(entity)} <span className="font-mono text-[11px] font-normal break-all text-silt">{list[0].source_table}</span>
-                  </span>
-                  <span className={cx("tabular text-[12px] font-bold", TONE_TEXT.warn)}>
-                    {count(list.length, "rejet", "rejets")}
-                    {partial ? " affiché(s)" : ""}
-                  </span>
-                </div>
-                <ul className="mt-1 flex flex-col gap-0.5">
-                  {shown.map(([reason, k]) => (
-                    <li key={reason} className="flex items-start justify-between gap-3 text-[12.5px]">
-                      <span className="min-w-0 break-words">{reason}</span>
-                      <span className="tabular shrink-0 text-silt">× {fmt(k)}</span>
+    <Section collapsible title={count(total, "ligne rejetée", "lignes rejetées")} badge={<Tag tone="warn">À connaître</Tag>} description="Non transférées, avec leur motif ; elles restent intactes dans les fichiers récupérés.">
+      <div className="flex flex-col gap-5">
+        {groups.map(([entity, list]) => {
+          const { shown, others } = topReasons(list);
+          const table = sourceHint(entity, list[0].source_table, entityLabel(entity));
+          return (
+            <div key={entity} className="min-w-0">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                <h3 className="min-w-0 text-body font-semibold text-ink">
+                  {entityLabel(entity)} {table && <span className="font-mono text-meta font-normal break-all text-text-3">{table}</span>}
+                </h3>
+                <span className={cx("tabular text-small font-semibold", TONE_TEXT.warn)}>{count(list.length, "rejet", "rejets")}</span>
+              </div>
+              <ul className={cx("mt-2", listCls)}>
+                {shown.map(([reason, k]) => (
+                  <li key={reason} className="flex items-start justify-between gap-3 border-b border-line px-3 py-2 text-body last:border-b-0">
+                    <span className="min-w-0 break-words text-ink">{reason}</span>
+                    <span className="tabular shrink-0 text-text-3">× {fmt(k)}</span>
+                  </li>
+                ))}
+                {others > 0 && <li className="px-3 py-2 text-small text-text-3">+ {count(others, "autre motif", "autres motifs")}</li>}
+              </ul>
+              <More label={`Voir les lignes (${fmt(list.length)})`} className="mt-2">
+                <ol className="flex max-h-96 flex-col gap-2 overflow-y-auto pr-1" {...scrollRegion(`Lignes rejetées : ${entityLabel(entity)}`)}>
+                  {list.map((r) => (
+                    <li key={`${r.row}-${r.source_key ?? ""}`} className="rounded-control bg-surface-sunken px-3 py-2">
+                      <p className="flex flex-wrap gap-x-3 text-small">
+                        <span className="font-mono font-semibold text-ink">clé {r.source_key ?? "absente"}</span>
+                        <span className="tabular text-text-3">ligne {fmt(r.row)} du fichier</span>
+                      </p>
+                      <ul className="mt-0.5 text-small text-ink">
+                        {r.reasons.map((why, i) => (
+                          <li key={i} className="break-words">
+                            {why}
+                          </li>
+                        ))}
+                      </ul>
+                      {r.raw && <SourceRow raw={r.raw} />}
                     </li>
                   ))}
-                  {others > 0 && <li className="text-[12px] text-silt">+ {count(others, "autre motif", "autres motifs")}</li>}
-                </ul>
-                <details className="mt-1.5">
-                  <summary className="cursor-pointer text-[12px] font-bold text-sediment hover:text-ink">Voir les lignes rejetées ({fmt(list.length)})</summary>
-                  <ol className="mt-1.5 flex max-h-96 flex-col gap-2 overflow-y-auto pr-1">
-                    {list.map((r) => (
-                      <li key={`${r.row}-${r.source_key ?? ""}`} className="rounded-sm bg-chalk/60 px-2.5 py-1.5">
-                        <div className="flex flex-wrap gap-x-3 text-[12px]">
-                          <span className="font-mono font-bold">clé {r.source_key ?? "absente"}</span>
-                          <span className="tabular text-silt">ligne {fmt(r.row)} du fichier</span>
-                        </div>
-                        <ul className="mt-0.5 text-[12px] text-ink">
-                          {r.reasons.map((why, i) => (
-                            <li key={i} className="break-words">
-                              — {why}
-                            </li>
-                          ))}
-                        </ul>
-                        {r.raw && <SourceRow raw={r.raw} />}
-                      </li>
-                    ))}
-                  </ol>
-                </details>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      {partial && (
-        <p className="mt-2 text-[12px] text-silt">
-          Les {fmt(items.length)} premiers rejets sur {fmt(total)} sont détaillés ici (les motifs ci-dessus portent sur eux) ; le CSV contient la liste complète.
+                </ol>
+              </More>
+            </div>
+          );
+        })}
+        <p className="text-small text-text-3">
+          {partial ? `Les ${fmt(items.length)} premiers rejets sur ${fmt(total)} sont détaillés ici ; le rapport d'écarts (CSV) les contient tous. ` : ""}
+          Pour récupérer une ligne, corrigez sa cause (données ou correspondances) puis relancez la migration.
         </p>
-      )}
-      <p className="mt-3 text-[12px] text-silt">
-        Pour récupérer une ligne rejetée, corrigez la cause (donnée source, correspondance ou décision) puis relancez la migration : aucune correction n&apos;est faite à la main dans la base.
-      </p>
-    </Panel>
+      </div>
+    </Section>
   );
 }
 
@@ -358,61 +366,56 @@ export function RunRejections({ detail, projectId }: { detail: RunDetail; projec
 /* ------------------------------------------------------------------ */
 
 const ISSUE_KIND: Record<FieldIssue["kind"], string> = {
-  conversion: "valeur non convertible, laissée vide",
-  unlinked: "lien introuvable dans la source, enregistrement migré sans lien",
+  conversion: "Valeur non convertible, laissée vide",
+  unlinked: "Fiche liée introuvable dans l'ancien logiciel, migrée sans lien",
 };
 
+/** Enregistrements migrés dont une valeur n'a pas pu être reprise telle quelle. Section repliée. */
 export function RunIssues({ detail }: { detail: RunDetail }) {
   const { total, items } = detail.field_issues;
   const entityLabel = labelOf(detail);
   const groups = useMemo(() => groupBy(items, (i) => `${i.entity}\u0000${i.field}\u0000${i.kind}`), [items]);
+  if (!total) return null;
   return (
-    <Panel eyebrow="Migrées avec signalement" title={total ? count(total, "valeur signalée", "valeurs signalées") : "Aucune valeur signalée"}>
-      <p className="text-[12.5px] text-sediment">
-        {total
-          ? "Ces enregistrements sont dans la nouvelle base, mais une valeur n'a pas pu être reprise telle quelle. Elle n'est ni devinée ni complétée : la valeur d'origine reste dans la traçabilité de l'enregistrement."
-          : "Chaque valeur lue a été convertie et chaque lien retrouvé."}
-      </p>
-      {groups.length > 0 && (
-        <ul className="mt-3 overflow-hidden rounded-md shadow-[0_0_0_1px_var(--color-line)]">
-          {groups.map(([key, list]) => {
-            const first = list[0];
-            return (
-              <li key={key} className="border-t border-line px-3 py-2.5 first:border-t-0">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-                  <span className="min-w-0 text-[13px] font-bold">
-                    {entityLabel(first.entity)} · <span className="font-mono text-[12px]">{first.field}</span>
-                  </span>
-                  <span className={cx("tabular text-[12px] font-bold", TONE_TEXT.warn)}>× {fmt(list.length)}</span>
-                </div>
-                <p className="text-[12px] text-sediment">{ISSUE_KIND[first.kind] ?? first.kind}</p>
-                <details className="mt-1">
-                  <summary className="cursor-pointer text-[12px] font-bold text-sediment hover:text-ink">Voir les enregistrements ({fmt(list.length)})</summary>
-                  <ol className="mt-1.5 flex max-h-72 flex-col gap-1 overflow-y-auto pr-1">
-                    {list.map((i) => (
-                      <li key={`${i.record_id}-${i.field}`} className="rounded-sm bg-chalk/60 px-2.5 py-1.5 text-[12px]">
-                        <span className="font-mono font-bold">clé {i.source_key}</span>
-                        <span className="text-silt"> · #{i.record_id} dans la nouvelle base</span>
-                        <span className="block break-words text-ink">
-                          {i.message}
-                          {i.raw !== null && i.raw !== undefined && i.raw !== "" && (
-                            <>
-                              {" "}
-                              · valeur source <span className="font-mono">{typeof i.raw === "string" ? i.raw : JSON.stringify(i.raw)}</span>
-                            </>
-                          )}
-                        </span>
-                      </li>
-                    ))}
-                  </ol>
-                </details>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      {items.length < total && <p className="mt-2 text-[12px] text-silt">Les {fmt(items.length)} premières sur {fmt(total)} sont détaillées ici ; le CSV des écarts contient la liste complète.</p>}
-    </Panel>
+    <Section collapsible title={count(total, "valeur signalée", "valeurs signalées")} description="Fiches transférées avec une valeur vide ou sans lien : rien n'est deviné.">
+      <p className="mb-3 text-small text-text-3">La valeur d&apos;origine reste dans la traçabilité de chaque fiche.</p>
+      <ul className={listCls}>
+        {groups.map(([key, list]) => {
+          const first = list[0];
+          return (
+            <li key={key} className="border-b border-line px-3 py-2.5 last:border-b-0">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                <span className="min-w-0 text-body font-semibold text-ink">
+                  {entityLabel(first.entity)} · <span className="font-mono text-small font-normal">{first.field}</span>
+                </span>
+                <span className={cx("tabular text-small font-semibold", TONE_TEXT.warn)}>× {fmt(list.length)}</span>
+              </div>
+              <p className="text-small text-text-2">{ISSUE_KIND[first.kind] ?? first.kind}</p>
+              <More label={`Voir les fiches (${fmt(list.length)})`} className="mt-1.5">
+                <ol className="flex max-h-72 flex-col gap-1.5 overflow-y-auto pr-1" {...scrollRegion(`Fiches signalées : ${entityLabel(first.entity)} · ${first.field}`)}>
+                  {list.map((i) => (
+                    <li key={`${i.record_id}-${i.field}`} className="rounded-control bg-surface-sunken px-3 py-2 text-small">
+                      <span className="font-mono font-semibold text-ink">clé {i.source_key}</span>
+                      <span className="text-text-3"> · n° {i.record_id} dans la nouvelle base</span>
+                      <span className="block break-words text-ink">
+                        {i.message}
+                        {i.raw !== null && i.raw !== undefined && i.raw !== "" && (
+                          <>
+                            {" "}
+                            · valeur source <span className="font-mono">{typeof i.raw === "string" ? i.raw : JSON.stringify(i.raw)}</span>
+                          </>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </More>
+            </li>
+          );
+        })}
+      </ul>
+      {items.length < total && <p className="mt-3 text-small text-text-3">Les {fmt(items.length)} premières sur {fmt(total)} sont détaillées ici ; le rapport d&apos;écarts (CSV) les contient toutes.</p>}
+    </Section>
   );
 }
 
@@ -420,37 +423,33 @@ export function RunIssues({ detail }: { detail: RunDetail }) {
 /* Doublons signalés                                                    */
 /* ------------------------------------------------------------------ */
 
+/** Fiches partageant une même valeur selon les règles de détection des correspondances. Section repliée. */
 export function RunDuplicates({ detail }: { detail: RunDetail }) {
   const groups = detail.duplicates ?? [];
   const entityLabel = labelOf(detail);
+  if (!groups.length) return null;
   return (
-    <Panel eyebrow="Doublons signalés" title={groups.length ? count(groups.length, "groupe de doublons potentiels", "groupes de doublons potentiels") : "Aucun doublon signalé"}>
-      <p className="text-[12.5px] text-sediment">
-        {groups.length
-          ? "Fiches qui partagent une même valeur selon les règles de détection des correspondances. Elles sont migrées séparément : aucune fusion automatique. L'arbitrage revient à un responsable ; le Studio ne propose pas d'action de fusion."
-          : "Aucun groupe détecté selon les règles de détection déclarées dans les correspondances (sans règle, rien n'est recherché)."}
-      </p>
-      {groups.length > 0 && (
-        <ul className="mt-3 flex max-h-96 flex-col overflow-y-auto rounded-md shadow-[0_0_0_1px_var(--color-line)]">
-          {groups.map((g, i) => (
-            <li key={`${g.entity}-${g.rule}-${g.value}-${i}`} className="border-t border-line px-3 py-2 first:border-t-0">
-              <div className="flex flex-wrap items-baseline gap-x-2 text-[12.5px]">
-                <span className="font-bold">{entityLabel(g.entity)}</span>
-                <span className="text-sediment">{g.rule}</span>
-                <span className="font-mono text-[12px] break-all">« {g.value} »</span>
-              </div>
-              <p className="text-[12px] text-sediment">
-                {count(g.records.length, "fiche", "fiches")} :{" "}
-                {g.records.map((r, k) => (
-                  <span key={r.id} className="font-mono text-[11.5px]">
-                    {k > 0 && ", "}clé {r.source_key} → #{r.id}
-                  </span>
-                ))}
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Panel>
+    <Section collapsible title={count(groups.length, "groupe de doublons possibles", "groupes de doublons possibles")} description="Transférés séparément, sans fusion automatique.">
+      <p className="mb-3 text-small text-text-3">Fiches partageant une même valeur selon les règles des correspondances ; l&apos;arbitrage revient à un responsable.</p>
+      <ul className={cx("flex max-h-[28rem] flex-col overflow-y-auto", listCls)} {...scrollRegion("Groupes de doublons possibles")}>
+        {groups.map((g, i) => (
+          <li key={`${g.entity}-${g.rule}-${g.value}-${i}`} className="border-b border-line px-3 py-2.5 last:border-b-0">
+            <p className="flex flex-wrap items-baseline gap-x-2 text-body">
+              <span className="font-semibold text-ink">{entityLabel(g.entity)}</span>
+              <span className="text-text-2">{g.rule}</span>
+              <span className="font-mono text-small break-all text-ink">« {g.value} »</span>
+            </p>
+            <p className="mt-0.5 text-small text-text-2">
+              {count(g.records.length, "fiche", "fiches")} :{" "}
+              {g.records.map((r, k) => (
+                <span key={r.id} className="font-mono text-small">
+                  {k > 0 && ", "}clé {r.source_key} → n° {r.id}
+                </span>
+              ))}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </Section>
   );
 }

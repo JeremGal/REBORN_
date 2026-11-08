@@ -7,10 +7,12 @@
     <meta name="color-scheme" content="light" />
     <title>Chargement…</title>
     <link rel="icon" href="data:," />
+    <link rel="preload" href="/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/app.css" />
   </head>
   <body>
     <div id="root"><p class="boot" role="status">Chargement…</p></div>
+    <div id="live" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
     <noscript><p class="boot">Ce logiciel nécessite JavaScript : activez-le dans votre navigateur.</p></noscript>
     <script type="module" src="/app.js"></script>
   </body>

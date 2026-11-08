@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
-import { Check, CircleAlert, CircleCheck, CircleDashed, CircleX, ClipboardCheck, Copy, FlaskConical, Info, LoaderCircle, RefreshCw, TriangleAlert, X, type LucideIcon } from "lucide-react";
-import { Button, cx } from "@/components/ui";
+import { useEffect, useId, useState, type ReactNode } from "react";
+import { ClipboardCheck, Copy, LoaderCircle, X } from "lucide-react";
+import { Badge, ErrorState, StatusBadge, cx, formatDateTime, formatDay, formatInt } from "@/components/ds";
+import { Callout } from "./Step";
 import { useProject } from "./ProjectProvider";
 
 /*
- * Socle commun des étapes « Reconstruction » et « Livraison » : types des réponses d'API
- * (sous-ensembles de src/lib/migration/*), libellés français, petits composants et hook d'action.
+ * Socle commun des étapes « Reconstruction » et « Livraison » : types des réponses d'API
+ * (sous-ensembles de src/lib/migration/*), libellés français, formats, hook d'action et
+ * quelques éléments propres à ces étapes. Les blocs de mise en page viennent de ./Step,
+ * les composants du design system (components/ds).
  * Aucun chiffre n'est produit ici : tout ce qui est affiché provient des réponses d'API.
  */
 
@@ -73,6 +76,7 @@ export interface ReportCheck {
   status: "pass" | "fail" | "warn" | "info";
   blocking: boolean;
   summary: string;
+  metrics?: Record<string, number | string>;
 }
 
 /** Rapport de vérification (lib/migration/verify.ts : VerificationReport). */
@@ -82,7 +86,8 @@ export interface VerificationReport {
   status: "validated" | "review" | "blocked";
   statement: string;
   checks: ReportCheck[];
-  gaps: { kind: string; message: string; count: number }[];
+  gaps: { kind: string; message: string; count: number; entity?: string; source?: string }[];
+  entities?: { entity: string; label?: string; source_rows: number; target_rows: number; rejected: number; exact: number; mismatched: number; totals: { field: string; accounting: boolean; source_cents: number; target_cents: number; rejected_cents: number }[] }[];
 }
 
 /** GET /api/migration/runs/[id]. */
@@ -263,7 +268,7 @@ export const BM_SOURCE: Record<string, { label: string; test?: boolean }> = {
   analyst: { label: "Analyste" },
   fixture: { label: "Jeu de test — Relatio 2004", test: true },
   investigation: { label: "Règles de l'investigation" },
-  user: { label: "Opérateur" },
+  user: { label: "Saisie manuelle" },
 };
 
 export const DEPLOY_STATUS: Record<Deployment["status"], { label: string; tone: Tone }> = {
@@ -276,15 +281,37 @@ export const DEPLOY_STATUS: Record<Deployment["status"], { label: string; tone: 
 /* Formats                                                              */
 /* ------------------------------------------------------------------ */
 
-export const fmtInt = (x: number) => x.toLocaleString("fr-FR");
+/** Entier au format français, séparateur de milliers lisible (formatInt du design system). */
+export const fmtInt = (x: number) => formatInt(x);
 
 /** Accord à la française (0 et 1 au singulier). */
 export const plural = (n: number, one: string, many: string) => `${fmtInt(n)} ${n > 1 ? many : one}`;
 
-export function fmtDate(iso: string | null | undefined): string {
-  if (!iso) return "—";
+function toDate(iso: string | null | undefined): Date | null {
+  if (!iso) return null;
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" });
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+/** Date et heure au format unique du Studio (« 8 nov. 2026, 02:09 »). */
+export function fmtDate(iso: string | null | undefined): string {
+  return toDate(iso) ? formatDateTime(iso) : (iso ?? "—");
+}
+
+/** Date seule, même format (« 8 nov. 2026 »). */
+export function fmtDay(iso: string | null | undefined): string {
+  return toDate(iso) ? formatDay(iso) : (iso ?? "—");
+}
+
+/** Date dans une phrase (« mis en service le 8 nov. 2026 ») : même format que partout ailleurs. */
+export function fmtLongDay(iso: string | null | undefined): string {
+  return fmtDay(iso);
+}
+
+/** Heure seule (hh:mm). */
+export function fmtTime(iso: string | null | undefined): string {
+  const d = toDate(iso);
+  return d ? d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : "—";
 }
 
 /** Message d'API terminé par une ponctuation (pour l'enchaîner avec un lien ou une phrase). */
@@ -299,6 +326,15 @@ export function fmtMoney(cents: number, currency = "EUR"): string {
     return (cents / 100).toLocaleString("fr-FR", { style: "currency", currency });
   } catch {
     return `${(cents / 100).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
+  }
+}
+
+/** Adresse sans protocole (127.0.0.1:5050). */
+export function hostOf(url: string): string {
+  try {
+    return new URL(url).host || url;
+  } catch {
+    return url;
   }
 }
 
@@ -324,29 +360,12 @@ export function deployReadiness(o: MigrationOverview): Readiness {
   const last = o.runs.at(-1) ?? null;
   const newerFailed = last && last.id !== run?.id ? last : null;
   if (!run)
-    return {
-      run,
-      newerFailed,
-      ok: false,
-      tone: "bad",
-      title: "Aucune migration terminée",
-      detail: "La génération installe la base migrée : exécutez d'abord la migration.",
-      step: "migration",
-    };
-  const counts = `${plural(run.summary.imported, "enregistrement importé", "enregistrements importés")} · ${plural(run.summary.rejected, "ligne rejetée", "lignes rejetées")}`;
+    return { run, newerFailed, ok: false, tone: "bad", title: "Aucune migration terminée", detail: "La génération installe la base migrée : exécutez d'abord la migration.", step: "migration" };
+  const counts = `${plural(run.summary.imported, "fiche transférée", "fiches transférées")} · ${plural(run.summary.rejected, "ligne rejetée", "lignes rejetées")}`;
   const ack = o.acknowledgements[run.id];
-  if (run.verification === "validated")
-    return { run, newerFailed, ok: true, tone: "ok", title: `Migration ${run.id} vérifiée : migration validée`, detail: `${counts}. Contrôles et écarts détaillés à l'étape Validation.`, step: null };
+  if (run.verification === "validated") return { run, newerFailed, ok: true, tone: "ok", title: `Migration ${run.id} vérifiée : aucun écart sur ce qui a été contrôlé`, detail: `${counts}. Contrôles détaillés à l'étape Validation.`, step: null };
   if (run.verification === "review" && ack)
-    return {
-      run,
-      newerFailed,
-      ok: true,
-      tone: "ok",
-      title: `Migration ${run.id} : écarts examinés et acceptés`,
-      detail: `${counts}. Écarts acceptés par ${ack.by} le ${fmtDate(ack.at)}${ack.comment ? ` — « ${ack.comment} »` : ""}.`,
-      step: null,
-    };
+    return { run, newerFailed, ok: true, tone: "ok", title: `Migration ${run.id} : écarts examinés et acceptés`, detail: `${counts}. Écarts acceptés par ${ack.by} le ${fmtDate(ack.at)}${ack.comment ? ` — « ${ack.comment} »` : ""}.`, step: null };
   if (run.verification === "review")
     return { run, newerFailed, ok: false, tone: "warn", title: `Migration ${run.id} : écarts à examiner`, detail: `${counts}. Un responsable doit examiner et accepter les écarts documentés avant toute mise en service.`, step: "validation" };
   if (run.verification === "blocked")
@@ -355,149 +374,130 @@ export function deployReadiness(o: MigrationOverview): Readiness {
 }
 
 /* ------------------------------------------------------------------ */
-/* Composants                                                           */
+/* Compte connecté (rôle : actions réservées à l'équipe REBORN)          */
 /* ------------------------------------------------------------------ */
 
-const TONE_TAG: Record<Tone, string> = {
-  ok: "bg-verdigris-soft text-[#0b6b5f]",
-  warn: "bg-ochre-soft text-ochre",
-  bad: "bg-rust-soft text-rust",
-  info: "bg-[#e7eef8] text-[#2457a6]",
-  idle: "bg-chalk-2 text-sediment",
-};
+export interface Viewer {
+  email: string;
+  firstName: string;
+  lastName: string;
+  company: string | null;
+  role: "client" | "operator";
+}
+let viewerCache: Promise<Viewer | null> | null = null;
+/** Compte connecté (GET /api/me), lu une fois par chargement de page ; null si indisponible. */
+export function useViewer(): Viewer | null {
+  const [v, setV] = useState<Viewer | null>(null);
+  useEffect(() => {
+    viewerCache ??= fetch("/api/me", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { user?: Viewer } | null) => d?.user ?? null)
+      .catch(() => null);
+    let live = true;
+    void viewerCache.then((x) => {
+      if (live) setV(x);
+      if (!x) viewerCache = null;
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
+  return v;
+}
 
-/** Étiquette courte (état, origine, nature). */
-export function Pill({ tone = "idle", icon, children, title, className }: { tone?: Tone; icon?: ReactNode; children: ReactNode; title?: string; className?: string }) {
+/* ------------------------------------------------------------------ */
+/* Éléments propres à ces étapes                                        */
+/* ------------------------------------------------------------------ */
+
+const DS_TONE = { ok: "ok", warn: "warn", bad: "bad", info: "info", idle: "neutral" } as const;
+
+/** Étiquette d'état (À valider, Validée, En service…) : icône et texte. `plain` : étiquette sans icône. */
+export function Tag({ tone = "idle", icon, children, title, className, plain }: { tone?: Tone; icon?: ReactNode; children: ReactNode; title?: string; className?: string; plain?: boolean }) {
+  if (plain || icon)
+    return (
+      <Badge tone={DS_TONE[tone]} icon={icon} title={title} className={cx("max-w-full", className)}>
+        <span className="min-w-0 truncate">{children}</span>
+      </Badge>
+    );
   return (
-    <span title={title} className={cx("inline-flex max-w-full items-center gap-1 rounded-xs px-1.5 text-[11px] leading-[18px] font-bold", TONE_TAG[tone], className)}>
-      {icon}
+    <StatusBadge tone={DS_TONE[tone]} title={title} className={cx("max-w-full", className)}>
       <span className="min-w-0 truncate">{children}</span>
-    </span>
+    </StatusBadge>
   );
 }
 
-/** Étiquette obligatoire de tout ce qui vient d'un jeu de test (jamais présenté comme un envoi réel). */
-export function TestBadge({ label = "Jeu de test" }: { label?: string }) {
-  return (
-    <Pill tone="warn" icon={<FlaskConical size={11} aria-hidden />} title="Données de test écrites à la main au format des agents : elles ne proviennent d'aucun agent">
-      {label}
-    </Pill>
-  );
-}
-
-const NOTICE: Record<Tone, { box: string; text: string; icon: LucideIcon }> = {
-  ok: { box: "bg-verdigris-soft", text: "text-[#0b6b5f]", icon: CircleCheck },
-  warn: { box: "bg-ochre-soft", text: "text-ochre", icon: TriangleAlert },
-  bad: { box: "bg-rust-soft", text: "text-rust", icon: CircleAlert },
-  info: { box: "bg-[#e7eef8]", text: "text-[#2457a6]", icon: Info },
-  idle: { box: "bg-chalk", text: "text-ink", icon: Info },
-};
+/** Ton d'un <Callout> pour un ton d'état. */
+export const calloutTone = (t: Tone): "info" | "ok" | "warn" | "bad" => (t === "idle" ? "info" : t);
 
 export interface NoticeState {
   tone: Tone;
-  text: ReactNode;
+  title?: ReactNode;
+  text?: ReactNode;
 }
 
-/** Résultat d'une opération (message renvoyé par l'API en cas d'erreur). */
-export function Notice({ tone, children, onClose, className }: { tone: Tone; children: ReactNode; onClose?: () => void; className?: string }) {
-  const s = NOTICE[tone];
-  const Icon = s.icon;
+/** Résultat d'une opération (message renvoyé par l'API en cas d'erreur), refermable. */
+export function ActionNotice({ notice, onClose, className }: { notice: NoticeState; onClose?: () => void; className?: string }) {
   return (
-    <div role={tone === "bad" ? "alert" : "status"} className={cx("flex items-start gap-2 rounded-sm px-3 py-2 text-[12.5px] leading-relaxed", s.box, className)}>
-      <Icon size={14} className={cx("mt-[3px] shrink-0", s.text)} aria-hidden />
-      <div className="min-w-0 flex-1 break-words text-ink/85">{children}</div>
-      {onClose && (
-        <button type="button" onClick={onClose} aria-label="Fermer le message" className={cx("-mr-1 shrink-0 rounded-xs p-1 opacity-70 hover:opacity-100", s.text)}>
-          <X size={12} />
-        </button>
-      )}
-    </div>
-  );
-}
-
-/** Ligne d'une liste de prérequis, avec son état. */
-export function CheckRow({ tone, title, children, action }: { tone: Tone; title: ReactNode; children?: ReactNode; action?: ReactNode }) {
-  const Icon = tone === "ok" ? Check : tone === "warn" ? TriangleAlert : tone === "bad" ? CircleX : tone === "info" ? Info : CircleDashed;
-  return (
-    <li className="flex items-start gap-2.5 py-2.5">
-      <span
-        aria-hidden
-        className={cx(
-          "mt-px flex size-5 shrink-0 items-center justify-center rounded-full",
-          tone === "ok" && "bg-verdigris text-white",
-          tone === "warn" && "bg-ochre-soft text-ochre",
-          tone === "bad" && "bg-rust-soft text-rust",
-          tone === "info" && "bg-[#e7eef8] text-[#2457a6]",
-          tone === "idle" && "bg-chalk-2 text-silt",
-        )}
+    <div role={notice.tone === "bad" ? undefined : "status"} className={className}>
+      <Callout
+        tone={calloutTone(notice.tone)}
+        title={notice.title}
+        action={
+          onClose && (
+            <button type="button" onClick={onClose} aria-label="Fermer le message" className="btn btn-ghost btn-icon btn-sm">
+              <X size={16} aria-hidden />
+            </button>
+          )
+        }
       >
-        <Icon size={12} strokeWidth={2.5} />
-      </span>
-      <div className="min-w-0 flex-1">
-        <div className="text-[13px] leading-snug font-bold break-words">{title}</div>
-        {children && <div className="mt-0.5 text-[12px] leading-relaxed break-words text-sediment">{children}</div>}
-      </div>
-      {action && <div className="shrink-0">{action}</div>}
-    </li>
-  );
-}
-
-/** Paire libellé / valeur (à placer dans un <dl>). */
-export function Fact({ label, children, className }: { label: string; children: ReactNode; className?: string }) {
-  return (
-    <div className={cx("min-w-0", className)}>
-      <dt className="text-[11.5px] text-silt">{label}</dt>
-      <dd className="mt-0.5 min-w-0 text-[13px] break-words text-ink">{children}</dd>
+        {notice.text && <span className="break-words">{notice.text}</span>}
+      </Callout>
     </div>
   );
 }
 
 export function Loading({ label = "Chargement…" }: { label?: string }) {
   return (
-    <div role="status" className="flex items-center gap-2 py-6 text-[13px] text-silt">
-      <LoaderCircle size={14} className="animate-spin" aria-hidden />
+    <div role="status" className="flex items-center gap-2 py-4 text-body text-text-3">
+      <LoaderCircle size={15} className="animate-spin motion-reduce:animate-none" aria-hidden />
       {label}
     </div>
   );
 }
 
-export function Spinner({ size = 13 }: { size?: number }) {
-  return <LoaderCircle size={size} className="animate-spin" aria-hidden />;
+export function Spinner({ size = 14 }: { size?: number }) {
+  return <LoaderCircle size={size} className="animate-spin motion-reduce:animate-none" aria-hidden />;
 }
 
 /** Erreur de chargement : message renvoyé par l'API et nouvelle tentative (vraie relecture). */
 export function LoadError({ message, onRetry, title = "Chargement impossible" }: { message: string | null; onRetry?: () => Promise<void> | void; title?: string }) {
-  return (
-    <div role="alert" className="flex flex-wrap items-start justify-between gap-3 rounded-sm bg-rust-soft px-3.5 py-3 text-[12.5px]">
-      <div className="min-w-0">
-        <div className="font-bold text-rust">{title}</div>
-        <div className="mt-0.5 break-words text-ink/80">{message ?? "Réponse vide de l'API."}</div>
-      </div>
-      {onRetry && (
-        <Button size="sm" variant="ghost" onClick={() => void onRetry()}>
-          <RefreshCw size={12} aria-hidden /> Réessayer
-        </Button>
-      )}
-    </div>
-  );
+  return <ErrorState title={title} message={message ?? "Le Studio n'a renvoyé aucune donnée."} onRetry={onRetry} />;
 }
 
 /** Lien vers une autre étape du projet. */
 export function StepLink({ step, children, className }: { step: string; children: ReactNode; className?: string }) {
   const { id } = useProject();
   return (
-    <Link href={`/projets/${id}/${step}`} className={cx("font-bold text-ink underline decoration-line-strong underline-offset-2 hover:text-verdigris", className)}>
+    <Link href={`/projets/${id}/${step}`} className={cx("ds-link font-semibold", className)}>
       {children}
     </Link>
   );
 }
 
-/** Commande à exécuter dans un terminal, avec copie dans le presse-papiers (jamais un secret). */
-export function Command({ value }: { value: string }) {
+/** Texte à copier (commande, lien) avec confirmation de copie ; jamais un secret journalisé. */
+export function CopyField({ value, label, mono = true, prefix }: { value: string; label: string; mono?: boolean; prefix?: string }) {
   const [copied, setCopied] = useState<"ok" | "ko" | null>(null);
+  const id = useId();
   return (
-    <div className="flex min-w-0 items-stretch overflow-hidden rounded-sm bg-ink text-white">
-      <code className="min-w-0 flex-1 overflow-x-auto px-3 py-2 font-mono text-[12px] leading-5 whitespace-pre">{value}</code>
+    <div className="flex min-w-0 items-stretch overflow-hidden rounded-control bg-ink text-white" data-surface="dark">
+      <code id={id} className={cx("min-w-0 flex-1 px-3.5 py-2.5 text-small leading-5 break-all whitespace-pre-wrap", mono && "font-mono")}>
+        {prefix && (
+          <span aria-hidden className="mr-2 text-white/50 select-none">
+            {prefix}
+          </span>
+        )}
+        {value}
+      </code>
       <button
         type="button"
         onClick={async () => {
@@ -509,31 +509,85 @@ export function Command({ value }: { value: string }) {
           }
         }}
         onBlur={() => setCopied(null)}
-        className="flex shrink-0 items-center gap-1 border-l border-white/15 px-2.5 text-[11.5px] font-bold text-white/80 hover:bg-white/10 hover:text-white"
-        aria-label={copied === "ok" ? "Commande copiée" : "Copier la commande"}
+        className="flex min-h-11 shrink-0 items-center gap-1.5 border-l border-white/20 px-3.5 text-small font-semibold text-white transition-colors duration-(--duration-fast) hover:bg-white/10"
+        aria-describedby={id}
+        aria-label={copied === "ok" ? `${label} : copié` : `Copier ${label.toLowerCase()}`}
       >
-        {copied === "ok" ? <ClipboardCheck size={13} aria-hidden /> : <Copy size={13} aria-hidden />}
-        <span className="hidden sm:inline">{copied === "ok" ? "Copiée" : copied === "ko" ? "Copie impossible" : "Copier"}</span>
+        {copied === "ok" ? <ClipboardCheck size={15} aria-hidden /> : <Copy size={15} aria-hidden />}
+        <span>{copied === "ok" ? "Copié" : copied === "ko" ? "Copie impossible" : "Copier"}</span>
       </button>
+      <span role="status" className="sr-only">
+        {/* Tournure neutre : « Le lien d'activation », « La commande »… sans accord fautif (« La commande copié ») */}
+        {copied === "ok" ? `Copie faite : ${label.charAt(0).toLowerCase()}${label.slice(1)} est dans le presse-papiers.` : copied === "ko" ? "Copie impossible : sélectionnez le texte pour le copier." : ""}
+      </span>
     </div>
   );
 }
 
-/** Bouton dont le libellé peut passer à la ligne sur petit écran. */
-export const WRAP_BTN = "h-auto! min-h-9 whitespace-normal! py-1.5 text-left";
-export const WRAP_BTN_SM = "h-auto! min-h-7 whitespace-normal! py-1 text-left";
-/** Le variant « danger » de ui.tsx n'a pas d'état désactivé visible. */
-export const DANGER_DISABLED = "disabled:text-dust disabled:hover:bg-paper";
+/** Commande à exécuter dans un terminal, avec copie dans le presse-papiers (jamais un secret). */
+export function Command({ value }: { value: string }) {
+  return <CopyField value={value} label="La commande" prefix="$" />;
+}
+
+/** Routes d'API (section « Intégration technique »). */
+export function ApiRoutes({ routes }: { routes: { method: "GET" | "POST"; path: string; label: string }[] }) {
+  return (
+    <ul className="flex flex-col divide-y divide-line rounded-panel ring-1 ring-line">
+      {routes.map((r) => (
+        <li key={`${r.method} ${r.path} ${r.label}`} className="flex flex-col gap-0.5 px-3.5 py-2.5 md:flex-row md:items-baseline md:gap-4">
+          <code className="min-w-0 font-mono text-small break-all text-ink md:w-[360px] md:shrink-0">
+            <span className="mr-1.5 font-semibold text-accent-ink">{r.method}</span>
+            {r.path}
+          </code>
+          <span className="text-small leading-snug text-text-2">{r.label}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Sous-titre à l'intérieur d'une section. */
+export function SubHeading({ children, aside, className }: { children: ReactNode; aside?: ReactNode; className?: string }) {
+  return (
+    <div className={cx("flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1", className)}>
+      <h3 className="text-body font-semibold text-ink">{children}</h3>
+      {aside && <div className="text-small text-text-3">{aside}</div>}
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /* Hook d'action : occupation, message de résultat ou d'erreur            */
 /* ------------------------------------------------------------------ */
 
+/** Une nouvelle opération remplace les messages de réussite précédents de la page (erreurs et alertes restent). */
+const SUPERSEDE = "reborn:app-action";
+
+export function announceAction(source: string) {
+  window.dispatchEvent(new CustomEvent(SUPERSEDE, { detail: source }));
+}
+
+export function useSupersededNotice(source: string, setNotice: (f: (n: NoticeState | null) => NoticeState | null) => void) {
+  useEffect(() => {
+    const h = (e: Event) => {
+      if ((e as CustomEvent<string>).detail !== source) setNotice((n) => (n && (n.tone === "ok" || n.tone === "info") ? null : n));
+    };
+    window.addEventListener(SUPERSEDE, h);
+    return () => window.removeEventListener(SUPERSEDE, h);
+  }, [source, setNotice]);
+}
+
 export function useAction() {
+  const id = useId();
   const [busy, setBusy] = useState<string | null>(null);
   const [notice, setNotice] = useState<NoticeState | null>(null);
+  /** Clé de la dernière opération : son message s'affiche à côté du bouton qui l'a lancée. */
+  const [last, setLast] = useState<string | null>(null);
+  useSupersededNotice(id, setNotice);
   async function run<T>(key: string, fn: () => Promise<T>, done?: (r: T) => NoticeState | null): Promise<T | undefined> {
+    announceAction(id);
     setBusy(key);
+    setLast(key);
     setNotice(null);
     try {
       const r = await fn();
@@ -547,5 +601,6 @@ export function useAction() {
       setBusy(null);
     }
   }
-  return { busy, notice, setNotice, run };
+  return { busy, notice, setNotice, last, run };
 }
+

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { ArrowRight, Check, CircleDashed, CircleX, Info, LoaderCircle, RefreshCw, TriangleAlert } from "lucide-react";
-import { Button, cx } from "@/components/ui";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { ArrowRight, Check, ChevronRight, CircleDashed, CircleX, Download, Info, LoaderCircle, TriangleAlert } from "lucide-react";
+import { Badge, StatusBadge, buttonClasses, cx, ErrorState, formatDateTime, formatNumber, formatPercent } from "@/components/ds";
 
 /* ------------------------------------------------------------------ */
 /* Types des réponses d'API utilisées par les étapes Migration et        */
@@ -141,13 +141,13 @@ export interface MappingVersion {
   version: number;
   origin: "auto" | "analyst" | "user" | "fixture";
   received_at: string;
-  mapping: { source_system?: string; target: { id: string; name: string }; entities: { name: string; label?: string; fields: MappingField[] }[] };
+  mapping: { source_system?: string; target: { id: string; name: string }; entities: { name: string; label?: string; source: { table: string; key: string }; fields: MappingField[] }[]; attachments?: unknown[] };
   issues: { level: "error" | "warning"; path: string; message: string }[];
 }
 /** GET /api/migration/mapping */
 export interface MappingState {
   current: MappingVersion | null;
-  status: { pending: number; can_run: boolean; blockers: string[] };
+  status: { pending: number; can_run: boolean; blockers: string[]; items?: { key: string; decision: { decision: "accepted" | "excluded"; by: string; at: string; comment?: string } | null; label: string }[] };
 }
 
 export interface HistoryBinding {
@@ -210,14 +210,23 @@ export interface ReconcileResult {
 /* Formats                                                              */
 /* ------------------------------------------------------------------ */
 
-export const fmt = (x: number | string | null | undefined): string => (typeof x === "number" && Number.isFinite(x) ? x.toLocaleString("fr-FR") : typeof x === "string" ? x : "—");
-export const euros = (cents: number): string => `${(cents / 100).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+/** Nombre au format français, séparateur de milliers lisible (formatNumber du design system, partagé par tout le Studio). */
+const fr = (x: number, o?: Intl.NumberFormatOptions): string => formatNumber(x, o);
+export const fmt = (x: number | string | null | undefined): string => (typeof x === "number" && Number.isFinite(x) ? fr(x) : typeof x === "string" ? x : "—");
+export const euros = (cents: number): string => `${fr(cents / 100, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+/**
+ * Part de `total` en pourcentage, jamais arrondie à 100 % (ni à 0 %) si elle ne l'est pas :
+ * 2 999 sur 3 000 donne « 99,97 % », pas « 100 % » (formatPercent du design system).
+ */
+export const share = (part: number, total: number): string => (total > 0 ? formatPercent(part / total) : "—");
+/** Date et heure à la seconde (détails techniques). */
 export const when = (iso: string | null | undefined): string => (iso ? new Date(iso).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "medium" }) : "—");
-export const bytes = (b: number): string =>
-  b >= 1048576 ? `${(b / 1048576).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} Mo` : b < 1024 ? `${b.toLocaleString("fr-FR")} octet${b > 1 ? "s" : ""}` : `${Math.round(b / 1024).toLocaleString("fr-FR")} Ko`;
+/** Date et heure à la minute (vue principale) : format unique du Studio (« 8 nov. 2026, 02:09 »). */
+export const whenShort = (iso: string | null | undefined): string => formatDateTime(iso);
+export const bytes = (b: number): string => (b >= 1048576 ? `${fr(b / 1048576, { maximumFractionDigits: 1 })} Mo` : b < 1024 ? `${fr(b)} octet${b > 1 ? "s" : ""}` : `${fr(Math.round(b / 1024))} Ko`);
 export function duration(ms: number): string {
   if (ms < 1000) return `${fmt(ms)} ms`;
-  if (ms < 60000) return `${(ms / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} s`;
+  if (ms < 60000) return `${fr(ms / 1000, { maximumFractionDigits: 1 })} s`;
   const s = Math.round(ms / 1000);
   return `${Math.floor(s / 60)} min ${String(s % 60).padStart(2, "0")} s`;
 }
@@ -230,7 +239,7 @@ export const count = (x: number, one: string, many: string): string => `${fmt(x)
 export function readableError(e: unknown): string {
   const m = e instanceof Error ? e.message : String(e);
   if (/failed to fetch|networkerror|load failed|network request failed/i.test(m))
-    return "La connexion au Studio s'est interrompue avant la réponse : l'opération a pu aboutir côté serveur. Les données affichées sont rechargées depuis l'API.";
+    return "La connexion au Studio s'est interrompue avant la réponse : l'opération a pu aboutir côté serveur. Les données affichées sont rechargées.";
   return m;
 }
 
@@ -238,8 +247,15 @@ export function readableError(e: unknown): string {
 export function formatStored(v: unknown, type?: string): string {
   if (v === null || v === undefined || v === "") return "vide";
   if (type === "money" && typeof v === "number") return euros(v);
-  if (typeof v === "number") return v.toLocaleString("fr-FR");
+  if (typeof v === "number") return fr(v);
   return typeof v === "string" ? v : JSON.stringify(v);
+}
+
+/** Nom de table source, affiché seulement s'il apporte une information (différent de l'entité). */
+export function sourceHint(entity: string, table: string | undefined, label?: string): string | null {
+  if (!table) return null;
+  const t = table.toLowerCase();
+  return t === entity.toLowerCase() || t === label?.toLowerCase() ? null : table;
 }
 
 /* ------------------------------------------------------------------ */
@@ -249,18 +265,10 @@ export function formatStored(v: unknown, type?: string): string {
 /** Un jeu de test (format de l'Analyste ou de l'Explorer) est toujours présenté comme tel. */
 export const TEST_DATASET = "Jeu de test — Relatio 2004";
 
-export const VERDICT: Record<Verdict, { label: string; tone: Tone; text: string }> = {
-  validated: { label: "Migration validée", tone: "ok", text: "Tous les contrôles ont réussi sur les données relues, sans écart documenté." },
-  review: {
-    label: "Validation humaine requise",
-    tone: "warn",
-    text: "Aucun contrôle bloquant n'a échoué, mais des écarts documentés doivent être examinés et acceptés par un responsable avant la mise en service.",
-  },
-  blocked: {
-    label: "Intervention requise",
-    tone: "bad",
-    text: "Au moins un contrôle bloquant a échoué : la mise en service est refusée tant que la cause n'est pas corrigée et la migration relancée.",
-  },
+export const VERDICT: Record<Verdict, { label: string; tone: Tone }> = {
+  validated: { label: "Migration validée", tone: "ok" },
+  review: { label: "Validation humaine requise", tone: "warn" },
+  blocked: { label: "Intervention requise", tone: "bad" },
 };
 export const VERIFICATION_SHORT: Record<Verdict, string> = { validated: "migration validée", review: "validation humaine requise", blocked: "intervention requise" };
 
@@ -301,14 +309,14 @@ export const MAPPING_ORIGIN: Record<MappingVersion["origin"], string> = {
   analyst: "reçues de l'Analyste",
   fixture: `${TEST_DATASET} (format de l'Analyste)`,
   auto: "proposition automatique déduite de la structure lue",
-  user: "saisies par l'opérateur",
+  user: "corrigées à la main",
 };
 
 export const BM_SOURCE: Record<BusinessModelVersion["source"], string> = {
   analyst: "reçu de l'Analyste",
   fixture: `${TEST_DATASET} (format de l'Analyste)`,
   investigation: "règles reconstruites par l'investigation",
-  user: "saisi par l'opérateur",
+  user: "saisi à la main",
 };
 
 export const BM_STATUS: Record<BusinessModelVersion["status"], { label: string; tone: Tone }> = {
@@ -405,123 +413,152 @@ export function describe(x: unknown): string {
 }
 
 /* ------------------------------------------------------------------ */
-/* Éléments d'interface                                                 */
+/* Éléments d'interface (jetons du design system)                       */
 /* ------------------------------------------------------------------ */
 
-/** Couleurs de texte contrastées (≥ 4,5:1 sur blanc et sur les fonds teintés). */
+/** Couleurs de texte des tons (≥ 4,5:1 sur les surfaces du Studio). */
 export const TONE_TEXT: Record<Tone, string> = {
-  ok: "text-[#0b6b5f]",
-  warn: "text-[#8a5a10]",
-  bad: "text-[#9c3a24]",
-  info: "text-ink-3",
-  idle: "text-sediment",
-  run: "text-[#2457a6]",
+  ok: "text-accent-ink",
+  warn: "text-warning-ink",
+  bad: "text-danger-ink",
+  info: "text-ink",
+  idle: "text-text-2",
+  run: "text-accent-ink",
 };
-const TONE_BG: Record<Tone, string> = {
-  ok: "bg-verdigris-soft",
-  warn: "bg-ochre-soft",
-  bad: "bg-rust-soft",
-  info: "bg-[#e6ecf5]",
-  idle: "bg-chalk-2",
-  run: "bg-[#e7eef8]",
-};
-export const TONE_BORDER: Record<Tone, string> = {
-  ok: "border-verdigris",
-  warn: "border-ochre",
-  bad: "border-rust",
-  info: "border-ink-3",
-  idle: "border-line-strong",
-  run: "border-[#2457a6]",
-};
+const DS_TONE = { ok: "ok", warn: "warn", bad: "bad", info: "info", idle: "neutral", run: "running" } as const;
 
-export function ToneIcon({ tone, size = 14, className }: { tone: Tone; size?: number; className?: string }) {
+export function ToneIcon({ tone, size = 15, className }: { tone: Tone; size?: number; className?: string }) {
   const c = cx("shrink-0", className);
   switch (tone) {
     case "ok":
-      return <Check size={size} strokeWidth={2.75} className={cx(c, "text-verdigris")} aria-hidden />;
+      return <Check size={size} strokeWidth={2.75} className={cx(c, "text-accent")} aria-hidden />;
     case "warn":
-      return <TriangleAlert size={size} className={cx(c, "text-ochre")} aria-hidden />;
+      return <TriangleAlert size={size} className={cx(c, "text-warning")} aria-hidden />;
     case "bad":
-      return <CircleX size={size} className={cx(c, "text-rust")} aria-hidden />;
+      return <CircleX size={size} className={cx(c, "text-danger")} aria-hidden />;
     case "info":
-      return <Info size={size} className={cx(c, "text-ink-3")} aria-hidden />;
+      return <Info size={size} className={cx(c, "text-text-2")} aria-hidden />;
     case "run":
-      return <LoaderCircle size={size} className={cx(c, "animate-spin text-[#2457a6] motion-reduce:animate-none")} aria-hidden />;
+      return <LoaderCircle size={size} className={cx(c, "animate-spin text-accent motion-reduce:animate-none")} aria-hidden />;
     default:
-      return <CircleDashed size={size} className={cx(c, "text-silt")} aria-hidden />;
+      return <CircleDashed size={size} className={cx(c, "text-text-3")} aria-hidden />;
   }
 }
 
-export function Tag({ tone, children, className, title }: { tone: Tone; children: ReactNode; className?: string; title?: string }) {
-  return (
-    <span title={title} className={cx("inline-flex items-center gap-1 rounded-xs px-1.5 text-[11px] leading-[19px] font-bold whitespace-nowrap", TONE_BG[tone], TONE_TEXT[tone], className)}>
+/** Étiquette d'état : icône ET texte (jamais la couleur seule). `plain` : étiquette sans icône (catégorie). */
+export function Tag({ tone, children, className, title, plain }: { tone: Tone; children: ReactNode; className?: string; title?: string; plain?: boolean }) {
+  return plain ? (
+    <Badge tone={DS_TONE[tone]} className={className} title={title}>
       {children}
-    </span>
-  );
-}
-
-/** Message d'état : titre teinté, texte à l'encre (lisible), icône du ton. */
-export function Notice({ tone, title, children, className }: { tone: Exclude<Tone, "idle">; title?: ReactNode; children?: ReactNode; className?: string }) {
-  return (
-    <div role={tone === "bad" ? "alert" : "status"} className={cx("flex items-start gap-2.5 rounded-md px-3 py-2.5 text-[12.5px] text-ink", TONE_BG[tone], className)}>
-      <ToneIcon tone={tone} size={15} className="mt-0.5" />
-      <div className="min-w-0 flex-1">
-        {title && <p className={cx("font-bold", TONE_TEXT[tone])}>{title}</p>}
-        {children && <div className={cx("flex flex-col gap-1", title ? "mt-0.5" : undefined)}>{children}</div>}
-      </div>
-    </div>
+    </Badge>
+  ) : (
+    <StatusBadge tone={DS_TONE[tone]} className={className} title={title}>
+      {children}
+    </StatusBadge>
   );
 }
 
 export function Loading({ label = "Chargement…", className }: { label?: string; className?: string }) {
   return (
-    <p role="status" className={cx("flex items-center gap-2 py-5 text-[13px] text-silt", className)}>
+    <p role="status" className={cx("flex items-center gap-2 py-4 text-body text-text-3", className)}>
       <LoaderCircle size={14} className="animate-spin motion-reduce:animate-none" aria-hidden /> {label}
     </p>
   );
 }
 
 export function LoadError({ message, onRetry, title = "Chargement impossible" }: { message: string; onRetry?: () => void; title?: string }) {
-  return (
-    <Notice tone="bad" title={title}>
-      <p>{message}</p>
-      {onRetry && (
-        <div>
-          <Button size="sm" variant="ghost" className="mt-1" onClick={onRetry}>
-            <RefreshCw size={12} aria-hidden /> Réessayer
-          </Button>
-        </div>
-      )}
-    </Notice>
-  );
+  return <ErrorState title={title} message={message} onRetry={onRetry} />;
 }
 
 export function StepLink({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
   return (
-    <Link href={href} className={cx("inline-flex items-center gap-1 text-[12.5px] font-bold text-ink underline decoration-line-strong underline-offset-[3px] transition-colors duration-150 hover:decoration-ink", className)}>
-      {children} <ArrowRight size={12} aria-hidden />
+    <Link href={href} className={cx("ds-link inline-flex items-center gap-1 text-body font-semibold max-sm:min-h-11", className)}>
+      {children} <ArrowRight size={13} aria-hidden />
     </Link>
   );
 }
 
-/** Cellule d'une ligne « tableau » responsive : libellé visible sur mobile, réservé aux lecteurs d'écran au-delà. */
-export function Cell({ label, children, className }: { label: string; children: ReactNode; className?: string }) {
+/** Lien de téléchargement du rapport d'écarts (CSV) d'une exécution. */
+export function rejectsCsvHref(runId: string, projectId: string) {
+  return `/api/migration/runs/${encodeURIComponent(runId)}/rejects?project=${encodeURIComponent(projectId)}`;
+}
+
+/** Rapport d'écarts (rejets, valeurs signalées, pièces jointes manquantes) au format CSV. */
+export function CsvLink({ runId, projectId }: { runId: string; projectId: string }) {
   return (
-    <div className={cx("min-w-0 md:text-right", className)}>
-      <span className="block text-[11px] leading-tight text-silt md:sr-only">{label}</span>
-      <span className="tabular block text-[13px]">{children}</span>
-    </div>
+    <a href={rejectsCsvHref(runId, projectId)} download title={`Rapport d'écarts de ${runId} : rejets, valeurs signalées et pièces jointes manquantes`} className={buttonClasses({ variant: "secondary", size: "sm" })}>
+      <Download size={14} aria-hidden />
+      <span>Rapport d&apos;écarts (CSV)</span>
+    </a>
   );
 }
 
-/** En-tête de colonnes (masqué aux lecteurs d'écran : chaque cellule porte son libellé). */
-export function HeaderRow({ cols, children }: { cols: string; children: ReactNode }) {
+/** Détail replié à l'intérieur d'une section (groupe nommé : indépendant de la section parente). */
+export function More({ label, children, open, className }: { label: ReactNode; children: ReactNode; open?: boolean; className?: string }) {
   return (
-    <div aria-hidden className={cx("hidden gap-3 border-b border-line bg-chalk/60 px-3 py-1.5 text-[11px] font-bold text-silt md:grid", cols)}>
-      {children}
-    </div>
+    <details open={open} className={cx("group/more", className)}>
+      <summary className="inline-flex min-h-8 cursor-pointer list-none items-center gap-1 rounded-xs text-small font-semibold text-text-2 transition-colors duration-(--duration-fast) select-none hover:text-ink max-sm:min-h-11 [&::-webkit-details-marker]:hidden">
+        <ChevronRight size={14} aria-hidden className="shrink-0 transition-transform duration-(--duration-fast) group-open/more:rotate-90" />
+        {label}
+      </summary>
+      <div className="mt-2">{children}</div>
+    </details>
   );
 }
+
+/**
+ * Tableaux de données : pleine largeur dans une <Section> (débord de son padding horizontal),
+ * nombres alignés à droite en chiffres tabulaires, libellés de colonnes ≥ 12 px.
+ */
+export const T = {
+  wrap: "-mx-5 overflow-x-auto",
+  table: "w-full border-collapse text-body",
+  head: "border-b border-line-strong bg-canvas",
+  th: "px-3 py-2 text-right align-bottom text-small leading-snug font-semibold whitespace-nowrap text-text-2 first:pl-5 first:text-left last:pr-5",
+  row: "border-b border-line last:border-b-0",
+  td: "tabular px-3 py-2.5 text-right align-top whitespace-nowrap first:pl-5 first:text-left first:whitespace-normal last:pr-5",
+  foot: "border-t border-line-strong bg-canvas",
+};
+/**
+ * Conteneur d'un tableau qui peut défiler horizontalement : il devient une région focalisable et
+ * nommée seulement quand il défile réellement (accessible au clavier, WCAG 2.1.1), et l'indique aussi à
+ * l'écran (« Faites défiler le tableau → ») : sur mobile, des colonnes coupées ne doivent pas passer inaperçues.
+ */
+export function TableScroll({ label, children, className = T.wrap }: { label: string; children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [scrolls, setScrolls] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const check = () => setScrolls(el.scrollWidth > el.clientWidth + 1);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    if (el.firstElementChild) ro.observe(el.firstElementChild);
+    return () => ro.disconnect();
+  }, []);
+  return (
+    <>
+      <div ref={ref} className={className} {...(scrolls ? { tabIndex: 0, role: "region", "aria-label": `${label} (faites défiler horizontalement)` } : {})}>
+        {children}
+      </div>
+      {scrolls && (
+        <p aria-hidden className="mt-1.5 text-meta text-text-3">
+          Faites défiler le tableau horizontalement →
+        </p>
+      )}
+    </>
+  );
+}
+
+/**
+ * Liste à hauteur limitée qui peut défiler : focalisable et nommée (clavier). Posé sur <ul>/<ol> : on
+ * garde le rôle natif de liste (un rôle « region » l'écraserait et les <li> perdraient leur liste).
+ */
+export const scrollRegion = (label: string) => ({ tabIndex: 0, "aria-label": label });
+
+/** Valeur nulle d'un tableau : lisible (text-3), pas « désactivée ». */
+export const ZERO = "text-text-3";
 
 const METRIC: Record<string, { label: string; money?: boolean; alarm?: boolean }> = {
   source: { label: "lignes sources" },
@@ -540,7 +577,7 @@ const METRIC: Record<string, { label: string; money?: boolean; alarm?: boolean }
 };
 
 /** Mesures brutes d'un contrôle, telles que renvoyées par le moteur de vérification. */
-export function Metrics({ metrics, className }: { metrics?: Record<string, number | string>; className?: string }) {
+export function CheckMetrics({ metrics, className }: { metrics?: Record<string, number | string>; className?: string }) {
   const list = Object.entries(metrics ?? {});
   if (!list.length) return null;
   return (
@@ -549,8 +586,8 @@ export function Metrics({ metrics, className }: { metrics?: Record<string, numbe
         const m = METRIC[k];
         const alarm = !!m?.alarm && typeof v === "number" && v > 0;
         return (
-          <li key={k} className={cx("tabular rounded-xs px-1.5 text-[11px] leading-[19px]", alarm ? "bg-rust-soft text-[#9c3a24]" : "bg-chalk text-sediment")}>
-            {m?.label ?? k} <b className={cx("font-bold", alarm ? "text-[#9c3a24]" : "text-ink")}>{m?.money && typeof v === "number" ? euros(v) : fmt(v)}</b>
+          <li key={k} className={cx("tabular rounded-xs px-1.5 py-0.5 text-meta", alarm ? "bg-danger-soft text-danger-ink" : "bg-surface-sunken text-text-2")}>
+            {m?.label ?? k} <b className={cx("font-semibold", alarm ? "text-danger-ink" : "text-ink")}>{m?.money && typeof v === "number" ? euros(v) : fmt(v)}</b>
           </li>
         );
       })}

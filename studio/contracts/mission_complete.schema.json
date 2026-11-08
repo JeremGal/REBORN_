@@ -1,0 +1,37 @@
+{
+  "$comment": "GÉNÉRÉ par platform/src/lib/contracts-export.ts — ne pas modifier à la main (npm run contracts). Contrat mission_complete 1.0.",
+  "title": "mission_complete",
+  "description": "Fin de mission déclarée par l'exécuteur titulaire (Mouss → Studio) : POST /api/executor/missions/<mission_id>/complete. Clôt l'investigation, libère le prêt et efface les identifiants confiés ; jamais de fin « completed » implicite.",
+  "x-contract-version": "1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "failed"
+      ]
+    },
+    "detail": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "disposal": {
+      "type": "object",
+      "properties": {
+        "h_vault_item_deleted": {
+          "type": "boolean"
+        },
+        "local_artifacts_purged": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "outcome"
+  ],
+  "additionalProperties": false
+}

@@ -1,6 +1,14 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { formatMoney, STATUS_LABEL } from "@/lib/engine/describe";
+import { StatusBadge as DsStatusBadge } from "./ds/Badge";
+import { buttonClasses, controlClasses, type ButtonVariant, type Tone } from "./ds/styles";
+
+/*
+ * Kit historique des pages du Studio. Exports et signatures inchangés ; le rendu s'appuie
+ * désormais sur le design system (components/ds, jetons dans app/globals.css).
+ * Nouveaux écrans : importer directement depuis "@/components/ds".
+ */
 
 export function cx(...c: (string | false | null | undefined)[]) {
   return c.filter(Boolean).join(" ");
@@ -10,39 +18,21 @@ export function cx(...c: (string | false | null | undefined)[]) {
 
 type BtnVariant = "primary" | "accent" | "ghost" | "quiet" | "danger";
 
-const BTN: Record<BtnVariant, string> = {
-  primary: "bg-ink text-white hover:bg-ink-2 disabled:bg-dust",
-  accent: "bg-verdigris text-white hover:bg-[#0e7f70] disabled:bg-dust",
-  ghost: "bg-paper text-ink shadow-[0_0_0_1px_var(--color-line-strong)] hover:bg-chalk disabled:text-dust",
-  quiet: "text-sediment hover:text-ink hover:bg-chalk-2 disabled:text-dust",
-  danger: "bg-paper text-rust shadow-[0_0_0_1px_var(--color-line-strong)] hover:bg-rust-soft",
+/** Variantes historiques → variantes du design system. */
+const VARIANT: Record<BtnVariant, ButtonVariant> = {
+  primary: "primary",
+  accent: "accent",
+  ghost: "secondary",
+  quiet: "ghost",
+  danger: "danger-subtle",
 };
 
 export function Button({ variant = "primary", className, size = "md", ...p }: ComponentProps<"button"> & { variant?: BtnVariant; size?: "sm" | "md" }) {
-  return (
-    <button
-      {...p}
-      className={cx(
-        "inline-flex items-center justify-center gap-1.5 rounded-sm font-bold whitespace-nowrap transition-[background-color,color,transform] duration-150 ease-out-quint disabled:cursor-not-allowed",
-        size === "sm" ? "h-7 px-2.5 text-xs" : "h-9 px-3.5 text-[13px]",
-        BTN[variant],
-        className,
-      )}
-    />
-  );
+  return <button {...p} className={cx(buttonClasses({ variant: VARIANT[variant], size }), className)} />;
 }
 
 export function ButtonLink({ variant = "ghost", className, ...p }: ComponentProps<typeof Link> & { variant?: BtnVariant }) {
-  return (
-    <Link
-      {...p}
-      className={cx(
-        "inline-flex h-9 items-center justify-center gap-1.5 rounded-sm px-3.5 text-[13px] font-bold whitespace-nowrap transition-colors duration-150",
-        BTN[variant],
-        className,
-      )}
-    />
-  );
+  return <Link {...p} className={cx(buttonClasses({ variant: VARIANT[variant] }), className)} />;
 }
 
 /* ------------------------------------------------------------------ */
@@ -65,10 +55,10 @@ export function Panel({
   return (
     <section className={cx("card flex min-w-0 flex-col", className)}>
       {(title || eyebrow || actions) && (
-        <header className="flex items-start justify-between gap-3 px-4 pt-3.5 pb-2.5">
+        <header className="flex items-start justify-between gap-3 px-4 pt-4 pb-3">
           <div className="min-w-0">
-            {eyebrow && <div className="eyebrow mb-0.5">{eyebrow}</div>}
-            {title && <h2 className="text-[15px] leading-snug font-bold tracking-[-0.01em]">{title}</h2>}
+            {eyebrow && <div className="eyebrow mb-1">{eyebrow}</div>}
+            {title && <h2 className="text-lead font-semibold text-ink">{title}</h2>}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-1.5">{actions}</div>}
         </header>
@@ -84,9 +74,9 @@ export function Specimen({ children, tone, className, title }: { children: React
       title={title}
       className={cx(
         "specimen inline-block",
-        tone === "ok" && "border-verdigris/30! bg-verdigris-soft! text-verdigris!",
-        tone === "bad" && "border-rust/30! bg-rust-soft! text-rust!",
-        tone === "warn" && "border-ochre/30! bg-ochre-soft! text-ochre!",
+        tone === "ok" && "border-accent/35 bg-accent-soft text-accent-ink",
+        tone === "bad" && "border-danger/35 bg-danger-soft text-danger-ink",
+        tone === "warn" && "border-warning/40 bg-warning-soft text-warning-ink",
         className,
       )}
     >
@@ -95,32 +85,39 @@ export function Specimen({ children, tone, className, title }: { children: React
   );
 }
 
-const STATUS_STYLE: Record<string, string> = {
-  hypothesis: "bg-ochre-soft text-ochre",
-  tested: "bg-[#e6ecf5] text-ink-3",
-  validated: "bg-verdigris-soft text-verdigris",
-  rejected: "bg-rust-soft text-rust line-through",
+/** Statut d'une règle (hypothèse, testée, validée, rejetée) : icône + texte, jamais la couleur seule. */
+const STATUS_TONE: Record<string, Tone> = {
+  hypothesis: "warn",
+  tested: "info",
+  validated: "ok",
+  rejected: "bad",
 };
 
 export function StatusBadge({ status }: { status?: string }) {
   const s = status ?? "hypothesis";
-  return (
-    <span className={cx("inline-flex h-5 items-center rounded-xs px-1.5 text-[11px] font-bold tracking-wide uppercase", STATUS_STYLE[s] ?? "bg-chalk-2 text-sediment")}>
-      {STATUS_LABEL[s] ?? s}
-    </span>
-  );
+  return <DsStatusBadge tone={STATUS_TONE[s] ?? "neutral"}>{STATUS_LABEL[s] ?? s}</DsStatusBadge>;
+}
+
+/** Pourcentage entier qui n'affiche jamais 100 % (ni 0 %) pour une valeur qui ne l'est pas. */
+function wholePct(value: number) {
+  const raw = value * 100;
+  const n = Math.round(raw);
+  if (n >= 100 && raw < 100) return Math.floor(raw * 10) / 10 >= 100 ? 99.9 : Math.floor(raw * 10) / 10;
+  if (n <= 0 && raw > 0) return Math.ceil(raw * 10) / 10;
+  return n;
 }
 
 export function Confidence({ value }: { value?: number }) {
-  if (value === undefined) return <span className="text-xs text-silt">—</span>;
-  const pct = Math.round(value * 100);
-  const tone = value >= 0.95 ? "bg-verdigris" : value >= 0.8 ? "bg-ink-3" : "bg-ochre";
+  if (value === undefined) return <span className="text-meta text-text-3">—</span>;
+  const pct = wholePct(value);
+  const label = `${pct.toLocaleString("fr-FR")}%`;
+  const tone = value >= 0.95 ? "bg-accent" : value >= 0.8 ? "bg-ink-3" : "bg-warning";
   return (
-    <span className="inline-flex items-center gap-1.5" title={`Confiance ${pct} %`}>
-      <span className="relative h-1 w-12 overflow-hidden rounded-full bg-chalk-2">
-        <span className={cx("absolute inset-y-0 left-0 rounded-full", tone)} style={{ width: `${pct}%` }} />
+    <span className="inline-flex items-center gap-1.5" title={`Confiance ${pct.toLocaleString("fr-FR")} %`}>
+      <span aria-hidden className="relative h-1.5 w-12 overflow-hidden rounded-full bg-surface-sunken">
+        <span className={cx("absolute inset-y-0 left-0 rounded-full", tone)} style={{ width: `${Math.min(100, Math.max(0, value * 100))}%` }} />
       </span>
-      <span className="tabular font-mono text-[11px] text-sediment">{pct}%</span>
+      <span className="tabular font-mono text-meta text-text-2">{label}</span>
     </span>
   );
 }
@@ -139,33 +136,45 @@ export function LegacyValue({ value }: { value?: unknown }) {
 
 export function Empty({ title, hint, children }: { title: string; hint?: ReactNode; children?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 rounded-md border border-dashed border-line-strong px-6 py-10 text-center">
-      <div className="text-[13px] font-bold text-ink">{title}</div>
-      {hint && <div className="max-w-sm text-[13px] text-sediment">{hint}</div>}
+    <div className="flex flex-col items-center justify-center gap-2 rounded-panel border border-dashed border-line-strong px-6 py-10 text-center">
+      <div className="text-body font-semibold text-ink">{title}</div>
+      {hint && <div className="max-w-sm text-small leading-relaxed text-text-2">{hint}</div>}
       {children && <div className="mt-2 flex flex-wrap justify-center gap-2">{children}</div>}
     </div>
   );
 }
 
+/**
+ * Part (0..1) → « 12,5 % ». Jamais « 100 % » pour une valeur inférieure à 1 (ni « 0 % » pour une
+ * valeur positive) : la précision augmente au besoin (99,96 % reste 99,96 %).
+ */
 export function pct(v: number | null | undefined, digits = 1) {
   if (v === null || v === undefined) return "—";
-  const n = Math.round(v * 100 * 10 ** digits) / 10 ** digits;
-  return `${n.toLocaleString("fr-FR")} %`;
+  const raw = v * 100;
+  let d = digits;
+  let n = Math.round(raw * 10 ** d) / 10 ** d;
+  while (d < 4 && ((n >= 100 && raw < 100) || (n <= 0 && raw > 0))) {
+    d++;
+    n = Math.round(raw * 10 ** d) / 10 ** d;
+  }
+  if (n >= 100 && raw < 100) n = Math.floor(raw * 10 ** d) / 10 ** d;
+  return `${n.toLocaleString("fr-FR", { maximumFractionDigits: d })} %`;
 }
 
 export function timeOf(iso: string) {
   return new Date(iso).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }
 
+/** Champ historique : le libellé enveloppe le contrôle (association implicite) ; l'aide fait partie du libellé. */
 export function Field({ label, children, hint }: { label: string; children: ReactNode; hint?: string }) {
   return (
-    <label className="flex flex-col gap-1">
-      <span className="text-xs font-bold text-sediment">{label}</span>
+    <label className="flex min-w-0 flex-col gap-1.5">
+      <span className="ds-label">{label}</span>
       {children}
-      {hint && <span className="text-[11px] text-silt">{hint}</span>}
+      {hint && <span className="ds-hint">{hint}</span>}
     </label>
   );
 }
 
-export const inputCls =
-  "h-9 w-full rounded-sm bg-chalk px-2.5 text-[13px] text-ink shadow-[inset_0_0_0_1px_var(--color-line-strong)] outline-none transition-shadow placeholder:text-silt focus:bg-paper focus:shadow-[inset_0_0_0_1.5px_var(--color-verdigris)]";
+/** Classes d'un champ historique (input, select, textarea) : jetons du design system ; les utilitaires ajoutés surchargent. */
+export const inputCls = controlClasses("md");

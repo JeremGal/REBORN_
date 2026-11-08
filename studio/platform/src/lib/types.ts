@@ -30,7 +30,10 @@ export interface Observation {
   error?: string;
   /** Rattachement à une investigation. Si absent, la plateforme rattache à l'investigation active. */
   investigation_id?: string;
-  /** Capture d'écran (URL http ou data URL base64). */
+  /**
+   * Capture d'écran : data URL base64 (PNG, JPEG ou WebP, 8 Mo au plus), rangée par REBORN et remplacée par
+   * /api/shots/<uuid>.<ext>. Toute autre adresse (http(s) externe, javascript:…) n'est pas conservée.
+   */
   screenshot_url?: string;
   /** Si l'expérience répond à une demande d'Alan. */
   request_id?: string;

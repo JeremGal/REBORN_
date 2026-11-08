@@ -62,6 +62,8 @@ beforeAll(async () => {
   crmUrl = `http://127.0.0.1:${process.env.CRM_PORT}`;
   const port = await freePort();
   legacyUrl = `http://127.0.0.1:${port}`;
+  // Liste blanche de test (SPEC §7, lot B2) : seul ce Relatio local est joignable par le connecteur.
+  process.env.REBORN_EGRESS_ALLOW = `127.0.0.1:${port}`;
   legacy = spawn(process.execPath, ["--no-warnings", path.join(ROOT, "legacy-crm/server.mjs")], { env: { ...process.env, LEGACY_CRM_PORT: String(port), LEGACY_CRM_DATA: LEGACY_DATA }, stdio: "ignore" });
   await waitFor(`${legacyUrl}/login`);
   creds = JSON.parse(fs.readFileSync(path.join(LEGACY_DATA, ".credentials.json"), "utf8"));
@@ -76,6 +78,12 @@ afterAll(async () => {
   await generate?.stopApp("morel-crm");
   legacy?.kill();
   legacyDb?.close();
+  // Écriture différée du journal (200 ms, et à la sortie du processus) faite MAINTENANT : sinon elle
+  // recréerait <tmp>/reborn/state.json après la suppression du dossier (reste constaté par le lot C1).
+  (await import("@/lib/store")).flushPersist();
+  // Dossier temporaire (≈ 180 Mo : Relatio de test, base migrée, CRM généré) : supprimé à chaque exécution
+  // pour ne pas remplir le disque ; il ne contient que des données synthétiques et des comptes de test.
+  if (!process.env.REBORN_KEEP_TEST_DIRS) fs.rmSync(tmp, { recursive: true, force: true });
 });
 
 const one = <T,>(sql: string, ...a: (string | number)[]) => legacyDb.prepare(sql).get(...a) as T;

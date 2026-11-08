@@ -1,64 +1,45 @@
-import { randomUUID } from "node:crypto";
-import { credentialStatus, issueRedeemToken } from "@/lib/migration/credentials";
-import { loadProject, projectRoot } from "@/lib/migration/project";
-import { addEvent } from "@/lib/store";
+import { loadProject } from "@/lib/migration/project";
+import { claimMission, ensureExecutor, executorIdentity, missionPreview, sweepIfDue } from "@/lib/migration/analysis";
+import { currentPrincipal } from "@/lib/auth/principal";
 import { ApiError, handler, json } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
 
-const MISSION_CONTRACT_VERSION = "1.0";
-
-function mission(id: string, withToken: boolean) {
-  const p = loadProject(id);
-  if (!p) throw new ApiError(404, `Projet inconnu : ${id}`);
-  const cred = credentialStatus(projectRoot(id));
-  const q = `?project=${id}`;
-  return {
-    contract: "connection_mission",
-    contract_version: MISSION_CONTRACT_VERSION,
-    mission_id: `MIS_${randomUUID().replace(/-/g, "").slice(0, 10)}`,
-    project_id: id,
-    target: { url: p.legacy_url ?? null, software: p.source_system ?? null, software_type: p.software_type ?? null, company: p.company ?? p.name },
-    authorization: p.authorization ?? null,
-    objectives: [
-      "Se connecter à l'ancien logiciel avec le compte fourni et rapporter l'état de connexion",
-      "Explorer les modules, écrans, menus, formulaires et fonctions accessibles à ce compte",
-      "Repérer les mécanismes d'export autorisés (exports CSV/Excel, API, impression) et les données accessibles",
-      "Déposer les exports obtenus et rapporter les observations avec leurs preuves (captures)",
-    ],
-    constraints: [
-      "Ne jamais contourner une permission, un contrôle d'accès ou une limite du compte fourni",
-      "Ne jamais modifier ni supprimer de données dans l'ancien logiciel",
-      "Ne jamais transmettre les identifiants à un modèle de langage : seul le code technique de l'exécuteur les utilise",
-      "Signaler toute double authentification ou intervention nécessaire au lieu de la contourner",
-    ],
-    credential: cred.stored
-      ? { username_hint: cred.username_hint, expires_at: cred.expires_at, ...(withToken ? { redeem_url: `/api/projects/${id}/credentials/redeem`, ...issueRedeemToken(projectRoot(id)) } : {}) }
-      : null,
-    report: {
-      connection_status: { method: "POST", url: `/api/projects/${id}/connection`, body: '{ "status": "pending|connected|failed|mfa_required|human_needed", "detail": "…" }' },
-      investigation: { method: "POST", url: `/api/investigations`, body: `{ "application": "…", "module": "…", "mode": "live", "project_id": "${id}" }` },
-      events: { method: "POST", url: `/api/events${q}` },
-      screens: { method: "POST", url: `/api/schema${q}` },
-      observations: { method: "POST", url: `/api/observations${q}` },
-      exports: { method: "POST", url: `/api/migration/sources${q}`, body: '{ "name": "clients.csv", "content_base64": "…", "mechanism": "export CSV" }' },
-    },
-  };
-}
-
-/** Mission sans jeton (consultation). */
-export const GET = handler(async (_req, ctx) => {
-  const { id } = await ctx.params;
-  return json(mission(id, false));
-});
-
-/** Mission transmise à l'exécuteur de l'agent : émet un jeton de remise à usage unique (15 min). */
-export const POST = handler(
+/**
+ * Aperçu de la mission (contrat connection_mission 1.1), SANS jeton : la mission en cours ou la dernière,
+ * sinon ce qu'elle contiendrait. Propriétaire, équipe REBORN, exécuteur.
+ */
+export const GET = handler(
   async (_req, ctx) => {
     const { id } = await ctx.params;
-    const m = mission(id, true);
-    addEvent({ source: "platform", type: "migration", title: "Mission de connexion préparée pour l'agent Computer Use", detail: m.credential ? "Jeton de remise des identifiants à usage unique (15 min) inclus" : "Aucun identifiant confié au projet" });
-    return json(m);
+    await sweepIfDue();
+    return json(await missionPreview(id));
   },
-  { write: true },
+  { access: ["owner", "operator", "explorer"], project: "param" },
+);
+
+/**
+ * Compatibilité 1.0 — take_mission(projet) : l'exécuteur (jeton explorer) prend la mission EN FILE de ce
+ * projet (même format qu'en 1.0, champs 1.1 en plus, jeton de remise lié à la mission et à l'exécuteur) ;
+ * 409 s'il n'y a rien en file. L'appel vaut signe de vie (exécuteur 1.0 sans battement de cœur).
+ * L'équipe REBORN ne reçoit jamais de jeton : la mission n'est remise qu'à l'exécuteur qui la prend.
+ */
+export const POST = handler(
+  async (req, ctx) => {
+    const { id } = await ctx.params;
+    const who = currentPrincipal();
+    if (who.kind !== "service") {
+      throw new ApiError(409, "La mission est remise à l'exécuteur par la file d'attente : il la prend lui-même (POST /api/executor/missions/claim). Aucun jeton n'est remis hors de l'exécuteur.");
+    }
+    const p = loadProject(id);
+    if (!p) throw new ApiError(404, "Projet introuvable");
+    if (p.status === "PAUSED") throw new ApiError(409, "Projet en pause : aucune mission n'est remise");
+    const ex = executorIdentity(who, req);
+    // Exécuteur 1.0 (sans battement) : cet appel est son signe de vie réel (capacités 1.0 par défaut).
+    await ensureExecutor(ex);
+    const mission = await claimMission(ex, { projectId: id });
+    if (!mission) throw new ApiError(409, "Aucune analyse en file pour ce projet : le propriétaire doit d'abord lancer « Analyser mon logiciel »");
+    return json(mission);
+  },
+  { access: ["explorer", "operator"], project: "param", write: true },
 );

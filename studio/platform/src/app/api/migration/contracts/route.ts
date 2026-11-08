@@ -11,4 +11,6 @@ export const GET = handler(async () =>
     extraction_plan: { version: EXTRACTION_CONTRACT_VERSION, schema: z.toJSONSchema(ExtractionPlanSchema, { io: "input", unrepresentable: "any" }) },
     migration_mapping: { version: MAPPING_CONTRACT_VERSION, schema: z.toJSONSchema(MigrationMappingSchema, { io: "input", unrepresentable: "any" }) },
   }),
+  // Schémas statiques, sans aucune donnée de projet : publics (liens « Avancé » des pages du parcours).
+  { access: ["public"], project: "none" },
 );

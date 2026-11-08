@@ -1,14 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { CircleCheck, CircleX, FlaskConical, Info, LoaderCircle, TriangleAlert, X } from "lucide-react";
-import { cx } from "@/components/ui";
+import { LoaderCircle, X } from "lucide-react";
+import { Button } from "@/components/ds/Button";
+import { cx } from "@/components/ds/cx";
+import { formatDateTime, formatInt, formatNumber, formatPercent } from "@/components/ds/format";
+import { Callout } from "./Step";
 import { projectCall, useProject } from "./ProjectProvider";
 
 /*
  * Socle commun des étapes « Données » et « Correspondances » : types des réponses d'API
  * (sous-ensembles de src/lib/migration/*), libellés français, petits composants et hooks.
  * Aucun chiffre n'est produit ici : tout ce qui est affiché provient des réponses d'API.
+ * Les blocs visuels (en-tête, chiffres, sections, messages, jeux de test) viennent de ./Step.
  */
 
 /* ------------------------------------------------------------------ */
@@ -253,7 +257,6 @@ export interface MappingPostResponse {
  * (format de l'Explorer / de l'Analyste) le décrivent. Tout ce qui en provient est étiqueté « jeu de test ».
  */
 export const TEST_SYSTEM = "Relatio 2004";
-export const TEST_LABEL = `Jeu de test — ${TEST_SYSTEM}`;
 
 /** Auteur enregistré pour les fichiers déposés depuis cet écran (champ `by` de POST /api/migration/sources). */
 export const UPLOAD_BY = "Studio (import manuel)";
@@ -301,32 +304,34 @@ export const ORIGIN: Record<MappingOrigin, { label: string; hint: string; test: 
   analyst: { label: "Reçue de l'Analyste", hint: "Envoyée par l'agent d'Alan via l'API.", test: false },
   fixture: {
     label: `Jeu de test au format de l'Analyste — ${TEST_SYSTEM}`,
-    hint: `Correspondances de test écrites pour le logiciel de test ${TEST_SYSTEM}, au format que l'Analyste enverra. Ce n'est pas un envoi de l'Analyste.`,
+    hint: `Écrite à la main pour le logiciel de test ${TEST_SYSTEM} : ce n'est pas un envoi de l'Analyste.`,
     test: true,
   },
-  auto: { label: "Proposition automatique", hint: "Déduite uniquement de la structure lue (types, clés, relations) : aucune connaissance du logiciel source.", test: false },
+  auto: { label: "Proposition automatique", hint: "Déduite uniquement de la structure lue, sans connaissance du logiciel source.", test: false },
   user: { label: "Saisie opérateur", hint: "Correspondances fournies à la main par un opérateur.", test: false },
 };
 
 const TRANSFORM_WORD: Record<string, string> = {
-  trim: "espaces de début et de fin retirés",
+  trim: "espaces début/fin retirés",
   lower: "en minuscules",
   upper: "en majuscules",
   collapse_spaces: "espaces multiples réduits",
-  digits: "chiffres uniquement",
+  digits: "chiffres seulement",
 };
+/** Nettoyages de forme, sans effet sur le sens de la valeur : affichés en retrait. */
+const MINOR_TRANSFORMS = new Set(["trim", "lower", "upper", "collapse_spaces"]);
 const SEP: Record<string, string> = { comma: "virgule décimale", dot: "point décimal", auto: "séparateur détecté" };
 
-/** Libellé lisible d'une transformation déclarée dans le contrat. */
-export function transformLabel(t: Transform): { label: string; title?: string } {
-  if (typeof t === "string") return { label: TRANSFORM_WORD[t] ?? t };
+/** Libellé lisible d'une transformation déclarée dans le contrat (`minor` : simple nettoyage de forme). */
+export function transformLabel(t: Transform): { label: string; title?: string; minor?: boolean } {
+  if (typeof t === "string") return { label: TRANSFORM_WORD[t] ?? t, minor: MINOR_TRANSFORMS.has(t) };
   if ("date" in t) return { label: t.date === "excel" ? "date Excel (numéro de série)" : `date ${READ_FORMAT[t.date] ?? t.date}` };
   if ("decimal" in t) return { label: `décimal, ${SEP[t.decimal] ?? t.decimal}` };
   if ("money" in t) return { label: `montant, ${SEP[t.money] ?? t.money}` };
-  if ("boolean" in t) return { label: `oui = ${t.boolean.true.join(" / ") || "—"} · non = ${t.boolean.false.join(" / ") || "—"}` };
+  if ("boolean" in t) return { label: `oui = ${t.boolean.true.join(" / ") || "—"}, non = ${t.boolean.false.join(" / ") || "—"}` };
   if ("map" in t) {
     const pairs = Object.entries(t.map).map(([k, v]) => `${k} → ${v}`);
-    return { label: `codes : ${pairs.slice(0, 3).join(", ")}${pairs.length > 3 ? ` (+${pairs.length - 3})` : ""}`, title: pairs.join("\n") };
+    return { label: `codes ${pairs.slice(0, 3).join(", ")}${pairs.length > 3 ? ` (+${pairs.length - 3})` : ""}`, title: pairs.join("\n") };
   }
   if ("null_if" in t) return { label: `vide si ${t.null_if.map((v) => `« ${v} »`).join(", ")}` };
   return { label: JSON.stringify(t) };
@@ -336,64 +341,47 @@ export function transformLabel(t: Transform): { label: string; title?: string } 
 /* Formats                                                              */
 /* ------------------------------------------------------------------ */
 
-export const nf = (x: number) => x.toLocaleString("fr-FR");
+/** Entier au format français, séparateur de milliers lisible (formatInt du design system). */
+export const nf = (x: number) => formatInt(x);
 /** Pluriel français : 0 et 1 au singulier. */
 export const plural = (count: number, one: string, many = `${one}s`) => `${nf(count)} ${count > 1 ? many : one}`;
-export const bytes = (b: number) =>
-  b >= 1048576 ? `${(b / 1048576).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} Mo` : b >= 1024 ? `${Math.round(b / 1024).toLocaleString("fr-FR")} Ko` : `${nf(b)} o`;
-export const dt = (iso: string) => new Date(iso).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+export const bytes = (b: number) => (b >= 1048576 ? `${formatNumber(b / 1048576, { maximumFractionDigits: 1 })} Mo` : b >= 1024 ? `${formatInt(Math.round(b / 1024))} Ko` : `${nf(b)} o`);
+/** Date et heure au format unique du Studio (« 8 nov. 2026, 02:09 »). */
+export const dt = (iso: string) => formatDateTime(iso);
 export const shortHash = (h: string | undefined, len = 12) => (h ? `${h.slice(0, len)}…` : "—");
-/** Pourcentage arrondi (sans jamais arrondir à 100 % une valeur qui ne l'est pas). */
-export const percent = (v: number) => {
-  const p = Math.round(v * 1000) / 10;
-  const shown = p >= 100 && v < 1 ? 99.9 : p;
-  return `${shown.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} %`;
-};
+/**
+ * Pourcentage (une décimale au plus) qui n'est jamais arrondi à 100 % ni à 0 % s'il ne l'est pas :
+ * la précision augmente près des bornes (0,9996 → « 99,96 % »), voir formatPercent du design system.
+ */
+export const percent = (v: number) => formatPercent(v, 1);
+/** Confiance en pourcentage entier, jamais « 100 % » pour une valeur qui ne l'est pas exactement. */
+export const confidencePct = (v: number) => `${v < 1 ? Math.min(Math.round(v * 100), 99) : 100} %`;
 
 /* ------------------------------------------------------------------ */
 /* Composants                                                           */
 /* ------------------------------------------------------------------ */
-
-/** Étiquette obligatoire de tout ce qui provient d'un jeu de test. */
-export function TestBadge({ children = TEST_LABEL, className }: { children?: ReactNode; className?: string }) {
-  return (
-    <span className={cx("inline-flex max-w-full items-start gap-1 rounded-xs bg-ochre-soft px-1.5 py-0.5 text-[11px] leading-4 font-bold text-ochre", className)}>
-      <FlaskConical size={11} className="mt-[2.5px] shrink-0" aria-hidden />
-      <span className="min-w-0">{children}</span>
-    </span>
-  );
-}
 
 /** Libellé long d'un bouton : peut passer à la ligne sur mobile au lieu de déborder. */
 export const WRAP_BTN = "h-auto! min-h-7 whitespace-normal! py-1 text-left";
 
 export type Tone = "ok" | "bad" | "warn" | "info";
 
-export function Notice({ tone = "info", title, children, onClose, className }: { tone?: Tone; title?: ReactNode; children?: ReactNode; onClose?: () => void; className?: string }) {
-  const Icon = tone === "ok" ? CircleCheck : tone === "bad" ? CircleX : tone === "warn" ? TriangleAlert : Info;
+/** Tons des pastilles : jetons du design system (contrastes ≥ 4,5:1, voir globals.css). */
+const CHIP_TONE = {
+  neutral: "bg-surface-sunken text-text-2",
+  ok: "bg-accent-soft text-accent-ink",
+  warn: "bg-warning-soft text-warning-ink",
+  bad: "bg-danger-soft text-danger-ink",
+  ref: "bg-surface text-ink ring-1 ring-inset ring-line-strong",
+  lock: "bg-ink text-white",
+} as const;
+
+/** Pastille compacte (état, drapeau). */
+export function Chip({ children, tone = "neutral", title, className }: { children: ReactNode; tone?: keyof typeof CHIP_TONE; title?: string; className?: string }) {
   return (
-    <div
-      role={tone === "bad" ? "alert" : "status"}
-      className={cx(
-        "flex items-start gap-2 rounded-md px-3 py-2 text-[12.5px] leading-relaxed",
-        tone === "ok" && "bg-verdigris-soft text-[#0b6b5f]",
-        tone === "bad" && "bg-rust-soft text-rust",
-        tone === "warn" && "bg-ochre-soft text-ochre",
-        tone === "info" && "bg-chalk text-sediment",
-        className,
-      )}
-    >
-      <Icon size={15} className="mt-0.5 shrink-0" aria-hidden />
-      <div className="min-w-0 flex-1 break-words">
-        {title && <div className="font-bold">{title}</div>}
-        {children}
-      </div>
-      {onClose && (
-        <button type="button" onClick={onClose} aria-label="Fermer le message" className="-mr-1 shrink-0 rounded-xs p-0.5 opacity-70 hover:opacity-100">
-          <X size={14} />
-        </button>
-      )}
-    </div>
+    <span title={title} className={cx("inline-flex max-w-full items-center gap-1 rounded-xs px-1.5 py-0.5 text-meta leading-4 font-semibold", CHIP_TONE[tone], className)}>
+      {children}
+    </span>
   );
 }
 
@@ -403,7 +391,7 @@ export function Spinner({ size = 14, className }: { size?: number; className?: s
 
 export function Loading({ label }: { label: string }) {
   return (
-    <div className="flex items-center justify-center gap-2 py-10 text-[13px] text-silt" role="status">
+    <div className="flex items-center justify-center gap-2 py-8 text-body text-text-3" role="status">
       <Spinner /> {label}
     </div>
   );
@@ -412,58 +400,39 @@ export function Loading({ label }: { label: string }) {
 /** Erreur de chargement : message renvoyé par l'API + nouvel essai (vrai GET). */
 export function LoadError({ message, onRetry, title = "Chargement impossible" }: { message: string; onRetry?: () => void; title?: string }) {
   return (
-    <Notice tone="bad" title={title}>
-      <p>{message}</p>
-      {onRetry && (
-        <button type="button" onClick={onRetry} className="mt-1 font-bold underline underline-offset-2 hover:no-underline">
-          Réessayer
-        </button>
-      )}
-    </Notice>
-  );
-}
-
-export function StepHeader({ step, title, children, aside }: { step: string; title: string; children?: ReactNode; aside?: ReactNode }) {
-  return (
-    <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-      <div className="min-w-0 max-w-[780px]">
-        <div className="eyebrow">{step}</div>
-        <h2 className="mt-0.5 text-[20px] leading-tight font-black tracking-[-0.02em]">{title}</h2>
-        {children && <p className="mt-1 text-[13px] text-sediment">{children}</p>}
-      </div>
-      {aside}
-    </header>
-  );
-}
-
-export function Kpi({ label, value, hint, tone }: { label: string; value: ReactNode; hint?: ReactNode; tone?: "ok" | "warn" | "bad" }) {
-  return (
-    <div className="min-w-0">
-      <dt className="text-[11.5px] text-silt">{label}</dt>
-      <dd className={cx("tabular text-[19px] leading-tight font-black", tone === "ok" ? "text-verdigris" : tone === "warn" ? "text-ochre" : tone === "bad" ? "text-rust" : "text-ink")}>{value}</dd>
-      {hint && <dd className="text-[11px] leading-tight text-silt">{hint}</dd>}
-    </div>
-  );
-}
-
-/** Pastille compacte (méta-information). */
-export function Chip({ children, tone, title, className }: { children: ReactNode; tone?: "ok" | "warn" | "bad" | "ref" | "lock"; title?: string; className?: string }) {
-  return (
-    <span
+    <Callout
+      tone="bad"
       title={title}
-      className={cx(
-        "inline-flex max-w-full items-center gap-1 rounded-xs px-1.5 py-px text-[11px] leading-[18px] font-bold",
-        !tone && "bg-chalk-2 text-sediment",
-        tone === "ok" && "bg-verdigris-soft text-[#0b6b5f]",
-        tone === "warn" && "bg-ochre-soft text-ochre",
-        tone === "bad" && "bg-rust-soft text-rust",
-        tone === "ref" && "bg-[#e7eef8] text-[#2457a6]",
-        tone === "lock" && "bg-ink text-white",
-        className,
-      )}
+      action={
+        onRetry ? (
+          <Button size="sm" variant="secondary" onClick={onRetry}>
+            Réessayer
+          </Button>
+        ) : undefined
+      }
     >
-      {children}
-    </span>
+      {message}
+    </Callout>
+  );
+}
+
+/** Message d'une opération (réussite, avertissement, erreur), refermable. */
+export function NoticeCallout({ notice, onClose, className }: { notice: ActionNotice; onClose?: () => void; className?: string }) {
+  return (
+    <Callout
+      tone={notice.tone}
+      title={notice.title}
+      className={className}
+      action={
+        onClose ? (
+          <button type="button" onClick={onClose} aria-label="Fermer le message" className="btn btn-ghost btn-icon btn-sm -mr-1">
+            <X size={16} aria-hidden />
+          </button>
+        ) : undefined
+      }
+    >
+      {notice.text}
+    </Callout>
   );
 }
 
@@ -510,6 +479,7 @@ export function useKeyedData<T>(url: string | null, key: string): { data: T | nu
 
 export interface ActionNotice {
   tone: Tone;
+  title?: ReactNode;
   text: ReactNode;
 }
 

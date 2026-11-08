@@ -6,7 +6,7 @@ import { DatabaseSync } from "node:sqlite";
 import { ApiError } from "../http";
 import { effectiveMapping, type EntityMap, type MigrationMapping } from "./mapping";
 import { buildDdl } from "./model";
-import { assertActive, getProject, loadProject, unmappedTables, markRolledBack, migrationLog, projectIds, reconcileDeployed, recordBusinessModel, recordDeployment, runArtifacts, runDir, statusLabel, transition, validatedBusinessModels, type Deployment } from "./project";
+import { appsRoot, assertActive, deliveredApp, getProject, loadProject, unmappedTables, markRolledBack, migrationLog, projectIds, reconcileDeployed, recordBusinessModel, recordDeployment, runArtifacts, runDir, statusLabel, transition, validatedBusinessModels, type Deployment } from "./project";
 import { checkBusinessModel, type BusinessModel } from "./business-model";
 import { enrichSpec } from "./application-spec";
 import type { VerificationReport } from "./verify";
@@ -20,10 +20,19 @@ import type { RulePackage } from "../engine/bindings";
 
 /** 1.1 : classification (protection de l'historique), line_of, modèle métier versionné (rules/). */
 export const SPEC_VERSION = "1.1";
-// Dossiers lus à l'exécution (gabarit du runtime, logiciels générés) : exclus du traçage du build
-export const appsRoot = () => process.env.REBORN_APPS_DIR ?? path.resolve(/* turbopackIgnore: true */ process.cwd(), "..", "generated");
+// Dossiers lus à l'exécution (gabarit du runtime) : exclus du traçage du build
+export { appsRoot };
 const runtimeDir = () => path.join(/* turbopackIgnore: true */ process.cwd(), "runtime");
 export const appPort = () => Number(process.env.CRM_PORT ?? 5050);
+
+/**
+ * Identifiant du nouveau logiciel déjà pris par un logiciel livré qui n'est pas celui de ce projet : refus (409)
+ * formulé pour le client — ni « target.id », ni mention d'un autre projet ou d'un autre client — avec l'action
+ * à mener. (Les correspondances proposées par REBORN, automatiques ou jeu de test, visent toujours un
+ * identifiant propre au projet : ce refus ne concerne plus qu'un envoi de l'Analyste ou une ancienne version.)
+ */
+export const appIdTaken = (appId: string) =>
+  new ApiError(409, `L'identifiant « ${appId} » du nouveau logiciel est déjà réservé à un autre logiciel livré. Dans « Correspondance des champs », appliquez de nouveau la proposition automatique (ou le jeu de test) pour obtenir un identifiant propre à ce projet, puis relancez la migration.`);
 
 export interface AppSpec {
   spec_version: string;
@@ -307,14 +316,15 @@ export async function deploy(runId: string, by: string, opts: { force?: boolean 
   const dir = path.join(appsRoot(), appId);
   const owner = path.join(dir, ".reborn-project");
   if (fs.existsSync(owner) && fs.readFileSync(owner, "utf8").trim() !== p.id) {
-    throw new ApiError(409, `Le logiciel « ${appId} » appartient à un autre projet : changez l'identifiant du nouveau logiciel (correspondances → target.id)`);
+    throw appIdTaken(appId);
   }
   const dbPath = path.join(dir, "data", "app.db");
   const activity = userActivity(dbPath);
   if (activity && !opts.force) {
     throw new ApiError(409, `Le logiciel en service contient ${activity} modification(s) faite(s) par ses utilisateurs : une nouvelle mise en service remplacerait la base. Confirmez explicitement (une sauvegarde sera faite).`);
   }
-  const port = p.app?.id === appId ? p.app.port : await allocatePort(p.id);
+  const known = deliveredApp(p);
+  const port = known?.id === appId ? known.port : await allocatePort(p.id);
   const wasManaged = await stopApp(appId);
   const h = await health(port);
   if (h?.app === appId) throw new ApiError(409, `Le logiciel en service ne s'est pas arrêté (processus sans fichier PID, lancé par une version antérieure) : arrêtez-le à la main avant la mise en service`);
@@ -429,7 +439,8 @@ async function allocatePort(projectId: string): Promise<number> {
   const used = new Set<number>();
   for (const id of projectIds()) {
     if (id === projectId) continue;
-    const port = loadProject(id)?.app?.port;
+    const other = loadProject(id);
+    const port = other ? deliveredApp(other)?.port : undefined;
     if (port) used.add(port);
   }
   for (let port = appPort(); port < appPort() + 200; port++) {
