@@ -1,0 +1,100 @@
+id: run-20261108T112651-studio-MIS_85157e3573
+mission: M-001
+subject: original
+agent:
+  provider: h-company
+  product: agents-api (h-explorer_v2 through the REBORN Studio mission queue)
+target:
+  id: hoteldruid
+  environment: web application (public instance)
+started_at: 2026-11-08T11:26:51.072Z
+ended_at: 2026-11-08T11:26:51.074Z
+outcome: success
+steps:
+  - n: 1
+    at: 2026-11-08T11:26:51.073Z
+    action:
+      type: read
+      target_desc: screen « Main Menu »
+    observation: "7 field label(s) shown: Reservations in month selector, Year
+      selector, Table with dropdown, Availability from date, Availability to
+      date, People count, Go to year"
+  - n: 2
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Reservation Form »
+    observation: "23 field label(s) shown: Client surname, Client name, Client
+      phone, Client email, Starting date, Ending date, Number of nights,
+      Starting rate (€), Starting rate day, Ending rate (€), Ending rate day,
+      Room, Roommate, Roommate surname, Total, Paid, Deposit, Extra cost,
+      Comment, Breakfast, Half board, Full board, Other extras"
+  - n: 3
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Client Form »
+    observation: "9 field label(s) shown: Surname, Name, Nation, City, Telephone,
+      Email, Pos. code, Address, Comment"
+  - n: 4
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Rooms Table »
+    observation: screen reached; no form field listed by the agent
+  - n: 5
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Reservations Table »
+    observation: screen reached; no form field listed by the agent
+  - n: 6
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Clients Table »
+    observation: "1 field label(s) shown: Search box"
+  - n: 7
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Rates Page »
+    observation: "2 field label(s) shown: Month selector (add periods), Year
+      selector (add periods)"
+  - n: 8
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Monthly Calendar »
+    observation: screen reached; no form field listed by the agent
+  - n: 9
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Configure Page »
+    observation: screen reached; no form field listed by the agent
+  - n: 10
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Incomes and Expenses »
+    observation: "9 field label(s) shown: Reason for income, Amount (income), Date
+      (income), Person inserting (income), Subtract the amount from total of the
+      reservations, Reason for expense, Amount (expense), Date (expense), Person
+      inserting (expense)"
+  - n: 11
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Point of Sale »
+    observation: screen reached; no form field listed by the agent
+  - n: 12
+    at: 2026-11-08T11:26:51.074Z
+    action:
+      type: read
+      target_desc: screen « Statistics »
+    observation: "5 field label(s) shown: Years filter, Months filter, From date, To
+      date, Rooms filter"
+notes: "Imported from the REBORN Studio: project MIG_9e43d9f5, mission
+  MIS_85157e3573. Interface structure only (screen titles and field labels), no
+  data values."

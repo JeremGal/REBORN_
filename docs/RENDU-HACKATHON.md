@@ -11,6 +11,7 @@ est dit.
 | Compte client, projet, autorisation | Inscription réelle (Better Auth), projet « Hôtel RM » avec l'adresse de l'ancien logiciel, « Analyser mon logiciel » | `studio/scripts/demo-hotel.mjs` |
 | Studio → agent H de Mouss | La mission part dans la file du Studio ; le nouvel exécuteur `studio/clients/h_executor.py` la prend (battement, prise atomique, réseau public) et lance **le véritable agent H Company** de `h-explorer_v2/` (importé, jamais modifié) | session H « completed », mission `MIS_…` prise par `EXE_…` |
 | Agent H → Studio | 1re mission : connexion rapportée « réussie », carte de 18 écrans reçue, puis un envoi refusé (HTTP 400) : mission close **en échec**, honnêtement. Correction de l'exécuteur (envoi écran par écran, refus consignés). 2e mission `MIS_85157e3573` : **terminée** — 13 évènements de découverte reçus et schéma de l'écran « Reservation Form » publié dans le projet | évènements et schémas du projet dans le Studio |
+| Studio → bloc 2 d'Alan | `tools/studio-pull.mjs` lit, avec le jeton de l'Analyste, les écrans réellement découverts par l'agent H dans le projet du Studio et écrit un run au contrat d'Alan (`targets/hoteldruid/`, mission M-001 « cartographier les écrans ») : **12 écrans**, libellés d'interface seulement, aucune donnée ; `node tools/reborn.mjs validate hoteldruid` : 0 erreur | `targets/hoteldruid/01-exploration/runs/run-20261108T112651-studio-MIS_85157e3573/` |
 | Extraction autorisée | Mécanisme d'export officiel du logiciel (création de la sauvegarde puis téléchargement compressé) : **55 tables, 23 977 lignes** | `.evidence/hoteldruid/` (hors git) |
 | Adaptateur de format | `studio/scripts/tagged-dump-to-sqlite.mjs` : lecture du format de sauvegarde, tables par année fusionnées avec une clé « année:identifiant » (les identifiants se répètent d'une année à l'autre), liens déclarés, **comptes, sessions, réglages et modèles de documents jamais importés** | 15 tables, 22 915 lignes, 0 ligne rejetée |
 | Migration (moteur de Jerem) | Dépôt par le propriétaire, profil (48 relations), correspondances proposées, migration | **22 915 importés, 0 rejeté** |
@@ -32,10 +33,11 @@ clés des agents sont dans `.env` (ignoré par git).
 
 ## Ce qui n'est pas encore branché (dit tel quel)
 
-- **Moteur d'Alan (bloc 2) ↔ Studio** : pas encore relié. Les ponts `studio-pull` (observations du Studio → runs)
-  et `studio-export` (kit → `migration_mapping` + `business_model`) sont spécifiés mais pas écrits. Les
-  correspondances de la démonstration viennent de la proposition automatique du Studio, et les 172 points à
-  valider ont été **acceptés par l'équipe** pour la démonstration (journalisé).
+- **Bloc 2 d'Alan → Studio** : le sens retour n'est pas encore relié. `studio-export` (kit → `migration_mapping` +
+  `business_model`, une hypothèse ne devenant jamais une règle validée) est spécifié mais pas écrit, et
+  l'enquête du bloc 2 sur HotelDruid (règles, entités) n'a pas été menée jusqu'au kit. Les correspondances
+  de la démonstration viennent de la proposition automatique du Studio, et les 172 points à valider ont été
+  **acceptés par l'équipe** pour la démonstration (journalisé).
 - **Règles métier** : aucune règle n'est installée dans le logiciel livré (`rules_version: null`). Le prix d'un
   séjour (tarifs par période, frais, réductions, acompte, taxes) n'est pas encore reproduit ; l'historique est
   migré tel quel, jamais recalculé.

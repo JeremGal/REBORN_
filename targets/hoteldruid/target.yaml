@@ -1,0 +1,31 @@
+id: hoteldruid
+name: Gestion hôtelière
+vendor: ""
+domain: hospitality
+description: Hotel management web application (rooms, clients, reservations,
+  rates, payments).
+kind: saas
+versions:
+  - 3.0.x
+platforms:
+  - web
+access:
+  method: open-source
+  notes: AGPL-3.0 source code; public instance provided as the hackathon target,
+    explored read-only by the H Company agent through the REBORN Studio.
+legal:
+  basis: Free software under the GNU AGPL-3.0; public instance provided as the
+    target of the H Company x 42AI hackathon (8 November 2026).
+  clean_room: true
+  restrictions:
+    - no customer data in git
+    - read-only exploration of the shared instance
+artifacts: []
+urls:
+  - label: public instance of the target (hackathon)
+    url: https://www.hotelrm.pro
+team:
+  explorer: Mouss (h-explorer_v2) via the REBORN Studio
+  investigator: Alan (block 2 tools)
+  rebuilder: Jerem (REBORN Studio)
+kit_title: Gestion hôtelière
