@@ -199,7 +199,8 @@ function buildOptions(db: DatabaseSync, cfg: AuthConfig) {
     emailAndPassword: {
       enabled: true,
       autoSignIn: true,
-      minPasswordLength: 10,
+      // 10 caractères par défaut ; REBORN_AUTH_MIN_PASSWORD (8 à 64) pour un déploiement qui en décide autrement.
+      minPasswordLength: ((n) => (Number.isInteger(n) && n >= 8 && n <= 64 ? n : 10))(Number(process.env.REBORN_AUTH_MIN_PASSWORD)),
       maxPasswordLength: 128,
       revokeSessionsOnPasswordReset: true,
       resetPasswordTokenExpiresIn: 3600,
