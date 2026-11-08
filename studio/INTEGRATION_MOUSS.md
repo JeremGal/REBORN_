@@ -101,6 +101,47 @@ Déclare dans `networks` les réseaux **réellement** joignables. Le navigateur 
 6. **Exports** : les autoriser en lecture seule, ou fournir un `extraction_plan` pour le connecteur du Studio.
 7. **Hygiène** : purge locale, Linkup coupé, plafonds H.
 
+## 9 bis. Exécuteur permanent et récupération automatique des données
+
+**Lancer en permanent.** `npm run executor` (depuis `studio/`) démarre l'exécuteur en **mode permanent** : il
+bat le cœur, prend chaque mission dès qu'elle arrive (une à la fois), reprend proprement après une erreur
+(journal sans secret) et s'arrête proprement sur **Ctrl+C**. Le lanceur choisit l'interpréteur Python
+(`studio/clients/.venv` s'il existe, sinon `python3`), vérifie que le SDK H (`hai_agents`) est importable — sinon
+il affiche la commande `pip install -r h-explorer_v2/requirements.txt` — et transmet au seul processus Python
+`REBORN_URL`, le jeton explorer (`REBORN_TOKEN`, sinon `REBORN_EXPLORER_TOKEN`, sinon le jeton local, **jamais
+affiché**) et la clé H (`HAI_API_KEY`, ou `h-explorer_v2/.env`, **jamais affichée**). Équivalent direct :
+`REBORN_URL=… REBORN_TOKEN=<explorer> python3 clients/h_executor.py --loop` (`--max-missions N` borne les démos).
+
+**Ce qui est récupéré automatiquement.** Pendant qu'il **tient le prêt** de la mission (avant `complete`),
+l'exécuteur tente une récupération des données par un **mécanisme d'export OFFICIEL** du logiciel
+(`clients/h_exports.py`, registre extensible). Premier mécanisme : **sauvegarde de type HotelDruid**
+(`crea_backup.php`, format « tagged-dump » gzip) —
+1. détection prudente : `GET {base}/crea_backup.php` sur la **même origine** ; le formulaire doit porter
+   `crea_backup` et `salva_backup` (sinon rien) ;
+2. préparation : `POST crea_backup=1` (le logiciel crée le fichier) ;
+3. téléchargement : `POST salva_backup=1 & compresso=SI` → `application/x-gzip`.
+
+La sauvegarde est convertie en SQLite par l'adaptateur du Studio
+(`node studio/scripts/tagged-dump-to-sqlite.mjs`, dossier temporaire supprimé après le dépôt), puis déposée au
+projet par `POST /api/migration/sources?project=…` (jeton explorer, titulaire du prêt) avec
+`mechanism = « Sauvegarde officielle du logiciel, récupérée par l'agent d'exploration (mission MIS_…) »`. Un
+évènement de suivi consigne les **comptes** (tables, lignes lues/écrites, tables exclues et motif) **sans aucune
+donnée**. Le résumé de fin de mission dit ce qui a été récupéré. Si **aucun mécanisme** n'est reconnu, un
+évènement clair invite le propriétaire à déposer ses exports dans l'étape **Données**.
+
+**Garde-fous (h_exports).** Même origine que l'adresse du projet ; **redirections jamais suivies** ; délais
+stricts ; plafonds **50 Mo compressé / 500 Mo décompressé** (décompression bornée, anti-bombe) ; **aucun
+contournement d'authentification** — si le logiciel demande une connexion, rien n'est tenté et c'est signalé.
+Tables sensibles (`utenti`, sessions, réglages, modèles de documents…) et colonnes de secret **jamais déposées**
+(l'adaptateur les écarte et les liste dans son rapport).
+
+**Limites.** La récupération automatique part de l'**adresse déclarée du projet**, par le code de l'exécuteur
+(hors du navigateur H) : un logiciel derrière une connexion ou une double authentification n'est pas extrait
+automatiquement (le propriétaire dépose alors ses exports). Sur **Ctrl+C**, l'exécuteur vide le coffre H et purge
+ses fichiers locaux pour la mission en cours ; une session H déjà lancée est laissée à la fermeture pour
+inactivité de H (l'exécuteur ne détient pas sa poignée). Le seul mécanisme reconnu aujourd'hui est la sauvegarde
+HotelDruid ; d'autres s'ajoutent dans `REGISTRY` (`h_exports.py`).
+
 ## 10. Points signalés à l'équipe (code non modifié par le Studio)
 
 - `tools/h_run.py` (Alan) place l'identifiant et le mot de passe dans la consigne envoyée au modèle (bloc `login = …`, l. 77-80 au commit `33d2afe`) : contraire à `credential.handling` ; à remplacer par le coffre H ou CDP.

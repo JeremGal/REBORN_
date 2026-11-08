@@ -2,6 +2,8 @@ import { createHash, randomBytes } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
 import { ApiError } from "../errors";
 import { addEvent, completeInvestigation, createInvestigation, getState, type NewEvent } from "../store";
+import { eventProject } from "../visibility";
+import type { AgentEvent } from "../types";
 import { getAuthDb } from "../auth/auth";
 import { outsideTransaction } from "../auth/db";
 import { listConsents, recordConsent } from "../auth/consents";
@@ -322,7 +324,7 @@ export async function sweepMissions(now: number = clockNow()): Promise<{ expired
   }
   for (const r of out.requeued) {
     revokeRedeemTokens(r.project_id, "prise en charge expirée", { mission_id: r.id });
-    projectEvent(r.project_id, "Prise en charge de l'analyse interrompue : demande remise en file d'attente", "L'agent n'a plus donné signe de vie ; son jeton de remise est révoqué.", "platform", { mission_id: r.id });
+    projectEvent(r.project_id, "Prise en charge de l'analyse interrompue : demande remise en file d'attente", "L'agent n'a plus donné signe de vie ; son jeton de remise est révoqué.", "platform", { mission_id: r.id, step: "requeued" });
   }
   for (const r of out.failed) {
     revokeRedeemTokens(r.project_id, "mission en échec", { mission_id: r.id });
@@ -492,6 +494,250 @@ export interface AnalysisView {
   requested_at: string | null;
   requested_by: string | null;
   mission: MissionSummary | null;
+  /** Avancement réel de la mission (évènements reçus), dès sa première prise par un exécuteur ; null avant. */
+  progress: MissionProgress | null;
+}
+
+/* ------------------------------------------------------------------ */
+/* Avancement réel d'une mission (évènements reçus, jamais estimé)      */
+/* ------------------------------------------------------------------ */
+
+export type ProgressStepId = "claimed" | "connection" | "screens" | "export" | "end";
+/**
+ * done : constaté · current : en cours (rapport « en attente » reçu) · failed : échec rapporté · attention : à
+ * vérifier (intervention, prise interrompue) · waiting : rien reçu pour l'instant · none : rien reçu, mission close.
+ */
+export type ProgressState = "done" | "current" | "failed" | "attention" | "waiting" | "none";
+export interface ProgressStep {
+  id: ProgressStepId;
+  label: string;
+  state: ProgressState;
+  /** Date du fait constaté (évènement ou mission), null s'il n'a pas eu lieu. */
+  at: string | null;
+  detail: string | null;
+}
+export interface MissionProgress {
+  steps: ProgressStep[];
+  /** Écrans distincts rapportés par l'agent pour CETTE mission. */
+  screens: number;
+  /** Exports déposés par l'exécuteur titulaire pendant CETTE mission. */
+  exports: number;
+  /** Dernier rapport reçu de l'agent pour cette mission. */
+  last_report_at: string | null;
+}
+
+const dataOf = (e: AgentEvent): Record<string, unknown> => (e.data && typeof e.data === "object" ? (e.data as Record<string, unknown>) : {});
+const CLAIM_TITLE = "Analyse prise en charge par l'agent d'analyse";
+const CONNECTION_TITLE = "Connexion à l'ancien logiciel : ";
+const count = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : one}`;
+const list6 = (names: string[]) => `${names.slice(0, 6).join(" · ")}${names.length > 6 ? ` · et ${names.length - 6} autre(s)` : ""}`;
+
+/**
+ * Évènements d'une mission : ceux qui la citent (data.mission_id, posé par le Studio et par l'exécuteur) dans SON
+ * projet, et ceux de l'investigation ouverte pour elle par le Studio à la prise.
+ */
+function missionEvents(r: MissionRow): AgentEvent[] {
+  const s = getState();
+  return s.events.filter((e) => {
+    if (dataOf(e).mission_id === r.id) return eventProject(s, e) === r.project_id;
+    return !!r.investigation_id && e.investigation_id === r.investigation_id;
+  });
+}
+
+/**
+ * Déroulé réel d'une mission (prise, connexion, écrans découverts, export récupéré, fin), uniquement à partir de ce que
+ * le Studio a reçu ou enregistré : null tant qu'aucun exécuteur ne l'a prise. Une étape sans fait reçu est « waiting »
+ * (mission en cours) ou « none » (mission close), jamais présentée comme faite.
+ */
+export function missionProgress(r: MissionRow): MissionProgress | null {
+  const events = missionEvents(r);
+  const claims = events.filter((e) => dataOf(e).step === "claimed" || e.title === CLAIM_TITLE);
+  if (!claims.length && !r.claimed_at && r.attempts === 0) return null;
+  const active = r.status === "queued" || LEASED.has(r.status) || r.status === "needs_human";
+  const agent = events.filter((e) => e.source === "explorer");
+  const steps: ProgressStep[] = [];
+
+  // 1. Prise en charge (une prise interrompue remet la demande en file : signalé, jamais caché)
+  const requeued = r.status === "queued";
+  steps.push({
+    id: "claimed",
+    label: requeued ? "Prise en charge interrompue" : "Prise en charge par l'agent d'analyse",
+    state: requeued ? "attention" : "done",
+    at: claims.at(-1)?.ts ?? r.claimed_at ?? null,
+    detail: requeued
+      ? r.attempts > 0
+        ? `Demande remise en file d'attente (prise ${r.attempts} sur ${MAX_ATTEMPTS})`
+        : "Demande relancée : en attente d'une nouvelle prise en charge"
+      : r.attempts > 1
+        ? `Prise ${r.attempts} sur ${MAX_ATTEMPTS}`
+        : null,
+  });
+
+  // 2. Connexion : dernier rapport de connexion de la mission
+  const conn = events.filter((e) => dataOf(e).step === "connection" || (e.source === "explorer" && e.title.startsWith(CONNECTION_TITLE))).at(-1);
+  const byLabel = Object.fromEntries(Object.entries(CONNECTION_LABEL).map(([k, v]) => [`${CONNECTION_TITLE}${v}`, k]));
+  const cs = conn ? String(dataOf(conn).status ?? byLabel[conn.title] ?? "") : "";
+  const CONN: Record<string, { label: string; state: ProgressState }> = {
+    connected: { label: "Connexion à votre logiciel réussie", state: "done" },
+    pending: { label: "Connexion à votre logiciel en cours", state: "current" },
+    failed: { label: "Connexion à votre logiciel échouée", state: "failed" },
+    mfa_required: { label: "Double authentification demandée", state: "attention" },
+    human_needed: { label: "Intervention humaine nécessaire", state: "attention" },
+  };
+  steps.push(
+    conn && CONN[cs]
+      ? { id: "connection", ...CONN[cs], at: conn.ts, detail: conn.detail ?? null }
+      : { id: "connection", label: "Connexion à votre logiciel", state: active ? "waiting" : "none", at: null, detail: active ? "Aucun rapport de connexion reçu pour l'instant" : "Aucun rapport de connexion reçu" },
+  );
+
+  // 3. Écrans découverts : pages distinctes rapportées (data.page), sinon le nombre annoncé par la carte (data.pages)
+  const pages = new Map<string, string>();
+  let announced = 0;
+  let announcedAt: string | null = null;
+  for (const e of agent) {
+    const d = dataOf(e);
+    if (typeof d.page === "string" && d.page.trim()) pages.set(d.page.trim().slice(0, 120), e.ts);
+    else if (typeof d.pages === "number" && Number.isInteger(d.pages) && d.pages > announced) {
+      announced = d.pages;
+      announcedAt = e.ts;
+    }
+  }
+  const screens = pages.size || announced;
+  const screensAt = pages.size ? [...pages.values()].sort().at(-1)! : announcedAt;
+  steps.push(
+    screens
+      ? { id: "screens", label: count(screens, "écran découvert", "écrans découverts"), state: "done", at: screensAt, detail: pages.size ? list6([...pages.keys()]) : null }
+      : { id: "screens", label: "Écrans découverts", state: active ? "waiting" : "none", at: null, detail: active ? "Aucun écran rapporté pour l'instant" : "Aucun écran rapporté" },
+  );
+
+  // 4. Export récupéré : dépôts de l'exécuteur titulaire inscrits par le Studio (recordAgentExport)
+  const deposits = new Map<string, { name: string; at: string; rows: number | null }>();
+  for (const e of events) {
+    const d = dataOf(e);
+    if (d.step !== "export") continue;
+    const key = String(d.source_id ?? e.id);
+    deposits.set(key, { name: String(d.source_name ?? "export"), at: e.ts, rows: typeof d.rows === "number" ? d.rows : null });
+  }
+  const exp = [...deposits.values()];
+  steps.push(
+    exp.length
+      ? {
+          id: "export",
+          label: count(exp.length, "export récupéré par l'agent", "exports récupérés par l'agent"),
+          state: "done",
+          at: exp.map((x) => x.at).sort().at(-1)!,
+          detail: list6(exp.map((x) => (x.rows !== null ? `${x.name} (${x.rows} ligne${x.rows > 1 ? "s" : ""})` : x.name))),
+        }
+      : { id: "export", label: "Export des données", state: active ? "waiting" : "none", at: null, detail: active ? "Aucun export déposé pour l'instant" : "Aucun export déposé par l'agent : vous pouvez importer vos exports à l'étape Données" },
+  );
+
+  // 5. Fin : déclarée par l'exécuteur (ou constatée par le Studio : annulation, échéance), jamais supposée
+  const END: Partial<Record<MissionStatus, { label: string; state: ProgressState }>> = {
+    completed: { label: "Analyse terminée", state: "done" },
+    failed: { label: "Analyse en échec", state: "failed" },
+    cancelled: { label: "Analyse annulée", state: "none" },
+    expired: { label: "Analyse expirée", state: "none" },
+    needs_human: { label: "En attente de votre intervention", state: "attention" },
+  };
+  const end = END[r.status];
+  steps.push(end ? { id: "end", ...end, at: r.status === "needs_human" ? null : r.ended_at, detail: r.outcome_detail } : { id: "end", label: "Fin de l'analyse", state: "waiting", at: null, detail: "Déclarée par l'agent lui-même à la fin de sa mission" });
+
+  return { steps, screens, exports: exp.length, last_report_at: agent.at(-1)?.ts ?? null };
+}
+
+/**
+ * Dépôt d'un export par l'exécuteur titulaire (POST /api/migration/sources) : inscrit à l'avancement de SA mission
+ * (nom du fichier et volumes seulement, jamais de contenu). Ne lève jamais : le dépôt est déjà enregistré.
+ */
+export async function recordAgentExport(projectId: string, meta: { id: string; name: string; tables: { rows: number }[]; archive_entries?: number }) {
+  let missionId: string | null = null;
+  try {
+    missionId = (await activeMission(projectId))?.id ?? null;
+  } catch {}
+  const rows = meta.tables.reduce((n, t) => n + t.rows, 0);
+  projectEvent(
+    projectId,
+    `Export déposé par l'agent d'analyse : ${meta.name}`,
+    meta.archive_entries !== undefined ? count(meta.archive_entries, "fichier", "fichiers") : `${count(meta.tables.length, "table", "tables")} · ${count(rows, "ligne", "lignes")}`,
+    "explorer",
+    { ...(missionId ? { mission_id: missionId } : {}), step: "export", source_id: meta.id, source_name: meta.name, rows },
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Vue d'ensemble de l'équipe (métadonnées seulement)                   */
+/* ------------------------------------------------------------------ */
+
+export interface ExecutorOverview {
+  id: string;
+  /** Nom d'instance déclaré (X-Reborn-Executor) et libellé facultatif du battement. */
+  name: string;
+  label: string | null;
+  version: string;
+  networks: string[];
+  login: "h_vault" | "cdp" | "none";
+  max_concurrent: number;
+  first_seen_at: string;
+  last_seen_at: string;
+  /** Battement de moins de 60 s et exécuteur non désactivé. */
+  online: boolean;
+  disabled: boolean;
+}
+
+/** Exécuteurs connus (le plus récent d'abord) : aucune empreinte de jeton, aucun identifiant confié. */
+export async function listExecutors(limit = 100): Promise<ExecutorOverview[]> {
+  const db = await missionsDb();
+  const fresh = iso(clockNow() - HEARTBEAT_FRESH_MS);
+  return rows<ExecutorRow & { first_seen_at: string }>(db.prepare("SELECT * FROM executors ORDER BY last_seen_at DESC LIMIT ?").all(limit)).map((e) => ({
+    id: e.id,
+    name: e.instance,
+    label: e.label,
+    version: e.version,
+    networks: parseNetworks(e.networks),
+    login: e.login,
+    max_concurrent: e.max_concurrent,
+    first_seen_at: e.first_seen_at,
+    last_seen_at: e.last_seen_at,
+    online: !e.disabled_at && e.last_seen_at > fresh,
+    disabled: !!e.disabled_at,
+  }));
+}
+
+export interface MissionOverview {
+  id: string;
+  project_id: string;
+  status: MissionStatus;
+  requires_network: "public" | "private";
+  with_credentials: boolean;
+  created_at: string;
+  requested_at: string;
+  claimed_at: string | null;
+  ended_at: string | null;
+  attempts: number;
+  executor_id: string | null;
+  updated_at: string;
+}
+
+/**
+ * Missions (actives d'abord, puis les plus récentes) : états et dates seulement — ni demandeur, ni consentement, ni
+ * détail libre de l'agent, ni empreinte de l'adresse, ni jeton.
+ */
+export async function listMissions(limit = 100): Promise<MissionOverview[]> {
+  const db = await missionsDb();
+  return rows<MissionRow>(db.prepare(`SELECT * FROM analysis_missions ORDER BY CASE WHEN status IN ${ACTIVE_SQL} THEN 0 ELSE 1 END, updated_at DESC, rowid DESC LIMIT ?`).all(limit)).map((r) => ({
+    id: r.id,
+    project_id: r.project_id,
+    status: r.status,
+    requires_network: r.requires_network,
+    with_credentials: !!r.with_credentials,
+    created_at: r.created_at,
+    requested_at: r.requested_at,
+    claimed_at: r.claimed_at,
+    ended_at: r.ended_at,
+    attempts: r.attempts,
+    executor_id: r.executor_id,
+    updated_at: r.updated_at,
+  }));
 }
 
 const summaryOf = (r: MissionRow): MissionSummary => ({
@@ -585,6 +831,7 @@ async function viewOf(projectId: string, r: MissionRow | null, mode: "post" | "g
     requested_at: r?.requested_at ?? null,
     requested_by: r?.requested_by ?? null,
     mission: r ? summaryOf(r) : null,
+    progress: r ? missionProgress(r) : null,
   };
 }
 
@@ -779,7 +1026,7 @@ export async function claimMission(ex: ExecutorIdentity, opts: { projectId?: str
       return null;
     }
   }
-  projectEvent(p.id, "Analyse prise en charge par l'agent d'analyse", `Mission ${claimed.id} · prise ${claimed.attempts}/${MAX_ATTEMPTS}${token ? " · jeton de remise des identifiants à usage unique (15 min)" : " · sans identifiants"}`, "explorer", { mission_id: claimed.id });
+  projectEvent(p.id, "Analyse prise en charge par l'agent d'analyse", `Mission ${claimed.id} · prise ${claimed.attempts}/${MAX_ATTEMPTS}${token ? " · jeton de remise des identifiants à usage unique (15 min)" : " · sans identifiants"}`, "explorer", { mission_id: claimed.id, step: "claimed", attempt: claimed.attempts });
   return buildMission({ ...claimed, investigation_id: investigationId }, p, token);
 }
 
@@ -852,7 +1099,7 @@ export async function reportConnection(projectId: string, ex: ExecutorIdentity, 
     else if (report.status === "human_needed") setStatus(x, "NEEDS_HUMAN_REVIEW", `Intervention humaine nécessaire — ${reason}`);
     else if (report.status === "pending" && early) setStatus(x, "CONNECTION_PENDING", reason);
   });
-  projectEvent(projectId, `Connexion à l'ancien logiciel : ${CONNECTION_LABEL[report.status]}`, detail, "explorer", { mission_id: r.id });
+  projectEvent(projectId, `Connexion à l'ancien logiciel : ${CONNECTION_LABEL[report.status]}`, detail, "explorer", { mission_id: r.id, step: "connection", status: report.status });
   return { ok: true as const, project: projectSummary(projectId), mission: summaryOf((await getMission(r.id))!) };
 }
 
@@ -919,7 +1166,7 @@ export async function completeMission(missionId: string, ex: ExecutorIdentity, b
   const disposal = body.disposal
     ? ` · coffre H : ${body.disposal.h_vault_item_deleted === undefined ? "non indiqué" : body.disposal.h_vault_item_deleted ? "élément supprimé" : "élément NON supprimé"} · fichiers locaux : ${body.disposal.local_artifacts_purged === undefined ? "non indiqué" : body.disposal.local_artifacts_purged ? "purgés" : "NON purgés"}`
     : " · effacement côté agent non indiqué";
-  projectEvent(r.project_id, body.outcome === "completed" ? "Analyse terminée par l'agent" : "Analyse terminée en échec par l'agent", `${detail ?? `Mission ${r.id}`}${disposal}`, "explorer", { mission_id: r.id });
+  projectEvent(r.project_id, body.outcome === "completed" ? "Analyse terminée par l'agent" : "Analyse terminée en échec par l'agent", `${detail ?? `Mission ${r.id}`}${disposal}`, "explorer", { mission_id: r.id, step: "end", outcome: body.outcome });
   return { ok: true as const, mission: summaryOf((await getMission(r.id))!), credentials };
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
-import { ArrowRight, Ban, Check, ChevronRight, CircleX, Link2, Lock, LockOpen, MessageSquareText, Paperclip, PencilLine, TriangleAlert, Undo2 } from "lucide-react";
+import { ArrowRight, Ban, Check, CheckCheck, ChevronRight, CircleX, Link2, Lock, LockOpen, MessageSquareText, Paperclip, PencilLine, TriangleAlert, Undo2 } from "lucide-react";
 import { Badge, Button, Checkbox, Dialog, Field, Input, Select, Textarea, cx, formatDateTime, formatInt, formatNumber, formatPercent } from "@/components/ds";
 import type { AttachmentMap, Decision, EntityMap, FieldMap, MappingIssue, MigrationMapping, ReviewItem as ReviewItemBase } from "@/lib/migration/mapping";
 import type { ColumnProfile, RelationGuess, SourceProfile, TableProfile } from "@/lib/migration/profile";
@@ -30,6 +30,8 @@ export interface MappingVersion {
   sha256: string;
   mapping: MigrationMapping;
   issues: MappingIssue[];
+  /** Proposition faite d'office par le Studio à l'arrivée des données (personne ne l'a demandée). */
+  on_arrival?: boolean;
 }
 export interface PlanStatus {
   items: ReviewItem[];
@@ -595,6 +597,148 @@ export function PendingList({ items, idx, actions, onFocus, advanced }: { items:
         );
       })}
     </ul>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Validation en bloc des propositions restantes                        */
+/* ------------------------------------------------------------------ */
+
+/** POST /api/migration/decisions/bulk */
+export interface BulkAcceptResponse {
+  ok: boolean;
+  version: number;
+  accepted: number;
+  skipped: number;
+  accounting: number;
+  review: PlanStatus;
+}
+
+const KIND_WORDS: Record<ReviewItem["kind"], [string, string]> = {
+  field: ["champ", "champs"],
+  entity: ["table", "tables"],
+  attachment: ["rattachement de pièces jointes", "rattachements de pièces jointes"],
+  accounting: ["protection de l'historique comptable", "protections de l'historique comptable"],
+};
+
+/** « 160 champs, 8 tables et 4 protections de l'historique comptable » */
+function kindSummary(items: ReviewItem[]): string {
+  const by = new Map<ReviewItem["kind"], number>();
+  for (const i of items) by.set(i.kind, (by.get(i.kind) ?? 0) + 1);
+  const parts = (["field", "entity", "attachment", "accounting"] as const).filter((k) => by.get(k)).map((k) => plural(by.get(k)!, KIND_WORDS[k][0], KIND_WORDS[k][1]));
+  return parts.length > 1 ? `${parts.slice(0, -1).join(", ")} et ${parts.at(-1)}` : (parts[0] ?? "aucun point");
+}
+
+/**
+ * Confirmation de « Accepter toutes les propositions restantes » : dit combien de points seront acceptés et lesquels
+ * sont sensibles (protection de l'historique comptable), listés à part et décochables (le point reste alors à
+ * trancher). Envoie EXACTEMENT les points affichés avec la version affichée : si les correspondances ont changé
+ * entre-temps, le serveur refuse (409) et rien n'est enregistré.
+ */
+export function BulkAcceptDialog({ open, onClose, items, idx, onDone }: { open: boolean; onClose: () => void; items: ReviewItem[]; idx: MappingIndex; onDone: (r: BulkAcceptResponse) => Promise<void> }) {
+  const { post } = useProject();
+  const cancel = useRef<HTMLButtonElement>(null);
+  const sensitive = useMemo(() => items.filter((i) => i.kind === "accounting"), [items]);
+  const others = useMemo(() => items.filter((i) => i.kind !== "accounting"), [items]);
+  // Clé stable (la page recalcule la liste à chaque rendu) : les cases ne sont remises à zéro qu'à l'ouverture,
+  // ou si la liste des protections à trancher change réellement pendant que la fenêtre est ouverte.
+  const sensitiveKey = sensitive.map((i) => i.key).join("\n");
+  const [keep, setKeep] = useState<Set<string>>(() => new Set());
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  // À chaque ouverture : toutes les protections incluses (accepter = garder la protection, le choix prudent)
+  useEffect(() => {
+    if (!open) return;
+    setKeep(new Set(sensitiveKey ? sensitiveKey.split("\n") : []));
+    setError(null);
+  }, [open, sensitiveKey]);
+  const chosen = [...others, ...sensitive.filter((i) => keep.has(i.key))];
+  const left = sensitive.length - sensitive.filter((i) => keep.has(i.key)).length;
+
+  async function confirm() {
+    if (busy || !chosen.length) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const r = await post<BulkAcceptResponse>("/api/migration/decisions/bulk", { version: idx.version, keys: chosen.map((i) => i.key) });
+      await onDone(r);
+      onClose();
+    } catch (e) {
+      setError((e as Error).message || "L'enregistrement n'a pas abouti. Réessayez dans un instant.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onClose={busy ? () => undefined : onClose}
+      title={items.length > 1 ? `Accepter les ${nf(items.length)} propositions restantes ?` : "Accepter la proposition restante ?"}
+      description={`Correspondances version ${idx.version} : ${kindSummary(items)}.`}
+      size="lg"
+      initialFocus={cancel}
+      closeOnBackdrop={false}
+      footer={
+        <>
+          <Button ref={cancel} variant="secondary" onClick={onClose} disabled={busy}>
+            Annuler
+          </Button>
+          <Button variant="primary" icon={<CheckCheck size={16} />} loading={busy} loadingText="Enregistrement…" disabled={!chosen.length} onClick={() => void confirm()}>
+            {chosen.length ? `Accepter ${plural(chosen.length, "point")}` : "Aucun point choisi"}
+          </Button>
+        </>
+      }
+    >
+      <div className="flex flex-col gap-4 text-body leading-relaxed text-text-2">
+        <p>
+          Chaque point sera enregistré comme <strong className="font-semibold text-ink">accepté à votre nom</strong>, avec la date, exactement comme si vous l&apos;acceptiez un par un. Chaque décision reste modifiable ensuite dans « Décisions prises ». Rien n&apos;est migré tant que vous ne lancez pas la migration.
+        </p>
+        {sensitive.length > 0 ? (
+          <fieldset className="flex flex-col gap-3 rounded-panel bg-canvas px-4 pt-1 pb-4 ring-1 ring-line">
+            <legend className="px-1 text-body font-semibold text-ink">Points sensibles : {plural(sensitive.length, "protection de l'historique comptable", "protections de l'historique comptable")}</legend>
+            <p className="text-small text-text-2">
+              Accepter <strong className="font-semibold text-ink">garde la protection</strong> : sur les fiches migrées de ces documents, montants, dates et numéros ne pourront pas être modifiés dans le nouveau logiciel. Décochez un point pour le trancher vous-même plus tard : il restera à vérifier.
+            </p>
+            <ul className="flex flex-col gap-2.5">
+              {sensitive.map((i) => (
+                <li key={i.key}>
+                  <Checkbox
+                    checked={keep.has(i.key)}
+                    disabled={busy}
+                    onChange={(e) => {
+                      const on = e.target.checked;
+                      setKeep((s) => {
+                        const n = new Set(s);
+                        if (on) n.add(i.key);
+                        else n.delete(i.key);
+                        return n;
+                      });
+                    }}
+                    label={
+                      <span className="flex flex-col gap-0.5">
+                        <span>Inclure dans l&apos;acceptation (garder la protection)</span>
+                        <span className="text-small">
+                          <ItemTitle item={i} idx={idx} />
+                        </span>
+                      </span>
+                    }
+                  />
+                </li>
+              ))}
+            </ul>
+            {left > 0 && (
+              <p className="text-small font-medium text-warning-ink" role="status">
+                {plural(left, "protection restera", "protections resteront")} à trancher après cette acceptation.
+              </p>
+            )}
+          </fieldset>
+        ) : (
+          <p className="text-small text-text-3">Aucun point sensible (protection de l&apos;historique comptable) parmi ces propositions.</p>
+        )}
+        {error && <Callout tone="bad" title="Rien n'a été enregistré">{error}</Callout>}
+      </div>
+    </Dialog>
   );
 }
 

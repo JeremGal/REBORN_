@@ -1381,7 +1381,8 @@ try {
   });
   let accepted = 0;
   for (let i = 0; i < 40; i++) {
-    const ok = (await click("Garder la protection", "button")) || (await click("Accepter", "button"));
+    // Boutons de chaque point de la liste « À vérifier » (jamais « Accepter toutes les propositions restantes », en tête de section)
+    const ok = (await click("Garder la protection", "#a-verifier li button")) || (await click("Accepter", "#a-verifier li button"));
     if (!ok) break;
     accepted++;
     await sleep(450);

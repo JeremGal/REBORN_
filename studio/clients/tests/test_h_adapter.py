@@ -122,3 +122,15 @@ class ExtractionPlanTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFormDiscoveredOutputs(unittest.TestCase):
+    """Un écran découvert est lu par le Studio comme un schéma d'écran : sorties en objets (contrat OutputFieldSchema)."""
+
+    def test_outputs_are_objects(self):
+        page = {"name": "Liste (jeu de test)", "url": "https://exemple.test/liste", "elements": [{"kind": "select", "label": "Année", "options": ["2025", "2026"]}], "outputs": ["Tableau des réservations", "Total"]}
+        ev = A.page_to_event(page, "MIS_test")
+        self.assertEqual(ev["type"], "form_discovered")
+        for o in ev["data"]["outputs"]:
+            self.assertIsInstance(o, dict)
+            self.assertTrue(o["name"] and o["label"])

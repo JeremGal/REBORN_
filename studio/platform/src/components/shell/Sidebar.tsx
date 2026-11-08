@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { FlaskConical, FolderOpen, History, LayoutGrid, Palette, Plus, Settings, WifiOff } from "lucide-react";
+import { FlaskConical, FolderOpen, Gauge, History, LayoutGrid, Palette, Plus, Settings, WifiOff } from "lucide-react";
 import { cx } from "@/components/ds/cx";
 import { Wordmark } from "@/components/ds/Wordmark";
 import { useReborn } from "@/components/RebornProvider";
 import { isOperatorUser, useShell } from "./context";
 import { ProjectNav } from "./ProjectNav";
-import { AtelierNav, ATELIER_PATHS } from "./AtelierNav";
+import { AtelierNav, ATELIER_PATHS, DEMO_PATHS, OPERATIONS_PATH } from "./AtelierNav";
 import { UserBlock } from "./UserBlock";
 
 /**
@@ -29,8 +29,10 @@ const MAIN: Item[] = [
   { href: "/activite", label: "Activité", icon: <History size={17} />, on: (p) => p === "/activite" },
 ];
 
+/** Équipe REBORN : la vue d'ensemble des opérations réelles d'abord, puis les outils de démonstration. */
 const ADVANCED: Item[] = [
-  { href: "/atelier", label: "Atelier", icon: <FlaskConical size={17} />, on: (p) => ATELIER_PATHS.some((a) => p === a || p.startsWith(`${a}/`)) },
+  { href: OPERATIONS_PATH, label: "Opérations", icon: <Gauge size={17} />, on: (p) => p === OPERATIONS_PATH },
+  { href: "/atelier", label: "Outils de démonstration", icon: <FlaskConical size={17} />, on: (p) => DEMO_PATHS.some((a) => p === a || p.startsWith(`${a}/`)) },
   { href: "/design-system", label: "Design system", icon: <Palette size={17} />, on: (p) => p === "/design-system" },
 ];
 

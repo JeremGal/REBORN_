@@ -7,8 +7,14 @@ toute consigne : coffre H puis suppression), exploration réelle en lecture seul
 envoi de la carte et des observations, proposition d'un plan d'extraction à valider, fin de mission.
 
     REBORN_URL=http://127.0.0.1:3000 REBORN_TOKEN=<jeton explorer> REBORN_EXECUTOR_ID=poste-mouss-1 \
-      python3 clients/h_executor.py                 # exploration réelle (clé H dans HAI_API_KEY ou h-explorer_v2/.env)
+      python3 clients/h_executor.py --loop          # MODE PERMANENT : prend chaque mission dès qu'elle arrive (Ctrl+C arrête)
+    ... python3 clients/h_executor.py                 # une seule mission puis sort (exploration réelle, clé H dans HAI_API_KEY ou h-explorer_v2/.env)
     ... python3 clients/h_executor.py --replay clients/examples/replay/hotel   # doublure : rejoue des sorties ENREGISTRÉES
+
+Lanceur recommandé (environnement Python prêt, jeton non affiché) : npm run executor  (studio/scripts/executor.mjs).
+Pendant qu'il tient le prêt (avant la fin de mission), l'exécuteur récupère aussi les données par un mécanisme
+d'export OFFICIEL du logiciel (h_exports.py) : sauvegarde officielle téléchargée, convertie en SQLite et déposée
+au projet, avec les comptes (sans aucune donnée). Aucun mécanisme reconnu → le propriétaire dépose ses exports.
 
 Jetons / adresses (SPEC-5) : REBORN_TOKEN = jeton explorer du Studio, REBORN_URL = adresse du Studio.
 La clé H est lue par l'explorateur dans HAI_API_KEY ou h-explorer_v2/.env ; elle n'est jamais affichée.
@@ -30,6 +36,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import sys
 import threading
 import time
@@ -39,6 +46,7 @@ from typing import Any, Dict, List, Optional
 sys.path.insert(0, os.path.dirname(__file__))
 from reborn_client import Reborn, RebornError  # noqa: E402
 import h_adapter as A  # noqa: E402
+import h_exports as HX  # noqa: E402
 
 Json = Dict[str, Any]
 
@@ -46,6 +54,7 @@ REPO = Path(__file__).resolve().parents[2]
 HEXP_ROOT = REPO / "h-explorer_v2"
 VAULT_NAME = "reborn-logins"  # même coffre interne que h-explorer_v2/explorer/vault.py (non modifié)
 HEARTBEAT_EVERY_S = 15.0       # < 20 s (renouvellement du prêt exigé par le Studio)
+POLL_IDLE_S = 2.0              # attente entre deux prises quand la file est vide (mode permanent)
 DOUBLURE = "(doublure — jeu de test)"
 
 
@@ -283,6 +292,7 @@ def load_replay(folder: str) -> Json:
 
 def run_mission(rb: Reborn, mission: Json, *, replay: Optional[Json], api_key: Optional[str], heartbeat_ctl: "Heartbeat") -> int:
     mid, pid = mission["mission_id"], mission["project_id"]
+    inv = mission.get("investigation_id")
     target = mission.get("target") or {}
     url = (target.get("url") or "").rstrip("/")
     dry = replay is not None
@@ -368,10 +378,17 @@ def run_mission(rb: Reborn, mission: Json, *, replay: Optional[Json], api_key: O
             plan = A.build_extraction_plan(system, url, mechs, who, mission_id=mid)
             plan_route = propose_extraction_plan(rb, plan, pid)
 
+        # --- récupération automatique des données par un mécanisme d'export OFFICIEL (prêt tenu) ---
+        # Réel : à l'adresse déclarée du projet. Doublure : seulement si meta fournit un faux logiciel local
+        # explicite (export_base), jamais vers la cible fictive de la mission (aucun appel réseau en test).
+        export_base = url if not dry else (replay["meta"].get("export_base") or "")
+        recovery = HX.recover(rb, base_url=export_base, mission_id=mid, project_id=pid, investigation_id=inv, log=log, dry_run=dry) if export_base else None
+
         # --- fin de mission ---
         purged = bool(purge_local(local_ids)) or True
         vault_deleted = vault.delete() if vault else None
-        detail = f"Carte : {summary['events']} évènement(s), écran « {summary.get('screen')} »" + (f", {n_obs} observation(s)" if n_obs else "") + (f", plan d'extraction proposé ({plan_route})" if plan_route else "") + tag
+        recov_txt = f", {recovery['summary']}" if recovery else ""
+        detail = f"Carte : {summary['events']} évènement(s), écran « {summary.get('screen')} »" + (f", {n_obs} observation(s)" if n_obs else "") + (f", plan d'extraction proposé ({plan_route})" if plan_route else "") + recov_txt + tag
         rb.complete_mission(mid, "completed", detail[:1000], h_vault_item_deleted=vault_deleted, local_artifacts_purged=purged)
         heartbeat_ctl.done(mid)
         log(f"mission {mid} terminée : {detail}")
@@ -448,12 +465,95 @@ class Heartbeat:
             self._thread.join(timeout=2)
 
 
+# --------------------------------------------------------------------------- mode permanent (--loop)
+
+
+def _install_stop() -> tuple:
+    """Arrêt propre sur Ctrl+C / SIGTERM : 1re interruption → fin de la mission en cours puis arrêt ;
+    2e interruption → KeyboardInterrupt (interruption dure, les coffres sont tout de même vidés par les
+    `finally` de la mission). Dans un fil secondaire (tests), poser un gestionnaire de signal lève : on
+    retombe alors sur un simple drapeau. Renvoie (event, handlers_installés)."""
+    stop = threading.Event()
+
+    def handler(signum, frame):  # noqa: ANN001
+        if stop.is_set():
+            try:
+                signal.signal(signal.SIGINT, signal.default_int_handler)
+            except (ValueError, OSError):
+                pass
+            raise KeyboardInterrupt
+        stop.set()
+        log("arrêt demandé : fin de la mission en cours puis arrêt (Ctrl+C à nouveau pour interrompre)")
+
+    installed = []
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        try:
+            installed.append((sig, signal.signal(sig, handler)))
+        except (ValueError, OSError):
+            pass
+    return stop, installed
+
+
+def _restore_stop(installed: list) -> None:
+    for sig, prev in installed:
+        try:
+            signal.signal(sig, prev)
+        except (ValueError, OSError):
+            pass
+
+
+def run_loop(rb: Reborn, hb: "Heartbeat", *, replay: Optional[Json], api_key: Optional[str], max_missions: int = 0) -> int:
+    """Exécuteur permanent : prend chaque nouvelle mission dès qu'elle arrive, UNE à la fois, et renouvelle
+    les prêts par le battement. Reprise propre après une erreur (journal sans secret) ; arrêt propre sur
+    Ctrl+C. `max_missions` > 0 borne le nombre de missions menées (tests, démos)."""
+    stop, installed = _install_stop()
+    done = 0
+    log("mode permanent : en attente de missions" + (f" {DOUBLURE}" if replay else "") + " (Ctrl+C pour arrêter)")
+    try:
+        while not stop.is_set():
+            try:
+                mission = rb.claim_mission()
+            except RebornError as e:
+                if e.status == 409:  # pas de battement récent : on en refait un et on réessaie
+                    try:
+                        hb.beat()
+                    except RebornError:
+                        pass
+                    stop.wait(1.0)
+                    continue
+                log(f"prise impossible (HTTP {e.status or '?'}) — nouvelle tentative")
+                stop.wait(POLL_IDLE_S)
+                continue
+            if not mission:
+                stop.wait(POLL_IDLE_S)
+                continue
+            log(f"mission {mission['mission_id']} prise · projet {mission['project_id']} · réseau {mission.get('requires_network')}" + (f" {DOUBLURE}" if replay else ""))
+            try:
+                run_mission(rb, mission, replay=replay, api_key=api_key, heartbeat_ctl=hb)
+            except KeyboardInterrupt:
+                raise
+            except Exception as exc:  # noqa: BLE001 — reprise propre, aucun secret dans le journal
+                log(f"mission {mission.get('mission_id')} interrompue par une erreur inattendue ({type(exc).__name__}) — l'exécuteur continue")
+            done += 1
+            if max_missions and done >= max_missions:
+                log(f"borne atteinte ({done} mission(s) menée(s)) — arrêt")
+                break
+    except KeyboardInterrupt:
+        log("interruption — arrêt")
+    finally:
+        _restore_stop(installed)
+    log(f"exécuteur arrêté ({done} mission(s) menée(s))")
+    return 0
+
+
 # --------------------------------------------------------------------------- main
 
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description="Exécuteur H Company pour la file des missions du Studio.")
     ap.add_argument("--replay", metavar="DOSSIER", help="doublure : rejoue des sorties d'explorateur enregistrées (jeu de test), sans appeler H")
     ap.add_argument("--wait", type=float, default=0.0, help="secondes d'attente d'une mission en file (défaut 0 : une seule tentative)")
+    ap.add_argument("--loop", action="store_true", help="mode permanent : prend chaque nouvelle mission dès qu'elle arrive, jusqu'à Ctrl+C")
+    ap.add_argument("--max-missions", type=int, default=0, help="borne le nombre de missions menées en mode permanent (0 : illimité ; utile aux tests et démos)")
     args = ap.parse_args(argv)
 
     replay = None
@@ -485,6 +585,8 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     hb.start()
     try:
+        if args.loop:
+            return run_loop(rb, hb, replay=replay, api_key=api_key, max_missions=max(0, args.max_missions))
         deadline = time.monotonic() + max(0.0, args.wait)
         mission = None
         while True:

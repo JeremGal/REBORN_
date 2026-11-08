@@ -47,6 +47,12 @@ export interface MappingVersion {
   sha256: string;
   mapping: MigrationMapping;
   issues: MappingIssue[];
+  /**
+   * Proposition automatique faite par le Studio à l'arrivée d'une source (personne ne l'a demandée) : elle ne fait
+   * pas avancer l'état du projet et n'efface pas les identifiants confiés ; tant qu'aucune décision n'est prise, la
+   * source suivante la remplace par une nouvelle version qui couvre toutes les données reçues (proposeOnArrival).
+   */
+  on_arrival?: true;
 }
 
 export interface RunMeta {
@@ -353,7 +359,9 @@ function credentialsFollowStatus(p: MigrationProject, status: ProjectStatus) {
   try {
     const dir = projectRoot(p.id);
     if (status === "PAUSED") revokeRedeemTokens(dir, "projet mis en pause");
-    else if (CREDENTIALS_RELEASE_STATUSES.has(status) || (p.mappings?.length ?? 0) > 0) {
+    // Une proposition faite d'office à l'arrivée des données (on_arrival) n'est pas un passage aux correspondances :
+    // seules une version demandée, reçue ou corrigée, ou un état des correspondances et au-delà, effacent.
+    else if (CREDENTIALS_RELEASE_STATUSES.has(status) || (p.mappings ?? []).some((m) => !m.on_arrival)) {
       releaseCredentials(dir, status === "PUBLISHED" ? "logiciel mis en service" : "projet passé à l'étape des correspondances", p.id);
     }
   } catch (e) {
@@ -645,25 +653,41 @@ export function currentMapping(): MappingVersion | null {
   return getProject().mappings.at(-1) ?? null;
 }
 
-export function setMapping(raw: unknown, origin: MappingVersion["origin"]): MappingVersion {
+/**
+ * `arrival` : proposition automatique faite d'office à l'arrivée d'une source (proposeOnArrival) — version marquée
+ * on_arrival, état du projet inchangé (rien n'a été demandé ni validé), évènement de suivi propre.
+ * `profile` : structure déjà lue par l'appelant (évite une seconde lecture des sources).
+ */
+export function setMapping(raw: unknown, origin: MappingVersion["origin"], opts: { arrival?: { source: string; refresh: boolean }; profile?: SourceProfile } = {}): MappingVersion {
   assertActive();
   const parsed = MigrationMappingSchema.safeParse(raw);
   if (!parsed.success) throw new ApiError(400, "Correspondances non conformes au contrat", parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })));
   const mapping = parsed.data;
   const { archives } = loadSources();
-  const issues = checkMapping(mapping, profile(), [...archives.keys()]);
+  const issues = checkMapping(mapping, opts.profile ?? profile(), [...archives.keys()]);
   const p = getProject();
-  const v: MappingVersion = { version: (p.mappings.at(-1)?.version ?? 0) + 1, origin, received_at: new Date().toISOString(), sha256: sha256(canonical(mapping)), mapping, issues };
+  const v: MappingVersion = { version: (p.mappings.at(-1)?.version ?? 0) + 1, origin, received_at: new Date().toISOString(), sha256: sha256(canonical(mapping)), mapping, issues, ...(opts.arrival ? { on_arrival: true as const } : {}) };
   // Les décisions déjà prises restent valables pour les éléments inchangés
   const items = new Set(reviewItems(mapping).map((i) => i.key));
   p.decisions = Object.fromEntries(Object.entries(p.decisions).filter(([k]) => items.has(k)));
   p.mappings.push(v);
-  const total = reviewItems(mapping).length;
-  const pending = reviewItems(mapping).filter((i) => !p.decisions[i.key]).length;
-  setStatus(p, pending ? "NEEDS_HUMAN_REVIEW" : "MAPPING", pending ? pendingReason(v.version, pending) : `Correspondances v${v.version} prêtes`);
+  const review = reviewItems(mapping);
+  const total = review.length;
+  const pending = review.filter((i) => !p.decisions[i.key]).length;
+  if (!opts.arrival) setStatus(p, pending ? "NEEDS_HUMAN_REVIEW" : "MAPPING", pending ? pendingReason(v.version, pending) : `Correspondances v${v.version} prêtes`);
   save(p);
   const errors = issues.filter((i) => i.level === "error").length;
   const decided = total - pending;
+  if (opts.arrival) {
+    const protections = review.filter((i) => i.kind === "accounting").length;
+    log(
+      `Correspondances v${v.version} proposées automatiquement ${opts.arrival.refresh ? "pour inclure" : "à la réception de"} « ${opts.arrival.source} » — ${mapping.entities.length} entité(s)`,
+      `${total} point(s) à vérifier${protections ? `, dont ${protections} protection(s) de l'historique comptable` : ""}${errors ? ` · ${errors} erreur(s) bloquante(s)` : ""} · rien n'est migré avant votre validation`,
+      "platform",
+      { mapping_version: v.version, on_arrival: true },
+    );
+    return v;
+  }
   log(
     // Origine « user » : correction manuelle (propriétaire ou équipe, lot B4b) — jamais présentée comme venant de l'équipe.
     `Correspondances v${v.version} reçues (${origin === "analyst" ? "Analyste" : origin === "auto" ? "proposition automatique" : origin === "fixture" ? "jeu de test" : "correction manuelle"}) — ${mapping.entities.length} entité(s)`,
@@ -672,6 +696,61 @@ export function setMapping(raw: unknown, origin: MappingVersion["origin"]): Mapp
     origin === "analyst" ? "analyst" : "platform",
   );
   return v;
+}
+
+/** Résultat de la proposition faite à l'arrivée d'une source (réponse du dépôt, tests). */
+export type ArrivalOutcome =
+  | { action: "proposed" | "refreshed"; version: number; pending: number; accounting: number; errors: number }
+  | { action: "unchanged"; version: number }
+  | { action: "kept"; version: number; uncovered: string[] }
+  | { action: "skipped"; reason: string };
+
+/**
+ * Proposition automatique dès qu'une source déposée arrive (propriétaire ou exécuteur de l'agent, POST
+ * /api/migration/sources) : le client voit tout de suite les correspondances proposées, avec un évènement de suivi.
+ * - Aucune correspondance : proposition v1, marquée on_arrival (l'état du projet et les identifiants n'en dépendent pas).
+ * - Proposition on_arrival encore intacte (aucune décision prise) : nouvelle version qui couvre AUSSI la nouvelle source
+ *   (sinon les tables reçues ensuite ne seraient jamais migrées) ; identique → rien n'est créé.
+ * - Toute autre version (Analyste, jeu de test, correction, proposition demandée, ou décision déjà prise) : JAMAIS
+ *   remplacée ; un évènement signale les tables reçues qu'elle ne couvre pas.
+ * Ne lève jamais : un dépôt réussi reste réussi, l'échec de la proposition est consigné.
+ */
+export function proposeOnArrival(received: SourceMeta): ArrivalOutcome {
+  const p = getProject();
+  const cur = p.mappings.at(-1) ?? null;
+  const untouched = !!cur?.on_arrival && Object.keys(p.decisions).length === 0;
+  if (cur && !untouched) {
+    const m = cur.mapping;
+    const used = new Set([...m.entities.map((e) => e.source.table), ...(m.attachments ?? []).map((a) => a.source.table), ...(m.excluded_sources ?? []).map((x) => x.table)]);
+    const uncovered = received.tables.map((t) => t.name).filter((n) => !used.has(n));
+    if (uncovered.length)
+      log(
+        `Données reçues (« ${received.name} ») : correspondances v${cur.version} conservées`,
+        `${uncovered.length} table(s) qu'elles ne couvrent pas : ${uncovered.slice(0, 12).join(", ")}${uncovered.length > 12 ? "…" : ""}. Rien n'a été remplacé : obtenez une nouvelle version à l'étape Correspondances pour les inclure.`,
+        "platform",
+        { mapping_version: cur.version },
+      );
+    return { action: "kept", version: cur.version, uncovered };
+  }
+  try {
+    const prof = profile();
+    if (!prof.tables.length) return { action: "skipped", reason: "aucune table lisible dans les données reçues" };
+    const parsed = MigrationMappingSchema.safeParse(proposeMapping(prof, { source_system: p.source_system, target: projectAppIdentity(p) }));
+    if (!parsed.success) {
+      const reason = "aucune table avec un identifiant de ligne reconnu";
+      log(`Proposition automatique impossible pour « ${received.name} »`, `${reason} : demandez une proposition à l'étape Correspondances après avoir complété les données, ou attendez l'Analyste.`, "platform");
+      return { action: "skipped", reason };
+    }
+    if (cur && sha256(canonical(parsed.data)) === cur.sha256) return { action: "unchanged", version: cur.version };
+    const v = setMapping(parsed.data, "auto", { arrival: { source: received.name, refresh: !!cur }, profile: prof });
+    const items = reviewItems(v.mapping);
+    return { action: cur ? "refreshed" : "proposed", version: v.version, pending: items.filter((i) => !p.decisions[i.key]).length, accounting: items.filter((i) => i.kind === "accounting").length, errors: v.issues.filter((i) => i.level === "error").length };
+  } catch (e) {
+    const reason = e instanceof ApiError ? e.message : "erreur interne";
+    if (!(e instanceof ApiError)) console.error("[reborn] proposition à l'arrivée :", (e as Error)?.message ?? String(e));
+    log(`Proposition automatique impossible pour « ${received.name} »`, reason, "platform");
+    return { action: "skipped", reason };
+  }
 }
 
 /** Identité du nouveau logiciel propre au projet : `<entreprise>-<4 derniers caractères du projet>`, « <entreprise> — nouveau logiciel ». */
@@ -704,21 +783,14 @@ export function proposeAutomatic(): MappingVersion {
   const prof = profile();
   if (!prof.tables.length) throw new ApiError(409, "Aucune source : extrayez ou importez des données d'abord");
   const p = getProject();
-  return setMapping(proposeMapping(prof, { source_system: p.source_system, target: projectAppIdentity(p) }), "auto");
+  return setMapping(proposeMapping(prof, { source_system: p.source_system, target: projectAppIdentity(p) }), "auto", { profile: prof });
 }
 
 /** Raison de l'état « validation humaine requise » des correspondances : nombre RÉEL de points encore à trancher. */
 const pendingReason = (version: number, pending: number) => `Correspondances v${version} : ${pending} point(s) à valider`;
 
-export function decide(key: string, decision: Decision["decision"], by: string, comment?: string) {
-  assertActive();
-  const m = currentMapping();
-  if (!m) throw new ApiError(409, "Aucune correspondance à valider");
-  const item = reviewItems(m.mapping).find((i) => i.key === key);
-  if (!item) throw new ApiError(404, `Point de validation inconnu : ${key}`);
-  const p = getProject();
-  p.decisions[key] = { decision, at: new Date().toISOString(), by, comment };
-  const pending = reviewItems(m.mapping).filter((i) => !p.decisions[i.key]).length;
+/** Après une ou plusieurs décisions (à enregistrer par l'appelant) : état et raison tenus à jour, comme pour une décision unitaire. */
+function afterDecisions(p: MigrationProject, m: MappingVersion, pending: number) {
   if (!pending) setStatus(p, "MAPPING", "Toutes les correspondances incertaines ont été tranchées : migration possible");
   else {
     // L'état ne change pas (des points restent à trancher) : sa raison est tenue à jour, sans nouvelle entrée
@@ -728,9 +800,77 @@ export function decide(key: string, decision: Decision["decision"], by: string, 
       last.reason = pendingReason(m.version, pending);
     }
   }
+}
+
+export function decide(key: string, decision: Decision["decision"], by: string, comment?: string) {
+  assertActive();
+  const m = currentMapping();
+  if (!m) throw new ApiError(409, "Aucune correspondance à valider");
+  const item = reviewItems(m.mapping).find((i) => i.key === key);
+  if (!item) throw new ApiError(404, `Point de validation inconnu : ${key}`);
+  const p = getProject();
+  p.decisions[key] = { decision, at: new Date().toISOString(), by, comment };
+  afterDecisions(p, m, reviewItems(m.mapping).filter((i) => !p.decisions[i.key]).length);
   save(p);
   const verb = item.kind === "accounting" ? (decision === "accepted" ? "Protection de l'historique confirmée" : "Protection de l'historique retirée") : decision === "accepted" ? "Correspondance validée" : "Correspondance exclue";
   log(`${verb} : ${item.label}`, comment, "user");
+}
+
+export interface BulkAcceptance {
+  version: number;
+  /** Points acceptés par cette demande. */
+  accepted: string[];
+  /** Points déjà tranchés entre-temps (jamais réécrits : seules les propositions RESTANTES sont acceptées). */
+  skipped: string[];
+  /** Protections de l'historique comptable gardées par cette demande. */
+  accounting: number;
+  /** Points encore à trancher dans la version en vigueur. */
+  pending: number;
+}
+
+/** Commentaire consigné avec chaque décision prise en bloc (sans commentaire de la personne). */
+export const BULK_NOTE = "Acceptée en bloc avec les autres propositions restantes";
+
+/**
+ * Validation en bloc par le propriétaire : accepte EXACTEMENT les points listés (ceux qu'il a vus) de la version qu'il a
+ * vue — même logique que decide() : projet actif, point connu de la version en vigueur, auteur = identité
+ * authentifiée, état et raison mis à jour, migration possible quand plus rien ne reste. Version changée depuis
+ * l'affichage → 409 (rien n'est enregistré) ; point inconnu → 404 (rien n'est enregistré). Un point déjà tranché
+ * n'est jamais réécrit. Un seul évènement « N points acceptés en bloc par <nom> ».
+ */
+export function acceptMany(version: number, keys: readonly string[], by: string, comment?: string): BulkAcceptance {
+  assertActive();
+  const m = currentMapping();
+  if (!m) throw new ApiError(409, "Aucune correspondance à valider");
+  if (m.version !== version) throw new ApiError(409, `Les correspondances ont changé : la version ${m.version} est en vigueur et vous validiez la version ${version}. Rechargez la page, puis recommencez.`);
+  const items = new Map(reviewItems(m.mapping).map((i) => [i.key, i]));
+  const unique = [...new Set(keys)];
+  const unknown = unique.filter((k) => !items.has(k));
+  if (unknown.length) throw new ApiError(404, `Point de validation inconnu : ${unknown.slice(0, 3).join(", ")}${unknown.length > 3 ? ` (et ${unknown.length - 3} autre(s))` : ""}`);
+  const p = getProject();
+  const at = new Date().toISOString();
+  const accepted: string[] = [];
+  const skipped: string[] = [];
+  for (const k of unique) {
+    if (p.decisions[k]) skipped.push(k);
+    else {
+      p.decisions[k] = { decision: "accepted", at, by, comment: comment || BULK_NOTE };
+      accepted.push(k);
+    }
+  }
+  const pending = [...items.keys()].filter((k) => !p.decisions[k]).length;
+  const accounting = accepted.filter((k) => items.get(k)?.kind === "accounting").length;
+  if (!accepted.length) return { version: m.version, accepted, skipped, accounting, pending };
+  afterDecisions(p, m, pending);
+  save(p);
+  const n = accepted.length;
+  log(
+    `${n} point${n > 1 ? "s" : ""} accepté${n > 1 ? "s" : ""} en bloc par ${by}`,
+    `Correspondances v${m.version}${accounting ? ` · dont ${accounting} protection(s) de l'historique comptable gardée(s)` : ""} · ${pending ? `${pending} point(s) encore à vérifier` : "plus aucun point à vérifier : migration possible"}${comment ? ` — « ${comment} »` : ""}`,
+    "user",
+    { mapping_version: m.version, accepted: n, accounting, pending },
+  );
+  return { version: m.version, accepted, skipped, accounting, pending };
 }
 
 /* ------------------------------------------------------------------ */

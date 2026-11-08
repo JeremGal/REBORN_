@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ds/Progress";
 import { useReborn } from "@/components/RebornProvider";
 import { Facts, Metric, Metrics, Section, StepHeader, TestBadge } from "@/components/project/Step";
 import { useProject, useProjectData } from "@/components/project/ProjectProvider";
-import { missionInfo, useAnalysis } from "@/components/project/ConnAnalysis";
+import { MissionProgressList, missionInfo, useAnalysis } from "@/components/project/ConnAnalysis";
 import { DiscoveryAnomalies, DiscoveryDetails, DiscoveryModules, DiscoveryTimeline, buildTimeline, collectAnomalies, connMode, discoveryData, fromTestPlan, sourceOrigin } from "@/components/project/ConnDiscovery";
 import { connByConnector, connCount, connDate, connNum } from "@/components/project/ConnShared";
 import { journey, nextAction } from "@/components/shell/journey";
@@ -103,6 +103,17 @@ export default function DecouvertePage() {
         <Alert tone="warn" live="off" title="Synchronisation interrompue">
           {error} Les informations affichées sont les dernières reçues.
         </Alert>
+      )}
+
+      {/* Dès qu'un exécuteur a pris la demande : son avancement réel, étape par étape (évènements de la mission). */}
+      {analysis.data?.progress && mission && (
+        <Section
+          title="Avancement de l'analyse"
+          badge={<Badge tone={info.tone}>{info.label}</Badge>}
+          description={`Ce que l'agent a réellement fait pour la demande du ${connDate(mission.created_at)} : prise en charge, connexion, écrans, export, fin.`}
+        >
+          <MissionProgressList progress={analysis.data.progress} />
+        </Section>
       )}
 
       <Section title="Chronologie" description="Faits réellement reçus pour ce projet, du plus ancien au plus récent.">

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { CircleAlert, ExternalLink, FileUp, Info, Plus, ShieldCheck, TriangleAlert } from "lucide-react";
+import { ArrowRight, CircleAlert, ExternalLink, FileUp, Info, Plus, ShieldCheck, TriangleAlert } from "lucide-react";
+import { Alert } from "@/components/ds/Alert";
 import { Button } from "@/components/ds/Button";
 import { Skeleton } from "@/components/ds/Progress";
 import { ErrorState } from "@/components/ds/States";
@@ -193,6 +194,21 @@ export function Overview() {
           </Button>
         )}
       </header>
+
+      {user?.role === "operator" && (
+        <Alert
+          tone="info"
+          live="off"
+          title="Équipe REBORN"
+          action={
+            <Button href="/operations" variant="secondary" size="sm" iconEnd={<ArrowRight size={14} />}>
+              Vue d&apos;ensemble des opérations
+            </Button>
+          }
+        >
+          Cette page ne montre que vos propres projets. Les agents d&apos;analyse connectés, les demandes des clients et l&apos;avancement de tous les projets sont suivis dans la vue d&apos;ensemble des opérations.
+        </Alert>
+      )}
 
       {error && <ErrorState title="Lecture des projets impossible" message={error} onRetry={reload} />}
 

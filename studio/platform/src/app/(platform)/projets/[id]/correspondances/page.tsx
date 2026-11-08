@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, ChevronsDownUp, ChevronsUpDown, FlaskConical, Inbox, Settings2, Sparkles, X, type LucideIcon } from "lucide-react";
+import { ArrowRight, CheckCheck, ChevronsDownUp, ChevronsUpDown, FlaskConical, Inbox, Settings2, Sparkles, X, type LucideIcon } from "lucide-react";
 import { Badge, Button, Textarea, cx, formatPercent } from "@/components/ds";
 import { projectCall, useProject, useProjectData } from "@/components/project/ProjectProvider";
 import { Callout, Facts, Metric, Metrics, Section, StepHeader, TestBadge } from "@/components/project/Step";
 import { useViewer } from "@/components/project/AppKit";
 import {
   AttachmentRow,
+  BulkAcceptDialog,
   CorrectFieldDialog,
   DecidedList,
   EntityGroup,
@@ -30,6 +31,7 @@ import {
   nf,
   plural,
   useMappingActions,
+  type BulkAcceptResponse,
   type ExtractionSummary,
   type FieldFilter,
   type MappingIndex,
@@ -48,6 +50,8 @@ import {
  * - GET /api/migration/mapping : version en vigueur, problèmes, points à vérifier, bloquants.
  * - POST /api/migration/mapping?propose=auto | ?fixture=crm (jeu de test) ; envoi de l'Analyste par l'API.
  * - POST /api/migration/decisions : accepter / rejeter une proposition incertaine.
+ * - POST /api/migration/decisions/bulk : accepter en bloc les propositions restantes (après confirmation : nombre de
+ *   points, protections de l'historique comptable listées à part et décochables).
  * - POST /api/migration/mapping/fields : corriger, rejeter ou reprendre un champ (nouvelle version).
  * La migration reste impossible côté serveur tant qu'un point bloquant subsiste.
  */
@@ -120,6 +124,22 @@ export default function CorrespondancesPage() {
     await mapping.reload();
   }, [mapping]);
   const { actions, notice, setNotice, dialog, closeDialog, saved } = useMappingActions(current?.version ?? 0, reload);
+
+  // Validation en bloc (« Accepter toutes les propositions restantes ») : le message de résultat reçoit le focus,
+  // le bouton qui a ouvert la fenêtre disparaissant quand plus rien ne reste à vérifier.
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const noticeRef = useRef<HTMLDivElement>(null);
+  const bulkDone = useCallback(
+    async (r: BulkAcceptResponse) => {
+      const left = r.review.pending;
+      const skipped = r.skipped ? ` (${plural(r.skipped, "point déjà tranché laissé", "points déjà tranchés laissés")} tel quel)` : "";
+      const after = left ? `${plural(left, "point reste", "points restent")} à vérifier.` : r.review.can_run ? "Plus aucun point à vérifier : la migration est possible." : "Plus aucun point à vérifier.";
+      setNotice({ tone: "ok", text: `${plural(r.accepted, "point accepté", "points acceptés")} en bloc à votre nom${skipped}. ${after}` });
+      await mapping.reload();
+      requestAnimationFrame(() => noticeRef.current?.focus());
+    },
+    [mapping, setNotice],
+  );
 
   // Tables dépliées (repliées par défaut) : elles le restent d'une version à l'autre (une correction ne fait pas perdre sa place)
   const [openSet, setOpenSet] = useState<Set<string>>(NO_ENTITY);
@@ -214,18 +234,20 @@ export default function CorrespondancesPage() {
         <Metric label="Champs protégés" value={counts ? nf(counts.locked) : "—"} hint={counts ? "historique comptable, non modifiable" : undefined} />
       </Metrics>
 
-      {notice && (
-        <Callout
-          tone={notice.tone}
-          action={
-            <Button variant="ghost" size="sm" onClick={() => setNotice(null)} aria-label="Fermer le message" icon={<X size={14} />}>
-              Fermer
-            </Button>
-          }
-        >
-          {notice.text}
-        </Callout>
-      )}
+      <div ref={noticeRef} tabIndex={-1} className="outline-none empty:hidden">
+        {notice && (
+          <Callout
+            tone={notice.tone}
+            action={
+              <Button variant="ghost" size="sm" onClick={() => setNotice(null)} aria-label="Fermer le message" icon={<X size={14} />}>
+                Fermer
+              </Button>
+            }
+          >
+            {notice.text}
+          </Callout>
+        )}
+      </div>
 
       {mapping.loading && !mapping.data ? (
         <p role="status" className="py-6 text-body text-text-3">
@@ -259,7 +281,18 @@ export default function CorrespondancesPage() {
           <StaleNotice current={current} sources={sources.data} profile={profile.data} />
 
           {pendingItems.length > 0 && (
-            <Section id="a-verifier" className="scroll-mt-6" title="À vérifier" badge={<Badge tone="warn">{nf(pendingItems.length)}</Badge>} description="Propositions incertaines : rien n'est migré tant qu'une seule reste en attente.">
+            <Section
+              id="a-verifier"
+              className="scroll-mt-6"
+              title="À vérifier"
+              badge={<Badge tone="warn">{nf(pendingItems.length)}</Badge>}
+              description="Propositions incertaines : rien n'est migré tant qu'une seule reste en attente."
+              actions={
+                <Button size="sm" variant="accent" icon={<CheckCheck size={14} />} disabled={!!actions.busy} onClick={() => setBulkOpen(true)}>
+                  {pendingItems.length > 1 ? "Accepter toutes les propositions restantes" : "Accepter la proposition restante"}
+                </Button>
+              }
+            >
               <PendingList items={pendingItems} idx={idx} actions={actions} onFocus={focus} advanced={advanced} />
             </Section>
           )}
@@ -325,6 +358,7 @@ export default function CorrespondancesPage() {
         </>
       )}
 
+      {idx && <BulkAcceptDialog open={bulkOpen} onClose={() => setBulkOpen(false)} items={pendingItems} idx={idx} onDone={bulkDone} />}
       {dialog?.kind === "correct" && dlgEntity && dlgField && idx && (
         <CorrectFieldDialog key={`c-${dialog.seq}`} open={dialog.open} onClose={closeDialog} e={dlgEntity} f={dlgField} idx={idx} onSaved={saved} />
       )}
@@ -351,7 +385,7 @@ function VersionLine({ current }: { current: MappingVersion }) {
       <span>
         Version {current.version} du {dt(current.received_at)}
       </span>
-      {origin.test ? <TestBadge /> : <Badge>{origin.label}</Badge>}
+      {origin.test ? <TestBadge /> : <Badge>{current.on_arrival ? `${origin.label} · faite à la réception des données` : origin.label}</Badge>}
     </p>
   );
 }

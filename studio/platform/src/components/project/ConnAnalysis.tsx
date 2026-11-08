@@ -36,10 +36,49 @@ export interface AnalysisMission {
   outcome_detail?: string | null;
 }
 
+/** État d'une étape du déroulé réel (lib/migration/analysis.ts : missionProgress). */
+export type ProgressState = "done" | "current" | "failed" | "attention" | "waiting" | "none";
+export interface ProgressStep {
+  id: string;
+  label: string;
+  state: ProgressState;
+  at: string | null;
+  detail: string | null;
+}
+/** Avancement réel de la mission, calculé par le Studio à partir des évènements reçus (null avant la première prise). */
+export interface MissionProgress {
+  steps: ProgressStep[];
+  screens: number;
+  exports: number;
+  last_report_at: string | null;
+}
+
 export interface AnalysisState {
   mission: AnalysisMission | null;
   executor_available: boolean;
   message?: string;
+  progress: MissionProgress | null;
+}
+
+const PROGRESS_STATES: ReadonlySet<string> = new Set(["done", "current", "failed", "attention", "waiting", "none"]);
+
+/** Déroulé lu prudemment : un état inconnu n'est jamais présenté comme fait. */
+function normalizeProgress(raw: unknown): MissionProgress | null {
+  if (!raw || typeof raw !== "object") return null;
+  const p = raw as Record<string, unknown>;
+  if (!Array.isArray(p.steps)) return null;
+  const steps = p.steps
+    .filter((s): s is Record<string, unknown> => !!s && typeof s === "object" && typeof (s as { label?: unknown }).label === "string")
+    .map((s, i) => ({
+      id: typeof s.id === "string" ? s.id : `etape-${i}`,
+      label: String(s.label),
+      state: (PROGRESS_STATES.has(String(s.state)) ? s.state : "waiting") as ProgressState,
+      at: typeof s.at === "string" && s.at ? s.at : null,
+      detail: typeof s.detail === "string" && s.detail ? s.detail : null,
+    }));
+  if (!steps.length) return null;
+  const n = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : 0);
+  return { steps, screens: n(p.screens), exports: n(p.exports), last_report_at: typeof p.last_report_at === "string" ? p.last_report_at : null };
 }
 
 /** Réponse de l'API, lue prudemment (le contrat est en cours d'écriture côté B2). */
@@ -61,7 +100,52 @@ export function normalizeAnalysis(raw: unknown): AnalysisState {
     mission,
     executor_available: r.executor_available === true || r.agent_available === true,
     message: typeof r.message === "string" && r.message ? r.message : undefined,
+    progress: mission ? normalizeProgress(r.progress) : null,
   };
+}
+
+const PROGRESS_BADGE: Record<ProgressState, { tone: Tone; text: string }> = {
+  done: { tone: "ok", text: "Fait" },
+  current: { tone: "running", text: "En cours" },
+  failed: { tone: "bad", text: "Échec" },
+  attention: { tone: "warn", text: "À vérifier" },
+  waiting: { tone: "neutral", text: "En attente" },
+  none: { tone: "neutral", text: "Aucun" },
+};
+
+/**
+ * Déroulé réel de l'analyse (prise, connexion, écrans découverts, export récupéré, fin) : chaque étape porte un état
+ * en toutes lettres (jamais la couleur seule) et la date du fait reçu. Rien n'est estimé : sans rapport, « En attente ».
+ */
+export function MissionProgressList({ progress, label = "Déroulé réel de l'analyse, dans l'ordre" }: { progress: MissionProgress; label?: string }) {
+  return (
+    <ol aria-label={label} className="flex flex-col divide-y divide-line rounded-panel ring-1 ring-line">
+      {progress.steps.map((s) => {
+        const b = PROGRESS_BADGE[s.state] ?? PROGRESS_BADGE.waiting;
+        return (
+          <li key={s.id} className="grid gap-x-4 gap-y-1.5 px-4 py-3 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:items-start">
+            <span className="sm:pt-0.5">
+              <StatusBadge tone={b.tone}>{b.text}</StatusBadge>
+            </span>
+            <div className="min-w-0">
+              <p className={s.state === "waiting" || s.state === "none" ? "text-body break-words text-text-2" : "text-body font-semibold break-words text-ink"}>{s.label}</p>
+              {(s.at || s.detail) && (
+                <p className="mt-0.5 text-small break-words text-text-2">
+                  {s.at && (
+                    <time dateTime={s.at} className="tabular text-text-3">
+                      {connDate(s.at)}
+                    </time>
+                  )}
+                  {s.at && s.detail ? " · " : ""}
+                  {s.detail}
+                </p>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  );
 }
 
 interface MissionInfo {
@@ -345,7 +429,20 @@ export function ConnAnalysisPanel({
           <span className="text-small text-text-3">Mise à jour automatique</span>
         </div>
         <p className="max-w-[720px] text-body leading-relaxed text-text-2">{endedText(mission, info)}</p>
-        {info.stage !== null && <Stepper steps={missionSteps(info)} orientation="horizontal" label="Déroulé de la demande d'analyse" />}
+        {data.progress ? (
+          <div className="flex flex-col gap-2">
+            <div>
+              <h3 className="text-body font-semibold text-ink">Déroulé réel de l&apos;analyse</h3>
+              <p className="text-small text-text-3">
+                Chaque étape s&apos;affiche quand l&apos;agent la rapporte, rien n&apos;est estimé
+                {data.progress.last_report_at ? ` · dernier rapport de l'agent le ${connDate(data.progress.last_report_at)}` : ""}.
+              </p>
+            </div>
+            <MissionProgressList progress={data.progress} />
+          </div>
+        ) : (
+          info.stage !== null && <Stepper steps={missionSteps(info)} orientation="horizontal" label="Déroulé de la demande d'analyse" />
+        )}
         {unavailable && (
           <Alert
             tone="warn"

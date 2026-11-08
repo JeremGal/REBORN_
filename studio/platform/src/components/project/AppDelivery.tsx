@@ -226,6 +226,85 @@ export function useAppAccess(appId: string | null) {
 }
 export type AppAccess = ReturnType<typeof useAppAccess>;
 
+interface AppCredentials {
+  login: string;
+  password: string;
+  url: string;
+}
+
+/**
+ * « Identifiant et mot de passe » : le Studio génère un mot de passe lisible et active le compte administrateur
+ * du propriétaire dans le logiciel livré. Le mot de passe n'est gardé qu'en mémoire de la page, le temps de
+ * l'afficher ; une nouvelle génération annule le précédent.
+ */
+function useAppCredentials() {
+  const { post } = useProject();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [creds, setCreds] = useState<AppCredentials | null>(null);
+  const generate = useCallback(async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      setCreds(await post<AppCredentials>("/api/migration/app/credentials", {}));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }, [post]);
+  return { busy, error, creds, generate, hide: () => setCreds(null) };
+}
+
+function CredentialsBlock({ app, email }: { app: AppStatus; email: string | null }) {
+  const { busy, error, creds, generate, hide } = useAppCredentials();
+  return (
+    <div className="flex flex-col gap-3 rounded-panel border border-line px-4 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-body font-semibold text-ink">Identifiant et mot de passe</p>
+          <p className="text-small text-text-2">
+            Pour vous connecter tout de suite au nouveau logiciel, avec votre adresse{email ? <b className="font-semibold text-ink"> {email}</b> : " e-mail"} (rôle administrateur).
+          </p>
+        </div>
+        <Button variant={creds ? "secondary" : "accent"} loading={busy} loadingText="Génération…" icon={<KeyRound size={16} />} onClick={() => void generate()} disabled={!app.running}>
+          {creds ? "Générer un autre mot de passe" : "Générer mon identifiant et mon mot de passe"}
+        </Button>
+      </div>
+      {!app.running && <Callout tone="info">Le logiciel est arrêté : démarrez-le pour générer vos identifiants.</Callout>}
+      {error && (
+        <Callout tone="bad" title="Identifiants non générés">
+          <p className="break-words">{error}</p>
+        </Callout>
+      )}
+      {creds && (
+        <div role="status" className="flex flex-col gap-3 rounded-panel bg-accent-soft px-4 py-4">
+          <p className="text-body font-semibold text-ink">Vos identifiants du nouveau logiciel. Notez le mot de passe : il ne sera plus affiché.</p>
+          {[
+            ["Adresse du logiciel", creds.url],
+            ["Identifiant", creds.login],
+            ["Mot de passe", creds.password],
+          ].map(([label, value]) => (
+            <div key={label} className="flex flex-col gap-1">
+              <p className="text-small font-semibold text-ink">{label}</p>
+              <CopyField value={value} label={label} />
+            </div>
+          ))}
+          <p className="text-small text-text-2">REBORN ne conserve pas ce mot de passe. Vous pouvez en générer un autre à tout moment (l&apos;ancien cesse alors de fonctionner) ou le changer dans le logiciel.</p>
+          <div className="flex flex-wrap gap-2">
+            <Button href={creds.url} target="_blank" rel="noreferrer" variant="accent" iconEnd={<ExternalLink size={16} />}>
+              Ouvrir le nouveau logiciel
+            </Button>
+            <Button variant="ghost" onClick={hide}>
+              Masquer
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /**
  * « Créer mon accès au logiciel » : lien d'activation à usage unique pour l'adresse du compte. Le lien
  * n'est affiché qu'une fois (il n'est conservé ni ici ni par le Studio) ; la personne y choisit son
@@ -248,6 +327,8 @@ export function AccessSection({ app, email, access: a }: { app: AppStatus; email
       }
     >
       <div className="flex flex-col gap-4">
+        <CredentialsBlock app={app} email={email} />
+        <p className="text-small font-semibold text-text-2">Ou choisissez vous-même votre mot de passe, par un lien d&apos;activation :</p>
         <ol className="flex list-decimal flex-col gap-1 pl-5 text-body text-text-2">
           <li>
             REBORN crée un lien d&apos;activation personnel pour votre adresse{email ? <b className="font-semibold text-ink"> {email}</b> : " e-mail"}, avec le rôle administrateur.

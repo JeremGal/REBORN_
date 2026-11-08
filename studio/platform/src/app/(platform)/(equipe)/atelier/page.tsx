@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, CircleStop } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CircleStop } from "lucide-react";
 import { useReborn } from "@/components/RebornProvider";
 import { LaunchPanel } from "@/components/LaunchPanel";
 import { EventFeed } from "@/components/EventFeed";
@@ -9,6 +9,8 @@ import { CoreSample } from "@/components/CoreSample";
 import { ScenarioPanel } from "@/components/ScenarioPanel";
 import { Button, ButtonLink, Panel, pct, cx, timeOf } from "@/components/ui";
 import { MODE_INFO } from "@/lib/modes";
+import { Alert } from "@/components/ds/Alert";
+import { Button as DsButton } from "@/components/ds/Button";
 import type { RebornState } from "@/lib/types";
 
 export default function MissionControl() {
@@ -33,6 +35,19 @@ export default function MissionControl() {
 
   return (
     <div className="flex flex-col gap-5">
+      {/* Repère pour l'équipe : cet écran est un outil de démonstration ; le suivi réel est sur /operations. */}
+      <Alert
+        tone="info"
+        live="off"
+        title="Outil de démonstration"
+        action={
+          <DsButton href="/operations" variant="secondary" size="sm" iconEnd={<ArrowRight size={14} />}>
+            Vue d&apos;ensemble des opérations
+          </DsButton>
+        }
+      >
+        Cet atelier rejoue la chaîne découverte, règles et comparaison sur le logiciel de test Quotix 98. Pour suivre les vrais agents, les demandes d&apos;analyse des clients et leurs projets, ouvrez la vue d&apos;ensemble des opérations.
+      </Alert>
       {error && <div className="rounded-md bg-rust-soft px-4 py-2 text-[13px] text-rust">{error}</div>}
 
       {/* Contexte : quel logiciel, quel statut, quelle version -------------------- */}

@@ -104,7 +104,9 @@ beforeAll(async () => {
   // Publication des correspondances par l'Analyste (jeton de service), comme en production
   const pub = await callRoute(mods.mapping, "POST", `/api/migration/mapping${q()}`, { body: MAPPING, headers: asService("analyst") });
   expect(pub.status).toBe(200);
-  expect(pub.body.version).toBe(1);
+  // Les deux dépôts ont d'abord produit la proposition automatique faite à l'arrivée des données (v1, puis v2 pour
+  // inclure factures.csv, personne n'ayant encore rien décidé) ; l'envoi de l'Analyste devient la version en vigueur.
+  expect(pub.body.version).toBe(3);
 });
 afterAll(() => cleanupAuthEnv());
 

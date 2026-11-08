@@ -48,7 +48,7 @@ function secretDir(dir: string) {
  * `http://127.0.0.1:<port>/#/activation/<jeton>` (port lu dans son app.json). Le jeton est dans le
  * fragment `#` : il n'est envoyé ni au serveur dans l'adresse, ni dans l'en-tête Referer.
  */
-export function issueAppInvite(appId: string, i: AppInviteInput): { link: string; expires_at: string } {
+export function issueAppInvite(appId: string, i: AppInviteInput): { link: string; expires_at: string; port: number } {
   if (!APP_ID.test(appId)) throw new ApiError(400, "Identifiant de logiciel invalide");
   const dir = path.join(appsRoot(), appId);
   let port: number;
@@ -94,5 +94,43 @@ export function issueAppInvite(appId: string, i: AppInviteInput): { link: string
     fs.rmSync(tmp, { force: true });
     throw e;
   }
-  return { link: `${appPublicUrl(port)}/#/activation/${token}`, expires_at: record.expires_at };
+  return { link: `${appPublicUrl(port)}/#/activation/${token}`, expires_at: record.expires_at, port };
+}
+
+/** Alphabet sans caractères ambigus (0/O, 1/l/I) : un mot de passe facile à recopier. */
+const READABLE = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789";
+function readablePassword(): string {
+  const bytes = randomBytes(12);
+  const chars = [...bytes].map((b) => READABLE[b % READABLE.length]).join("");
+  return `Rbn-${chars.slice(0, 4)}-${chars.slice(4, 8)}-${chars.slice(8, 12)}`;
+}
+
+/**
+ * « Identifiant et mot de passe » (étape Livraison) : le Studio crée une invitation pour l'adresse du
+ * propriétaire, l'active AUSSITÔT dans le logiciel livré (appel local) avec un mot de passe aléatoire lisible,
+ * et renvoie identifiant + mot de passe pour affichage UNIQUE. Le Studio ne conserve pas le mot de passe (seul
+ * le logiciel livré en garde l'empreinte) ; une nouvelle demande en génère un autre et annule le précédent
+ * (le logiciel livré réinitialise le mot de passe d'un compte existant). Logiciel arrêté : 409.
+ */
+export async function issueAppCredentials(appId: string, i: { email: string; by: string }): Promise<{ login: string; password: string; url: string }> {
+  const invite = issueAppInvite(appId, { email: i.email, role: "admin", by: i.by, ttlHours: 1 });
+  const token = decodeURIComponent(invite.link.slice(invite.link.indexOf("#/activation/") + "#/activation/".length));
+  const password = readablePassword();
+  const local = `http://127.0.0.1:${invite.port}`;
+  let res: Response;
+  try {
+    res = await fetch(`${local}/api/auth/activate`, {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: local },
+      body: JSON.stringify({ token, password }),
+      signal: AbortSignal.timeout(10_000),
+    });
+  } catch {
+    throw new ApiError(409, "Le logiciel livré ne répond pas : démarrez-le, puis réessayez.");
+  }
+  if (!res.ok) {
+    const why = await res.text().catch(() => "");
+    throw new ApiError(502, `Le logiciel livré a refusé l'activation (HTTP ${res.status})${why ? ` : ${why.slice(0, 200)}` : ""}`);
+  }
+  return { login: i.email.trim().toLowerCase(), password, url: appPublicUrl(invite.port) };
 }

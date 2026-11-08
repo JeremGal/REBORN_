@@ -201,7 +201,8 @@ describe("Test G — parcours de migration d'un client, sous sa session, par les
     expect(run.status, JSON.stringify(run.body)).toBe(200);
     runId = run.body.run.id;
     expect(runId).toBe("RUN_001");
-    expect(run.body.run).toMatchObject({ status: "completed", by: "Inès Morel", mapping_version: 1, verification: "review" });
+    // v1 et v2 : propositions faites d'office à l'arrivée de clients.csv puis de factures.csv ; v3 : celle demandée par le client
+    expect(run.body.run).toMatchObject({ status: "completed", by: "Inès Morel", mapping_version: 3, verification: "review" });
     expect(run.body.run.summary).toMatchObject({ source_rows: clientsInSource + invoicesInSource, imported: clientsInSource + invoicesInSource, rejected: 0 });
     expect(run.body.report).toMatchObject({ status: "review", failed: 0 });
 

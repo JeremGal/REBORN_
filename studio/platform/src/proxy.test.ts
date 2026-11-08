@@ -13,7 +13,7 @@ const matches = (url: string) => unstable_doesMiddlewareMatch({ config, url });
 
 describe("proxy.ts — périmètre", () => {
   it("couvre l'espace connecté, l'atelier et /app", () => {
-    for (const p of ["/espace", "/projets", "/projets/nouveau", "/projets/MIG_0123abcd/validation", "/activite", "/parametres", "/atelier", "/investigation", "/regles", "/reconstruction", "/comparaison", "/migration", "/design-system", "/app"]) {
+    for (const p of ["/espace", "/projets", "/projets/nouveau", "/projets/MIG_0123abcd/validation", "/activite", "/parametres", "/operations", "/atelier", "/investigation", "/regles", "/reconstruction", "/comparaison", "/migration", "/design-system", "/app"]) {
       expect(matches(p), p).toBe(true);
     }
   });

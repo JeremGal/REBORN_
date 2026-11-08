@@ -30,6 +30,7 @@ export const config = {
     "/projets/:path*",
     "/activite",
     "/parametres",
+    "/operations",
     "/atelier",
     "/investigation",
     "/regles",

@@ -20,8 +20,11 @@ FAKE_TOKEN = "jeton-de-remise-fictif-0000000000"
 
 
 class FakeStudio:
-    def __init__(self, *, mission: Json, plan_route: bool = False, with_credentials: bool = True):
+    def __init__(self, *, mission: Json, plan_route: bool = False, with_credentials: bool = True, missions: Optional[List[Json]] = None):
+        # `missions` : plusieurs missions servies à la suite (mode permanent) ; sinon la seule `mission`.
         self.mission = mission
+        self.missions_mode = missions is not None
+        self.mission_queue: List[Json] = list(missions) if missions is not None else []
         self.plan_route = plan_route
         self.with_credentials = with_credentials
         self.requests: List[Json] = []
@@ -30,6 +33,8 @@ class FakeStudio:
         self.redeemed = 0
         self.connection_reports: List[str] = []
         self.completed: Optional[Json] = None
+        self.completions: List[Json] = []
+        self.sources: List[Json] = []
         self.plan_posts = 0
         self.secrets = [FAKE_USERNAME, FAKE_PASSWORD, FAKE_TOKEN]
         self._lock = threading.Lock()
@@ -97,6 +102,9 @@ class FakeStudio:
             if base == "/api/executor/missions/claim":
                 if self.heartbeats == 0:
                     return 409, {"ok": False, "error": "battement requis"}
+                if self.missions_mode:
+                    # Mode permanent : chaque mission de la file servie une seule fois, puis 204.
+                    return (200, self.mission_queue.pop(0)) if self.mission_queue else (204, None)
                 if self.claimed:
                     return 204, None
                 self.claimed = True
@@ -123,8 +131,17 @@ class FakeStudio:
             if base == "/api/migration/extraction-plan":
                 self.plan_posts += 1
                 return (200, {"ok": True, "status": "proposed"}) if self.plan_route else (404, {"ok": False, "error": "route inconnue"})
+            if base == "/api/migration/sources":
+                # Dépôt d'un export par l'exécuteur titulaire du prêt : { name, content_base64, mechanism }.
+                b = body or {}
+                name = b.get("name") or "source"
+                content = b.get("content_base64") or ""
+                src = {"id": f"src{len(self.sources):04d}", "name": name, "mechanism": b.get("mechanism"), "size": len(content)}
+                self.sources.append({**src, "content_base64": content})
+                return 200, {"ok": True, "source": src}
             if base.endswith("/complete"):
-                self.completed = {"outcome": (body or {}).get("outcome"), "disposal": (body or {}).get("disposal")}
+                self.completed = {"outcome": (body or {}).get("outcome"), "disposal": (body or {}).get("disposal"), "detail": (body or {}).get("detail")}
+                self.completions.append(self.completed)
                 return 200, {"ok": True, "mission": {"status": self.completed["outcome"]}, "credentials": {"revoked_at": "2026-11-08T00:00:00Z", "erased": True}}
             return 404, {"ok": False, "error": f"route inconnue : {base}"}
 

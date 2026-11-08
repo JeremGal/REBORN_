@@ -130,11 +130,15 @@ def page_to_event(page: Json, mission_id: Optional[str] = None, investigation_id
     outputs = [str(o) for o in (page.get("outputs") or []) if str(o).strip()]
     ev: Json
     if fields:
+        # Un écran découvert est lu par le Studio comme un schéma d'écran : ses sorties sont des objets
+        # { name, label, format } (contrat OutputFieldSchema), pas de simples libellés.
+        used_out: set = set()
+        out_fields = [{"name": _slug(o, used_out), "label": o, "format": "text"} for o in outputs]
         ev = {
             "source": "explorer",
             "type": "form_discovered",
             "title": f"Écran « {name} » : {len(fields)} champ(s)"[:500],
-            "data": {"page": name, "url": page.get("url"), "fields": fields, "outputs": outputs},
+            "data": {"page": name, "url": page.get("url"), "fields": fields, **({"outputs": out_fields} if out_fields else {})},
         }
     else:
         ev = {

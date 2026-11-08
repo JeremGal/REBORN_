@@ -30,7 +30,7 @@ Le Studio prépare, vérifie et publie. Le logiciel livré tourne seul : il ne c
 |---|---|---|
 | Anonyme | aucune session | accueil, textes juridiques, inscription, connexion, `/api/health` réduit, contrats JSON |
 | **Client** | inscription (`/inscription`) | ses projets seulement |
-| **Opérateur** (équipe REBORN) | `npm run account -- operator <email>`, jamais par l'API | ses projets, ceux sans propriétaire, l'atelier, `/design-system`, `/app` |
+| **Opérateur** (équipe REBORN) | `npm run account -- operator <email>`, jamais par l'API | ses projets, ceux sans propriétaire, la vue d'ensemble des opérations (`/operations`, métadonnées de tous les projets), l'atelier, `/design-system`, `/app` |
 | Service `explorer` | `Authorization: Bearer <REBORN_EXPLORER_TOKEN>` | exécuteur de Mouss : file des missions, remise des identifiants (titulaire du prêt), rapports, évènements, observations, dépôt d'exports |
 | Service `analyst` | `Authorization: Bearer <REBORN_ANALYST_TOKEN>` | Analyste d'Alan : correspondances, modèle métier, règles de l'atelier, lecture des données d'un projet |
 
@@ -42,7 +42,7 @@ Le Studio prépare, vérifie et publie. Le logiciel livré tourne seul : il ne c
 
 ### `handler()` : point d'application unique (`platform/src/lib/http.ts`)
 
-Chaque route de l'API passe par `handler(fn, { access, write?, project? })`, sauf `/api/auth/*` (Better Auth : contrôle de l'hôte, puis ses propres contrôles d'origine et une liste fermée de fonctions). `access` est **obligatoire** : une route sans contrôle d'accès ne se charge pas, et un test d'inventaire vérifie que chacune des 57 routes en déclare un. Ordre :
+Chaque route de l'API passe par `handler(fn, { access, write?, project? })`, sauf `/api/auth/*` (Better Auth : contrôle de l'hôte, puis ses propres contrôles d'origine et une liste fermée de fonctions). `access` est **obligatoire** : une route sans contrôle d'accès ne se charge pas, et un test d'inventaire vérifie que chacune des routes (toutes les `route.ts`, découvertes automatiquement) en déclare un. Ordre :
 
 1. **Hôte** : adresses de bouclage seulement (protection contre le rebinding DNS), plus `REBORN_ALLOWED_HOSTS` et l'hôte de `REBORN_PUBLIC_URL` ; tous les hôtes en mode réseau (`REBORN_LAN=1`).
 2. **Identité** : jeton Bearer de service (comparaison en temps constant), sinon session Better Auth, sinon anonyme.
@@ -71,6 +71,7 @@ Chaque route de l'API passe par `handler(fn, { access, write?, project? })`, sau
 3. **Prise atomique** (`/api/executor/missions/claim`, `BEGIN IMMEDIATE … RETURNING`) : mission `connection_mission` 1.1 avec un **jeton de remise** lié à la mission et à l'exécuteur (15 min, usage unique). Prêt de 120 s renouvelé par le battement ; prêt expiré → jeton révoqué, mission remise en file ; 3 prises sans aboutir → `failed`.
 4. Remise des identifiants (`/credentials/redeem`, refusée si la requête porte `Origin`), rapport de connexion, exploration, exports : **titulaire du prêt** seulement.
 5. **Fin** (`/api/executor/missions/:id/complete`) : investigation close, prêt libéré, **identifiants effacés**. Jamais de `completed` implicite.
+6. **Avancement vu par le client** : dès la première prise, `GET /api/projects/:id/analysis` renvoie `progress` (prise, connexion, écrans découverts, export récupéré, fin), calculé uniquement à partir des évènements de la mission (`data.mission_id`, investigation de la mission, dans SON projet) ; une étape sans fait reçu reste « en attente ». Étapes Connexion et Découverte. Le message exact d'indisponibilité reste affiché tant qu'aucun exécuteur compatible n'est en ligne.
 
 Contrats : `connection_mission` 1.1, `executor_heartbeat` 1.0, `mission_complete` 1.0, `connection_report` 1.1 (`contracts/`). Détail pour Mouss : [INTEGRATION_MOUSS.md](INTEGRATION_MOUSS.md).
 
@@ -85,7 +86,7 @@ Connecteur HTTP et simulateur de l'atelier passent par `node:http`/`node:https` 
 | Projets | `platform/src/lib/migration/project.ts`, `context.ts`, `project-contracts.ts`, routes `api/projects/**` | Projets isolés, propriétaire, états persistés (pause appliquée côté serveur), historique d'états |
 | Extraction | `connectors.ts`, `formats.ts`, `egress.ts` | Plan d'extraction HTTP (même origine, 401/403 consignés, 200 Mo max), lecteurs CSV (encodages), JSON, XLSX, ZIP, SQL (instructions autorisées seulement), SQLite ; lecture paginée côté serveur (`/api/migration/sources/rows`, 100 lignes au plus) |
 | Analyse | `profile.ts` | Types, formats, clés, relations (inclusion des valeurs + noms), anomalies, indicateurs oui/non |
-| Correspondances | `mapping.ts`, `labels.ts`, route `mapping/fields` | Contrat `migration_mapping` 1.0, proposition automatique, points à valider, décisions humaines, corrections champ par champ (nouvelle version « user », aperçu sur les vraies valeurs) |
+| Correspondances | `mapping.ts`, `labels.ts`, routes `mapping/fields`, `decisions/bulk` | Contrat `migration_mapping` 1.0, proposition automatique (aussi faite d'office au dépôt d'une source si le projet n'a pas de correspondances, ou si la précédente proposition d'office est intacte ; une version de l'Analyste, d'un jeu de test, corrigée ou déjà tranchée n'est jamais remplacée), points à valider, décisions humaines unitaires ou en bloc (« Accepter toutes les propositions restantes », protections comptables listées à part et décochables, un évènement « N points acceptés en bloc par <nom> »), corrections champ par champ (nouvelle version « user », aperçu sur les vraies valeurs) |
 | Migration | `run.ts`, `model.ts`, `transforms.ts` | Nouvelle base par exécution, transaction unique, ordre des dépendances, `_lineage` par enregistrement, rejets motivés, doublons signalés, montants en centimes entiers |
 | Vérification | `verify.ts` | Relit les sources du coffre (empreintes revérifiées) et la base cible en lecture seule : volumes, valeurs champ par champ, relations (`foreign_key_check`), sommes au centime, contrôles métier, pièces jointes, intégrité |
 | Modèle métier | `business-model.ts`, `rules-history.ts`, `engine/bindings.ts` | Contrat `business_model` 1.0 (modules de règles + liaisons), versions immuables à valider, rejeu sur les documents historiques (identiques / arrondis / écarts) |
@@ -137,7 +138,7 @@ La classification « comptable / commercial / lignes / référentiel » est prop
 
 ## Interface du Studio et design system
 
-- **Pages** : `(site)` public (accueil, `/legal/conditions`, `/legal/confidentialite`) ; `(auth)` (`/connexion`, `/inscription`, `/reinitialisation`) ; `(platform)` espace connecté (`/espace`, `/projets`, `/projets/nouveau`, `/projets/[id]/<8 étapes>`, `/activite`, `/parametres`), session vérifiée côté serveur dans le layout ; `(platform)/(equipe)` atelier de l'équipe (404 pour un client). `src/proxy.ts` ne fait qu'une redirection optimiste (présence du cookie) : la vraie barrière reste l'API.
+- **Pages** : `(site)` public (accueil, `/legal/conditions`, `/legal/confidentialite`) ; `(auth)` (`/connexion`, `/inscription`, `/reinitialisation`) ; `(platform)` espace connecté (`/espace`, `/projets`, `/projets/nouveau`, `/projets/[id]/<8 étapes>`, `/activite`, `/parametres`), session vérifiée côté serveur dans le layout ; `(platform)/(equipe)` pages de l'équipe (404 pour un client) : d'abord `/operations` (vue d'ensemble : agents connectés, file des missions, projets ; `GET /api/operations`, opérateur seulement, métadonnées sans donnée de client ni identifiant ni secret), puis les outils de démonstration de l'atelier. `src/proxy.ts` ne fait qu'une redirection optimiste (présence du cookie) : la vraie barrière reste l'API.
 - **AppShell** : une barre latérale contextuelle (navigation globale ; dans un projet, ses 8 étapes avec leur statut réel ; bloc utilisateur), tiroir `<dialog>` sur mobile, lien « Aller au contenu ».
 - **Design system** (`platform/src/components/ds/`) : composants natifs et accessibles (Button, Field/Input/PasswordInput/Select/Checkbox/RadioGroup, Dialog/ConfirmationDialog/Drawer, Menu, Tabs, Stepper, Toast, Alert, Progress, DataTable, Pagination, FileUpload, Wordmark…). Jetons centralisés dans `globals.css` (`@theme`) : une seule couleur d'accent (vert-de-gris, aussi celle de la validation), ocre pour les avertissements, rouille pour les erreurs ; Instrument Sans et IBM Plex Mono ; contrastes calculés (texte ≥ 4,5:1) ; mouvement réduit respecté. Démonstration de chaque composant : `/design-system` (équipe). Le logiciel livré garde sa propre identité (IBM Plex Sans embarquée).
 

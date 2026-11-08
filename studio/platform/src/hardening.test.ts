@@ -302,7 +302,9 @@ describe("C4 — journal des correspondances : une correction manuelle n'est jam
     const { projectScope } = await import("@/lib/migration/context");
     const v = projectScope.run(pid, () => setMapping(currentMapping()!.mapping, "user"));
     const title = events().filter((e) => (e as { project_id?: string }).project_id === pid && e.title.startsWith(`Correspondances v${v.version} reçues`)).at(-1)?.title;
-    expect(title).toMatch(/^Correspondances v2 reçues \(correction manuelle\) — \d+ entité\(s\)$/);
+    // v1 : proposition faite d'office au dépôt de clients.csv · v2 : proposition demandée · v3 : correction manuelle
+    expect(v.version).toBe(3);
+    expect(title).toMatch(/^Correspondances v3 reçues \(correction manuelle\) — \d+ entité\(s\)$/);
   });
 });
 

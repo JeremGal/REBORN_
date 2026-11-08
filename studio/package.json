@@ -23,6 +23,7 @@
     "token": "node scripts/open.mjs token",
     "secrets": "node scripts/secrets.mjs",
     "account": "node --no-warnings scripts/account.mjs",
+    "executor": "node scripts/executor.mjs",
     "contracts": "cd platform && WRITE_CONTRACTS=1 npx vitest run src/contracts.test.ts",
     "acceptance": "node scripts/acceptance.mjs",
     "a11y": "node scripts/a11y.mjs"

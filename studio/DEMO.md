@@ -35,7 +35,7 @@ Pour une démonstration répétée, utiliser une nouvelle adresse e-mail : une a
    - Consultation paginée côté serveur (tri, recherche, filtre), colonnes et qualité.
 7. **Correspondances**
    - « Jeu de test au format de l'Analyste — Relatio ». La file « À vérifier » montre « Ancien champ → Nouveau champ » (ex. `T_CLIENT.RAISON_SOC` → Clients / Raison sociale), l'incertitude et les transformations qui modifient une valeur.
-   - Accepter, corriger (aperçu sur les vraies valeurs avant d'enregistrer) ou rejeter un champ ; la migration reste bloquée tant qu'un point incertain n'est pas tranché.
+   - Accepter, corriger (aperçu sur les vraies valeurs avant d'enregistrer) ou rejeter un champ ; ou « Accepter toutes les propositions restantes » (confirmation : nombre de points, protections de l'historique comptable listées à part et décochables). La migration reste bloquée tant qu'un point incertain n'est pas tranché.
 8. **Migration**
    - « Lancer la migration » : 21 065 fiches transférées sur 21 079 lignes sources, 14 rejetées avec leur motif (2 clients sans raison sociale, leurs devis et leurs lignes).
 9. **Validation**
