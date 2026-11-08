@@ -3,6 +3,7 @@ import path from "node:path";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { ApiError } from "../errors";
 import { appsRoot } from "./project";
+import { appPublicUrl } from "./public-urls";
 
 /**
  * Accès au logiciel livré par invitation à usage unique (conception A, phase 1).
@@ -93,5 +94,5 @@ export function issueAppInvite(appId: string, i: AppInviteInput): { link: string
     fs.rmSync(tmp, { force: true });
     throw e;
   }
-  return { link: `http://127.0.0.1:${port}/#/activation/${token}`, expires_at: record.expires_at };
+  return { link: `${appPublicUrl(port)}/#/activation/${token}`, expires_at: record.expires_at };
 }

@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { appPublicUrl } from "./public-urls";
 import path from "node:path";
 import { spawn, type ChildProcess } from "node:child_process";
 import { randomBytes, randomUUID } from "node:crypto";
@@ -238,7 +239,7 @@ export async function appStatus() {
     deployment: active,
     app_id: id,
     port,
-    url: `http://127.0.0.1:${port}`,
+    url: appPublicUrl(port),
     running: !!h && h.app === id,
     /** Processus retrouvé par son fichier PID : le Studio peut l'arrêter, mais n'en est pas le parent. */
     managed: !!proc,
@@ -361,7 +362,7 @@ export async function deploy(runId: string, by: string, opts: { force?: boolean 
   await startApp(appId);
   migrationLog(`Nouveau logiciel « ${mapping.target.name} » mis en service (${runId})`, `${meta.summary.imported} enregistrement(s) migré(s) · ${backup ? "base précédente sauvegardée" : "première mise en service"}${wasManaged ? " · redémarré" : ""}`);
   transition("PUBLISHED", `Nouveau logiciel « ${mapping.target.name} » en service sur le port ${port} (${runId}${rules.length ? `, modèle métier v${rules.at(-1)!.version}` : ", sans modèle métier"})`);
-  return { deployment, url: `http://127.0.0.1:${port}`, report: report! };
+  return { deployment, url: appPublicUrl(port), report: report! };
   }
 }
 
@@ -431,7 +432,7 @@ export async function upgradeApp(by: string): Promise<{ app_id: string; backup: 
   writeApp(specFor(mapping, active.run_id, meta.mapping_version, port, rules), dir, rules);
   await startApp(appId);
   migrationLog(`Logiciel « ${mapping.target.name} » mis à jour (moteur et spécification)`, `Données conservées · sauvegarde ${path.basename(backup)}${rules.length ? ` · modèle métier v${rules.map((r) => r.version).join(", v")}` : ""} · par ${by}`);
-  return { app_id: appId, backup: path.basename(backup), rules_versions: rules.map((r) => r.version), url: `http://127.0.0.1:${port}` };
+  return { app_id: appId, backup: path.basename(backup), rules_versions: rules.map((r) => r.version), url: appPublicUrl(port) };
 }
 
 /** Port libre pour un nouveau logiciel livré : à partir de CRM_PORT (5050), hors ports des autres projets. */

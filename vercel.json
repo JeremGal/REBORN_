@@ -6,7 +6,19 @@
       "framework": "nextjs"
     }
   },
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://8653-130-93-90-94.ngrok-free.app/$1",
+      "permanent": false
+    }
+  ],
   "rewrites": [
-    { "source": "/(.*)", "destination": { "service": "platform" } }
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "platform"
+      }
+    }
   ]
 }
