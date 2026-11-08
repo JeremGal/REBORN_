@@ -21,7 +21,7 @@ import {
 } from "./db";
 import { enterGate, enterSessionGate, leaveGate, leaveSessionGate } from "./limits";
 import { linkBase, writeOutbox } from "./outbox";
-import { requestHostOf, VALID_HOST } from "./request-host";
+import { configuredPublicUrl, requestHostOf, VALID_HOST } from "./request-host";
 
 /**
  * Comptes REBORN (lot A1, SPEC §2) : Better Auth 1.7.12 sur node:sqlite, essai réel validé sur ce poste.
@@ -369,7 +369,7 @@ function resolveSecret(dir: string): string {
 const list = (v: string | undefined) => (v ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 
 function publicOrigin(): string | null {
-  const v = process.env.REBORN_PUBLIC_URL?.trim();
+  const v = configuredPublicUrl();
   if (!v) return null;
   try {
     const u = new URL(v);

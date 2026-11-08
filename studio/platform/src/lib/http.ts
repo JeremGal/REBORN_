@@ -6,7 +6,7 @@ import { ownerOf } from "./migration/project";
 import { ANONYMOUS, principalScope, type Principal } from "./auth/principal";
 import { bearerToken, serviceFromToken } from "./auth/tokens";
 import { resolveSession } from "./auth/session";
-import { requestHostOf } from "./auth/request-host";
+import { configuredPublicUrl, platformHosts, requestHostOf } from "./auth/request-host";
 import { requiredAccountConsents } from "./auth/consents";
 
 export { ApiError };
@@ -250,7 +250,7 @@ export function errorResponse(e: unknown): Response {
  * en-têtes de sécurité sont posés par next.config.ts, figés au build ; celui-ci dépend de l'adresse publique.
  */
 function withTransportSecurity(res: Response): Response {
-  if (!/^https:\/\//i.test(process.env.REBORN_PUBLIC_URL?.trim() ?? "")) return res;
+  if (!/^https:\/\//i.test(configuredPublicUrl())) return res;
   const value = "max-age=31536000";
   try {
     res.headers.set("strict-transport-security", value);
@@ -384,7 +384,7 @@ function hostname(host: string): string {
 }
 
 function publicHostname(): string | null {
-  const v = process.env.REBORN_PUBLIC_URL?.trim();
+  const v = configuredPublicUrl();
   if (!v) return null;
   try {
     return new URL(v).hostname.toLowerCase();
@@ -407,6 +407,7 @@ export function checkHost(req: Request): Response | null {
   const extra = (process.env.REBORN_ALLOWED_HOSTS ?? "").split(",").map((h) => h.trim().toLowerCase()).filter(Boolean);
   const pub = publicHostname();
   if (pub) extra.push(pub);
+  extra.push(...platformHosts().map(hostname));
   if (LOOPBACK.has(name) || extra.includes(name)) return null;
   return json({ ok: false, error: `Hôte non autorisé : ${name}. En local, utilisez http://127.0.0.1:3000 ; pour le réseau, lancez npm run dev:lan.` }, 403);
 }
