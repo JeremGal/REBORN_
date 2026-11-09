@@ -61,7 +61,7 @@ function deliveredPort(appId: string): number {
   return port;
 }
 
-export function issueAppInvite(appId: string, i: AppInviteInput): { link: string; expires_at: string; port: number } {
+export function issueAppInvite(appId: string, i: AppInviteInput): { link: string; expires_at: string; port: number; file: string } {
   const port = deliveredPort(appId);
   const dir = path.join(appsRoot(), appId);
   const email = String(i.email ?? "")
@@ -100,7 +100,7 @@ export function issueAppInvite(appId: string, i: AppInviteInput): { link: string
     fs.rmSync(tmp, { force: true });
     throw e;
   }
-  return { link: `${appPublicUrl(port)}/#/activation/${token}`, expires_at: record.expires_at, port };
+  return { link: `${appPublicUrl(port)}/#/activation/${token}`, expires_at: record.expires_at, port, file: path.join(invites, name) };
 }
 
 /** Alphabet sans caractères ambigus (0/O, 1/l/I) : un mot de passe facile à recopier. */
@@ -139,9 +139,12 @@ export async function issueAppCredentials(appId: string, i: { email: string; by:
       signal: AbortSignal.timeout(10_000),
     });
   } catch {
+    // Invitation retirée : jamais importée, elle révoquerait au prochain démarrage le lien encore valable du propriétaire
+    fs.rmSync(invite.file, { force: true });
     throw new ApiError(409, "Le logiciel livré ne répond pas : démarrez-le, puis réessayez.");
   }
   if (!res.ok) {
+    fs.rmSync(invite.file, { force: true });
     const why = await res.text().catch(() => "");
     throw new ApiError(502, `Le logiciel livré a refusé l'activation (HTTP ${res.status})${why ? ` : ${why.slice(0, 200)}` : ""}`);
   }

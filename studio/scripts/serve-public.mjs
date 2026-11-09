@@ -83,14 +83,16 @@ for (let i = 0; i < 40 && !ready; i++) {
   if (!ready) await sleep(500);
 }
 if (!ready) throw new Error(`agent ngrok injoignable (voir ${path.join(LOGS, "ngrok.log")})`);
-const API_TIMEOUT = () => AbortSignal.timeout(5000); // un appel bloqué à l'agent ngrok ne fige pas la publication des autres logiciels
+// Un appel bloqué à l'agent ngrok ne fige pas la publication des autres logiciels ; la création d'un tunnel (connexion de
+// l'agent à ngrok, surtout juste après son lancement) a droit à 30 s, les lectures et suppressions à 5 s.
+const API_TIMEOUT = (ms = 5000) => AbortSignal.timeout(ms);
 async function tunnel(name, port) {
   const list = await (await fetch(NGROK_API, { signal: API_TIMEOUT() })).json();
   const found = list.tunnels?.find((t) => t.name === name);
   // Un tunnel du même nom vers un AUTRE port est fermé : jamais d'adresse publique vers un service inattendu.
   if (found && new URL(found.config?.addr?.includes("://") ? found.config.addr : `http://${found.config?.addr}`).port === String(port)) return found.public_url;
   if (found) await fetch(`${NGROK_API}/${encodeURIComponent(name)}`, { method: "DELETE", signal: API_TIMEOUT() });
-  const r = await fetch(NGROK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name, addr: String(port), proto: "http" }), signal: API_TIMEOUT() });
+  const r = await fetch(NGROK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name, addr: String(port), proto: "http" }), signal: API_TIMEOUT(30_000) });
   const j = await r.json();
   if (!j.public_url) throw new Error(`tunnel ${name} refusé : ${JSON.stringify(j).slice(0, 200)}`);
   return j.public_url;

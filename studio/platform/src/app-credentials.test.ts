@@ -74,6 +74,31 @@ describe("identifiant et mot de passe du logiciel livré", () => {
     expect(fs.existsSync(path.join(tmp, "arrete-app", ".secrets", "invites"))).toBe(false);
   });
 
+  it("activation refusée après le contrôle de santé : 502, et l'invitation écrite est retirée", async () => {
+    const refus = http.createServer((req, res) => {
+      if (req.method === "GET" && req.url === "/api/health") {
+        res.writeHead(200, { "content-type": "application/json" });
+        return res.end(JSON.stringify({ ok: true, app: "refus-app" }));
+      }
+      req.resume();
+      req.on("end", () => {
+        res.writeHead(429, { "content-type": "application/json" });
+        res.end(JSON.stringify({ ok: false, error: "Trop de tentatives (jeu de test)" }));
+      });
+    });
+    await new Promise<void>((r) => refus.listen(0, "127.0.0.1", r));
+    try {
+      fs.mkdirSync(path.join(tmp, "refus-app"), { recursive: true });
+      fs.writeFileSync(path.join(tmp, "refus-app", "app.json"), JSON.stringify({ app: { id: "refus-app", port: (refus.address() as { port: number }).port } }));
+      const { issueAppCredentials } = await import("@/lib/migration/app-access");
+      await expect(issueAppCredentials("refus-app", { email: "client.test@exemple.test", by: "Test" })).rejects.toMatchObject({ status: 502 });
+      const dir = path.join(tmp, "refus-app", ".secrets", "invites");
+      expect(fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".json")) : []).toEqual([]);
+    } finally {
+      await new Promise<void>((r) => refus.close(() => r()));
+    }
+  });
+
   it("un autre logiciel répond sur ce port : refus (409), sans invitation écrite", async () => {
     const { issueAppCredentials } = await import("@/lib/migration/app-access");
     fs.mkdirSync(path.join(tmp, "autre-app"), { recursive: true });

@@ -626,8 +626,9 @@ function assertNotLimited(key) {
   if (f && f.until > Date.now()) throw new HttpError(429, "Trop de tentatives : réessayez dans quelques minutes.");
 }
 function countFailure(key, max = 8) {
-  // Mémoire bornée : au-delà de 10 000 clés (adresses ou identifiants inventés), seules les clés bloquées sont gardées
-  if (failures.size > 10_000) for (const [k, v] of failures) if (!(v.until > Date.now())) failures.delete(k);
+  // Mémoire bornée : au-delà de 10 000 clés (adresses ou identifiants inventés), seules sont gardées les clés bloquées et les
+  // compteurs des comptes existants (user:, password: ; deux au plus par compte) : remplir la table ne les remet pas à zéro.
+  if (failures.size > 10_000) for (const [k, v] of failures) if (!(v.until > Date.now()) && !/^(user|password):/.test(k)) failures.delete(k);
   const f = failures.get(key) ?? { n: 0, until: 0 };
   f.n++;
   if (f.n >= max) Object.assign(f, { n: 0, until: Date.now() + 5 * 60e3 });
@@ -1328,8 +1329,9 @@ async function route(req, res) {
     const key = ident.includes("@") ? ident.toLowerCase() : ident;
     const u = (key && (db.prepare(`SELECT * FROM "_users" WHERE "username" = ?`).get(key) ?? (key.includes("@") ? db.prepare(`SELECT * FROM "_users" WHERE "email" = ?`).get(key) : null))) || null;
     // Deux compteurs : par visiteur (8 échecs) et par compte visé (30 échecs, quelle que soit l'adresse annoncée :
-    // borne les essais même si un programme connecté directement choisit son adresse). Identifiant inconnu : compté de la même façon.
-    const account = `account:${u ? u.id : key}`;
+    // borne les essais même si un programme connecté directement choisit son adresse). Compte existant : user:<id> ;
+    // identifiant inconnu : account:<identifiant>, compté de la même façon, sans jamais partager le compteur d'un compte.
+    const account = u ? `user:${u.id}` : `account:${key}`;
     assertNotLimited(`login:${ip}`);
     assertNotLimited(account);
     // scrypt est calculé même pour un identifiant inconnu : la réponse ne révèle pas quels comptes existent

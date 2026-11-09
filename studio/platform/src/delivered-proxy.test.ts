@@ -79,8 +79,9 @@ function rawLogin(port: number, extraHeaderLines: string[], password: string) {
 }
 const portOf = (url: string) => Number(new URL(url).port);
 
-const login = async (url: string, password: string, xff?: string) =>
-  (await fetch(`${url}/api/auth/login`, { method: "POST", headers: { "content-type": "application/json", origin: url, ...(xff ? { "x-forwarded-for": xff } : {}) }, body: JSON.stringify({ username: ADMIN.username, password }) })).status;
+const loginAs = async (url: string, username: string, password: string, xff?: string) =>
+  (await fetch(`${url}/api/auth/login`, { method: "POST", headers: { "content-type": "application/json", origin: url, ...(xff ? { "x-forwarded-for": xff } : {}) }, body: JSON.stringify({ username, password }) })).status;
+const login = (url: string, password: string, xff?: string) => loginAs(url, ADMIN.username, password, xff);
 
 afterAll(async () => {
   for (const c of children) {
@@ -128,6 +129,24 @@ describe("limiteur de connexion du logiciel livré derrière un tunnel", () => {
     const url = await startDeliveredApp("proxy-compte", { TRUST_PROXY: "1" });
     for (let i = 0; i < 30; i++) expect(await login(url, "mauvais mot de passe", `198.51.100.${i + 1}`)).toBe(401);
     expect(await login(url, ADMIN.password, "198.51.100.250")).toBe(429);
+  }, 60000);
+
+  it("compteur d'un compte existant : remplir la table des échecs (plus de 10 000 clés) ne le remet pas à zéro", async () => {
+    const url = await startDeliveredApp("proxy-purge", { TRUST_PROXY: "1" });
+    for (let i = 0; i < 29; i++) expect(await login(url, "mauvais mot de passe", `198.51.100.${i + 1}`)).toBe(401);
+    // Clés d'échec créées à bas coût : jetons d'activation inconnus, une adresse annoncée différente par essai
+    const token = "x".repeat(43);
+    for (let b = 0; b < 101; b++) {
+      await Promise.all(Array.from({ length: 100 }, (_, k) => fetch(`${url}/api/auth/invitation`, { method: "POST", headers: { "content-type": "application/json", origin: url, "x-forwarded-for": `10.${b}.${k}.1` }, body: JSON.stringify({ token }) }).then((r) => r.status)));
+    }
+    expect(await login(url, "mauvais mot de passe", "198.51.100.200")).toBe(401); // 30e échec : le compte se bloque
+    expect(await login(url, ADMIN.password, "198.51.100.201")).toBe(429);
+  }, 120000);
+
+  it("identifiant inconnu « 1 » : ses échecs ne bloquent pas le compte n° 1", async () => {
+    const url = await startDeliveredApp("proxy-collision", { TRUST_PROXY: "1" });
+    for (let i = 0; i < 30; i++) expect(await loginAs(url, "1", "mauvais mot de passe", `198.51.100.${i + 1}`)).toBe(401);
+    expect(await login(url, ADMIN.password, "198.51.100.240")).toBe(200);
   }, 60000);
 
   it("sans TRUST_PROXY : l'en-tête est ignoré, l'adresse de la connexion compte", async () => {
